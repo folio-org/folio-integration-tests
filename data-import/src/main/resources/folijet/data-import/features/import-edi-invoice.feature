@@ -2,15 +2,10 @@ Feature: Import EDIFACT invoice
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': '*/*'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * configure headers = headersUser
 
   Scenario: EDI invoice import
@@ -1145,12 +1140,13 @@ Feature: Import EDIFACT invoice
     When method POST
     Then status 201
 
+    * def userId = java.lang.System.getProperty('testUserId')
     Given path 'acquisitions-units-storage/memberships'
-    And headers headersAdmin
+    And headers headersUser
     And request
     """
     {
-      "userId": "00000000-1111-5555-9999-999999999992",
+      "userId": '#(userId)',
       "acquisitionsUnitId": "#(acqUnitId)"
     }
     """

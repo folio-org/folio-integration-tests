@@ -92,7 +92,6 @@ function configuration() {
     config.prototypeTenant = 'diku';
     config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org'
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-
   }
   return config;
 }

@@ -1,11 +1,8 @@
 Feature: Get job execution by S3 key with retries (maps to job execution)
 
   Background:
-    # do this again since, while waiting, the access token can time out :(
     * call login testUser
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * url baseUrl
     * configure retry = { interval: 2000, count: 30 }
 
@@ -15,10 +12,10 @@ Feature: Get job execution by S3 key with retries (maps to job execution)
     # splitting process creates additional job executions for parent/child
     # so we need to query to get the correct job execution ID
     Given path 'metadata-provider/jobExecutions'
+    And headers headersUser
     And param limit = 10000
     And param sortBy = 'started_date,desc'
     And param subordinationTypeNotAny = ['COMPOSITE_CHILD', 'PARENT_SINGLE']
-    And headers headersUser
     And retry until response.jobExecutions[0].status == 'COMMITTED' && response.jobExecutions[0].uiStatus == 'RUNNING_COMPLETE'
     When method get
     Then status 200

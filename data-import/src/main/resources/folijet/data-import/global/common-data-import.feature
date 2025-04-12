@@ -43,7 +43,7 @@ Feature: Do Data Import Using Parameters
     Given path 'data-import/uploadUrl'
     And headers headersUser
     And param filename = fileName
-    When method get
+    When method GET
     Then status 200
     And def s3UploadKey = response.key
     And def s3UploadId = response.uploadId

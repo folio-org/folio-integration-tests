@@ -1,12 +1,11 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @FolioTest(team = "folijet", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Deprecated(forRemoval = true)
-@Disabled
-class DataImportApiTest extends TestBase {
+class DataImportApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 
     public DataImportApiTest() {
@@ -27,94 +24,95 @@ class DataImportApiTest extends TestBase {
     @Test
     @Order(1)
     void createMarcRecordsTest() {
-        runFeatureTest("create-marc-records");
+        runFeatureTest("create-marc-records.feature");
     }
 
     @Test
     @Order(2)
     void dataImportIntegrationTest() {
-        runFeatureTest("data-import-integration");
+        runFeatureTest("data-import-integration.feature");
     }
 
     @Test
     @Order(3)
     void orderImportTest() {
-        runFeatureTest("data-import-orders");
+        runFeatureTest("data-import-orders.feature");
     }
 
     @Test
     @Order(4)
     void dataImportLogDeletionTest() {
-        runFeatureTest("data-import-delete-logs");
+        runFeatureTest("data-import-delete-logs.feature");
     }
 
     @Test
     @Order(5)
     void importHoldingsRecordsTest() {
-        runFeatureTest("data-import-holdings-records");
+        runFeatureTest("data-import-holdings-records.feature");
     }
 
+    // one still broken :(
     @Test
     @Order(6)
     void importInvoiceTest() {
-        runFeatureTest("import-edi-invoice");
+        runFeatureTest("import-edi-invoice.feature");
     }
 
     @Test
     @Order(7)
     void importAuthorityRecordsTest() {
-        runFeatureTest("data-import-authority-records");
+        runFeatureTest("data-import-authority-records.feature");
     }
 
     @Test
     @Order(8)
     void importPolAndVrnMatchingTest() {
-        runFeatureTest("pol-vrn-matching");
+        runFeatureTest("pol-vrn-matching.feature");
     }
 
     @Test
     void marcBibsCreateTest() {
-        runFeatureTest("marc-bibs/create");
+        runFeatureTest("marc-bibs/create.feature");
     }
 
     @Test
     void marcBibsUpdateTest() {
-        runFeatureTest("marc-bibs/update");
+        runFeatureTest("marc-bibs/update.feature");
     }
 
     @Test
     void importInstanceIdentifierMatchTest() {
-        runFeatureTest("instance-identifier-match");
+        runFeatureTest("instance-identifier-match.feature");
     }
 
     @Test
     void importBibRecordsTest() {
-        runFeatureTest("data-import-bib-records");
+        runFeatureTest("data-import-bib-records.feature");
     }
 
     @Test
     void fileExtensionsTest() {
-        runFeatureTest("file-extensions");
+        runFeatureTest("file-extensions.feature");
     }
 
     @Test
     void fileUploadTest() {
-        runFeatureTest("file-upload");
+        runFeatureTest("file-upload.feature");
     }
 
     @Test
     void testSplitFeatureEnabledStatus() {
-        runFeatureTest("split-feature-enabled");
+        runFeatureTest("split-feature-enabled.feature");
     }
 
     @Test
     void dataImportMultipleItemsTest() {
-        runFeatureTest("data-import-multiple-records-from-marc-bib");
+        runFeatureTest("data-import-multiple-records-from-marc-bib.feature");
     }
 
     @Test
     void dataImportSetForDeletion() {
-        runFeatureTest("data-import-set-for-deletion");
+        runFeatureTest("data-import-set-for-deletion.feature");
     }
 
     @BeforeAll
@@ -127,7 +125,7 @@ class DataImportApiTest extends TestBase {
     @AfterAll
     public void teardown() {
         if (shouldCreateTenant()) {
-            runFeature("classpath:common/destroy-data.feature");
+            runFeature("classpath:common/eureka/destroy-data.feature");
         }
     }
 }
