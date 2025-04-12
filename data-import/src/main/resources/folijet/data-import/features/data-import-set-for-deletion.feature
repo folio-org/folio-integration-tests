@@ -163,7 +163,7 @@ Feature: Set for deletion logic
     # Verify instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
