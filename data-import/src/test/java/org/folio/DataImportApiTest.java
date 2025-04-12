@@ -24,95 +24,95 @@ class DataImportApiTest extends TestBaseEureka {
     @Test
     @Order(1)
     void createMarcRecordsTest() {
-        runFeatureTest("create-marc-records.feature");
+        runFeatureTest("create-marc-records");
     }
 
     @Test
     @Order(2)
     void dataImportIntegrationTest() {
-        runFeatureTest("data-import-integration.feature");
+        runFeatureTest("data-import-integration");
     }
 
     @Test
     @Order(3)
     void orderImportTest() {
-        runFeatureTest("data-import-orders.feature");
+        runFeatureTest("data-import-orders");
     }
 
     @Test
     @Order(4)
     void dataImportLogDeletionTest() {
-        runFeatureTest("data-import-delete-logs.feature");
+        runFeatureTest("data-import-delete-logs");
     }
 
     @Test
     @Order(5)
     void importHoldingsRecordsTest() {
-        runFeatureTest("data-import-holdings-records.feature");
+        runFeatureTest("data-import-holdings-records");
     }
 
     // one still broken :(
     @Test
     @Order(6)
     void importInvoiceTest() {
-        runFeatureTest("import-edi-invoice.feature");
+        runFeatureTest("import-edi-invoice");
     }
 
     @Test
     @Order(7)
     void importAuthorityRecordsTest() {
-        runFeatureTest("data-import-authority-records.feature");
+        runFeatureTest("data-import-authority-records");
     }
 
     @Test
     @Order(8)
     void importPolAndVrnMatchingTest() {
-        runFeatureTest("pol-vrn-matching.feature");
+        runFeatureTest("pol-vrn-matching");
     }
 
     @Test
     void marcBibsCreateTest() {
-        runFeatureTest("marc-bibs/create.feature");
+        runFeatureTest("marc-bibs/create");
     }
 
     @Test
     void marcBibsUpdateTest() {
-        runFeatureTest("marc-bibs/update.feature");
+        runFeatureTest("marc-bibs/update");
     }
 
     @Test
     void importInstanceIdentifierMatchTest() {
-        runFeatureTest("instance-identifier-match.feature");
+        runFeatureTest("instance-identifier-match");
     }
 
     @Test
     void importBibRecordsTest() {
-        runFeatureTest("data-import-bib-records.feature");
+        runFeatureTest("data-import-bib-records");
     }
 
     @Test
     void fileExtensionsTest() {
-        runFeatureTest("file-extensions.feature");
+        runFeatureTest("file-extensions");
     }
 
     @Test
     void fileUploadTest() {
-        runFeatureTest("file-upload.feature");
+        runFeatureTest("file-upload");
     }
 
     @Test
     void testSplitFeatureEnabledStatus() {
-        runFeatureTest("split-feature-enabled.feature");
+        runFeatureTest("split-feature-enabled");
     }
 
     @Test
     void dataImportMultipleItemsTest() {
-        runFeatureTest("data-import-multiple-records-from-marc-bib.feature");
+        runFeatureTest("data-import-multiple-records-from-marc-bib");
     }
 
     @Test
     void dataImportSetForDeletion() {
-        runFeatureTest("data-import-set-for-deletion.feature");
+        runFeatureTest("data-import-set-for-deletion");
     }
 
     @BeforeAll
