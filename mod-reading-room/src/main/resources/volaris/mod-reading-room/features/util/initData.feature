@@ -3,7 +3,7 @@ Feature: init data for mod-reading-room
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json','x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json','x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * def util1 = call read('classpath:common/util/uuid1.feature')
     * def util2 = call read('classpath:common/util/random_string.feature')
 

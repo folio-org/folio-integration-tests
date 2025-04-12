@@ -3,13 +3,13 @@ Feature: Scenarios that are primarily focused around getting list contents
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
     * def itemListId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
 
 
   Scenario: Get contents of a list, ensure different results for different offsets
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * listRequest.fqlQuery = '{\"$and\": [{\"users.username\" : {\"$regex\": \"^integration_test_user\"}}]}'
     * def postCall = call postList
     * def listId = postCall.listId

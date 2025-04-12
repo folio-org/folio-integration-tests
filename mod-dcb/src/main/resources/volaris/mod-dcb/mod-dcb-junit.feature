@@ -19,6 +19,47 @@ Feature: mod-dcb integration tests
       | 'mod-circulation-item'      |
       | 'mod-dcb'                   |
 
+    * table adminAdditionalPermissions
+      | name                                                      |
+      | 'circulation-item.collection.get'                         |
+      | 'circulation-storage.cancellation-reasons.item.post'      |
+      | 'circulation-storage.loan-policies.item.post'             |
+      | 'circulation-storage.loans.collection.get'                |
+      | 'circulation-storage.patron-notice-policies.item.post'    |
+      | 'circulation-storage.request-policies.item.post'          |
+      | 'circulation-storage.requests.collection.get'             |
+      | 'circulation.check-in-by-barcode.post'                    |
+      | 'circulation.check-out-by-barcode.post'                   |
+      | 'circulation.requests.item.get'                           |
+      | 'circulation.requests.item.put'                           |
+      | 'circulation.rules.put'                                   |
+      | 'dcb.transactions.collection.get'                         |
+      | 'dcb.transactions.item.put'                               |
+      | 'dcb.transactions.post'                                   |
+      | 'dcb.transactions.status.get'                             |
+      | 'dcb.transactions.status.put'                             |
+      | 'inventory-storage.contributor-name-types.item.post'      |
+      | 'inventory-storage.holdings-sources.collection.get'       |
+      | 'inventory-storage.holdings.item.post'                    |
+      | 'inventory-storage.instance-types.item.post'              |
+      | 'inventory-storage.items.item.get'                        |
+      | 'inventory-storage.loan-types.item.post'                  |
+      | 'inventory-storage.location-units.campuses.item.post'     |
+      | 'inventory-storage.location-units.institutions.item.post' |
+      | 'inventory-storage.location-units.libraries.item.post'    |
+      | 'inventory-storage.locations.item.post'                   |
+      | 'inventory-storage.material-types.collection.get'         |
+      | 'inventory-storage.material-types.item.post'              |
+      | 'inventory-storage.service-points.collection.get'         |
+      | 'inventory-storage.service-points.item.post'              |
+      | 'inventory.instances.item.post'                           |
+      | 'inventory.items.item.post'                               |
+      | 'lost-item-fees-policies.item.post'                       |
+      | 'overdue-fines-policies.item.post'                        |
+      | 'usergroups.item.post'                                    |
+      | 'users.item.get'                                          |
+      | 'users.item.post'                                         |
+
 
     * table userPermissions
       | name                                                       |
@@ -47,6 +88,8 @@ Feature: mod-dcb integration tests
       | 'dcb.transactions.item.put'                                |
       | 'circulation.check-out-by-barcode.post'                    |
       | 'circulation.check-in-by-barcode.post'                     |
+      |'circulation-storage.loan-policies.collection.get'          |
+      |'circulation.loans.collection.get'                          |
       | 'manualblocks.collection.get'                              |
       | 'perms.users.item.post'                                    |
       | 'login.item.post'                                          |
@@ -63,6 +106,19 @@ Feature: mod-dcb integration tests
 
 
   Scenario: create tenant and users for testing for mod-dcb
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
+
+  Scenario: create admin user for testing
+    * def tempTestUser = testUser
+    * def tempUserPermissions = userPermissions
+    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(testAdmin.password)' }
+    * def userPermissions = adminAdditionalPermissions
+    Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
+    Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
+    Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
+    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
+    * def testUser = tempTestUser
+    * def userPermissions = tempUserPermissions
+
   Scenario: call pre requisites feature file
     * callonce read('classpath:volaris/mod-dcb/reusable/pre-requisites.feature')

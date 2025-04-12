@@ -1,9 +1,0 @@
-
-{
-    "id": "#(patronPermissionId)",
-    "userId": "#(userId)",
-    "readingRoomId": "#(readingRoomId)",
-    "readingRoomName": "#(readingRoomName)",
-    "access": "ALLOWED",
-    "notes": "test notes"
-}

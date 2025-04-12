@@ -10,10 +10,15 @@ Feature: mod-password-validator integration tests
       | 'mod-password-validator'          |
 
     * table userPermissions
-      | name         |
-      | 'validation.all'                  |
-      | 'login.password.validate'         |
-      | 'users.collection.get'            |
+      | name                              |
+      | 'validation.rules.item.post'      |
+      | 'validation.rules.collection.get' |
+      | 'validation.rules.item.get'       |
+      | 'validation.rules.item.put'       |
+      | 'validation.validate.post'        |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
+
+  Scenario: create dummy admin user for validate.feature
+    Given call read('classpath:spitfire/passwordvalidator/features/setup/setup-dummy-admin.feature')

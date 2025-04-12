@@ -1,7 +1,6 @@
 Feature: Entity types
 
   Background:
-    * url baseUrl
     * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*' }
     * def locationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def holdingsEntityTypeId = '8418e512-feac-4a6a-a56d-9006aab31e33'
@@ -12,9 +11,9 @@ Feature: Entity types
     And param apikey = apikey
     When method GET
     Then status 200
-    And match $.entityTypes.[0] == '#present'
-    And match $.entityTypes.[1] == '#present'
-    And match $.entityTypes.[2] == '#present'
+    And match $.entityTypes[0] == '#present'
+    And match $.entityTypes[1] == '#present'
+    And match $.entityTypes[2] == '#present'
     And match karate.keysOf(responseHeaders) !contains 'x-okapi-token'
 
   Scenario: Get entity with invalid API key should return 401 error
@@ -74,8 +73,8 @@ Feature: Entity types
     When method GET
     Then status 200
     * def edgeResponse = $
-    * call login admin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)', 'Accept': '*/*' }
     Given url baseUrl
     And path 'entity-types'
     When method GET

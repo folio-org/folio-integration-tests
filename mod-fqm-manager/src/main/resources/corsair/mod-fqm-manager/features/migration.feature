@@ -2,10 +2,10 @@ Feature: Query migration and versioning
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Get FQL version
-    Given path 'fqm/version'
+    Given path 'fqm', 'version'
     When method GET
     Then status 200
     And def version = response
@@ -17,7 +17,7 @@ Feature: Query migration and versioning
 
   Scenario: Migrate query for users
     * def migrateRequest = { entityTypeId: '0069cf6f-2833-46db-8a51-8934769b8289' , fqlQuery: '{\"user_active\": {\"$eq\":\"true\"}}', fields : '[\"user_active\"]'}
-    Given path 'fqm/migrate'
+    Given path 'fqm', 'migrate'
     And request migrateRequest
     When method POST
     Then status 200
@@ -30,7 +30,7 @@ Feature: Query migration and versioning
 
   Scenario: Migrate query for loans
     * def migrateRequest = { entityTypeId: '4e09d89a-44ed-418e-a9cc-820dfb27bf3a' , fqlQuery: '{\"return_date\": {\"$leq\":\"2024-01-01\"}}', fields : '[\"user_last_name\"]'}
-    Given path 'fqm/migrate'
+    Given path 'fqm', 'migrate'
     And request migrateRequest
     When method POST
     Then status 200
@@ -42,7 +42,7 @@ Feature: Query migration and versioning
 
   Scenario: Migrate queries with warning
     * def migrateRequest = { entityTypeId: '146dfba5-cdc9-45f5-a8a1-3fdc454c9ae2' , fqlQuery: '{\"loan_status\": {\"$ne\":\"zz\"}}', fields : '[\"loan_status\"]'}
-    Given path 'fqm/migrate'
+    Given path 'fqm', 'migrate'
     And request migrateRequest
     When method POST
     Then status 200

@@ -325,8 +325,8 @@ Feature: Setup quickMARC
     And param qmRecordId = recordId
     When method GET
     Then status 200
+    And retry until response.status == 'CREATED' || response.status == 'ERROR'
     And def recordId = response.externalId
-    And assert response.status == 'CREATED' || response.status == 'IN_PROGRESS'
     * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetRecordById') {recordId: '#(recordId)'}
 
   @Ignore #Util scenario

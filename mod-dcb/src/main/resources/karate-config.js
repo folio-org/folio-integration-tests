@@ -29,7 +29,7 @@ function fn() {
       loginRegularUser: karate.read('classpath:common/login.feature'),
       loginAdmin: karate.read('classpath:common/login.feature'),
       dev: karate.read('classpath:common/dev.feature'),
-      variables: karate.read('classpath:volaris/mod-dcb/eureka-global/variables.feature'),
+      variables: karate.read('classpath:volaris/mod-dcb/global/variables.feature'),
 
 // define global functions
     uuid: function () {
@@ -101,8 +101,10 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-volaris-okapi.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-volaris-2nd-okapi.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',
