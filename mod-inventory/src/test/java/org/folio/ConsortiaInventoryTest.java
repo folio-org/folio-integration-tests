@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
@@ -13,9 +13,8 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @FolioTest(team = "folijet", module = "mod-inventory")
-@Deprecated(forRemoval = true)
 @Disabled
-public class ConsortiaInventoryTest extends TestBase {
+public class ConsortiaInventoryTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:folijet/mod-inventory/features/consortia/";
 
   public ConsortiaInventoryTest() {
@@ -47,5 +46,9 @@ public class ConsortiaInventoryTest extends TestBase {
     System.setProperty("consortiumId", UUID.randomUUID().toString());
 
     System.setProperty("randomNumbers", String.valueOf(ThreadLocalRandom.current().nextLong(Long.MAX_VALUE)));
+
+    System.setProperty("centralTenantId", UUID.randomUUID().toString());
+    System.setProperty("collegeTenantId", UUID.randomUUID().toString());
+    System.setProperty("universityTenantId", UUID.randomUUID().toString());
   }
 }
