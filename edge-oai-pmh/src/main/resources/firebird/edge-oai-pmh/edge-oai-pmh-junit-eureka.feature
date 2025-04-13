@@ -58,8 +58,8 @@ Feature: mod-audit integration tests
       | 'marc-records-editor.item.get'                                                |
       | 'marc-records-editor.item.put'                                                |
 
-    * def testTenant = 'testoaipmh'
-    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+    * def testTenant = 'testoaipmh12'
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user12', password: 'test12' }
 
   Scenario: create tenant and users for testing
     * pause(5000)

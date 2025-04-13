@@ -6,7 +6,7 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant ="testoaipmh";
+  var testTenant ="testoaipmh12";
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
@@ -14,11 +14,11 @@ function fn() {
     edgeUrl: 'http://localhost:9701',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
-    apikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9',
+    apikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG0xMiIsInUiOiJ0ZXN0LXVzZXIxMiJ9',
     testTenant: 'testoaipmh',
     testTenantId: (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testUser: {tenant: testTenant, name: 'test-user12', password: 'test12'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -67,7 +67,7 @@ function fn() {
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG0xMiIsInUiOiJ0ZXN0LXVzZXIxMiJ9';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -76,7 +76,7 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG0xMiIsInUiOiJ0ZXN0LXVzZXIxMiJ9';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -85,7 +85,7 @@ function fn() {
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-dev-firebird-okapi.ci.folio.org';
     config.edgeUrl = 'https://folio-dev-firebird-edge.ci.folio.org';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG0xMiIsInUiOiJ0ZXN0LXVzZXIxMiJ9';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -97,11 +97,11 @@ function fn() {
       config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
       config.clientSecret = karate.properties['clientSecret'];
       config.edgeUrl = 'https://folio-edev-dojo-edge.ci.folio.org';
-      config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+      config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG0xMiIsInUiOiJ0ZXN0LXVzZXIxMiJ9';
   } else if(env == 'folio-testing-karate') {
       config.baseUrl = '${baseUrl}';
       config.edgeUrl = karate.properties['edgeUrl'] || 'https://folio-etesting-karate-eureka-edge.ci.folio.org'
-      config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+      config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG0xMiIsInUiOiJ0ZXN0LXVzZXIxMiJ9';
       config.admin = {
           tenant: '${admin.tenant}',
           name: '${admin.name}',
@@ -115,7 +115,7 @@ function fn() {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG0xMiIsInUiOiJ0ZXN0LXVzZXIxMiJ9';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',
