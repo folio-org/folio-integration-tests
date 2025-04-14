@@ -130,66 +130,7 @@ Feature: Create new tenant and upload test data
     Then status 201
 
   Scenario: Create authorities
-    * def personalAuthority = read(samplePath + 'authorities/personal-authority.json')
-    * def corporateAuthority = read(samplePath + 'authorities/corporate-authority.json')
-    * def meetingAuthority = read(samplePath + 'authorities/meeting-authority.json')
-    * def personalTitleAuthority = read(samplePath + 'authorities/personal-title-authority.json')
-    * def corporateTitleAuthority = read(samplePath + 'authorities/corporate-title-authority.json')
-    * def meetingTitleAuthority = read(samplePath + 'authorities/meeting-title-authority.json')
-    * def genreAuthority = read(samplePath + 'authorities/genre-authority.json')
-    * def geographicAuthority = read(samplePath + 'authorities/geographic-authority.json')
-    * def topicalAuthority = read(samplePath + 'authorities/topical-authority.json')
-    * def uniformAuthority = read(samplePath + 'authorities/uniform-authority.json')
-
-    Given path 'authority-storage/authorities'
-    And request personalAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request corporateAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request meetingAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request personalTitleAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request corporateTitleAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request meetingTitleAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request genreAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request geographicAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request topicalAuthority
-    When method POST
-    Then status 201
-
-    Given path 'authority-storage/authorities'
-    And request uniformAuthority
-    When method POST
-    Then status 201
+    * call read('create-authority.feature@CreateAuthority')
 
     Given path '/search/authorities'
     And param query = 'cql.allRecords=1'
@@ -201,7 +142,6 @@ Feature: Create new tenant and upload test data
     When method GET
     Then status 200
     And match response.totalRecords == 10
-
 
   Scenario: Link authority to an instance
     Given path '/links/instances/7e18b615-0e44-4307-ba78-76f3f447041c'

@@ -17,7 +17,7 @@ Feature: Tests that searches by facet
     When method GET
     Then status 200
     And def actualFacet = response.facets[facetPath]
-    Then match facetValues contains actualFacet.values[0]
+    Then match facetValues contains actualFacet.values
 
 
 #   ================= Instance test cases =================
@@ -91,7 +91,7 @@ Feature: Tests that searches by facet
   Scenario: Can search by statisticalCodes facet
     * def facetValues = []
     * def facetName = "statisticalCodes"
-    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 2)
+    * facetValues[0] = facet("f5f97be7-4803-496b-807e-ca013433953f", 2)
     * facetValues[1] = facet("b2c0e100-0485-43f2-b161-3c60aac9f68a", 2)
     * facetValues[2] = facet("3abd6fc2-b3e4-4879-b1e1-78be41769fe3", 1)
     * call read(searchFacet) {recordsType: 'instances'}
@@ -99,7 +99,7 @@ Feature: Tests that searches by facet
   Scenario: Can search by statisticalCodeIds facet
     * def facetValues = []
     * def facetName = "statisticalCodeIds"
-    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 1)
+    * facetValues[0] = facet("f5f97be7-4803-496b-807e-ca013433953f", 2)
     * facetValues[1] = facet("b2c0e100-0485-43f2-b161-3c60aac9f68a", 1)
     * call read(searchFacet) {recordsType: 'instances'}
 
@@ -129,7 +129,7 @@ Feature: Tests that searches by facet
   Scenario: Can search by holdings.statisticalCodeIds facet
     * def facetValues = []
     * def facetName = "holdings.statisticalCodeIds"
-    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 2)
+    * facetValues[0] = facet("f5f97be7-4803-496b-807e-ca013433953f", 2)
     * facetValues[1] = facet("3abd6fc2-b3e4-4879-b1e1-78be41769fe3", 1)
     * call read(searchFacet) {recordsType: 'instances'}
 
@@ -187,7 +187,7 @@ Feature: Tests that searches by facet
     * def facetValues = []
     * def facetName = "item.statisticalCodeIds"
     * def facetPath = "items.statisticalCodeIds"
-    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 1)
+    * facetValues[0] = facet("f5f97be7-4803-496b-807e-ca013433953f", 2)
     * facetValues[1] = facet("b2c0e100-0485-43f2-b161-3c60aac9f68a", 1)
     * call read(searchFacet) {recordsType: 'instances'}
 
@@ -234,7 +234,7 @@ Feature: Tests that searches by facet
   Scenario: Can search by items.statisticalCodeIds facet
     * def facetValues = []
     * def facetName = "items.statisticalCodeIds"
-    * facetValues[0] = facet("b5968c9e-cddc-4576-99e3-8e60aed8b0dd", 1)
+    * facetValues[0] = facet("f5f97be7-4803-496b-807e-ca013433953f", 2)
     * facetValues[1] = facet("b2c0e100-0485-43f2-b161-3c60aac9f68a", 1)
     * call read(searchFacet) {recordsType: 'instances'}
 
