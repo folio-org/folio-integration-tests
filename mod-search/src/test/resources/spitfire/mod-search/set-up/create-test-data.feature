@@ -141,16 +141,55 @@ Feature: Create new tenant and upload test data
     * def topicalAuthority = read(samplePath + 'authorities/topical-authority.json')
     * def uniformAuthority = read(samplePath + 'authorities/uniform-authority.json')
 
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(personalAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(corporateAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(meetingAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(personalTitleAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(corporateTitleAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(meetingTitleAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(genreAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(geographicAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(topicalAuthority)'}
-    * call read('create-authority.feature@CreateAuthority') {authorityDto: '#(uniformAuthority)'}
+    Given path 'authority-storage/authorities'
+    And request personalAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request corporateAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request meetingAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request personalTitleAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request corporateTitleAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request meetingTitleAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request genreAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request geographicAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request topicalAuthority
+    When method POST
+    Then status 201
+
+    Given path 'authority-storage/authorities'
+    And request uniformAuthority
+    When method POST
+    Then status 201
 
     Given path '/search/authorities'
     And param query = 'cql.allRecords=1'
@@ -162,6 +201,7 @@ Feature: Create new tenant and upload test data
     When method GET
     Then status 200
     And match response.totalRecords == 10
+
 
   Scenario: Link authority to an instance
     Given path '/links/instances/7e18b615-0e44-4307-ba78-76f3f447041c'
