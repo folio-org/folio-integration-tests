@@ -3,7 +3,7 @@ Feature: Source-Record-Storage
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
 
     * def samplesPath = 'classpath:folijet/mod-source-record-storage/features/samples/'
     * def snapshotPath = samplesPath + 'snapshot.json'

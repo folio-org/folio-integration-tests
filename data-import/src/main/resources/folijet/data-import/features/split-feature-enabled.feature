@@ -4,7 +4,7 @@ Feature: Check that the splitting feature is enabled
     * url baseUrl
 
     * callonce login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
   Scenario: Splitting feature should be enabled
     * print 'Splitting feature should be enabled'

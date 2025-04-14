@@ -3,7 +3,7 @@ Feature: Audit log for MARC Bib record changes
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
 
     * def samplesPath = 'classpath:firebird/mod-audit/features/samples/'
     * def snapshotPath = samplesPath + 'FAT-17478/snapshot.json'

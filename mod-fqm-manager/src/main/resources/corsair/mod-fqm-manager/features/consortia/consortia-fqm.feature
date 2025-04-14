@@ -1,6 +1,3 @@
-# Please refer to the following document to see test cases for 'mod-consortia':
-# https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
-
 Feature: mod-consortia and mod-fqm-manager integration tests
 
   Background:
@@ -8,56 +5,80 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     * callonce login admin
     * configure readTimeout = 600000
 
-    * table requiredModules
-      | name                                |
-      | 'mod-login'                         |
-      | 'mod-inventory'                     |
-      | 'mod-permissions'                   |
-      | 'okapi'                             |
-      | 'mod-users'                         |
-      | 'mod-inventory-storage'             |
-      | 'mod-circulation'                   |
-      | 'mod-circulation-storage'           |
-      | 'mod-finance'                       |
-      | 'mod-finance-storage'               |
-      | 'mod-orders'                        |
-      | 'mod-orders-storage'                |
-      | 'mod-organizations'                 |
-      | 'mod-organizations-storage'         |
+    * table modules
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-inventory'             |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-inventory-storage'     |
+      | 'mod-circulation'           |
+      | 'mod-circulation-storage'   |
+      | 'mod-finance'               |
+      | 'mod-fqm-manager'           |
+      | 'mod-finance-storage'       |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
 
+    * table userPermissions
+      | name                                                        |
+      | 'inventory.instances.item.get'                              |
+      | 'fqm.entityTypes.collection.get'                            |
+      | 'inventory-storage.call-number-types.collection.get'        |
+      | 'inventory-storage.classification-types.collection.get'     |
+      | 'inventory-storage.contributor-name-types.collection.get'   |
+      | 'inventory-storage.contributor-types.collection.get'        |
+      | 'inventory-storage.holdings-sources.item.post'              |
+      | 'inventory-storage.holdings.item.get'                       |
+      | 'inventory-storage.holdings.item.post'                      |
+      | 'inventory-storage.instance-date-types.collection.get'      |
+      | 'inventory-storage.instance-statuses.collection.get'        |
+      | 'inventory-storage.instance-formats.collection.get'         |
+      | 'inventory-storage.instance-types.collection.get'           |
+      | 'inventory-storage.instance-types.item.post'                |
+      | 'inventory-storage.instances.item.get'                      |
+      | 'inventory-storage.instances.item.post'                     |
+      | 'inventory-storage.items.item.get'                          |
+      | 'inventory-storage.items.item.post'                         |
+      | 'inventory-storage.loan-types.item.post'                    |
+      | 'inventory-storage.loan-types.collection.get'               |
+      | 'inventory-storage.location-units.campuses.item.post'       |
+      | 'inventory-storage.location-units.institutions.item.post'   |
+      | 'inventory-storage.location-units.libraries.collection.get' |
+      | 'inventory-storage.location-units.libraries.item.post'      |
+      | 'inventory-storage.locations.collection.get'                |
+      | 'inventory-storage.locations.item.post'                     |
+      | 'inventory-storage.material-types.collection.get'           |
+      | 'inventory-storage.material-types.item.post'                |
+      | 'inventory-storage.service-points.collection.get'           |
+      | 'inventory-storage.statistical-code-types.collection.get'   |
+      | 'inventory-storage.statistical-codes.collection.get'        |
+      | 'user-tenants.collection.get'                               |
+      | 'user-tenants.item.post'                                    |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'
 
     # generate test tenants' names
     * def random = callonce randomMillis
+    * def centralTenantId = uuid()
     * def centralTenant = 'central' + random
+    * def universityTenantId = uuid()
     * def universityTenant = 'university' + random
 
     # define users
     * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
 
-    * def centralUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'central_user1', password: 'central_user1_password', tenant: '#(centralTenant)'}
-    * def universityUser1 = { id: '334e5a9e-94f9-4673-8d1d-ab552863886b', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
+    * def universityUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
 
     # define custom login
-    * def login = 'util/initData.feature@Login'
+    * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
   Scenario: Create ['central', 'university'] tenants and set up admins
-    * call read('util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-    * eval java.lang.Thread.sleep(5000)
-
-    # add 'consortia.all' permission to 'consortiaAdmin'
-    # add 'tags.all' required for publish coordinator tests
-    * call read(login) consortiaAdmin
-    * call read('util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'inventory.instances.item.get', 'inventory-storage.all','fqm.entityTypes.collection.get']}
-
-
-    # add 'consortia.all' permission to 'universityUser1'
-    # add 'tags.all' required for publish coordinator tests
-    * call read(login) universityUser1
-    * call read('util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'inventory.instances.item.get', 'inventory-storage.all','fqm.entityTypes.collection.get']}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
 
   Scenario: Consortium api tests
     * call read('consortium.feature')
@@ -68,7 +89,6 @@ Feature: mod-consortia and mod-fqm-manager integration tests
   Scenario: Cross Tenant
     * call read('cross_tenant_et.feature')
 
-
   Scenario: Destroy created ['university', 'central'] tenants
-    * call read('util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}

@@ -3,8 +3,8 @@ Feature: Set for deletion logic
   Background:
     * url baseUrl
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
     * def commonImportFeature = 'classpath:folijet/data-import/global/common-data-import.feature'
     * def completeExecutionFeature = 'classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted'
@@ -163,7 +163,7 @@ Feature: Set for deletion logic
     # Verify instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET

@@ -9,7 +9,7 @@ Feature: Post a query
     * def queryId = $.queryId
     * def pollingAttempts = 0
     * def maxPollingAttempts = 3
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And retry until (pollingAttempts++ >= maxPollingAttempts || response.status == 'SUCCESS')
     When method GET
     Then status 200

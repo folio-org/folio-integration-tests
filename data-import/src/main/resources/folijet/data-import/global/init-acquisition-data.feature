@@ -2,10 +2,8 @@ Feature: init acquisitions data
 
   Background:
     * url baseUrl
-
-    * call login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
 
   Scenario: create organization
   Given path 'organizations-storage/organizations'

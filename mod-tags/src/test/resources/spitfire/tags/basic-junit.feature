@@ -9,9 +9,13 @@ Feature: mod-tags integration tests
       | 'mod-tags'        |
 
     * table userPermissions
-      | name       |
-      | 'tags.all' |
+      | name                  |
+      | 'tags.collection.get' |
+      | 'tags.item.delete'    |
+      | 'tags.item.get'       |
+      | 'tags.item.post'      |
+      | 'tags.item.put'       |
 
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')

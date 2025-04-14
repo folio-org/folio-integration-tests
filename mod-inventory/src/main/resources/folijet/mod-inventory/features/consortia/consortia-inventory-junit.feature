@@ -3,10 +3,10 @@ Feature: mod-inventory ECS tests
   Background:
     * url baseUrl
     * configure readTimeout = 600000
-    * call login admin
+    * callonce login admin
     * def samplesPath = 'classpath:folijet/mod-inventory/samples/'
 
-    * table requiredModules
+    * table modules
       | name                        |
       | 'okapi'                     |
       | 'mod-login'                 |
@@ -20,41 +20,53 @@ Feature: mod-inventory ECS tests
       | 'mod-entities-links'        |
       | 'folio-custom-fields'       |
 
+    * table userPermissions
+      | name                                                      |
+      | 'inventory-storage.hrid-settings.item.put'                |
+      | 'inventory-storage.service-points.item.post'              |
+      | 'inventory-storage.location-units.institutions.item.post' |
+      | 'inventory-storage.location-units.campuses.item.post'     |
+      | 'inventory-storage.location-units.libraries.item.post'    |
+      | 'inventory-storage.locations.item.post'                   |
+      | 'inventory-storage.holdings-sources.item.post'            |
+      | 'inventory-storage.holdings.item.post'                    |
+      | 'inventory.items.item.post'                               |
+      | 'inventory.instances.item.get'                            |
+      | 'inventory.holdings.update-ownership.item.post'           |
+      | 'inventory-storage.holdings.collection.get'               |
+      | 'inventory.items-by-holdings-id.collection.get'           |
+      | 'inventory.instances.item.post'                           |
+      | 'inventory-storage.bound-withs.collection.put'            |
+      | 'inventory.items.item.put'                                |
+      | 'inventory.items.update-ownership.item.post'              |
+
+
+
     # define custom login
-    * def login = read('classpath:common-consortia/initData.feature@Login')
+    * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
-
-    # Temporary fix, should be removed after implementing proper consortium data cache handling during install operation at mod-inventory-storage
-    * call pause 360000
-
-    # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
-    * call login consortiaAdmin
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
-
-    * call login universityUser1
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all', 'consortia.sharing-instances.item.post']}
-
-    * call login collegeUser1
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)'}
 
   Scenario: Create consortium and setup tenants
     * call login consortiaAdmin
-    * call read('classpath:common-consortia/consortium.feature@SetupConsortia')
+    * call read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia') { tenant: '#(centralTenant)' }
 
-    * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(centralTenant)', isCentral: true, code: 'ABC' }
-    * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(universityTenant)', isCentral: false, code: 'XYZ' }
-    * call read('classpath:common-consortia/consortium.feature@SetupTenantForConsortia') { tenant: '#(collegeTenant)', isCentral: false, code: 'BEE' }
+    * call read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia') { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'ABC' }
+    * call read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia') { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'XYZ' }
+    * call read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia') { tenant: '#(collegeTenant)', id: '#(collegeTenantId)', isCentral: false, code: 'BEE' }
 
   Scenario: Add affilitions
     * call login consortiaAdmin
-    * call read('classpath:common-consortia/affiliation.feature@AddAffiliation') { user: '#(universityUser1)', tenant: '#(collegeTenant)' }
+    * call read('classpath:common-consortia/eureka/affiliation.feature@AddAffiliation') { user: '#(universityUser1)', tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)'  }
 
+    * table notEmptyPermissinos
+      | name            |
+      | 'consortia.all' |
     # add non-empty permission to shadow 'centralUser1'
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { id: '#(universityUser1.id)', tenant: '#(collegeTenant)', desiredPermissions: ['consortia.all']}
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { id: '#(universityUser1.id)', tenant: '#(collegeTenant)', userPermissions: '#(notEmptyPermissinos)'}
 
   Scenario: Update hrId for all tenants
     * call login consortiaAdmin
@@ -84,13 +96,13 @@ Feature: mod-inventory ECS tests
     * def holdingsSource = read('classpath:folijet/mod-inventory/samples/holdings_source.json')
 
     * call login consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
-    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}
 
     * call login universityUser1
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
-    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}
 
     * call login collegeUser1
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
-    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}

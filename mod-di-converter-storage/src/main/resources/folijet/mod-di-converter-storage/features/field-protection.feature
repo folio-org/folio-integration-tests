@@ -2,13 +2,8 @@ Feature: Field protections
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
     * def setting = { "field" : "500", "indicator1" : "a", "indicator2" : "a", "subfield" : "1", "data" : "*", "source" : "USER", "override" : false }
     * def invalidSetting = { "invalidField" : "500", "indicator1" : "1", "indicator2" : "a", "subfield" : "1", "data" : "*", "source" : "USER", "override" : false }

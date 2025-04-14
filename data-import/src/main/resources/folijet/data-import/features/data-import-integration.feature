@@ -2,18 +2,9 @@ Feature: Data Import integration tests
 
   Background:
     * url baseUrl
-    # login every time, to prevent token expiry
-    # we do this after each pause too, for the same reason
-
-    * call login testAdmin
-    * def okapitokenAdmin = okapitoken
-
     * call login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
     * configure retry = { interval: 5000, count: 30 }
 
@@ -2153,7 +2144,7 @@ Feature: Data Import integration tests
     # Verify that needed entities created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -2240,7 +2231,7 @@ Feature: Data Import integration tests
     # Verify that needed entities created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -4687,7 +4678,7 @@ Feature: Data Import integration tests
     # Verify that needed entities updated
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
@@ -6080,7 +6071,7 @@ Feature: Data Import integration tests
     # Verify that needed entities updated
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
@@ -6694,7 +6685,7 @@ Feature: Data Import integration tests
     # Verify that needed entities created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -6722,7 +6713,7 @@ Feature: Data Import integration tests
      # Verify that needed entities updated
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -6742,7 +6733,7 @@ Feature: Data Import integration tests
     # Verify updated item record
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/item-storage/items'
     And headers headersUser
     And param query = 'administrativeNotes==["Updated item"]'
@@ -7081,7 +7072,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7103,7 +7094,7 @@ Feature: Data Import integration tests
     # Verify create holdings record correct mapping
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -7420,7 +7411,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7431,7 +7422,7 @@ Feature: Data Import integration tests
     # Verify create holdings record correct mapping
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -7465,7 +7456,7 @@ Feature: Data Import integration tests
     # Verify instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7838,7 +7829,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7860,7 +7851,7 @@ Feature: Data Import integration tests
     # Verify create holdings record correct mapping
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -7895,7 +7886,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7906,7 +7897,7 @@ Feature: Data Import integration tests
     # Verify update holdings record correct mapping
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -7941,7 +7932,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7952,7 +7943,7 @@ Feature: Data Import integration tests
     # Verify update holdings record correct mapping
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -7987,7 +7978,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -7998,7 +7989,7 @@ Feature: Data Import integration tests
     # Verify update holdings record correct mapping
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
     And headers headersUser
     And param query = 'hrid==' + holdingHrid
@@ -8239,7 +8230,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -8264,7 +8255,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -8338,7 +8329,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -8442,7 +8433,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -8815,7 +8806,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -8876,7 +8867,7 @@ Feature: Data Import integration tests
     # Verify that needed entities updated
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
@@ -9368,7 +9359,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -9903,7 +9894,7 @@ Feature: Data Import integration tests
     # Verify instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -9951,6 +9942,7 @@ Feature: Data Import integration tests
     * def sourcePath = result.response.fileDefinitions[0].sourcePath
     * url baseUrl
 
+
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And headers headersUser
@@ -9982,7 +9974,7 @@ Feature: Data Import integration tests
     # Verify that needed entities updated
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
@@ -10207,7 +10199,7 @@ Feature: Data Import integration tests
     # Verify instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -10287,7 +10279,7 @@ Feature: Data Import integration tests
     # Verify that needed entities updated
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
@@ -10512,7 +10504,7 @@ Feature: Data Import integration tests
     # Verify instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -10556,7 +10548,7 @@ Feature: Data Import integration tests
     # Verify second instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -10631,7 +10623,7 @@ Feature: Data Import integration tests
     # Verify that needed entities discarded on update
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
@@ -10899,7 +10891,7 @@ Feature: Data Import integration tests
     # Verify instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -10959,7 +10951,7 @@ Feature: Data Import integration tests
     # Verify second instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -11034,7 +11026,7 @@ Feature: Data Import integration tests
     # Verify that needed entities updated
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
@@ -11160,7 +11152,7 @@ Feature: Data Import integration tests
 
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -11386,7 +11378,7 @@ Feature: Data Import integration tests
     # Verify instance created
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
     When method GET
@@ -11466,7 +11458,7 @@ Feature: Data Import integration tests
     # Verify that needed entities updated
     * call pause 10000
     * call login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
     And retry until response.entries[0].relatedInstanceInfo.actionStatus != null

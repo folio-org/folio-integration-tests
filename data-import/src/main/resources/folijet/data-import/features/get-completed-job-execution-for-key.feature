@@ -1,11 +1,8 @@
 Feature: Get job execution by S3 key with retries (maps to job execution)
 
   Background:
-    # do this again since, while waiting, the access token can time out :(
     * call login testUser
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * url baseUrl
     * configure retry = { interval: 2000, count: 30 }
 

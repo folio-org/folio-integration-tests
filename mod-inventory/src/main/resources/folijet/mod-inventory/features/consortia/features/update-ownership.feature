@@ -2,7 +2,7 @@ Feature: Updating ownership of holdings and item api tests
 
   Background:
     * url baseUrl
-    * def login = read('classpath:common-consortia/initData.feature@Login')
+    * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
     * call login consortiaAdmin
     * def headersConsortia = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
@@ -22,21 +22,21 @@ Feature: Updating ownership of holdings and item api tests
     # Create local Instance on University.
     * configure headers = headersUniversity
 
-    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance', testTenant: '#(universityTenant)' }
     And def instanceId = instance.id
 
     # Add 2 Holdings for Instance
-    Given def holdings1 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings1 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId1 = holdings1.id
 
-    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId2 = holdings2.id
 
     # Create an Item for each of the Holdings
-    Given def item1 = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)' }
+    Given def item1 = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)', testTenant: '#(universityTenant)' }
     And def itemsId1 = item1.id
 
-    Given def item2 = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId2)' }
+    Given def item2 = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId2)', testTenant: '#(universityTenant)' }
     And def itemsId2 = item2.id
 
     # Sharing instance
@@ -59,6 +59,7 @@ Feature: Updating ownership of holdings and item api tests
     And def sharingInstanceId = response.id
 
     # Verify status is 'COMPLETE'
+    * configure retry = { count: 40, interval: 10000 }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenant
@@ -142,21 +143,21 @@ Feature: Updating ownership of holdings and item api tests
     # Create local Instance on University.
     * configure headers = headersUniversity
 
-    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance', testTenant: '#(universityTenant)' }
     And def instanceId = instance.id
 
     # Add 2 Holdings for Instance
-    Given def holdings1 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings1 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId1 = holdings1.id
 
-    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId2 = holdings2.id
 
     # Create an Item for each of the Holdings
-    Given def item1 = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)' }
+    Given def item1 = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)', testTenant: '#(universityTenant)' }
     And def itemsId1 = item1.id
 
-    Given def item2 = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId2)' }
+    Given def item2 = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId2)', testTenant: '#(universityTenant)' }
     And def itemsId2 = item2.id
 
     # Sharing instance
@@ -204,7 +205,7 @@ Feature: Updating ownership of holdings and item api tests
     # Create Holding for shared instance on Colleage tenant
     * configure headers = headersCollege
 
-    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(collegeTenant)' }
     And def collegeHoldingsId = holdings2.id
 
     # Verify shadow instance is created in college tenant with source = 'CONSORTIUM-FOLIO'
@@ -287,7 +288,7 @@ Feature: Updating ownership of holdings and item api tests
     # Create local Instance on University.
     * configure headers = headersUniversity
 
-    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance', testTenant: '#(universityTenant)' }
     And def instanceId = instance.id
     And def instanceTitle = instance.title
 
@@ -297,20 +298,20 @@ Feature: Updating ownership of holdings and item api tests
     And def instanceHrId = response.hrid
 
     # Add first Holding for Instance
-    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId1 = holdings.id
 
     # Add second Holding for Instance
-    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId2 = holdings.id
     And def holdingsHrId2 = holdings.hrid
 
     # Add third Holding for Instance
-    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId3 = holdings.id
 
     # Create an Item for the Holding
-    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)' }
+    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)', testTenant: '#(universityTenant)' }
     And def item = itemRequest.response
     And def itemsId = item.id
 
@@ -437,7 +438,7 @@ Feature: Updating ownership of holdings and item api tests
     # Create local Instance on University.
     * configure headers = headersUniversity
 
-    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance', testTenant: '#(universityTenant)' }
     And def instanceId = instance.id
     And def instanceTitle = instance.title
 
@@ -447,21 +448,21 @@ Feature: Updating ownership of holdings and item api tests
     And def instanceHrId = response.hrid
 
     # Add first Holding for Instance
-    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId1 = holdings.id
 
     # Add second Holding for Instance
-    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId2 = holdings.id
     And def holdingsHrId2 = holdings.hrid
 
     # Create first Item for of the Holding
-    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)' }
+    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)', testTenant: '#(universityTenant)' }
     And def item1 = itemRequest.response
     And def itemsId1 = item1.id
 
     # Create second Item for of the Holding
-    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)' }
+    Given def itemRequest = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId1)', testTenant: '#(universityTenant)' }
     And def item2 = itemRequest.response
     And def itemsId2 = item2.id
 
@@ -544,7 +545,7 @@ Feature: Updating ownership of holdings and item api tests
     # Create Holding for shared instance on Colleage tenant
     * configure headers = headersCollege
 
-    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings2 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(collegeTenant)' }
     And def collegeHoldingsId = holdings2.id
 
     # Verify shadow instance is created in college tenant with source = 'CONSORTIUM-FOLIO'
@@ -641,11 +642,11 @@ Feature: Updating ownership of holdings and item api tests
   Scenario: Test changing holding ownership request with not shared instance
     * configure headers = headersUniversity
 
-    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance', testTenant: '#(universityTenant)' }
     And def instanceId = instance.id
 
     # Add 2 Holdings for Instance
-    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(universityTenant)' }
     And def holdingsId = holdings.id
 
     * def errorMessage = "Instance with id: " + instanceId + " is not shared"
@@ -667,11 +668,11 @@ Feature: Updating ownership of holdings and item api tests
   Scenario: Test changing item ownership request with holdingsRecord related to not shared instance
     * configure headers = headersCollege
 
-    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance', testTenant: '#(collegeTenant)' }
     And def instanceId = instance.id
 
     # Add 2 Holdings for Instance
-    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)' }
+    Given def holdings = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId)', testTenant: '#(collegeTenant)' }
     And def holdingsId = holdings.id
 
     * def nonExistentItem = uuid()

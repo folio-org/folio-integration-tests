@@ -3,11 +3,11 @@ Feature: Scenarios that are primarily focused around refreshing lists
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
   Scenario: Post list refresh should fail if list is already refreshing
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -25,7 +25,7 @@ Feature: Scenarios that are primarily focused around refreshing lists
     Then status 204
 
   Scenario: Post list refresh should fail for inactive list
-    * def listRequest = read('samples/private-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/private-list-request.json')
     * listRequest.isActive = 'false'
     * def postCall = call postList
     * def listId = postCall.listId
@@ -35,7 +35,7 @@ Feature: Scenarios that are primarily focused around refreshing lists
     Then status 400
 
   Scenario: Cancel a refresh
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -59,10 +59,10 @@ Feature: Scenarios that are primarily focused around refreshing lists
     And match $.inProgressRefresh == '#notpresent'
 
   Scenario: Add record, refresh list, see that refresh count has increased. Remove record and see that count decreased again
-    * def userRequest = read('samples/user-request.json')
+    * def userRequest = read('classpath:corsair/mod-lists/features/samples/user-request.json')
     * userRequest.id = '00000000-1111-2222-9999-44444444444'
     * userRequest.username = 'integration_test_user_789'
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * listRequest.fqlQuery = '{\"$and\": [{\"users.username\" : {\"$regex\": \"integration_test_user\"}}]}'
     Given path 'lists'
     And request listRequest

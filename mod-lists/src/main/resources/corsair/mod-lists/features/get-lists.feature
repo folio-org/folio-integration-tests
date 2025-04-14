@@ -3,7 +3,7 @@ Feature: Scenarios that are primarily focused around getting list details
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
     * def itemListId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
     * def loanListId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
@@ -40,7 +40,7 @@ Feature: Scenarios that are primarily focused around getting list details
     * assert totalRecords >= 2
 
   Scenario: Get all lists for tenant with private query parameter
-    * def listRequest = read('samples/private-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/private-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
     * def parameters = {private: true}
@@ -52,7 +52,7 @@ Feature: Scenarios that are primarily focused around getting list details
     And match $.content[0].isPrivate == true
 
   Scenario: Get all lists for tenant with active query parameter
-    * def listRequest = read('samples/private-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/private-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
     * def parameters = {active: true}

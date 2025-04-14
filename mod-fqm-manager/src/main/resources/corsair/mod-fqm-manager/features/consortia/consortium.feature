@@ -2,7 +2,7 @@ Feature: Consortium object in mod-consortia api tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * call login consortiaAdmin
     * configure retry = { count: 10, interval: 20000 }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
@@ -15,4 +15,3 @@ Feature: Consortium object in mod-consortia api tests
     And retry until responseStatus == 201
     When method POST
     And match response == { id: '#(consortiumId)', name: '#(consortiumName)' }
-

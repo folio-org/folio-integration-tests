@@ -2,14 +2,12 @@ Feature: File extensions
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * configure headers = headersUser
 
   Scenario: Get non-existent file extension

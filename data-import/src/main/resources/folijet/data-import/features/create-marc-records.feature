@@ -2,11 +2,8 @@ Feature: Create marc records
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
 
   Scenario: Create MARC Authority via Data Import

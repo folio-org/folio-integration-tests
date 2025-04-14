@@ -62,6 +62,7 @@ Feature: setup tenant
   Scenario: Post tenant, enable all required modules, and setup admin
     * def description = 'tenant_description'
 
+    * def oldModules = modules
     * def modules = modules.concat(requiredModulesForConsortia)
     * def oldPermissions = (typeof userPermissions !== 'undefined') ? userPermissions : []
     * def userPermissions = requiredCapabilitiesForConsortia.concat(oldPermissions)
@@ -81,3 +82,4 @@ Feature: setup tenant
     * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') {tenant: '#(tenant)', user: '#(user)', userPermissions: '#(userPermissions)'}
 
     * def userPermissions = oldPermissions
+    * def modules = oldModules
