@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "folijet", module = "mod-di-converter-storage")
-@Disabled
+@Disabled("Migrated to Eureka")
 public class ModDataImportConverterStorageTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:folijet/mod-di-converter-storage/features/";
 

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "folijet", module = "mod-inventory")
-@Disabled
+@Disabled("Migrated to Eureka")
 public class ModInventoryTests extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:folijet/mod-inventory/features/";
 

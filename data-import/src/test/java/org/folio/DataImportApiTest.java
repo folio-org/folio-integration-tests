@@ -14,7 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @FolioTest(team = "folijet", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Disabled
+@Disabled("Migrated to Eureka")
 class DataImportApiTest extends TestBase {
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 

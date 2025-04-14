@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "folijet", module = "mod-source-record-manager")
-@Disabled
+@Disabled("Migrated to Eureka")
 public class ModSourceRecordManagerTest extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:folijet/mod-source-record-manager/features/";
 
