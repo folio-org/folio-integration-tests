@@ -121,7 +121,7 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-  } else if (env == 'dev-rancher') {
+  } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org'
     config.prototypeTenant = 'consortium';
     config.admin = {
@@ -131,6 +131,8 @@ function fn() {
     }
     config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org'
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+  } else if (env == 'dev') {
+    config.checkDepsDuringModInstall = 'false'
   }
   return config;
 }
