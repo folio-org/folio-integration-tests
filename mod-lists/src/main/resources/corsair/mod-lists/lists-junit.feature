@@ -57,7 +57,7 @@ Feature: mod-lists integration tests
     * eval java.lang.System.setProperty('testUser1Id', karate.get('userId'))
 
   Scenario: Add sample data for queries
-    Given call read('classpath:corsair/mod-lists/eureka-features/util/add-list-data.feature')
+    Given call read('classpath:corsair/mod-lists/features/util/add-list-data.feature')
 
   Scenario: create second user for testing
     * def testUserName = testUser.name
