@@ -2,15 +2,8 @@ Feature: Job Profiles
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
-    * configure headers = headersUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
   Scenario: Get all profiles
     Given path 'data-import-profiles', 'jobProfiles'
@@ -195,7 +188,6 @@ Feature: Job Profiles
 
     ## Create MARC-to-MARC mapping profile
     Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
     And request
     """
     {
@@ -245,7 +237,6 @@ Feature: Job Profiles
 
     ## Create action profile for modify MARC bib
     Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
     And request
     """
     {
@@ -404,7 +395,6 @@ Feature: Job Profiles
 
     ## Create job profile
     Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
     And request
     """
     {
@@ -705,7 +695,6 @@ Feature: Job Profiles
     # Create job profile
     * def jobProfileName = "FAT-13630_1: Job profile create"
     Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -727,7 +716,6 @@ Feature: Job Profiles
     * print 'Create Job profile with match profile which does not contain any action profiles'
     # Create match profile for MARC-to-MARC 010$z field to 010$z field
     Given path 'data-import-profiles/matchProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -799,7 +787,6 @@ Feature: Job Profiles
      # Create job profile
     * def jobProfileUpdateName = "FAT-13630_2: Job profile"
     Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -826,7 +813,6 @@ Feature: Job Profiles
 
   Scenario: FAT-13630_3 Validation Update Job Profile remove action profile from match profile
     Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -876,7 +862,6 @@ Feature: Job Profiles
 
     # Create action profile for UPDATE Instance
     Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -903,7 +888,6 @@ Feature: Job Profiles
 
     # Create match profile for MARC-to-INSTANCE 010 field to cancelled LCCN
     Given path 'data-import-profiles/matchProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -963,7 +947,6 @@ Feature: Job Profiles
     # Create job profile
     * def jobProfileUpdateName = "FAT-13630_3: Job profile"
     Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -1001,7 +984,6 @@ Feature: Job Profiles
     # Update job profile
     * print 'Update Job profile with remove action profile'
     Given path 'data-import-profiles/jobProfiles', updateJobProfileId
-    And headers headersUser
     And request
     """
     {
@@ -1028,7 +1010,6 @@ Feature: Job Profiles
 
   Scenario: FAT-13630_4 Validation of Job Profiles without actions
     Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -1078,7 +1059,6 @@ Feature: Job Profiles
 
     # Create action profile for UPDATE Instance
     Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -1107,7 +1087,6 @@ Feature: Job Profiles
     * print 'Create Job profile with action profile'
     * def jobProfileName = "FAT-13630_4: Job profile"
     Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -1133,7 +1112,6 @@ Feature: Job Profiles
     # Update job profile
     * print 'Update Job profile with remove action profile'
     Given path 'data-import-profiles/jobProfiles', updateJobProfileId
-    And headers headersUser
     And request
     """
     {
@@ -1180,7 +1158,6 @@ Feature: Job Profiles
     * def matchProfileId = $.id
 
     Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -1199,7 +1176,6 @@ Feature: Job Profiles
     * def marcToMarcMappingProfileId = $.id
 
     Given path 'data-import-profiles/mappingProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -1219,7 +1195,6 @@ Feature: Job Profiles
 
     # Create action profile for UPDATE Instance
     Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -1246,7 +1221,6 @@ Feature: Job Profiles
 
     # Create action profile for UPDATE MARC
     Given path 'data-import-profiles/actionProfiles'
-    And headers headersUser
     And request
       """
       {
@@ -1274,7 +1248,6 @@ Feature: Job Profiles
     # Create job profile
     * print 'Create Job profile with action profile'
     Given path 'data-import-profiles/jobProfiles'
-    And headers headersUser
     And request
       """
       {

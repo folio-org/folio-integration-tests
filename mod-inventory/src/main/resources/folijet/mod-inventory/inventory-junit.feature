@@ -12,46 +12,37 @@ Feature: mod-inventory integration tests
       | 'mod-inventory-storage'     |
 
     * table userPermissions
-      | name                                                            |
-      | 'source-storage.stream.marc-record-identifiers.collection.post' |
-      | 'source-storage.records.collection.get'                         |
-      | 'source-storage.records.item.get'                               |
-      | 'source-storage.records.formatted.item.get'                     |
-      | 'source-storage.stream.records.collection.get'                  |
-      | 'source-storage.records.matching.collection.post'               |
-      | 'inventory.items.item.post'                                     |
-      | 'inventory.items.move.item.post'                                |
-      | 'inventory.instances.item.get'                                  |
-      | 'inventory.instances.item.post'                                 |
-      | 'inventory.instances.item.put'                                  |
-      | 'inventory.instances.collection.get'                            |
-      | 'inventory.holdings.move.item.post'                             |
-      | 'inventory.items-by-holdings-id.collection.get'                 |
-      | 'inventory-storage.holdings.item.post'                          |
-      | 'inventory-storage.holdings.item.delete'                        |
-      | 'inventory-storage.service-points.item.post'                    |
-      | 'inventory-storage.location-units.campuses.item.post'           |
-      | 'inventory-storage.location-units.institutions.item.post'       |
-      | 'inventory-storage.location-units.libraries.item.post'          |
-      | 'inventory-storage.locations.item.post'                         |
-      | 'inventory-storage.holdings-sources.item.post'                  |
-      | 'source-storage.snapshots.post'                                 |
-      | 'source-storage.records.post'                                   |
-      | 'inventory.holdings.update-ownership.item.post'                 |
-      | 'inventory.items.update-ownership.item.post'                    |
-      | 'user-tenants.collection.get'                                   |
+      | name                                                      |
+      | 'source-storage.records.item.get'                         |
+      | 'inventory.items.item.post'                               |
+      | 'inventory.items.move.item.post'                          |
+      | 'inventory.instances.item.get'                            |
+      | 'inventory.instances.item.post'                           |
+      | 'inventory.instances.item.delete'                         |
+      | 'inventory.holdings.move.item.post'                       |
+      | 'inventory-storage.holdings.item.post'                    |
+      | 'inventory-storage.holdings.item.delete'                  |
+      | 'inventory-storage.service-points.item.post'              |
+      | 'inventory-storage.location-units.campuses.item.post'     |
+      | 'inventory-storage.location-units.institutions.item.post' |
+      | 'inventory-storage.location-units.libraries.item.post'    |
+      | 'inventory-storage.locations.item.post'                   |
+      | 'inventory-storage.holdings-sources.item.post'            |
+      | 'source-storage.snapshots.post'                           |
+      | 'source-storage.records.post'                             |
+      | 'inventory.holdings.update-ownership.item.post'           |
+      | 'inventory.items.update-ownership.item.post'              |
+      | 'inventory.instances.item.put'                            |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: create locations
     Given call read('classpath:folijet/mod-inventory/features/locations.feature')
 
   Scenario: create holdings source type
-    * def testUser = karate.get('testUser')
-    * print testUser
     * callonce login testUser
-    * configure headers = { 'x-okapi-tenant':'#(testUser.tenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'x-okapi-tenant':'#(testUser.tenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
 
     * def holdingsSource =
       """
@@ -61,4 +52,4 @@ Feature: mod-inventory integration tests
         "source": "folio"
       }
       """
-    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
+    * call read('classpath:folijet/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}

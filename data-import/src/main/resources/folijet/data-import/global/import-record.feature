@@ -2,11 +2,8 @@ Feature: Util feature to import records
 
   Background:
     * url baseUrl
-
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
-
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure retry = { count: 30, interval: 5000 }
-
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
   ## Util scenario accept fileName and jobName
@@ -22,7 +19,6 @@ Feature: Util feature to import records
     # Initiate data import job
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And param defaultMapping = false
-    And headers headersUser
     And request read(samplePath + 'jobs/' + jobName)
     When method post
     Then status 204

@@ -3,7 +3,7 @@ Feature: Source-Record-Storage
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * def marc_bib_rules = read('classpath:samples/marc-bib.json')
     * def marc_holdings_rules = read('classpath:samples/marc-holdings.json')
     * def marc_authority_rules = read('classpath:samples/marc-authority.json')

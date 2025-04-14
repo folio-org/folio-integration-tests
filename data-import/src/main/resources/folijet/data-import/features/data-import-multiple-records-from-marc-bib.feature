@@ -5,15 +5,12 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
   Background:
     * url baseUrl
     * def entitiesIdMap = {}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
   @importMultipleHoldingsAndItems
   Scenario: Import Holdings, Items. Based on FAT-4834 scenario steps.
@@ -154,7 +151,7 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
 
     # get default create instance action profile
     Given path 'data-import-profiles', 'actionProfiles'
-    And headers headersAdmin
+    And headers headersUser
     And param query = 'name=="Default - Create instance"'
     When method GET
     Then status 200
@@ -227,7 +224,7 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
     And request
     """
     {
-      "uploadDefinition": #(result.uploadDefinition),
+      "uploadDefinition": '#(result.uploadDefinition)',
       "jobProfileInfo": {
         "id": "#(jobProfileId)",
         "name": "#(profileName)",

@@ -2,14 +2,11 @@ Feature: Test import with match on identifier and identifier type
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
     * configure retry = { interval: 15000, count: 10 }
     * def marcFilesFolderPath = 'classpath:folijet/data-import/samples/mrc-files/'

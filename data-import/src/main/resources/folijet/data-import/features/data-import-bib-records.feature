@@ -4,10 +4,10 @@ Feature: Test Data-Import bib records
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json' }
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
