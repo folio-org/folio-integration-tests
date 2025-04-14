@@ -442,6 +442,9 @@ public class OrdersApiTest extends TestBase {
     runFeatureTest("change-pending-distribution-with-inactive-budget.feature");
   }
 
+  @Test
+  void unlinkTitle() {runFeatureTest("unlink-title.feature");}
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
