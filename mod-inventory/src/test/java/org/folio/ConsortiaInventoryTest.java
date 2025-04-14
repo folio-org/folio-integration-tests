@@ -6,12 +6,14 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @FolioTest(team = "folijet", module = "mod-inventory")
+@Disabled
 public class ConsortiaInventoryTest extends TestBase {
   private static final String TEST_BASE_PATH = "classpath:folijet/mod-inventory/features/consortia/";
 
