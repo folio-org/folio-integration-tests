@@ -29,19 +29,6 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-
-    isTokenExpired: function (token) {
-      var base64Url = token.split('.')[1];
-      var base64Str = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var Base64 = Java.type('java.util.Base64');
-      var decodedBytes = Base64.getDecoder().decode(base64Str);
-      var decodedString = new java.lang.String(decodedBytes, 'UTF-8');
-      var payload = JSON.parse(decodedString);
-      const expirationTime = payload.exp * 1000;
-      const currentTime = Date.now();
-      return currentTime > expirationTime;
-    },
-
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
@@ -66,13 +53,6 @@ function fn() {
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
-    },
-
-    orWhereQuery: function(field, values) {
-      var orStr = ' or ';
-      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
-
-      return string;
     }
   };
 
@@ -85,24 +65,14 @@ function fn() {
   karate.repeat(100, rand);
 
   if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-  } else if(env == 'eureka') {
-    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-    config.clientSecret = karate.properties['clientSecret'];
-  } else if(env == 'folio-testing-karate') {
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
@@ -115,18 +85,6 @@ function fn() {
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if(env == 'dev') {
     config.checkDepsDuringModInstall = 'false'
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
   }
-
-  // uncomment to run on local
-  // karate.callSingle('classpath:vega/mod-circulation/global/add-okapi-permissions.feature', config);
-
   return config;
 }

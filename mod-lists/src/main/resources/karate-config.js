@@ -21,6 +21,7 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testUser2: {tenant: testTenant, name: 'test-user-2', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -67,30 +68,14 @@ function fn() {
   }
   karate.repeat(100, rand);
 
-  if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-  } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-  } else if(env == 'eureka') {
-    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-    config.clientSecret = karate.properties['clientSecret'];
-
-    config.postList = karate.read('classpath:corsair/mod-lists/eureka-features/util/post-list.feature');
-    config.updateList = karate.read('classpath:corsair/mod-lists/eureka-features/util/update-list.feature');
-    config.refreshList = karate.read('classpath:corsair/mod-lists/eureka-features/util/refresh-list.feature');
-    config.cancelRefresh = karate.read('classpath:corsair/mod-lists/eureka-features/util/cancel-refresh.feature');
-    config.testUser2 = {tenant: testTenant, name: config.testUser.name + '-2', password: 'test'}
+  if (env == 'snapshot') {
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+  } else if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -102,28 +87,16 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-
-    config.postList = karate.read('classpath:corsair/mod-lists/eureka-features/util/post-list.feature');
-    config.updateList = karate.read('classpath:corsair/mod-lists/eureka-features/util/update-list.feature');
-    config.refreshList = karate.read('classpath:corsair/mod-lists/eureka-features/util/refresh-list.feature');
-    config.cancelRefresh = karate.read('classpath:corsair/mod-lists/eureka-features/util/cancel-refresh.feature');
-    config.testUser2 = {tenant: testTenant, name: config.testUser.name + '-2', password: 'test'}
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-perf-corsair-okapi.ci.folio.org:443';
+    config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org:443';
     config.admin = {
-      tenant: 'fs09000000',
-      name: 'admin',
-      password: 'bugfest09'
-    };
-    config.prototypeTenant = 'fs09000000';
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
-    }
+    };
+    config.prototypeTenant = 'diku';
+    config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   }
   return config;
 }

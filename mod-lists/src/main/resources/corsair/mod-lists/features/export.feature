@@ -3,12 +3,12 @@ Feature: Scenarios that are primarily focused around exporting list data
   Background:
     * url baseUrl
     * callonce login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
     * def loanListId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
 
   Scenario: Test export list
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -54,7 +54,7 @@ Feature: Scenarios that are primarily focused around exporting list data
     And match $.code == '#present'
 
   Scenario: Export should fail if list is refreshing
-    * def listRequest = read('samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
     * def postCall = call postList
     * def listId = postCall.listId
 

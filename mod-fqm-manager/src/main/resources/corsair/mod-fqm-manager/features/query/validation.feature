@@ -2,7 +2,7 @@ Feature: Query validation
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
 
   Scenario: Post query with invalid fql query should return 400 error
@@ -29,6 +29,6 @@ Feature: Query validation
 
   Scenario: Get query with invalid queryId should return '404 Not Found' Response
     * def invalidId = call uuid1
-    Given path 'query/' + invalidId
+    Given path 'query', invalidId
     When method GET
     Then status 404

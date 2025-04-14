@@ -3,7 +3,7 @@ Feature: automate fee/fines
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)','Accept': 'application/json, text/plain' }
     * def mockLoanId = call uuid1
     * def userId = call uuid1
     * def groupId = call uuid1
@@ -129,6 +129,7 @@ Feature: automate fee/fines
 
     * def lostItemFeePolicyEntityRequest = read('samples/policies/lost-item-fee-policy-entity-request.json')
     Given path 'lost-item-fees-policies'
+    * lostItemFeePolicyEntityRequest.name='otherName'
     And request lostItemFeePolicyEntityRequest
     When method POST
     Then status 201

@@ -2,8 +2,8 @@ Feature: Create item and checkout
 
   Background:
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)','Accept': 'application/json, text/plain' }
     * def permanentLoanTypeId = call uuid1
     * def temporaryLoanTypeId = call uuid1
     * def temporaryLocationId = call uuid1

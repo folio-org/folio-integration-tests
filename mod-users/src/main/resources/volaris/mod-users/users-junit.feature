@@ -27,4 +27,4 @@ Feature: mod-users integration tests
       | 'users.collection.delete'                                      |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')

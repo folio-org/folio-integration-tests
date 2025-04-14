@@ -3,7 +3,7 @@ Feature: Entity types
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def simpleLocationsEntityTypeId = '74ddf1a6-19e0-4d63-baf0-cd2da9a46ca4'
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
     * def loanEntityTypeId = 'd6729885-f2fb-4dc7-b7d0-a865a7f461e4'
@@ -81,7 +81,7 @@ Feature: Entity types
     Then status 400
 
   Scenario: Get simple entity type for a valid id
-    Given path 'entity-types/' + simpleLocationsEntityTypeId
+    Given path 'entity-types', simpleLocationsEntityTypeId
     When method GET
     Then status 200
     And match $.id == simpleLocationsEntityTypeId
@@ -90,7 +90,7 @@ Feature: Entity types
     And match $.defaultSort == '#present'
 
   Scenario: Get complex entity type for a valid id
-    Given path 'entity-types/' + itemEntityTypeId
+    Given path 'entity-types', itemEntityTypeId
     When method GET
     Then status 200
     And match $.id == itemEntityTypeId
@@ -100,12 +100,12 @@ Feature: Entity types
 
   Scenario: Get entity type for an invalid id should return '404 Not Found'
     * def invalidId = call uuid1
-    Given path 'entity-types/' + invalidId
+    Given path 'entity-types', invalidId
     When method GET
     Then status 404
 
   Scenario: Get details for entity-type providing entity-type-id
-    Given path 'entity-types/' + loanEntityTypeId
+    Given path 'entity-types', loanEntityTypeId
     When method GET
     Then status 200
     And match $.id == loanEntityTypeId
@@ -116,20 +116,20 @@ Feature: Entity types
     And match $.columns[*].source[*].columnName == '#present'
 
   Scenario: Get column value for an entity-type
-    Given path 'entity-types/' + locationsEntityTypeId
+    Given path 'entity-types', locationsEntityTypeId
     When method GET
     Then status 200
     And match $.id == locationsEntityTypeId
     And match $.name == 'simple_location'
     And match $.labelAlias == 'Locations'
     And match $.columns == '#present'
-    Given path 'entity-types/' + locationsEntityTypeId + '/columns/name/values'
+    Given path 'entity-types', locationsEntityTypeId, 'columns', 'name', 'values'
     When method GET
     Then status 200
     And match $.content[0].value == '#present'
 
   Scenario: Get column values for instance.languages
-    Given path 'entity-types/' + instanceEntityTypeId + '/columns/instance.languages/values'
+    Given path 'entity-types', instanceEntityTypeId, 'columns', 'instance.languages', 'values'
     When method GET
     Then status 200
     And match $.content[0].value == '#present'
@@ -137,7 +137,7 @@ Feature: Entity types
   Scenario: Get column name and value with search parameter
     * def columnName = 'name'
     * def parameter  = {search: 'Location'}
-    Given path 'entity-types/' + locationsEntityTypeId + '/columns/' + columnName + '/values'
+    Given path 'entity-types', locationsEntityTypeId, 'columns', columnName, 'values'
     And params parameter
     When method GET
     Then status 200
@@ -146,19 +146,19 @@ Feature: Entity types
 
   Scenario: Get column name and value microservice for invalid column name should return '404 Not Found' Response
     * def columnName  = 'invalid_column_name'
-    Given path 'entity-types/' + loanEntityTypeId + '/columns/' + columnName + '/values'
+    Given path 'entity-types', loanEntityTypeId, 'columns', columnName, 'values'
     When method GET
     Then status 404
 
   Scenario: Get column name and value microservice for invalid entity-type-id should return '404 Not Found' Response
     * def columnName  = 'invalid_column_name'
     * def invalidId = call uuid1
-    Given path 'entity-types/' + invalidId + '/columns/' + columnName + '/values'
+    Given path 'entity-types', invalidId, 'columns', columnName, 'values'
     When method GET
     Then status 404
 
   Scenario: Refresh materialized view for tenant
-    Given path '/entity-types/materialized-views/refresh'
+    Given path 'entity-types', 'materialized-views', 'refresh'
     When method POST
     Then status 200
 

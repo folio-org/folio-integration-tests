@@ -4,9 +4,9 @@ Feature: Profile-picture tests
 
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * def profileIdNotUploaded = 'c58d129e-347a-4931-9ffa-a27a3fffa7a8'
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def statusSuccess = function(){ var status = karate.get('responseStatus'); return status >= 200 && status < 300 }
 
   Scenario: Set enabledObjectStorage = false (by default DB will be enabled), set enabled = true (when profile picture feature is enabled)
@@ -215,7 +215,7 @@ Feature: Profile-picture tests
     Then status 500
     And match response == 'Requested file size should be within allowed size updated in profile_picture configuration'
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': '*/*'  }
 
     # remove the maxFIleSize from config. Try to upload an image more than 10 mb. We should get error.
     Given path '/users/configurations/entry/' + id
@@ -238,10 +238,9 @@ Feature: Profile-picture tests
     And configure headers = headersUserOctetStream
     And request read(filepath)
     When method POST
-    Then status 500
-    And match response == 'Requested file size should be within allowed size updated in profile_picture configuration'
+    Then status 413
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': '*/*'  }
 
     # Update configuration. Give maxFileSize value more than 10. Should get error.
     Given path '/users/configurations/entry/' + id

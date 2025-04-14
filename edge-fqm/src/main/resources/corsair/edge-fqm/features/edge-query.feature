@@ -1,6 +1,5 @@
 Feature: Query
   Background:
-    * url baseUrl
     * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*' }
     * def itemEntityTypeId = 'd0213d22-32cf-490f-9196-d81c3c66e53f'
     * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
@@ -82,8 +81,8 @@ Feature: Query
     And match $.content[0]['users.username'] == 'diku_admin'
     * def edgeResponse = $
 
-    * call login admin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)', 'Accept': '*/*' }
     Given url baseUrl
     And path 'query/' + queryId
     And params {includeResults: true}
