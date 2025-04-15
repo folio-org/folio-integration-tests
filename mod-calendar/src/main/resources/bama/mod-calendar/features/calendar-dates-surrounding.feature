@@ -3,15 +3,15 @@ Feature: Calendar searching
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * def servicePointId = call uuid1
 
   Scenario: Test complex calendar surrounding opening reports
     * def calendarName = 'Sample complex calendar'
-    * def assignments = [#(servicePointId)]
-    * def createCalendarRequest = read('samples/createComplexCalendar.json')
+    * def assignments = ['#(servicePointId)']
+    * def createCalendarRequest = read('classpath:bama/mod-calendar/features/samples/createComplexCalendar.json')
 
-    Given path 'calendar/calendars'
+    Given path 'calendar', 'calendars'
     And request createCalendarRequest
     When method POST
     Then status 201
@@ -27,7 +27,7 @@ Feature: Calendar searching
       | '2000-01-01' | true   | false | false       | []                                          |
       | '2000-01-03' | false  | true  | false       | [{startTime:"07:00:00",endTime:"23:59:00"}] |
 
-    Given path 'calendar/dates/' + servicePointId + '/surrounding-openings'
+    Given path 'calendar', 'dates', servicePointId, 'surrounding-openings'
     And param date = "2000-01-01"
     When method GET
     Then status 200
@@ -39,7 +39,7 @@ Feature: Calendar searching
       | '2000-01-06' | true   | true | false       | [{startTime:"00:00:00",endTime:"23:59:00"}]                                           |
       | '2000-01-07' | false  | true | false       | [{startTime:"07:00:00",endTime:"12:00:00"},{startTime:"13:00:00",endTime:"22:00:00"}] |
 
-    Given path 'calendar/dates/' + servicePointId + '/surrounding-openings'
+    Given path 'calendar', 'dates', servicePointId, 'surrounding-openings'
     And param date = "2000-01-06"
     When method GET
     Then status 200
@@ -51,7 +51,7 @@ Feature: Calendar searching
       | '2000-01-15' | false  | true  | true        | 'Exceptional opening' | [{startTime:"07:00:00",endTime:"23:59:00"}]                                           |
       | '2000-01-16' | true   | true  | true        | 'Exceptional opening' | [{startTime:"00:00:00",endTime:"23:59:00"}]                                           |
 
-    Given path 'calendar/dates/' + servicePointId + '/surrounding-openings'
+    Given path 'calendar', 'dates', servicePointId, 'surrounding-openings'
     And param date = "2000-01-15"
     When method GET
     Then status 200
@@ -63,7 +63,7 @@ Feature: Calendar searching
       | '2000-01-21' | true   | false | true        | 'Exceptional opening' | []                                          |
       | '2000-01-25' | false  | true  | true        | 'Exceptional opening' | [{startTime:"07:00:00",endTime:"23:59:00"}] |
 
-    Given path 'calendar/dates/' + servicePointId + '/surrounding-openings'
+    Given path 'calendar', 'dates', servicePointId, 'surrounding-openings'
     And param date = "2000-01-21"
     When method GET
     Then status 200
@@ -75,7 +75,7 @@ Feature: Calendar searching
       | '2000-01-31' | false  | true | true        | 'Exceptional opening' | [{startTime:"00:00:00",endTime:"23:00:00"}] |
       | '2000-02-01' | true   | true | false       |                       | [{startTime:"00:00:00",endTime:"23:59:00"}] |
 
-    Given path 'calendar/dates/' + servicePointId + '/surrounding-openings'
+    Given path 'calendar', 'dates', servicePointId, 'surrounding-openings'
     And param date = "2000-01-31"
     When method GET
     Then status 200
@@ -87,7 +87,7 @@ Feature: Calendar searching
       | '2000-02-01' | true   | true | false       |                       | [{startTime:"00:00:00",endTime:"23:59:00"}] |
       | '2000-02-02' | true   | true | false       |                       | [{startTime:"00:00:00",endTime:"23:59:00"}] |
 
-    Given path 'calendar/dates/' + servicePointId + '/surrounding-openings'
+    Given path 'calendar', 'dates', servicePointId, 'surrounding-openings'
     And param date = "2000-02-01"
     When method GET
     Then status 200
@@ -99,13 +99,13 @@ Feature: Calendar searching
       | '2000-03-13' | true   | false | true        | 'Exceptional closure' | []                                          |
       | '2000-04-03' | false  | true  | false       |                       | [{startTime:"07:00:00",endTime:"23:59:00"}] |
 
-    Given path 'calendar/dates/' + servicePointId + '/surrounding-openings'
+    Given path 'calendar', 'dates', servicePointId, 'surrounding-openings'
     And param date = "2000-03-13"
     When method GET
     Then status 200
     And match $.openings == expectedMar13
 
     # cleanup
-    Given path 'calendar/calendars/' + createdCalendarId
+    Given path 'calendar', 'calendars', createdCalendarId
     When method DELETE
     Then status 204
