@@ -18,7 +18,7 @@ public class GobiApiEurekaTest extends TestBaseEureka {
 
     @Test
     void gobiApiTest() {
-    runFeature("classpath:thunderjet/mod-gobi/eureka/gobi-junit.feature");
+        runFeature("classpath:thunderjet/mod-gobi/eureka/gobi-junit.feature");
     }
 
 }
