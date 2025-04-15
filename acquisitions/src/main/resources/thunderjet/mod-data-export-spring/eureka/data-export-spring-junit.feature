@@ -126,13 +126,6 @@ Feature: mod-data-export-spring integration tests
       | 'inventory-storage.holdings.retrieve.collection.post'         |
       | 'users.collection.get'                                        |
 
-    * def random = callonce randomMillis
-    * def testTenant = 'testdataexportspring' + random
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-#    "id": "ec7d8968-b84d-4615-ad93-cde22a500c5b",
-#    "name": "testtenant4585883352926827336",
-#    "description": "Tenant for test purpose"
-
   Scenario: create tenant and users for testing
     * def testUser = testAdmin
     Given call read('classpath:common/eureka/setup-users.feature')

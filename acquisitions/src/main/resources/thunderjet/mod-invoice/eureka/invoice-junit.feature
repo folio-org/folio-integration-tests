@@ -133,13 +133,6 @@ Feature: mod-invoice integration tests
       | 'voucher-storage.vouchers.item.delete'                      |
       | 'invoice.invoices.documents.item.get'                       |
 
-    * def random = callonce randomMillis
-    * def testTenant = 'testinvoice' + random
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-  #    "id": "82065a2b-cb25-4574-825d-edb0beb4f303",
-  #    "name": "testtenant5823528056434509762",
-  #    "description": "Tenant for test purpose"
-
   Scenario: create tenant and users for testing
     * def testUser = testAdmin
     Given call read('classpath:common/eureka/setup-users.feature')
