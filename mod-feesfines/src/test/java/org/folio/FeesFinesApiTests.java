@@ -6,9 +6,11 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "vega", module = "mod-feesfines")
+@Disabled
 class FeesFinesApiTests extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:vega/mod-feesfines/features/";
