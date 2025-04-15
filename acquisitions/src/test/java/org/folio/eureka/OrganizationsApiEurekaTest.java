@@ -23,7 +23,7 @@ public class OrganizationsApiEurekaTest extends TestBaseEureka {
 
     @BeforeAll
     public void organizationsApiTestBeforeAll() {
-        System.setProperty("testTenant", "testorganizations" + RandomUtils.nextLong());
+        System.setProperty("testTenant", "testorg" + RandomUtils.nextLong());
         System.setProperty("testTenantId", UUID.randomUUID().toString());
         runFeature("classpath:thunderjet/mod-organizations/eureka/organizations-junit.feature");
     }

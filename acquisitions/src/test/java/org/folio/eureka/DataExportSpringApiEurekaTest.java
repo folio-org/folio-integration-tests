@@ -22,7 +22,7 @@ public class DataExportSpringApiEurekaTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        System.setProperty("testTenant", "testdataexportspring" + RandomUtils.nextLong());
+        System.setProperty("testTenant", "testexport" + RandomUtils.nextLong());
         System.setProperty("testTenantId", UUID.randomUUID().toString());
         runFeature("classpath:thunderjet/mod-data-export-spring/eureka/data-export-spring-junit.feature");
     }

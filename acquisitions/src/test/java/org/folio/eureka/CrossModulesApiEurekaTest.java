@@ -239,7 +239,7 @@ public class CrossModulesApiEurekaTest extends TestBaseEureka {
 
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
-    System.setProperty("testTenant", "testcrossmodules" + RandomUtils.nextLong());
+    System.setProperty("testTenant", "testcross" + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/cross-modules/eureka/cross-modules-junit.feature");
   }
