@@ -302,6 +302,8 @@ Feature: mod-orders integration tests
   #    Given call read("features/parallel-create-piece.feature")
   #  Scenario: Update order lines for the same open orders in parallel
   #    Given call read("features/parallel-update-order-lines-same-order.feature")
+  Scenario: Unlink title
+    Given call read("features/unlink-title.feature")
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')
