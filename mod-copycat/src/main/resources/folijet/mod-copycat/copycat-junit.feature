@@ -4,10 +4,9 @@ Feature: mod-copycat integration tests
     * url baseUrl
     * table modules
       | name                    |
-      | 'okapi'                 |
       | 'mod-login'             |
       | 'mod-permissions'       |
-      | 'mod-copycat'         |
+      | 'mod-copycat'           |
 
     * table userPermissions
       | name                                                      |
@@ -18,4 +17,4 @@ Feature: mod-copycat integration tests
       | 'copycat.profiles.item.delete'                            |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
