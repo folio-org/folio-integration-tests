@@ -323,9 +323,9 @@ Feature: Setup quickMARC
     Given path 'records-editor/records/status'
     And headers headersUser
     And param qmRecordId = recordId
+    And retry until response.status == 'CREATED' || response.status == 'ERROR'
     When method GET
     Then status 200
-    And retry until response.status == 'CREATED' || response.status == 'ERROR'
     And def recordId = response.externalId
     * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetRecordById') {recordId: '#(recordId)'}
 
