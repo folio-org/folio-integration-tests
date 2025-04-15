@@ -7,19 +7,38 @@ Feature: mod-consortia and mod-data-export integration tests
     * url baseUrl
     * callonce login admin
 
-    * table requiredModules
+    * table modules
       | name                        |
       | 'mod-login'                 |
       | 'mod-inventory'             |
       | 'mod-permissions'           |
       | 'okapi'                     |
 
+      * table userPermissions
+        | name                                            |
+        | 'data-export.file-definitions.item.post'        |
+        | 'data-export.file-definitions.item.get'         |
+        | 'data-export.file-definitions.upload.post'      |
+        | 'data-export.export.post'                       |
+        | 'data-export.job-executions.item.delete'        |
+        | 'data-export.job-executions.items.download.get' |
+        | 'data-export.logs.collection.get'               |
+        | 'inventory.instances.item.post'                 |
+        | 'source-storage.snapshots.post'                 |
+        | 'source-storage.records.post'                   |
+        | 'inventory.instances.item.get'                  |
+        | 'data-export.job-executions.collection.get'     |
+        | 'user-tenants.collection.get'                   |
+        | 'user-tenants.item.post'                        |
+
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c32'
 
     # generate test tenants' names
     * def random = callonce randomMillis
+    * def centralTenantId = uuid()
     * def centralTenant = 'central' + random
+    * def universityTenantId = uuid()
     * def universityTenant = 'university' + random
 
     # define users
@@ -29,22 +48,12 @@ Feature: mod-consortia and mod-data-export integration tests
     * def universityUser1 = { id: '334e5a9e-94f9-4673-8d1d-ab552863886b', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
 
     # define custom login
-    * def login = 'consortia/util/initData.feature@Login'
+    * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
   Scenario: Create ['central', 'university'] tenants and set up admins
-    * call read('consortia/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('consortia/util/tenant-and-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
     * pause(5000)
-
-    # add 'consortia.all' permission to 'consortiaAdmin'
-    # add 'tags.all' required for publish coordinator tests
-    * call read(login) consortiaAdmin
-    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all']}
-
-    # add 'consortia.all' permission to 'universityUser1'
-    # add 'tags.all' required for publish coordinator tests
-    * call read(login) universityUser1
-    * call read('consortia/util/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'inventory.instances.item.get', 'data-export.all', 'inventory-storage.all']}
 
   Scenario: Consortium api tests
     * call read('consortia/consortium.feature')
@@ -59,5 +68,5 @@ Feature: mod-consortia and mod-data-export integration tests
     * call read('consortia/export.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
-    * call read('consortia/util/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('consortia/util/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}

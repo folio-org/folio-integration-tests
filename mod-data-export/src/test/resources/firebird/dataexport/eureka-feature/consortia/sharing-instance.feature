@@ -2,7 +2,7 @@ Feature: Consortia Sharing Instances api tests
 
   Background:
     * url baseUrl
-    * call read(login) consortiaAdmin
+    * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     * def instanceId1 = 'cf23adf0-61ba-4887-bf82-956c4aae2261'
     * def instanceTypeId1 = '8105bd44-e7bd-487e-a8f2-b804a361d92f'
@@ -65,7 +65,7 @@ Feature: Consortia Sharing Instances api tests
     And match response.status == 'COMPLETE'
 
     # 2. verify shared instance is created in target tenant with status = 'CONSORTIUM-MARC'
-    * call read(login) universityUser1
+    * call login universityUser1
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
 
     Given path 'inventory/instances', instanceId1

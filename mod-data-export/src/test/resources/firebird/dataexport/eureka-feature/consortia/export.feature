@@ -3,13 +3,11 @@ Feature: Tests for uploading "uuids file" and exporting the records
   Background:
     * url baseUrl
 
-    * call read(login) universityUser1
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * call login universityUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(universityTenant)' }
 
-    * def okapiUserToken = okapitoken
-
-    * def headersUser = {'x-okapi-tenant': '#(universityTenant)', 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def headersUserOctetStream = {'x-okapi-tenant': '#(universityTenant)', 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
+    * def headersUser = {'x-okapi-tenant': '#(universityTenant)', 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = {'x-okapi-tenant': '#(universityTenant)', 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
     * def defaultInstanceJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
