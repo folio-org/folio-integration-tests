@@ -48,7 +48,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * set value.recordsSource = 'Inventory'
     * set value.suppressedRecordsProcessing = 'true'
     * set value.deletedRecordsSupport = 'No'
-    * string updatedValue = value;
+    * string updatedValue = value
     * set config.value = updatedValue
     Given path '/configurations/entries', config.id
     And request config
@@ -547,7 +547,7 @@ Feature: Additional ListRecords tests when source is Inventory
     And match config.configName == 'behavior'
     * def value = karate.fromString(config.value)
     * set value.recordsSource = 'Source record storage and Inventory'
-    * string updatedValue = value;
+    * string updatedValue = value
     * set config.value = updatedValue
     Given path '/configurations/entries', config.id
     And request config
@@ -602,7 +602,7 @@ Feature: Additional ListRecords tests when source is Inventory
     And match config.configName == 'behavior'
     * def value = karate.fromString(config.value)
     * set value.recordsSource = 'Inventory'
-    * string updatedValue = value;
+    * string updatedValue = value
     * set config.value = updatedValue
     Given path '/configurations/entries', config.id
     And request config

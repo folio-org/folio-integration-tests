@@ -13,3 +13,4 @@
       * def errorsProcessingConfig = '200'
       * def deletedRecordsSupportConfig = 'persistent'
       * def suppressedRecordsProcessingConfig = 'false'
+      * def recordsSourceConfig = 'Source record storage'
