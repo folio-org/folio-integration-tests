@@ -128,6 +128,13 @@ Feature: mod-organizations integration tests
       | 'users.collection.get'                                      |
       | 'acquisition.organization.events.get'                       |
 
+    * def random = callonce randomMillis
+    * def testTenant = 'testorganizations' + random
+    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
+  #    "id": "82065a2b-cb25-4574-825d-edb0beb4f303",
+  #    "name": "testtenant5823528056434509762",
+  #    "description": "Tenant for test purpose"
+
   Scenario: Create tenant and users for testing
     * def testUser = testAdmin
     * call read('classpath:common/eureka/setup-users.feature')
