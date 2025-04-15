@@ -42,14 +42,14 @@
 
   <modules>
     <module>common</module>
-    <module>acquisitions</module>
+    <!--<module>acquisitions</module>
     <module>mod-ldp</module>
-    <module>mod-oai-pmh</module>
+    <module>mod-oai-pmh</module>-->
     <module>mod-quick-marc</module>
-    <module>data-import</module>
-    <module>mod-data-export</module>
+    <!--<module>data-import</module>
+    <module>mod-data-export</module>-->
     <module>testrail-integration</module>
-    <module>edge-dematic</module>
+    <!--<module>edge-dematic</module>
     <module>mod-feesfines</module>
     <module>mod-patron-blocks</module>
     <module>mod-email</module>
@@ -59,9 +59,9 @@
     <module>mod-event-config</module>
     <module>mod-notify</module>
     <module>mod-sender</module>
-    <module>mod-template-engine</module>
+    <module>mod-template-engine</module>-->
     <module>mod-search</module>
-    <module>mod-login-saml</module>
+    <!--<module>mod-login-saml</module>
     <module>edge-caiasoft</module>
     <module>mod-audit</module>
     <module>mod-source-record-storage</module>
@@ -94,7 +94,7 @@
     <module>mod-reading-room</module>
     <module>common-consortia</module>
     <module>mod-linked-data</module>
-    <module>data-import-large-scale-tests</module>
+    <module>data-import-large-scale-tests</module>-->
   </modules>
 
   <build>
