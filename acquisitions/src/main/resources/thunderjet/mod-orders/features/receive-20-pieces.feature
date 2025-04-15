@@ -15,7 +15,6 @@ Feature: Receive 20 pieces
 
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createTitle = read('classpath:thunderjet/mod-orders/reusable/create-title.feature')
     * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
     * def receivePiece = read('classpath:thunderjet/mod-orders/reusable/receive-piece.feature')
 
