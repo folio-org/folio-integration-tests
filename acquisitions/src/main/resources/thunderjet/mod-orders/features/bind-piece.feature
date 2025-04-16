@@ -19,7 +19,6 @@ Feature: Verify Bind Piece feature
 
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def createTitle = read('classpath:thunderjet/mod-orders/reusable/create-title.feature')
     * def createPieceWithHolding = read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature')
     * def createCirculationPolicy = read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
     * def createCirculationRequest = read('classpath:thunderjet/mod-orders/reusable/create-circulation-request.feature')
