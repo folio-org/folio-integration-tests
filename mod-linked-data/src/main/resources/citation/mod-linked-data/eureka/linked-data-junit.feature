@@ -35,7 +35,6 @@ Feature: mod-linked-data integration tests
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
-      | 'mapping-metadata.get'                                         |
       | 'inventory-storage.instances.item.post'                        |
       | 'inventory-storage.instances.item.get'                         |
       | 'inventory-storage.instances.item.put'                         |
@@ -51,7 +50,6 @@ Feature: mod-linked-data integration tests
       | 'marc-records-editor.item.post'                                |
       | 'marc-records-editor.item.put'                                 |
       | 'browse.authorities.collection.get'                            |
-      | 'source-storage.records.formatted.item.get'                    |
       | 'specification-storage.specifications.collection.get'          |
       | 'specification-storage.specification.rules.collection.get'     |
       | 'specification-storage.specification.rules.item.patch'         |

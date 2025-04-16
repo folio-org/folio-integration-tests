@@ -15,8 +15,8 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * match work contains { id: '#(workId)' }
     * match work.titles[*] contains { value: 'The main title', type: 'Main' }
     * match work.languages[*] contains [ 'eng' ]
-    * match work.classifications[*] contains { number: 'Lib-Congress-number', source: 'lc' }
-    * match work.classifications[*] contains { number: 'Dewey-number', source: 'ddc' }
+    * match work.classifications[*] contains { type: 'lc', number: 'Lib-Congress-number', additionalNumber: 'Lib-Congress-number-item'}
+    * match work.classifications[*] contains { type: 'ddc', number: 'Dewey-number', additionalNumber: 'Dewey-number-item' }
 
     * def instance = work.instances[0]
     * match instance contains { id: '#(instanceId)' }
@@ -28,11 +28,14 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * match instance.editionStatements[*] contains [ 'Second edition' ]
 
     Examples:
-      | query                                    | scenario                               |
-      | title all "main the title"               | Search by work title                   |
-      | title == "the main title"                | Search by work title - Exact phrase    |
-      | title all "create-bib-title"             | Search by instance title               |
-      | title == "Variant title of the instance" | Search by instance variant title       |
-      | title == "Parallel sub title"            | Search by instance parallel sub title  |
-      | isbn all "0987654321"                    | Search by ISBN                         |
-      | lccn all "1234567890"                    | Search by LCCN                         |
+      | query                                                           | scenario                                      |
+      | title all "main the title"                                      | Search by work title                          |
+      | title == "the main title"                                       | Search by work title - Exact phrase           |
+      | title all "create-bib-title"                                    | Search by instance title                      |
+      | title == "Variant title of the instance"                        | Search by instance variant title              |
+      | title == "Parallel sub title"                                   | Search by instance parallel sub title         |
+      | isbn all "0987654321"                                           | Search by ISBN                                |
+      | lccn all "1234567890"                                           | Search by LCCN                                |
+      | classificationType == "ddc"                                     | Search by classification type                 |
+      | classificationNumber == "Dewey-number"                          | Search by classification number               |
+      | classificationAdditionalNumber == "Lib-Congress-number-item"    | Search by classification additional number    |
