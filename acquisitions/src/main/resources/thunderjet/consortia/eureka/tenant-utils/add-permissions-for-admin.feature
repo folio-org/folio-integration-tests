@@ -2,7 +2,7 @@ Feature: add permissions to consortia-admin user in all tenants
 
   Background:
     * url baseUrl
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(tenant.name)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
     * configure retry = { count: 10, interval: 2000 }
     * def consortiaAdminId = consortiaAdmin.id
     * def consortiaAdminUsername = consortiaAdmin.username
@@ -10,19 +10,19 @@ Feature: add permissions to consortia-admin user in all tenants
   Scenario: Add permissions of real 'consortiaAdmin' to all shadow 'consortiaAdmin':
 
     # get permissions of 'consortiaAdmin'
-    Given path 'perms/users'
+    Given path '/users/capabilities'
     And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenantName)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
-    * def newPermissions = $.permissionUsers[0].permissions
+    * def newCaps = $.capabilities
 
     # For 'universityTenant':
     # get permissions of shadow 'consortiaAdmin' of 'universityTenant'
-    Given path 'perms/users'
+    Given path '/users/capabilities'
     And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(universityTenantName)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
 
@@ -33,7 +33,7 @@ Feature: add permissions to consortia-admin user in all tenants
 
     # update permissions of shadow 'consortiaAdmin' of 'universityTenant'
     Given path 'perms/users', permissionEntry.id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And headers {'x-okapi-tenant':'#(universityTenantName)', 'x-okapi-token':'#(okapitoken)'}
     And request permissionEntry
     When method PUT
     Then status 200

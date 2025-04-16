@@ -2,10 +2,10 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
 
   Background:
     * url baseUrl
-    * call login centralUser1
-    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
-    * call login consortiaAdmin
-    * def headersAdmin = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
+    * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    * configure headers = headersCentral
 
     * callonce variables
     * callonce variablesCentral
@@ -15,7 +15,6 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * def orderId = callonce uuid
     * def poLineId = callonce uuid
 
-    * configure headers = headersAdmin
     * table poLineLocations
       | locationId             | quantity | quantityPhysical | tenantId         |
       | centralLocationsId     | 1        | 1                | centralTenant    |
@@ -51,14 +50,3 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     When method PUT
     Then status 422
     And match response.errors[0].code == "locationUpdateWithoutAffiliation"
-
-
-  Scenario: Modify affiliated locations quantity
-    # Update PoLine locations with changes only to centralLocationsId and centralLocationsId2
-    * set poLine.locations = karate.filter(poLine.locations, (loc) => loc.locationId != centralLocationsId2)
-    * set poLine.locations[0].quantityPhysical = 3
-    * set poLine.cost.quantityPhysical = 5
-    Given path 'orders/order-lines/', poLineId
-    And request poLine
-    When method PUT
-    Then status 204

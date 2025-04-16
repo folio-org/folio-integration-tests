@@ -5,7 +5,6 @@ Feature: Verify Bind Piece feature
 
     * def tenantId1 = karate.get('tenantId1', testTenant);
     * def tenantId2 = karate.get('tenantId2', testTenant);
-    * def adminUser = karate.get('adminUser', testAdmin);
 
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken

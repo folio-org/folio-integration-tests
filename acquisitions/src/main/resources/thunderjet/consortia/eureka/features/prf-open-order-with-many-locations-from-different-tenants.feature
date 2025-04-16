@@ -2,7 +2,6 @@ Feature: Open order with many locations from different tenants
 
   Background:
     * url baseUrl
-    * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
     * configure retry = { count: 5, interval: 1000 }
 

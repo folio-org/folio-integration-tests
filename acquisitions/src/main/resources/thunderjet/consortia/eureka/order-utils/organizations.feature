@@ -9,6 +9,7 @@ Feature: global organizations
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = tenantName
     And request
     """
     {
@@ -27,6 +28,7 @@ Feature: global organizations
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = tenantName
     And request
     """
     {

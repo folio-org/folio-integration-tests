@@ -3,7 +3,6 @@ Feature: Updating Holding ownership changes order data
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * call login consortiaAdmin
     * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenant)' }
     * def headersUniversity = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(universityTenant)' }
     * configure headers = headersUniversity
