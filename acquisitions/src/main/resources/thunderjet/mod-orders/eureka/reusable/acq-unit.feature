@@ -37,7 +37,7 @@ Feature: Reusable components for acquisition units
   @AssignUserToAcqUnit
   Scenario: Assign user to acquisition unit
     * def result = call read('classpath:common/eureka/users.feature') { user: '#(testAdmin)' }
-    * def userId = result.userId
+    * def userId = karate.get('userId', result.userId)
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
@@ -57,7 +57,7 @@ Feature: Reusable components for acquisition units
     * configure headers = headersAdminTextPlain
 
     * def result = call read('classpath:common/eureka/users.feature') { user: '#(testAdmin)' }
-    * def userId = result.userId
+    * def userId = karate.get('userId', result.userId)
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
 
     Given path 'acquisitions-units-storage/memberships'
