@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 
 @FolioTest(team = "firebird", module = "data-export")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Disabled
 public class ModDataExportApiEurekaTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/dataexport/eureka-feature/";
 

@@ -1,19 +1,19 @@
 package org.folio;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 
 @FolioTest(team = "firebird", module = "mod-oai-pmh")
-@Disabled
 public class ModOaiPmhEurekaTests extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/oaipmh/eureka/";
 
@@ -24,6 +24,8 @@ public class ModOaiPmhEurekaTests extends TestBaseEureka {
 
     @BeforeEach
     public void setup() {
+        System.setProperty("testTenant", "testoaipmh" + RandomUtils.nextLong());
+        System.setProperty("testTenantId", UUID.randomUUID().toString());
         runFeature("classpath:firebird/mod-oai-pmh-junit-eureka.feature");
     }
 
