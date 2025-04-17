@@ -58,7 +58,6 @@ Feature: setup tenant
       | 'tags.item.put'                                       |
       | 'tags.item.get'                                       |
 
-  # Parameters:
   @SetupTenant
   Scenario: Post tenant, enable all required modules, and setup admin
     * def description = 'tenant_description'
