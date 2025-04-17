@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 @FolioTest(team = "thunderjet", module = "mod-finance")
-@Disabled
 public class FinanceApiEurekaTest extends TestBaseEureka {
 
   // default module settings

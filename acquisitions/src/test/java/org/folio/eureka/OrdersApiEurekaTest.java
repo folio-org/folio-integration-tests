@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 @FolioTest(team = "thunderjet", module = "mod-orders")
-@Disabled
 public class OrdersApiEurekaTest extends TestBaseEureka {
 
   // default module settings
