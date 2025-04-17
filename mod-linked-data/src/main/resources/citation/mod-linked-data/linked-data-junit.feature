@@ -35,7 +35,6 @@ Feature: mod-linked-data integration tests
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
-      | 'mapping-metadata.get'                                         |
       | 'inventory-storage.instances.item.post'                        |
       | 'inventory-storage.instances.item.get'                         |
       | 'inventory-storage.instances.item.put'                         |
@@ -51,7 +50,6 @@ Feature: mod-linked-data integration tests
       | 'marc-records-editor.item.post'                                |
       | 'marc-records-editor.item.put'                                 |
       | 'browse.authorities.collection.get'                            |
-      | 'source-storage.records.formatted.item.get'                    |
       | 'specification-storage.specifications.collection.get'          |
       | 'specification-storage.specification.rules.collection.get'     |
       | 'specification-storage.specification.rules.item.patch'         |
@@ -59,6 +57,9 @@ Feature: mod-linked-data integration tests
       | 'mod-settings.entries.collection.get'                          |
       | 'mod-settings.entries.item.get'                                |
       | 'mod-settings.entries.item.put'                                |
+      | 'mod-settings.entries.item.post'                               |
+      | 'mod-settings.global.write.ui-quick-marc.lccn-duplicate-check.manage' |
+      | 'mod-settings.global.read.ui-quick-marc.lccn-duplicate-check.manage' |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
