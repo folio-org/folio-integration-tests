@@ -40,7 +40,7 @@ Feature: init data for consortia
 
   @DeleteTenantAndEntitlement
   Scenario: Get list of enabled modules for specified tenant, and then disable these modules, finally delete tenant
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteEntitlements') {testTenantId: '#(tenantId)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteEntitlement') {testTenantId: '#(tenantId)' }
     * call read('classpath:common/eureka/destroy-data.feature@deleteTenant') {testTenantId: '#(tenantId)' }
 
   @DeleteEntitlement
