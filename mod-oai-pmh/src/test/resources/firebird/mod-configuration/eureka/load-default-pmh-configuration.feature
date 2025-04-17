@@ -14,12 +14,7 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
   Scenario: Should post default configs to mod-configuration and enable the module when mod-config does not contain the data
     * def result = call read('classpath:firebird/mod-configuration/eureka/reusable/get_oaipmh_configs.feature')
     * def configResponse = result.response
-    * def ids = get configResponse.configs[*].id
-    * def configIds = karate.mapWithKey(ids, 'id')
 
-    Given call deleteModuleEureka $module
-    Given call read('classpath:firebird/mod-configuration/eureka/reusable/delete_config_by_id.feature') configIds
-    Given call enableModuleEureka $module
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
@@ -27,7 +22,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = get $.configs[*].configName
+    * def configGroups = karate.filter(configResponse.configs, function(x){ return x.module == 'OAIPMH' })
+    * def configGroups = karate.map(configGroups, function(x){ return x.configName })
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'
     And match configGroups contains 'general'
@@ -38,7 +34,6 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     * def ids = get configResponse.configs[*].id
     * def configIds = karate.mapWithKey(ids, 'id')
 
-    Given call deleteModuleEureka $module
     Given call read('classpath:firebird/mod-configuration/eureka/reusable/delete_config_by_id.feature') configIds
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
@@ -57,7 +52,6 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     When method POST
     Then status 201
 
-    Given call enableModuleEureka $module
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
@@ -65,7 +59,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = get $.configs[*].configName
+    * def configGroups = karate.filter(configResponse.configs, function(x){ return x.module == 'OAIPMH' })
+    * def configGroups = karate.map(configGroups, function(x){ return x.configName })
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'
     And match configGroups contains 'general'
@@ -78,8 +73,6 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And match configGroups contains 'technical'
     And match configGroups contains 'general'
 
-    Given call deleteModuleEureka $module
-    Given call enableModuleEureka $module
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
@@ -87,7 +80,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = get $.configs[*].configName
+    * def configGroups = karate.filter(configResponse.configs, function(x){ return x.module == 'OAIPMH' })
+    * def configGroups = karate.map(configGroups, function(x){ return x.configName })
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'
     And match configGroups contains 'general'

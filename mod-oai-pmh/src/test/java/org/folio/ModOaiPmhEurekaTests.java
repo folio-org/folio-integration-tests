@@ -61,7 +61,7 @@ public class ModOaiPmhEurekaTests extends TestBaseEureka {
         runFeatureTest("sets");
     }
 
-    @Disabled("This feature file contains test cases for enabling and disabling modules. However, in the Eureka environment, we work with entitlements instead of modules, so the logic in this feature is not applicable.")
+//    @Disabled("This feature file contains test cases for enabling and disabling modules. However, in the Eureka environment, we work with entitlements instead of modules, so the logic in this feature is not applicable.")
     @Test
     void loadDefaultConfigurationTests() {
         runFeature("classpath:firebird/mod-configuration/eureka/load-default-pmh-configuration.feature");
