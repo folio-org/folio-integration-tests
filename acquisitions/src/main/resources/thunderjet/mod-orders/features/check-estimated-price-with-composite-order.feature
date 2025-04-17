@@ -38,16 +38,16 @@ Feature: Check estimated price with composite order
     * print '## Prepare the order'
     * def po = read('classpath:samples/mod-orders/compositeOrders/po-listed-print-monograph.json')
     # Make sure expected number of PO Lines available
-    * assert po.compositePoLines.length == 2
-    * assert po.compositePoLines[0].orderFormat == "P/E Mix"
-    * assert po.compositePoLines[1].orderFormat == "Electronic Resource"
+    * assert po.poLines.length == 2
+    * assert po.poLines[0].orderFormat == "P/E Mix"
+    * assert po.poLines[1].orderFormat == "Electronic Resource"
     # Set the fund ids
-    * set po.compositePoLines[0].fundDistribution[0].fundId = histFundId
-    * set po.compositePoLines[0].fundDistribution[1].fundId = genrlFundId
-    * set po.compositePoLines[1].fundDistribution[0].fundId = miscHistFundId
+    * set po.poLines[0].fundDistribution[0].fundId = histFundId
+    * set po.poLines[0].fundDistribution[1].fundId = genrlFundId
+    * set po.poLines[1].fundDistribution[0].fundId = miscHistFundId
 
     # Prepare cost details for the first PO Line (see MODORDERS-180 and MODORDERS-181)
-    * def cost = po.compositePoLines[0].cost
+    * def cost = po.poLines[0].cost
     * set cost.additionalCost = 10.0
     * set cost.discount = 3.0
     * set cost.discountType = "percentage"
@@ -59,7 +59,7 @@ Feature: Check estimated price with composite order
     * def expectedTotalPoLine1 = 44.41
 
     # Prepare cost details for the second PO Line (see MODORDERS-180 and MODORDERS-181)
-    * def cost = po.compositePoLines[1].cost
+    * def cost = po.poLines[1].cost
     * set cost.additionalCost = 2
     * set cost.discount = 4.99
     * set cost.discountType = "amount"
@@ -79,21 +79,21 @@ Feature: Check estimated price with composite order
     * match $.id == '#notnull'
     * def orderId = $.id
     * match $.poNumber == '#notnull'
-    * match $.compositePoLines == '#[2]'
+    * match $.poLines == '#[2]'
     * match $.workflowStatus == "Pending"
     # Lines
-    * def poLineId1 = response.compositePoLines[0].id
-    * def poLineId2 = response.compositePoLines[1].id
-    * match each $.compositePoLines[*].purchaseOrderId == orderId
-    * match $.compositePoLines[*].id == ['#notnull', '#notnull']
-    * match each $.compositePoLines[*].poLineNumber == '#? _.startsWith("' + response.poNumber + '")'
-    * match $.compositePoLines[*].instanceId == []
-    * match each $.compositePoLines[0].locations == '#? _.quantityPhysical + _.quantityElectronic == _.quantity'
-    * match each $.compositePoLines[1].locations == '#? _.quantityElectronic == _.quantity'
+    * def poLineId1 = response.poLines[0].id
+    * def poLineId2 = response.poLines[1].id
+    * match each $.poLines[*].purchaseOrderId == orderId
+    * match $.poLines[*].id == ['#notnull', '#notnull']
+    * match each $.poLines[*].poLineNumber == '#? _.startsWith("' + response.poNumber + '")'
+    * match $.poLines[*].instanceId == []
+    * match each $.poLines[0].locations == '#? _.quantityPhysical + _.quantityElectronic == _.quantity'
+    * match each $.poLines[1].locations == '#? _.quantityElectronic == _.quantity'
 
     # see MODORDERS-180 and MODORDERS-181
-    * match $.compositePoLines[0].cost.poLineEstimatedPrice == expectedTotalPoLine1
-    * match $.compositePoLines[1].cost.poLineEstimatedPrice == expectedTotalPoLine2
+    * match $.poLines[0].cost.poLineEstimatedPrice == expectedTotalPoLine1
+    * match $.poLines[1].cost.poLineEstimatedPrice == expectedTotalPoLine2
     # the sum would be wrong with a simple addition: 44.41 + 32.98 results in 77.38999999999999
     * match $.totalEstimatedPrice == (expectedTotalPoLine1 * 100 + expectedTotalPoLine2 * 100) / 100
 

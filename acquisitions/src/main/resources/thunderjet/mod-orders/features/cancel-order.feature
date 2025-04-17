@@ -71,7 +71,7 @@ Feature: Cancel order
     When method GET
     Then status 200
 
-    * def poLines = $.compositePoLines
+    * def poLines = $.poLines
     * def line1 = poLines[0]
     * match line1.paymentStatus == 'Cancelled'
     * match line1.receiptStatus == 'Cancelled'

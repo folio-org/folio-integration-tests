@@ -1,7 +1,6 @@
 {
   "checkinItems": false,
   "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
-  "alerts": [],
   "claims": [],
   "contributors": [],
   "cost": {
@@ -41,7 +40,6 @@
   },
   "purchaseOrderId": "",
   "receiptStatus": "Pending",
-  "reportingCodes": [],
   "source": "User",
   "titleOrPackage": "test",
   "vendorDetail": {
