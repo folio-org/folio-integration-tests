@@ -19,7 +19,7 @@ public class CrossModulesApiEurekaTest extends TestBaseEureka {
 
   public CrossModulesApiEurekaTest() {
     super(new TestIntegrationService(
-            new TestModuleConfiguration(TEST_BASE_PATH)));
+        new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @Test

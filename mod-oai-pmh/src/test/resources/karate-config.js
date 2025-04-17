@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var env = karate.env;
+  var env = karate.env ? karate.env : 'rancher';
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
@@ -101,17 +101,17 @@ function fn() {
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
     config.getModuleByIdPath = '_/proxy/modules';
   }
-  //
-  // config.runId = karate.properties['runId'] ? karate.properties['runId'] : config.random(10000);
-  // config.testTenant = 'oaipmhtesttenant' +  config.runId
-  // karate.log('===RUNNING TESTS IN ENVIRONMENT===' + env);
-  // karate.log('===TENANT===' + config.testTenant);
-  //
-  //
-  // config.testUser = {tenant: config.testTenant, name: 'test-user', password: 'test', id: '00000000-1111-5555-9999-999999999991'}
-  //
-  // var params = JSON.parse(JSON.stringify(config.admin))
-  // params.baseUrl = config.baseUrl;
+
+  config.runId = karate.properties['runId'] ? karate.properties['runId'] : config.random(10000);
+  config.testTenant = 'oaipmhtesttenant' +  config.runId
+  karate.log('===RUNNING TESTS IN ENVIRONMENT===' + env);
+  karate.log('===TENANT===' + config.testTenant);
+
+
+  config.testUser = {tenant: config.testTenant, name: 'test-user', password: 'test', id: '00000000-1111-5555-9999-999999999991'}
+
+  var params = JSON.parse(JSON.stringify(config.admin))
+  params.baseUrl = config.baseUrl;
 
   return config;
 }

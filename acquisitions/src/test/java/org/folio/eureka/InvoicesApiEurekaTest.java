@@ -19,7 +19,7 @@ public class InvoicesApiEurekaTest extends TestBaseEureka {
 
   public InvoicesApiEurekaTest() {
     super(new TestIntegrationService(
-            new TestModuleConfiguration(TEST_BASE_PATH)));
+        new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @Test
@@ -63,7 +63,7 @@ public class InvoicesApiEurekaTest extends TestBaseEureka {
   }
 
   @Test
-  void checkLockTotalsAndCalculatedTotalsInInvoiceApproveTime() {
+   void checkLockTotalsAndCalculatedTotalsInInvoiceApproveTime() {
     runFeatureTest("check-lock-totals-and-calculated-totals-in-invoice-approve-time.feature");
   }
 
@@ -138,9 +138,7 @@ public class InvoicesApiEurekaTest extends TestBaseEureka {
   }
 
   @Test
-  void validateInvoiceWithAdjustment() {
-    runFeatureTest("check-invoice-line-validation-with-adjustments");
-  }
+  void validateInvoiceWithAdjustment() { runFeatureTest("check-invoice-line-validation-with-adjustments");  }
 
   @Test
   void checkErrorResponseWithFundCode() {
