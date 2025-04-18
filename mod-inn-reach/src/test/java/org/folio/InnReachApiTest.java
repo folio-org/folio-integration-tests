@@ -16,7 +16,7 @@ public class InnReachApiTest extends TestBaseEureka {
 
   public InnReachApiTest() {
     super(new TestIntegrationService(
-            new TestModuleConfiguration(TEST_BASE_PATH)));
+        new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @Test

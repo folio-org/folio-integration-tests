@@ -3,7 +3,6 @@ Feature: bulk operations integration tests
   Background:
     * url baseUrl
     * def checkDateByRegEx = '#regex \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z'
-    * def requiredApplications = ['app-platform-complete', 'app-platform-minimal', 'app-oai-pmh']
 
     * table modules
       | name                        |
@@ -16,10 +15,6 @@ Feature: bulk operations integration tests
 
     * table userPermissions
       | name                                                          |
-      | 'oai-pmh.all'                                                 |
-      | 'configuration.all'                                           |
-      | 'inventory-storage.all'                                       |
-      | 'source-storage.all'                                          |
       | 'oai-pmh.records.collection.get'                              |
       | 'source-storage.records.item.get'                             |
       | 'source-storage.snapshots.post'                               |
