@@ -19,7 +19,7 @@ public class EbsconetApiEurekaTest extends TestBaseEureka {
 
   public EbsconetApiEurekaTest() {
     super(new TestIntegrationService(
-            new TestModuleConfiguration(TEST_BASE_PATH)));
+      new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @Test
@@ -41,7 +41,6 @@ public class EbsconetApiEurekaTest extends TestBaseEureka {
   void cancelOrderLinesWithEbsconet() {
     runFeatureTest("cancel-order-lines-with-ebsconet");
   }
-
   @Test
   void updateEbsconetOrderLineEmptyLocations() {
     runFeatureTest("update-ebsconet-order-line-empty-locations");
