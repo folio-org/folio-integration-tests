@@ -20,11 +20,6 @@ Feature: mod-orders integration tests
 
     * table userPermissions
       | name                                                           |
-      | 'data-export.all'                                              |
-      | 'configuration.all'                                            |
-      | 'inventory-storage.all'                                        |
-      | 'source-storage.all'                                           |
-      | 'marc-records-editor.all'                                      |
       | 'metadata-provider.jobLogEntries.collection.get'               |
       | 'metadata-provider.jobLogEntries.records.item.get'             |
       | 'metadata-provider.journalRecords.collection.get'              |

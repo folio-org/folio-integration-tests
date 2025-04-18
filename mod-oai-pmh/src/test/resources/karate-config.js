@@ -5,25 +5,32 @@ function fn() {
 
   var env = karate.env ? karate.env : 'rancher';
 
-    // The "testTenant" property could be specified during test runs
-    var testTenant = karate.properties['testTenant'];
+  // The "testTenant" property could be specified during test runs
+  var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
 
   var config = {
     baseUrl: 'http://localhost:9130',
-    testTenant: testTenant ? testTenant : 'testtenant',
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
+    testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
+    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
     edgeHost:'http://localhost:9701',
     edgeApiKey: 'eyJzIjoiQlBhb2ZORm5jSzY0NzdEdWJ4RGgiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0',
     // define global features
     variables: karate.read('classpath:global/variables.feature'),
+    variablesEureka: karate.read('classpath:global/eureka/variables.feature'),
     destroyData: karate.read('classpath:common/destroy-data.feature'),
     getModuleIdByName: karate.read('classpath:global/module-operations.feature@getModuleIdByName'),
+    getModuleIdByNameEureka: karate.read('classpath:global/eureka/module-operations.feature@getModuleIdByName'),
     enableModule: karate.read('classpath:global/module-operations.feature@enableModule'),
+    enableModuleEureka: karate.read('classpath:global/eureka/module-operations.feature@enableModule'),
     deleteModule: karate.read('classpath:global/module-operations.feature@deleteModule'),
+    deleteModuleEureka: karate.read('classpath:global/eureka/module-operations.feature@deleteModule'),
     resetConfiguration: karate.read('classpath:firebird/mod-configuration/reusable/reset-configuration.feature'),
+    resetConfigurationEureka: karate.read('classpath:firebird/mod-configuration/eureka/reusable/reset-configuration.feature'),
     login: karate.read('classpath:common/login.feature'),
     // define global functions
     uuid: function () {
@@ -66,6 +73,10 @@ function fn() {
     config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
+  } else if (env == 'eureka'){
+    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
+    config.clientSecret = karate.properties['clientSecret'];
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeHost = '${edgeUrl}';
@@ -77,23 +88,14 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
     config.getModuleByIdPath = '_/proxy/modules';
   }
-
-  config.runId = karate.properties['runId'] ? karate.properties['runId'] : config.random(10000);
-  config.testTenant = 'oaipmhtesttenant' +  config.runId
-  karate.log('===RUNNING TESTS IN ENVIRONMENT===' + env);
-  karate.log('===TENANT===' + config.testTenant);
-
-
-  config.testUser = {tenant: config.testTenant, name: 'test-user', password: 'test', id: '00000000-1111-5555-9999-999999999991'}
-
-  var params = JSON.parse(JSON.stringify(config.admin))
-  params.baseUrl = config.baseUrl;
 
   return config;
 }
