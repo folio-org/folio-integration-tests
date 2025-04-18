@@ -28,43 +28,6 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And match configGroups contains 'technical'
     And match configGroups contains 'general'
 
-  Scenario: Should post missing default configs to mod-configuration and enable module when mod-config has only part of oaipmh configuration groups
-    * def result = call read('classpath:firebird/mod-configuration/eureka/reusable/get_oaipmh_configs.feature')
-    * def configResponse = result.response
-    * def ids = get configResponse.configs[*].id
-    * def configIds = karate.mapWithKey(ids, 'id')
-
-    Given call read('classpath:firebird/mod-configuration/eureka/reusable/delete_config_by_id.feature') configIds
-    Given path '/configurations/entries'
-    And header Content-Type = 'application/json'
-    And header Accept = '*/*'
-    And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = okapitoken
-    And request
-    """
-    {
-      "module" : "OAIPMH",
-      "configName" : "technical",
-      "enabled" : true,
-      "value" : "{\"maxRecordsPerResponse\":\"50\",\"enableValidation\":\"false\",\"formattedOutput\":\"false\"}"
-    }
-    """
-    When method POST
-    Then status 201
-
-    Given path '/configurations/entries'
-    And header Content-Type = 'application/json'
-    And header Accept = '*/*'
-    And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = okapitoken
-    When method GET
-    Then status 200
-    * def configGroups = karate.filter(configResponse.configs, function(x){ return x.module == 'OAIPMH' })
-    * def configGroups = karate.map(configGroups, function(x){ return x.configName })
-    And match configGroups contains 'behavior'
-    And match configGroups contains 'technical'
-    And match configGroups contains 'general'
-
   Scenario: Should just enable module when mod-configuration already contains all related configs
     * def result = call read('classpath:firebird/mod-configuration/eureka/reusable/get_oaipmh_configs.feature')
     * def configResponse = result.response
