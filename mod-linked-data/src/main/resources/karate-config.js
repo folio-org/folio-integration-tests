@@ -93,10 +93,6 @@ function fn() {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-  } else if (env == 'eureka') {
-    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-    config.clientSecret = karate.properties['clientSecret'];
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
