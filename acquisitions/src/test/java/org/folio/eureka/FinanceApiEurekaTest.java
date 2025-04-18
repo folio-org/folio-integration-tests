@@ -19,7 +19,7 @@ public class FinanceApiEurekaTest extends TestBaseEureka {
 
   public FinanceApiEurekaTest() {
     super(new TestIntegrationService(
-            new TestModuleConfiguration(TEST_BASE_PATH)));
+        new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
 //  @Test
