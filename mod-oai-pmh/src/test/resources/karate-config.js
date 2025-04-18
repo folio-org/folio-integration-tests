@@ -39,11 +39,6 @@ function fn() {
     random: function (max) {
       return Math.floor(Math.random() * max)
     },
-    orWhereQuery: function(field, values) {
-      var orStr = ' or ';
-      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
-      return string;
-    },
     addVariables: function(a,b){
       return a + b;
     },
@@ -101,17 +96,6 @@ function fn() {
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
     config.getModuleByIdPath = '_/proxy/modules';
   }
-
-  config.runId = karate.properties['runId'] ? karate.properties['runId'] : config.random(10000);
-  config.testTenant = 'oaipmhtesttenant' +  config.runId
-  karate.log('===RUNNING TESTS IN ENVIRONMENT===' + env);
-  karate.log('===TENANT===' + config.testTenant);
-
-
-  config.testUser = {tenant: config.testTenant, name: 'test-user', password: 'test', id: '00000000-1111-5555-9999-999999999991'}
-
-  var params = JSON.parse(JSON.stringify(config.admin))
-  params.baseUrl = config.baseUrl;
 
   return config;
 }
