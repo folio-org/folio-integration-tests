@@ -42,10 +42,10 @@ function fn() {
     getResourceSupportCheck: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceSupportCheck'),
     getResourcePreview: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourcePreview'),
     validationErrorWithCodeOnResourceCreation: karate.read('classpath:citation/mod-linked-data/features/util/validation-resource.feature@validationErrorWithCodeOnResourceCreation'),
-    getSettings: karate.read('classpath:citation/mod-linked-data/eureka/features/util/crud-settings.feature@getSettings'),
-    putSetting: karate.read('classpath:citation/mod-linked-data/eureka/features/util/crud-settings.feature@putSetting'),
-    postSetting: karate.read('classpath:citation/mod-linked-data/eureka/features/util/crud-settings.feature@postSetting'),
-    getSetting: karate.read('classpath:citation/mod-linked-data/eureka/features/util/crud-settings.feature@getSetting'),
+    getSettings: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@getSettings'),
+    putSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@putSetting'),
+    postSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@postSetting'),
+    getSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@getSetting'),
     postImport: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postImport'),
     getSpecifications: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getSpecifications'),
     getRules: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getRules'),
@@ -93,7 +93,7 @@ function fn() {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
- } else if (env == 'folio-testing-karate') {
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
