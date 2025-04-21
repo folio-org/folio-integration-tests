@@ -6,11 +6,8 @@ Feature: Create fives pieces for an open order
     * url baseUrl
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -32,8 +29,6 @@ Feature: Create fives pieces for an open order
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def getOrderLineTitleId = read('classpath:thunderjet/mod-orders/reusable/get-order-line-title-id.feature')
     * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
-
-    * configure headers = headersUser
 
   Scenario: Create finances
     * configure headers = headersAdmin

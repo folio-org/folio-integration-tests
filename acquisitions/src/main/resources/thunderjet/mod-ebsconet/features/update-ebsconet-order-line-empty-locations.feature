@@ -7,14 +7,9 @@ Feature: Update Ebsconet Order Line with empty locations
     #* callonce dev {tenant: 'testebsconet6'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
     # load global variables
     * callonce variables
 

@@ -6,12 +6,10 @@ Feature:  Return current fiscal year consider time zone
     #* callonce dev {tenant: 'testfinance'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
+    * callonce login dummyUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
 
     * configure headers = headersUser
     * callonce variables
@@ -28,15 +26,15 @@ Feature:  Return current fiscal year consider time zone
 
     Given path 'finance/fiscal-years'
     And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + year)',
-      "code": '#(codePrefix + year)',
-      "periodStart": '#(yesterday + "T00:00:00Z")',
-      "periodEnd": '#(yesterday + "T23:59:59Z")'
-    }
-    """
+      """
+      {
+        "id": '#(fiscalYearId)',
+        "name": '#(codePrefix + year)',
+        "code": '#(codePrefix + year)',
+        "periodStart": '#(yesterday + "T00:00:00Z")',
+        "periodEnd": '#(yesterday + "T23:59:59Z")'
+      }
+      """
     When method POST
     Then status 201
 
@@ -44,30 +42,31 @@ Feature:  Return current fiscal year consider time zone
   Scenario: prepare finances for ledger
     Given path 'finance/ledgers'
     And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(fiscalYearId)"
-    }
-    """
+      """
+      {
+        "id": "#(ledgerId)",
+        "ledgerStatus": "Active",
+        "name": "#(ledgerId)",
+        "code": "#(ledgerId)",
+        "fiscalYearOneId":"#(fiscalYearId)"
+      }
+      """
     When method POST
     Then status 201
 
   Scenario: Create configuration with Pacific/Midway timezone
     Given path 'configurations/entries'
     And request
-    """
-    {
-      "id": "#(configUUID)",
-      "module": "ORG",
-      "configName": "localeSettings",
-      "enabled": true,
-      "value": "{\"locale\":\"en-US\",\"timezone\":\"Pacific/Midway\",\"currency\":\"USD\"}"
-    }
-    """
+      """
+      {
+        "id": "#(configUUID)",
+        "module": "ORG",
+        "configName": "localeSettings",
+        "enabled": true,
+        "code": "#(configUUID)",
+        "value": "{\"locale\":\"en-US\",\"timezone\":\"Pacific/Midway\",\"currency\":\"USD\"}"
+      }
+      """
     When method POST
     Then status 201
 
@@ -80,15 +79,16 @@ Feature:  Return current fiscal year consider time zone
   Scenario: update configuration with UTC timezone
     Given path 'configurations/entries', configUUID
     And request
-    """
-    {
-      "id": "#(configUUID)",
-      "module": "ORG",
-      "configName": "localeSettings",
-      "enabled": true,
-      "value": "{\"locale\":\"en-US\",\"timezone\":\"Europe/Minsk\",\"currency\":\"USD\"}"
-    }
-    """
+      """
+      {
+        "id": "#(configUUID)",
+        "module": "ORG",
+        "configName": "localeSettings",
+        "enabled": true,
+        "code": "#(configUUID)",
+        "value": "{\"locale\":\"en-US\",\"timezone\":\"Europe/Minsk\",\"currency\":\"USD\"}"
+      }
+      """
     When method PUT
     Then status 204
 

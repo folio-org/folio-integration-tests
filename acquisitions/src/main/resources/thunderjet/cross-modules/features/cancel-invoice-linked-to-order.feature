@@ -5,14 +5,8 @@ Feature: Cancel an invoice linked to an order
     * url baseUrl
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -40,7 +34,6 @@ Feature: Cancel an invoice linked to an order
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
-    * configure headers = headersUser
 
     * print "Create an order and line"
     * def v = call createOrder { id: #(orderId) }
@@ -154,7 +147,6 @@ Feature: Cancel an invoice linked to an order
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
-    * configure headers = headersUser
 
     * print "Create an order and line"
     * def v = call createOrder { id: #(orderId) }
@@ -297,7 +289,6 @@ Feature: Cancel an invoice linked to an order
     * configure headers = headersAdmin
     * call createFund { id: #(fundId) }
     * call createBudget { id: #(budgetId), allocated: 1000, fundId: #(fundId), status: 'Active' }
-    * configure headers = headersUser
 
     * print "Create an order and line"
     * def v = call createOrder { id: #(orderId) }
@@ -410,7 +401,6 @@ Feature: Cancel an invoice linked to an order
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
-    * configure headers = headersUser
 
     * print "Create an order"
     * def v = call createOrder { id: #(orderId) }
@@ -528,7 +518,6 @@ Feature: Cancel an invoice linked to an order
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
-    * configure headers = headersUser
 
     * print "Create order and line"
     * def ongoing = { interval: 123, isSubscription: true, renewalDate: '2022-05-08T00:00:00.000+00:00' }

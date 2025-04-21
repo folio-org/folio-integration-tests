@@ -4,16 +4,10 @@ Feature: Check encumbrances after order line exchange rate update
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * call loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * call loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -35,7 +29,6 @@ Feature: Check encumbrances after order line exchange rate update
     * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     ### 2. Create an order and line
     * def v = call createOrder { id: "#(orderId)" }
@@ -131,7 +124,6 @@ Feature: Check encumbrances after order line exchange rate update
     * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     ### 2. Create an order and line
     * def v = call createOrder { id: "#(orderId)" }

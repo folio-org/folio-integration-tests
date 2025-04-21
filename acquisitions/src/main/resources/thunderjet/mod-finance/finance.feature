@@ -3,20 +3,17 @@ Feature: mod-finance integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-organizations-storage' |
+      | name                    |
+      | 'mod-inventory-storage' |
+      | 'mod-orders-storage'    |
+      | 'mod-orders'            |
+      | 'mod-invoice'           |
+      | 'mod-invoice-storage'   |
+      | 'mod-finance-storage'   |
+      | 'mod-finance'           |
+      | 'mod-login'             |
+      | 'mod-permissions'       |
+      | 'mod-configuration'     |
 
     * def random = callonce randomMillis
     * def testTenant = 'testfinance' + random
@@ -80,13 +77,13 @@ Feature: mod-finance integration tests
     Given call read('features/unrelease-encumbrance.feature')
 
   Scenario: Test creating budget add expense classes from previous budget automatically
-    Given call read('features/when-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
+    Given call read('features/When-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
 
   Scenario: Test when creating budget add expense classes if them provided by user
-    Given call read('features/when-creating-budget-add-expense-classes-if-them-provided-by-user.feature')
+    Given call read('features/When-creating-budget-add-expense-classes-if-them-provided-by-user.feature')
 
   Scenario: Test when creating budget add expense classes if them provided by user
-    Given call read('features/create-planned-budget-without-expense-classes-when-there-is-no-current-budget.feature')
+    Given call read('features/Create-planned-budget-without-expense-classes-when-there-is-no-current-budget.feature')
 
   Scenario: Test when creating budget add expense classes if them provided by user
     Given call read('features/create-planned-budget-without-expense-classes-and-current-budget.feature')
@@ -149,9 +146,6 @@ Feature: mod-finance integration tests
 
   Scenario: Batch transaction API
     Given call read('features/batch-transaction-api.feature')
-
-  Scenario: Create inactive budget
-    Given call read('features/create-inactive-budget.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

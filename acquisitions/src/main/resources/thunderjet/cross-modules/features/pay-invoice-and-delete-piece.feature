@@ -5,16 +5,10 @@ Feature: Pay an invoice and delete a piece
     * print karate.info.scenarioName
 
     * url baseUrl
-
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -28,10 +22,8 @@ Feature: Pay an invoice and delete a piece
     * def invoiceLineId = callonce uuid6
 
     # Prepare finances
-    * configure headers = headersAdmin
     * callonce createFund { id: #(fundId) }
     * callonce createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
-    * configure headers = headersUser
 
   Scenario: Pay an invoice and delete a piece
     # 1. Create an order

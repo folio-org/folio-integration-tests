@@ -6,16 +6,10 @@ Feature: Invoice encumbrance update without acquisition unit
     * print karate.info.scenarioName
 
     * url baseUrl
-
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -52,7 +46,7 @@ Feature: Invoice encumbrance update without acquisition unit
       "protectCreate": true,
       "protectDelete": true,
       "protectRead": true,
-      "name": "testAcqUnitForInvoice"
+      "name": "testAcqUnitForInvoice3"
     }
     """
     When method POST
@@ -61,12 +55,14 @@ Feature: Invoice encumbrance update without acquisition unit
 
   Scenario: Create acq unit membership
     * configure headers = headersAdmin
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
     And request
     """
       {
         "id": '#(acqUnitMembershipId)',
-        "userId": "00000000-1111-5555-9999-999999999992",
+        "userId": "#(userIdForMembership)",
         "acquisitionsUnitId": "#(acqUnitId)"
       }
     """
@@ -125,12 +121,14 @@ Feature: Invoice encumbrance update without acquisition unit
 
   Scenario: Re-add acq unit membership
     * configure headers = headersAdmin
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
     And request
     """
       {
         "id": '#(acqUnitMembershipId)',
-        "userId": "00000000-1111-5555-9999-999999999992",
+        "userId": "#(userIdForMembership)",
         "acquisitionsUnitId": "#(acqUnitId)"
       }
     """

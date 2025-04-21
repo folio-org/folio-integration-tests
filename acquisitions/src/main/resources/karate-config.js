@@ -40,7 +40,7 @@ function fn() {
     // acquisitions units
     createAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@CreateAcqUnit'),
     assignUserToAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@AssignUserToAcqUnit'),
-    deleteUserFromAcqUnit: karate.read('classpath:thunderjet/mod-orders/eureka/reusable/acq-unit.feature@DeleteUserFromAcqUnit'),
+    deleteUserFromAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@DeleteUserFromAcqUnit'),
 
     // consortia variables
     variablesCentral: karate.read('classpath:thunderjet/consortia/variables/variablesCentral.feature'),
@@ -112,7 +112,7 @@ function fn() {
     createInvoice: read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature'),
     createInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature'),
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
-    payInvoice: read('classpath:thunderjet/mod-invoice/eureka/reusable/pay-invoice.feature'),
+    payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
     verifyInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line.feature'),
 
@@ -216,8 +216,10 @@ function fn() {
   if (env == 'dev') {
     config.checkDepsDuringModInstall = 'false'
   } else if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.edgeUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
     config.ftpPort = 21;
     config.ftpUser = 'folio';
@@ -228,8 +230,10 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.edgeUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
     config.ftpPort = 21;
     config.ftpUser = 'folio';
@@ -303,8 +307,10 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher-consortia') {
-    config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.baseUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-thunderjet-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.edgeUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org:8000';
     config.ftpUrl = 'ftp://ftp.ci.folio.org';
     config.ftpPort = 21;
     config.ftpUser = 'folio';

@@ -1,12 +1,11 @@
 Feature: Pay invoice
-  # parameters: invoiceId, poLinePaymentStatus?
+  # parameters: invoiceId
 
   Background:
     * url baseUrl
 
   Scenario: Pay invoice
     * def poLinePaymentStatus = karate.get('poLinePaymentStatus', null)
-
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200

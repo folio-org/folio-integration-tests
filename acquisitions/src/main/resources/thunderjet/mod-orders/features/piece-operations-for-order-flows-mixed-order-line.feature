@@ -41,11 +41,8 @@ Feature: Test operations affecting pieces with different po line options
     * callonce dev {tenant: 'testorders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -84,7 +81,6 @@ Feature: Test operations affecting pieces with different po line options
     * if (locations == 'holdingLocation') karate.call('../reusable/create-holdings.feature', { holdingId: initialHoldingId, instanceId: initialInstanceId, locationId: locationId })
 
     * print 'Create an order'
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -172,7 +168,6 @@ Feature: Test operations affecting pieces with different po line options
     * if (<isPackage>) karate.log('Create a title (for isPackage only)')
     * if (<isPackage>) karate.call('../reusable/create-title.feature', { titleId: packageTitleId, poLineId })
 
-    * configure headers = headersUser
     * print 'Check titles'
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId

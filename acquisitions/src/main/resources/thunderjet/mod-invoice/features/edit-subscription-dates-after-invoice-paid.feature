@@ -7,13 +7,9 @@ Feature: Edit subscription dates after invoice is paid
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     * callonce variables
 

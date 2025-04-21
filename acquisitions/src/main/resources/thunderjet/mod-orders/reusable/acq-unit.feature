@@ -4,7 +4,7 @@ Feature: Reusable components for acquisition units
   Background:
     * url baseUrl
     * def randomAcqUnitId = call uuid
-    * def headersAdminTextPlain = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'text/plain' }
+    * def headersAdminTextPlain = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'text/plain', 'x-okapi-tenant': '#(testTenant)' }
 
   @CreateAcqUnit
   Scenario: Create acquisition unit
@@ -36,7 +36,8 @@ Feature: Reusable components for acquisition units
 
   @AssignUserToAcqUnit
   Scenario: Assign user to acquisition unit
-    * def userId = karate.get('userId', '00000000-1111-5555-9999-999999999992')
+    * def result = call read('classpath:common/eureka/users.feature') { user: '#(testAdmin)' }
+    * def userId = karate.get('userId', result.userId)
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
@@ -55,7 +56,8 @@ Feature: Reusable components for acquisition units
   Scenario: Delete user from acquisition unit
     * configure headers = headersAdminTextPlain
 
-    * def userId = karate.get('userId', '00000000-1111-5555-9999-999999999992')
+    * def result = call read('classpath:common/eureka/users.feature') { user: '#(testAdmin)' }
+    * def userId = karate.get('userId', result.userId)
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
 
     Given path 'acquisitions-units-storage/memberships'
@@ -70,5 +72,3 @@ Feature: Reusable components for acquisition units
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204
-
-    * configure headers = headersUser

@@ -4,16 +4,10 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
   Background:
     * url baseUrl
     #* callonce dev {tenant: 'testcrossmodules2'}
-
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
     * callonce variables
 
     * def poLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -35,7 +29,6 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
   Scenario: Invoice poNumbers needs to be updated when an invoice line is deleted
     # Create order 1
     Given path 'orders/composite-orders'
-    And headers headersUser
     And request
     """
     {
@@ -50,7 +43,6 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
 
     # Create order 2
     Given path 'orders/composite-orders'
-    And headers headersUser
     And request
     """
     {
@@ -70,7 +62,6 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     * set poLine1.fundDistribution[0].fundId = globalFundId
 
     Given path 'orders/order-lines'
-    And headers headersUser
     And request poLine1
     When method POST
     Then status 201
@@ -82,7 +73,6 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     * set poLine2.fundDistribution[0].fundId = globalFundId
 
    Given path 'orders/order-lines'
-    And headers headersUser
     And request poLine2
     When method POST
     Then status 201
@@ -92,7 +82,6 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     * set invoice.id = invoiceId
 
     Given path 'invoice/invoices'
-    And headers headersUser
     And request invoice
     When method POST
     Then status 201
@@ -105,7 +94,6 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     * remove invoiceLine1.fundDistributions[0].expenseClassId
 
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request invoiceLine1
     When method POST
     Then status 201
@@ -118,20 +106,17 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     * remove invoiceLine2.fundDistributions[0].expenseClassId
 
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request invoiceLine2
     When method POST
     Then status 201
 
     # Delete invoice line
     Given path 'invoice/invoice-lines', invoiceLineId1
-    And headers headersUser
     When method DELETE
     Then status 204
 
     # Retrieve invoice with po numbers
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoiceResponse = $

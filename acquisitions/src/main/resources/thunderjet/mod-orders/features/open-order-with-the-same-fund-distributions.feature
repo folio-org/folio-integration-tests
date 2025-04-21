@@ -5,16 +5,10 @@ Feature: Should open order with polines having the same fund distributions
     * url baseUrl
     # uncomment below line for development
 #    * callonce dev {tenant: 'testorders'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     # load global variables
     * callonce variables
 
@@ -47,8 +41,6 @@ Feature: Should open order with polines having the same fund distributions
     Then status 201
 
     # Open order with polines having the same fund distributions
-
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """

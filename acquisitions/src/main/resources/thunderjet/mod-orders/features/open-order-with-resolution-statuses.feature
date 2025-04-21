@@ -4,16 +4,10 @@ Feature: Close order if order line has resolution statuses that should make it a
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -28,7 +22,6 @@ Feature: Close order if order line has resolution statuses that should make it a
     * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId) }
     * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 100 }
-    * configure headers = headersUser
 
     # 2. Create an order
     * def v = call createOrder { id: #(orderId) }

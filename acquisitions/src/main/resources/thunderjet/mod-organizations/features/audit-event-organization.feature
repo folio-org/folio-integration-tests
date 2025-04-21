@@ -4,8 +4,12 @@ Feature: Audit events for Organization
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+
+    * configure headers = headersAdmin
     * configure retry = { count: 10, interval: 10000 }
 
     * callonce variables

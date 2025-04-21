@@ -5,16 +5,10 @@ Feature: Check paymentStatus after reopen
     * print karate.info.scenarioName
 
     * url baseUrl
-
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -39,7 +33,6 @@ Feature: Check paymentStatus after reopen
     * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
-    * configure headers = headersUser
 
     * print "Create an order"
     * def v = call createOrder { id: '#(orderId)' }
@@ -68,7 +61,6 @@ Feature: Check paymentStatus after reopen
 
     * print "Check the po line paymentStatus"
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     And match $.paymentStatus == 'Awaiting Payment'
@@ -81,7 +73,6 @@ Feature: Check paymentStatus after reopen
 
     * print "Check the po line paymentStatus"
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     And match $.paymentStatus == 'Awaiting Payment'

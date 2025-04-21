@@ -8,13 +8,10 @@ Also verify with acq units
     * print karate.info.scenarioName
 
     * url baseUrl
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -35,7 +32,6 @@ Also verify with acq units
       | budgetId1 | 100       | fundId1 | 'Active' |
       | budgetId2 | 200       | fundId2 | 'Active' |
     * def v = callonce createBudget budgetTable
-    * configure headers = headersUser
 
   Scenario: Delete encumbrance link in invoice fund distribution when poLine fund was updated
     * def orderId = call uuid
@@ -99,7 +95,8 @@ Also verify with acq units
     10. Check the invoice line encumbrance link
 
     * def acqUnitId = call uuid
-    * def userId = "00000000-1111-5555-9999-999999999992"
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userId = result.userId
 
     * def orderId = call uuid
     * def poLineId = call uuid
@@ -108,9 +105,8 @@ Also verify with acq units
 
     # 1. Create acquisition unit and assign user
     * configure headers = headersAdmin
-    * def v = call createAcqUnit { id: '#(acqUnitId)', name: 'Acq Unit 1', isDeleted: false, protectCreate: true, protectRead: true, protectUpdate: true, protectDelete: true }
+    * def v = call createAcqUnit { id: '#(acqUnitId)', name: 'Acq Unit 111', isDeleted: false, protectCreate: true, protectRead: true, protectUpdate: true, protectDelete: true }
     * def v = call assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
-    * configure headers = headersUser
 
     # 3. Create an order and line
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time', ongoing: null }
@@ -129,7 +125,6 @@ Also verify with acq units
     # 7. Delete user from acquisition unit
     * configure headers = headersAdmin
     * def v = call deleteUserFromAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
-    * configure headers = headersUser
 
     # 8. Remove the po line fund distribution
     Given path 'orders/order-lines', poLineId
@@ -147,7 +142,6 @@ Also verify with acq units
     # 9. Add user to acquisition unit again
     * configure headers = headersAdmin
     * def v = call assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
-    * configure headers = headersUser
 
     # 10. Check the invoice line encumbrance link
     * def v = call verifyInvoiceLine { _invoiceLineId: '#(invoiceLineId)', _fundId: '#(fundId1)', _fundCode: '#(fundId1)', _encumbrance: '#notpresent' }

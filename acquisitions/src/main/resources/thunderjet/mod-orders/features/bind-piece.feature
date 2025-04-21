@@ -6,15 +6,11 @@ Feature: Verify Bind Piece feature
     * def tenantId1 = karate.get('tenantId1', testTenant);
     * def tenantId2 = karate.get('tenantId2', testTenant);
     * def adminUser = karate.get('adminUser', testAdmin);
-    * def regularUser = karate.get('regularUser', testUser);
 
-    * callonce loginAdmin adminUser
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser regularUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     * configure retry = { count: 5, interval: 1000 }
 
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
@@ -48,7 +44,6 @@ Feature: Verify Bind Piece feature
 
   @Setup
   Scenario: Create Finance, Budget, and Order, User, and Patron, and Circulation Policy
-    * configure headers = headersAdmin
 
     # 1. Create Fund and Budget
     * def periodStart = fromYear + '-01-01T00:00:00Z'
@@ -67,8 +62,6 @@ Feature: Verify Bind Piece feature
 
     # 4. Setup Circulation Policy
     * call createCirculationPolicy { tenant: '#(tenantId1)' }
-
-    * configure headers = headersUser
 
   @Negative
   Scenario: Verify ERROR cases for Bindary active can be set only for Physical or P/E Mix orders with
@@ -343,7 +336,6 @@ Feature: Verify Bind Piece feature
 
     # 1.2 Creating Second Piece with Item to bind in Title with 'titleId'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -428,7 +420,6 @@ Feature: Verify Bind Piece feature
     # 7. Update bounded piece
     # New item fields should not be affected
     Given path 'orders/pieces', pieceWithItemId2
-    * configure headers = headersUser
     And request
       """
       {
@@ -463,7 +454,6 @@ Feature: Verify Bind Piece feature
 
     # 1.1 Creating piece with item to bind in Title with 'titleId'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -485,7 +475,6 @@ Feature: Verify Bind Piece feature
 
     # 1.2 Creating second piece with item to bind in Title with 'titleId' with different holding 'holdingId3'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -530,8 +519,6 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match $.itemId == prevItemId2
-
-    * configure headers = headersUser
 
 
     # 3. Receive both pieceId1 and pieceId2
@@ -582,7 +569,6 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match response.status == 'Closed - Cancelled'
-    * configure headers = headersUser
 
   @Positive
   Scenario: When pieces have items with open circulation requests, these requests should not be moved
@@ -613,7 +599,6 @@ Feature: Verify Bind Piece feature
 
     # 1.2 Creating second piece with item to bind in Title with 'titleId' with different holding 'holdingId3'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -658,8 +643,6 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match $.itemId == prevItemId2
-
-    * configure headers = headersUser
 
 
     # 3. Receive both pieceId1 and pieceId2

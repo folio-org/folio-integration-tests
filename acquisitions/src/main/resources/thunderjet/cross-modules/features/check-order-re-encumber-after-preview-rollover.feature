@@ -14,15 +14,9 @@ Feature: Check order re-encumber after preview rollover
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'test_finance1'}
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
     * configure headers = headersAdmin
 
     * callonce variables
@@ -279,7 +273,6 @@ Feature: Check order re-encumber after preview rollover
   Scenario Outline: Start rollover <rolloverId> for ledger <ledgerId>
     * def ledgerId = <ledgerId>
     * def rolloverId = <rolloverId>
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """

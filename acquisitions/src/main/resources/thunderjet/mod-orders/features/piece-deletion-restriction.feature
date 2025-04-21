@@ -4,10 +4,8 @@ Feature: Piece deletion restrictions from order and order line
     * url baseUrl
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
     * def last_piece_error_masage = "The piece cannot be deleted because it is the last piece for the poLine with Receiving Workflow 'Synchronized order and receipt quantity' and cost quantity '1'"
@@ -18,7 +16,6 @@ Feature: Piece deletion restrictions from order and order line
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
-    * configure headers = headersUser
 
   Scenario: Avoid deletion of piece when poLine cost quantity '1' and ReceivingWorkflow 'Syncronized'
     increase piece quantity and delete successfully

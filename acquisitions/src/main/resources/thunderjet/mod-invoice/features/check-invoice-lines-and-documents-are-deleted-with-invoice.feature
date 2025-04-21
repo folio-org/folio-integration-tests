@@ -4,15 +4,12 @@ Feature: Check invoice lines and documents are deleted with invoice
     * url baseUrl
     # uncomment below line for development
 #    * callonce dev {tenant: 'testinvoices'}
-    * callonce login testAdmin
+    * call login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     # load global variables
     * callonce variables
@@ -47,12 +44,12 @@ Feature: Check invoice lines and documents are deleted with invoice
     # ============= create the invoice document ================
     * set documentPayload.documentMetadata.id = documentId
     * set documentPayload.documentMetadata.invoiceId = invoiceId
-    * configure headers = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
     Given path 'invoice/invoices', invoiceId, 'documents'
     And request documentPayload
     When method POST
     Then status 201
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     # ============= get the invoice line ===================
     Given path 'invoice/invoice-lines', invoiceLineId

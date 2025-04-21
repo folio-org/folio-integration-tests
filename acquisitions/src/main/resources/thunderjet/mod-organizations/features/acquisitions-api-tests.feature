@@ -5,15 +5,12 @@ Feature: Organizations API tests.
 
     # uncomment below line for development
     #* callonce dev {tenant: 'testmodorgs'}
-
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
 
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+
+    * configure headers = headersAdmin
     * callonce variables
 
     * def readOnlyAcqUnitId = callonce uuid1
@@ -71,7 +68,7 @@ Feature: Organizations API tests.
   Scenario: Assign user to read-open unit
     * configure headers = headersAdmin
     Given path '/users'
-    And param query = 'username=test-user'
+    And param query = 'username=' + testAdmin.name
     When method GET
     Then status 200
     * def userId = $.users[0].id
@@ -119,7 +116,7 @@ Feature: Organizations API tests.
   Scenario: Assign user to read-open unit
     * configure headers = headersAdmin
     Given path '/users'
-    And param query = 'username=test-user'
+    And param query = 'username=' + testAdmin.name
     When method GET
     Then status 200
     * def userId = $.users[0].id
@@ -139,7 +136,7 @@ Feature: Organizations API tests.
   Scenario: Assign user to full-protected unit
     * configure headers = headersAdmin
     Given path '/users'
-    And param query = 'username=test-user'
+    And param query = 'username=' + testAdmin.name
     When method GET
     Then status 200
     * def userId = $.users[0].id

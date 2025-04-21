@@ -6,13 +6,8 @@ Feature: Test order invoice relation can be deleted
     #* callonce dev {tenant: 'testcrossmodules'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
     # load global variables
     * callonce variables
 
@@ -27,7 +22,6 @@ Feature: Test order invoice relation can be deleted
 
   Scenario Outline: Create orders
     * def orderId = <orderId>
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -48,7 +42,6 @@ Feature: Test order invoice relation can be deleted
   Scenario Outline: Create order lines for <orderLineId>
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
-    * configure headers = headersUser
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -67,7 +60,6 @@ Feature: Test order invoice relation can be deleted
 
 
   Scenario: Create invoice
-    * configure headers = headersUser
     Given path 'invoice/invoices'
     And request
     """
@@ -89,7 +81,6 @@ Feature: Test order invoice relation can be deleted
     Then status 201
 
   Scenario Outline: Create invoice lines
-    * configure headers = headersUser
     * def orderLineId = <orderLineId>
     * def invoiceLineId = <invoiceLineId>
 
@@ -139,7 +130,6 @@ Feature: Test order invoice relation can be deleted
       | orderIdOne | invoiceId |
 
   Scenario: Update order line reference in the invoice line
-    * configure headers = headersUser
     Given path 'invoice/invoice-lines', invoiceLineIdOne
     When method GET
     Then status 200

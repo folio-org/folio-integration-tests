@@ -7,11 +7,9 @@ Feature: Check vendor address included with batch voucher
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+    * configure headers = headersAdmin
 
     # load global variables
     * callonce variables
@@ -65,7 +63,6 @@ Feature: Check vendor address included with batch voucher
     * set invoicePayload.exportToAccounting = true
 
     Given path 'invoice/invoices'
-    And headers headersUser
     And request invoicePayload
     When method POST
     Then status 201
@@ -76,14 +73,12 @@ Feature: Check vendor address included with batch voucher
     * remove invoiceLinePayload.fundDistributions[0].expenseClassId
 
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request invoiceLinePayload
     When method POST
     Then status 201
 
     # ============= get invoice to approve ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoiceBody = $
@@ -91,14 +86,12 @@ Feature: Check vendor address included with batch voucher
 
     # ============= put approved invoice ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoiceBody
     When method PUT
     Then status 204
 
     # ============= create batch export configuration ===================
     Given path 'batch-voucher/export-configurations'
-    And headers headersUser
     And request
     """
     {
@@ -117,7 +110,6 @@ Feature: Check vendor address included with batch voucher
 
     # ============= create batch export ftp credentials ===================
     Given path 'batch-voucher/export-configurations', batchVoucherExportConfigurationId, 'credentials'
-    And headers headersUser
     And request
     """
     {
@@ -131,7 +123,6 @@ Feature: Check vendor address included with batch voucher
 
     # ============= create batch voucher ===================
     Given path 'batch-voucher/batch-voucher-exports'
-    And headers headersUser
     And request
     """
     {
@@ -147,7 +138,6 @@ Feature: Check vendor address included with batch voucher
 
     # ============= get export later to give it time to create the batch voucher ===================
     Given path 'batch-voucher/batch-voucher-exports', batchVoucherExportId
-    And headers headersUser
     And retry until response.status == 'Uploaded'
     When method GET
     Then status 200
@@ -156,18 +146,17 @@ Feature: Check vendor address included with batch voucher
     # ============= get batch voucher and check address ===================
     * def expectedAddress = { addressLine1: 'MSU Libraries', addressLine2: '366 W. Circle Drive', city: 'East Lansing', stateRegion: 'MI', zipCode: '48824', country: 'USA'}
     Given path 'batch-voucher/batch-vouchers', batchVoucherId
-    And headers headersUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
     When method GET
     Then status 200
     And match $.batchedVouchers[0].vendorName == 'MSU Libraries'
     And match $.batchedVouchers[0].vendorAddress == expectedAddress
 
     # ============= get it again in XML ===================
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/xml'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
     Given path 'batch-voucher/batch-vouchers', batchVoucherId
-    And headers headersUser
     When method GET
     Then status 200
-    * def batchedVoucher = $.batchVoucher.batchedVouchers.batchedVoucher
+    * def batchedVoucher = $.batchedVouchers[0]
     And match batchedVoucher.vendorName == 'MSU Libraries'
     And match batchedVoucher.vendorAddress == expectedAddress

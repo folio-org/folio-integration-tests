@@ -3,28 +3,13 @@ Feature: mod-orders integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-tags'                  |
-      | 'mod-audit'                 |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-organizations-storage' |
-      | 'mod-organizations'         |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-template-engine'       |
-      | 'mod-feesfines'             |
+      | name                 |
+      | 'mod-configuration'  |
+      | 'mod-permissions'    |
+      | 'mod-login'          |
+      | 'mod-orders-storage' |
+      | 'mod-orders'         |
+      | 'mod-invoice'        |
 
     * def random = callonce randomMillis
     * def testTenant = 'testorders' + random

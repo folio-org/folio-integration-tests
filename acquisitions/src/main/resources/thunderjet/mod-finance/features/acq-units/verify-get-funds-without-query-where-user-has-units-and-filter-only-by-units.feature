@@ -4,25 +4,11 @@ Feature: Get funds without providing filter query should take into account acqui
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'testfinance'}
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+    * def headersUser = headersAdmin
     * callonce variables
-
-#    * def fundAllowFundViewAcqUnitId = "19d6b6ed-54d7-4ab5-997c-0e67166c1ceb"
-#    * def restrictFundViewAcqUnitId = "19d6b6ed-54d7-4ab5-997c-0e67166c2ceb"
-#    * def externalAccountNo = "1691111111111169"
-#
-#    * def fundNoAcqId = "29d6b6ed-54d7-4ab5-997c-0e67166c1ceb"
-#    * def fundAllowViewAcqId = "29d6b6ed-54d7-4ab5-997c-0e67166c2ceb"
-#    * def fundRestrictViewAcqId = "29d6b6ed-54d7-4ab5-997c-0e67166c3ceb"
-#    * def fundAllowViewAndRestrictViewAcqId = "29d6b6ed-54d7-4ab5-997c-0e67166c4ceb"
 
     * def fundAllowFundViewAcqUnitId = callonce uuid1
     * def restrictFundViewAcqUnitId = callonce uuid2
@@ -100,12 +86,14 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign restrict view acquisitions units memberships to user
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
     And request
     """
     {
-      "userId": "00000000-1111-5555-9999-999999999992",
+      "userId": "#(userId)",
       "acquisitionsUnitId": "#(restrictFundViewAcqUnitId)"
     }
     """
@@ -123,9 +111,11 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundRestrictViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign allow view acquisitions units memberships to user
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
-    And param query = 'acquisitionsUnitId==' + restrictFundViewAcqUnitId + ' and userId==00000000-1111-5555-9999-999999999992'
+    And param query = 'acquisitionsUnitId==' + restrictFundViewAcqUnitId + ' and userId==' + userId
     When method GET
     Then status 200
     * def acqMember = $.acquisitionsUnitMemberships[0]
@@ -151,12 +141,14 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Again assign restrict view acquisitions units memberships to user
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
     And request
     """
     {
-      "userId": "00000000-1111-5555-9999-999999999992",
+      "userId": "#(userId)",
       "acquisitionsUnitId": "#(restrictFundViewAcqUnitId)"
     }
     """
@@ -174,10 +166,12 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundRestrictViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario Outline: DELETE acquisitions units and memberships <acqUnitId>
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userId = result.userId
     * def acqUnitId = <acqUnitId>
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
-    And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==00000000-1111-5555-9999-999999999992'
+    And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==' + userId
     When method GET
     Then status 200
     * def acqMember = $.acquisitionsUnitMemberships[0]

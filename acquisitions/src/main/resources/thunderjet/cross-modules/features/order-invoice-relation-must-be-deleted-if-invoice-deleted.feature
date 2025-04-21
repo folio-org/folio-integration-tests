@@ -6,13 +6,8 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
     #* callonce dev {tenant: 'testcrossmodules1'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
     # load global variables
     * callonce variables
 
@@ -26,7 +21,6 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
   Scenario Outline: Create orders
     * def orderId = <orderId>
     Given path 'orders/composite-orders'
-    And headers headersUser
     And request
     """
     {
@@ -47,7 +41,6 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
     * def poLineId = <orderLineId>
 
     Given path 'orders/order-lines'
-    And headers headersUser
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.id = poLineId
@@ -65,7 +58,6 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
   Scenario: Create invoice
     Given path 'invoice/invoices'
-    And headers headersUser
     And request
     """
     {
@@ -91,7 +83,6 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
     # ============= get order line with fund distribution ===================
     Given path 'orders/order-lines', orderLineId
-    And headers headersUser
     When method GET
     Then status 200
     * def fd = response.fundDistribution
@@ -100,7 +91,6 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
     # ============= Create lines ===================
 
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -139,7 +129,6 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
   Scenario: Delete invoice
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request
     When method DELETE
     Then status 204
@@ -162,11 +151,9 @@ Feature: When invoice is deleted, then order vs invoice relation must be deleted
 
   Scenario: Delete order lines
     Given path 'orders/order-lines', orderLineIdOne
-    And headers headersUser
     When method DELETE
     Then status 204
 
     Given path 'orders/order-lines', orderLineIdOne
-    And headers headersUser
     When method GET
     Then status 404

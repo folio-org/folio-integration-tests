@@ -3,17 +3,10 @@ Feature: Rollover and pay invoice using past fiscal year
 
   Background:
     * url baseUrl
-
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * call login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -74,7 +67,6 @@ Feature: Rollover and pay invoice using past fiscal year
       | budgetId1 | fundId | fiscalYearId1 | 1000      | 'Active' |
       | budgetId2 | fundId | fiscalYearId2 | 1000      | 'Active' |
     * def v = call createBudget budgets
-    * configure headers = headersUser
 
     ### 3. Create orders and order lines
     * def emptyOngoingObj = { }

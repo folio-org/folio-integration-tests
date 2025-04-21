@@ -7,14 +7,8 @@ Feature: Update encumbrance links with fiscal year
     * url baseUrl
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -69,7 +63,6 @@ Feature: Update encumbrance links with fiscal year
     * print "Create the past encumbrance"
     * configure headers = headersAdmin
     * def v = call createTransaction { id: #(pastEncumbranceId), transactionType: 'Encumbrance', fiscalYearId: #(pastFiscalYearId), fundId: #(fundId), amount: 10.0, orderId: #(orderId), poLineId: #(poLineId) }
-    * configure headers = headersUser
 
     * print "Create an invoice in the past fiscal year"
     * def v = call createInvoice { id: #(invoiceId), fiscalYearId: #(pastFiscalYearId) }
@@ -114,7 +107,6 @@ Feature: Update encumbrance links with fiscal year
     * print "Create one past encumbrance"
     * configure headers = headersAdmin
     * def v = call createTransaction { id: #(pastEncumbranceId), transactionType: 'Encumbrance', fiscalYearId: #(pastFiscalYearId), fundId: #(fundId), amount: 10.0, orderId: #(orderId), poLineId: #(poLineId1) }
-    * configure headers = headersUser
 
     * print "Create an invoice in the current fiscal year"
     * def v = call createInvoice { id: #(invoiceId) }

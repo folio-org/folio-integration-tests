@@ -8,11 +8,8 @@ Feature: Create pieces for an open order in parallel
     * url baseUrl
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -55,8 +52,6 @@ Feature: Create pieces for an open order in parallel
     * def titleId4 = titleId
     * callonce getOrderLineTitleId { poLineId: "#(poLineId5)" }
     * def titleId5 = titleId
-
-    * configure headers = headersUser
 
   Scenario: Create pieces and check budget
     # it would be nice to put the contents of parallel-create-piece-2 here and use karate.afterFeature() to check the budget,

@@ -6,13 +6,8 @@ Feature: Test deleting an encumbrance
     #* callonce dev {tenant: 'testcrossmodules'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
     * callonce variables
     * def orderId1 = callonce uuid1
     * def orderId2 = callonce uuid2
@@ -29,7 +24,6 @@ Feature: Test deleting an encumbrance
 
     # retrieve budge info for later
     Given path '/finance/budgets', globalBudgetId
-    And headers headersUser
     When method GET
     Then status 200
     * def budgetBefore = $
@@ -60,7 +54,6 @@ Feature: Test deleting an encumbrance
     }
     """
     Given path 'finance/transactions/batch-all-or-nothing'
-    And headers headersUser
     And request
     """
     {
@@ -73,14 +66,12 @@ Feature: Test deleting an encumbrance
     # release the encumbrance
     * set transaction.encumbrance.status = "Released"
     Given path 'finance/release-encumbrance', transaction.id
-    And headers headersUser
     And request {}
     When method POST
     Then status 204
 
     # delete the encumbrance
     Given path 'finance/transactions/batch-all-or-nothing'
-    And headers headersUser
     And request
     """
     {
@@ -92,14 +83,12 @@ Feature: Test deleting an encumbrance
 
     # check the transaction is gone
     Given path 'finance/transactions', transaction.id
-    And headers headersUser
     And request transaction
     When method GET
     Then status 404
 
     # check the budget's encumbered total was updated
     Given path '/finance/budgets', globalBudgetId
-    And headers headersUser
     When method GET
     Then status 200
     And match $.encumbered == budgetBefore.encumbered
@@ -109,7 +98,6 @@ Feature: Test deleting an encumbrance
     * print "Test Error when trying to delete an encumbrance linked to an invoice"
     # create order
     Given path 'orders/composite-orders'
-    And headers headersUser
     And request
     """
     {
@@ -127,14 +115,12 @@ Feature: Test deleting an encumbrance
     * set poLine.purchaseOrderId = orderId3
     * set poLine.fundDistribution[0].fundId = globalFundId
     Given path 'orders/order-lines'
-    And headers headersUser
     And request poLine
     When method POST
     Then status 201
 
     # open order
     Given path 'orders/composite-orders', orderId3
-    And headers headersUser
     When method GET
     Then status 200
     * def order = $
@@ -142,14 +128,12 @@ Feature: Test deleting an encumbrance
 
 
     Given path 'orders/composite-orders', orderId3
-    And headers headersUser
     And request order
     When method PUT
     Then status 204
 
     # get order line info for later
     Given path 'orders/order-lines', poLineId3
-    And headers headersUser
     When method GET
     Then status 200
     * def fd = $.fundDistribution
@@ -158,7 +142,6 @@ Feature: Test deleting an encumbrance
 
     # create invoice
     Given path 'invoice/invoices'
-    And headers headersUser
     And request
     """
     {
@@ -180,7 +163,6 @@ Feature: Test deleting an encumbrance
 
     # Create invoice line
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -199,7 +181,6 @@ Feature: Test deleting an encumbrance
 
     # approve invoice
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoice = $
@@ -207,14 +188,12 @@ Feature: Test deleting an encumbrance
 
 
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoice
     When method PUT
     Then status 204
 
     # try to delete the encumbrance
     Given path 'finance/transactions/batch-all-or-nothing'
-    And headers headersUser
     And request
     """
     {

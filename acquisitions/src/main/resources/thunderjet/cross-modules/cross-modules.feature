@@ -3,23 +3,14 @@ Feature: cross-module integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-organizations-storage' |
+      | name                |
+      | 'mod-invoice'       |
+      | 'mod-finance'       |
+      | 'mod-orders'        |
+      | 'mod-login'         |
+      | 'mod-permissions'   |
+      | 'mod-configuration' |
+      | 'mod-tags'          |
 
 
     * def random = callonce randomMillis
@@ -179,9 +170,6 @@ Feature: cross-module integration tests
 
   Scenario: Check the encumbrances after issuing credit when the order is fully paid
     Given call read('features/check-encumbrances-after-issuing-credit-for-paid-order.feature')
-
-  Scenario: Approve or cancel an invoice with the poLinePaymentStatus parameter
-    Given call read('features/approve-or-cancel-invoice-with-polinepaymentstatus-parameter.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

@@ -5,16 +5,10 @@ Feature: Check needReEncumber flag populated correctly
     * url baseUrl
     # uncomment below line for development
     # * callonce dev {tenant: 'testorders'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     # load global variables
     * callonce variables
 
@@ -45,7 +39,6 @@ Feature: Check needReEncumber flag populated correctly
       | fundId | budgetId |
 
   Scenario: Create order
-    * configure headers = headersUser
 
     Given path 'orders/composite-orders'
     And request
@@ -60,7 +53,6 @@ Feature: Check needReEncumber flag populated correctly
     Then status 201
 
   Scenario: Create order line
-    * configure headers = headersUser
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')
@@ -129,7 +121,6 @@ Feature: Check needReEncumber flag populated correctly
     When method DELETE
     Then status 204
 
-    * configure headers = headersUser
     Given path 'orders/composite-orders' , orderId
     And header Accept = 'application/json'
     When method GET

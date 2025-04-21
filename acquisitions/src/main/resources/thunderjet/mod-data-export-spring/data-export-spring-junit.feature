@@ -3,7 +3,6 @@ Feature: mod-data-export-spring integration tests
   Background:
     * url baseUrl
     * configure readTimeout = 300000
-    * callonce login admin
 
     * table modules
       | name                        |
@@ -24,58 +23,113 @@ Feature: mod-data-export-spring integration tests
       | 'mod-audit'                 |
 
     * table userPermissions
-      | name                                                    |
-      | 'orders.all'                                            |
-      | 'audit.all'                                             |
-      | 'orders-storage.titles.collection.get'                  |
-      | 'orders-storage.pieces-batch.collection.put'            |
-      | 'pieces.send-claims.collection.post'                    |
-      | 'acquisitions-units-storage.units.collection.get'       |
-      | 'acquisitions-units-storage.memberships.collection.get' |
-      | 'finance-storage.funds.item.post'                       |
-      | 'finance.budgets.item.post'                             |
-      | 'configuration.entries.item.get'                        |
-      | 'organizations.module.all'                              |
-
-
-    * table exportModules
-      | name                     |
-      | 'mod-data-export-spring' |
-      | 'mod-data-export-worker' |
-
-    * table exportModulesPermissions
-      | name                           |
-      | 'data-export.job.all'          |
-      | 'data-export.config.all'       |
-      | 'data-export.config.item.post' |
+      | name                                                          |
+      | 'acquisitions-units.memberships.item.delete'                  |
+      | 'acquisitions-units.memberships.item.post'                    |
+      | 'acquisitions-units.units.item.post'                          |
+      | 'configuration.entries.item.post'                             |
+      | 'finance.budgets.collection.get'                              |
+      | 'finance.budgets.item.delete'                                 |
+      | 'finance.budgets.item.post'                                   |
+      | 'finance.budgets.item.put'                                    |
+      | 'finance.budgets.item.get'                                    |
+      | 'finance.expense-classes.item.post'                           |
+      | 'finance.fiscal-years.item.post'                              |
+      | 'finance.fiscal-years.item.put'                               |
+      | 'finance.fiscal-years.item.get'                               |
+      | 'finance.ledger-rollovers.item.post'                          |
+      | 'finance.ledger-rollovers-logs.item.get'                      |
+      | 'finance.ledger-rollovers-errors.collection.get'              |
+      | 'finance.ledger-rollovers-progress.collection.get'            |
+      | 'finance.ledgers.item.post'                                   |
+      | 'finance.release-encumbrance.item.post'                       |
+      | 'finance.transactions.batch.execute'                          |
+      | 'finance.transactions.item.get'                               |
+      | 'finance.transactions.collection.get'                         |
+      | 'finance.fund-types.item.post'                                |
+      | 'finance.funds.item.get'                                      |
+      | 'finance-storage.funds.item.post'                             |
+      | 'finance-storage.ledgers.item.post'                           |
+      | 'finance-storage.transactions.batch.execute'                  |
+      | 'finance-storage.transactions.collection.get'                 |
+      | 'inventory-storage.contributor-name-types.item.post'          |
+      | 'inventory-storage.electronic-access-relationships.item.post' |
+      | 'inventory-storage.holdings-sources.item.post'                |
+      | 'inventory-storage.holdings.item.post'                        |
+      | 'inventory-storage.identifier-types.item.post'                |
+      | 'inventory-storage.instance-statuses.item.post'               |
+      | 'inventory-storage.instance-types.item.post'                  |
+      | 'inventory-storage.loan-types.item.post'                      |
+      | 'inventory-storage.location-units.campuses.item.post'         |
+      | 'inventory-storage.location-units.institutions.item.post'     |
+      | 'inventory-storage.location-units.libraries.item.post'        |
+      | 'inventory-storage.locations.item.post'                       |
+      | 'inventory-storage.material-types.item.post'                  |
+      | 'inventory-storage.service-points.item.post'                  |
+      | 'inventory.instances.item.post'                               |
+      | 'invoice.invoice-lines.collection.get'                        |
+      | 'invoice.invoice-lines.item.delete'                           |
+      | 'invoice.invoice-lines.item.get'                              |
+      | 'invoice.invoice-lines.item.post'                             |
+      | 'invoice.invoice-lines.item.put'                              |
+      | 'invoice.invoices.item.delete'                                |
+      | 'invoice.invoices.item.get'                                   |
+      | 'invoice.invoices.item.post'                                  |
+      | 'invoice.invoices.item.put'                                   |
+      | 'invoice.item.approve.execute'                                |
+      | 'invoice.item.cancel.execute'                                 |
+      | 'invoice.item.pay.execute'                                    |
+      | 'invoices.fiscal-year.update.execute'                         |
+      | 'invoice-storage.invoices.item.get'                           |
+      | 'invoice-storage.invoices.item.put'                           |
+      | 'orders.check-in.collection.post'                             |
+      | 'orders.collection.get'                                       |
+      | 'orders.item.approve'                                         |
+      | 'orders.item.get'                                             |
+      | 'orders.item.post'                                            |
+      | 'orders.item.put'                                             |
+      | 'orders.item.reopen'                                          |
+      | 'orders.item.unopen'                                          |
+      | 'orders.po-lines.collection.get'                              |
+      | 'orders.po-lines.item.delete'                                 |
+      | 'orders.po-lines.item.get'                                    |
+      | 'orders.po-lines.item.post'                                   |
+      | 'orders.po-lines.item.put'                                    |
+      | 'orders.re-encumber.item.post'                                |
+      | 'orders.pieces.collection.get'                                |
+      | 'orders-storage.order-invoice-relationships.collection.get'   |
+      | 'orders-storage.po-lines.item.get'                            |
+      | 'orders-storage.po-lines.item.put'                            |
+      | 'organizations-storage.organizations.item.post'               |
+      | 'voucher.vouchers.collection.get'                             |
+      | 'orders.pieces.item.delete'                                   |
+      | 'finance.funds.item.put'                                      |
+      | 'perms.users.get'                                             |
+      | 'perms.users.item.put'                                        |
+      | 'data-export.config.collection.get'                           |
+      | 'data-export.config.item.get'                                 |
+      | 'data-export.config.item.post'                                |
+      | 'data-export.config.item.put'                                 |
+      | 'data-export.config.item.delete'                              |
+      | 'data-export.job.collection.get'                              |
+      | 'data-export.job.item.download'                               |
+      | 'data-export.job.item.resend'                                 |
+      | 'pieces.send-claims.collection.post'                          |
+      | 'organizations.organizations.item.post'                       |
+      | 'orders.titles.item.post'                                     |
+      | 'organizations.organizations.item.get'                        |
+      | 'organizations.organizations.item.put'                        |
+      | 'orders.pieces.item.post'                                     |
+      | 'data-export.job.item.get'                                    |
+      | 'orders.titles.collection.get'                                |
+      | 'orders.pieces.collection.put'                                |
+      | 'inventory-storage.holdings.retrieve.collection.post'         |
+      | 'users.collection.get'                                        |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
-
-  Scenario: enable export modules
-    # get and install export modules
-    Given call read('classpath:common/tenant.feature@install') { modules: '#(exportModules)', tenant: '#(testTenant)'}
-    And pause(300000)
-
-  Scenario: update user permissions with export modules permissions
-    * call login testAdmin
-    Given path 'perms/users'
-    And param query = 'userId=00000000-1111-5555-9999-999999999992'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    And def permissionEntry = $.permissionUsers[0]
-    And def newPermissions = $exportModulesPermissions[*].name
-    And def updatedPermissions = karate.append(permissionEntry.permissions, newPermissions)
-    And set permissionEntry.permissions = updatedPermissions
-
-    # update user permissions with export modules permissions
-    Given path 'perms/users', permissionEntry.id
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And request permissionEntry
-    When method PUT
-    Then status 200
+    * def testUser = testAdmin
+    Given call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 1800 }
 
   Scenario: init global data
     * call login testAdmin

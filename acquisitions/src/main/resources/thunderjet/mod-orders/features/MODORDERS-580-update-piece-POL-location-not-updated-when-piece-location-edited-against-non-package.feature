@@ -7,11 +7,8 @@ Feature: Should update location in the POL if change Location to a different hol
     #* callonce dev {tenant: 'testorders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -32,7 +29,6 @@ Feature: Should update location in the POL if change Location to a different hol
 
 
   Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -58,7 +54,6 @@ Feature: Should update location in the POL if change Location to a different hol
     * set poLine.locations[0].quantityPhysical = 2
     * set poLine.cost.quantityPhysical = 2
     Given path 'orders/order-lines'
-    * configure headers = headersUser
     And request poLine
     When method POST
     Then status 201
@@ -69,7 +64,6 @@ Feature: Should update location in the POL if change Location to a different hol
 
   * print 'Open the order with 2 items'
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -84,7 +78,6 @@ Feature: Should update location in the POL if change Location to a different hol
   * print 'Check inventory and order items after open order'
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def poLineInstanceId = response.instanceId
@@ -108,7 +101,6 @@ Feature: Should update location in the POL if change Location to a different hol
 
     * print 'Check if pieces were created when the order was opened'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -133,13 +125,11 @@ Feature: Should update location in the POL if change Location to a different hol
     * print 'Update Physical piece without holding deletion and update location with another holding from same instance'
     Given path 'orders/pieces', physicalPieceAfterOpenOrder2.id
     * set physicalPieceAfterOpenOrder2.holdingId = holdingToPiece2
-    * configure headers = headersUser
     And  request physicalPieceAfterOpenOrder2
     When method PUT
     Then status 204
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -166,7 +156,6 @@ Feature: Should update location in the POL if change Location to a different hol
 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     * def poLine = $.compositePoLines[0]
     And match $.workflowStatus == 'Open'

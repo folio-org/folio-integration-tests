@@ -5,21 +5,16 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * url baseUrl
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
 
     ## Prepare finances
-    * configure headers = headersAdmin
     * callonce createFund { 'id': '#(fundId)'}
     * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
-    * configure headers = headersUser
 
   @Positive
   Scenario: Verify holding NOT being created when createInventory: None

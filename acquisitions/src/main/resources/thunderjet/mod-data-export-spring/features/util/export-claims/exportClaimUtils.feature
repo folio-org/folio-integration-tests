@@ -4,6 +4,8 @@ Feature: Init Data for Claims Export
   Background:
     * url baseUrl
 
+    * call login testAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
     # Replace these 2 lines to remove date and time constraints, but match with file ids
     * def interchangeHeaderRegexTemplte = "UNB\\+UNOC:3\\+LIB-EDI-CODE:31B\\+VENDOR-EDI-CODE:31B\\+\\d{6}:\\d{4}\\+{fileId}'"
     * def interchangeHeaderSampleTemplate = "UNB+UNOC:3+LIB-EDI-CODE:31B+VENDOR-EDI-CODE:31B+150125:1249+{fileId}'"
@@ -119,6 +121,9 @@ Feature: Init Data for Claims Export
 
   @CreatePiecesForPoLine
   Scenario: createPiecesForPoLine
+    * call login testAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+
     # parameters: _poLineNumber, _pieceIds
 
     # 1. Get poLine by poLineNumber
@@ -136,6 +141,9 @@ Feature: Init Data for Claims Export
     Then status 200
     And match response.totalRecords == 1
     * def titleId = response.titles[0].id
+
+    * call login testAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
     # 3. Create 249 pieces for the poLine
     * def pieceIdsTable = karate.map(_pieceIds, p => { return { pieceId: p, poLineId: poLineId, titleId: titleId } })

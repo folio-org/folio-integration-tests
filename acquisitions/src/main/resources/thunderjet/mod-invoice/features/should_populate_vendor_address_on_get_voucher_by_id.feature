@@ -4,15 +4,12 @@ Feature: Should populate vendor address when retrieve voucher by id
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'testinvoices2222'}
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+    * configure headers = headersAdmin
 
     # load global variables
     * callonce variables
@@ -72,7 +69,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= create invoice ===================
     Given path 'invoice/invoices'
-    And headers headersUser
     And request
     """
     {
@@ -92,7 +88,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= create invoice lines ===================
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -116,7 +111,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= get invoice to approve ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoiceBody = $
@@ -124,7 +118,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= put approved invoice ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoiceBody
     When method PUT
     Then status 204
@@ -143,14 +136,12 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= Verify vouchers ===================
     Given path '/voucher/vouchers'
-    And headers headersUser
     And param query = 'invoiceId==' + invoiceId
     When method GET
     Then status 200
     * def voucherId = $.vouchers[0].id
 
     Given path '/voucher/vouchers', voucherId
-    And headers headersUser
     When method GET
     Then status 200
     And match $.vendorId == vendorId

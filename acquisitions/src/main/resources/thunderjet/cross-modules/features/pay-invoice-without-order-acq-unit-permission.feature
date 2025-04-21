@@ -6,16 +6,10 @@ Feature: Pay invoice without order acq unit permission
     * print karate.info.scenarioName
 
     * url baseUrl
-
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -54,7 +48,7 @@ Feature: Pay invoice without order acq unit permission
       "protectCreate": true,
       "protectDelete": true,
       "protectRead": true,
-      "name": "testAcqUnit"
+      "name": "testAcqUnit3"
     }
     """
     When method POST
@@ -63,12 +57,14 @@ Feature: Pay invoice without order acq unit permission
 
   Scenario: Create acq unit membership
     * configure headers = headersAdmin
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
     And request
     """
       {
         "id": '#(acqUnitMembershipId)',
-        "userId": "00000000-1111-5555-9999-999999999992",
+        "userId": "#(userIdForMembership)",
         "acquisitionsUnitId": "#(acqUnitId)"
       }
     """

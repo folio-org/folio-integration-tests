@@ -4,8 +4,8 @@ Feature: Move Item and Holding to update order data
     * def moveItemAndHoldingFeature = read('classpath:thunderjet/mod-orders/features/mode-item-and-holding-to-update-order-data.feature')
 
   Scenario: Test Moving Item and Holding to update order data in ECS environment
-    * set consortiaAdmin.name = consortiaAdmin.username
+    * def proxyConsortiaAdmin = {name: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)'}
     * table tenants
       | testAdmin      |
-      | consortiaAdmin |
-    * def v = call moveItemAndHoldingFeature tenants
+      | proxyConsortiaAdmin |
+    * def v = call moveItemAndHoldingFeature {testAdmin: '#(proxyConsortiaAdmin)', testTenant: '#(centralTenant)'}
