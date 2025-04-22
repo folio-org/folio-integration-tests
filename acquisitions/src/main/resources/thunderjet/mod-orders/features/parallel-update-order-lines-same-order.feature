@@ -8,11 +8,8 @@ Feature: Update order lines for an open order in parallel
     * url baseUrl
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -39,8 +36,6 @@ Feature: Update order lines for an open order in parallel
     * callonce createOrderLine { id: "#(poLineId4)", orderId: "#(orderId)", fundId: "#(fundId)" }
     * callonce createOrderLine { id: "#(poLineId5)", orderId: "#(orderId)", fundId: "#(fundId)" }
     * callonce openOrder { orderId: "#(orderId)" }
-
-    * configure headers = headersUser
 
 
   Scenario Outline: Update line <lineNumber>

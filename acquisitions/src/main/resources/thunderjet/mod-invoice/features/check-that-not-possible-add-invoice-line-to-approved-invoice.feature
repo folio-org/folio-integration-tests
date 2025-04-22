@@ -7,12 +7,9 @@ Feature: Checking that it is impossible to add a invoice line to already approve
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     # load global variables
     * callonce variables

@@ -4,14 +4,12 @@ Feature: Check remaining amount upon invoice approval
     * url baseUrl
     # uncomment below line for development
 #    * callonce dev {tenant: 'testinvoices'}
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
+    * configure headers = headersAdmin
 
   Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> and <netTransfers> amount to get <httpCode> code
 
@@ -61,7 +59,6 @@ Feature: Check remaining amount upon invoice approval
     Then status 201
 
     # ============= Create invoices ===================
-    * configure headers = headersUser
 
     Given path 'invoice/invoices'
     And request

@@ -4,16 +4,11 @@ Feature: Budget can not be deleted if have to and from fund in allocation transa
     * url baseUrl
     # uncomment below line for development
    # * callonce dev {tenant: 'testfinance'}
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
     * callonce variables
 
     * def ledgerId = callonce uuid1

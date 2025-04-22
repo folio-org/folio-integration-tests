@@ -4,15 +4,11 @@ Feature: Update Pieces statuses in batch
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-
-    * call loginAdmin testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * call loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure retry = { count: 10, interval: 5000 }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
     * configure headers = headersAdmin
+    * configure retry = { count: 10, interval: 5000 }
 
     * callonce variables
     * def fundId = callonce uuid
@@ -42,7 +38,6 @@ Feature: Update Pieces statuses in batch
       | pieceId2 | titleId | poLineId |
       | pieceId3 | titleId | poLineId |
     * def v = callonce createPiece pieceData
-    * configure headers = headersUser
 
   @Positive
   Scenario: Update once Piece status in batch to received and verify PoLine receipt status
@@ -170,34 +165,28 @@ Feature: Update Pieces statuses in batch
 
   @Positive
   Scenario: Update 100 pieces statuses in batch to delay claim, late claim and unreceivable
+    ## Relogin to avoid login expry problem
+    * call loginAdmin testAdmin
+    * def okapitokenAdmin = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
+
     # 1. Create 100 Pieces
-    * def piecesIds = []
     * def piecesData = []
     * def populatePiecesData =
       """
       function() {
         for (let i = 0; i < 100; i++) {
           const randomPieceId = uuid();
-          piecesIds.push(randomPieceId);
           piecesData.push({ id: randomPieceId, titleId: titleId, poLineId: poLineId, format: 'Physical', locationId: globalLocationsId });
         }
       }
       """
     * eval populatePiecesData()
+    * def piecesIds = piecesData.map(x => x.id)
+    * print 'piecesIds:' + piecesIds
     * def pieceCollection = { pieces: '#(piecesData)', totalRecords: 100 }
     * def v = call createPiecesBatch pieceCollection
-
-    ## Relogin to avoid login expry problem
-    * def headersAdmin = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'Accept': '*/*'  }
-    * configure headers = headersUser
-    * call loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
-    * call loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
 
     # 2 Update Pieces statuses in batch to "Claim delayed"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim delayed' }
@@ -212,4 +201,9 @@ Feature: Update Pieces statuses in batch
     # 4 Update Pieces statuses in batch to "Unreceivable"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Unreceivable' }
     * def verifyPiecesData3 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Unreceivable', _eventCount: 4 } } )
+
+    * call loginAdmin testAdmin
+    * def okapitokenAdmin = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     * def v = call verifyPieceAuditEvents verifyPiecesData3

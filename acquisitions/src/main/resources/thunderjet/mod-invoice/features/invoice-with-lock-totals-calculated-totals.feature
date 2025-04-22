@@ -7,12 +7,9 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     # load global variables
     * callonce variables
@@ -78,7 +75,7 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     And match $.total == 35.0
 
   Scenario: Add first invoice line with adjustment to created invoice
-     # ============= create invoice lines ===================
+    # ============= create invoice lines ===================
     Given path 'invoice/invoice-lines'
     * set invoiceLinePayload.id = firstInvoiceLineId
     * set invoiceLinePayload.invoiceId = firstInvoiceId
@@ -113,7 +110,7 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     And match $.total == 117.58
 
   Scenario: Add second invoice line with adjustment to created invoice
-     # ============= create invoice lines ===================
+    # ============= create invoice lines ===================
     Given path 'invoice/invoice-lines'
     * set invoiceLinePayload.id = secondInvoiceLineId
     * set invoiceLinePayload.invoiceId = firstInvoiceId
@@ -195,7 +192,7 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     And match $.total == 127.75
 
   Scenario: Delete second invoice line
-     # ============= try to delete approved invoice line ===================
+    # ============= try to delete approved invoice line ===================
     Given path 'invoice/invoice-lines', secondInvoiceLineId
     When method DELETE
     Then status 204

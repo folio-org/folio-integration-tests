@@ -4,13 +4,10 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'testcrossmodules'}
-
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
     # load global variables
     * callonce variables
 

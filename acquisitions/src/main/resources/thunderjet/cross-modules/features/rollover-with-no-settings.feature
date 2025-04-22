@@ -6,14 +6,8 @@ Feature: Rollover with no settings
     * url baseUrl
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * call loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -60,7 +54,6 @@ Feature: Rollover with no settings
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
     * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId)', fiscalYearId: '#(fiscalYearId1)', allocated: 1000, status: 'Active' }
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId)', fiscalYearId: '#(fiscalYearId2)', allocated: 1000, status: 'Active' }
-    * configure headers = headersUser
 
     ### 3. Create order and order line
     * table orders

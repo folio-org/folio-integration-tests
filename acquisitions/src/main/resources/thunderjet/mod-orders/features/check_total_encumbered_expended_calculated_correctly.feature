@@ -7,13 +7,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
     #* callonce dev {tenant: 'testorders32'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
     * configure headers = headersAdmin
     # load global variables
     * callonce variables
@@ -290,7 +284,6 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
 
 
   Scenario Outline: Check totalEncumbered, totalExpended values of order <orderId>
-    * configure headers = headersUser
 
     # ============= get order to open ===================
     Given path 'orders/composite-orders', <orderId>

@@ -6,16 +6,10 @@ Feature: Cancel and delete order
     * print karate.info.scenarioName
 
     * url baseUrl
-
-    * call login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * call login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * call variables
 
@@ -32,7 +26,6 @@ Feature: Cancel and delete order
 
   Scenario: Cancel & Delete Order
     * print '## Prepare finances'
-    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 1000 }
 
@@ -72,7 +65,6 @@ Feature: Cancel and delete order
 
 
     * print '## Check the encumbrances were deleted'
-    * configure headers = headersAdmin
     Given path '/finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET

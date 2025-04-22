@@ -5,16 +5,10 @@ Feature: Check estimated price with composite order
     * print karate.info.scenarioName
 
     * url baseUrl
-
-    * call login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * call login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     * call variables
 
 
@@ -33,7 +27,6 @@ Feature: Check estimated price with composite order
     * def v = call createBudget { id: "#(genrlBudgetId)", fundId: "#(genrlFundId)", allocated: 1000 }
     * def v = call createFund { id: "#(miscHistFundId)" }
     * def v = call createBudget { id: "#(miscHistBudgetId)", fundId: "#(miscHistFundId)", allocated: 1000 }
-    * configure headers = headersUser
 
     * print '## Prepare the order'
     * def po = read('classpath:samples/mod-orders/compositeOrders/po-listed-print-monograph.json')

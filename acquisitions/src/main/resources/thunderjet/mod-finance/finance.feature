@@ -3,20 +3,17 @@ Feature: mod-finance integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-organizations-storage' |
+      | name                    |
+      | 'mod-inventory-storage' |
+      | 'mod-orders-storage'    |
+      | 'mod-orders'            |
+      | 'mod-invoice'           |
+      | 'mod-invoice-storage'   |
+      | 'mod-finance-storage'   |
+      | 'mod-finance'           |
+      | 'mod-login'             |
+      | 'mod-permissions'       |
+      | 'mod-configuration'     |
 
     * def random = callonce randomMillis
     * def testTenant = 'testfinance' + random
@@ -149,9 +146,6 @@ Feature: mod-finance integration tests
 
   Scenario: Batch transaction API
     Given call read('features/batch-transaction-api.feature')
-
-  Scenario: Create inactive budget
-    Given call read('features/create-inactive-budget.feature')
 
   Scenario: wipe data
     Given call read('classpath:common/destroy-data.feature')

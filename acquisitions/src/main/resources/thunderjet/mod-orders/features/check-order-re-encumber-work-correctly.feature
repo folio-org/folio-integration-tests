@@ -5,16 +5,10 @@ Feature: Check re-encumber works correctly
     * url baseUrl
     # uncomment below line for development
     # * callonce dev {tenant: 'testorders12'}
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     # load global variables
     * callonce variables
 
@@ -401,7 +395,6 @@ Feature: Check re-encumber works correctly
       | initialAmountOngoingRollover | successInitialAmountOrder | successInitialAmountLine  | initialAmountEncumberedFund  |
 
   Scenario Outline: re-encumber orders with orderId <orderId>
-    * configure headers = headersUser
 
     * def orderId = <orderId>
 

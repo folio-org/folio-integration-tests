@@ -7,11 +7,8 @@ Feature: Receive piece against non-package POL
     #* callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -31,7 +28,6 @@ Feature: Receive piece against non-package POL
 
 
   Scenario: Create an order
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """

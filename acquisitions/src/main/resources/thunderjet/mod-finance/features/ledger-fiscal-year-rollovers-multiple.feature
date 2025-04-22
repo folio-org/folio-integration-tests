@@ -5,15 +5,10 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'testfinance'}
-
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * def headersUser = headersAdmin
 
     * configure headers = headersAdmin
 

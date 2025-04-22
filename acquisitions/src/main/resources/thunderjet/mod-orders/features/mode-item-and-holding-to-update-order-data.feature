@@ -3,8 +3,10 @@ Feature: Move Item and Holding to update order data
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * call loginAdmin testAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * callonce loginAdmin testAdmin
+    * def okapitokenAdmin = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     * configure retry = { interval: 1000, count: 5 }
 
     * callonce variables

@@ -4,17 +4,10 @@ Feature: Retrieve titles with honor of acquisition units
 
   Background:
     * url baseUrl
-
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -29,7 +22,6 @@ Feature: Retrieve titles with honor of acquisition units
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
     * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
-    * configure headers = headersUser
 
 
   Scenario: Create acq unit
@@ -52,13 +44,15 @@ Feature: Retrieve titles with honor of acquisition units
 
   Scenario: Create acq unit membership
     * configure headers = headersAdmin
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
     And headers headersAdmin
     And request
     """
       {
         "id": '#(acqUnitMembershipId)',
-        "userId": "00000000-1111-5555-9999-999999999992",
+        "userId": "#(userIdForMembership)",
         "acquisitionsUnitId": "#(acqUnitId)"
       }
     """
@@ -67,7 +61,6 @@ Feature: Retrieve titles with honor of acquisition units
 
 
   Scenario: Create a composite order
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -109,7 +102,6 @@ Feature: Retrieve titles with honor of acquisition units
     Then status 204
 
   Scenario: Retrieve title having acq units membership
-    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -125,7 +117,6 @@ Feature: Retrieve titles with honor of acquisition units
     Then status 204
 
   Scenario: Retrieve title without acq units membership
-    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET

@@ -7,14 +7,8 @@ Feature: Verify updating poLine location restricted after open order
     #* callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     # load global variables
     * callonce variables

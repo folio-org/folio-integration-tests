@@ -7,10 +7,10 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * url baseUrl
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login testUser
+    * callonce login dummyUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
     * configure retry = { count: 10, interval: 1000 }
     * callonce variables
@@ -27,7 +27,8 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def budgetId1 = callonce uuid { n: 10 }
     * def budgetId2 = callonce uuid { n: 11 }
 
-    * def userId = "00000000-1111-5555-9999-999999999992"
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(dummyUser)'}
+    * def userId = result.userId
 
     * configure headers = headersAdmin
 

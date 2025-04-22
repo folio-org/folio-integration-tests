@@ -7,10 +7,8 @@ Feature: Receive piece against package POL
     #* callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -34,7 +32,6 @@ Feature: Receive piece against package POL
 
   Scenario: Create an order
     * print "Create an order"
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -50,7 +47,6 @@ Feature: Receive piece against package POL
 
   Scenario: Create an order line with isPackage
     * print "Create an order line with isPackage"
-    * configure headers = headersUser
 
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId
@@ -68,7 +64,6 @@ Feature: Receive piece against package POL
 
   Scenario: Open the order
     * print "Open the order"
-    * configure headers = headersUser
 
     Given path 'orders/composite-orders', orderId
     When method GET
@@ -99,7 +94,6 @@ Feature: Receive piece against package POL
 
   Scenario: Create title 1
     * print "Create title 1"
-    * configure headers = headersUser
 
     Given path 'orders/titles'
     And request
@@ -135,7 +129,6 @@ Feature: Receive piece against package POL
 
   Scenario: Receive piece 1
     * print "Receive piece 1"
-    * configure headers = headersUser
 
     Given path 'orders/check-in'
     And request
@@ -194,7 +187,6 @@ Feature: Receive piece against package POL
 
   Scenario: Create title 2
     * print "Create title 2"
-    * configure headers = headersUser
 
     Given path 'orders/titles'
     And request
@@ -249,7 +241,6 @@ Feature: Receive piece against package POL
 
   Scenario: Receive piece 2
     * print "Receive piece 2"
-    * configure headers = headersUser
 
     Given path 'orders/check-in'
     And request
@@ -293,7 +284,6 @@ Feature: Receive piece against package POL
 
   Scenario: Receive piece 3
     * print "Receive piece 3"
-    * configure headers = headersUser
 
     Given path 'orders/check-in'
     And request
@@ -337,7 +327,6 @@ Feature: Receive piece against package POL
 
   Scenario: Unreceive pieces 2 and 3
     * print "Unreceive pieces 2 and 3"
-    * configure headers = headersUser
 
     Given path 'orders/receive'
     And request

@@ -2,10 +2,11 @@ Feature: Pieces API tests for cross-tenant envs
 
   Background:
     * url baseUrl
-    * call login centralUser1
-    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
-    * call login consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
+    * def headersUniAdmin = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitokenUni)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
+    * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    * configure headers = headersCentral
 
     * callonce variables
     * callonce variablesCentral
@@ -52,6 +53,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.receivingTenantId == '#(universityTenant)'
     And def holdingId = response.holdingId
 
+    * configure headers = headersUni
     # Check the created holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
@@ -198,12 +200,14 @@ Feature: Pieces API tests for cross-tenant envs
     And def oldItemId = response.itemId
     And def oldHoldingId = response.holdingId
 
+    * configure headers = headersUni
     # Delete associated item for holding to be deleted in specified tenant
     Given path '/inventory/items', oldItemId
     And header x-okapi-tenant = universityTenant
     When method DELETE
     Then status 204
 
+    * configure headers = headersCentral
     # Update existing piece
     * set minimalPiece.id = pieceId
     * set minimalPiece.titleId = titleId
@@ -232,6 +236,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.holdingId != '#(oldHoldingId)'
     And def holdingId = response.holdingId
 
+    * configure headers = headersUni
     # Check the created holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
@@ -294,6 +299,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.receivingStatus == 'Received'
     And def holdingId = response.holdingId
 
+    * configure headers = headersUni
     # Check the holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
@@ -349,6 +355,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.receivingStatus == 'Expected'
     And def holdingId = response.holdingId
 
+    * configure headers = headersUni
     # Check the holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
@@ -407,6 +414,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.holdingId != '#(oldHoldingId)'
     And def holdingId = response.holdingId
 
+    * configure headers = headersUni
     # Check the updated holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
@@ -470,6 +478,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.holdingId != '#(oldHoldingId)'
     And def holdingId = response.holdingId
 
+    * configure headers = headersUni
     # Check the updated holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
@@ -519,6 +528,7 @@ Feature: Pieces API tests for cross-tenant envs
     When method DELETE
     Then status 204
 
+    * configure headers = headersUni
     # Check the deleted holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
@@ -538,7 +548,6 @@ Feature: Pieces API tests for cross-tenant envs
     * def patronGroupId = call uuid
 
     # 1.1 Create and set patron group for central tenant user
-    * def v = call login consortiaAdmin
 
     * table groupDetails
       | id            | group   | tenant        |
@@ -557,38 +566,38 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 200
 
     # 1.2 Create and set patron group for target tenant user
-    * table uniUserDetails
-      | username                 | password                 | tenant           |
-      | universityUser1.username | universityUser1.password | universityTenant |
-    * def v = call login uniUserDetails
 
+    * configure headers = headersUniAdmin
+    * def patronGroupId2 = call uuid
     * table groupDetails
       | id            | group   | tenant           |
-      | patronGroupId | 'staff' | universityTenant |
+      | patronGroupId2 | 'staffUni' | universityTenant |
     * def v = call createUserGroup groupDetails
 
     * table userGroupDetails
       | userId            | groupId       | tenant           |
-      | universityUser1Id | patronGroupId | universityTenant |
+      | universityUserId | patronGroupId2 | universityTenant |
     * def v = call setUserPatronGroup userGroupDetails
 
-    Given path 'users', universityUser1Id
+    Given path 'users', universityUserId
     And header x-okapi-tenant = universityTenant
-    And retry until response.patronGroup == patronGroupId
+    And retry until response.patronGroup == patronGroupId2
     When method GET
     Then status 200
 
     # 2. Setup Circulation Policy
-    * def v = call login consortiaAdmin
+    * configure headers = headersCentral
     * table tenant
       | tenant        |
       | centralTenant |
     * def v = call read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature') tenant
+    * configure headers = headersUni
     * table tenant
       | tenant           |
       | universityTenant |
     * def v = call read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature') tenant
 
+    * configure headers = headersCentral
     # 3.1 Create piece for central
     * def centralPieceId = call uuid
     * set minimalPiece.id = centralPieceId
@@ -637,9 +646,10 @@ Feature: Pieces API tests for cross-tenant envs
       | requestId1 | centralAdminId | itemId1 | centralHoldingId1 | centralInstanceId | centralTenant |
     * def v = call createCirculationRequest request1
 
+    * configure headers = headersUni
     * table request2
       | id         | userId            | itemId  | holdingId            | instanceId           | tenant           |
-      | requestId2 | universityUser1Id | itemId2 | universityHoldingId1 | universityInstanceId | universityTenant |
+      | requestId2 | universityUserId | itemId2 | universityHoldingId1 | universityInstanceId | universityTenant |
     * def v = call createCirculationRequest request2
 
     # 4.2 Verify circulation request 2
@@ -650,6 +660,7 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 200
     And match response.itemId == itemId2
 
+    * configure headers = headersCentral
     # 4.3 Verify circulation request 1
     Given path 'circulation', 'requests', requestId1
     And header x-okapi-tenant = centralTenant
@@ -677,6 +688,7 @@ Feature: Pieces API tests for cross-tenant envs
     * set minimalPiece.poLineId = poLineId
     * set minimalPiece.locationId = universityLocationsId
     * set minimalPiece.receivingTenantId = universityTenant
+
     Given path 'orders/pieces'
     And header x-okapi-tenant = centralTenant
     And param createItem = true
@@ -689,6 +701,7 @@ Feature: Pieces API tests for cross-tenant envs
     And def itemId1 = response.itemId
     And def holdingId = response.holdingId
 
+    * configure headers = headersUni
     # 2.1 Check the created holding record in specified tenant
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant
@@ -713,6 +726,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(holdingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
+    * configure headers = headersCentral
     # 3. Change affliation in the piece
     Given path 'orders/pieces', pieceId
     And header x-okapi-tenant = centralTenant
@@ -761,6 +775,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(centralHoldingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
+    * configure headers = headersUni
     # 5.1 Verify that existing shared holding and item, and deletion of items in 'univeristyTenant'
     Given path '/holdings-storage/holdings/', holdingId
     And header x-okapi-tenant = universityTenant

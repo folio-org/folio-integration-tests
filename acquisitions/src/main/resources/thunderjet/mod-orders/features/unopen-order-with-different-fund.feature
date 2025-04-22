@@ -4,13 +4,10 @@ Feature: Unopen order and change fund distribution
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -24,7 +21,6 @@ Feature: Unopen order and change fund distribution
       * configure headers = headersAdmin
       * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerId)' }
       * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: '#(statusExpenseClasses)' }
-      * configure headers = headersUser
 
       # 2. Create order and order line
       * def orderId = call uuid
@@ -73,7 +69,6 @@ Feature: Unopen order and change fund distribution
       * configure headers = headersAdmin
       * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerId)' }
       * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: '#(statusExpenseClasses)' }
-      * configure headers = headersUser
 
       # 2. Create order and order line
       * def orderId = call uuid
@@ -130,8 +125,6 @@ Feature: Unopen order and change fund distribution
       | budgetId2 | fundId2 | 1000      | statusExpenseClasses |
       | budgetId3 | fundId3 | 1000      | statusExpenseClasses |
     * def v = call createBudget budgetTable
-
-    * configure headers = headersUser
 
     # 2. Create order and 15 order line with 3 fund distributions
     * def orderId = call uuid
@@ -217,7 +210,6 @@ Feature: Unopen order and change fund distribution
       """
     * eval createBudgetsTable()
     * def v = call createBudget budgetsTable
-    * configure headers = headersUser
 
     # 2. Create order and one order line with 25 fund distributions
     * def orderId = call uuid

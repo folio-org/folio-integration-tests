@@ -3,9 +3,8 @@ Feature: Check that order total fields are calculated correctly
   Background:
     * url baseUrl
     * callonce loginAdmin testAdmin
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
-    * callonce loginRegularUser testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def okapitokenAdmin = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
     * configure headers = headersAdmin
 
     * callonce variables
@@ -31,7 +30,7 @@ Feature: Check that order total fields are calculated correctly
     * def fundId = callonce uuid4
     * table fundDetails
       | id     | code     | ledgerId |
-      | fundId | "FUND-1" | ledgerId |
+      | fundId | "FUND-11111" | ledgerId |
     * def v = callonce createFund fundDetails
 
     * table budgetDetails
@@ -212,7 +211,7 @@ Feature: Check that order total fields are calculated correctly
       | invoiceLineId1 | invoiceId2 | poLineId | fundId | -100  |
     * def v = call createInvoiceLine invoiceLinesData
     * def v = call approveInvoice { invoiceId: '#(invoiceId2)' }
-    * def v = call payInvoice  { invoiceId: '#(invoiceId2)', poLinePaymentStatus: 'Fully Paid' }
+    * def v = call payInvoice { invoiceId: '#(invoiceId2)', poLinePaymentStatus: 'Fully Paid' }
 
     # 3. Check that total fields are calculated correctly
     Given path 'orders/composite-orders', orderId

@@ -5,11 +5,8 @@ Feature: Open order without creating holdings
     * url baseUrl
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -49,7 +46,6 @@ Feature: Open order without creating holdings
     """
     When method POST
     Then status 201
-    * configure headers = headersUser
 
     * print 'Create an order'
     Given path 'orders/composite-orders'
@@ -93,7 +89,6 @@ Feature: Open order without creating holdings
 
     * print 'Check the order line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     And match $.locations[0].holdingId == '#notpresent'

@@ -2,16 +2,10 @@ Feature: Should decrease quantity when delete piece with no location
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
     * callonce variables
 
     * def orderIdForPhysicalQuantity = callonce uuid1
@@ -158,13 +152,11 @@ Feature: Should decrease quantity when delete piece with no location
     * def physicalPieceId = $.pieces[0].id
 
     Given path '/orders/pieces', physicalPieceId
-    * configure headers = headersUser
     When method DELETE
     Then status 204
 
     * print 'Check Physical piece should be deleted'
     Given path 'orders/pieces', physicalPieceId
-    * configure headers = headersUser
     When method GET
     Then status 404
     * call pause 2000
@@ -180,13 +172,11 @@ Feature: Should decrease quantity when delete piece with no location
     * def electronicPieceId = $.pieces[0].id
 
     Given path '/orders/pieces', electronicPieceId
-    * configure headers = headersUser
     When method DELETE
     Then status 204
 
     * print 'Check Electronic piece should be deleted'
     Given path 'orders/pieces', electronicPieceId
-    * configure headers = headersUser
     When method GET
     Then status 404
     * call pause 2000

@@ -7,11 +7,9 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
+    * configure headers = headersAdmin
 
     # load global variables
     * callonce variables
@@ -34,7 +32,6 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     * set invoicePayload.id = invoiceId
     # ============= create invoice ===================
     Given path 'invoice/invoices'
-    And headers headersUser
     And request invoicePayload
     When method POST
     Then status 201
@@ -66,7 +63,6 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     ]
     """
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request invoiceLinePayload
     When method POST
     Then status 201
@@ -82,14 +78,12 @@ Feature: Check approve and pay invoice with odd number of pennies in total
     # ============= approve invoice ===================
   Scenario: Approve and Verify created invoice
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = "Approved"
 
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoicePayload
     When method PUT
     Then status 204
@@ -118,7 +112,6 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
     * print '## Verify get invoice by id - invoice totals are calculated invoice and move to Approved status'
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     And match $.status == "Approved"
@@ -129,21 +122,18 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
   Scenario: Pay And Verify the invoice
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = 'Paid'
 
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoicePayload
     When method PUT
     Then status 204
 
     * print '## Verify payed invoice'
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     And match $.status == 'Paid'

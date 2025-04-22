@@ -5,14 +5,8 @@
       * url baseUrl
       * callonce loginAdmin testAdmin
       * def okapitokenAdmin = okapitoken
-
-      * callonce loginRegularUser testUser
-      * def okapitokenUser = okapitoken
-
-      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-      * configure headers = headersUser
+      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+      * configure headers = headersAdmin
 
       * callonce variables
       * def routingListId = "a1d13648-347b-4ac9-8c2f-5bc47248b87e"
@@ -120,7 +114,6 @@
 
 
       * print "Create composite order to use in routing list"
-      * configure headers = headersUser
       Given path 'orders/composite-orders'
       And request
         """
@@ -196,7 +189,6 @@
 
 
       * print "Verify GET template feature"
-      * configure headers = headersUser
       Given path 'orders/routing-lists/' + routingListId + '/template'
       When method GET
       Then status 200

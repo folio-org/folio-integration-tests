@@ -4,16 +4,10 @@ Feature: Check poNumbers updates when invoice lines are created and updated
   Background:
     * url baseUrl
     #* callonce dev {tenant: 'testcrossmodules1'}
-
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
+    * configure headers = headersAdmin
 
     * callonce variables
 

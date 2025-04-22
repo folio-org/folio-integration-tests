@@ -5,11 +5,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * url baseUrl
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -33,7 +30,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
 
   Scenario: Create an order
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -60,7 +56,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * set poLine.locations[0].quantity = 3
     * set poLine.locations[0].quantityElectronic = 2
     Given path 'orders/order-lines'
-    * configure headers = headersUser
     And request poLine
     When method POST
     Then status 201
@@ -71,7 +66,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Scenario: Open the order
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -86,7 +80,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
   Scenario: Check inventory and order items after open order
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def instanceId = response.instanceId
@@ -106,7 +99,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
     * print 'Check if pieces were created when the order was opened'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -134,7 +126,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 # -- DELETE Physical piece -- #
   Scenario: Delete Physical piece without holding deletion
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -144,7 +135,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
     * print 'Delete Physical piece without holding deletion'
     Given path 'orders/pieces', physicalPieceForDelete.id
-    * configure headers = headersUser
     When method DELETE
     Then status 204
 
@@ -156,7 +146,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
     * print 'Check physical piece should be deleted'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -173,7 +162,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Scenario: Check order and transaction after Physical piece deletion
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def poLine = $.compositePoLines[0]
@@ -212,7 +200,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
     * print 'Delete Electronic piece without holding deletion'
     Given path 'orders/pieces', electronicPiece.id
-    * configure headers = headersUser
     When method DELETE
     Then status 204
 
@@ -238,7 +225,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Scenario: Check order and transaction after Electronic piece deletion
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def orderResponse = $
@@ -272,7 +258,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * def titleId = title.id
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
     """
     {
@@ -288,7 +273,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 201
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
     """
     {
@@ -303,7 +287,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 201
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
     """
     {
@@ -319,7 +302,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 201
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
     """
     {
@@ -335,7 +317,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Scenario: Check order and transaction after adding set of pieces
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def orderResponse = $
@@ -362,7 +343,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
   Scenario: Delete Physical piece with item and with holding deletion
     * print 'Delete piece With Item And initially Location in the piece with holding deletion'
     Given path 'orders/pieces', pieceIdWithItemAndLocation
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def pieceForDelete = $
@@ -371,7 +351,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
     * print 'Delete piece With Item And initially Location in the piece with holding deletion'
     Given path 'orders/pieces', pieceIdWithItemAndLocation
-    * configure headers = headersUser
     And param deleteHolding = true
     When method DELETE
     Then status 204
@@ -384,7 +363,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
     * print 'Check Electronic piece should be deleted'
     Given path 'orders/pieces', pieceIdWithItemAndLocation
-    * configure headers = headersUser
     When method GET
     Then status 404
 
@@ -396,7 +374,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Scenario: Check order and transaction after Physical piece and connected holding and item deletion
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def orderResponse = $
@@ -423,7 +400,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
   Scenario: Delete Electronic piece without item and with holding deletion, where still connected items
     * print 'Delete Electronic piece without item and with holding deletion, where still connected items'
     Given path 'orders/pieces', pieceIdWithoutItemAndHolding
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def pieceForDelete = $
@@ -432,14 +408,12 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
     * print 'Delete piece With Item And initially Global holding in the piece with holding deletion'
     Given path 'orders/pieces', pieceIdWithoutItemAndHolding
-    * configure headers = headersUser
     And param deleteHolding = true
     When method DELETE
     Then status 204
 
     * print 'Check Electronic piece should be deleted'
     Given path 'orders/pieces', pieceIdWithoutItemAndHolding
-    * configure headers = headersUser
     When method GET
     Then status 404
 
@@ -451,7 +425,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
   Scenario: Check order and transaction after Electronic piece deletion without connected holding deletion
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def orderResponse = $

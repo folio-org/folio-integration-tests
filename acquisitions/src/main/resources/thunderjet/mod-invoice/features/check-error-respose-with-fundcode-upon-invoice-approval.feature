@@ -4,14 +4,13 @@ Feature: Check error response with fundcode upon invoice approval
     * url baseUrl
     # uncomment below line for development
 #   * callonce dev {tenant: 'testinvoices'}
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
+    * configure headers = headersAdmin
+
 
   Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> amount to get code <httpCode> & <fundCode>
 
@@ -23,7 +22,6 @@ Feature: Check error response with fundcode upon invoice approval
     * def invoiceLineId = call uuid
 
     # ============= Create funds =============
-    * configure headers = headersAdmin
     Given path 'finance-storage/funds'
     And request
     """
@@ -62,7 +60,6 @@ Feature: Check error response with fundcode upon invoice approval
     Then status 201
 
     # ============= Create invoices ===================
-    * configure headers = headersUser
 
     Given path 'invoice/invoices'
     And request

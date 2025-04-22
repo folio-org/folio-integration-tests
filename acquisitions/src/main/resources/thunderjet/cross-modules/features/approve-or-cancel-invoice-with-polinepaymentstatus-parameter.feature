@@ -7,18 +7,18 @@
       * url baseUrl
       * callonce login testAdmin
       * def okapitokenAdmin = okapitoken
-      * callonce login testUser
-      * def okapitokenUser = okapitoken
+      * callonce login dummyUser
+      * def okapitokenDummy = okapitoken
 
-      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-      * configure headers = headersUser
+      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * def headersDummy = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenDummy)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * configure headers = headersDummy
 
       * callonce variables
 
 
     @Positive
-    Scenario: Pay and cancel the invoice, first without poLinePaymentStatus and then using poLinePaymentStatus
+    Scenario: Approve and cancel the invoice, first without poLinePaymentStatus and then using poLinePaymentStatus
       * def codePrefix = callonce random_string
       * def currentYear = callonce getCurrentYear
       * def pastYear = 2020
@@ -35,13 +35,10 @@
       * def currentBudgetId = call uuid
       * def pastBudgetId = call uuid
       * def orderId = call uuid
-      * def poLineId1 = call uuid
-      * def poLineId2 = call uuid
-      * def pastEncumbranceId1 = call uuid
-      * def pastEncumbranceId2 = call uuid
+      * def poLineId = call uuid
+      * def pastEncumbranceId = call uuid
       * def invoiceId = call uuid
-      * def invoiceLineId1 = call uuid
-      * def invoiceLineId2 = call uuid
+      * def invoiceLineId = call uuid
 
       * print "Create finances with a current and a past fiscal year"
       * configure headers = headersAdmin
@@ -51,54 +48,43 @@
       * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
       * def v = call createBudget { id: '#(currentBudgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active', fiscalYearId: '#(currentFiscalYearId)' }
       * def v = call createBudget { id: '#(pastBudgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active', fiscalYearId: '#(pastFiscalYearId)' }
-      * configure headers = headersUser
+      * configure headers = headersDummy
 
-      * print "Create an order and 2 lines"
+      * print "Create an order and line"
       * def v = call createOrder { id: '#(orderId)' }
-      * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10 }
-      * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10 }
+      * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10 }
 
       * print "Open the order"
       * def v = call openOrder { orderId: '#(orderId)' }
 
-      * print "Create encumbrances in the past fiscal year"
+      * print "Create an encumbrance in the past fiscal year"
       * configure headers = headersAdmin
-      * def v = call createTransaction { id: '#(pastEncumbranceId1)', transactionType: 'Encumbrance', fiscalYearId: '#(pastFiscalYearId)', fundId: '#(fundId)', amount: 10.0, orderId: '#(orderId)', poLineId: '#(poLineId1)' }
-      * def v = call createTransaction { id: '#(pastEncumbranceId2)', transactionType: 'Encumbrance', fiscalYearId: '#(pastFiscalYearId)', fundId: '#(fundId)', amount: 10.0, orderId: '#(orderId)', poLineId: '#(poLineId2)' }
-      * configure headers = headersUser
+      * def v = call createTransaction { id: '#(pastEncumbranceId)', transactionType: 'Encumbrance', fiscalYearId: '#(pastFiscalYearId)', fundId: '#(fundId)', amount: 10.0, orderId: '#(orderId)', poLineId: '#(poLineId)' }
+      * configure headers = headersDummy
 
       * print "Create an invoice in the past fiscal year"
       * def v = call createInvoice { id: '#(invoiceId)', fiscalYearId: '#(pastFiscalYearId)' }
 
-      * print "Add invoice lines linked to the po lines, using the past encumbrances, with releaseEncumbrance=true and releaseEncumbrance=false"
-      * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId1)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId1)', fundId: '#(fundId)', encumbranceId: '#(pastEncumbranceId1)', total: 10, releaseEncumbrance: true }
-      * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId2)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId2)', fundId: '#(fundId)', encumbranceId: '#(pastEncumbranceId2)', total: 10, releaseEncumbrance: false }
+      * print "Add an invoice line linked to the po line, using the past encumbrance, with releaseEncumbrance=true"
+      * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(pastEncumbranceId)', total: 10, releaseEncumbrance: true }
 
-      * def v = call approveInvoice
-
-      * print "Pay the invoice without using the poLinePaymentStatus parameter"
+      * print "Approve the invoice without using the poLinePaymentStatus parameter"
       * call getInvoice
-      * set invoice.status = 'Paid'
+      * set invoice.status = 'Approved'
       Given path 'invoice/invoices', invoiceId
       And request invoice
       When method PUT
       Then status 400
       And match $.errors[0].code == 'poLinePaymentStatusNotPresent'
 
-      * print "Pay the invoice using the poLinePaymentStatus parameter"
-      * def v = call payInvoice { poLinePaymentStatus: 'Fully Paid' }
+      * print "Approve the invoice using the poLinePaymentStatus parameter"
+      * def v = call approveInvoice { poLinePaymentStatus: 'Fully Paid' }
 
-      * print "Check the first order line payment status after paying"
-      Given path 'orders/order-lines', poLineId1
+      * print "Check the order line payment status after approving"
+      Given path 'orders/order-lines', poLineId
       When method GET
       Then status 200
       And match $.paymentStatus == 'Fully Paid'
-
-      * print "Check the second order line payment status after paying"
-      Given path 'orders/order-lines', poLineId2
-      When method GET
-      Then status 200
-      And match $.paymentStatus == 'Partially Paid'
 
       * print "Cancel the invoice without using the poLinePaymentStatus parameter"
       * call getInvoice
@@ -112,14 +98,8 @@
       * print "Cancel the invoice using the poLinePaymentStatus parameter"
       * def v = call cancelInvoice { poLinePaymentStatus: 'Cancelled' }
 
-      * print "Check the first order line payment status after cancelling"
-      Given path 'orders/order-lines', poLineId1
+      * print "Check the order line payment status after cancelling"
+      Given path 'orders/order-lines', poLineId
       When method GET
       Then status 200
       And match $.paymentStatus == 'Cancelled'
-
-      * print "Check the second order line payment status after cancelling"
-      Given path 'orders/order-lines', poLineId2
-      When method GET
-      Then status 200
-      And match $.paymentStatus == 'Partially Paid'

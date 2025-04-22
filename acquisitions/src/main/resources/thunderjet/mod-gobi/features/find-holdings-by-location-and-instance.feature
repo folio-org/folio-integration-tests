@@ -3,14 +3,14 @@ Feature: find-holdings-by-location-and-instance
   Background:
     * url baseUrl
     * callonce loginAdmin testAdmin
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
 
     * def locationId = 'b32c5ce2-6738-42db-a291-2796b1c3c4c8'
 
   Scenario: Create first order
     * def sample_po_1 = read('classpath:samples/mod-gobi/po-physical-annex-holding-1.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po_1
     When method POST
     Then status 201
@@ -28,7 +28,7 @@ Feature: find-holdings-by-location-and-instance
   Scenario: Create second order
     * def sample_po_2 = read('classpath:samples/mod-gobi/po-physical-annex-holding-2.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po_2
     When method POST
     Then status 201

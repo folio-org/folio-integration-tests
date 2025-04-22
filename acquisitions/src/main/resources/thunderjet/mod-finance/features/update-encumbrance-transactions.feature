@@ -6,14 +6,9 @@ Feature: Budge's totals (available, unavailable, encumbered) is updated when enc
 #    * callonce dev {tenant: 'testfinance'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     * def orderId = callonce uuid
     * def poLineId = callonce uuid

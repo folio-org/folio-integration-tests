@@ -9,10 +9,8 @@ Feature: Get and put a composite order
 #    * callonce dev {tenant: 'testorders'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -25,8 +23,6 @@ Feature: Get and put a composite order
 
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-
-    * configure headers = headersUser
 
 
   Scenario: Create finances

@@ -7,11 +7,8 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     #* callonce dev {tenant: 'testorders1'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -33,7 +30,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
 
   Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -59,7 +55,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     * set poLine.locations[0].quantityPhysical = 1
     * set poLine.cost.quantityPhysical = 1
     Given path 'orders/order-lines'
-    * configure headers = headersUser
     And request poLine
     When method POST
     Then status 201
@@ -70,7 +65,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
   * print 'Open the order with 1 items'
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -85,7 +79,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
   * print 'Check inventory and order items after open order'
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def poLineInstanceId = response.instanceId
@@ -106,7 +99,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
     * print 'Check if pieces were created when the order was opened'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -135,7 +127,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
     * print 'Create piece without item creation and provided location'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
     """
     {
@@ -152,14 +143,12 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
     * print 'Update piece with item creation and provided location'
     Given path 'orders/pieces', newCreatedPiece.id
-    * configure headers = headersUser
     And request newCreatedPiece
     And param createItem = true
     When method PUT
     Then status 204
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -186,7 +175,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     * def poLine = $.compositePoLines[0]
     And match $.workflowStatus == 'Open'

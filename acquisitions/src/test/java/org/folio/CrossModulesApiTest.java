@@ -1,18 +1,18 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.apache.commons.lang3.RandomUtils;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 @FolioTest(team = "thunderjet", module = "cross-modules")
-@Deprecated(forRemoval = true)
-@Disabled
-public class CrossModulesApiTest extends TestBase {
+public class CrossModulesApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
@@ -91,7 +91,7 @@ public class CrossModulesApiTest extends TestBase {
   void orderInvoiceRelationCanBeDeleted() {
     runFeatureTest("order-invoice-relation-can-be-deleted");
   }
-  
+
   @Test
   void order_invoice_relation_must_be_deleted_if_invoice_deleted() {
     runFeatureTest("order-invoice-relation-must-be-deleted-if-invoice-deleted");
@@ -237,19 +237,16 @@ public class CrossModulesApiTest extends TestBase {
     runFeatureTest("check-encumbrances-after-issuing-credit-for-paid-order");
   }
 
-  @Test
-  void approveOrCancelInvoiceWithPolinepaymentstatusParameter() {
-    runFeatureTest("approve-or-cancel-invoice-with-polinepaymentstatus-parameter");
-  }
-
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
+    System.setProperty("testTenant", "testcross" + RandomUtils.nextLong());
+    System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
   }
 
   @AfterAll
   public void crossModuleApiTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
 }

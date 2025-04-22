@@ -7,13 +7,9 @@ Feature: Batch voucher export with many lines
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -51,7 +47,6 @@ Feature: Batch voucher export with many lines
     * configure headers = headersAdmin
     * call createFund { id: '#(fundId)', externalAccountNo: '#(externalAccountNo)' }
     * call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
-    * configure headers = headersUser
 
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = call uuid
@@ -121,6 +116,7 @@ Feature: Batch voucher export with many lines
     * def batchVoucherId = $.batchVoucherId
 
     Given path 'batch-voucher/batch-vouchers', batchVoucherId
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
     When method GET
     Then status 200
     And match $.batchedVouchers[0].batchedVoucherLines == '#[16]'

@@ -7,11 +7,8 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     #* callonce dev {tenant: 'testorders6'}
     * callonce loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -70,7 +67,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
       | newElectronicCreatedHoldingIdSecondUpdate | 'ElecLocationCode2' |'ElecLocation2'|
 
   Scenario: Create an order
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -94,7 +90,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     * remove poLine.locations[0].locationId
     * set poLine.locations[0].holdingId = initialHoldingId
     Given path 'orders/order-lines'
-    * configure headers = headersUser
     And request poLine
     When method POST
     Then status 201
@@ -105,7 +100,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
   Scenario: Open the order
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -120,7 +114,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
   Scenario: Check inventory and order items after open order
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def instanceId = response.instanceId
@@ -140,7 +133,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
     * print 'Check if pieces were created when the order was opened'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -168,7 +160,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
  #-- Update Physical piece -- #
   Scenario: Update Physical piece without holding deletion and in the piece there is location reference
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -180,13 +171,11 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
     * print 'Update Physical piece without holding deletion'
     Given path 'orders/pieces', physicalPieceForUpdate.id
-    * configure headers = headersUser
     And  request physicalPieceForUpdate
     When method PUT
     Then status 204
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -216,7 +205,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def poLine = $.compositePoLines[0]
@@ -251,7 +239,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 # -- Update Physical piece -- #
  * print 'Update Physical piece without holding deletion and in the piece there is initial holding reference'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -262,13 +249,11 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
     * print 'Update Physical piece without holding deletion'
     Given path 'orders/pieces', physicalPieceForUpdate.id
-    * configure headers = headersUser
     And  request physicalPieceForUpdate
     When method PUT
     Then status 204
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -298,7 +283,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def poLine = $.compositePoLines[0]
@@ -327,7 +311,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 # -- Update Electronic piece -- #
     * print 'Update Electronic piece without holding deletion and create item true should fail, because inventory option is Instance, Holding'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -339,7 +322,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
     * print 'Update Physical piece without holding deletion'
     Given path 'orders/pieces', electronicPieceForUpdate.id
-    * configure headers = headersUser
     And  request electronicPieceForUpdate
     And param createItem = true
     When method PUT
@@ -348,7 +330,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 # -- Update Electronic piece with new location and delete holding -- #
   Scenario: Update Electronic piece with holding deletion and in the piece there is location reference
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -360,13 +341,11 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
     * print 'Update Electronic piece without holding deletion'
     Given path 'orders/pieces', electronicPieceForUpdate.id
-    * configure headers = headersUser
     And  request electronicPieceForUpdate
     When method PUT
     Then status 204
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -383,7 +362,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     Given path 'orders/pieces', electronicPieceForUpdateFirstUpdate.id
     * set electronicPieceForUpdateFirstUpdate.locationId = newElectronicCreatedHoldingIdSecondUpdate
     * remove electronicPieceForUpdateFirstUpdate.holdingId
-    * configure headers = headersUser
     And  request electronicPieceForUpdateFirstUpdate
     And param deleteHolding = true
     When method PUT
@@ -391,7 +369,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -422,7 +399,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
     * print 'Check order and transaction after Electronic piece update'
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def poLine = $.compositePoLines[0]

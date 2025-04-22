@@ -8,13 +8,9 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     * url baseUrl
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -54,13 +50,11 @@ Feature: Test ledger fiscal year rollover based on cash balance value
 
   Scenario: Prepare finances
     * def fundCode = fundId
-    * configure headers = headersAdmin
     * call createFund { id: '#(fundId)', code: '#(fundCode)', ledgerId: '#(ledgerId)' }
     * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 100 }
 
 
   Scenario: Create an order
-    * configure headers = headersAdmin
     Given path 'orders/composite-orders'
     And request
     """
@@ -75,7 +69,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 201
 
   Scenario Outline: Create a po lines
-    * configure headers = headersAdmin
     * copy poLine = orderLineTemplate
     * set poLine.id = <poLineId>
     * set poLine.purchaseOrderId = orderId
@@ -97,7 +90,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
       | 10.0        | poLineId2   |
 
   Scenario: Open the order
-    * configure headers = headersAdmin
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -111,7 +103,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 204
 
   Scenario: Create an invoice
-    * configure headers = headersAdmin
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -120,7 +111,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 201
 
   Scenario: Create a invoice line
-    * configure headers = headersAdmin
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId1
     When method GET
@@ -144,7 +134,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 201
 
   Scenario: Create a invoice line
-    * configure headers = headersAdmin
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId1
     When method GET
@@ -168,7 +157,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 201
 
   Scenario: Approve the invoice
-    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -180,7 +168,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 204
 
   Scenario: Pay the invoice
-    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -215,15 +202,10 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     * set budgetResponse.cashBalance = 40
     * set budgetResponse.unavailable = 40
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'text/plain' }
-
     Given path 'finance-storage/budgets', budgetId
     And request budgetResponse
     When method PUT
     Then status 204
-
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-
 
   Scenario Outline: Start preview rollover based on CashBalance
 

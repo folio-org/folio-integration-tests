@@ -4,16 +4,14 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
     * url baseUrl
     # uncomment below line for development
     #* callonce dev {tenant: 'testinvoices'}
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
+    * configure headers = headersAdmin
+
     * configure readTimeout = 600000
-    * configure headers = headersUser
   #-------------- Init global variables and load templates. !Variables must be before templates initialization --------
     * callonce variables
     * callonce read('classpath:global/load-shared-templates.feature')

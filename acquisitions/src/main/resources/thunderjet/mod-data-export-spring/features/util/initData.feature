@@ -3,12 +3,8 @@ Feature: init data for mod-data-export-spring
   Background:
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     # set default headers to 'user'
     * configure headers = headersUser
     # define default values
@@ -17,7 +13,6 @@ Feature: init data for mod-data-export-spring
 
   @CreateOrganization
   Scenario: Create organization
-    * configure headers = headersAdmin
     * def organizationEntityRequest = read('samples/organization-entity-request.json')
     * organizationEntityRequest.id = karate.get('extOrganizationId', globalVendorId)
     * organizationEntityRequest.name = karate.get('extOrganizationName', defaultOrganizationName + ' ' + random_string())
@@ -107,7 +102,6 @@ Feature: init data for mod-data-export-spring
 
   @GetLocaleSettings
   Scenario: Get locale settings
-    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And param query = '(configName==localeSettings)'
     When method GET
