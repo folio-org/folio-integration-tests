@@ -62,21 +62,17 @@ function fn() {
     }
     karate.configure('ssl',true)
   }else if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-    config.edgeHost = 'https://folio-snapshot-2.dev.folio.org:8000';
+    config.edgeHost = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-    config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
+    config.edgeHost = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
-  } else if (env == 'eureka'){
-    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-    config.clientSecret = karate.properties['clientSecret'];
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeHost = '${edgeUrl}';

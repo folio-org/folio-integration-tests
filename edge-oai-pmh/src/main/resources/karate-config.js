@@ -60,8 +60,10 @@ function fn() {
   };
 
   if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
     config.admin = {
       tenant: 'supertenant',
@@ -69,8 +71,10 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
     config.admin = {
       tenant: 'supertenant',
@@ -87,12 +91,6 @@ function fn() {
       password: 'admin'
     }
     karate.configure('ssl',true)
-  } else if(env == 'eureka') {
-      config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-      config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-      config.clientSecret = karate.properties['clientSecret'];
-      config.edgeUrl = 'https://folio-edev-dojo-edge.ci.folio.org';
-      config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
   } else if(env == 'folio-testing-karate') {
       config.baseUrl = '${baseUrl}';
       config.edgeUrl = karate.properties['edgeUrl'] || 'https://folio-etesting-karate-eureka-edge.ci.folio.org'
