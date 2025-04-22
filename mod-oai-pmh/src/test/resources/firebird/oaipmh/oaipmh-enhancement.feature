@@ -12,9 +12,11 @@ Feature: Test enhancements to oai-pmh
 
   Scenario Outline: set errors to 200 and 500 and check Http status in responses <errorCode>
     * def errorsProcessingConfig = <errorCode>
+    * def recordsSourceConfig = "Source record storage"
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
     * string valueTemplateString = valueTemplate
+    * print 'valueTemplate=', valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
     Given url pmhUrl
