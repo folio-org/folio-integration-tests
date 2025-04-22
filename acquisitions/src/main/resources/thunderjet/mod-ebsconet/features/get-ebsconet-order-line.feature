@@ -22,7 +22,7 @@ Feature: Get Ebsconet Order Line
       id: '#(orderId)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: [{
+      poLines: [{
         acquisitionMethod: '#(globalPurchaseAcqMethodId)',
         cost: {
           listUnitPrice: 2.0,
@@ -44,7 +44,7 @@ Feature: Get Ebsconet Order Line
     """
     When method POST
     Then status 201
-    * def poLineNumber = $.compositePoLines[0].poLineNumber
+    * def poLineNumber = $.poLines[0].poLineNumber
 
     Given path '/ebsconet/orders/order-lines', poLineNumber
     When method GET
@@ -71,12 +71,12 @@ Feature: Get Ebsconet Order Line
       id: '#(orderId)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: ['#(orderLine)']
+      poLines: ['#(orderLine)']
     }
     """
     When method POST
     Then status 201
-    * def poLineNumber = $.compositePoLines[0].poLineNumber
+    * def poLineNumber = $.poLines[0].poLineNumber
 
     Given path '/ebsconet/orders/order-lines', poLineNumber
     When method GET

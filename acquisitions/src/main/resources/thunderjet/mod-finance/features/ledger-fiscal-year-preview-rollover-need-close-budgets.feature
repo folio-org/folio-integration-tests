@@ -231,7 +231,7 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
+      "poLines": [
         {
           "id": "#(poLineId)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",

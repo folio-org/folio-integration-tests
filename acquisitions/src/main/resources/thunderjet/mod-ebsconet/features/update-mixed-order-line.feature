@@ -37,12 +37,12 @@ Feature: Update Ebsconet Order Line
     {
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: [#(orderLine)]
+      poLines: [#(orderLine)]
     }
     """
     When method POST
     Then status 201
-    * def poLineNumber = $.compositePoLines[0].poLineNumber
+    * def poLineNumber = $.poLines[0].poLineNumber
     * def orderId = $.id
 
     # get ebsco line
@@ -72,10 +72,10 @@ Feature: Update Ebsconet Order Line
     Given path '/orders/composite-orders', orderId
     When method GET
     Then status 200
-    And match $.compositePoLines[0].cost.quantityPhysical == expectedPQuantity
-    And match $.compositePoLines[0].cost.quantityElectronic == expectedEQuantity
-    And match $.compositePoLines[0].locations[0].quantityPhysical == expectedPQuantity
-    And match $.compositePoLines[0].locations[0].quantityElectronic == expectedEQuantity
+    And match $.poLines[0].cost.quantityPhysical == expectedPQuantity
+    And match $.poLines[0].cost.quantityElectronic == expectedEQuantity
+    And match $.poLines[0].locations[0].quantityPhysical == expectedPQuantity
+    And match $.poLines[0].locations[0].quantityElectronic == expectedEQuantity
 
     Given path '/orders/composite-orders', orderId
     When method DELETE
@@ -115,12 +115,12 @@ Feature: Update Ebsconet Order Line
     {
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: [#(orderLine)]
+      poLines: [#(orderLine)]
     }
     """
     When method POST
     Then status 201
-    * def poLineNumber = $.compositePoLines[0].poLineNumber
+    * def poLineNumber = $.poLines[0].poLineNumber
     * def orderId = $.id
 
     # get ebsco line
@@ -150,8 +150,8 @@ Feature: Update Ebsconet Order Line
     Given path '/orders/composite-orders', orderId
     When method GET
     Then status 200
-    And match $.compositePoLines[0].cost.listUnitPrice == expectedPPrice
-    And match $.compositePoLines[0].cost.listUnitPriceElectronic == expectedEPrice
+    And match $.poLines[0].cost.listUnitPrice == expectedPPrice
+    And match $.poLines[0].cost.listUnitPriceElectronic == expectedEPrice
 
     Given path '/orders/composite-orders', orderId
     When method DELETE

@@ -30,8 +30,8 @@
 
       * print '## Prepare the order'
       * def po = read('classpath:samples/mod-orders/compositeOrders/po-listed-print-monograph.json')
-      * def line1 = po.compositePoLines[0]
-      * def line2 = po.compositePoLines[1]
+      * def line1 = po.poLines[0]
+      * def line2 = po.poLines[1]
       * set line1.fundDistribution[0].fundId = histFundId
       * set line1.fundDistribution[1].fundId = genrlFundId
       * set line2.fundDistribution[0].fundId = miscHistFundId
@@ -74,11 +74,11 @@
       * match po.dateOrdered contains getCurrentDateUTC()
       * match po.id == '#notnull'
       * match po.poNumber == '#notnull'
-      * match po.compositePoLines == '#[2]'
+      * match po.poLines == '#[2]'
       * match po.workflowStatus == "Open"
       * match po.totalItems == 14
       # Lines
-      * def newLines =  po.compositePoLines
+      * def newLines =  po.poLines
       * def poLineId1 = newLines[0].id
       * def poLineId2 = newLines[1].id
       * def orderId = po.id

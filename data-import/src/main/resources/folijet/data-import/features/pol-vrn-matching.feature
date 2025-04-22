@@ -1158,7 +1158,7 @@ Feature: Test matching by POL number and vendor reference number
     When method GET
     Then status 200
     And request createdOrder
-    And match response.compositePoLines[0].titleOrPackage contains 'Capitalism and the camera'
+    And match response.poLines[0].titleOrPackage contains 'Capitalism and the camera'
     And match response.vendor == vendorId
     * def openedOprder = response
 

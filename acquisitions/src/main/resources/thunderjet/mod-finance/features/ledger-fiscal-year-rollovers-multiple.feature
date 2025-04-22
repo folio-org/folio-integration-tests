@@ -313,7 +313,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
+      "poLines": [
         {
           "id" : "#(poLineId1)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
@@ -403,7 +403,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
+      "poLines": [
         {
           "id" : "#(poLineId1)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
@@ -497,7 +497,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
+      "poLines": [
         {
           "id" : "#(poLineId1)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",

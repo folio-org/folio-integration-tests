@@ -209,7 +209,7 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
+      "poLines": [
         {
           "id": "#(poLineId)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",

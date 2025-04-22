@@ -236,7 +236,7 @@ Feature: Ledger fiscal year rollover issue MODFISTO-247
       "workflowStatus": "Open",
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
-      "compositePoLines": [
+      "poLines": [
         {
           "id" : "#(poLineId)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",

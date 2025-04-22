@@ -201,7 +201,7 @@ Feature: Check order re-encumber after preview rollover
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
       "ongoing": #(ongoing),
-      "compositePoLines": [
+      "poLines": [
         {
           "id": "#(poLineId)",
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",

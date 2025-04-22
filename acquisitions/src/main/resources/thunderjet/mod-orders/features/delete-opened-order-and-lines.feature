@@ -27,7 +27,7 @@ Feature: Delete opened order and lines
       "orderType": "One-Time",
       "vendor": "#(globalVendorId)",
       "workflowStatus": "Open",
-      "compositePoLines": [
+      "poLines": [
         {
           "acquisitionMethod": "#(globalPurchaseAcqMethodId)",
           "orderFormat": "Other",

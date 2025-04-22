@@ -93,7 +93,7 @@ Feature: init data for mod-data-export-spring
     # set order.workflowStatus to 'Open'
     * def orderResponse = $
     * set orderResponse.workflowStatus = 'Open'
-    * remove order.compositePoLines
+    * remove order.poLines
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse

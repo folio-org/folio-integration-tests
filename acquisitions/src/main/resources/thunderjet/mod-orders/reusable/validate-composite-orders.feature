@@ -10,6 +10,6 @@ Feature: Validate composite orders
     When method GET
     Then status 200
     And match $.workflowStatus == workflowStatus
-    And match each $.compositePoLines[*].titleOrPackage == titleOrPackage
-    And match each $.compositePoLines[*].paymentStatus == paymentStatus
-    And match each $.compositePoLines[*].receiptStatus == receiptStatus
+    And match each $.poLines[*].titleOrPackage == titleOrPackage
+    And match each $.poLines[*].paymentStatus == paymentStatus
+    And match each $.poLines[*].receiptStatus == receiptStatus

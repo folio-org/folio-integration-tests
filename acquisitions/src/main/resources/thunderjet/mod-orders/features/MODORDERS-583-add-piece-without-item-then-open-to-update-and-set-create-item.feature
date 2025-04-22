@@ -176,17 +176,17 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     * print 'Check order and transaction after Physical piece update'
     Given path 'orders/composite-orders', orderId
     When method GET
-    * def poLine = $.compositePoLines[0]
+    * def poLine = $.poLines[0]
     And match $.workflowStatus == 'Open'
     And match $.totalItems == 2
     And match $.totalEstimatedPrice == 2.0
     And match poLine.cost.quantityElectronic == '#notpresent'
     And match poLine.cost.quantityPhysical == 2
-    * def physicalLocationAfterUpdate1 = karate.jsonPath(response.compositePoLines[0], '$.locations[*][?(@.holdingId == "' + poLineHoldingId + '")]')[0]
+    * def physicalLocationAfterUpdate1 = karate.jsonPath(response.poLines[0], '$.locations[*][?(@.holdingId == "' + poLineHoldingId + '")]')[0]
     And match physicalLocationAfterUpdate1.quantity == 1
     And match physicalLocationAfterUpdate1.quantityPhysical == 1
     And match physicalLocationAfterUpdate1.quantityElectronic == '#notpresent'
-    * def physicalLocationAfterUpdate2 = karate.jsonPath(response.compositePoLines[0], '$.locations[*][?(@.holdingId == "' + holdingToPiece2 + '")]')[0]
+    * def physicalLocationAfterUpdate2 = karate.jsonPath(response.poLines[0], '$.locations[*][?(@.holdingId == "' + holdingToPiece2 + '")]')[0]
     And match physicalLocationAfterUpdate2.quantity == 1
     And match physicalLocationAfterUpdate2.quantityPhysical == 1
     And match physicalLocationAfterUpdate2.quantityElectronic == '#notpresent'
