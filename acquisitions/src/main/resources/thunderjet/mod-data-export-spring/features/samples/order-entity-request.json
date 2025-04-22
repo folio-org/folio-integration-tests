@@ -9,7 +9,7 @@
   "totalItems": 0,
   "vendor": "#(organizationId)",
   "workflowStatus": "Pending",
-  "compositePoLines": [],
+  "poLines": [],
   "acqUnitIds": [],
   "metadata": {
     "createdDate": "2023-04-14T09:35:11.333+00:00",

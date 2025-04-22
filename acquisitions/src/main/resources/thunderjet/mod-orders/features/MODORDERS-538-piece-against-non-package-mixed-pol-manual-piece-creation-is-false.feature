@@ -176,7 +176,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * configure headers = headersUser
     When method GET
     Then status 200
-    * def poLine = $.compositePoLines[0]
+    * def poLine = $.poLines[0]
     And match $.workflowStatus == 'Open'
     And match $.totalItems == 2
     And match $.totalEstimatedPrice == 6
@@ -242,7 +242,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     * def orderResponse = $
-    * def poLine = orderResponse.compositePoLines[0]
+    * def poLine = orderResponse.poLines[0]
     And match poLine.locations == '#[1]'
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 1
@@ -339,7 +339,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     * def orderResponse = $
-    * def poLine = orderResponse.compositePoLines[0]
+    * def poLine = orderResponse.poLines[0]
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 5
     And match orderResponse.totalEstimatedPrice == 17.0
@@ -400,7 +400,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     * def orderResponse = $
-    * def poLine = orderResponse.compositePoLines[0]
+    * def poLine = orderResponse.poLines[0]
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 4
     And match orderResponse.totalEstimatedPrice == 13.0
@@ -455,7 +455,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     When method GET
     Then status 200
     * def orderResponse = $
-    * def poLine = orderResponse.compositePoLines[0]
+    * def poLine = orderResponse.poLines[0]
     And match orderResponse.workflowStatus == 'Open'
     And match orderResponse.totalItems == 3
     And match orderResponse.totalEstimatedPrice == 10.0

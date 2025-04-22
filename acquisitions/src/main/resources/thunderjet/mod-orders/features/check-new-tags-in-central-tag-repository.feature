@@ -44,7 +44,7 @@ Feature: Check new tags created in central tag repository
       id: '#(orderId)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: [#(orderLine)]
+      poLines: [#(orderLine)]
     }
     """
     When method POST

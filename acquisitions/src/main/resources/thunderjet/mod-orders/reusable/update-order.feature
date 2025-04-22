@@ -17,7 +17,7 @@ Feature: Update order
     * set order.reEncumber = karate.get('reEncumber', order.reEncumber)
     * set order.acqUnitIds = karate.get('acqUnitIds', order.acqUnitIds)
     * set order.workflowStatus = karate.get('workflowStatus', order.workflowStatus)
-    * remove order.compositePoLines
+    * remove order.poLines
 
     Given path 'orders/composite-orders', id
     And request order
