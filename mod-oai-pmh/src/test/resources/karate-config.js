@@ -21,16 +21,11 @@ function fn() {
     edgeApiKey: 'eyJzIjoiQlBhb2ZORm5jSzY0NzdEdWJ4RGgiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0',
     // define global features
     variables: karate.read('classpath:global/variables.feature'),
-    variablesEureka: karate.read('classpath:global/eureka/variables.feature'),
     destroyData: karate.read('classpath:common/destroy-data.feature'),
     getModuleIdByName: karate.read('classpath:global/module-operations.feature@getModuleIdByName'),
-    getModuleIdByNameEureka: karate.read('classpath:global/eureka/module-operations.feature@getModuleIdByName'),
     enableModule: karate.read('classpath:global/module-operations.feature@enableModule'),
-    enableModuleEureka: karate.read('classpath:global/eureka/module-operations.feature@enableModule'),
     deleteModule: karate.read('classpath:global/module-operations.feature@deleteModule'),
-    deleteModuleEureka: karate.read('classpath:global/eureka/module-operations.feature@deleteModule'),
     resetConfiguration: karate.read('classpath:firebird/mod-configuration/reusable/reset-configuration.feature'),
-    resetConfigurationEureka: karate.read('classpath:firebird/mod-configuration/eureka/reusable/reset-configuration.feature'),
     login: karate.read('classpath:common/login.feature'),
     // define global functions
     uuid: function () {
@@ -54,25 +49,30 @@ function fn() {
   config.env = env;
 
   if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-firebird-okapi.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
       password: 'admin'
     }
     karate.configure('ssl',true)
-  }else if (env == 'snapshot-2') {
+  } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
     config.edgeHost = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
-    config.getModuleByIdPath = '_/proxy/modules';
+    config.getModuleByIdPath = '_/proxy/modules'
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
     config.edgeHost = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeHost = '${edgeUrl}';

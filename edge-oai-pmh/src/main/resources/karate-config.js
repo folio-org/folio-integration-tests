@@ -82,8 +82,10 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-firebird-okapi.ci.folio.org';
-    config.edgeUrl = 'https://folio-dev-firebird-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
     config.admin = {
       tenant: 'supertenant',

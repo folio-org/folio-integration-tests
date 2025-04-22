@@ -96,14 +96,15 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'rancher') {
-     config.baseUrl='https://folio-dev-firebird-okapi.ci.folio.org'
+    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
      config.admin = {
         tenant:'supertenant',
         name:'testing_admin',
         password:'admin'
      }
      karate.configure('ssl',true)
-    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
