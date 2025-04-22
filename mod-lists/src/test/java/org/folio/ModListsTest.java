@@ -73,4 +73,9 @@ public class ModListsTest extends TestBaseEureka {
     void testVersioning() {
         runFeatureTest("versions");
     }
+
+    @Test
+    void testEcsExport() {
+        runFeatureTest("consortia/consortia-list");
+    }
 }
