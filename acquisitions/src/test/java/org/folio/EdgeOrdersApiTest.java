@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.folio.test.TestBaseEureka;
+import org.folio.test.TestBase;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
@@ -18,12 +18,13 @@ import org.junit.jupiter.api.Test;
  * The port number to use for edge modules is specified in karate-config.js.
  */
 
-@Disabled("they are disable for OKAPI as well")
+@Disabled
 @FolioTest(team = "thunderjet", module = "edge-orders")
-public class EdgeOrdersApiTest extends TestBaseEureka {
+@Deprecated(forRemoval = true)
+public class EdgeOrdersApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:thunderjet/edge-orders/eureka/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/edge-orders/features/";
 
   public EdgeOrdersApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -41,12 +42,12 @@ public class EdgeOrdersApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void edgeOrdersApiTestBeforeAll() {
-    runFeature("classpath:thunderjet/edge-orders/eureka/edge-orders-junit.feature");
+    runFeature("classpath:thunderjet/edge-orders/edge-orders-junit.feature");
   }
 
   @AfterAll
   public void edgeOrdersApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    runFeature("classpath:thunderjet/edge-orders/edge-orders-destroy-data.feature");
   }
 
 }
