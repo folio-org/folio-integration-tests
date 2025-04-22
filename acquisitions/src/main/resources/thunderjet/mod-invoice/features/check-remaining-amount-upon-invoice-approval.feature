@@ -3,6 +3,7 @@ Feature: Check remaining amount upon invoice approval
   Background:
     * url baseUrl
     # uncomment below line for development
+#    * callonce dev {tenant: 'testinvoices'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
 
