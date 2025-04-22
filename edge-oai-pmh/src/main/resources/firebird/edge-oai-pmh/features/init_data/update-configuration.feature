@@ -2,7 +2,7 @@ Feature: update configuration
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapiTokenAdmin = okapitoken
 
   @TechnicalConfig
@@ -12,6 +12,7 @@ Feature: update configuration
       And header Accept = 'application/json'
       And header Content-Type = 'application/json'
       And header x-okapi-token = okapiTokenAdmin
+      And header x-okapi-tenant = testTenant
       When method GET
       Then status 200
 
@@ -30,6 +31,7 @@ Feature: update configuration
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     When method PUT
     Then status 204
 
@@ -40,6 +42,7 @@ Feature: update configuration
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
 
@@ -58,5 +61,6 @@ Feature: update configuration
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     When method PUT
     Then status 204

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "firebird", module = "mod-bulk-operations")
 public class ModBulkOperationsApiEurekaTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/mod-bulk-operations/eureka-features/";
+    private static final String TEST_BASE_PATH = "classpath:firebird/mod-bulk-operations/features/";
 
     public ModBulkOperationsApiEurekaTest() {
         super(new TestIntegrationService(
@@ -19,7 +19,7 @@ public class ModBulkOperationsApiEurekaTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit-eureka.feature");
+        runFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit.feature");
     }
 
     @AfterAll

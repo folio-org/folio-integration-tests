@@ -3,7 +3,7 @@ Feature: post users
   Background:
     * url baseUrl
     * callonce variables
-    * callonce login testAdmin
+    * callonce login testUser
 
   Scenario: Create user
     * def groups = karate.read('classpath:samples/users/patron-groups.json')

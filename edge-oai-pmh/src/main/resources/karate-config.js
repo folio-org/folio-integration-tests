@@ -16,7 +16,7 @@ function fn() {
     prototypeTenant: 'diku',
     apikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9',
     testTenant: 'testoaipmh',
-    testTenantId: (function() { return java.util.UUID.randomUUID() + '' })(),
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -44,11 +44,6 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
-    },
-    orWhereQuery: function(field, values) {
-      var orStr = ' or ';
-      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
-      return string;
     },
     isoDate: function() {
       // var dtf = java.time.format.DateTimeFormatter.ISO_INSTANT;

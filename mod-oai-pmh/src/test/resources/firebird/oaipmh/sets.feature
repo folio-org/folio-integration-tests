@@ -1,29 +1,12 @@
 Feature: Test integration with inventory-storage into /oai-pmh/filtering-conditions endpoint logic
 
   Background:
-    * table modules
-      | name                              |
-      | 'mod-permissions'                 |
-      | 'mod-oai-pmh'                     |
-      | 'mod-login'                       |
-      | 'mod-inventory-storage'           |
-
-    * table userPermissions
-      | name                              |
-      | 'oai-pmh.all'                     |
-      | 'configuration.all'               |
-      | 'inventory-storage.all'           |
-      | 'source-storage.all'              |
-
     * def filteringConditionsUrl = baseUrl + '/oai-pmh/filtering-conditions'
     * url filteringConditionsUrl
-    * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    Given call read('classpath:common/setup-users.feature')
-    * callonce read('classpath:common/login.feature') testUser
-    * callonce read('classpath:global/init_data/setup-filtering-conditions-data.feature')
-    #=========================SETUP=================================================
+    * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
+    * callonce read('classpath:global/init_data/setup-filtering-conditions-data.feature')
 
   Scenario: should return filtering-conditions values composed from inventory entities: ill-policy, instanceType, instanceFormat, location and materialType
     And header Accept = 'application/json'

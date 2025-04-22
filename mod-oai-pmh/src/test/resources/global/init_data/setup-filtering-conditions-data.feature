@@ -7,6 +7,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/ill-policies'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def illPolicy = read('classpath:samples/filtering-conditions/illPolicies.json')
     And request illPolicy
     When method POST
@@ -16,6 +17,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/instance-types'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def instanceType = read('classpath:samples/filtering-conditions/instanceTypes.json')
     And request instanceType
     When method POST
@@ -25,6 +27,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/instance-formats'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def instanceFormat = read('classpath:samples/filtering-conditions/instanceFormats.json')
     And request instanceFormat
     When method POST
@@ -34,6 +37,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/location-units/institutions'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def institution = read('classpath:samples/filtering-conditions/locationUnit-institution.json')
     And request institution
     When method POST
@@ -43,6 +47,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/location-units/campuses'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def campus = read('classpath:samples/filtering-conditions/locationUnit-campus.json')
     And request campus
     When method POST
@@ -52,6 +57,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/location-units/libraries'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def library = read('classpath:samples/filtering-conditions/locationUnit-library.json')
     And request library
     When method POST
@@ -61,6 +67,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/service-points'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def servicePoint = read('classpath:samples/filtering-conditions/location-servicePoint.json')
     And request servicePoint
     When method POST
@@ -70,6 +77,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/locations'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def location = read('classpath:samples/filtering-conditions/locations.json')
     And request location
     When method POST
@@ -79,6 +87,7 @@ Feature: creates required entities within inventory storage which is used for bu
     Given path '/material-types'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def materialType = read('classpath:samples/filtering-conditions/materialTypes.json')
     And request materialType
     When method POST

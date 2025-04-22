@@ -1,27 +1,10 @@
 Feature: Test enhancements to oai-pmh
 
   Background:
-    * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'mod-oai-pmh'               |
-      | 'mod-login'                 |
-      | 'mod-configuration'         |
-      | 'mod-source-record-storage' |
-
-    * table userPermissions
-      | name                    |
-      | 'oai-pmh.all'           |
-      | 'configuration.all'     |
-      | 'inventory-storage.all' |
-      | 'source-storage.all'    |
-
     * def pmhUrl = baseUrl + '/oai/records'
     * url pmhUrl
-    * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
     #=========================SETUP================================================
-    Given call read('classpath:common/setup-users.feature')
-    * callonce read('classpath:common/login.feature') testUser
+    * callonce login testUser
     * callonce read('classpath:global/setup-data.feature')
     #=========================SETUP=================================================
     * call resetConfiguration

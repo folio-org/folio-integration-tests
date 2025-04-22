@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @FolioTest(team = "firebird", module = "mod-oai-pmh")
 public class ModOaiPmhEurekaTests extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/oaipmh/eureka/";
+    private static final String TEST_BASE_PATH = "classpath:firebird/oaipmh/";
 
     public ModOaiPmhEurekaTests() {
         super(new TestIntegrationService(
@@ -26,7 +26,7 @@ public class ModOaiPmhEurekaTests extends TestBaseEureka {
     public void setup() {
         System.setProperty("testTenant", "testoaipmh" + RandomUtils.nextLong());
         System.setProperty("testTenantId", UUID.randomUUID().toString());
-        runFeature("classpath:firebird/mod-oai-pmh-junit-eureka.feature");
+        runFeature("classpath:firebird/mod-oai-pmh-junit.feature");
     }
 
     @AfterEach
@@ -63,6 +63,6 @@ public class ModOaiPmhEurekaTests extends TestBaseEureka {
 
     @Test
     void loadDefaultConfigurationTests() {
-        runFeature("classpath:firebird/mod-configuration/eureka/load-default-pmh-configuration.feature");
+        runFeature("classpath:firebird/mod-configuration/load-default-pmh-configuration.feature");
     }
 }

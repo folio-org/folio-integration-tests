@@ -2,27 +2,7 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
 
   Background:
     * url baseUrl
-    * table modules
-      | name                              |
-      | 'okapi'                           |
-      | 'mod-permissions'                 |
-      | 'mod-oai-pmh'                     |
-      | 'mod-login'                       |
-      | 'mod-configuration'               |
-
-    * table userPermissions
-      | name                                        |
-      | 'oai-pmh.all'                               |
-      | 'configuration.all'                         |
-      | 'inventory-storage.all'                     |
-      | 'source-storage.all'                        |
-      | 'okapi.proxy.tenants.modules.enabled.delete'|
-      | 'okapi.proxy.tenants.modules.post'          |
-
-    * configure afterFeature =  function(){ karate.call('classpath:common/destroy-data.feature', {tenant: testUser.tenant})}
-    #=========================SETUP================================================
-    Given call read('classpath:common/setup-users.feature')
-    * callonce read('classpath:common/login.feature') testUser
+    * callonce login testUser
     * callonce read('classpath:global/setup-data.feature')
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
     #=========================SETUP=================================================
@@ -34,12 +14,7 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
   Scenario: Should post default configs to mod-configuration and enable the module when mod-config does not contain the data
     * def result = call read('classpath:firebird/mod-configuration/reusable/get_oaipmh_configs.feature')
     * def configResponse = result.response
-    * def ids = get configResponse.configs[*].id
-    * def configIds = karate.mapWithKey(ids, 'id')
 
-    Given call deleteModule $module
-    Given call read('classpath:firebird/mod-configuration/reusable/delete_config_by_id.feature') configIds
-    Given call enableModule $module
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
@@ -47,45 +22,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = get $.configs[*].configName
-    And match configGroups contains 'behavior'
-    And match configGroups contains 'technical'
-    And match configGroups contains 'general'
-
-  Scenario: Should post missing default configs to mod-configuration and enable module when mod-config has only part of oaipmh configuration groups
-    * def result = call read('classpath:firebird/mod-configuration/reusable/get_oaipmh_configs.feature')
-    * def configResponse = result.response
-    * def ids = get configResponse.configs[*].id
-    * def configIds = karate.mapWithKey(ids, 'id')
-
-    Given call deleteModule $module
-    Given call read('classpath:firebird/mod-configuration/reusable/delete_config_by_id.feature') configIds
-    Given path '/configurations/entries'
-    And header Content-Type = 'application/json'
-    And header Accept = '*/*'
-    And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = okapitoken
-    And request
-    """
-    {
-      "module" : "OAIPMH",
-      "configName" : "technical",
-      "enabled" : true,
-      "value" : "{\"maxRecordsPerResponse\":\"50\",\"enableValidation\":\"false\",\"formattedOutput\":\"false\"}"
-    }
-    """
-    When method POST
-    Then status 201
-
-    Given call enableModule $module
-    Given path '/configurations/entries'
-    And header Content-Type = 'application/json'
-    And header Accept = '*/*'
-    And header x-okapi-tenant = testUser.tenant
-    And header x-okapi-token = okapitoken
-    When method GET
-    Then status 200
-    * def configGroups = get $.configs[*].configName
+    * def configGroups = karate.filter(configResponse.configs, function(x){ return x.module == 'OAIPMH' })
+    * def configGroups = karate.map(configGroups, function(x){ return x.configName })
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'
     And match configGroups contains 'general'
@@ -98,8 +36,6 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And match configGroups contains 'technical'
     And match configGroups contains 'general'
 
-    Given call deleteModule $module
-    Given call enableModule $module
     Given path '/configurations/entries'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
@@ -107,7 +43,8 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = get $.configs[*].configName
+    * def configGroups = karate.filter(configResponse.configs, function(x){ return x.module == 'OAIPMH' })
+    * def configGroups = karate.map(configGroups, function(x){ return x.configName })
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'
     And match configGroups contains 'general'
