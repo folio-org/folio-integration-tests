@@ -30,8 +30,6 @@ Feature: edge-orders integration tests
       | 'orders-storage.po-lines.item.get'                            |
       | 'orders-storage.claiming.process.execute'                     |
       | 'orders-storage.titles.item.get'                              |
-      | 'orders-storage.alerts.item.get'                              |
-      | 'orders-storage.reporting-codes.item.get'                     |
       | 'orders-storage.purchase-orders.item.get'                     |
       | 'orders-storage.titles.collection.get'                        |
       | 'orders-storage.configuration.prefixes.collection.get'        |

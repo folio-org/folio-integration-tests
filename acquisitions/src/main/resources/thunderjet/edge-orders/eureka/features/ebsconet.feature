@@ -38,7 +38,7 @@ Feature: Edge Orders Ebsconet
       poNumber: '#(poNumber)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      compositePoLines: ['#(orderLine)']
+      poLines: ['#(orderLine)']
     }
     """
     And headers folioHeaders
