@@ -140,4 +140,4 @@ Feature: mod-gobi integration tests
     Given call read('features/find-holdings-by-location-and-instance.feature')
 
   Scenario: Wipe data
-    Given call read('classpath:common/eureka/destroy-data.feature')
+    Given call read('classpath:common/destroy-data.feature')

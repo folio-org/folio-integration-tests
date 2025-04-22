@@ -2,8 +2,6 @@ Feature: Test allowable encumbrance and expenditure restrictions
 
   Background:
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testfinance4'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }

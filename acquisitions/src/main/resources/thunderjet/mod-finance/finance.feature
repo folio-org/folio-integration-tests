@@ -77,13 +77,13 @@ Feature: mod-finance integration tests
     Given call read('features/unrelease-encumbrance.feature')
 
   Scenario: Test creating budget add expense classes from previous budget automatically
-    Given call read('features/When-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
+    Given call read('features/when-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
 
   Scenario: Test when creating budget add expense classes if them provided by user
-    Given call read('features/When-creating-budget-add-expense-classes-if-them-provided-by-user.feature')
+    Given call read('features/when-creating-budget-add-expense-classes-if-them-provided-by-user.feature')
 
   Scenario: Test when creating budget add expense classes if them provided by user
-    Given call read('features/Create-planned-budget-without-expense-classes-when-there-is-no-current-budget.feature')
+    Given call read('features/create-planned-budget-without-expense-classes-when-there-is-no-current-budget.feature')
 
   Scenario: Test when creating budget add expense classes if them provided by user
     Given call read('features/create-planned-budget-without-expense-classes-and-current-budget.feature')

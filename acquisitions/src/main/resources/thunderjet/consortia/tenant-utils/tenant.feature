@@ -14,7 +14,7 @@ Feature: Tenant object in mod-consortia api tests
     Then status 200
     And match response.totalRecords == 0
 
-#     post 'centralTenant' (isCentral = true)
+    # post 'centralTenant' (isCentral = true)
     Given path 'consortia', consortiumId, 'tenants'
     And request { id: '#(centralTenantName)', code: 'ABC', name: 'Central tenants name', isCentral: true }
     And headers { 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(centralTenantName)' }
@@ -22,7 +22,7 @@ Feature: Tenant object in mod-consortia api tests
     Then status 201
     And match response == { id: '#(centralTenantName)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted: false }
 
-#     get tenant details for 'centralTenant'
+    # get tenant details for 'centralTenant'
     Given path 'consortia', consortiumId, 'tenants', centralTenantName
     And headers { 'x-okapi-token': '#(token)', 'x-okapi-tenant': '#(centralTenantName)' }
     When method GET

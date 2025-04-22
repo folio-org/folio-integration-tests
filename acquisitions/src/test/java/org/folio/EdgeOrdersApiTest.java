@@ -1,4 +1,4 @@
-package org.folio.eureka;
+package org.folio;
 
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
