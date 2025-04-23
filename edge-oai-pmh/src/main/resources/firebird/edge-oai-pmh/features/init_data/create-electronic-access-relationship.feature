@@ -2,7 +2,7 @@ Feature: create electronic access relationship
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapiTokenAdmin = okapitoken
 
   Scenario: post electronic relationship

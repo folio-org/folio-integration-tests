@@ -938,7 +938,7 @@ Feature: mod bulk operations holdings features
     And match response.holdingsRecords[0].notes[0].note == ''
 
   Scenario: In-App approach remove notes
-    * callonce login testUser
+    * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def query = 'hrid==' + holdingHRID
     Given path 'holdings-storage/holdings'
