@@ -3,7 +3,7 @@ Feature: post holdings
   Background:
     * url baseUrl
     * callonce variables
-    * callonce login testAdmin
+    * callonce login testUser
 
   Scenario: Create holdings
     * def servicePoints = karate.read('classpath:samples/holdings/service-points.json')

@@ -13,7 +13,7 @@ Feature: Test export deleted IDs
     * json deletedIdsInvalidToRequest = read('classpath:samples/deleted_ids_invalid_to.json')
     * json deletedIdsInvalidDateRangeRequest = read('classpath:samples/deleted_ids_invalid_date_range.json')
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
     * configure retry = { interval: 15000, count: 10 }

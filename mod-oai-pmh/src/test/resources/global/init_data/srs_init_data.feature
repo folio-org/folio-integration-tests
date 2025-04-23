@@ -8,6 +8,7 @@ Feature: init datas for srs
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     And request
     """
     {

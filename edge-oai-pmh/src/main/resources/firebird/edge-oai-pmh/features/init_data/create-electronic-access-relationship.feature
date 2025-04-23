@@ -14,6 +14,7 @@ Feature: create electronic access relationship
     Given path 'electronic-access-relationships'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request relationship
     When method POST
     Then status 201

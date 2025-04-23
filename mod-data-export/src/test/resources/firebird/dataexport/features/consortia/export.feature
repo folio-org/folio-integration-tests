@@ -3,8 +3,8 @@ Feature: Tests for uploading "uuids file" and exporting the records
   Background:
     * url baseUrl
 
-    * call read(login) universityUser1
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+    * call login universityUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
 
     * def okapiUserToken = okapitoken
 

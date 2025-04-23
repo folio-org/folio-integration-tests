@@ -3,7 +3,7 @@ Feature: init data for items
   Background:
     * url baseUrl
     * callonce variables
-    * callonce login testAdmin
+    * callonce login testUser
 
   Scenario: setup service point test data
     * def servicePoint = karate.read('classpath:samples/items/service-point-cd3.json')

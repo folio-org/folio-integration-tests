@@ -70,17 +70,18 @@ function fn() {
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
   if (env === 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.edgeHost = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env === 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-    config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
+    config.edgeHost = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
-  } else if (env === 'eureka') {
-    config.baseUrl = 'https://folio-edev-dojo-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-edev-dojo-keycloak.ci.folio.org:443';
-    config.clientSecret = karate.properties['clientSecret'];
+    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env === 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeHost = '${edgeUrl}';
@@ -95,13 +96,16 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'rancher') {
-     config.baseUrl='https://folio-dev-firebird-okapi.ci.folio.org'
+    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
      config.admin = {
         tenant:'supertenant',
         name:'testing_admin',
         password:'admin'
      }
      karate.configure('ssl',true)
+    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     config.baseUrl = 'http://' + env + ':9130';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}

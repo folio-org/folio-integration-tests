@@ -3,16 +3,13 @@ Feature: Tests mapping holdings to marc file and presence of necessary fields
   Background:
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapiAdminToken = okapitoken
-
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
     * callonce loadTestVariables
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
     * configure retry = { interval: 30000, count: 20 }
 

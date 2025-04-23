@@ -14,7 +14,7 @@ Feature: Test export authority deleted
     * json deletedAuthoritiesTooBigLimitRequest = read('classpath:samples/deleted_authorities_too_big_limit.json')
     * json deletedAuthoritiesInvalidQueryRequest = read('classpath:samples/deleted_authorities_invalid_query.json')
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
     * configure retry = { interval: 15000, count: 10 }
