@@ -32,9 +32,6 @@ class ListExportSimulation extends Simulation {
   val before = scenario("before")
     .exec(karateFeature("classpath:corsair/mod-lists/lists-junit.feature"))
   val export = scenario("export")
-      .repeat(10) {
-        exec(karateFeature("classpath:corsair/mod-lists/features/consortia/ecs-export.feature"))
-      }
     .repeat(10) {
       exec(karateFeature("classpath:corsair/mod-lists/features/export.feature"))
     }
