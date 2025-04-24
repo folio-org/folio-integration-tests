@@ -88,15 +88,15 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org:443';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    };
-    config.prototypeTenant = 'diku';
-    config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-  }
-  return config;
+        config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org:443';
+        config.admin = {
+          tenant: 'diku',
+          name: 'diku_admin',
+          password: 'admin'
+        };
+        config.prototypeTenant = 'diku';
+        config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
+        config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+      }
+      return config;
 }
