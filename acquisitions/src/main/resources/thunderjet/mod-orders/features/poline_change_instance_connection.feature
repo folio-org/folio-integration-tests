@@ -22,7 +22,6 @@ Feature: PoLine change instance connection
 
     * def isbn1 = "1-56619-909-3 first-isbn"
     * def isbn1ProductId = "1-56619-909-3"
-    * def isbn1Qualifier = "first-isbn"
     * def isbn2 = "1-56619-909-3 second-isbn"
     * def isbn3 = "1-56619-909-3 third-isbn"
 
@@ -115,7 +114,7 @@ Feature: PoLine change instance connection
     * set poLine.purchaseOrderId = orderId
     * set poLine.fundDistribution[0].fundId = fundId
     * set poLine.instanceId = instanceId1
-    * set poLine.details.productIds = [ { productId: "#(isbn1ProductId)", qualifier: "#(isbn1Qualifier)" , productIdType: "#(globalISBNIdentifierTypeId)" } ]
+    * set poLine.details.productIds = [ { productId: "#(isbn1ProductId)", productIdType: "#(globalISBNIdentifierTypeId)" } ]
 
     Given path 'orders/order-lines'
     And request poLine
@@ -144,8 +143,8 @@ Feature: PoLine change instance connection
     When method GET
     Then status 200
     And match $.instanceId == instanceId1
-    And match $.details.productIds[0].productId == '9781566199094'
-    And match $.details.productIds[0].qualifier == 'first-isbn'
+    And match $.details.productIds[0].productId == '1-56619-909-3'
+    And match $.details.productIds[0].qualifier == '#notpresent'
 
   Scenario: change poLine instance connection
     * print "change poLine instance connection"
@@ -163,8 +162,8 @@ Feature: PoLine change instance connection
     When method GET
     Then status 200
     And match $.instanceId == instanceId2
-    And match $.details.productIds[0].productId == '9781566199094'
-    And match $.details.productIds[0].qualifier == 'second-isbn'
+    And match $.details.productIds[0].productId == '1-56619-909-3 second-isbn'
+    And match $.details.productIds[0].qualifier == '#notpresent'
 
   Scenario: change (move) poLine instance connection
     * print "change poLine instance connection (move)"
@@ -182,5 +181,5 @@ Feature: PoLine change instance connection
     When method GET
     Then status 200
     And match $.instanceId == instanceId3
-    And match $.details.productIds[0].productId == '9781566199094'
-    And match $.details.productIds[0].qualifier == 'third-isbn'
+    And match $.details.productIds[0].productId == '1-56619-909-3 third-isbn'
+    And match $.details.productIds[0].qualifier == '#notpresent'
