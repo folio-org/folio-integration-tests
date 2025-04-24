@@ -92,4 +92,4 @@ Feature: Get and put a composite order
     And match $.details.productIds[1].productId == '15934409'
     And match $.details.productIds[1].productIdType == '439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef'
     And match $.details.productIds[2].productId == '12345'
-    And match $.details.productIds[2].productIdType == '#(globalInvalidISBNIdentifierTypeId)'
+    And match $.details.productIds[2].productIdType == '#(globalISBNIdentifierTypeId)'
