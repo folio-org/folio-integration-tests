@@ -136,7 +136,7 @@ Feature: mod-invoice integration tests
   Scenario: create tenant and users for testing
     * def testUser = testAdmin
     Given call read('classpath:common/eureka/setup-users.feature')
-    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 1800 }
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
 
   Scenario: init global data
     * call login testAdmin
