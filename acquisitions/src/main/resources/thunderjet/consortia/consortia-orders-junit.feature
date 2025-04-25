@@ -375,7 +375,7 @@ Feature: mod-consortia integration tests
     * def result = call read('classpath:common-consortia/eureka/initData.feature@Login') { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant.name)'}
     * call read('tenant-utils/consortium.feature@EnableCentralOrdering') {token: '#(result.token)', tenant: '#(centralTenant)'}
 
-    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 1800, testTenant: '#(centralTenant.name)' }
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600, testTenant: '#(centralTenant.name)' }
 
   @InitData
   Scenario: Prepare data
