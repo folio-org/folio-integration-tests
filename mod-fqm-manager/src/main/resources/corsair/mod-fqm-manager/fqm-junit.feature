@@ -107,6 +107,8 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.query.async.results.query.get'                         |
       | 'fqm.query.async.post'                                      |
       | 'fqm.query.async.delete'                                    |
+      | 'finance.budgets.collection.get'                            |
+      | 'finance.groups.collection.get'                             |
 
 
   Scenario: create tenant and users for testing
