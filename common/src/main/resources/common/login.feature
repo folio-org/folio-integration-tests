@@ -3,7 +3,7 @@ Feature: login
   Background:
     * url baseUrl
     * configure cookies = null
-    * configure headers = {}
+#    * configure headers = {}
 
   Scenario: login user
     Given path 'authn/login-with-expiry'
