@@ -7,13 +7,9 @@ Feature: Check invoice lines with VAT adjustments
     * call login testAdmin
     * def okapitokenAdmin = okapitoken
 
-    * call login testUser
-    * def okapitokenUser = okapitoken
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
-    * configure headers = headersUser
+    * configure headers = headersAdmin
 
     * callonce variables
 
@@ -33,10 +29,8 @@ Feature: Check invoice lines with VAT adjustments
     * def invoiceLineId4 = call uuid
 
     ### 1. Create fund and budgets
-    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
-    * configure headers = headersUser
 
     ### 2. Create invoices
     * def invoiceAdjustments =
@@ -114,10 +108,8 @@ Feature: Check invoice lines with VAT adjustments
     * def invoiceLineId4 = call uuid
 
     ### 1. Create fund and budgets
-    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
-    * configure headers = headersUser
 
     ### 2. Create invoices
     * table invoices

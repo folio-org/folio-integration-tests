@@ -211,7 +211,7 @@ Feature: Check that order total fields are calculated correctly
       | invoiceLineId1 | invoiceId2 | poLineId | fundId | -100  |
     * def v = call createInvoiceLine invoiceLinesData
     * def v = call approveInvoice { invoiceId: '#(invoiceId2)' }
-    * def v = call payInvoice  { invoiceId: '#(invoiceId2)', poLinePaymentStatus: 'Fully Paid' }
+    * def v = call payInvoice { invoiceId: '#(invoiceId2)', poLinePaymentStatus: 'Fully Paid' }
 
     # 3. Check that total fields are calculated correctly
     Given path 'orders/composite-orders', orderId
