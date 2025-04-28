@@ -27,7 +27,7 @@ Feature: Applications
     * def uniqueAppIds = karate.distinct(appIds)
 
     # search dependencies among found applications, extract dependencies names, remove dependencies name duplicates
-    * karate.forEach(uniqueAppIds, appId => dependencyNames.push(appDescriptions.filter(descriptor => descriptor.id == appId).flatMap(x => x.dependencies.map(dep => dep.name))))
+    * karate.forEach(uniqueAppIds, appId => dependencyNames.push(appDescriptions.filter(descriptor => descriptor.id == appId).flatMap(x => x.dependencies ? x.dependencies.map(dep => dep.name) : [])))
     * def flattenedArray = []
     * karate.forEach(dependencyNames, arr =>  flattenedArray = flattenedArray.concat(arr))
     * def uniqueDependencyNames = karate.distinct(flattenedArray)

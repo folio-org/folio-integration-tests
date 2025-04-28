@@ -10,7 +10,7 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:8000',
     ftpUrl: 'ftp://ftp.ci.folio.org',
     ftpPort:  21,
@@ -214,42 +214,47 @@ function fn() {
   karate.repeat(100, rand);
 
   if (env == 'dev') {
+    // UI: http://localhost:3000/
     config.checkDepsDuringModInstall = 'false'
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret'
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
   } else if (env == 'snapshot-2') {
+    // UI: https://folio-etesting-snapshot2-diku.ci.folio.org/
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.kcClientId = 'folio-backend-admin-client'
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.edgeUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org:8000';
-    config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 21;
-    config.ftpUser = 'folio';
-    config.ftpPassword = 'Ffx29%pu';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
       password: 'admin'
     }
   } else if (env == 'snapshot') {
+    // UI: https://folio-etesting-snapshot-diku.ci.folio.org/
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.kcClientId = 'folio-backend-admin-client'
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.edgeUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org:8000';
-    config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 21;
-    config.ftpUser = 'folio';
-    config.ftpPassword = 'Ffx29%pu';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-thunderjet-okapi.ci.folio.org';
-    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 21;
-    config.ftpUser = 'folio';
-    config.ftpPassword = 'Ffx29%pu';
+    // UI at https://folio-edev-thunderjet-diku.ci.folio.org/
+    config.baseUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-thunderjet-keycloak.ci.folio.org';
+    config.kcClientId = 'folio-backend-admin-client'
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.edgeUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org:8000';
     config.prototypeTenant= 'diku'
     config.admin = {
       tenant: 'diku',
@@ -257,14 +262,12 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher-consortia') {
-    config.baseUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org';
+    // UI at https://folio-edev-thunderjet-consortium.ci.folio.org/
+    config.baseUrl = 'https://ecs-folio-edev-thunderjet-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-thunderjet-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-    config.edgeUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org:8000';
-    config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 21;
-    config.ftpUser = 'folio';
-    config.ftpPassword = 'Ffx29%pu';
+    config.kcClientId = 'folio-backend-admin-client'
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.edgeUrl = 'https://ecs-folio-edev-thunderjet-kong.ci.folio.org:8000';
     config.prototypeTenant= 'consortium'
     config.admin = {
       tenant: 'consortium',
@@ -277,12 +280,9 @@ function fn() {
     loginAdmin: karate.read('classpath:common/eureka/login.feature');
     config.baseUrl = 'https://folio-etesting-karate-eureka-kong.ci.folio.org:443';
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org:443';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.kcClientId = 'folio-backend-admin-client'
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.edgeUrl = 'https://folio-etesting-karate-eureka-edge.ci.folio.org';
-    config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 21;
-    config.ftpUser = 'folio';
-    config.ftpPassword = 'Ffx29%pu';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
@@ -294,10 +294,6 @@ function fn() {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
     config.edgeUrl = 'http://' + env + ':8000';
-    config.ftpUrl = 'ftp://ftp.ci.folio.org';
-    config.ftpPort = 21;
-    config.ftpUser = 'folio';
-    config.ftpPassword = 'Ffx29%pu';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',
