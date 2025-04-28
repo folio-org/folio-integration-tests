@@ -104,7 +104,7 @@ function fn() {
     config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org/';
     config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
     config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
-  } else if(env == 'folio-testing-karate') {
+  } else if(env == 'folio-etesting-karate-eureka') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     config.centralServerUrl = karate.get('centralServerUrl') || 'https://folio-etesting-karate-eureka-mockserver.ci.folio.org'
