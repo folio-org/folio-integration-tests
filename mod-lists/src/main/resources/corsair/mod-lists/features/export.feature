@@ -72,7 +72,7 @@ Feature: Scenarios that are primarily focused around exporting list data
     Then status 204
 
   Scenario: Export test with instance and list using all columns
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/non-ecs-instance-list.json.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/non-ecs-instance-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
