@@ -6,10 +6,10 @@ Feature: unlink title from package. DELETE Title
 
     * call loginAdmin testAdmin
     * def okapitokenAdmin = okapitoken
-    * call loginRegularUser testUser
+    * call loginRegularUser dummyUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     * configure retry = { count: 10, interval: 5000 }
     * configure headers = headersAdmin
 
