@@ -14,6 +14,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'mod-fqm-manager'         |
       | 'mod-lists'               |
       | 'mod-entities-links'      |
+      | 'mod-inventory-storage'   |
 
     * table userPermissions
       | name                                                        |
@@ -56,6 +57,21 @@ Feature: mod-consortia and mod-lists integration tests
       | 'lists.item.versions.item.get'                              |
       | 'user-tenants.collection.get'                               |
       | 'user-tenants.item.post'                                    |
+      | 'inventory-storage.holdings-sources.item.post'              |
+      | 'inventory-storage.holdings.item.post'                      |
+      | 'inventory-storage.instance-types.item.post'                |
+      | 'inventory-storage.instances.item.post'                     |
+      | 'inventory-storage.items.item.post'                         |
+      | 'inventory-storage.loan-types.item.post'                    |
+      | 'inventory-storage.location-units.campuses.item.post'       |
+      | 'inventory-storage.location-units.institutions.item.post'   |
+      | 'inventory-storage.location-units.libraries.item.post'      |
+      | 'inventory-storage.locations.item.post'                     |
+      | 'inventory-storage.material-types.item.post'                |
+      | 'search.instances.collection.get'                           |
+      | 'inventory-storage.instance-types.collection.get'           |
+      | 'inventory-storage.instance-statuses.collection.get'        |
+
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'
@@ -85,8 +101,8 @@ Feature: mod-consortia and mod-lists integration tests
   Scenario: Tenant api tests
     * call read('tenant.feature')
 
-  Scenario: Export
-    * call read('ecs-export.feature')
+  Scenario: Instance Export
+    * call read('instance-export.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}

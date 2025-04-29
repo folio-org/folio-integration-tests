@@ -167,8 +167,10 @@ Feature: Add FQM query data
 
      #Add Purchase Order Line
     * def purchaseOrderLineId = call uuid1
+    * def cost = {"additionalCost": 4.99, "currency": "USD", "discount": 10, "discountType": "percentage", "exchangeRate": 1.12, "listUnitPriceElectronic": 24.99, "quantityElectronic": 2, "poLineEstimatedPrice": 49.97}
+    * def acquisitionMethod = call uuid1
     * def fundDistribution = [{ "code": "serials", "value": 100.0 , "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]
-    * def purchaseOrderLineRequest = {id: '#(purchaseOrderLineId)', orderFormat:'P/E Mix' ,source:'User', purchaseOrderId:'#(orderId)', titleOrPackage: 'Kayak Fishing in the Northern Gulf Coast', paymentStatus: 'Fully Paid', fundDistribution : '#(fundDistribution)'}
+    * def purchaseOrderLineRequest = {id: '#(purchaseOrderLineId)', orderFormat:'P/E Mix' ,source:'User', purchaseOrderId:'#(orderId)', titleOrPackage: 'Kayak Fishing in the Northern Gulf Coast', paymentStatus: 'Fully Paid', fundDistribution : '#(fundDistribution)', cost: '#(cost)', acquisitionMethod: '#(acquisitionMethod)'}
     Given path '/orders-storage/po-lines'
     And request purchaseOrderLineRequest
     When method POST

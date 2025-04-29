@@ -11,6 +11,7 @@ Feature: mod-lists integration tests
       | 'mod-fqm-manager'         |
       | 'mod-lists'               |
       | 'mod-entities-links'      |
+      | 'mod-inventory-storage'   |
 
     * table userPermissions
       | name                                                        |
@@ -51,6 +52,20 @@ Feature: mod-lists integration tests
       | 'lists.item.update'                                         |
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
+      | 'inventory-storage.holdings-sources.item.post'              |
+      | 'inventory-storage.holdings.item.post'                      |
+      | 'inventory-storage.instance-types.item.post'                |
+      | 'inventory-storage.instances.item.post'                     |
+      | 'inventory-storage.items.item.post'                         |
+      | 'inventory-storage.loan-types.item.post'                    |
+      | 'inventory-storage.location-units.campuses.item.post'       |
+      | 'inventory-storage.location-units.institutions.item.post'   |
+      | 'inventory-storage.location-units.libraries.item.post'      |
+      | 'inventory-storage.locations.item.post'                     |
+      | 'inventory-storage.material-types.item.post'                |
+      | 'search.instances.collection.get'                           |
+      | 'inventory-storage.instance-types.collection.get'           |
+      | 'inventory-storage.instance-statuses.collection.get'        |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
