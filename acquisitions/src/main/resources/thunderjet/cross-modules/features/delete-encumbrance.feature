@@ -83,7 +83,6 @@ Feature: Test deleting an encumbrance
 
     # check the transaction is gone
     Given path 'finance/transactions', transaction.id
-    And request transaction
     When method GET
     Then status 404
 
