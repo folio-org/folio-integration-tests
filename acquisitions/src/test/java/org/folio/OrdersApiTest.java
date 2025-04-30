@@ -445,6 +445,9 @@ public class OrdersApiTest extends TestBaseEureka {
     runFeatureTest("change-pending-distribution-with-inactive-budget.feature");
   }
 
+  @Test
+  void unlinkTitle() {runFeatureTest("unlink-title.feature");}
+
   @BeforeAll
   public void ordersApiTestBeforeAll() {
     System.setProperty("testTenant", "testorders" + RandomUtils.nextLong());

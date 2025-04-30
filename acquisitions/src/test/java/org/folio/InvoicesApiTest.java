@@ -180,6 +180,16 @@ public class InvoicesApiTest extends TestBaseEureka {
     runFeatureTest("audit-event-invoice-line");
   }
 
+  @Test
+  void checkInvoiceLinesWithVatAdjustments() {
+    runFeatureTest("check-invoice-lines-with-vat-adjustments");
+  }
+
+  @Test
+  void invoiceWithIdenticalAdjustments() {
+    runFeatureTest("invoice-with-identical-adjustments");
+  }
+
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
     System.setProperty("testTenant", "testinvoice" + RandomUtils.nextLong());

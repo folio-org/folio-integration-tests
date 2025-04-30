@@ -101,7 +101,6 @@ Feature: Should decrease quantity when delete piece with no location
     Then status 204
 
     Given path 'orders/composite-orders', orderIdForPhysicalQuantity
-    And request orderResponse
     When method GET
     Then status 200
     * def orderResponse = $
@@ -128,7 +127,6 @@ Feature: Should decrease quantity when delete piece with no location
     Then status 204
 
     Given path 'orders/composite-orders', orderIdForElectronicQuantity
-    And request orderResponseElectronic
     When method GET
     Then status 200
     * def orderResponse = $

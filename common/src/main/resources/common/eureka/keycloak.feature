@@ -10,8 +10,8 @@ Feature: keycloak
     Given path 'realms', 'master', 'protocol', 'openid-connect', 'token'
     And header Content-Type = 'application/x-www-form-urlencoded'
     And form field grant_type = 'client_credentials'
-    And form field client_id = 'folio-backend-admin-client'
-    And form field client_secret = clientSecret
+    And form field client_id = kcClientId
+    And form field client_secret = kcClientSecret
     And form field scope = 'email openid'
     When method post
     Then status 200

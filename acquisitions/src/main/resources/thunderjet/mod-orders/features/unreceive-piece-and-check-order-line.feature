@@ -14,7 +14,6 @@ Feature: Unreceive a piece and check the order line
     * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createTitle = read('classpath:thunderjet/mod-orders/reusable/create-title.feature')
     * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
     * def unreceivePiece = read('classpath:thunderjet/mod-orders/reusable/unreceive-piece.feature')
 
