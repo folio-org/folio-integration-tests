@@ -18,6 +18,9 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
+
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
@@ -88,15 +91,12 @@ function fn() {
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
@@ -107,7 +107,6 @@ function fn() {
   } else if (env === 'rancher') {
     config.baseUrl = 'https://folio-edev-citation-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-citation-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: 'diku',
       name: 'diku_admin',

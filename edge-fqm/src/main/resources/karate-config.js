@@ -17,6 +17,9 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
+
     tenantParams: {loadReferenceData : true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
@@ -67,13 +70,11 @@ function fn() {
     config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
@@ -87,7 +88,6 @@ function fn() {
     karate.configure('ssl',true);
 
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org:443';
     config.edgeUrl = 'https://folio-edev-corsair-edge.ci.folio.org';
@@ -100,7 +100,6 @@ function fn() {
     config.prototypeTenant = 'diku';
 
     config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   }
   return config;
 }

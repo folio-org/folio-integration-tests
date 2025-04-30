@@ -114,11 +114,12 @@ sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 
 Also possible to run integration tests trough IDE by:
 
-There are 3 main variables in karate-config.js we have to take into account
+There are 4 main variables in karate-config.js we have to take into account
 ```
 1: baseUrl            - url to kong(api-gateway)
 2: baseKeycloakUrl    - url to keycloak(authorization)
-3: clientSecret       - master keycloak password
+3: kcClientId         - master keycloak id
+4: kcClientSecret     - master keycloak password
 ```
 
 Either you hardcode these values in karate-config.js or use a predefined block for karate.env

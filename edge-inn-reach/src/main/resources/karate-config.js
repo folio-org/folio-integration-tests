@@ -16,6 +16,9 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
+
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
@@ -72,19 +75,16 @@ function fn() {
     config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'snapshot') {
     config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
     config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'rancher') {
     config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
     config.edgeUrl = 'https://folio-edev-volaris-edge-inn-reach.ci.folio.org';
     config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
@@ -97,7 +97,6 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   }
   return config;
 }

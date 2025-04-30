@@ -17,6 +17,9 @@ function fn() {
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
+
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
@@ -64,7 +67,6 @@ function fn() {
   if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -73,7 +75,6 @@ function fn() {
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -83,7 +84,6 @@ function fn() {
     config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
     config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
@@ -100,16 +100,17 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
-    config.clientSecret = karate.properties['clientSecret'] || 'SecretPassword';
   } else if (env == 'localhost') {
-        config.baseUrl = 'http://localhost:9130';
-        config.admin = {
-          tenant: 'diku',
-          name: 'diku_admin',
-          password: 'admin'
-        }
-        config.prototypeTenant = 'diku';
-        karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
+    config.prototypeTenant = 'diku';
+    karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':9130';
