@@ -13,7 +13,7 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -59,7 +59,11 @@ function fn() {
   }
   karate.repeat(100, rand);
 
-  if (env == 'snapshot-2') {
+  if (env == 'dev') {
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+  } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
   } else if (env == 'snapshot') {
@@ -78,7 +82,7 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
+    config.baseUrl = 'http://' + env + ':8000';
     config.admin = {
       tenant: 'supertenant',
       name: 'admin',

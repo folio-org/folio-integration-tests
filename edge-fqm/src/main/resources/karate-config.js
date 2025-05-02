@@ -13,7 +13,7 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -65,7 +65,11 @@ function fn() {
   }
   karate.repeat(100, rand);
 
-  if (env == 'snapshot') {
+  if (env == 'dev') {
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+  } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
@@ -75,15 +79,10 @@ function fn() {
     config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-  } else if(env == 'folio-testing-karate') {
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin}'
-    }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
 

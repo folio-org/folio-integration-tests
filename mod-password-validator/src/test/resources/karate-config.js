@@ -8,7 +8,7 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -25,13 +25,17 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
   };
 
-  if (env == 'snapshot') {
+  if (env == 'dev') {
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+  } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-  } else if(env == 'folio-testing-karate') {
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeHost = '${edgeUrl}';
     config.admin = {
