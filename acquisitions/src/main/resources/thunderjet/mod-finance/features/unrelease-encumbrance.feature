@@ -90,7 +90,6 @@ Feature: Test changing encumbrance from Released to Unreleased
 
     # check the transaction amount and encumbrance status
     Given path 'finance/transactions', transaction.id
-    And request transaction
     When method GET
     Then status 200
     And match $.encumbrance.status == "Unreleased"
