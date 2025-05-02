@@ -32,7 +32,7 @@ function fn() {
 
   var config = {
     tenantParams: {loadReferenceData: true},
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -111,7 +111,7 @@ function fn() {
   } else if (env == 'snapshot-2') {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-  } else if(env == 'folio-testing-karate') {
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
@@ -134,11 +134,7 @@ function fn() {
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
     config.kcClientId = 'supersecret';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    };
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   }
   return config;
 }

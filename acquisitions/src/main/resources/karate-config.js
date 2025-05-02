@@ -223,11 +223,6 @@ function fn() {
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
     config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
   } else if (env == 'snapshot-2') {
     // UI: https://folio-etesting-snapshot2-diku.ci.folio.org/
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
@@ -254,11 +249,6 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-edev-thunderjet-keycloak.ci.folio.org';
     config.edgeUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org:8000';
     config.prototypeTenant= 'diku'
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
   } else if (env == 'rancher-consortia') {
     // UI at https://folio-edev-thunderjet-consortium.ci.folio.org/
     config.baseUrl = 'https://ecs-folio-edev-thunderjet-kong.ci.folio.org';
@@ -271,9 +261,7 @@ function fn() {
       password: 'admin'
     }
   } else if(env == 'folio-testing-karate') {
-    login: karate.read('classpath:common/eureka/login.feature');
-    loginRegularUser: karate.read('classpath:common/eureka/login.feature');
-    loginAdmin: karate.read('classpath:common/eureka/login.feature');
+    // Used to run nightly karate tests in Jenkins
     config.baseUrl = 'https://folio-etesting-karate-eureka-kong.ci.folio.org:443';
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org:443';
     config.edgeUrl = 'https://folio-etesting-karate-eureka-edge.ci.folio.org';
@@ -286,7 +274,7 @@ function fn() {
     karate.configure('ssl',true);
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
+    config.baseUrl = 'http://' + env + ':8000';
     config.edgeUrl = 'http://' + env + ':8000';
     config.admin = {
       tenant: 'supertenant',

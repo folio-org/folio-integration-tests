@@ -10,7 +10,7 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
     kcClientId: 'folio-backend-admin-client',
@@ -50,7 +50,11 @@ function fn() {
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
   config.env = env;
 
-  if (env == 'rancher') {
+  if (env == 'dev') {
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+  } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
     config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
@@ -72,7 +76,7 @@ function fn() {
     config.edgeHost = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
-  } else if(env == 'folio-testing-karate') {
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeHost = '${edgeUrl}';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
@@ -86,7 +90,7 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
+    config.baseUrl = 'http://' + env + ':8000';
     config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
     config.getModuleByIdPath = '_/proxy/modules';
   }

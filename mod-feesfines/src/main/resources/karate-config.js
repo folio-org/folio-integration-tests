@@ -17,7 +17,7 @@ function fn() {
   var testUserPassword = karate.properties['testUserPassword'] || 'test';
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -79,16 +79,11 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
-  } else if(env == 'dev') {
+  } else if (env == 'dev') {
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
     config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
   }
   return config;
 }
