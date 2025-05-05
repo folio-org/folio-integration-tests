@@ -3,14 +3,15 @@ Feature: Verify fault tolerance ledger fiscal year rollover when occurred duplic
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersUser = headersAdmin
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -38,7 +39,6 @@ Feature: Verify fault tolerance ledger fiscal year rollover when occurred duplic
 
   Scenario: Verify fault tolerance ledger fiscal year rollover when occurred duplicate encumbrance
     * print "Prepare fiscal year with #(fromFiscalYearId) for rollover"
-    * configure headers = headersAdmin
     * def code = fromYear
     * def periodStart = code + '-01-01T00:00:00Z'
     * def periodEnd = code + '-12-30T23:59:59Z'
@@ -59,13 +59,14 @@ Feature: Verify fault tolerance ledger fiscal year rollover when occurred duplic
 
 
     * print "Create and open an order"
+    * configure headers = headersAdmin
     * def v = call createOrder { id: #(orderId), orderType: 'One-Time', reEncumber: true }
     * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId) }
     * def v = call openOrder { orderId: "#(orderId)" }
+    * configure headers = headersUser
 
 
     * print "Create a duplicate encumbrance"
-    * configure headers = headersUser
     Given path 'finance-storage/transactions'
     And param query = 'fromFundId==' + fundId + ' AND fiscalYearId==' + fromFiscalYearId + ' AND encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET

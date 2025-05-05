@@ -2,9 +2,7 @@ Feature: global finances
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * callonce variables
 
   Scenario: create fiscal year

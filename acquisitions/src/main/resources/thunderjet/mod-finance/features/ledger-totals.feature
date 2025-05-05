@@ -1,17 +1,15 @@
 Feature: Verify calculation of the Ledger totals for the fiscal year
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersUser = headersAdmin
 
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
-
 
     * def fundId1 = callonce uuid1
     * def fundId2 = callonce uuid2
@@ -54,7 +52,6 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     * def fundId = <fundId>
     * def budgetId = <budgetId>
     * def ledgerId = <ledgerId>
-    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
     Given path 'finance-storage/budgets'
     And request
