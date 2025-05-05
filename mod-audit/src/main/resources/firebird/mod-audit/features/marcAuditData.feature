@@ -21,6 +21,13 @@ Feature: Audit log for MARC Bib record changes
     * def recordType = __arg.recordType
     * def auditPath = __arg.auditPath
 
+    # Validate audit inventory enabled setting
+    Given path 'audit/config/groups/audit.inventory/settings'
+    When method GET
+    Then status 200
+    * def enabledSetting = karate.filter(response.settings, function(x){ return x.key == 'enabled' })[0].value
+    And match enabledSetting == true
+
     # Create snapshot
     * def snapshotId = uuid()
     * def snapshot = read(snapshotPath)
@@ -42,6 +49,15 @@ Feature: Audit log for MARC Bib record changes
     When method POST
     Then status 201
     * def record = response
+
+    * call pause 10000
+
+    Given path auditPath, recordId
+    When method GET
+    Then status 200
+    And match response.marcAuditItems != null
+    And match response.totalRecords == 1
+    And match response.marcAuditItems[0].action == 'CREATED'
 
     # First Update - Add a field
     * record.generation = record.generation + 1
