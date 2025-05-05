@@ -9,7 +9,7 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:1212',
     centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -78,7 +78,11 @@ function fn() {
   }
   karate.repeat(100, rand);
 
-  if (env == 'snapshot') {
+  if (env == 'dev') {
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+  } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
@@ -93,12 +97,6 @@ function fn() {
     config.edgeUrl = 'https://folio-edev-volaris-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
     config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
-
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';

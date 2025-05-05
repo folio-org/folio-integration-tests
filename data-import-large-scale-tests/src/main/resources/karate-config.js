@@ -31,7 +31,7 @@ function fn() {
 
   var config = {
     tenantParams: {loadReferenceData: true},
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -93,9 +93,12 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if(env === 'dev') {
-    config.checkDepsDuringModInstall = 'false'
+    config.checkDepsDuringModInstall = 'false';
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   } else if (env?.match(/^ec2-\d+/)) {
-    config.baseUrl = 'http://' + env + ':9130';
+    config.baseUrl = 'http://' + env + ':8000';
     config.testUser = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
 

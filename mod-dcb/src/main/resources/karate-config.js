@@ -14,7 +14,7 @@ function fn() {
   var testUserPassword = karate.properties['testUserPassword'] || 'test';
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9703',
     centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -105,11 +105,6 @@ function fn() {
     config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
     config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
@@ -121,15 +116,11 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
     config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
-  } else if(env == 'dev') {
+  } else if (env == 'dev') {
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
     config.kcClientId = 'supersecret';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   }
 
   return config;
