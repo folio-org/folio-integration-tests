@@ -1,13 +1,16 @@
 Feature: Ledger fiscal year rollover when "Close all current budgets" flag is true
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersUser = headersAdmin
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -34,6 +37,8 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
     * def reEncumberLine = callonce uuid84
 
   Scenario: Update po line limit
+    * configure headers = headersAdmin
+
     Given path 'configurations/entries'
     And param query = 'configName==poLines-limit'
     When method GET
@@ -137,7 +142,6 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
 
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
@@ -267,7 +271,6 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
       | reEncumberOrder   | reEncumberLine        | taxFund      | 'Ongoing'  | false        | true       | 150    |
 
   Scenario: Start rollover for ledger
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -299,7 +302,6 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
 
 
   Scenario Outline: Check that budget <id> status is <status> after rollover, budget status should not be changed
-    * configure headers = headersAdmin
 
     Given path 'finance/budgets', <id>
     When method GET
@@ -381,7 +383,6 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
     Then status 204
 
   Scenario: Delete rollover with In Progress status
-    * configure headers = headersAdmin
     Given path '/finance-storage/ledger-rollovers', rolloverId
     When method DELETE
     Then status 422
@@ -401,7 +402,6 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
     Then status 204
 
   Scenario: Delete rollover with Success status
-    * configure headers = headersAdmin
     Given path '/finance-storage/ledger-rollovers', rolloverId
     When method DELETE
     Then status 204

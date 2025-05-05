@@ -3,14 +3,15 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersUser = headersAdmin
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -43,7 +44,6 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
 
   Scenario: Verify that order with broken encumbrance will be rolled over successfully
     * print "Prepare fiscal year with #(fromFiscalYearId) for rollover"
-    * configure headers = headersAdmin
     * def code = fromYear
     * def periodStart = code + '-01-01T00:00:00Z'
     * def periodEnd = code + '-12-30T23:59:59Z'
@@ -64,6 +64,7 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
 
 
     * print "Create order 1 and open them"
+    * configure headers = headersAdmin
     * def v = call createOrder { id: #(brokenOrderId), orderType: 'One-Time', reEncumber: true }
     * def v = call createOrderLine { id: #(brokenPoLineId), orderId: #(brokenOrderId), fundId: #(fundId), listUnitPrice: 20 }
     * def v = call openOrder { orderId: "#(brokenOrderId)" }
