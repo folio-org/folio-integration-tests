@@ -1,15 +1,19 @@
+# THIS SHOULD BE IN CROSS-MODULES TESTS
 @parallel=false
 Feature: Check that totalEncumbered and totalExpended calculated correctly
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testorders32'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
-    # load global variables
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def previousFiscalYear = callonce uuid1
@@ -40,6 +44,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
     * def fromYear = parseInt(toYear) -1
 
   Scenario Outline: prepare fiscal year for <year>
+    * configure headers = headersAdmin
     * def fiscalYearId = <fiscalYearId>
     * def year = <year>
 
@@ -63,6 +68,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
       | currentFiscalYear  | toYear   |
 
   Scenario: prepare ledger
+    * configure headers = headersAdmin
 
     Given path 'finance/ledgers'
     And request
@@ -80,6 +86,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
     Then status 201
 
   Scenario Outline: prepare fund with fundId
+    * configure headers = headersAdmin
     * def fundId = <fundId>
 
     Given path 'finance-storage/funds'
@@ -105,6 +112,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
 
 
   Scenario Outline: Create a budgets for fiscal year <fiscalYearId> and fund <fundId>
+    * configure headers = headersAdmin
     * def fiscalYearId = <fiscalYearId>
     * def fundId = <fundId>
 
@@ -168,6 +176,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
 
 
   Scenario Outline: Create encumbrances for order <orderId>
+    * configure headers = headersAdmin
     * def transactionId = <transactionId>
     * def orderId = <orderId>
     * def orderLineId = <orderLineId>
@@ -213,6 +222,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
 
 
   Scenario Outline: create pending payments for <encumbranceId>
+    * configure headers = headersAdmin
     * def encumbranceId = <encumbranceId>
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>
@@ -249,6 +259,7 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
 
 
   Scenario Outline: create payments, credits for <encumbranceId>
+    * configure headers = headersAdmin
     * def encumbranceId = <encumbranceId>
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>

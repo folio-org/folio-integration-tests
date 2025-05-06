@@ -4,10 +4,14 @@ Feature: Update Pieces statuses in batch
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+
     * configure retry = { count: 10, interval: 5000 }
 
     * callonce variables
@@ -22,10 +26,12 @@ Feature: Update Pieces statuses in batch
 
     ### Before All ###
     # 1. Prepare finance data
+    * configure headers = headersAdmin
     * def v = callonce createFund { id: '#(fundId)' }
     * def v = callonce createBudget { id: '#(budgetId)', allocated: 100, fundId: '#(fundId)', status: 'Active' }
 
     # 2. Prepare acquisitions data
+    * configure headers = headersUser
     * def v = callonce createOrder { id: '#(orderId)' }
     * def v = callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
     * def v = callonce openOrder { orderId: '#(orderId)' }
@@ -54,6 +60,7 @@ Feature: Update Pieces statuses in batch
     * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
+    * configure headers = headersAdmin
     * table verifyPieceAuditData
       | _pieceId | _receivingStatus | _eventCount |
       | pieceId1 | 'Unreceivable'   | 2           |
@@ -76,6 +83,7 @@ Feature: Update Pieces statuses in batch
     * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
+    * configure headers = headersAdmin
     * table verifyPieceAuditData
       | _pieceId | _receivingStatus | _eventCount |
       | pieceId2 | 'Received'       | 2           |
@@ -100,6 +108,7 @@ Feature: Update Pieces statuses in batch
     * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
+    * configure headers = headersAdmin
     * table verifyPieceAuditData
       | _pieceId | _receivingStatus | _eventCount |
       | pieceId1 | 'Expected'       | 3           |
@@ -166,10 +175,13 @@ Feature: Update Pieces statuses in batch
   @Positive
   Scenario: Update 100 pieces statuses in batch to delay claim, late claim and unreceivable
     ## Relogin to avoid login expry problem
-    * call loginAdmin testAdmin
+    * call login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * call login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     # 1. Create 100 Pieces
     * def piecesData = []
@@ -191,19 +203,20 @@ Feature: Update Pieces statuses in batch
     # 2 Update Pieces statuses in batch to "Claim delayed"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim delayed' }
     * def verifyPiecesData1 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim delayed', _eventCount: 2 } } )
+    * configure headers = headersAdmin
     * def v = call verifyPieceAuditEvents verifyPiecesData1
 
     # 3 Update Pieces statuses in batch to "Claim sent"
+    * configure headers = headersUser
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim sent' }
     * def verifyPiecesData2 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim sent', _eventCount: 3 } } )
+    * configure headers = headersAdmin
     * def v = call verifyPieceAuditEvents verifyPiecesData2
 
     # 4 Update Pieces statuses in batch to "Unreceivable"
+    * configure headers = headersUser
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Unreceivable' }
     * def verifyPiecesData3 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Unreceivable', _eventCount: 4 } } )
 
-    * call loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
     * configure headers = headersAdmin
     * def v = call verifyPieceAuditEvents verifyPiecesData3

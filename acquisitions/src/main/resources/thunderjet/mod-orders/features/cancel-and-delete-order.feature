@@ -4,18 +4,17 @@ Feature: Cancel and delete order
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * call variables
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
     * def fundId = call uuid1
     * def budgetId = call uuid2
@@ -26,11 +25,13 @@ Feature: Cancel and delete order
 
   Scenario: Cancel & Delete Order
     * print '## Prepare finances'
+    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 1000 }
 
 
     * print '## Create an order'
+    * configure headers = headersUser
     * def v = call createOrder { id: "#(orderId)" }
 
 
@@ -65,6 +66,7 @@ Feature: Cancel and delete order
 
 
     * print '## Check the encumbrances were deleted'
+    * configure headers = headersAdmin
     Given path '/finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET

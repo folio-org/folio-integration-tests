@@ -2,14 +2,17 @@
 Feature: Should Open ongoing order if interval or renewal date is not set
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testorders'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
-    # load global variables
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -27,7 +30,7 @@ Feature: Should Open ongoing order if interval or renewal date is not set
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000 }
 
     Examples:
@@ -35,6 +38,7 @@ Feature: Should Open ongoing order if interval or renewal date is not set
       | fundId | budgetId |
 
   Scenario: check budget after create
+    * configure headers = headersAdmin
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET

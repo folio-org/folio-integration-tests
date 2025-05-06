@@ -1,16 +1,19 @@
+# THIS SHOULD BE IN MOD-INVOICE
 @parallel=false
 # for https://issues.folio.org/browse/MODORDERS-803
 Feature: Should fail updating fund in poLine when related invoice is approved
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -81,6 +84,7 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     Then status 204
 
   Scenario: Create an invoice
+    * configure headers = headersAdmin
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -97,6 +101,7 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     * def encumbranceId = poLine.fundDistribution[0].encumbrance
 
     * print "Add an invoice line linked to the po line"
+    * configure headers = headersAdmin
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId
@@ -112,6 +117,7 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     Then status 201
 
   Scenario: Approve the invoice
+    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -123,6 +129,7 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     Then status 204
 
   Scenario: Check the budget
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200

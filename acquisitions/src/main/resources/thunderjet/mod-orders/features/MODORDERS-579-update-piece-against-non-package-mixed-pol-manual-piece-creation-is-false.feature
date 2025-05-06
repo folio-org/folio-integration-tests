@@ -3,12 +3,16 @@
 Feature: Should create and update pieces for non package mixed POL with quantity POL updates when manual is false
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    #* callonce dev {tenant: 'testorders6'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -31,16 +35,16 @@ Feature: Should create and update pieces for non package mixed POL with quantity
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
   Scenario Outline: create locations
     # create locations
+    * configure headers = headersAdmin
     * def locationId = <locationId>
     * def code = <code>
     * def name = <name>
     Given path 'locations'
-    * configure headers = headersAdmin
     And request
     """
     {
@@ -120,8 +124,8 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     * def holdingId = response.locations[0].holdingId
 
     * print 'Check items'
-    Given path 'inventory/items'
     * configure headers = headersAdmin
+    Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 1
@@ -132,6 +136,7 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     And assert physicalItem.status.name == 'On order'
 
     * print 'Check if pieces were created when the order was opened'
+    * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -151,8 +156,8 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     And assert electronicPiece.holdingId == holdingId
 
     * print 'Check holdings'
-    Given path 'holdings-storage/holdings', initialHoldingId
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', initialHoldingId
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
@@ -189,21 +194,20 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     * def newCreatedHoldingId = physicalPieceAfterUpdate.holdingId
 
     * print 'Check physical item should be updated'
-    Given path 'inventory/items', physicalPieceAfterUpdate.itemId
     * configure headers = headersAdmin
+    Given path 'inventory/items', physicalPieceAfterUpdate.itemId
     When method GET
     Then status 200
     And match $.holdingsRecordId == newCreatedHoldingId
 
-
     * print 'Check holding should not be deleted, because flag "deleteHolding" was not provided and exist item'
     Given path 'holdings-storage/holdings', initialHoldingId
-    * configure headers = headersAdmin
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
 
     * print 'Check order and transaction after Physical piece update'
+    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -224,10 +228,9 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     And match electronicalLocationAfterUpdate.quantity == 1
     And match electronicalLocationAfterUpdate.quantityElectronic == 1
 
-
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1
@@ -237,7 +240,8 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     And assert encumbranceTr.encumbrance.status == 'Unreleased'
 
 # -- Update Physical piece -- #
- * print 'Update Physical piece without holding deletion and in the piece there is initial holding reference'
+    * print 'Update Physical piece without holding deletion and in the piece there is initial holding reference'
+    * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -267,21 +271,20 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     And assert physicalPieceAfterUpdate.holdingId == initialHoldingId
 
     * print 'Check physical item should be updated'
-    Given path 'inventory/items', physicalPieceAfterUpdate.itemId
     * configure headers = headersAdmin
+    Given path 'inventory/items', physicalPieceAfterUpdate.itemId
     When method GET
     Then status 200
     And match $.holdingsRecordId == initialHoldingId
 
-
     * print 'Check holding should not be deleted, because flag "deleteHolding" was not provided and exist item'
     Given path 'holdings-storage/holdings', newCreatedHoldingId
-    * configure headers = headersAdmin
     When method GET
     Then status 200
     And assert response.id == newCreatedHoldingId
 
     * print 'Check order and transaction after Physical piece update'
+    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -298,8 +301,8 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     And match poLine.locations[0].quantityPhysical == 1
 
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1
@@ -310,6 +313,7 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
 # -- Update Electronic piece -- #
     * print 'Update Electronic piece without holding deletion and create item true should fail, because inventory option is Instance, Holding'
+    * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -385,19 +389,18 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     * print 'Second update holding id ' + newElectronicCreatedHoldingIdSecondUpdate
 
     * print 'Check holding should be deleted, because flag "deleteHolding" was true and no exist item or pieces'
-    Given path 'holdings-storage/holdings', newElectronicCreatedHoldingIdSecondUpdate
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', newElectronicCreatedHoldingIdSecondUpdate
     When method GET
     Then status 200
 
-
     * print 'Check holding should be deleted, because flag "deleteHolding" was true and no exist item or pieces'
     Given path 'holdings-storage/holdings', newElectronicCreatedHoldingIdFirstUpdate
-    * configure headers = headersAdmin
     When method GET
     Then status 404
 
     * print 'Check order and transaction after Electronic piece update'
+    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -420,8 +423,8 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
 
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1

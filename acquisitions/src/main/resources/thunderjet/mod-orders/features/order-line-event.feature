@@ -4,12 +4,16 @@ Feature: mod audit order_line events
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
     * def orderId = callonce uuid
     * def poLineId1 = callonce uuid
@@ -19,13 +23,12 @@ Feature: mod audit order_line events
     * configure retry = { count: 10, interval: 5000 }
 
   Scenario: Create Order and OrderLines
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-audit-order-line.feature')
     * callonce createOrder { id: #(orderId) }
     * callonce createOrderLine { id: #(poLineId1), orderId: #(orderId), fundId: #(fundId) }
 
 
   Scenario: Check event saved in audit
+    * configure headers = headersAdmin
     Given path 'audit-data/acquisition/order-line/', poLineId1
     And retry until response.totalItems == 1
     When method GET
@@ -47,6 +50,7 @@ Feature: mod audit order_line events
     Then status 204
 
   Scenario: Check 2 events saved in audit
+    * configure headers = headersAdmin
     Given path 'audit-data/acquisition/order-line/', poLineId1
     And retry until response.totalItems == 2
     When method GET

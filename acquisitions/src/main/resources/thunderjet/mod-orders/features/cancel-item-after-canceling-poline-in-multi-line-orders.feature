@@ -3,12 +3,15 @@ Feature: Cancel order
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -103,6 +106,7 @@ Feature: Cancel order
     Then status 200
     * def poLine = $
 
+    * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId ==' + poLine.instanceId
     When method GET
@@ -118,11 +122,13 @@ Feature: Cancel order
     * def item = items[0]
     * match item.status.name == 'Order closed'
 
+    * configure headers = headersUser
     Given path 'orders/order-lines/', poLineId2
     When method GET
     Then status 200
     * def poLine2 = $
 
+    * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId ==' + poLine2.instanceId
     When method GET

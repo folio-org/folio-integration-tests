@@ -3,14 +3,41 @@
 Feature: Independent acquisitions unit for ordering and receiving
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * def res1 = callonce login testAdmin
-    * def res2 = callonce login dummyUser
-    * def tokenAdmin = res1.okapitoken
-    * def tokenDummy = res2.okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(tokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersDummy = { 'Content-Type': 'application/json', 'x-okapi-token': '#(tokenDummy)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersDummy
+
+    * def testUser2 = { tenant: '#(testTenant)', name: 'test-user-2', password: 'test' }
+    * table user2Permissions
+      | name                                           |
+      | 'orders.acquisitions-units-assignments.assign' |
+      | 'orders.acquisitions-units-assignments.manage' |
+      | 'orders.item.get'                              |
+      | 'orders.item.put'                              |
+      | 'orders.titles.collection.get'                 |
+      | 'orders.titles.item.get'                       |
+      | 'orders.titles.item.post'                      |
+      | 'orders.titles.item.put'                       |
+      | 'titles.acquisitions-units-assignments.assign' |
+      | 'titles.acquisitions-units-assignments.manage' |
+    * def v = callonce createAdditionalUser { testUser: '#(testUser2)',  userPermissions: '#(user2Permissions)' }
+
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * callonce login testUser2
+    * def okapitokenUser2 = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersUser2 = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser2)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+
+    * configure headers = headersAdmin
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def testUserId = res.userId
+    * def res = callonce getUserIdByUsername { user: '#(testUser2)' }
+    * def testUser2Id = res.userId
+    * configure headers = headersUser
+
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -36,6 +63,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     * def acqUnitMembershipId6 = callonce uuid23
     * def locationId = callonce uuid18
     * def titleId1 = callonce uuid22
+
 
   Scenario Outline: Prepare acqUnits
     # 1. Create acq unit 'acqUnitId1', 'acqUnitId2' and 'acqUnitId3'
@@ -64,18 +92,16 @@ Feature: Independent acquisitions unit for ordering and receiving
       | acqUnitId2 | 'testAcqUnit2' |
       | acqUnitId3 | 'testAcqUnit3' |
 
-  Scenario Outline: Prepare membership for admin user only
+  Scenario Outline: Prepare membership for testUser2 user only
     * def acqUnitMembershipId = <acqUnitMembershipId>
     * def acqUnitId = <acqUnitId>
     * configure headers = headersAdmin
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)', 'okapitokenAdmin': '#(tokenAdmin)'}
-    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
     And request
       """
       {
         "id": '#(acqUnitMembershipId)',
-        "userId": "#(userIdForMembership)",
+        "userId": "#(testUser2Id)",
         "acquisitionsUnitId": "#(acqUnitId)"
       }
       """
@@ -112,22 +138,19 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 2. Create a fund and budget
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
+    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}] }
 
   ## Acq units inheritance from Order checks
   Scenario: Create Order with acqUnit1, Create PO Line, check that acqUnit1 was inherited from Order to Title
-    # 1. Create acq unit membership for user
+    # 1. Create acq unit membership for testUser
     * configure headers = headersAdmin
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(dummyUser)', 'okapitokenAdmin': '#(tokenDummy)'}
-    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
-    And headers headersAdmin
     And request
       """
       {
         "id": '#(acqUnitMembershipId1)',
-        "userId": "#(userIdForMembership)",
+        "userId": "#(testUserId)",
         "acquisitionsUnitId": "#(acqUnitId1)"
       }
       """
@@ -135,7 +158,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 2. Create a composite order 'orderId1' with already created fund, budget
-    * configure headers = headersDummy
+    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
       """
@@ -173,7 +196,6 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 5. Check that acqUnt 'acqUnitId1' was inherited from Order to Title
-    * configure headers = headersDummy
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId1
     When method GET
@@ -183,7 +205,6 @@ Feature: Independent acquisitions unit for ordering and receiving
 
   Scenario: Edit acq units for Order, change should NOT propagated to related Title
     # 1. Edit the composite order by removing acqUnit 'acqUnitId1'
-    * configure headers = headersDummy
     Given path 'orders/composite-orders', orderId1
     When method GET
     Then status 200
@@ -206,7 +227,7 @@ Feature: Independent acquisitions unit for ordering and receiving
 
   Scenario: Edit acq units for Title, change should NOT propagated to related Order
     # 1. Assign acqUnit 'acqUnitId1' to order back
-    * configure headers = headersAdmin
+    * configure headers = headersUser2
     Given path 'orders/composite-orders', orderId1
     When method GET
     Then status 200
@@ -220,7 +241,6 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 2. Remove acqUnit 'acqUnitId' from title
-    * configure headers = headersAdmin
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId1
     When method GET
@@ -236,7 +256,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 3. Check that previous title operation should not be affect to order. It should have acqUnitIds
-    * configure headers = headersDummy
+    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId1
     When method GET
     Then status 200
@@ -245,7 +265,7 @@ Feature: Independent acquisitions unit for ordering and receiving
   ## Title Acq units protection checks
   Scenario: Assign acqUnit1 to Title and remove acq unit from user membership to check that GET, PUT request for Title is forbidden
     # 1. Assign acqUnit 'acqUnitId1' to title
-    * configure headers = headersAdmin
+    * configure headers = headersUser2
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId1
     When method GET
@@ -261,7 +281,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 2. Before remove acq unit verify GET request
-    * configure headers = headersDummy
+    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId1
     When method GET
@@ -278,7 +298,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 4. Verify PUT request is not possible
-    * configure headers = headersDummy
+    * configure headers = headersUser
     Given path 'orders/titles', titleId
     And request titleResponse
     When method PUT
@@ -296,15 +316,12 @@ Feature: Independent acquisitions unit for ordering and receiving
   Scenario: Assign acqUnit1 to user and check that both GET titles return our title and this title is editable now
     # 1. Assign acq unit membership to user
     * configure headers = headersAdmin
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(dummyUser)', 'okapitokenAdmin': '#(tokenDummy)'}
-    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
-    And headers headersAdmin
     And request
       """
       {
         "id": '#(acqUnitMembershipId2)',
-        "userId": "#(userIdForMembership)",
+        "userId": "#(testUserId)",
         "acquisitionsUnitId": "#(acqUnitId1)"
       }
       """
@@ -312,7 +329,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 2. Retrieve successfully title after re-assign acq unit membership
-    * configure headers = headersDummy
+    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId1
     When method GET
@@ -323,7 +340,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     * def acqUnitIds = $.titles[0].acqUnitIds
 
     # 3. Do PUT operation for title after re-assign acq unit membership
-    * configure headers = headersAdmin
+    * configure headers = headersUser2
     Given path 'orders/titles', titleId
     And request
       """
@@ -340,7 +357,6 @@ Feature: Independent acquisitions unit for ordering and receiving
   Scenario: Create package order with acqUnit1 assigned,
   Create Title for this package order with acqUnit2, check that this POST Title operation is forbidden
     # 1. Create a composite order
-    * configure headers = headersDummy
     Given path 'orders/composite-orders'
     And request
       """
@@ -369,7 +385,6 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 3. Create Title for this package order with acqUnit2, check that this POST Title operation is forbidden
-    * configure headers = headersDummy
     Given path 'orders/titles'
     And request
       """
@@ -389,14 +404,12 @@ Feature: Independent acquisitions unit for ordering and receiving
     # 'acqUnitId2' has already been created
     # 1. Create acqUnit membership for user and 'acqUnitId2'
     * configure headers = headersAdmin
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(dummyUser)', 'okapitokenAdmin': '#(tokenDummy)'}
-    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
     And request
       """
       {
         "id": '#(acqUnitMembershipId3)',
-        "userId": "#(userIdForMembership)",
+        "userId": "#(testUserId)",
         "acquisitionsUnitId": "#(acqUnitId2)"
       }
       """
@@ -421,7 +434,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 3. Verify POST Title to be forbidden
-    * configure headers = headersAdmin
+    * configure headers = headersUser2
     Given path 'orders/titles'
     And request
       """
@@ -455,7 +468,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 2. POST Title
-    * configure headers = headersAdmin
+    * configure headers = headersUser2
     Given path 'orders/titles'
     And request
       """
@@ -476,7 +489,6 @@ Feature: Independent acquisitions unit for ordering and receiving
   because for any operation with piece we check acq unit from related Title, and user does not have acqUnit2 assigned.
 
     # 1. Create a composite order. Now 'acqUnitId1' is assigned to user, acqUnitId2' is not assigned to user
-    * configure headers = headersDummy
     Given path 'orders/composite-orders'
     And request
       """
@@ -548,7 +560,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     * call pause 500
 
     # 5. Retrieve title and assign acqUnit2
-    * configure headers = headersAdmin
+    * configure headers = headersUser2
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId3
     When method GET
@@ -570,7 +582,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 7. Check piece 1 receivingStatus and update the piece should be forbidden
-    * configure headers = headersDummy
+    * configure headers = headersUser
     Given path 'orders/pieces', pieceId
     When method GET
     Then status 200
@@ -608,14 +620,12 @@ Feature: Independent acquisitions unit for ordering and receiving
   Scenario: Verify after assign acqUnit2 to user, now all previous operations should be allowed
     # 1. Create acq unit 'acqUnit2' membership
     * configure headers = headersAdmin
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(dummyUser)', 'okapitokenAdmin': '#(tokenAdmin)'}
-    * def userIdForMembership = result.userId
     Given path 'acquisitions-units/memberships'
     And request
       """
       {
         "id": '#(acqUnitMembershipId4)',
-        "userId": "#(userIdForMembership)",
+        "userId": "#(testUserId)",
         "acquisitionsUnitId": "#(acqUnitId2)"
       }
       """
@@ -623,7 +633,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 2. Create a composite order 'orderId4' with already created fund, budget
-    * configure headers = headersDummy
+    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
       """
@@ -661,7 +671,6 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 204
 
     # 5. Receive the piece
-    * configure headers = headersDummy
     * print 'Receive the piece'
     Given path 'orders/check-in'
     And request

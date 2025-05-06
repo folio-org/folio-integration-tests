@@ -3,12 +3,16 @@
 Feature: find-holdings-by-location-and-instance-for-mixed-pol
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-#    * callonce dev {tenant: 'testorders'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -73,14 +77,13 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     * def holdingId = response.locations[0].holdingId
     * print 'Check items'
 
-    Given path 'holdings-storage/holdings'
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
     When method GET
     And match $.totalRecords == 1
 
     Given path 'inventory/items-by-holdings-id'
-    * configure headers = headersAdmin
     And param query = 'holdingsRecordId==' + holdingId
     When method GET
     And match $.totalRecords == 2
@@ -141,14 +144,13 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     * def holdingId = response.locations[0].holdingId
     * print 'Check items'
 
-    Given path 'holdings-storage/holdings'
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
     When method GET
     And match $.totalRecords == 1
 
     Given path 'inventory/items-by-holdings-id'
-    * configure headers = headersAdmin
     And param query = 'holdingsRecordId==' + holdingId
     When method GET
     And match $.totalRecords == 4

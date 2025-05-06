@@ -1,3 +1,4 @@
+# THIS SHOULD BE IN MOD-INVOICE
 @parallel=false
 # for https://folio-org.atlassian.net/browse/MODORDERS-1021
 Feature: Approve and pay order with 50 lines
@@ -11,19 +12,17 @@ Feature: Approve and pay order with 50 lines
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -32,9 +31,7 @@ Feature: Approve and pay order with 50 lines
     * def poLineUuid = 'f91b86d6-e2e5-4d0c-bffd-7beb1d56ce'
     * def invoiceLineUuid = '0c2a0074-43e3-4dcf-b3a8-978124ea20'
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
     * configure readTimeout = 60000
 
@@ -68,6 +65,7 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Create an invoice
+    * configure headers = headersAdmin
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -77,6 +75,7 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Create 50 invoiceLines for 50 poLines
+    * configure headers = headersAdmin
     * def lineParameters = []
     * def createParameterArray =
       """
@@ -99,6 +98,7 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Approve the invoice
+    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -111,6 +111,7 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Pay the invoice
+    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -123,6 +124,7 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Verify payed invoice
+    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -130,6 +132,7 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario Outline: Check that payments created with 10$ amount of money
+    * configure headers = headersAdmin
     * def invoiceLineId = <invoiceLineId>
     * def amount = <amount>
     Given path 'finance/transactions'

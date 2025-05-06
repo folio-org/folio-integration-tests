@@ -3,15 +3,20 @@ Feature: Move Item and Holding to update order data
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+
     * configure retry = { interval: 1000, count: 5 }
 
     * callonce variables
 
     ### Before Each ###
+    * configure headers = headersAdmin
     # Inventory: instance, holding
     * def instanceId = call uuid
     * table instanceData
@@ -32,6 +37,7 @@ Feature: Move Item and Holding to update order data
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)' }
 
     # Orders: order, poline, piece
+    * configure headers = headersUser
     * def orderId = call uuid
     * def v = call createOrder { id: '#(orderId)' }
 
@@ -56,6 +62,7 @@ Feature: Move Item and Holding to update order data
   @Positive
   Scenario: Test for changing ownership of Holdings to affect Pieces and PoLines
     # 1. Create new instance
+    * configure headers = headersAdmin
     * def instanceId2 = call uuid
     * table instanceData
       | id          | title       | instanceTypeId       |
@@ -75,6 +82,7 @@ Feature: Move Item and Holding to update order data
     Then status 200
 
     # 3. Verify updated PoLine contains updated instanceId
+    * configure headers = headersUser
     Given path 'orders/order-lines/', poLineId
     And retry until response.instanceId == instanceId2
     When method GET
@@ -98,6 +106,7 @@ Feature: Move Item and Holding to update order data
     * def itemId = piece[0].response.itemId
 
     # 2. Create new holding
+    * configure headers = headersAdmin
     * def holdingId2 = call uuid
     * table holdingData
       | id         | instanceId | locationId         | sourceId               |
@@ -117,6 +126,7 @@ Feature: Move Item and Holding to update order data
     Then status 200
 
     # 4. Verify updated Piece contains updated holdingId
+    * configure headers = headersUser
     Given path 'orders/pieces/', pieceId
     And retry until response.holdingId == holdingId2
     When method GET

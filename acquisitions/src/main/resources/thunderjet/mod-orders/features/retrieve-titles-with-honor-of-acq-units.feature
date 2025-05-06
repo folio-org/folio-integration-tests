@@ -3,11 +3,16 @@
 Feature: Retrieve titles with honor of acquisition units
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -20,14 +25,13 @@ Feature: Retrieve titles with honor of acquisition units
 
   Scenario: Create a fund and budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
+    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}] }
 
 
   Scenario: Create acq unit
     * configure headers = headersAdmin
     Given path 'acquisitions-units/units'
-    And headers headersAdmin
     And request
     """
     {
@@ -44,15 +48,14 @@ Feature: Retrieve titles with honor of acquisition units
 
   Scenario: Create acq unit membership
     * configure headers = headersAdmin
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
-    * def userIdForMembership = result.userId
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def userId = res.userId
     Given path 'acquisitions-units/memberships'
-    And headers headersAdmin
     And request
     """
       {
         "id": '#(acqUnitMembershipId)',
-        "userId": "#(userIdForMembership)",
+        "userId": "#(userId)",
         "acquisitionsUnitId": "#(acqUnitId)"
       }
     """

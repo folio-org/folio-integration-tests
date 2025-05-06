@@ -2,14 +2,17 @@
 Feature: Check needReEncumber flag populated correctly
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    # * callonce dev {tenant: 'testorders'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
-    # load global variables
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
@@ -31,7 +34,7 @@ Feature: Check needReEncumber flag populated correctly
     * def budgetId = <budgetId>
 
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
 
     Examples:
@@ -121,6 +124,7 @@ Feature: Check needReEncumber flag populated correctly
     When method DELETE
     Then status 204
 
+    * configure headers = headersUser
     Given path 'orders/composite-orders' , orderId
     And header Accept = 'application/json'
     When method GET

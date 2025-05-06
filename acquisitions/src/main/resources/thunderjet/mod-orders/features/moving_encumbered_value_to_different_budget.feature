@@ -1,16 +1,19 @@
+# THIS SHOULD BE IN MOD-INVOICE OR CROSS-MODULES
 @parallel=false
 # for https://issues.folio.org/browse/MODORDERS-800
 Feature: Moving encumbered value from budget 1 to budget 2
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -81,6 +84,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
     Then status 204
 
   Scenario: Create an invoice
+    * configure headers = headersAdmin
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -97,6 +101,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
     * def encumbranceId = poLine.fundDistribution[0].encumbrance
 
     * print "Add an invoice line linked to the po line"
+    * configure headers = headersAdmin
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId
@@ -112,6 +117,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
     Then status 201
 
   Scenario: Approve the invoice
+    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -123,6 +129,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
     Then status 204
 
   Scenario: Check the budget after invoice approve
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
@@ -134,6 +141,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
     And match $.encumbered == 0
 
   Scenario: Cancel the invoice
+    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -145,6 +153,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
     Then status 204
 
   Scenario: Check the budget after invoice cancel
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
@@ -170,6 +179,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
     Then status 204
 
   Scenario: Check the previous budget
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
@@ -181,6 +191,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
     And match $.encumbered == 0
 
   Scenario: Check the current budget
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId2
     When method GET
     Then status 200

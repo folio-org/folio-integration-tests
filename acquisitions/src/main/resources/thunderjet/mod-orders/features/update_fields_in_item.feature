@@ -2,20 +2,19 @@
 Feature: Should update copy number, enumeration and chronology in item after updating in piece
 
   Background:
-    * url baseUrl
     * print karate.info.scenarioName
+    * url baseUrl
 
-    # * callonce dev {tenant: 'testorders1'}
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
 
   @Positive
@@ -31,6 +30,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
     * print '2. Create an order'
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
     * print '3. Create a po line'
@@ -73,7 +73,8 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     Then status 200
 
     * def piece = $.pieces[0]
-    
+
+    * configure headers = headersAdmin
     Given path '/inventory/items/', piece.itemId
     When method GET
     Then status 200

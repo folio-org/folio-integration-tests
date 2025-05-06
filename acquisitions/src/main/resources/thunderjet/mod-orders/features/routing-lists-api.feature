@@ -2,11 +2,13 @@
 Feature: Test routing list API
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -20,9 +22,6 @@ Feature: Test routing list API
     * def rListSample = read('classpath:samples/mod-orders/routingLists/a1d13648-347b-4ac9-8c2f-5bc47248b87e.json')
     * set rListSample.id = rListId;
     * set rListSample.poLineId = poLineId;
-
-    * def createOrder = read('../reusable/create-order.feature')
-    * def createOrderLine = read('../reusable/create-order-line.feature')
 
     * callonce createOrder { id: #(orderId) }
     * callonce createOrderLine { id: #(poLineId), orderId: #(orderId) }

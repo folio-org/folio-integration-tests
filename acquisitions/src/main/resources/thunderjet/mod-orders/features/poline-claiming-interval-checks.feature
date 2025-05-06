@@ -3,18 +3,19 @@ Feature: Claiming Active/Claiming interval checks
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -24,7 +25,7 @@ Feature: Claiming Active/Claiming interval checks
 
   Scenario: Create finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
 
 
