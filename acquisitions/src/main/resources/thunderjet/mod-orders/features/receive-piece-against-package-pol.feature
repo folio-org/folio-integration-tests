@@ -3,12 +3,16 @@
 Feature: Receive piece against package POL
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    #* callonce dev {tenant: 'testorders'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -26,8 +30,8 @@ Feature: Receive piece against package POL
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
 
   Scenario: Create an order
@@ -110,7 +114,6 @@ Feature: Receive piece against package POL
 
   Scenario: Create piece 1 for title 1
     * print "Create piece 1 for title 1"
-    * configure headers = headersAdmin
 
     Given path 'orders/pieces'
     And request
@@ -162,8 +165,8 @@ Feature: Receive piece against package POL
 
 
     * print 'Check items after checkin first piece with createItem flag'
-    Given path 'inventory/items'
     * configure headers = headersAdmin
+    Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 1
@@ -174,6 +177,7 @@ Feature: Receive piece against package POL
     And match itemForPiece1.discoverySuppress == true
     
     # Check piece 1 receivingStatus
+    * configure headers = headersUser
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 200
@@ -205,7 +209,6 @@ Feature: Receive piece against package POL
     * print "Create piece 2 for title 2"
 
     Given path 'orders/pieces'
-    And headers headersAdmin
     And request
     """
     {
@@ -224,7 +227,6 @@ Feature: Receive piece against package POL
     * print "Create piece 3 for title 2"
 
     Given path 'orders/pieces'
-    And headers headersAdmin
     And request
     """
     {

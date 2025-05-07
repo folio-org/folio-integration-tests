@@ -1,15 +1,19 @@
+# THIS SHOULD BE IN CROSS-MODULES TESTS
 @parallel=false
 Feature: Check re-encumber works correctly
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    # * callonce dev {tenant: 'testorders12'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
-    # load global variables
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def fromFiscalYearId = callonce uuid1
@@ -77,7 +81,7 @@ Feature: Check re-encumber works correctly
 
 
   Scenario Outline: prepare finances for fiscal year with <fiscalYearId> for re-encumber
-
+    * configure headers = headersAdmin
     * def fiscalYearId = <fiscalYearId>
     * def code = <code>
 
@@ -101,6 +105,7 @@ Feature: Check re-encumber works correctly
       | toFiscalYearId   | toYear   |
 
   Scenario Outline: prepare finances for ledger with <ledgerId> for re-encumber
+    * configure headers = headersAdmin
     * def ledgerId = <ledgerId>
 
     Given path 'finance/ledgers'
@@ -127,6 +132,7 @@ Feature: Check re-encumber works correctly
       | initialAmountOngoingRolloverLedger | true                |
 
   Scenario Outline: prepare finances for rollover with <rolloverId>
+    * configure headers = headersAdmin
     * def rolloverId = <rolloverId>
     * def ledgerId = <ledgerId>
     * def oneTime = {"orderType": 'One-time', "basedOn": <basedOn>, "increaseBy": <increaseBy>}
@@ -191,7 +197,7 @@ Feature: Check re-encumber works correctly
       | initialAmountEncumberedFund  | initialAmountOngoingRolloverLedger |
 
   Scenario Outline: prepare finances for budget with <fundId> and <fiscalYearId>
-
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>
 
@@ -231,7 +237,6 @@ Feature: Check re-encumber works correctly
     * def orderId = <orderId>
     * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
 
-    * configure headers = headersAdmin
     Given path 'orders-storage/purchase-orders'
     And request
     """
@@ -259,7 +264,6 @@ Feature: Check re-encumber works correctly
       | successInitialAmountOrder  | 'Ongoing'  | null         |
 
   Scenario Outline: prepare order lines with orderLineId <poLineId>
-    * configure headers = headersAdmin
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fund1Id = <fund1Id>
@@ -416,7 +420,7 @@ Feature: Check re-encumber works correctly
       | successInitialAmountOrder   | null                   | 204      |
 
   Scenario Outline: check encumbrances and orderLine <poLineId> after re-encumber
-
+    * configure headers = headersAdmin
     * def poLineId = <poLineId>
 
     Given path 'finance/transactions'
@@ -431,6 +435,7 @@ Feature: Check re-encumber works correctly
     * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance1' ? newEncumbrance1.id : <encumbrance1Id>
     * def encumbrance2Id = <encumbrance2Id> == 'newEncumbrance2' ? newEncumbrance2.id : <encumbrance2Id>
 
+    * configure headers = headersUser
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200

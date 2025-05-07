@@ -1,21 +1,18 @@
 Feature: Cancel order
 
   Background:
-    * url baseUrl
     * print karate.info.scenarioName
+    * url baseUrl
 
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
-
-    # Define reusable functions
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def cancelOrder = read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature')
 
   @Positive
   Scenario: Cancel order
@@ -30,6 +27,7 @@ Feature: Cancel order
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
     * print '2. Create composite order'
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)' }
 
     * print '3. Create order lines'
@@ -48,6 +46,7 @@ Feature: Cancel order
     * def v = call cancelOrder { orderId: '#(orderId)' }
 
     * print '6. Check the order lines after cancelling the order'
+    * configure headers = headersAdmin
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET
@@ -62,6 +61,7 @@ Feature: Cancel order
     And match budget.unavailable == 0
 
     * print '7. Check the budget after cancelling the order'
+    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200

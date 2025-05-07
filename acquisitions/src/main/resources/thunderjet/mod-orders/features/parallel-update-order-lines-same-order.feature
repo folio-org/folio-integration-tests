@@ -5,11 +5,17 @@ Feature: Update order lines for an open order in parallel
   Background:
     # This part is called once before scenarios are executed. It's important that all scenarios start at the same time,
     # so all scripts must be called with callonce.
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -21,14 +27,11 @@ Feature: Update order lines for an open order in parallel
     * def poLineId4 = callonce uuid7
     * def poLineId5 = callonce uuid8
 
-    * def createOrder = read('../reusable/create-order.feature')
-    * def createOrderLine = read('../reusable/create-order-line.feature')
-    * def openOrder = read('../reusable/open-order.feature')
-
     * configure headers = headersAdmin
+    * callonce createFund { 'id': '#(fundId)' }
+    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
-    * callonce createFund { 'id': '#(fundId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * configure headers = headersUser
     * callonce createOrder { id: "#(orderId)" }
     * callonce createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
     * callonce createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }

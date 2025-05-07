@@ -1,12 +1,18 @@
+@parallel=false
 # MODORDERS-538
 Feature: Should create and delete pieces for non package mixed POL with quantity POL updates when manual is false
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -26,8 +32,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
   Scenario: Create an order
     Given path 'orders/composite-orders'
@@ -86,8 +92,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * def holdingId = response.locations[0].holdingId
 
     * print 'Check items'
-    Given path 'inventory/items'
     * configure headers = headersAdmin
+    Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 1
@@ -98,6 +104,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And assert physicalItem.status.name == 'On order'
 
     * print 'Check if pieces were created when the order was opened'
+    * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -117,8 +124,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And assert electronicPiece.holdingId == holdingId
 
     * print 'Check holdings'
-    Given path 'holdings-storage/holdings', initialHoldingId
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', initialHoldingId
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
@@ -139,12 +146,13 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 204
 
     * print 'Check physical item should be deleted'
-    Given path 'inventory/items', physicalPieceForDelete.itemId
     * configure headers = headersAdmin
+    Given path 'inventory/items', physicalPieceForDelete.itemId
     When method GET
     Then status 404
 
     * print 'Check physical piece should be deleted'
+    * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -154,8 +162,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And assert electronicPiecesAfterDelete[0].receivingStatus == 'Expected'
 
     * print 'Check holding should not be deleted, because flag "deleteHolding" was not provided and exist item'
-    Given path 'holdings-storage/holdings', initialHoldingId
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', initialHoldingId
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
@@ -176,8 +184,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match poLine.locations[0].quantityPhysical == '#notpresent' || poLine.locations[0].quantityPhysical == 0
 
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1
@@ -204,12 +212,13 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 204
 
     * print 'Check Electronic item should be deleted'
-    Given path 'inventory/items', electronicPiece.id
     * configure headers = headersAdmin
+    Given path 'inventory/items', electronicPiece.id
     When method GET
     Then status 404
 
     * print 'Check Electronic piece should be deleted'
+    * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -217,8 +226,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match $.totalRecords == 1
 
     * print 'Check holding should not be deleted, because flag "deleteHolding" was not provided and not existing items'
-    Given path 'holdings-storage/holdings', initialHoldingId
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', initialHoldingId
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
@@ -238,8 +247,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
 
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1
@@ -249,7 +258,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And assert encumbranceTr.encumbrance.status == 'Unreleased'
 
   Scenario: Create set of pieces
-    * configure headers = headersAdmin
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -329,8 +337,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match poLine.locations == '#[3]'
 
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1
@@ -356,19 +364,20 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 204
 
     * print 'Check item should be deleted'
-    Given path 'inventory/items', pieceItemId
     * configure headers = headersAdmin
+    Given path 'inventory/items', pieceItemId
     When method GET
     Then status 404
 
     * print 'Check Electronic piece should be deleted'
+    * configure headers = headersUser
     Given path 'orders/pieces', pieceIdWithItemAndLocation
     When method GET
     Then status 404
 
     * print 'Check holding should be deleted, because flag "deleteHolding" was provided and not existing items'
-    Given path 'holdings-storage/holdings', pieceHoldingId
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', pieceHoldingId
     When method GET
     Then status 404
 
@@ -386,8 +395,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match poLine.locations == '#[2]'
 
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1
@@ -418,8 +427,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     Then status 404
 
     * print 'Check holding should not be deleted and flag "deleteHolding" was provided but existing items'
-    Given path 'holdings-storage/holdings', pieceHoldingId
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', pieceHoldingId
     When method GET
     Then status 200
 
@@ -437,8 +446,8 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match poLine.locations == '#[2]'
 
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1

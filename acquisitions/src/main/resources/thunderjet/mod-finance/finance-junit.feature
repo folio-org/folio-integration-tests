@@ -148,12 +148,7 @@ Feature: mod-finance integration tests
     * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
 
   Scenario: create admin user
-    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(testAdmin.password)' }
-    * def userPermissions = adminPermissions
-    * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
-    * call read('classpath:common/eureka/setup-users.feature@createTestUser')
-    * call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
-    * call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
+    * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
 
   Scenario: init global data
     * call login testUser

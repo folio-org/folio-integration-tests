@@ -4,22 +4,26 @@ Feature: mod audit order events
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
     * def orderId = callonce uuid
 
     * configure retry = { count: 10, interval: 5000 }
 
   Scenario: Create Order event
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * callonce createOrder { id: #(orderId) }
 
   Scenario: Check event saved in audit
+    * configure headers = headersAdmin
     Given path 'audit-data/acquisition/order/', orderId
     And retry until response.totalItems == 1
     When method GET
@@ -41,6 +45,7 @@ Feature: mod audit order events
     Then status 204
 
   Scenario: Check 2 events saved in audit
+    * configure headers = headersAdmin
     Given path 'audit-data/acquisition/order/' + orderId
     And retry until response.totalItems == 2
     When method GET

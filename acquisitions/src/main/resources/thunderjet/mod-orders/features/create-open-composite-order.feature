@@ -3,12 +3,16 @@
 
     Background:
       * print karate.info.scenarioName
-
       * url baseUrl
-      * callonce loginAdmin testAdmin
+
+      * callonce login testAdmin
       * def okapitokenAdmin = okapitoken
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-      * configure headers = headersAdmin
+      * callonce login testUser
+      * def okapitokenUser = okapitoken
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * configure headers = headersUser
+
       * call variables
 
 
@@ -29,6 +33,7 @@
       * def v = call createBudget { id: "#(miscHistBudgetId)", fundId: "#(miscHistFundId)", allocated: 1000 }
 
       * print '## Prepare the order'
+      * configure headers = headersUser
       * def po = read('classpath:samples/mod-orders/compositeOrders/po-listed-print-monograph.json')
       * def line1 = po.poLines[0]
       * def line2 = po.poLines[1]
@@ -102,6 +107,7 @@
       * match each $.poLines[*].paymentStatus == 'Awaiting Payment'
 
       * print '## Check created instances'
+      * configure headers = headersAdmin
       Given path 'inventory/instances'
       And param query = 'title==("' + line1.titleOrPackage + '" OR "' + line2.titleOrPackage + '")'
       When method GET
@@ -110,7 +116,6 @@
       * def instances = response.instances
 
       * print '## Check created holdings'
-      * configure headers = headersAdmin
       Given path 'holdings-storage/holdings'
       And param query = 'instanceId==("' + instances[0].id + '" OR "' + instances[1].id + '")'
       When method GET
@@ -130,6 +135,7 @@
       * def itemIds = $.items[*].id
 
       * print '## Check created pieces'
+      * configure headers = headersUser
       Given path 'orders/pieces'
       And param query = 'poLineId==("' + newLines[0].id + '" OR "' + newLines[1].id + '")'
       And param limit = 100
@@ -143,6 +149,7 @@
       * match $.pieces[*].format == '#[14]'
 
       * print '## Check created encumbrances'
+      * configure headers = headersAdmin
       Given path 'finance/transactions'
       And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
       When method GET

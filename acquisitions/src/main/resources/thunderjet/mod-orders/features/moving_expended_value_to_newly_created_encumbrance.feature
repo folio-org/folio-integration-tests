@@ -1,15 +1,19 @@
+# THIS SHOULD BE IN CROSS-MODULES
 # MODORDERS-834
 @parallel=false
 Feature: Moving expended amount when editing fund distribution for POL
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -37,16 +41,18 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Create fiscal years and associated ledger
+    * configure headers = headersAdmin
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: '#(fyId1)', code: 'TESTFYA0001', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: 'TESTFYA' }
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: '#(fyId2)', code: 'TESTFYA0002', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: 'TESTFYA' }
-    * call createLedger { 'id': '#(ledgerId)', fiscalYearId: '#(fyId1)'}
+    * call createLedger { 'id': '#(ledgerId)', fiscalYearId: '#(fyId1)' }
 
 
   Scenario Outline: Prepare finances
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def fundCode = <fundCode>
     * def budgetId = <budgetId>
@@ -102,6 +108,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     Then status 204
 
   Scenario: Create an invoice
+    * configure headers = headersAdmin
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -118,6 +125,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     * def encumbranceId = poLine.fundDistribution[0].encumbrance
 
     * print "Add an invoice line linked to the po line"
+    * configure headers = headersAdmin
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId
@@ -134,6 +142,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     Then status 201
 
   Scenario: Approve the invoice
+    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -145,6 +154,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     Then status 204
 
   Scenario: Check the budget after invoice approve
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
@@ -156,6 +166,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match $.encumbered == 0
 
   Scenario: Pay the invoice
+    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -167,6 +178,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     Then status 204
 
   Scenario: Check the budget after invoice paid
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
@@ -192,6 +204,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     When method PUT
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'finance/transactions', oldEncumbranceId
     When method GET
     Then status 404
@@ -202,6 +215,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     Then status 200
     * def newEncumbranceId = $.fundDistribution[0].encumbrance
 
+    * configure headers = headersAdmin
     Given path 'finance/transactions', newEncumbranceId
     When method GET
     Then status 200
@@ -212,6 +226,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Check the previous budget
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
@@ -222,6 +237,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match $.encumbered == 0
 
   Scenario: Check the current budget
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId2
     When method GET
     Then status 200
@@ -232,6 +248,7 @@ Feature: Moving expended amount when editing fund distribution for POL
     And match $.encumbered == 0
 
   Scenario: Start preview rollover with based on Expended
+    * configure headers = headersAdmin
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -268,6 +285,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Wait for rollover to end
+    * configure headers = headersAdmin
     * configure retry = { count: 10, interval: 500 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + previewExpendedRolloverId
@@ -277,6 +295,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario Outline: Check new budgets after preview rollover based on Expended
+    * configure headers = headersAdmin
     * def fundId = <fundId>
 
     Given path 'finance/ledger-rollovers-budgets'
@@ -307,6 +326,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Start preview rollover with based on Remaining
+    * configure headers = headersAdmin
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -343,6 +363,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario Outline: Check new budgets after preview rollover based on Remaining
+    * configure headers = headersAdmin
     * def fundId = <fundId>
 
     Given path 'finance/ledger-rollovers-budgets'
@@ -373,6 +394,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Start preview rollover with based on Initial Amount Encumbered
+    * configure headers = headersAdmin
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -409,6 +431,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario Outline: Check new budgets after preview rollover based on Initial Amount Encumbered
+    * configure headers = headersAdmin
     * def fundId = <fundId>
 
     Given path 'finance/ledger-rollovers-budgets'
@@ -439,6 +462,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Start rollover
+    * configure headers = headersAdmin
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -475,6 +499,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Wait for rollover to end
+    * configure headers = headersAdmin
     * configure retry = { count: 10, interval: 500 }
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
@@ -484,6 +509,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Check rollover statuses
+    * configure headers = headersAdmin
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
@@ -495,6 +521,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario: Check rollover errors
+    * configure headers = headersAdmin
     Given path 'finance/ledger-rollovers-errors'
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
@@ -503,6 +530,7 @@ Feature: Moving expended amount when editing fund distribution for POL
 
 
   Scenario Outline: Check the new budgets after common rollover
+    * configure headers = headersAdmin
     * def fundId = <fundId>
     Given path 'finance/budgets'
     And param query = 'fiscalYearId==' + fyId2 + ' AND fundId==' + fundId
@@ -532,6 +560,7 @@ Feature: Moving expended amount when editing fund distribution for POL
   # Transaction Amount and Encumbrance Initial Amount Encumbered is equals to 1, because rollover type was based on Expended
   # And we had 1$ expended in transaction from previous FY
   Scenario: Check encumbrances
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2
     When method GET

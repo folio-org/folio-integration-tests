@@ -2,13 +2,13 @@
 Feature: Verify updating poLine location restricted after open order
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testorders'}
-    * callonce loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     # load global variables
     * callonce variables
@@ -17,6 +17,7 @@ Feature: Verify updating poLine location restricted after open order
     * def poLineId = callonce uuid2
     * def locationId = callonce uuid3
     * def holdingIdForUpdate = callonce uuid4
+
   Scenario: Create composite order
     Given path 'orders/composite-orders'
     And request
@@ -55,8 +56,6 @@ Feature: Verify updating poLine location restricted after open order
     Then status 204
 
   Scenario: Verify that pieces has been created for poLine
-    * configure headers = headersAdmin
-
     Given path 'orders-storage/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -93,8 +92,6 @@ Feature: Verify updating poLine location restricted after open order
     And match $.errors contains deep {code: 'locationCannotBeModifiedAfterOpen'}
 
   Scenario: Verify that pieces has not been increase for poLine
-    * configure headers = headersAdmin
-
     Given path 'orders-storage/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET

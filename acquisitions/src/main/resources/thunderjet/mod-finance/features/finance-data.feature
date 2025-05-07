@@ -27,15 +27,15 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def budgetId1 = callonce uuid { n: 10 }
     * def budgetId2 = callonce uuid { n: 11 }
 
-    * def result = call read('classpath:common/eureka/users.feature') { user: '#(testUser)' }
-    * def userId = result.userId
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def testUserId = res.userId
 
     ### Before All ###
 
     # Create Acq Unit and assign user (each scenario)
     * configure headers = headersAdmin
     * def v = callonce createAcqUnit { id: '#(acqUnitId)', name: '#(acqUnitId)', isDeleted: false, protectCreate: true, protectRead: true, protectUpdate: true, protectDelete: true }
-    * def v = callonce assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * def v = callonce assignUserToAcqUnit { userId: '#(testUserId)', acquisitionsUnitId: '#(acqUnitId)' }
     * configure headers = headersUser
 
     # Prepare finance data
@@ -171,7 +171,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     # 3. Verify get finance data with acq unit id restrictions, fiscal year id2 should be empty for user after removing acq unit
     * configure headers = headersAdmin
-    * def v = call deleteUserFromAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * def v = call deleteUserFromAcqUnit { userId: '#(testUserId)', acquisitionsUnitId: '#(acqUnitId)' }
     * configure headers = headersUser
 
     Given path 'finance/finance-data'
@@ -181,7 +181,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.totalRecords == 0
 
     * configure headers = headersAdmin
-    * def v = call assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * def v = call assignUserToAcqUnit { userId: '#(testUserId)', acquisitionsUnitId: '#(acqUnitId)' }
     * configure headers = headersUser
 
     Given path 'finance/finance-data'

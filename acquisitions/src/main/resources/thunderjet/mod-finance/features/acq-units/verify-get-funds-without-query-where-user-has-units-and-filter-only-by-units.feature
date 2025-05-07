@@ -11,6 +11,9 @@ Feature: Get funds without providing filter query should take into account acqui
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def testUserId = res.userId
+
     * callonce variables
 
     * def fundAllowFundViewAcqUnitId = callonce uuid1
@@ -89,14 +92,12 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign restrict view acquisitions units memberships to user
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testUser)'}
-    * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
     And request
     """
     {
-      "userId": "#(userId)",
+      "userId": "#(testUserId)",
       "acquisitionsUnitId": "#(restrictFundViewAcqUnitId)"
     }
     """
@@ -114,11 +115,9 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundRestrictViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign allow view acquisitions units memberships to user
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testUser)'}
-    * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
-    And param query = 'acquisitionsUnitId==' + restrictFundViewAcqUnitId + ' and userId==' + userId
+    And param query = 'acquisitionsUnitId==' + restrictFundViewAcqUnitId + ' and userId==' + testUserId
     When method GET
     Then status 200
     * def acqMember = $.acquisitionsUnitMemberships[0]
@@ -144,14 +143,12 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Again assign restrict view acquisitions units memberships to user
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testUser)'}
-    * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
     And request
     """
     {
-      "userId": "#(userId)",
+      "userId": "#(testUserId)",
       "acquisitionsUnitId": "#(restrictFundViewAcqUnitId)"
     }
     """
@@ -169,12 +166,10 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundRestrictViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario Outline: DELETE acquisitions units and memberships <acqUnitId>
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testUser)'}
-    * def userId = result.userId
     * def acqUnitId = <acqUnitId>
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
-    And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==' + userId
+    And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==' + testUserId
     When method GET
     Then status 200
     * def acqMember = $.acquisitionsUnitMemberships[0]

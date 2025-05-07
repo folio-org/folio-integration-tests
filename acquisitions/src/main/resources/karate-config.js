@@ -30,6 +30,8 @@ function fn() {
     dummyUser: {tenant: testTenant, name: 'dummy-user', password: 'dummy'},
 
     // define global features
+    createAdditionalUser: karate.read('classpath:common/eureka/create-additional-user.feature'),
+    getUserIdByUsername: karate.read('classpath:common/eureka/users.feature'),
     login: karate.read('classpath:common/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),

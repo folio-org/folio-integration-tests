@@ -1,3 +1,4 @@
+@parallel=false
 Feature: mod-orders integration tests
 
   Background:
@@ -30,140 +31,10 @@ Feature: mod-orders integration tests
 
     * table userPermissions
       | name                                                          |
-      | 'acquisition.invoice.events.get'                              |
-      | 'acquisition.invoice-line.events.get'                         |
-      | 'acquisition.order-line.events.get'                           |
-      | 'acquisition.order.events.get'                                |
-      | 'acquisition.piece.events.history.get'                        |
-      | 'acquisition.piece.events.get'                                |
-      | 'addresstypes.item.post'                                      |
-      | 'acquisitions-units.memberships.item.delete'                  |
-      | 'acquisitions-units.memberships.item.post'                    |
-      | 'acquisitions-units.units.item.post'                          |
-      | 'acquisitions-units.units.item.put'                           |
-      | 'acquisitions-units-storage.memberships.collection.get'       |
-      | 'acquisitions-units-storage.memberships.item.delete'          |
-      | 'acquisitions-units-storage.memberships.item.get'             |
-      | 'acquisitions-units-storage.memberships.item.post'            |
-      | 'acquisitions-units-storage.memberships.item.put'             |
-      | 'acquisitions-units-storage.units.item.post'                  |
-      | 'circulation.rules.put'                                       |
-      | 'circulation.requests.item.get'                               |
-      | 'circulation.requests.item.move.post'                         |
-      | 'circulation.requests.item.post'                              |
-      | 'circulation-storage.loan-policies.collection.get'            |
-      | 'circulation-storage.loan-policies.item.post'                 |
-      | 'circulation-storage.patron-notice-policies.collection.get'   |
-      | 'circulation-storage.patron-notice-policies.item.post'        |
-      | 'circulation-storage.request-policies.collection.get'         |
-      | 'circulation-storage.request-policies.item.post'              |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.delete'                           |
-      | 'configuration.entries.item.post'                             |
-      | 'configuration.entries.item.put'                              |
-      | 'finance.budgets-expense-classes-totals.collection.get'       |
-      | 'finance.budgets.collection.get'                              |
-      | 'finance.budgets.item.delete'                                 |
-      | 'finance.budgets.item.get'                                    |
-      | 'finance.budgets.item.post'                                   |
-      | 'finance.budgets.item.put'                                    |
-      | 'finance.exchange-rate.item.get'                              |
-      | 'finance.expense-classes.item.post'                           |
-      | 'finance.fiscal-years.item.delete'                            |
-      | 'finance.fiscal-years.item.get'                               |
-      | 'finance.fiscal-years.item.post'                              |
-      | 'finance.fiscal-years.item.put'                               |
-      | 'finance.fund-types.item.post'                                |
-      | 'finance.funds.budget.item.get'                               |
-      | 'finance.funds.collection.get'                                |
-      | 'finance.funds.item.get'                                      |
-      | 'finance.funds.item.put'                                      |
-      | 'finance.group-fiscal-year-summaries.collection.get'          |
-      | 'finance.group-fund-fiscal-years.item.post'                   |
-      | 'finance.groups-expense-classes-totals.collection.get'        |
-      | 'finance.ledger-rollovers-budgets.collection.get'             |
-      | 'finance.ledger-rollovers-budgets.item.get'                   |
-      | 'finance.ledger-rollovers-errors.collection.get'              |
-      | 'finance.ledger-rollovers-logs.collection.get'                |
-      | 'finance.ledger-rollovers-logs.item.get'                      |
-      | 'finance.ledger-rollovers-progress.collection.get'            |
-      | 'finance.ledger-rollovers-progress.item.put'                  |
-      | 'finance.ledger-rollovers.item.post'                          |
-      | 'finance.ledgers.collection.get'                              |
-      | 'finance.ledgers.current-fiscal-year.item.get'                |
-      | 'finance.ledgers.item.delete'                                 |
-      | 'finance.ledgers.item.get'                                    |
-      | 'finance.ledgers.item.post'                                   |
-      | 'finance.release-encumbrance.item.post'                       |
-      | 'finance.transactions.batch.execute'                          |
-      | 'finance.transactions.collection.get'                         |
-      | 'finance.transactions.item.get'                               |
-      | 'finance-storage.budget-expense-classes.collection.get'       |
-      | 'finance-storage.budget-expense-classes.item.post'            |
-      | 'finance-storage.budgets.item.get'                            |
-      | 'finance-storage.budgets.item.post'                           |
-      | 'finance-storage.funds.item.delete'                           |
-      | 'finance-storage.funds.item.post'                             |
-      | 'finance-storage.group-fund-fiscal-years.collection.get'      |
-      | 'finance-storage.group-fund-fiscal-years.item.post'           |
-      | 'finance-storage.ledger-rollovers-errors.collection.get'      |
-      | 'finance-storage.ledger-rollovers-errors.item.delete'         |
-      | 'finance-storage.ledger-rollovers-errors.item.post'           |
-      | 'finance-storage.ledger-rollovers.item.delete'                |
-      | 'finance-storage.ledger-rollovers.item.post'                  |
-      | 'finance-storage.ledgers.item.post'                           |
-      | 'finance-storage.transactions.batch.execute'                  |
-      | 'finance-storage.transactions.collection.get'                 |
-      | 'inventory-storage.contributor-name-types.item.post'          |
-      | 'inventory-storage.electronic-access-relationships.item.post' |
-      | 'inventory-storage.holdings.collection.get'                   |
-      | 'inventory-storage.holdings.item.get'                         |
-      | 'inventory-storage.holdings.item.post'                        |
-      | 'inventory-storage.holdings.retrieve.collection.post'         |
-      | 'inventory-storage.holdings-sources.item.post'                |
-      | 'inventory-storage.identifier-types.item.post'                |
-      | 'inventory-storage.instance-statuses.item.post'               |
-      | 'inventory-storage.instance-types.item.post'                  |
-      | 'inventory-storage.instances.item.get'                        |
-      | 'inventory-storage.items.item.get'                            |
-      | 'inventory-storage.loan-types.item.post'                      |
-      | 'inventory-storage.location-units.campuses.item.post'         |
-      | 'inventory-storage.location-units.institutions.item.post'     |
-      | 'inventory-storage.location-units.libraries.item.post'        |
-      | 'inventory-storage.locations.item.post'                       |
-      | 'inventory-storage.material-types.item.post'                  |
-      | 'inventory-storage.service-points.item.post'                  |
-      | 'inventory.instances.collection.get'                          |
-      | 'inventory.instances.item.post'                               |
-      | 'inventory.instances.item.put'                                |
-      | 'inventory.items.collection.get'                              |
-      | 'inventory.items.move.item.post'                              |
-      | 'inventory.items-by-holdings-id.collection.get'               |
-      | 'inventory.tenant-items.collection.get'                       |
-      | 'inventory.holdings.move.item.post'                           |
-      | 'invoice.invoice-lines.collection.get'                        |
-      | 'invoice.invoice-lines.item.delete'                           |
-      | 'invoice.invoice-lines.item.get'                              |
-      | 'invoice.invoice-lines.item.post'                             |
-      | 'invoice.invoice-lines.item.put'                              |
-      | 'invoice.invoices.collection.get'                             |
-      | 'invoice.invoices.documents.item.post'                        |
-      | 'invoice.invoices.fiscal-years.collection.get'                |
-      | 'invoice.invoices.item.delete'                                |
-      | 'invoice.invoices.item.get'                                   |
-      | 'invoice.invoices.item.post'                                  |
-      | 'invoice.invoices.item.put'                                   |
-      | 'invoice.item.approve.execute'                                |
-      | 'invoice.item.cancel.execute'                                 |
-      | 'invoice.item.pay.execute'                                    |
-      | 'invoices.acquisitions-units-assignments.assign'              |
-      | 'invoices.acquisitions-units-assignments.manage'              |
-      | 'lost-item-fees-policies.collection.get'                      |
-      | 'lost-item-fees-policies.item.post'                           |
       | 'orders.acquisition-method.item.post'                         |
-      | 'orders.acquisition-units.bypass.execute'                     |
       | 'orders.acquisitions-units-assignments.assign'                |
       | 'orders.acquisitions-units-assignments.manage'                |
+      | 'orders.acquisition-units.bypass.execute'                     |
       | 'orders.bind-pieces.collection.post'                          |
       | 'orders.bind-pieces.item.delete'                              |
       | 'orders.check-in.collection.post'                             |
@@ -187,18 +58,14 @@ Feature: mod-orders integration tests
       | 'orders.po-lines.item.get'                                    |
       | 'orders.po-lines.item.post'                                   |
       | 'orders.po-lines.item.put'                                    |
-      | 'orders.re-encumber.item.post'                                |
       | 'orders.receiving.collection.post'                            |
+      | 'orders.re-encumber.item.post'                                |
       | 'orders.routing-lists.collection.get'                         |
       | 'orders.routing-lists.item.delete'                            |
       | 'orders.routing-lists.item.get'                               |
       | 'orders.routing-lists.item.post'                              |
       | 'orders.routing-lists.item.put'                               |
       | 'orders.routing-lists-template.item.get'                      |
-      | 'orders.titles.collection.get'                                |
-      | 'orders.titles.item.get'                                      |
-      | 'orders.titles.item.post'                                     |
-      | 'orders.titles.item.put'                                      |
       | 'orders-storage.claiming.process.execute'                     |
       | 'orders-storage.pieces.collection.get'                        |
       | 'orders-storage.po-lines.item.get'                            |
@@ -207,6 +74,145 @@ Feature: mod-orders integration tests
       | 'orders-storage.purchase-orders.item.post'                    |
       | 'orders-storage.routing-lists.item.post'                      |
       | 'orders-storage.settings.item.post'                           |
+      | 'orders.titles.collection.get'                                |
+      | 'orders.titles.item.delete'                                   |
+      | 'orders.titles.item.get'                                      |
+      | 'orders.titles.item.post'                                     |
+      | 'orders.titles.item.put'                                      |
+
+    * table adminPermissions
+      | name                                                          |
+      | 'acquisition.invoice.events.get'                              |
+      | 'acquisition.invoice-line.events.get'                         |
+      | 'acquisition.order.events.get'                                |
+      | 'acquisition.order-line.events.get'                           |
+      | 'acquisition.piece.events.get'                                |
+      | 'acquisition.piece.events.history.get'                        |
+      | 'acquisitions-units.memberships.item.delete'                  |
+      | 'acquisitions-units.memberships.item.post'                    |
+      | 'acquisitions-units-storage.memberships.collection.get'       |
+      | 'acquisitions-units-storage.memberships.item.delete'          |
+      | 'acquisitions-units-storage.memberships.item.get'             |
+      | 'acquisitions-units-storage.memberships.item.post'            |
+      | 'acquisitions-units-storage.memberships.item.put'             |
+      | 'acquisitions-units-storage.units.item.post'                  |
+      | 'acquisitions-units.units.item.post'                          |
+      | 'acquisitions-units.units.item.put'                           |
+      | 'addresstypes.item.post'                                      |
+      | 'circulation.requests.item.get'                               |
+      | 'circulation.requests.item.move.post'                         |
+      | 'circulation.requests.item.post'                              |
+      | 'circulation.rules.put'                                       |
+      | 'circulation-storage.loan-policies.collection.get'            |
+      | 'circulation-storage.loan-policies.item.post'                 |
+      | 'circulation-storage.patron-notice-policies.collection.get'   |
+      | 'circulation-storage.patron-notice-policies.item.post'        |
+      | 'circulation-storage.request-policies.collection.get'         |
+      | 'circulation-storage.request-policies.item.post'              |
+      | 'configuration.entries.collection.get'                        |
+      | 'configuration.entries.item.delete'                           |
+      | 'configuration.entries.item.post'                             |
+      | 'configuration.entries.item.put'                              |
+      | 'finance.budgets.collection.get'                              |
+      | 'finance.budgets-expense-classes-totals.collection.get'       |
+      | 'finance.budgets.item.delete'                                 |
+      | 'finance.budgets.item.get'                                    |
+      | 'finance.budgets.item.post'                                   |
+      | 'finance.budgets.item.put'                                    |
+      | 'finance.exchange-rate.item.get'                              |
+      | 'finance.expense-classes.item.post'                           |
+      | 'finance.fiscal-years.item.delete'                            |
+      | 'finance.fiscal-years.item.get'                               |
+      | 'finance.fiscal-years.item.post'                              |
+      | 'finance.fiscal-years.item.put'                               |
+      | 'finance.funds.budget.item.get'                               |
+      | 'finance.funds.collection.get'                                |
+      | 'finance.funds.item.get'                                      |
+      | 'finance.funds.item.put'                                      |
+      | 'finance.fund-types.item.post'                                |
+      | 'finance.group-fiscal-year-summaries.collection.get'          |
+      | 'finance.group-fund-fiscal-years.item.post'                   |
+      | 'finance.groups-expense-classes-totals.collection.get'        |
+      | 'finance.ledger-rollovers-budgets.collection.get'             |
+      | 'finance.ledger-rollovers-budgets.item.get'                   |
+      | 'finance.ledger-rollovers-errors.collection.get'              |
+      | 'finance.ledger-rollovers.item.post'                          |
+      | 'finance.ledger-rollovers-logs.collection.get'                |
+      | 'finance.ledger-rollovers-logs.item.get'                      |
+      | 'finance.ledger-rollovers-progress.collection.get'            |
+      | 'finance.ledger-rollovers-progress.item.put'                  |
+      | 'finance.ledgers.collection.get'                              |
+      | 'finance.ledgers.current-fiscal-year.item.get'                |
+      | 'finance.ledgers.item.delete'                                 |
+      | 'finance.ledgers.item.get'                                    |
+      | 'finance.ledgers.item.post'                                   |
+      | 'finance.release-encumbrance.item.post'                       |
+      | 'finance-storage.budget-expense-classes.collection.get'       |
+      | 'finance-storage.budget-expense-classes.item.post'            |
+      | 'finance-storage.budgets.item.get'                            |
+      | 'finance-storage.budgets.item.post'                           |
+      | 'finance-storage.funds.item.delete'                           |
+      | 'finance-storage.funds.item.post'                             |
+      | 'finance-storage.group-fund-fiscal-years.collection.get'      |
+      | 'finance-storage.group-fund-fiscal-years.item.post'           |
+      | 'finance-storage.ledger-rollovers-errors.collection.get'      |
+      | 'finance-storage.ledger-rollovers-errors.item.delete'         |
+      | 'finance-storage.ledger-rollovers-errors.item.post'           |
+      | 'finance-storage.ledger-rollovers.item.delete'                |
+      | 'finance-storage.ledger-rollovers.item.post'                  |
+      | 'finance-storage.ledgers.item.post'                           |
+      | 'finance-storage.transactions.batch.execute'                  |
+      | 'finance-storage.transactions.collection.get'                 |
+      | 'finance.transactions.batch.execute'                          |
+      | 'finance.transactions.collection.get'                         |
+      | 'finance.transactions.item.get'                               |
+      | 'inventory.holdings.move.item.post'                           |
+      | 'inventory.instances.collection.get'                          |
+      | 'inventory.instances.item.post'                               |
+      | 'inventory.instances.item.put'                                |
+      | 'inventory.items-by-holdings-id.collection.get'               |
+      | 'inventory.items.collection.get'                              |
+      | 'inventory.items.item.get'                                    |
+      | 'inventory.items.move.item.post'                              |
+      | 'inventory-storage.contributor-name-types.item.post'          |
+      | 'inventory-storage.electronic-access-relationships.item.post' |
+      | 'inventory-storage.holdings.collection.get'                   |
+      | 'inventory-storage.holdings.item.get'                         |
+      | 'inventory-storage.holdings.item.post'                        |
+      | 'inventory-storage.holdings.retrieve.collection.post'         |
+      | 'inventory-storage.holdings-sources.item.post'                |
+      | 'inventory-storage.identifier-types.item.post'                |
+      | 'inventory-storage.instances.item.get'                        |
+      | 'inventory-storage.instance-statuses.item.post'               |
+      | 'inventory-storage.instance-types.item.post'                  |
+      | 'inventory-storage.items.item.get'                            |
+      | 'inventory-storage.loan-types.item.post'                      |
+      | 'inventory-storage.locations.item.post'                       |
+      | 'inventory-storage.location-units.campuses.item.post'         |
+      | 'inventory-storage.location-units.institutions.item.post'     |
+      | 'inventory-storage.location-units.libraries.item.post'        |
+      | 'inventory-storage.material-types.item.post'                  |
+      | 'inventory-storage.service-points.item.post'                  |
+      | 'inventory.tenant-items.collection.get'                       |
+      | 'invoice.invoice-lines.collection.get'                        |
+      | 'invoice.invoice-lines.item.delete'                           |
+      | 'invoice.invoice-lines.item.get'                              |
+      | 'invoice.invoice-lines.item.post'                             |
+      | 'invoice.invoice-lines.item.put'                              |
+      | 'invoice.invoices.collection.get'                             |
+      | 'invoice.invoices.documents.item.post'                        |
+      | 'invoice.invoices.fiscal-years.collection.get'                |
+      | 'invoice.invoices.item.delete'                                |
+      | 'invoice.invoices.item.get'                                   |
+      | 'invoice.invoices.item.post'                                  |
+      | 'invoice.invoices.item.put'                                   |
+      | 'invoice.item.approve.execute'                                |
+      | 'invoice.item.cancel.execute'                                 |
+      | 'invoice.item.pay.execute'                                    |
+      | 'invoices.acquisitions-units-assignments.assign'              |
+      | 'invoices.acquisitions-units-assignments.manage'              |
+      | 'lost-item-fees-policies.collection.get'                      |
+      | 'lost-item-fees-policies.item.post'                           |
       | 'organizations.organizations.item.get'                        |
       | 'organizations.organizations.item.post'                       |
       | 'organizations.organizations.item.put'                        |
@@ -216,219 +222,22 @@ Feature: mod-orders integration tests
       | 'tags.collection.get'                                         |
       | 'templates.item.post'                                         |
       | 'titles.acquisitions-units-assignments.assign'                |
+      | 'titles.acquisitions-units-assignments.manage'                |
+      | 'usergroups.item.post'                                        |
       | 'users.collection.get'                                        |
       | 'users.item.post'                                             |
-      | 'usergroups.item.post'                                        |
-      | 'inventory.items.item.get'                                    |
-      | 'titles.acquisitions-units-assignments.manage'                |
 
   Scenario: create tenant and users for testing
-    * def testUser = testAdmin
-    Given call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/setup-users.feature')
+
+  Scenario: create admin user and extra test user
+    * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
 
   Scenario: init global data
     * call login testAdmin
-
     * callonce read('classpath:global/inventory.feature')
     * callonce read('classpath:global/configuration.feature')
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')
+    * call login testUser
     * callonce read('classpath:global/orders.feature')
-
-  Scenario: dummyUser creation
-    * table userPermissions
-      | name                                                          |
-      | 'acquisition.invoice.events.get'                              |
-      | 'acquisition.invoice-line.events.get'                         |
-      | 'acquisition.order-line.events.get'                           |
-      | 'acquisition.order.events.get'                                |
-      | 'acquisition.piece.events.history.get'                        |
-      | 'acquisition.piece.events.get'                                |
-      | 'addresstypes.item.post'                                      |
-      | 'acquisitions-units.memberships.item.delete'                  |
-      | 'acquisitions-units.memberships.item.post'                    |
-      | 'acquisitions-units.units.item.post'                          |
-      | 'acquisitions-units.units.item.put'                           |
-      | 'acquisitions-units-storage.memberships.collection.get'       |
-      | 'acquisitions-units-storage.memberships.item.delete'          |
-      | 'acquisitions-units-storage.memberships.item.get'             |
-      | 'acquisitions-units-storage.memberships.item.post'            |
-      | 'acquisitions-units-storage.memberships.item.put'             |
-      | 'acquisitions-units-storage.units.item.post'                  |
-      | 'circulation.rules.put'                                       |
-      | 'circulation.requests.item.get'                               |
-      | 'circulation.requests.item.move.post'                         |
-      | 'circulation.requests.item.post'                              |
-      | 'circulation-storage.loan-policies.collection.get'            |
-      | 'circulation-storage.loan-policies.item.post'                 |
-      | 'circulation-storage.patron-notice-policies.collection.get'   |
-      | 'circulation-storage.patron-notice-policies.item.post'        |
-      | 'circulation-storage.request-policies.collection.get'         |
-      | 'circulation-storage.request-policies.item.post'              |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.delete'                           |
-      | 'configuration.entries.item.post'                             |
-      | 'configuration.entries.item.put'                              |
-      | 'finance.budgets-expense-classes-totals.collection.get'       |
-      | 'finance.budgets.collection.get'                              |
-      | 'finance.budgets.item.delete'                                 |
-      | 'finance.budgets.item.get'                                    |
-      | 'finance.budgets.item.post'                                   |
-      | 'finance.budgets.item.put'                                    |
-      | 'finance.exchange-rate.item.get'                              |
-      | 'finance.expense-classes.item.post'                           |
-      | 'finance.fiscal-years.item.delete'                            |
-      | 'finance.fiscal-years.item.get'                               |
-      | 'finance.fiscal-years.item.post'                              |
-      | 'finance.fiscal-years.item.put'                               |
-      | 'finance.fund-types.item.post'                                |
-      | 'finance.funds.budget.item.get'                               |
-      | 'finance.funds.collection.get'                                |
-      | 'finance.funds.item.get'                                      |
-      | 'finance.funds.item.put'                                      |
-      | 'finance.group-fiscal-year-summaries.collection.get'          |
-      | 'finance.group-fund-fiscal-years.item.post'                   |
-      | 'finance.groups-expense-classes-totals.collection.get'        |
-      | 'finance.ledger-rollovers-budgets.collection.get'             |
-      | 'finance.ledger-rollovers-budgets.item.get'                   |
-      | 'finance.ledger-rollovers-errors.collection.get'              |
-      | 'finance.ledger-rollovers-logs.collection.get'                |
-      | 'finance.ledger-rollovers-logs.item.get'                      |
-      | 'finance.ledger-rollovers-progress.collection.get'            |
-      | 'finance.ledger-rollovers-progress.item.put'                  |
-      | 'finance.ledger-rollovers.item.post'                          |
-      | 'finance.ledgers.collection.get'                              |
-      | 'finance.ledgers.current-fiscal-year.item.get'                |
-      | 'finance.ledgers.item.delete'                                 |
-      | 'finance.ledgers.item.get'                                    |
-      | 'finance.ledgers.item.post'                                   |
-      | 'finance.release-encumbrance.item.post'                       |
-      | 'finance.transactions.batch.execute'                          |
-      | 'finance.transactions.collection.get'                         |
-      | 'finance.transactions.item.get'                               |
-      | 'finance-storage.budget-expense-classes.collection.get'       |
-      | 'finance-storage.budget-expense-classes.item.post'            |
-      | 'finance-storage.budgets.item.get'                            |
-      | 'finance-storage.budgets.item.post'                           |
-      | 'finance-storage.funds.item.delete'                           |
-      | 'finance-storage.funds.item.post'                             |
-      | 'finance-storage.group-fund-fiscal-years.collection.get'      |
-      | 'finance-storage.group-fund-fiscal-years.item.post'           |
-      | 'finance-storage.ledger-rollovers-errors.collection.get'      |
-      | 'finance-storage.ledger-rollovers-errors.item.delete'         |
-      | 'finance-storage.ledger-rollovers-errors.item.post'           |
-      | 'finance-storage.ledger-rollovers.item.delete'                |
-      | 'finance-storage.ledger-rollovers.item.post'                  |
-      | 'finance-storage.ledgers.item.post'                           |
-      | 'finance-storage.transactions.batch.execute'                  |
-      | 'finance-storage.transactions.collection.get'                 |
-      | 'inventory-storage.contributor-name-types.item.post'          |
-      | 'inventory-storage.electronic-access-relationships.item.post' |
-      | 'inventory-storage.holdings.collection.get'                   |
-      | 'inventory-storage.holdings.item.get'                         |
-      | 'inventory-storage.holdings.item.post'                        |
-      | 'inventory-storage.holdings.retrieve.collection.post'         |
-      | 'inventory-storage.holdings-sources.item.post'                |
-      | 'inventory-storage.identifier-types.item.post'                |
-      | 'inventory-storage.instance-statuses.item.post'               |
-      | 'inventory-storage.instance-types.item.post'                  |
-      | 'inventory-storage.instances.item.get'                        |
-      | 'inventory-storage.items.item.get'                            |
-      | 'inventory-storage.loan-types.item.post'                      |
-      | 'inventory-storage.location-units.campuses.item.post'         |
-      | 'inventory-storage.location-units.institutions.item.post'     |
-      | 'inventory-storage.location-units.libraries.item.post'        |
-      | 'inventory-storage.locations.item.post'                       |
-      | 'inventory-storage.material-types.item.post'                  |
-      | 'inventory-storage.service-points.item.post'                  |
-      | 'inventory.instances.collection.get'                          |
-      | 'inventory.instances.item.post'                               |
-      | 'inventory.instances.item.put'                                |
-      | 'inventory.items.collection.get'                              |
-      | 'inventory.items.move.item.post'                              |
-      | 'inventory.items-by-holdings-id.collection.get'               |
-      | 'inventory.tenant-items.collection.get'                       |
-      | 'inventory.holdings.move.item.post'                           |
-      | 'invoice.invoice-lines.collection.get'                        |
-      | 'invoice.invoice-lines.item.delete'                           |
-      | 'invoice.invoice-lines.item.get'                              |
-      | 'invoice.invoice-lines.item.post'                             |
-      | 'invoice.invoice-lines.item.put'                              |
-      | 'invoice.invoices.collection.get'                             |
-      | 'invoice.invoices.documents.item.post'                        |
-      | 'invoice.invoices.fiscal-years.collection.get'                |
-      | 'invoice.invoices.item.delete'                                |
-      | 'invoice.invoices.item.get'                                   |
-      | 'invoice.invoices.item.post'                                  |
-      | 'invoice.invoices.item.put'                                   |
-      | 'invoice.item.approve.execute'                                |
-      | 'invoice.item.cancel.execute'                                 |
-      | 'invoice.item.pay.execute'                                    |
-      | 'invoices.acquisitions-units-assignments.assign'              |
-      | 'invoices.acquisitions-units-assignments.manage'              |
-      | 'lost-item-fees-policies.collection.get'                      |
-      | 'lost-item-fees-policies.item.post'                           |
-      | 'orders.acquisition-method.item.post'                         |
-      | 'orders.acquisition-units.bypass.execute'                     |
-      | 'orders.acquisitions-units-assignments.assign'                |
-      | 'orders.acquisitions-units-assignments.manage'                |
-      | 'orders.bind-pieces.collection.post'                          |
-      | 'orders.bind-pieces.item.delete'                              |
-      | 'orders.check-in.collection.post'                             |
-      | 'orders.collection.get'                                       |
-      | 'orders.item.approve'                                         |
-      | 'orders.item.delete'                                          |
-      | 'orders.item.get'                                             |
-      | 'orders.item.post'                                            |
-      | 'orders.item.put'                                             |
-      | 'orders.item.reopen'                                          |
-      | 'orders.item.unopen'                                          |
-      | 'orders.pieces.collection.get'                                |
-      | 'orders.pieces.collection.post'                               |
-      | 'orders.pieces.collection.put'                                |
-      | 'orders.pieces.item.delete'                                   |
-      | 'orders.pieces.item.get'                                      |
-      | 'orders.pieces.item.post'                                     |
-      | 'orders.pieces.item.put'                                      |
-      | 'orders.po-lines.collection.get'                              |
-      | 'orders.po-lines.item.delete'                                 |
-      | 'orders.po-lines.item.get'                                    |
-      | 'orders.po-lines.item.post'                                   |
-      | 'orders.po-lines.item.put'                                    |
-      | 'orders.re-encumber.item.post'                                |
-      | 'orders.receiving.collection.post'                            |
-      | 'orders.routing-lists.collection.get'                         |
-      | 'orders.routing-lists.item.delete'                            |
-      | 'orders.routing-lists.item.get'                               |
-      | 'orders.routing-lists.item.post'                              |
-      | 'orders.routing-lists.item.put'                               |
-      | 'orders.routing-lists-template.item.get'                      |
-      | 'orders.titles.collection.get'                                |
-      | 'orders.titles.item.get'                                      |
-      | 'orders.titles.item.post'                                     |
-      | 'orders.titles.item.put'                                      |
-      | 'orders-storage.claiming.process.execute'                     |
-      | 'orders-storage.pieces.collection.get'                        |
-      | 'orders-storage.po-lines.item.get'                            |
-      | 'orders-storage.po-lines.item.post'                           |
-      | 'orders-storage.po-lines.item.put'                            |
-      | 'orders-storage.purchase-orders.item.post'                    |
-      | 'orders-storage.routing-lists.item.post'                      |
-      | 'orders-storage.settings.item.post'                           |
-      | 'organizations.organizations.item.get'                        |
-      | 'organizations.organizations.item.post'                       |
-      | 'organizations.organizations.item.put'                        |
-      | 'organizations-storage.organizations.item.post'               |
-      | 'overdue-fines-policies.collection.get'                       |
-      | 'overdue-fines-policies.item.post'                            |
-      | 'tags.collection.get'                                         |
-      | 'templates.item.post'                                         |
-      | 'users.collection.get'                                        |
-      | 'users.item.post'                                             |
-      | 'usergroups.item.post'                                        |
-      | 'inventory.items.item.get'                                    |
-
-    * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
-    * call read('classpath:common/eureka/setup-users.feature@createTestUser') {testUser: '#(dummyUser)'}
-    * call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials') {testUser: '#(dummyUser)'}
-    * call read('classpath:common/eureka/setup-users.feature@addUserCapabilities') {userPermissions: '#(userPermissions)'}

@@ -2,11 +2,16 @@
   Feature: Should check processing of printing routing list functionlity
 
     Background:
+      * print karate.info.scenarioName
       * url baseUrl
-      * callonce loginAdmin testAdmin
+
+      * callonce login testAdmin
       * def okapitokenAdmin = okapitoken
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-      * configure headers = headersAdmin
+      * callonce login testUser
+      * def okapitokenUser = okapitoken
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * configure headers = headersUser
 
       * callonce variables
       * def routingListId = "a1d13648-347b-4ac9-8c2f-5bc47248b87e"
@@ -71,7 +76,6 @@
 
 
       * print "Create two users with different addressType are related to routingLists"
-      * configure headers = headersAdmin
       * set user1.personal.addresses[0].addressTypeId = officeAddressTypeId
       * set user1.personal.addresses[0].addressLine1 = officeAddressLine1V1
       * set user1.personal.addresses[1].addressTypeId = homeAddressTypeId
@@ -114,6 +118,7 @@
 
 
       * print "Create composite order to use in routing list"
+      * configure headers = headersUser
       Given path 'orders/composite-orders'
       And request
         """
@@ -142,7 +147,6 @@
 
 
       * print "POST setting with addressTypId"
-      * configure headers = headersAdmin
       Given path 'orders-storage/settings'
       And request
         """
@@ -179,7 +183,6 @@
       * set routingList.userIds[0] = user1.id
       * set routingList.userIds[1] = user2.id
       * set routingList.userIds[2] = user3.id
-      * configure headers = headersAdmin
 
       Given path 'orders-storage/routing-lists'
       And request routingList
