@@ -1,15 +1,14 @@
 Feature: Group fiscal year totals
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersUser = headersAdmin
 
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def fundId1 = callonce uuid1
@@ -50,7 +49,6 @@ Feature: Group fiscal year totals
     * def fundId = <fundId>
     * def budgetId = <budgetId>
     * def groupId = <groupId>
-    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': #(globalLedgerId) }
 
     Given path 'finance-storage/budgets'

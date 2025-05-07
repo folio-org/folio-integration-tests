@@ -8,15 +8,16 @@ Feature: Ledger fiscal year sequential rollovers
   # 6) rollover fiscalYearId2 -> fiscalYearId3
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance1'}
-    * call login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersUser = headersAdmin
 
-    * configure headers = headersAdmin
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -134,6 +135,7 @@ Feature: Ledger fiscal year sequential rollovers
     * def classicalBud2 = callonce uuid86
 
   Scenario: Update po line limit
+    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And param query = 'configName==poLines-limit'
     When method GET
@@ -238,7 +240,6 @@ Feature: Ledger fiscal year sequential rollovers
       | groupId2 |
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
@@ -561,6 +562,7 @@ Feature: Ledger fiscal year sequential rollovers
 
 
   Scenario: Create open orders with 3 fund distributions
+    * configure headers = headersAdmin
 
     Given path 'orders/composite-orders'
     And request
@@ -619,7 +621,6 @@ Feature: Ledger fiscal year sequential rollovers
 
   Scenario: Create closed order and encumbrance with orderStatus closed
     * def encumbranceId = call uuid
-    * configure headers = headersAdmin
     Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
@@ -650,6 +651,7 @@ Feature: Ledger fiscal year sequential rollovers
     When method POST
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'orders/composite-orders'
     And request
     """
@@ -811,7 +813,6 @@ Feature: Ledger fiscal year sequential rollovers
       | science    | multiFundLine         | 5      | encumbranceInvoiceId   | iLine16       |
 
   Scenario: Start first rollover preview for ledger 1
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -912,7 +913,6 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 200
 
   Scenario: Start first rollover preview for ledger 2
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -1013,8 +1013,6 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover, budget status should not be changed
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -1105,8 +1103,6 @@ Feature: Ledger fiscal year sequential rollovers
 
 
   Scenario Outline: Check rollover preview  id=<previewRolloverId> errors
-    * configure headers = headersAdmin
-
     * def previewRolloverId = <previewRolloverId>
     * def orderId = <orderId>
     * def poLineId = <poLineId>
@@ -1130,7 +1126,6 @@ Feature: Ledger fiscal year sequential rollovers
 
 
   Scenario: Start first rollover for ledger 1
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -1232,8 +1227,6 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -1258,7 +1251,6 @@ Feature: Ledger fiscal year sequential rollovers
 
 
   Scenario: Start first rollover for ledger 2
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -1360,8 +1352,6 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -1426,8 +1416,6 @@ Feature: Ledger fiscal year sequential rollovers
       | euroHist    | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
 
   Scenario Outline: Verify new budget groups after rollover
-    * configure headers = headersAdmin
-
     * def groups = <groups>
     * def fundId = <fundId>
     Given path 'finance/budgets'
@@ -1500,7 +1488,6 @@ Feature: Ledger fiscal year sequential rollovers
       | africanHist | 50     |
 
   Scenario: Check expected number of encumbrances for new fiscal year
-    * configure headers = headersAdmin
     Given path 'finance-storage/transactions'
     And param query = 'fiscalYearId==' + fiscalYearId2 + ' AND transactionType==Encumbrance'
     When method GET
@@ -1508,7 +1495,6 @@ Feature: Ledger fiscal year sequential rollovers
     And match response.transactions == '#[10]'
 
   Scenario Outline: Check encumbrances after rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def orderId = <orderId>
 
@@ -1545,8 +1531,6 @@ Feature: Ledger fiscal year sequential rollovers
 
 
   Scenario Outline: Check rollover 1 errors
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fundId = <fundId>
@@ -1617,7 +1601,6 @@ Feature: Ledger fiscal year sequential rollovers
 
 
   Scenario: Start second rollover preview for ledger 1
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -1718,7 +1701,6 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 200
 
   Scenario: Start second rollover preview for ledger 2
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -1819,8 +1801,6 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover, budget status should not be changed
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -1911,8 +1891,6 @@ Feature: Ledger fiscal year sequential rollovers
 
 
   Scenario Outline: Check rollover preview  id=<previewRolloverId> errors
-    * configure headers = headersAdmin
-
     * def previewRolloverId = <previewRolloverId>
     * def orderId = <orderId>
     * def poLineId = <poLineId>
@@ -1933,7 +1911,6 @@ Feature: Ledger fiscal year sequential rollovers
       | previewRolloverId4 | crossLedger    | crossLedgerLine    | euroHist     | 0      | '#("[WARNING] Part of the encumbrances belong to the ledger, which has not been rollovered. Ledgers to rollover: " + rolloverLedger1 + " (id=" + rolloverLedger1 + ")")' |
 
   Scenario: Start second rollover for ledger 1
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -2034,8 +2011,6 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -2077,8 +2052,6 @@ Feature: Ledger fiscal year sequential rollovers
 
 
   Scenario Outline: Check rollover 3 errors
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fundId = <fundId>
@@ -2097,7 +2070,6 @@ Feature: Ledger fiscal year sequential rollovers
       | crossLedger    | crossLedgerLine    | rollHist     | 0      | '#("[WARNING] Part of the encumbrances belong to the ledger, which has not been rollovered. Ledgers to rollover: " + rolloverLedger2 + " (id=" + rolloverLedger2 + ")")' |
 
   Scenario: Start second rollover for ledger 2
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -2198,8 +2170,6 @@ Feature: Ledger fiscal year sequential rollovers
     Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -2278,8 +2248,6 @@ Feature: Ledger fiscal year sequential rollovers
       | euroHist    | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                | [#(globalElecExpenseClassId)]                             |
 
   Scenario Outline: Verify new budget groups after rollover
-    * configure headers = headersAdmin
-
     * def groups = <groups>
     * def fundId = <fundId>
     Given path 'finance/budgets'
@@ -2352,7 +2320,6 @@ Feature: Ledger fiscal year sequential rollovers
       | africanHist | 127.5  |
 
   Scenario: Check expected number of encumbrances for new fiscal year
-    * configure headers = headersAdmin
     Given path 'finance-storage/transactions'
     And param query = 'fiscalYearId==' + fiscalYearId3 + ' AND transactionType==Encumbrance'
     When method GET
@@ -2360,7 +2327,6 @@ Feature: Ledger fiscal year sequential rollovers
     And match response.transactions == '#[10]'
 
   Scenario Outline: Check encumbrances after rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def orderId = <orderId>
 

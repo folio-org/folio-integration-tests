@@ -1,15 +1,16 @@
 Feature: Ledger fiscal year rollover pol and system currencies are different
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance1'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersUser = headersAdmin
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -108,6 +109,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * def iLine16 = callonce uuid79
 
   Scenario: Update po line limit
+    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And param query = 'configName==poLines-limit'
     When method GET
@@ -211,7 +213,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       | groupId2 |
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
@@ -533,6 +534,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
 
 
   Scenario: Create open orders with 3 fund distributions
+    * configure headers = headersAdmin
 
     Given path 'orders/composite-orders'
     And request
@@ -592,7 +594,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
 
   Scenario: Create closed order and encumbrance with orderStatus closed
     * def encumbranceId = call uuid
-    * configure headers = headersAdmin
     Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
@@ -623,6 +624,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     When method POST
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'orders/composite-orders'
     And request
     """
@@ -786,7 +788,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       | science    | multiFundLine         | 5      | encumbranceInvoiceId   | iLine16       |
 
   Scenario: Start rollover for ledger
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -887,8 +888,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
 
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -948,8 +947,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       | rollHist    | 198       | 196.9     | 1.1         | 0            | 1.1        | null                 | null                 | [#(globalElecExpenseClassId)]                             |
 
   Scenario Outline: Verify new budget groups after rollover
-    * configure headers = headersAdmin
-
     * def groups = <groups>
     * def fundId = <fundId>
     Given path 'finance/budgets'
@@ -1021,7 +1018,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       | africanHist | 50     |
 
   Scenario: Check expected number of encumbrances for new fiscal year
-    * configure headers = headersAdmin
     Given path 'finance-storage/transactions'
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND transactionType==Encumbrance'
     When method GET
@@ -1029,7 +1025,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     And match response.transactions == '#[10]'
 
   Scenario Outline: Check encumbrances after rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def orderId = <orderId>
 
@@ -1066,8 +1061,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
 
 
   Scenario Outline: Check rollover errors
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fundId = <fundId>
@@ -1088,7 +1081,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       | noBudgetOrder  | noBudgetLine       | inactiveFund | 248.57 | 'Budget not found'                                                                                                                                                         |
 
   Scenario Outline: Check order line after rollover
-    * configure headers = headersAdmin
     * def poLineId = <poLineId>
 
     Given path 'finance-storage/transactions'
@@ -1100,6 +1092,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * def sum = function(item) {var BigDecimal = Java.type('java.math.BigDecimal'); var sum=new BigDecimal("0"); for(var i=0; i<item.length; i++) {sum = sum.add(new BigDecimal(item[i]));} return sum.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();}
     * match sum(total) == <transactionAmount>
 
+    * configure headers = headersAdmin
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -1129,7 +1122,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     Then status 204
 
   Scenario: Delete rollover with In Progress status
-    * configure headers = headersAdmin
     Given path '/finance-storage/ledger-rollovers', rolloverId
     When method DELETE
     Then status 422
@@ -1150,7 +1142,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     Then status 204
 
   Scenario: Delete rollover with Success status
-    * configure headers = headersAdmin
     Given path '/finance-storage/ledger-rollovers', rolloverId
     When method DELETE
     Then status 204

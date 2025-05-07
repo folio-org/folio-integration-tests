@@ -1,13 +1,16 @@
 Feature: Get funds without providing filter query should take into account acquisition units
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-    * def headersUser = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+
     * callonce variables
 
     * def fundAllowFundViewAcqUnitId = callonce uuid1
@@ -52,7 +55,7 @@ Feature: Get funds without providing filter query should take into account acqui
     * def code = <code>
     * def acqUnitIds = <acqUnitIds>
     Given path 'finance-storage/funds'
-    And headers headersAdmin
+    And headers headersUser
     And request
     """
     {
@@ -86,7 +89,7 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign restrict view acquisitions units memberships to user
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testUser)'}
     * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
@@ -111,7 +114,7 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundRestrictViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign allow view acquisitions units memberships to user
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testUser)'}
     * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
@@ -141,7 +144,7 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Again assign restrict view acquisitions units memberships to user
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testUser)'}
     * def userId = result.userId
     Given path 'acquisitions-units-storage/memberships'
     And headers headersAdmin
@@ -166,7 +169,7 @@ Feature: Get funds without providing filter query should take into account acqui
     And match funds[*].id contains ["#(fundNoAcqId)", "#(fundAllowViewAcqId)", "#(fundRestrictViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario Outline: DELETE acquisitions units and memberships <acqUnitId>
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
+    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testUser)'}
     * def userId = result.userId
     * def acqUnitId = <acqUnitId>
     Given path 'acquisitions-units-storage/memberships'
@@ -196,7 +199,7 @@ Feature: Get funds without providing filter query should take into account acqui
   Scenario Outline: DELETE funds <fundId>
     * def fundId = <fundId>
     Given path 'finance-storage/funds', fundId
-    And headers headersAdmin
+    And headers headersUser
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204

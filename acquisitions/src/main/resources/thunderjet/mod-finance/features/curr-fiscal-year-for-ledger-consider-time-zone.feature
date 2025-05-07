@@ -1,17 +1,17 @@
 Feature:  Return current fiscal year consider time zone
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login dummyUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+
     * callonce variables
 
     * def fiscalYearId = callonce uuid1
@@ -55,6 +55,7 @@ Feature:  Return current fiscal year consider time zone
     Then status 201
 
   Scenario: Create configuration with Pacific/Midway timezone
+    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And request
       """
@@ -77,6 +78,7 @@ Feature:  Return current fiscal year consider time zone
     And match $.id == '#(fiscalYearId)'
 
   Scenario: update configuration with UTC timezone
+    * configure headers = headersAdmin
     Given path 'configurations/entries', configUUID
     And request
       """
@@ -109,6 +111,7 @@ Feature:  Return current fiscal year consider time zone
     Then status 204
 
   Scenario: Delete configuration with Pacific/Midway timezone
+    * configure headers = headersAdmin
     Given path 'configurations/entries',configUUID
     When method DELETE
     Then status 204

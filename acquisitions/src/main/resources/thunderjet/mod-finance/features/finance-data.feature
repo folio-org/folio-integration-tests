@@ -3,11 +3,11 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce login dummyUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
@@ -27,16 +27,16 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def budgetId1 = callonce uuid { n: 10 }
     * def budgetId2 = callonce uuid { n: 11 }
 
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(dummyUser)'}
+    * def result = call read('classpath:common/eureka/users.feature') { user: '#(testUser)' }
     * def userId = result.userId
-
-    * configure headers = headersAdmin
 
     ### Before All ###
 
     # Create Acq Unit and assign user (each scenario)
+    * configure headers = headersAdmin
     * def v = callonce createAcqUnit { id: '#(acqUnitId)', name: '#(acqUnitId)', isDeleted: false, protectCreate: true, protectRead: true, protectUpdate: true, protectDelete: true }
     * def v = callonce assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * configure headers = headersUser
 
     # Prepare finance data
     * table fiscalYears
@@ -64,8 +64,6 @@ Feature: Karate tests for FY finance bulk get/update functionality
       | budgetId1 | fundId1 | fiscalYearId1 | 1000      |
       | budgetId2 | fundId2 | fiscalYearId2 | 2000      |
     * def v = callonce createBudget budgets
-
-    * configure headers = headersUser
 
     * def createFinanceDataEntry =
       """
