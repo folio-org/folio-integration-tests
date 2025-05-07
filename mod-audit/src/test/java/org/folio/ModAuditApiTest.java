@@ -27,38 +27,38 @@ public class ModAuditApiTest extends TestBaseEureka {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
-//  @Test
-//  void loanEventTests() {
-//    runFeatureTest("loanEvent");
-//  }
-//
+  @Test
+  void loanEventTests() {
+    runFeatureTest("loanEvent");
+  }
+
   @Test
   void requestEventTests() {
     runFeatureTest("requestEvent");
   }
-//
-//  @Test
-//  void checkInCheckOutTests() {
-//    runFeatureTest("checkInCheckOutEvent");
-//  }
+
+  @Test
+  void checkInCheckOutTests() {
+    runFeatureTest("checkInCheckOutEvent");
+  }
 
   @Test
   void marcAuditDataTests() {
     runFeatureTest("marcAuditData");
   }
 
-//  @Test
-//  void instanceAuditDataTests() {
-//    runFeatureTest("instanceAuditData");
-//  }
-//
-//  @Test
-//  void holdingAuditDataTests() {
-//    runFeatureTest("holdingAuditData");
-//  }
-//
-//  @Test
-//  void itemAuditDataTests() {
-//    runFeatureTest("itemAuditData");
-//  }
+  @Test
+  void instanceAuditDataTests() {
+    runFeatureTest("instanceAuditData");
+  }
+
+  @Test
+  void holdingAuditDataTests() {
+    runFeatureTest("holdingAuditData");
+  }
+
+  @Test
+  void itemAuditDataTests() {
+    runFeatureTest("itemAuditData");
+  }
 }
