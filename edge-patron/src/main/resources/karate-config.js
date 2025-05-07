@@ -60,7 +60,7 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
-    config.edgeUrl = karate.properties['edgeUrl'] || 'https://folio-etesting-karate-eureka-edge.ci.folio.org'
+    config.edgeUrl = '${edgeUrl}'
     config.apikey = 'eyJzIjoiQnJVZEpkbDJrQSIsInQiOiJ0dHR0cGF0cm9uIiwidSI6InRlc3RwYXRyb24ifQ==';
     config.admin = {
       tenant: '${admin.tenant}',
@@ -69,7 +69,7 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
     config.edgeUrl = 'https://folio-edev-vega-edge-inn-reach.ci.folio.org';
     config.baseUrl = 'https://folio-edev-vega-kong.ci.folio.org';

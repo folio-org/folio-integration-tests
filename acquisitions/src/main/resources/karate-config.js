@@ -262,9 +262,9 @@ function fn() {
     }
   } else if(env == 'folio-testing-karate') {
     // Used to run nightly karate tests in Jenkins
-    config.baseUrl = 'https://folio-etesting-karate-eureka-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org:443';
-    config.edgeUrl = 'https://folio-etesting-karate-eureka-edge.ci.folio.org';
+    config.baseUrl = '${baseUrl}';
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
+    config.edgeUrl = '${edgeUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',

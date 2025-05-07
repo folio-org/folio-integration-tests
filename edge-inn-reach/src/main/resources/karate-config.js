@@ -92,7 +92,7 @@ function fn() {
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
-    config.edgeUrl = karate.properties['edgeUrl'] || 'https://folio-etesting-karate-eureka-edge.ci.folio.org'
+    config.edgeUrl = '${edgeUrl}'
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
@@ -100,7 +100,7 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
   }
   return config;
 }

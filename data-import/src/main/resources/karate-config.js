@@ -120,7 +120,7 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
     config.prototypeTenant = 'consortium';
