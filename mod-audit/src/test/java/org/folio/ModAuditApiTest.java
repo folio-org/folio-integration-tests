@@ -32,10 +32,10 @@ public class ModAuditApiTest extends TestBaseEureka {
 //    runFeatureTest("loanEvent");
 //  }
 //
-//  @Test
-//  void requestEventTests() {
-//    runFeatureTest("requestEvent");
-//  }
+  @Test
+  void requestEventTests() {
+    runFeatureTest("requestEvent");
+  }
 //
 //  @Test
 //  void checkInCheckOutTests() {
