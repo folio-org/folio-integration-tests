@@ -1,15 +1,16 @@
 Feature: Check remaining amount upon invoice approval
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testinvoices'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
   Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> and <netTransfers> amount to get <httpCode> code
 
@@ -21,18 +22,19 @@ Feature: Check remaining amount upon invoice approval
 
     # ============= Create funds =============
     * configure headers = headersAdmin
-    Given path 'finance-storage/funds'
+    Given path 'finance/funds'
     And request
     """
     {
-
-      "id": "#(fundId)",
-      "code": "#(fundId)",
-      "description": "Fund for orders API Tests",
-      "externalAccountNo": "1111111111111111111111111",
-      "fundStatus": "Active",
-      "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
-      "name": "Fund for orders API Tests"
+      "fund": {
+        "id": "#(fundId)",
+        "code": "#(fundId)",
+        "description": "Fund for orders API Tests",
+        "externalAccountNo": "1111111111111111111111111",
+        "fundStatus": "Active",
+        "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
+        "name": "Fund for orders API Tests",
+      }
     }
     """
     When method POST
@@ -48,7 +50,6 @@ Feature: Check remaining amount upon invoice approval
       "fundId": "#(fundId)",
       "name": "#(budgetId)",
       "fiscalYearId":"ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2",
-      "budgetStatus": "Active",
       "allowableExpenditure": 100,
       "allowableEncumbrance": 100,
       "allocated": <allocated>,
@@ -59,7 +60,7 @@ Feature: Check remaining amount upon invoice approval
     Then status 201
 
     # ============= Create invoices ===================
-
+    * configure headers = headersUser
     Given path 'invoice/invoices'
     And request
     """

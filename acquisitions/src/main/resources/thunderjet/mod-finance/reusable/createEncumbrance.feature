@@ -13,7 +13,7 @@ Feature: Create an encumbrance
     * def transactionEncumbrance = { initialAmountEncumbered: '#(amount)', status: 'Unreleased', sourcePurchaseOrderId: '#(sourcePurchaseOrderId)', sourcePoLineId: '#(sourcePoLineId)', orderType: 'One-Time', subscription: false, reEncumber: false }
     * def expectedStatus = karate.get('expectedStatus', 204)
 
-    Given path 'finance-storage/transactions/batch-all-or-nothing'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
       """
       {

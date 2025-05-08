@@ -2,7 +2,9 @@
 Feature: mod-finance integration tests
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
+
     * table modules
       | name                        |
       | 'mod-permissions'           |
@@ -53,6 +55,7 @@ Feature: mod-finance integration tests
       | 'finance.funds.budget.item.get'                               |
       | 'finance.funds.collection.get'                                |
       | 'finance.funds.item.get'                                      |
+      | 'finance.funds.item.post'                                     |
       | 'finance.funds.item.put'                                      |
       | 'finance.group-fiscal-year-summaries.collection.get'          |
       | 'finance.group-fund-fiscal-years.item.post'                   |
@@ -143,14 +146,14 @@ Feature: mod-finance integration tests
       | 'organizations.organizations.item.put'                        |
       | 'users.collection.get'                                        |
 
-  Scenario: create tenant and test user
-    Given call read('classpath:common/eureka/setup-users.feature')
+  Scenario: Create tenant and test user
+    * call read('classpath:common/eureka/setup-users.feature')
     * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
 
-  Scenario: create admin user
+  Scenario: Create admin user
     * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
 
-  Scenario: init global data
+  Scenario: Init global data
     * call login testUser
     * callonce read('classpath:global/finances.feature')
     * call login testAdmin

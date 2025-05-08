@@ -2,22 +2,18 @@
 Feature: Cancel an invoice
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
-
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * call variables
-
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
-    * def cancelInvoice = read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature')
 
 
   Scenario: Cancel an approved invoice
@@ -32,6 +28,7 @@ Feature: Cancel an invoice
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
     * print "2. Create an invoice"
+    * configure headers = headersUser
     * def v = call createInvoice { id: "#(invoiceId)" }
 
     * print "3. Add an invoice line"
@@ -41,6 +38,7 @@ Feature: Cancel an invoice
     * def v = call approveInvoice { invoiceId: "#(invoiceId)" }
 
     * print "5. Check budget before cancelling"
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId
     When method GET
     Then status 200
@@ -53,6 +51,7 @@ Feature: Cancel an invoice
     And match $.encumbered == 0
 
     * print "6. Cancel the invoice"
+    * configure headers = headersUser
     * def v = call cancelInvoice { invoiceId: "#(invoiceId)" }
 
     * print "7. Check the invoice line status"
@@ -62,6 +61,7 @@ Feature: Cancel an invoice
     And match $.invoiceLineStatus == 'Cancelled'
 
     * print "8. Check the pending payment"
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Pending payment'
     When method GET
@@ -71,6 +71,7 @@ Feature: Cancel an invoice
     And match $.transactions[0].voidedAmount == 10
 
     * print "9. Check the batch voucher"
+    * configure headers = headersUser
     Given path '/voucher/vouchers'
     And param query = 'invoiceId==' + invoiceId
     When method GET
@@ -78,6 +79,7 @@ Feature: Cancel an invoice
     And match $.vouchers[0].status == 'Cancelled'
 
     * print "10. Check budget after cancelling"
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId
     When method GET
     Then status 200
@@ -103,6 +105,7 @@ Feature: Cancel an invoice
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
     * print "2. Create an invoice"
+    * configure headers = headersUser
     * def v = call createInvoice { id: "#(invoiceId)" }
 
     * print "3. Add an invoice line with a payment"
@@ -118,6 +121,7 @@ Feature: Cancel an invoice
     * def v = call payInvoice { invoiceId: "#(invoiceId)" }
 
     * print "7. Check budget before cancelling"
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId
     When method GET
     Then status 200
@@ -130,6 +134,7 @@ Feature: Cancel an invoice
     And match $.encumbered == 0
 
     * print "8. Cancel the invoice"
+    * configure headers = headersUser
     * def v = call cancelInvoice { invoiceId: "#(invoiceId)" }
 
     * print "9. Check the invoice lines status"
@@ -143,6 +148,7 @@ Feature: Cancel an invoice
     And match $.invoiceLineStatus == 'Cancelled'
 
     * print "10. Check the payment"
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'sourceInvoiceLineId==' + invoiceLineId1 + ' and transactionType==Payment'
     When method GET
@@ -161,6 +167,7 @@ Feature: Cancel an invoice
     And match $.transactions[0].voidedAmount == 5
 
     * print "12. Check the batch voucher"
+    * configure headers = headersUser
     Given path '/voucher/vouchers'
     And param query = 'invoiceId==' + invoiceId
     When method GET
@@ -168,6 +175,7 @@ Feature: Cancel an invoice
     And match $.vouchers[0].status == 'Cancelled'
 
     * print "13. Check budget after cancelling"
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId
     When method GET
     Then status 200

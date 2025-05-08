@@ -1,17 +1,18 @@
+@parallel=false
 Feature: Check invoice and invoice lines total amount calculation, when adjustment exists and lockTotal set
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-   # * callonce dev {tenant: 'testinvoices1'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
-
-    # load global variables
     * callonce variables
 
     # prepare sample data

@@ -1,11 +1,12 @@
 Feature: global finances
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * callonce variables
 
-  Scenario: create fiscal year
+  Scenario: Create fiscal year
     Given path 'finance/fiscal-years'
     And request
       """
@@ -22,8 +23,8 @@ Feature: global finances
     When method POST
     Then status 201
 
-  Scenario: create ledgers
-    Given path 'finance-storage/ledgers'
+  Scenario: Create ledgers
+    Given path 'finance/ledgers'
     And request
       """
       {
@@ -38,7 +39,7 @@ Feature: global finances
     When method POST
     Then status 201
 
-  Scenario: create planned fiscal year
+  Scenario: Create planned fiscal year
     Given path 'finance/fiscal-years'
     And request
       """
@@ -55,8 +56,8 @@ Feature: global finances
     When method POST
     Then status 201
 
-  Scenario: create ledgers with restrict encumbrance and expenditure
-    Given path 'finance-storage/ledgers'
+  Scenario: Create ledgers with restrict encumbrance and expenditure
+    Given path 'finance/ledgers'
     And request
       """
       {
@@ -72,7 +73,7 @@ Feature: global finances
     When method POST
     Then status 201
 
-  Scenario: create funds
+  Scenario: Create funds
     * table funds
       | id                                     | code        | ledgerId                               | externalAccountNo              |
       | '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696' | 'TST-FND'   | '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695' | '1111111111111111111111111'    |
@@ -81,7 +82,7 @@ Feature: global finances
       | '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a639' | 'USHIST'    | '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695' | '1111111111111111111111111-01' |
     * def v = call createFund funds
 
-  Scenario: create budgets
+  Scenario: Create budgets
     * table budgets
       | id                                     | fundId                                 | fiscalYearId                           | allocated |
       | '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a697' | '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696' | 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2' | 9999999   |
@@ -90,24 +91,26 @@ Feature: global finances
       | '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a619' | '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a639' | 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2' | 9999999   |
     * def v = call createBudget budgets
 
-  Scenario: create funds without budget
-    Given path 'finance-storage/funds'
+  Scenario: Create funds without budget
+    Given path 'finance/funds'
     And request
       """
       {
-        "id": "c9363394-c13a-4470-bce5-3fdfce5a14cc",
-        "code": "TST-FND-WO-BUDGET",
-        "description": "Fund without budget for finance API Tests",
-        "externalAccountNo": "2111111111111111111111111",
-        "fundStatus": "Active",
-        "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
-        "name": "Fund without budget for finance API Tests"
+        "fund": {
+          "id": "c9363394-c13a-4470-bce5-3fdfce5a14cc",
+          "code": "TST-FND-WO-BUDGET",
+          "description": "Fund without budget for finance API Tests",
+          "externalAccountNo": "2111111111111111111111111",
+          "fundStatus": "Active",
+          "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
+          "name": "Fund without budget for finance API Tests",
+        }
       }
       """
     When method POST
     Then status 201
 
-  Scenario Outline: create expense classes
+  Scenario Outline: Create expense classes
     Given path 'finance/expense-classes'
     And request
       """

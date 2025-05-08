@@ -1,15 +1,13 @@
+@parallel=false
 Feature: Verify that request will be rejected if provided adjustments no valid
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testinvoices'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * def invoiceId = callonce uuid
     * def invoiceLineId = callonce uuid

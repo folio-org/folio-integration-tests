@@ -89,17 +89,19 @@ Feature: Check that totalEncumbered and totalExpended calculated correctly
     * configure headers = headersAdmin
     * def fundId = <fundId>
 
-    Given path 'finance-storage/funds'
+    Given path 'finance/funds'
     And request
     """
     {
-      "id": "#(fundId)",
-      "code": "#(fundId)",
-      "description": "Fund for API Tests",
-      "externalAccountNo": "#(fundId)",
-      "fundStatus": "Active",
-      "ledgerId": "#(ledgerId)",
-      "name": "Fund for API Tests"
+      "fund": {
+        "id": "#(fundId)",
+        "code": "#(fundId)",
+        "description": "Fund for API Tests",
+        "externalAccountNo": "#(fundId)",
+        "fundStatus": "Active",
+        "ledgerId": "#(ledgerId)",
+        "name": "Fund for API Tests",
+      }
     }
     """
     When method POST

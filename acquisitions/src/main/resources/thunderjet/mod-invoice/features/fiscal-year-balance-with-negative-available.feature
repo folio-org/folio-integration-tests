@@ -5,20 +5,16 @@ Feature: Check fiscal year balance when using a negative available
   Background:
     * print karate.info.scenarioName
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
-
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
 
     * def fiscalYearId = callonce uuid1
     * def ledgerId = callonce uuid2
@@ -52,6 +48,7 @@ Feature: Check fiscal year balance when using a negative available
     * def v = call payInvoice { invoiceId: #(invoiceId) }
 
   Scenario: Check budget for fund 2
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId2
     When method GET
     Then status 200
@@ -62,6 +59,7 @@ Feature: Check fiscal year balance when using a negative available
     And match $.encumbered == 0
 
   Scenario: Check fiscal year balance
+    * configure headers = headersAdmin
     Given path 'finance/fiscal-years', fiscalYearId
     And param withFinancialSummary = true
     When method GET

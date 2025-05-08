@@ -12,18 +12,20 @@ Feature: fund
     * def acqUnitIds = karate.get('acqUnitIds', [])
     * def name = karate.get('name', "")
 
-    Given path 'finance-storage/funds'
+    Given path 'finance/funds'
     And request
     """
     {
-      "id": "#(id)",
-      "code": "#(code)",
-      "description": "",
-      "externalAccountNo": "#(externalAccountNo)",
-      "fundStatus": "#(fundStatus)",
-      "ledgerId": "#(ledgerId)",
-      "name": "#(name)",
-      "acqUnitIds": "#(acqUnitIds)",
+      "fund": {
+        "id": "#(id)",
+        "code": "#(code)",
+        "description": "",
+        "externalAccountNo": "#(externalAccountNo)",
+        "fundStatus": "#(fundStatus)",
+        "ledgerId": "#(ledgerId)",
+        "name": "#(name)",
+        "acqUnitIds": "#(acqUnitIds)",
+      }
     }
     """
     When method POST

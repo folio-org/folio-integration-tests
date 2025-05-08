@@ -2,14 +2,16 @@
 Feature: Check invoice lines with VAT adjustments
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -29,10 +31,12 @@ Feature: Check invoice lines with VAT adjustments
     * def invoiceLineId4 = call uuid
 
     ### 1. Create fund and budgets
+    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
     ### 2. Create invoices
+    * configure headers = headersUser
     * def invoiceAdjustments =
       """
       [{
@@ -108,10 +112,12 @@ Feature: Check invoice lines with VAT adjustments
     * def invoiceLineId4 = call uuid
 
     ### 1. Create fund and budgets
+    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
     ### 2. Create invoices
+    * configure headers = headersUser
     * table invoices
       | id         | invoiceId  | currency |
       | invoiceId1 | invoiceId1 | 'EUR'    |

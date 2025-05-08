@@ -16,7 +16,7 @@ Feature: Create a pending payment
     * def awaitingPayment = { encumbranceId: '#(encumbranceId)', releaseEncumbrance: '#(releaseEncumbrance)' }
     * def expectedStatus = karate.get('expectedStatus', 204)
 
-    Given path 'finance-storage/transactions/batch-all-or-nothing'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
       """
       {

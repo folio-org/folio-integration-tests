@@ -3,12 +3,15 @@ Feature: Audit events for Invoice
   Background:
     * print karate.info.scenarioName
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
     * configure retry = { count: 10, interval: 10000 }
 
     ### Before All ###
@@ -21,6 +24,7 @@ Feature: Audit events for Invoice
       | invoiceId | globalFiscalYearId |
     * def v = call createInvoice invoicesData
 
+    * configure headers = headersAdmin
     * table eventData
       | eventEntityId | eventType | eventCount |
       | invoiceId     | "Create"  | 1          |
@@ -37,6 +41,7 @@ Feature: Audit events for Invoice
     When method PUT
     Then status 204
 
+    * configure headers = headersAdmin
     * table eventData
       | eventEntityId | eventType | eventCount |
       | invoiceId     | "Edit"    | 2          |
@@ -55,6 +60,7 @@ Feature: Audit events for Invoice
     * eval populateInvoiceIds()
     * def v = call read('@UpdateInvoice') invoiceIds
 
+    * configure headers = headersAdmin
     * table eventData
       | eventEntityId | eventType | eventCount |
       | invoiceId     | "Edit"    | 52         |
@@ -62,6 +68,7 @@ Feature: Audit events for Invoice
 
   @ignore @VerifyAuditEvents
   Scenario: Verify Audit Events
+    * configure headers = headersAdmin
     Given path '/audit-data/acquisition/invoice', eventEntityId
     And retry until response.totalItems == eventCount
     When method GET

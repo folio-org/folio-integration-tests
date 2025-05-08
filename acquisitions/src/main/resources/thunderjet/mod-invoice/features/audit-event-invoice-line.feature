@@ -3,12 +3,15 @@ Feature: Audit events for Invoice Line
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * call login testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
     * configure retry = { count: 10, interval: 10000 }
 
     ### Before All ###
@@ -19,6 +22,7 @@ Feature: Audit events for Invoice Line
     * def invoiceId = callonce uuid3
     * def invoiceLineId = callonce uuid4
 
+    * configure headers = headersAdmin
     * table orderData
       | id      | fundId | createInventory |
       | orderId | fundId | 'None'          |
@@ -29,6 +33,7 @@ Feature: Audit events for Invoice Line
     * callonce createOrderLine orderLineData
     * callonce openOrder { id: "#(orderId)" }
 
+    * configure headers = headersUser
     * table invoicesData
       | id        | fiscalYearId       |
       | invoiceId | globalFiscalYearId |
@@ -81,6 +86,7 @@ Feature: Audit events for Invoice Line
 
   @ignore @VerifyAuditEvents
   Scenario: Verify Audit Events
+    * configure headers = headersAdmin
     Given path 'audit-data/acquisition/invoice-line', eventEntityId
     And retry until response.totalItems == eventCount
     When method GET

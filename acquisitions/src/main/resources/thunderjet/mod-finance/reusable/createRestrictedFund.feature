@@ -10,21 +10,25 @@ Feature: fund
     * def externalAccountNo = karate.get('externalAccountNo', '1111111111111111111111111')
     * def fundStatus = karate.get('fundStatus', 'Active')
 
-    Given path 'finance-storage/funds'
+    Given path 'finance/funds'
     And request
     """
     {
-      "id": "#(id)",
-      "code": "#(code)",
-      "description": "",
-      "externalAccountNo": "#(externalAccountNo)",
-      "fundStatus": "#(fundStatus)",
-      "ledgerId": "#(ledgerId)",
-      "restrictByLocations": true,
-      "locations": [{
-        "locationId": "#(globalLocationsId)"
-      }],
-      "name": ""
+      "fund": {
+        "id": "#(id)",
+        "code": "#(code)",
+        "description": "",
+        "externalAccountNo": "#(externalAccountNo)",
+        "fundStatus": "#(fundStatus)",
+        "ledgerId": "#(ledgerId)",
+        "restrictByLocations": true,
+        "locations": [
+          {
+            "locationId": "#(globalLocationsId)"
+          }
+        ],
+        "name": "",
+      }
     }
     """
     When method POST
