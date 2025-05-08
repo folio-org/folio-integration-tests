@@ -1,4 +1,4 @@
-# created for MODINVOSTO-56
+# Created for MODINVOSTO-56
 @parallel=false
 Feature: Check voucher from invoice with lines
 
