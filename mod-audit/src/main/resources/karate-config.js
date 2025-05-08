@@ -63,9 +63,15 @@ function fn() {
   };
 
   if (env == 'dev') {
-    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
-    config.kcClientId = 'supersecret';
-    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.kcClientId = 'folio-backend-admin-client';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
@@ -81,7 +87,7 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-    config.baseKeycloakUrl = 'https://folio-etesting-karate-eureka-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
   }
   return config;
 }

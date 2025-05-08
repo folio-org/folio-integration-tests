@@ -6,14 +6,14 @@ function fn() {
   var retryConfig = { count: 20, interval: 50000 }
   karate.configure('retry', retryConfig)
 
-  var env = karate.env;
+  var env = 'dev';//karate.env;
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
-    baseUrl: 'http://localhost:8000',
+    baseUrl: 'https://folio-edev-volaris-2nd-kong.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -68,9 +68,15 @@ function fn() {
   karate.repeat(100, rand);
 
   if (env == 'dev') {
-    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
-    config.kcClientId = 'supersecret';
-    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+    config.baseUrl = 'https://folio-edev-volaris-2nd-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-volaris-2nd-keycloak.ci.folio.org';
+    config.kcClientId = 'admin';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
