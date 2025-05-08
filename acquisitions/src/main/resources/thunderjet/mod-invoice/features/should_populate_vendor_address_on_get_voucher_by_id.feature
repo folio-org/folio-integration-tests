@@ -1,17 +1,18 @@
+@parallel=false
 Feature: Should populate vendor address when retrieve voucher by id
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testinvoices2222'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
-
-    # load global variables
     * callonce variables
 
     # prepare sample data
@@ -39,9 +40,9 @@ Feature: Should populate vendor address when retrieve voucher by id
     * def addresses = []
     * def void = (address1 == null ? null : karate.appendTo(addresses, address1))
     * def void = (address2 == null ? null : karate.appendTo(addresses, address2))
-    
-    Given path '/organizations-storage/organizations'
-    And headers headersAdmin
+
+    * configure headers = headersAdmin
+    Given path '/organizations/organizations'
     And request
     """
     {

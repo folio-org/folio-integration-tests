@@ -1,17 +1,17 @@
 Feature: Check voucher from invoice with lines using the same external account
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testinvoices'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
-
-    # load global variables
     * callonce variables
 
     # prepare sample data
@@ -39,6 +39,7 @@ Feature: Check voucher from invoice with lines using the same external account
     * set invoicePayload.id = invoiceId
 
     # ============= create invoice ===================
+    * configure headers = headersUser
     Given path 'invoice/invoices'
     And request invoicePayload
     When method POST

@@ -2,6 +2,7 @@
 Feature: mod-orders integration tests
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
     # Order of the modules below is important: mod-pubsub should come before mod-circulation
     # Including all only required modules is needed for dev env, where checkDepsDuringModInstall is false
@@ -128,39 +129,26 @@ Feature: mod-orders integration tests
       | 'finance.funds.budget.item.get'                               |
       | 'finance.funds.collection.get'                                |
       | 'finance.funds.item.get'                                      |
+      | 'finance.funds.item.post'                                     |
       | 'finance.funds.item.put'                                      |
       | 'finance.fund-types.item.post'                                |
-      | 'finance.group-fiscal-year-summaries.collection.get'          |
       | 'finance.group-fund-fiscal-years.item.post'                   |
       | 'finance.groups-expense-classes-totals.collection.get'        |
       | 'finance.ledger-rollovers-budgets.collection.get'             |
       | 'finance.ledger-rollovers-budgets.item.get'                   |
       | 'finance.ledger-rollovers-errors.collection.get'              |
       | 'finance.ledger-rollovers.item.post'                          |
-      | 'finance.ledger-rollovers-logs.collection.get'                |
-      | 'finance.ledger-rollovers-logs.item.get'                      |
       | 'finance.ledger-rollovers-progress.collection.get'            |
-      | 'finance.ledger-rollovers-progress.item.put'                  |
       | 'finance.ledgers.collection.get'                              |
       | 'finance.ledgers.current-fiscal-year.item.get'                |
       | 'finance.ledgers.item.delete'                                 |
       | 'finance.ledgers.item.get'                                    |
       | 'finance.ledgers.item.post'                                   |
-      | 'finance.release-encumbrance.item.post'                       |
-      | 'finance-storage.budget-expense-classes.collection.get'       |
       | 'finance-storage.budget-expense-classes.item.post'            |
-      | 'finance-storage.budgets.item.get'                            |
-      | 'finance-storage.budgets.item.post'                           |
-      | 'finance-storage.funds.item.delete'                           |
-      | 'finance-storage.funds.item.post'                             |
-      | 'finance-storage.group-fund-fiscal-years.collection.get'      |
-      | 'finance-storage.group-fund-fiscal-years.item.post'           |
       | 'finance-storage.ledger-rollovers-errors.collection.get'      |
       | 'finance-storage.ledger-rollovers-errors.item.delete'         |
       | 'finance-storage.ledger-rollovers-errors.item.post'           |
-      | 'finance-storage.ledger-rollovers.item.delete'                |
       | 'finance-storage.ledger-rollovers.item.post'                  |
-      | 'finance-storage.ledgers.item.post'                           |
       | 'finance-storage.transactions.batch.execute'                  |
       | 'finance-storage.transactions.collection.get'                 |
       | 'finance.transactions.batch.execute'                          |
@@ -195,14 +183,9 @@ Feature: mod-orders integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.tenant-items.collection.get'                       |
       | 'invoice.invoice-lines.collection.get'                        |
-      | 'invoice.invoice-lines.item.delete'                           |
       | 'invoice.invoice-lines.item.get'                              |
       | 'invoice.invoice-lines.item.post'                             |
       | 'invoice.invoice-lines.item.put'                              |
-      | 'invoice.invoices.collection.get'                             |
-      | 'invoice.invoices.documents.item.post'                        |
-      | 'invoice.invoices.fiscal-years.collection.get'                |
-      | 'invoice.invoices.item.delete'                                |
       | 'invoice.invoices.item.get'                                   |
       | 'invoice.invoices.item.post'                                  |
       | 'invoice.invoices.item.put'                                   |
@@ -213,10 +196,7 @@ Feature: mod-orders integration tests
       | 'invoices.acquisitions-units-assignments.manage'              |
       | 'lost-item-fees-policies.collection.get'                      |
       | 'lost-item-fees-policies.item.post'                           |
-      | 'organizations.organizations.item.get'                        |
       | 'organizations.organizations.item.post'                       |
-      | 'organizations.organizations.item.put'                        |
-      | 'organizations-storage.organizations.item.post'               |
       | 'overdue-fines-policies.collection.get'                       |
       | 'overdue-fines-policies.item.post'                            |
       | 'tags.collection.get'                                         |
@@ -227,13 +207,13 @@ Feature: mod-orders integration tests
       | 'users.collection.get'                                        |
       | 'users.item.post'                                             |
 
-  Scenario: create tenant and users for testing
+  Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
 
-  Scenario: create admin user and extra test user
+  Scenario: Create admin user
     * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
 
-  Scenario: init global data
+  Scenario: Init global data
     * call login testAdmin
     * callonce read('classpath:global/inventory.feature')
     * callonce read('classpath:global/configuration.feature')

@@ -5,20 +5,16 @@ Feature: Approve and pay invoice with past fiscal year
   Background:
     * print karate.info.scenarioName
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
-
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
 
     * def pastFiscalYearId = callonce uuid1
     * def presentFiscalYearId = callonce uuid2
@@ -63,6 +59,7 @@ Feature: Approve and pay invoice with past fiscal year
     * def v = call approveInvoice { invoiceId: #(invoiceId) }
 
   Scenario: Check that pending payments were created with the right fiscal year
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Pending payment'
@@ -74,6 +71,7 @@ Feature: Approve and pay invoice with past fiscal year
     * def v = call payInvoice { invoiceId: #(invoiceId) }
 
   Scenario: Check that payments were created with the right fiscal year
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Payment'
@@ -82,6 +80,7 @@ Feature: Approve and pay invoice with past fiscal year
     And match $.transactions[0].fiscalYearId == pastFiscalYearId
 
   Scenario: Check the past budget
+    * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId
     When method GET
     Then status 200
@@ -92,6 +91,7 @@ Feature: Approve and pay invoice with past fiscal year
     And match $.encumbered == 0
 
   Scenario: Check the past fiscal year balance
+    * configure headers = headersAdmin
     Given path 'finance/fiscal-years', pastFiscalYearId
     And param withFinancialSummary = true
     When method GET

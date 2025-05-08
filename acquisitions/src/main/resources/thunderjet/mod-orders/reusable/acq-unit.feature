@@ -4,7 +4,6 @@ Feature: Reusable components for acquisition units
   Background:
     * url baseUrl
     * def randomAcqUnitId = call uuid
-    * def headersAdminTextPlain = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'text/plain', 'x-okapi-tenant': '#(testTenant)' }
 
   @CreateAcqUnit
   Scenario: Create acquisition unit
@@ -17,7 +16,6 @@ Feature: Reusable components for acquisition units
     * def isDeleted = karate.get('isDeleted', false)
 
     Given path 'acquisitions-units-storage/units'
-    And headers headersAdmin
     And request
       """
       {
@@ -36,11 +34,9 @@ Feature: Reusable components for acquisition units
 
   @AssignUserToAcqUnit
   Scenario: Assign user to acquisition unit
-    * def res = callonce getUserIdByUsername { user: '#(testAdmin)' }
-    * def userId = res.userId
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
+
     Given path 'acquisitions-units-storage/memberships'
-    And headers headersAdmin
     And request
       """
       {
@@ -54,10 +50,6 @@ Feature: Reusable components for acquisition units
 
   @DeleteUserFromAcqUnit
   Scenario: Delete user from acquisition unit
-    * configure headers = headersAdminTextPlain
-
-    * def res = callonce getUserIdByUsername { user: '#(testAdmin)' }
-    * def userId = res.userId
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
 
     Given path 'acquisitions-units-storage/memberships'
@@ -68,7 +60,7 @@ Feature: Reusable components for acquisition units
     * def acqMember = $.acquisitionsUnitMemberships[0]
     * def acqMemberId = acqMember.id
 
+    # Note: this requires a 'text/plain' Accept header
     Given path 'acquisitions-units-storage/memberships', acqMemberId
-    And header Accept = 'text/plain'
     When method DELETE
     Then status 204

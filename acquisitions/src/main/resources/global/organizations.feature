@@ -6,7 +6,7 @@ Feature: global organizations
     * configure headers = { 'x-okapi-tenant': '#(testTenant)'  }
 
   Scenario: create vendor
-    Given path 'organizations-storage/organizations'
+    Given path 'organizations/organizations'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
@@ -24,7 +24,7 @@ Feature: global organizations
     Then status 201
 
   Scenario: create GOBI vendor
-    Given path 'organizations-storage/organizations'
+    Given path 'organizations/organizations'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
@@ -42,7 +42,7 @@ Feature: global organizations
     Then status 201
 
   Scenario: create organization which is not a vendor
-    Given path 'organizations-storage/organizations'
+    Given path 'organizations/organizations'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken

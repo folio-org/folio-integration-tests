@@ -1,6 +1,7 @@
 Feature: mod-invoice integration tests
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
     * table modules
@@ -22,19 +23,6 @@ Feature: mod-invoice integration tests
 
     * table userPermissions
       | name                                                        |
-      | 'acquisition.invoice-line.events.get'                       |
-      | 'acquisition.invoice.events.get'                            |
-      | 'acquisitions-units.memberships.item.delete'                |
-      | 'acquisitions-units.memberships.item.post'                  |
-      | 'acquisitions-units.units.item.post'                        |
-      | 'acquisitions-units-storage.memberships.collection.get'     |
-      | 'acquisitions-units-storage.memberships.item.delete'        |
-      | 'acquisitions-units-storage.memberships.item.post'          |
-      | 'acquisitions-units-storage.memberships.item.put'           |
-      | 'acquisitions-units-storage.units.item.delete'              |
-      | 'acquisitions-units-storage.units.item.get'                 |
-      | 'acquisitions-units-storage.units.item.post'                |
-      | 'acquisitions-units-storage.units.item.put'                 |
       | 'batch-groups.collection.get'                               |
       | 'batch-groups.item.post'                                    |
       | 'batch-voucher.batch-voucher-exports.item.get'              |
@@ -42,103 +30,63 @@ Feature: mod-invoice integration tests
       | 'batch-voucher.batch-vouchers.item.get'                     |
       | 'batch-voucher.export-configurations.credentials.item.post' |
       | 'batch-voucher.export-configurations.item.post'             |
-      | 'configuration.entries.collection.get'                      |
-      | 'configuration.entries.item.delete'                         |
-      | 'configuration.entries.item.post'                           |
-      | 'configuration.entries.item.put'                            |
-      | 'finance.budgets-expense-classes-totals.collection.get'     |
-      | 'finance.budgets.collection.get'                            |
-      | 'finance.budgets.item.delete'                               |
-      | 'finance.budgets.item.get'                                  |
-      | 'finance.budgets.item.post'                                 |
-      | 'finance.budgets.item.put'                                  |
-      | 'finance.expense-classes.item.post'                         |
-      | 'finance.finance-data.collection.get'                       |
-      | 'finance.finance-data.collection.put'                       |
-      | 'finance.fiscal-years.item.delete'                          |
-      | 'finance.fiscal-years.item.get'                             |
-      | 'finance.fiscal-years.item.post'                            |
-      | 'finance.fiscal-years.item.put'                             |
-      | 'finance.fund-types.item.post'                              |
-      | 'finance.funds.budget.item.get'                             |
-      | 'finance.funds.collection.get'                              |
-      | 'finance.funds.item.get'                                    |
-      | 'finance.funds.item.put'                                    |
-      | 'finance.groups-expense-classes-totals.collection.get'      |
-      | 'finance.group-fiscal-year-summaries.collection.get'        |
-      | 'finance.group-fund-fiscal-years.item.post'                 |
-      | 'finance.ledger-rollovers-budgets.collection.get'           |
-      | 'finance.ledger-rollovers-budgets.item.get'                 |
-      | 'finance.ledger-rollovers-errors.collection.get'            |
-      | 'finance.ledger-rollovers-logs.collection.get'              |
-      | 'finance.ledger-rollovers-logs.item.get'                    |
-      | 'finance.ledger-rollovers-progress.collection.get'          |
-      | 'finance.ledger-rollovers-progress.item.put'                |
-      | 'finance.ledger-rollovers.item.post'                        |
-      | 'finance.ledgers.collection.get'                            |
-      | 'finance.ledgers.current-fiscal-year.item.get'              |
-      | 'finance.ledgers.item.delete'                               |
-      | 'finance.ledgers.item.get'                                  |
-      | 'finance.ledgers.item.post'                                 |
-      | 'finance.release-encumbrance.item.post'                     |
-      | 'finance.transactions.batch.execute'                        |
-      | 'finance.transactions.collection.get'                       |
-      | 'finance.transactions.item.get'                             |
-      | 'finance-storage.budget-expense-classes.collection.get'     |
-      | 'finance-storage.budget-expense-classes.item.post'          |
-      | 'finance-storage.budgets.item.get'                          |
-      | 'finance-storage.budgets.item.post'                         |
-      | 'finance-storage.funds.item.delete'                         |
-      | 'finance-storage.funds.item.post'                           |
-      | 'finance-storage.group-fund-fiscal-years.collection.get'    |
-      | 'finance-storage.group-fund-fiscal-years.item.post'         |
-      | 'finance-storage.ledger-rollovers-errors.collection.get'    |
-      | 'finance-storage.ledger-rollovers.item.delete'              |
-      | 'finance-storage.ledgers.item.post'                         |
-      | 'finance-storage.transactions.batch.execute'                |
-      | 'finance-storage.transactions.collection.get'               |
-      | 'inventory.instances.item.post'                             |
-      | 'inventory-storage.holdings.collection.get'                 |
+      | 'invoice.invoice-lines.collection.get'                      |
+      | 'invoice.invoice-lines.item.delete'                         |
+      | 'invoice.invoice-lines.item.get'                            |
+      | 'invoice.invoice-lines.item.post'                           |
+      | 'invoice.invoice-lines.item.put'                            |
       | 'invoice.invoices.collection.get'                           |
+      | 'invoice.invoices.documents.item.get'                       |
       | 'invoice.invoices.documents.item.post'                      |
       | 'invoice.invoices.fiscal-years.collection.get'              |
       | 'invoice.invoices.item.delete'                              |
       | 'invoice.invoices.item.get'                                 |
       | 'invoice.invoices.item.post'                                |
       | 'invoice.invoices.item.put'                                 |
-      | 'invoice.invoice-lines.collection.get'                      |
-      | 'invoice.invoice-lines.item.delete'                         |
-      | 'invoice.invoice-lines.item.get'                            |
-      | 'invoice.invoice-lines.item.post'                           |
-      | 'invoice.invoice-lines.item.put'                            |
       | 'invoice.item.approve.execute'                              |
       | 'invoice.item.cancel.execute'                               |
       | 'invoice.item.pay.execute'                                  |
       | 'invoices.fiscal-year.update.execute'                       |
-      | 'organizations-storage.organizations.item.post'             |
-      | 'organizations.organizations.item.get'                      |
-      | 'organizations.organizations.item.post'                     |
-      | 'organizations.organizations.item.put'                      |
-      | 'orders.collection.get'                                     |
-      | 'orders.item.get'                                           |
-      | 'orders.item.post'                                          |
-      | 'orders.item.put'                                           |
-      | 'orders.po-lines.collection.get'                            |
-      | 'orders.po-lines.item.post'                                 |
       | 'voucher-number.start.post'                                 |
+      | 'voucher-storage.voucher-lines.item.delete'                 |
+      | 'voucher-storage.vouchers.item.delete'                      |
       | 'voucher.voucher-lines.collection.get'                      |
       | 'voucher.vouchers.collection.get'                           |
       | 'voucher.vouchers.item.get'                                 |
-      | 'voucher-storage.voucher-lines.item.delete'                 |
-      | 'voucher-storage.vouchers.item.delete'                      |
-      | 'invoice.invoices.documents.item.get'                       |
 
-  Scenario: create tenant and users for testing
-    * def testUser = testAdmin
-    Given call read('classpath:common/eureka/setup-users.feature')
+    * table adminPermissions
+      | name                                                        |
+      | 'acquisition.invoice.events.get'                            |
+      | 'acquisition.invoice-line.events.get'                       |
+      | 'finance.budgets.item.get'                                  |
+      | 'finance.budgets.item.post'                                 |
+      | 'finance.budgets.item.put'                                  |
+      | 'finance.expense-classes.item.post'                         |
+      | 'finance.fiscal-years.item.get'                             |
+      | 'finance.fiscal-years.item.post'                            |
+      | 'finance.funds.budget.item.get'                             |
+      | 'finance.funds.collection.get'                              |
+      | 'finance.funds.item.get'                                    |
+      | 'finance.funds.item.post'                                   |
+      | 'finance.funds.item.put'                                    |
+      | 'finance.ledgers.item.post'                                 |
+      | 'finance-storage.budget-expense-classes.item.post'          |
+      | 'finance.transactions.collection.get'                       |
+      | 'finance.transactions.item.get'                             |
+      | 'orders.item.get'                                           |
+      | 'orders.item.post'                                          |
+      | 'orders.item.put'                                           |
+      | 'orders.po-lines.item.post'                                 |
+      | 'organizations.organizations.item.post'                     |
+
+  Scenario: Create tenant and test user
+    * call read('classpath:common/eureka/setup-users.feature')
     * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
 
-  Scenario: init global data
+  Scenario: Create admin user
+    * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
+
+  Scenario: Init global data
     * call login testAdmin
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/organizations.feature')

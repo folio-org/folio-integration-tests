@@ -1,17 +1,14 @@
+@parallel=false
 Feature: Checking that it is impossible to add a invoice line to already approved invoice
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-   #* callonce dev {tenant: 'testinvoices1'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * configure headers = headersAdmin
-
-    # load global variables
     * callonce variables
 
     # prepare sample data

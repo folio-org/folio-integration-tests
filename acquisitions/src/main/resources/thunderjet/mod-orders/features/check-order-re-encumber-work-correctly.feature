@@ -171,17 +171,19 @@ Feature: Check re-encumber works correctly
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
 
-    Given path 'finance-storage/funds'
+    Given path 'finance/funds'
     And request
     """
     {
-      "id": "#(fundId)",
-      "code": "#(fundId)",
-      "description": "Fund for re-encumber API Tests",
-      "externalAccountNo": "#(fundId)",
-      "fundStatus": "Active",
-      "ledgerId": "#(ledgerId)",
-      "name": "Fund for re-encumber API Tests"
+      "fund": {
+        "id": "#(fundId)",
+        "code": "#(fundId)",
+        "description": "Fund for re-encumber API Tests",
+        "externalAccountNo": "#(fundId)",
+        "fundStatus": "Active",
+        "ledgerId": "#(ledgerId)",
+        "name": "Fund for re-encumber API Tests",
+      }
     }
     """
     When method POST
