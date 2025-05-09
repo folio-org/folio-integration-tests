@@ -5,12 +5,17 @@ function fn() {
 
     var env = karate.env;
 
+    // Get config values from system properties with defaults if not provided
     var config = {
-        baseUrl: 'http://localhost:9130',
-        edgeUrl: 'http://localhost:8000',
-        admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-        prototypeTenant: 'diku',
-        consortiaSystemUserName: 'consortia-system-user',
+        baseUrl: karate.properties['baseUrl'] || 'http://localhost:9130',
+        edgeUrl: karate.properties['edgeUrl'] || 'http://localhost:8000',
+        admin: {
+            tenant: karate.properties['admin.tenant'] || 'diku',
+            name: karate.properties['admin.name'] || 'diku_admin',
+            password: karate.properties['admin.password'] || 'admin'
+        },
+        prototypeTenant: karate.properties['prototypeTenant'] || 'diku',
+        consortiaSystemUserName: karate.properties['consortiaSystemUserName'] || 'consortia-system-user',
 
         // define global features
         login: karate.read('classpath:common/login.feature'),

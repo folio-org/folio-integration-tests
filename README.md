@@ -44,6 +44,25 @@ This first builds the common and testrail-integration submodules and sets maven 
 
 To run only specific runner (Java) class test use `-DfailIfNoTests=false` and `-Dtest=<TestName>`.
 
+## Configuring Tests Using System Properties
+
+You can configure various aspects of the tests using system properties. This is especially useful for providing credentials and environment-specific settings without modifying the code.
+
+```
+mvn test -DargLine="-Dkarate.env=snapshot -DbaseUrl=https://custom-okapi-url:9130 -Dadmin.tenant=mytenant -Dadmin.name=custom_admin -Dadmin.password=secret_password -DprototypeTenant=mytenant"
+```
+
+The following system properties are supported:
+- `baseUrl`: URL of the Okapi instance (e.g., http://localhost:9130)
+- `admin.tenant`: Admin tenant ID (e.g., diku)
+- `admin.name`: Admin username (e.g., diku_admin)
+- `admin.password`: Admin password
+- `prototypeTenant`: Default tenant for the test (e.g., diku)
+- `edgeUrl`: URL for edge services (for modules that use edge services)
+- `apikey`: API key for edge services (for modules that use edge services)
+
+If any of these properties are not specified, they will use default values defined in each module's karate-config.js file.
+
 ## Running tests for a specific module in a specific environment
 
 ```

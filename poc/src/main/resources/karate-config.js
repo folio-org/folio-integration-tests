@@ -9,11 +9,16 @@ function fn() {
   // once we run tests again
   var runId = karate.properties['runId'];
 
+  // Get config values from system properties with defaults if not provided
   var config = {
-    baseUrl: 'http://localhost:9130',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    baseUrl: karate.properties['baseUrl'] || 'http://localhost:9130',
+    admin: {
+      tenant: karate.properties['admin.tenant'] || 'diku',
+      name: karate.properties['admin.name'] || 'diku_admin',
+      password: karate.properties['admin.password'] || 'admin'
+    },
     runId: runId ? runId: '',
-    prototypeTenant: 'diku',
+    prototypeTenant: karate.properties['prototypeTenant'] || 'diku',
 
     // define global features
     login: karate.read('classpath:common/login.feature'),

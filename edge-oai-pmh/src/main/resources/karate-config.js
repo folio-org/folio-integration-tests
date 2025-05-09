@@ -8,10 +8,17 @@ function fn() {
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
 
+  // Get config values from system properties with defaults if not provided
   var config = {
-    baseUrl: 'http://localhost:9130',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    prototypeTenant: 'diku',
+    baseUrl: karate.properties['baseUrl'] || 'http://localhost:9130',
+    edgeUrl: karate.properties['edgeUrl'],
+    apikey: karate.properties['apikey'] || 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0X29haXBtaCIsInUiOiJ0ZXN0LXVzZXIifQ==',
+    admin: {
+      tenant: karate.properties['admin.tenant'] || 'diku',
+      name: karate.properties['admin.name'] || 'diku_admin',
+      password: karate.properties['admin.password'] || 'admin'
+    },
+    prototypeTenant: karate.properties['prototypeTenant'] || 'diku',
 
     testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},

@@ -29,11 +29,16 @@ function fn() {
     return [year,month,day,hour,minute,seconds].join('');
   })()
 
+  // Get config values from system properties with defaults if not provided
   var config = {
     tenantParams: {loadReferenceData: true},
-    baseUrl: 'http://localhost:9130',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    prototypeTenant: 'diku',
+    baseUrl: karate.properties['baseUrl'] || 'http://localhost:9130',
+    admin: {
+      tenant: karate.properties['admin.tenant'] || 'diku',
+      name: karate.properties['admin.name'] || 'diku_admin',
+      password: karate.properties['admin.password'] || 'admin'
+    },
+    prototypeTenant: karate.properties['prototypeTenant'] || 'diku',
 
     testTenant: testTenant,
     testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
