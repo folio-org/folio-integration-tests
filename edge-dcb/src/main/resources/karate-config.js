@@ -8,12 +8,18 @@ function fn() {
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
 
+  // Get config values from system properties with defaults if not provided
   var config = {
-    baseUrl: 'http://localhost:9130',
-    edgeUrl: 'http://localhost:1212',
-    centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    prototypeTenant: 'diku',
+    baseUrl: karate.properties['baseUrl'] || 'http://localhost:9130',
+    edgeUrl: karate.properties['edgeUrl'] || 'http://localhost:1212',
+    centralServerUrl: karate.properties['centralServerUrl'] || 'https://folio-dev-volaris-mock-server.ci.folio.org',
+    apikey: karate.properties['apikey'] || 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==',
+    admin: {
+      tenant: karate.properties['admin.tenant'] || 'diku',
+      name: karate.properties['admin.name'] || 'diku_admin',
+      password: karate.properties['admin.password'] || 'admin'
+    },
+    prototypeTenant: karate.properties['prototypeTenant'] || 'diku',
 
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant : 'testtenant',

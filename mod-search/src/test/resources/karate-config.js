@@ -13,11 +13,16 @@ function fn() {
   // once we run tests again
   var runId = karate.properties['runId'];
 
+  // Get config values from system properties with defaults if not provided
   var config = {
     runId: runId ? runId : '',
-    baseUrl: 'https://folio-dev-spitfire-okapi.ci.folio.org',
-    admin: { tenant: 'diku', name: 'diku_admin', password: adminPassword },
-    prototypeTenant: 'diku',
+    baseUrl: karate.properties['baseUrl'] || 'https://folio-dev-spitfire-okapi.ci.folio.org',
+    admin: {
+      tenant: karate.properties['admin.tenant'] || 'diku',
+      name: karate.properties['admin.name'] || 'diku_admin',
+      password: adminPassword || karate.properties['admin.password'] || 'admin'
+    },
+    prototypeTenant: karate.properties['prototypeTenant'] || 'diku',
     testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: { tenant: testTenant, name: 'test-admin', password: 'admin' },
     testUser: { tenant: testTenant, name: 'test-user', password: 'test' },

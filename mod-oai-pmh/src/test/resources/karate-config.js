@@ -8,15 +8,20 @@ function fn() {
     // The "testTenant" property could be specified during test runs
     var testTenant = karate.properties['testTenant'];
 
+  // Get config values from system properties with defaults if not provided
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: karate.properties['baseUrl'] || 'http://localhost:9130',
     testTenant: testTenant ? testTenant : 'testtenant',
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    prototypeTenant: 'diku',
-    edgeHost:'http://localhost:9701',
-    edgeApiKey: 'eyJzIjoiQlBhb2ZORm5jSzY0NzdEdWJ4RGgiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0',
+    admin: {
+      tenant: karate.properties['admin.tenant'] || 'diku',
+      name: karate.properties['admin.name'] || 'diku_admin',
+      password: karate.properties['admin.password'] || 'admin'
+    },
+    prototypeTenant: karate.properties['prototypeTenant'] || 'diku',
+    edgeHost: karate.properties['edgeHost'] || 'http://localhost:9701',
+    edgeApiKey: karate.properties['edgeApiKey'] || 'eyJzIjoiQlBhb2ZORm5jSzY0NzdEdWJ4RGgiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0',
     // define global features
     variables: karate.read('classpath:global/variables.feature'),
     destroyData: karate.read('classpath:common/destroy-data.feature'),

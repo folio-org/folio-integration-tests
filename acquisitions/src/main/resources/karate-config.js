@@ -8,16 +8,21 @@ function fn() {
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'] || 'testtenant';
 
+  // Get config values from system properties with defaults if not provided
   var config = {
-    baseUrl: 'http://localhost:9130',
-    edgeUrl: 'http://localhost:8000',
-    ftpUrl: 'ftp://ftp.ci.folio.org',
-    ftpPort:  21,
-    ftpUser: 'folio',
-    ftpPassword: 'Ffx29%pu',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    prototypeTenant: 'diku',
-    consortiaSystemUserName: 'consortia-system-user',
+    baseUrl: karate.properties['baseUrl'] || 'http://localhost:9130',
+    edgeUrl: karate.properties['edgeUrl'] || 'http://localhost:8000',
+    ftpUrl: karate.properties['ftpUrl'] || 'ftp://ftp.ci.folio.org',
+    ftpPort: karate.properties['ftpPort'] || 21,
+    ftpUser: karate.properties['ftpUser'] || 'folio',
+    ftpPassword: karate.properties['ftpPassword'] || 'Ffx29%pu',
+    admin: {
+      tenant: karate.properties['admin.tenant'] || 'diku',
+      name: karate.properties['admin.name'] || 'diku_admin',
+      password: karate.properties['admin.password'] || 'admin'
+    },
+    prototypeTenant: karate.properties['prototypeTenant'] || 'diku',
+    consortiaSystemUserName: karate.properties['consortiaSystemUserName'] || 'consortia-system-user',
 
     testTenant: testTenant,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
