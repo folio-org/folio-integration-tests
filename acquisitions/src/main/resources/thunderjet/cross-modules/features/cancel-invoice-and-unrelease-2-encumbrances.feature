@@ -27,7 +27,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Create finances
-    * print "Create finances"
     * call createFund { id: '#(fundId1)', code: '#(fundId1)' }
     * call createBudget { id: '#(budgetId1)', allocated: 1000, fundId: '#(fundId1)', status: 'Active' }
     * call createFund { id: '#(fundId2)', code: '#(fundId2)' }
@@ -35,8 +34,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Create an order
-    * print "Create an order"
-
     Given path 'orders/composite-orders'
     And request
     """
@@ -51,8 +48,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Create an order line with 2 fund distributions
-    * print "Create an order line with 2 fund distributions"
-
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -68,8 +63,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Open the order
-    * print "Open the order"
-
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -84,8 +77,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Create an invoice
-    * print "Create an invoice"
-
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
 
@@ -96,7 +87,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Add an invoice line with the same fund distributions
-    * print "Add an invoice line with the same fund distributions"
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId
@@ -115,8 +105,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Approve the invoice
-    * print "Approve the invoice"
-
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -131,7 +119,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Check invoice line encumbrances have been added when the invoice was approved
-    * print "Check invoice line encumbrances have been added when the invoice was approved"
     Given path 'invoice/invoice-lines', invoiceLineId
     When method GET
     Then status 200
@@ -140,8 +127,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Pay the invoice
-    * print "Pay the invoice"
-
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -156,7 +141,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Check encumbrances before cancelling the invoice
-    * print "Check encumbrances before cancelling the invoice"
     Given path '/finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
@@ -166,7 +150,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Cancel the invoice
-    * print "Cancel the invoice"
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -179,7 +162,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
 
   Scenario: Check encumbrances after cancelling the invoice
-    * print "Check encumbrances after cancelling the invoice"
     Given path '/finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
