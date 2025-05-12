@@ -1,16 +1,18 @@
+@parallel=false
 Feature: Organizations API tests.
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testmodorgs'}
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersAdmin
+
     * callonce variables
 
     * def readOnlyAcqUnitId = callonce uuid1
@@ -24,6 +26,7 @@ Feature: Organizations API tests.
     * def v = callonce createAcqUnit acqUnitsData
 
 
+    * configure headers = headersUser
     * def noAcqOrganizationId = callonce uuid4
     * def readOnlyOrganizationId = callonce uuid5
     * def updateOnlyOrganizationId = callonce uuid6
@@ -36,6 +39,7 @@ Feature: Organizations API tests.
       | updateOnlyOrganizationId    | 'UPDATE_ONLY_ORG'    | 'Active' | ['#(updateOnlyAcqUnitId)']    |
       | fullProtectedOrganizationId | 'FULL_PROTECTED_ORG' | 'Active' | ['#(fullProtectedAcqUnitId)'] |
     * def v = callonce createOrganization organizationsData
+
 
   @Positive
   Scenario: Get not protected org
@@ -68,7 +72,7 @@ Feature: Organizations API tests.
   Scenario: Assign user to read-open unit
     * configure headers = headersAdmin
     Given path '/users'
-    And param query = 'username=' + testAdmin.name
+    And param query = 'username=' + testUser.name
     When method GET
     Then status 200
     * def userId = $.users[0].id
@@ -116,7 +120,7 @@ Feature: Organizations API tests.
   Scenario: Assign user to read-open unit
     * configure headers = headersAdmin
     Given path '/users'
-    And param query = 'username=' + testAdmin.name
+    And param query = 'username=' + testUser.name
     When method GET
     Then status 200
     * def userId = $.users[0].id
@@ -136,7 +140,7 @@ Feature: Organizations API tests.
   Scenario: Assign user to full-protected unit
     * configure headers = headersAdmin
     Given path '/users'
-    And param query = 'username=' + testAdmin.name
+    And param query = 'username=' + testUser.name
     When method GET
     Then status 200
     * def userId = $.users[0].id

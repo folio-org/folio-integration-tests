@@ -11,13 +11,12 @@ Feature: Check order re-encumber after preview rollover
   # 6) retry step 3 and make sure that preview rollover wasn't affected to results of re-encumber
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance1'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -110,24 +109,25 @@ Feature: Check order re-encumber after preview rollover
 
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
     * def fundTypeId = <fundTypeId>
 
-    Given path 'finance-storage/funds'
+    Given path 'finance/funds'
     And request
     """
     {
-      "id": "#(fundId)",
-      "code": "#(codePrefix + fundCode)",
-      "description": "Fund #(codePrefix + fundCode) for rollover API Tests",
-      "externalAccountNo": "#(fundId)",
-      "fundStatus": <status>,
-      "ledgerId": "#(ledgerId)",
-      "name": "Fund #(codePrefix + fundCode) for rollover API Tests",
-      "fundTypeId": "#(fundTypeId)"
+      "fund": {
+        "id": "#(fundId)",
+        "code": "#(codePrefix + fundCode)",
+        "description": "Fund #(codePrefix + fundCode) for rollover API Tests",
+        "externalAccountNo": "#(fundId)",
+        "fundStatus": <status>,
+        "ledgerId": "#(ledgerId)",
+        "name": "Fund #(codePrefix + fundCode) for rollover API Tests",
+        "fundTypeId": "#(fundTypeId)",
+      }
     }
     """
     When method POST
@@ -184,8 +184,6 @@ Feature: Check order re-encumber after preview rollover
 
 
   Scenario Outline: Create open orders with 1 fund distribution
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fundId = <fundId>
@@ -238,8 +236,6 @@ Feature: Check order re-encumber after preview rollover
 
 
   Scenario Outline: Open order
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     Given path 'orders/composite-orders', orderId
     When method GET

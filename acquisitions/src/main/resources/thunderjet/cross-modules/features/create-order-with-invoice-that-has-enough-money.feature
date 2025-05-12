@@ -1,14 +1,14 @@
+@parallel=false
 Feature: Create order with invoice that has enough money
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testcrossmodules'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
-    # load global variables
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -28,7 +28,6 @@ Feature: Create order with invoice that has enough money
     * def invoiceLineIdWithExpenseClasses = callonce uuid12
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>, <statusExpenseClasses>
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 

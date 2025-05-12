@@ -4,20 +4,17 @@ Feature: Invoice encumbrance update without acquisition unit
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -30,7 +27,6 @@ Feature: Invoice encumbrance update without acquisition unit
 
 
   Scenario: Prepare finances
-    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
@@ -55,8 +51,8 @@ Feature: Invoice encumbrance update without acquisition unit
 
   Scenario: Create acq unit membership
     * configure headers = headersAdmin
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
-    * def userIdForMembership = result.userId
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def userIdForMembership = res.userId
     Given path 'acquisitions-units/memberships'
     And request
     """
@@ -121,8 +117,8 @@ Feature: Invoice encumbrance update without acquisition unit
 
   Scenario: Re-add acq unit membership
     * configure headers = headersAdmin
-    * def result = call read('classpath:common/eureka/users.feature') {user: '#(testAdmin)'}
-    * def userIdForMembership = result.userId
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def userIdForMembership = res.userId
     Given path 'acquisitions-units/memberships'
     And request
     """

@@ -2,8 +2,7 @@ Feature: global organizations
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * configure headers = { 'x-okapi-tenant': '#(testTenant)'  }
+    * configure headers = { 'x-okapi-tenant': '#(testTenant)' }
 
   Scenario: create vendor
     Given path 'organizations/organizations'

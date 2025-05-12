@@ -1,14 +1,18 @@
+@parallel=false
 Feature: Test order invoice relation can be deleted
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testcrossmodules'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
-    # load global variables
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def orderIdOne = callonce uuid1
@@ -38,6 +42,7 @@ Feature: Test order invoice relation can be deleted
       | orderId    |
       | orderIdOne |
       | orderIdTwo |
+
 
   Scenario Outline: Create order lines for <orderLineId>
     * def orderId = <orderId>
@@ -79,6 +84,7 @@ Feature: Test order invoice relation can be deleted
     """
     When method POST
     Then status 201
+
 
   Scenario Outline: Create invoice lines
     * def orderLineId = <orderLineId>
@@ -129,6 +135,7 @@ Feature: Test order invoice relation can be deleted
       | orderId    | invoiceId |
       | orderIdOne | invoiceId |
 
+
   Scenario: Update order line reference in the invoice line
     Given path 'invoice/invoice-lines', invoiceLineIdOne
     When method GET
@@ -140,6 +147,7 @@ Feature: Test order invoice relation can be deleted
     And request invoiceLinePayload
     When method PUT
     Then status 204
+
 
   Scenario Outline: Check that order invoice relation has been changed
     * configure headers = headersAdmin

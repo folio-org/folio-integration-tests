@@ -4,12 +4,15 @@ Feature: Audit events for Organization
   Background:
     * print karate.info.scenarioName
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
-
-    * configure headers = headersAdmin
     * configure retry = { count: 10, interval: 10000 }
 
     * callonce variables
@@ -62,6 +65,7 @@ Feature: Audit events for Organization
 
   @ignore @VerifyAuditEvents
   Scenario: Verify Audit Events
+    * configure headers = headersAdmin
     Given path '/audit-data/acquisition/organization', eventEntityId
     And retry until response.totalItems == eventCount
     When method GET
@@ -69,6 +73,7 @@ Feature: Audit events for Organization
     And match response.totalItems == eventCount
     And match response.organizationAuditEvents[*].action contains eventType
     And match response.organizationAuditEvents[*].organizationId contains eventEntityId
+    * configure headers = headersUser
 
   @ignore @UpdateOrganization
   Scenario: Update Organization

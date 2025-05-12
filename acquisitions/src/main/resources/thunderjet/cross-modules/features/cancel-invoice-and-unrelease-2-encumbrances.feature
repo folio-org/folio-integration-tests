@@ -3,11 +3,12 @@
 Feature: Cancel invoice and unrelease 2 encumbrances
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -27,7 +28,6 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
   Scenario: Create finances
     * print "Create finances"
-    * configure headers = headersAdmin
     * call createFund { id: '#(fundId1)', code: '#(fundId1)' }
     * call createBudget { id: '#(budgetId1)', allocated: 1000, fundId: '#(fundId1)', status: 'Active' }
     * call createFund { id: '#(fundId2)', code: '#(fundId2)' }

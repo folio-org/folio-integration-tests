@@ -2,11 +2,12 @@
 Feature: Rollover and pay invoice using past fiscal year
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -60,7 +61,6 @@ Feature: Rollover and pay invoice using past fiscal year
     * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId1)' }
 
     ### 2. Create fund and budgets
-    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
     * table budgets
       | id        | fundId | fiscalYearId  | allocated | status   |
@@ -224,7 +224,6 @@ Feature: Rollover and pay invoice using past fiscal year
   @ignore @CheckPendingPaymentsWereCreatedInPastFiscalYear
   Scenario: Check pending payments were created in past fiscal year
     Given path 'finance/transactions'
-    And headers headersAdmin
     And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' And transactionType==Pending payment'
     When method GET
     Then status 200

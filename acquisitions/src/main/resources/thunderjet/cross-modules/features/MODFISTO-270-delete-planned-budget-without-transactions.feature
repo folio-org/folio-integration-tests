@@ -1,14 +1,15 @@
 # for https://issues.folio.org/browse/MODFISTO-270
+@parallel=false
 Feature: Planned budgets without transactions should be deleted
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testcrossmodules'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def ledgerId = callonce uuid1
@@ -22,12 +23,11 @@ Feature: Planned budgets without transactions should be deleted
 
   Scenario: Create ledger
     * print "Create ledger"
-    * call createLedger { 'id': '#(ledgerId)'}
+    * call createLedger { 'id': '#(ledgerId)' }
 
   Scenario: Create funds and current and planned budget
     * print "Create funds and current and planned budget"
 
-    * configure headers = headersAdmin
     * call createFund { 'id': '#(currentFundId)'}
     * call createBudget { 'id': '#(currentBudgetId)', 'allocated': 1000, 'fundId': '#(currentFundId)'}
     * print "Create planned budget"

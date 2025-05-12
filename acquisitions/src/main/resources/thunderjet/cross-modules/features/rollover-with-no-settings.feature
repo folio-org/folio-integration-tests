@@ -4,14 +4,13 @@ Feature: Rollover with no settings
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
     * def validateOrderLineEncumbranceLinks = read('classpath:thunderjet/mod-orders/reusable/validate-order-line-encumbrance-links.feature')
 
   @Positive
@@ -50,7 +49,6 @@ Feature: Rollover with no settings
     * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId1)' }
 
     ### 2. Create fund and budgets
-    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
     * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId)', fiscalYearId: '#(fiscalYearId1)', allocated: 1000, status: 'Active' }
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId)', fiscalYearId: '#(fiscalYearId2)', allocated: 1000, status: 'Active' }
