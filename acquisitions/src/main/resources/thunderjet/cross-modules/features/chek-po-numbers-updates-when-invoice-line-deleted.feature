@@ -2,12 +2,13 @@
 Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    #* callonce dev {tenant: 'testcrossmodules2'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def poLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')

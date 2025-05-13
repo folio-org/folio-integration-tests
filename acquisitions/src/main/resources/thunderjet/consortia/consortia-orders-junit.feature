@@ -21,6 +21,7 @@ Feature: mod-consortia integration tests
       | 'finance.budgets.item.post'                                 |
       | 'finance.expense-classes.item.post'                         |
       | 'finance.fiscal-years.item.post'                            |
+      | 'finance.funds.item.post'                                   |
       | 'finance.ledgers.item.post'                                 |
       | 'finance-storage.funds.item.post'                           |
       | 'inventory-storage.holdings-sources.item.post'              |
@@ -73,6 +74,7 @@ Feature: mod-consortia integration tests
       | 'orders.titles.item.get'                                    |
       | 'orders.titles.item.post'                                   |
       | 'orders-storage.settings.item.post'                         |
+      | 'organizations.organizations.item.post'                     |
       | 'organizations-storage.organizations.item.post'             |
       | 'overdue-fines-policies.collection.get'                     |
       | 'overdue-fines-policies.item.post'                          |
@@ -121,7 +123,7 @@ Feature: mod-consortia integration tests
       | 'mod-permissions'           |
       | 'okapi'                     |
       | 'mod-configuration'         |
-      | 'mod-login-keycloack'       |
+      | 'mod-login-keycloak'        |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
       | 'mod-audit'                 |
@@ -146,7 +148,7 @@ Feature: mod-consortia integration tests
       | 'mod-permissions'           |
       | 'okapi'                     |
       | 'mod-configuration'         |
-      | 'mod-login-keycloack'       |
+      | 'mod-login-keycloak'        |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
       | 'mod-audit'                 |
@@ -301,6 +303,7 @@ Feature: mod-consortia integration tests
       | 'finance.budgets.item.post'                                 |
       | 'finance.expense-classes.item.post'                         |
       | 'finance.fiscal-years.item.post'                            |
+      | 'finance.funds.item.post'                                   |
       | 'finance.ledgers.item.post'                                 |
       | 'inventory-storage.holdings-sources.item.post'              |
       | 'inventory-storage.holdings.collection.get'                 |
@@ -350,6 +353,7 @@ Feature: mod-consortia integration tests
       | 'orders.titles.collection.get'                              |
       | 'orders.titles.item.get'                                    |
       | 'orders.titles.item.post'                                   |
+      | 'organizations.organizations.item.post'                     |
       | 'organizations-storage.organizations.item.post'             |
       | 'overdue-fines-policies.collection.get'                     |
       | 'overdue-fines-policies.item.post'                          |

@@ -4,10 +4,11 @@
     Background:
       * print karate.info.scenarioName
       * url baseUrl
-      * callonce login testAdmin
-      * def okapitokenAdmin = okapitoken
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-      * configure headers = headersAdmin
+
+      * callonce login testUser
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * configure headers = headersUser
+
       * callonce variables
       * def fundId = callonce uuid1
       * def budgetId = callonce uuid2
@@ -21,8 +22,8 @@
 
     Scenario: Check the encumbrances after issuing credit when the order is fully paid
       # 1. Create a fund and a budget
-      * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
-      * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000}
+      * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
+      * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000 }
 
       # 2. Create an order, order line and open the order
       * def v = call createOrder { id: '#(orderId)' }

@@ -1,14 +1,18 @@
+@parallel=false
 Feature: Test order invoice relation logic
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testcrossmodules'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
-    # load global variables
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     * callonce variables
 
     * def orderId = callonce uuid1
@@ -125,8 +129,8 @@ Feature: Test order invoice relation logic
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
+    * configure headers = headersAdmin
     Given path 'orders-storage/order-invoice-relns'
-    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200
@@ -152,8 +156,8 @@ Feature: Test order invoice relation logic
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
+    * configure headers = headersAdmin
     Given path 'orders-storage/order-invoice-relns'
-    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200
@@ -174,8 +178,8 @@ Feature: Test order invoice relation logic
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
+    * configure headers = headersAdmin
     Given path 'orders-storage/order-invoice-relns'
-    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200

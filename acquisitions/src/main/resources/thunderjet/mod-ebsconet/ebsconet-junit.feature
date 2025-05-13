@@ -29,14 +29,6 @@ Feature: mod-ebsconet integration tests
       | 'acquisitions-units.memberships.item.post'                    |
       | 'acquisitions-units.units.item.post'                          |
       | 'configuration.entries.item.post'                             |
-      | 'data-export.config.collection.get'                           |
-      | 'data-export.config.item.delete'                              |
-      | 'data-export.config.item.get'                                 |
-      | 'data-export.config.item.post'                                |
-      | 'data-export.config.item.put'                                 |
-      | 'data-export.job.collection.get'                              |
-      | 'data-export.job.item.download'                               |
-      | 'data-export.job.item.resend'                                 |
       | 'ebsconet.order-lines.item.get'                               |
       | 'ebsconet.order-lines.item.put'                               |
       | 'finance.budgets.collection.get'                              |
@@ -50,20 +42,12 @@ Feature: mod-ebsconet integration tests
       | 'finance.fiscal-years.item.put'                               |
       | 'finance.fund-types.item.post'                                |
       | 'finance.funds.item.get'                                      |
+      | 'finance.funds.item.post'                                     |
       | 'finance.funds.item.put'                                      |
-      | 'finance.ledger-rollovers-errors.collection.get'              |
-      | 'finance.ledger-rollovers-logs.item.get'                      |
-      | 'finance.ledger-rollovers-progress.collection.get'            |
-      | 'finance.ledger-rollovers.item.post'                          |
       | 'finance.ledgers.item.post'                                   |
-      | 'finance.release-encumbrance.item.post'                       |
       | 'finance.transactions.batch.execute'                          |
       | 'finance.transactions.collection.get'                         |
       | 'finance.transactions.item.get'                               |
-      | 'finance-storage.funds.item.post'                             |
-      | 'finance-storage.ledgers.item.post'                           |
-      | 'finance-storage.transactions.batch.execute'                  |
-      | 'finance-storage.transactions.collection.get'                 |
       | 'inventory-storage.contributor-name-types.item.post'          |
       | 'inventory-storage.electronic-access-relationships.item.post' |
       | 'inventory-storage.holdings-sources.item.post'                |
@@ -79,21 +63,6 @@ Feature: mod-ebsconet integration tests
       | 'inventory-storage.material-types.item.post'                  |
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.instances.item.post'                               |
-      | 'invoice.invoice-lines.collection.get'                        |
-      | 'invoice.invoice-lines.item.delete'                           |
-      | 'invoice.invoice-lines.item.get'                              |
-      | 'invoice.invoice-lines.item.post'                             |
-      | 'invoice.invoice-lines.item.put'                              |
-      | 'invoice.invoices.item.delete'                                |
-      | 'invoice.invoices.item.get'                                   |
-      | 'invoice.invoices.item.post'                                  |
-      | 'invoice.invoices.item.put'                                   |
-      | 'invoice.item.approve.execute'                                |
-      | 'invoice.item.cancel.execute'                                 |
-      | 'invoice.item.pay.execute'                                    |
-      | 'invoice-storage.invoices.item.get'                           |
-      | 'invoice-storage.invoices.item.put'                           |
-      | 'invoices.fiscal-year.update.execute'                         |
       | 'orders.check-in.collection.post'                             |
       | 'orders.collection.get'                                       |
       | 'orders.item.approve'                                         |
@@ -117,11 +86,9 @@ Feature: mod-ebsconet integration tests
       | 'organizations.organizations.item.get'                        |
       | 'organizations.organizations.item.post'                       |
       | 'organizations.organizations.item.put'                        |
-      | 'organizations-storage.organizations.item.post'               |
       | 'perms.users.get'                                             |
       | 'perms.users.item.put'                                        |
       | 'pieces.send-claims.collection.post'                          |
-      | 'voucher.vouchers.collection.get'                             |
 
   Scenario: create tenant and users for testing
     * def testUser = testAdmin

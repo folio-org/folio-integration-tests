@@ -4,17 +4,13 @@ Feature: Check encumbrances after order line exchange rate update
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
   @Positive
   Scenario: Check encumbrances after order line exchange rate update to manual rate 2 times
@@ -26,7 +22,6 @@ Feature: Check encumbrances after order line exchange rate update
     * def invoiceLineId = call uuid
 
     ### 1. Create finances
-    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
 
@@ -121,7 +116,6 @@ Feature: Check encumbrances after order line exchange rate update
     * def invoiceLineId = call uuid
 
     ### 1. Create finances
-    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
 

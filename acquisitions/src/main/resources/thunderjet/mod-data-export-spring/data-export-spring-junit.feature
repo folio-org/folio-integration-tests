@@ -1,3 +1,4 @@
+@parallel=false
 Feature: mod-data-export-spring integration tests
 
   Background:
@@ -37,21 +38,14 @@ Feature: mod-data-export-spring integration tests
       | 'finance.fiscal-years.item.post'                              |
       | 'finance.fiscal-years.item.put'                               |
       | 'finance.fiscal-years.item.get'                               |
-      | 'finance.ledger-rollovers.item.post'                          |
-      | 'finance.ledger-rollovers-logs.item.get'                      |
-      | 'finance.ledger-rollovers-errors.collection.get'              |
-      | 'finance.ledger-rollovers-progress.collection.get'            |
       | 'finance.ledgers.item.post'                                   |
-      | 'finance.release-encumbrance.item.post'                       |
       | 'finance.transactions.batch.execute'                          |
       | 'finance.transactions.item.get'                               |
       | 'finance.transactions.collection.get'                         |
       | 'finance.fund-types.item.post'                                |
       | 'finance.funds.item.get'                                      |
-      | 'finance-storage.funds.item.post'                             |
-      | 'finance-storage.ledgers.item.post'                           |
-      | 'finance-storage.transactions.batch.execute'                  |
-      | 'finance-storage.transactions.collection.get'                 |
+      | 'finance.funds.item.post'                                     |
+      | 'finance.funds.item.put'                                      |
       | 'inventory-storage.contributor-name-types.item.post'          |
       | 'inventory-storage.electronic-access-relationships.item.post' |
       | 'inventory-storage.holdings-sources.item.post'                |
@@ -67,21 +61,6 @@ Feature: mod-data-export-spring integration tests
       | 'inventory-storage.material-types.item.post'                  |
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.instances.item.post'                               |
-      | 'invoice.invoice-lines.collection.get'                        |
-      | 'invoice.invoice-lines.item.delete'                           |
-      | 'invoice.invoice-lines.item.get'                              |
-      | 'invoice.invoice-lines.item.post'                             |
-      | 'invoice.invoice-lines.item.put'                              |
-      | 'invoice.invoices.item.delete'                                |
-      | 'invoice.invoices.item.get'                                   |
-      | 'invoice.invoices.item.post'                                  |
-      | 'invoice.invoices.item.put'                                   |
-      | 'invoice.item.approve.execute'                                |
-      | 'invoice.item.cancel.execute'                                 |
-      | 'invoice.item.pay.execute'                                    |
-      | 'invoices.fiscal-year.update.execute'                         |
-      | 'invoice-storage.invoices.item.get'                           |
-      | 'invoice-storage.invoices.item.put'                           |
       | 'orders.check-in.collection.post'                             |
       | 'orders.collection.get'                                       |
       | 'orders.item.approve'                                         |
@@ -100,10 +79,9 @@ Feature: mod-data-export-spring integration tests
       | 'orders-storage.order-invoice-relationships.collection.get'   |
       | 'orders-storage.po-lines.item.get'                            |
       | 'orders-storage.po-lines.item.put'                            |
-      | 'organizations-storage.organizations.item.post'               |
+      | 'organizations.organizations.item.post'                       |
       | 'voucher.vouchers.collection.get'                             |
       | 'orders.pieces.item.delete'                                   |
-      | 'finance.funds.item.put'                                      |
       | 'perms.users.get'                                             |
       | 'perms.users.item.put'                                        |
       | 'data-export.config.collection.get'                           |

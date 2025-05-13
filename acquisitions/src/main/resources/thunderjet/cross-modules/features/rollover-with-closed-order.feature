@@ -4,12 +4,15 @@ Feature: Rollover with closed order
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant':'#(testTenant)' }
-    * configure headers = headersAdmin
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
     * def fromYear = callonce getCurrentYear
@@ -25,10 +28,6 @@ Feature: Rollover with closed order
     * def rolloverId = callonce uuid9
     * def emptyEncumbrancePoLineId = callonce uuid10
 
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
 
 
@@ -44,7 +43,6 @@ Feature: Rollover with closed order
 
 
   ## Create fund and budgets
-    * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId), code: #(fundId), ledgerId: #(ledgerId) }
     * def v = call createBudget { id: #(budgetId1), fundId: #(fundId), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
     * def v = call createBudget { id: #(budgetId2), fundId: #(fundId), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
@@ -63,8 +61,8 @@ Feature: Rollover with closed order
   ## https://issues.folio.org/browse/MODORDERS-904
   ## Remove encumbrance from specific po line
   ## call endpoints other than mod-orders with admin token
-    Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
     * configure headers = headersAdmin
+    Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
@@ -73,19 +71,18 @@ Feature: Rollover with closed order
   ## remove encumbrance from fundDistribution and save
     * remove emptyEncumbrancePoLine.fundDistribution[0].encumbrance
     Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'text/plain', 'x-okapi-tenant':'#(testTenant)' }
     And request emptyEncumbrancePoLine
     When method PUT
     Then status 204
   ## get updated po line with empty encumbrance
     Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
-    * configure headers = headersAdmin
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
     * def emptyEncumbrancePoLineUpdated = response
 
   ## Start rollover
+    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -155,8 +152,8 @@ Feature: Rollover with closed order
     And match $.fundDistribution[0].encumbrance == '#notpresent'
 
   ## Check po line with empty encumbrance hasn't been modified after rollover
-    Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
     * configure headers = headersAdmin
+    Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
