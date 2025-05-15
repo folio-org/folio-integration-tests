@@ -35,6 +35,7 @@ function fn() {
     login: karate.read('classpath:common/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
+    eurekaLogin: read('classpath:common-consortia/eureka/initData.feature@Login'),
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 

@@ -1,10 +1,16 @@
 Feature: Update PoLine locations with tenantIds the user do not have affiliations with
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
-    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
-    * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+
+    * def resultAdmin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+    * def okapitoken = resultAdmin.okapitoken
+    * def resultUser = call eurekaLogin { username: '#(centralUser.username)', password: '#(centralUser.password)', tenant: '#(centralTenantName)' }
+    * def okapitokenUser = resultUser.okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
+    * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
     * configure headers = headersCentral
 
     * callonce variables
@@ -16,11 +22,11 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * def poLineId = callonce uuid
 
     * table poLineLocations
-      | locationId             | quantity | quantityPhysical | tenantId         |
-      | centralLocationsId     | 1        | 1                | centralTenant    |
-      | centralLocationsId2    | 1        | 1                | centralTenant    |
-      | universityLocationsId  | 1        | 1                | universityTenant |
-      | universityLocationsId2 | 1        | 1                | universityTenant |
+      | locationId             | quantity | quantityPhysical | tenantId             |
+      | centralLocationsId     | 1        | 1                | centralTenantName    |
+      | centralLocationsId2    | 1        | 1                | centralTenantName    |
+      | universityLocationsId  | 1        | 1                | universityTenantName |
+      | universityLocationsId2 | 1        | 1                | universityTenantName |
     * callonce createOrder { id: '#(orderId)' }
     * callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', quantity: 4, locations: '#(poLineLocations)', isPackage: True }
 

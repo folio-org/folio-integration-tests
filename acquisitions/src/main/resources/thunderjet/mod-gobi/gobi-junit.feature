@@ -59,6 +59,7 @@ Feature: mod-gobi integration tests
       | 'inventory-storage.contributor-name-types.item.post'          |
       | 'inventory-storage.electronic-access-relationships.item.post' |
       | 'inventory-storage.holdings-sources.item.post'                |
+      | 'inventory-storage.holdings.collection.get'                   |
       | 'inventory-storage.holdings.item.post'                        |
       | 'inventory-storage.identifier-types.item.post'                |
       | 'inventory-storage.instance-statuses.item.post'               |

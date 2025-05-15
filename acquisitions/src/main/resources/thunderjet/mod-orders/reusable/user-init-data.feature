@@ -67,14 +67,12 @@ Feature:
     * set userData.type = 'patron'
     * set userData.patronGroup = groupId
 
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'text/plain' }
     # update user
     Given path 'users', userId
     And header Accept = 'text/plain'
     And request userData
     When method PUT
     Then status 204
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'application/json' }
 
     Given path 'users', userId
     When method GET
