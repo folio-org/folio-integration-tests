@@ -122,18 +122,42 @@ Feature: prepare data for api test
             karate.log('****************** retry left # ', count);
             var chunkSize = 100;
             var capabilityIds = []
+            var permissionsFound = []
+            var missingPermissions = []
+            
             for (let i = 0; i < permissions.length; i += chunkSize) {
-              var result = karate.call('classpath:common/eureka/capabilities.feature', {userPermissions: userPermissions.slice(i, i + chunkSize)});
-              var capabilityIds = capabilityIds.concat(result.response.capabilities.map(x => x.id));
+              var permissionsBatch = userPermissions.slice(i, i + chunkSize);
+              var result = karate.call('classpath:common/eureka/capabilities.feature', {userPermissions: permissionsBatch});
+              var foundCapabilities = result.response.capabilities;
+              
+              // Track which permissions were found
+              for (let j = 0; j < foundCapabilities.length; j++) {
+                permissionsFound.push(foundCapabilities[j].permission);
+              }
+              
+              // Add capability IDs
+              capabilityIds = capabilityIds.concat(foundCapabilities.map(x => x.id));
             }
-            karate.log('capabilityIds: # #', capabilityIds.length, capabilityIds)
+            
+            // Find missing permissions
+            missingPermissions = permissions.filter(p => !permissionsFound.includes(p));
+            
+            karate.log('capabilityIds: # #', capabilityIds.length, capabilityIds);
+            if (missingPermissions.length > 0) {
+              karate.log('***** Missing capabilities for permissions: *****');
+              for (let i = 0; i < missingPermissions.length; i++) {
+                karate.log('Missing capability for permission: ' + missingPermissions[i]);
+              }
+            }
+            
             if (capabilityIds.length == permissions.length) {
               karate.log('***** All capabilities have been successfully found *****');
               return capabilityIds;
             }
+            
             count--;
             if (count == 0) {
-              karate.log('***** Not all capabilities found *****');
+              karate.log('***** Not all capabilities found. Missing ' + missingPermissions.length + ' capabilities *****');
               return capabilityIds;
             }
 
