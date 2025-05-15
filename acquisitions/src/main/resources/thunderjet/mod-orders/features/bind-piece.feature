@@ -12,8 +12,8 @@ Feature: Verify Bind Piece feature
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    * def tenantId1 = karate.get('tenantId1', testTenant);
-    * def tenantId2 = karate.get('tenantId2', testTenant);
+    * def tenantId1 = karate.get('tenantId1', testTenant)
+    * def tenantId2 = karate.get('tenantId2', testTenant)
 
     * configure retry = { count: 5, interval: 1000 }
 
@@ -28,9 +28,9 @@ Feature: Verify Bind Piece feature
 
     * callonce variables
 
-    * def holdingId1 = karate.get('holdingId1', globalHoldingId1);
-    * def holdingId2 = karate.get('holdingId2', globalHoldingId2);
-    * def holdingId3 = karate.get('holdingId3', globalHoldingId3);
+    * def holdingId1 = karate.get('holdingId1', globalHoldingId1)
+    * def holdingId2 = karate.get('holdingId2', globalHoldingId2)
+    * def holdingId3 = karate.get('holdingId3', globalHoldingId3)
 
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
