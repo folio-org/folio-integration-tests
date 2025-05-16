@@ -4676,7 +4676,7 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries.length') > 0
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -6068,7 +6068,7 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries.length') > 0
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -9962,7 +9962,7 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries.length') > 0
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -10266,7 +10266,7 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries.length') > 0
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -10609,7 +10609,7 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries.length') > 0
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'DISCARDED'
@@ -11012,7 +11012,7 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries.length') > 0
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -11443,7 +11443,7 @@ Feature: Data Import integration tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries.length') > 0
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
