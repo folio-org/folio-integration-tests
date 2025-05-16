@@ -430,10 +430,9 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'

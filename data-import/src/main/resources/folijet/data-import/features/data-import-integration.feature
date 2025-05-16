@@ -672,10 +672,9 @@ Feature: Data Import integration tests
     And def importJobExecutionId = jobExecution.id
 
     # Verify that needed entities updated
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries.length == 1 && response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    And retry until karate.get('response.entries.length') == 1 && karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -1355,10 +1354,9 @@ Feature: Data Import integration tests
     And def importJobExecutionId = jobExecution.id
 
     # Verify that needed entities updated
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries.length == 1 && response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -2083,10 +2081,9 @@ Feature: Data Import integration tests
     * def importJobExecutionId = jobExecution.id
 
     # Verify that needed entities updated
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries.length == 1 && response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -2142,11 +2139,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
@@ -2229,11 +2226,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
@@ -3317,10 +3314,9 @@ Feature: Data Import integration tests
     And def importJobExecutionId = jobExecution.id
 
     # Verify that needed entities updated
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries.length == 1 && response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -4676,12 +4672,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities updated
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -6069,12 +6064,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities updated
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -6683,11 +6677,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[*].sourceRecordActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
@@ -6711,11 +6705,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
      # Verify that needed entities updated
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[*].relatedHoldingsInfo[0].actionStatus == ["UPDATED","UPDATED","UPDATED","UPDATED","UPDATED","UPDATED"]
@@ -6731,7 +6725,6 @@ Feature: Data Import integration tests
     And match response.holdingsRecords[*].permanentLocationId == ["fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371","fcd64ce1-6995-48f0-840e-89ffa2288371"]
 
     # Verify updated item record
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/item-storage/items'
@@ -7070,11 +7063,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "CREATED"
@@ -7092,7 +7085,6 @@ Feature: Data Import integration tests
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
     # Verify create holdings record correct mapping
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
@@ -7390,11 +7382,10 @@ Feature: Data Import integration tests
 
     * call read(completeExecutionFeature) { key: '#(s3UploadKey)'}
 
-    * call pause 20000
-
     # Take job execution logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method get
     Then status 200
     And def errorMessage = response.entries[0].error
@@ -7409,18 +7400,17 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify create holdings record correct mapping
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
@@ -7454,11 +7444,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify instance created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "CREATED"
@@ -7827,11 +7817,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "CREATED"
@@ -7849,7 +7839,6 @@ Feature: Data Import integration tests
     * def instanceHrid = response.externalIdsHolder.instanceHrid
 
     # Verify create holdings record correct mapping
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
@@ -7869,6 +7858,7 @@ Feature: Data Import integration tests
     # Take job execution logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method get
     Then status 200
     And def errorMessage = response.entries[0].error
@@ -7884,18 +7874,17 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify update holdings record correct mapping
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
@@ -7915,6 +7904,7 @@ Feature: Data Import integration tests
     # Take job execution logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method get
     Then status 200
     And def errorMessage = response.entries[0].error
@@ -7930,18 +7920,17 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify update holdings record correct mapping
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
@@ -7961,6 +7950,7 @@ Feature: Data Import integration tests
     # Take job execution logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method get
     Then status 200
     And def errorMessage = response.entries[0].error
@@ -7976,18 +7966,17 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedHoldingsInfo[0].actionStatus == "UPDATED"
     And def sourceRecordId = response.entries[0].sourceRecordId
 
     # Verify update holdings record correct mapping
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path '/holdings-storage/holdings'
@@ -8048,18 +8037,17 @@ Feature: Data Import integration tests
     # Retrieve import id
     Given path 'metadata-provider/jobExecutions'
     And headers headersUser
-    And retry until response.jobExecutions[0].status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
+    And retry until response.jobExecutions[0].status == 'COMMITTED' || response.jobExecutions[0].status == 'ERROR' || response.jobExecutions[0].status == 'DISCARDED'
     And param fileName = "No file name"
     And param sortBy = "completed_date,desc"
     When method GET
     Then status 200
     And def jobExecutionId = response.jobExecutions[0].id
 
-    * call pause 10000
-
     # Check imported file name
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -8091,18 +8079,17 @@ Feature: Data Import integration tests
     # Retrieve import id
     Given path 'metadata-provider/jobExecutions'
     And headers headersUser
-    And retry until response.jobExecutions[0].status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
+    And retry until response.jobExecutions[0].status == 'COMMITTED' || response.jobExecutions[0].status == 'ERROR' || response.jobExecutions[0].status == 'DISCARDED'
     And param fileName = "No file name"
     And param sortBy = "started_date,desc"
     When method GET
     Then status 200
     And def jobExecutionId = response.jobExecutions[0].id
 
-    * call pause 20000
-
     # Check imported file name
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -8228,11 +8215,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
@@ -8253,11 +8240,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
@@ -8327,11 +8314,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
@@ -8431,11 +8418,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
@@ -8804,11 +8791,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
@@ -8865,12 +8852,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities updated
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -9357,11 +9343,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
@@ -9892,10 +9878,10 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify instance created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
+    And retry until karate.get('response.entries.length') > 0
     And headers headersUser
     When method GET
     Then status 200
@@ -9972,12 +9958,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities updated
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -10197,11 +10182,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify instance created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "CREATED"
@@ -10277,12 +10262,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities updated
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -10502,11 +10486,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify instance created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "CREATED"
@@ -10546,11 +10530,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify second instance created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "CREATED"
@@ -10621,12 +10605,11 @@ Feature: Data Import integration tests
     And assert jobExecution.progress.total == 1
 
     # Verify that needed entities discarded on update
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'DISCARDED'
@@ -10889,11 +10872,12 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify instance created
-    * call pause 10000
+
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "CREATED"
@@ -10949,11 +10933,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify second instance created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "CREATED"
@@ -11024,12 +11008,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities updated
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
@@ -11150,11 +11133,11 @@ Feature: Data Import integration tests
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == "CREATED"
@@ -11376,11 +11359,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify instance created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "CREATED"
@@ -11456,12 +11439,11 @@ Feature: Data Import integration tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities updated
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'
