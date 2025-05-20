@@ -53,3 +53,33 @@ Feature: Tests for filter terms
     When method GET
     Then status 200
     Then assert response.instances.length == 1
+
+  Scenario: Can search by createdDate filter
+    Given path '/search/instances'
+    And param query = 'metadata.createdDate>=2021-03-14'
+    And param expandAll = true
+    When method GET
+    Then status 200
+    And response.totalRecords == 17
+
+    Given path '/search/instances'
+    And param query = 'metadata.createdDate<2021-03-14'
+    And param expandAll = true
+    When method GET
+    Then status 200
+    And response.totalRecords == 0
+
+  Scenario: Can search by updatedDate filter
+    Given path '/search/instances'
+    And param query = 'metadata.updatedDate>=2021-03-14'
+    And param expandAll = true
+    When method GET
+    Then status 200
+    And response.totalRecords == 17
+
+    Given path '/search/instances'
+    And param query = 'metadata.updatedDate<2021-03-14'
+    And param expandAll = true
+    When method GET
+    Then status 200
+    And response.totalRecords == 0
