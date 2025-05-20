@@ -1,15 +1,14 @@
 Feature: Update Ebsconet Order Line
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-#    * callonce dev {tenant: 'testebsconet'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * configure headers = headersAdmin
-    # load global variables
     * callonce variables
 
   Scenario Outline: Update P/E Mix line with new quantity

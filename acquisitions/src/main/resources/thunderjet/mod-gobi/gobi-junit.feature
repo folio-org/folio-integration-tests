@@ -16,8 +16,6 @@ Feature: mod-gobi integration tests
       | 'mod-gobi'                  |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
       | 'mod-finance-storage'       |
       | 'mod-finance'               |
       | 'mod-organizations-storage' |
@@ -33,21 +31,6 @@ Feature: mod-gobi integration tests
 
     * table userPermissions
       | name                                                          |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.delete'                           |
-      | 'configuration.entries.item.post'                             |
-      | 'configuration.entries.item.put'                              |
-      | 'finance.budgets.item.post'                                   |
-      | 'finance.expense-classes.item.post'                           |
-      | 'finance.fiscal-years.item.post'                              |
-      | 'finance.fund-types.item.post'                                |
-      | 'finance.funds.collection.get'                                |
-      | 'finance.funds.item.post'                                     |
-      | 'finance.groups.item.post'                                    |
-      | 'finance.ledger-rollovers.item.post'                          |
-      | 'finance.ledgers.item.post'                                   |
-      | 'finance.release-encumbrance.item.post'                       |
-      | 'finance.transactions.batch.execute'                          |
       | 'gobi.custom-mappings.collection.get'                         |
       | 'gobi.custom-mappings.item.delete'                            |
       | 'gobi.custom-mappings.item.get'                               |
@@ -56,10 +39,22 @@ Feature: mod-gobi integration tests
       | 'gobi.orders.item.post'                                       |
       | 'gobi.validate.item.get'                                      |
       | 'gobi.validate.item.post'                                     |
+      | 'inventory-storage.holdings.collection.get'                   |
+      | 'orders.collection.get'                                       |
+      | 'orders.po-lines.collection.get'                              |
+
+    # testAdmin is only used to initialize global data
+    * table adminPermissions
+      | name                                                          |
+      | 'finance.budgets.item.post'                                   |
+      | 'finance.expense-classes.item.post'                           |
+      | 'finance.fiscal-years.item.post'                              |
+      | 'finance.fund-types.item.post'                                |
+      | 'finance.funds.item.post'                                     |
+      | 'finance.ledgers.item.post'                                   |
       | 'inventory-storage.contributor-name-types.item.post'          |
       | 'inventory-storage.electronic-access-relationships.item.post' |
       | 'inventory-storage.holdings-sources.item.post'                |
-      | 'inventory-storage.holdings.collection.get'                   |
       | 'inventory-storage.holdings.item.post'                        |
       | 'inventory-storage.identifier-types.item.post'                |
       | 'inventory-storage.instance-statuses.item.post'               |
@@ -73,34 +68,15 @@ Feature: mod-gobi integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.instances.item.post'                               |
       | 'organizations.organizations.item.post'                       |
-      | 'orders.collection.get'                                       |
-      | 'orders.po-lines.collection.get'                              |
 
-
-    # Test tenant name creation:
-    * def random = callonce randomMillis
-    * def testTenant = 'testmodgobi' + random
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
-
-  Scenario: Create tenant and users for testing
-    # Create tenant and users for testing:
-    * def testUser = testAdmin
+  Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
+
+  Scenario: Create admin user
+    * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
 
   Scenario: Init global data
     * call login testAdmin
-    * callonce variables
-
     * callonce read('classpath:global/finances.feature')
     * callonce read('classpath:global/inventory.feature')
     * callonce read('classpath:global/organizations.feature')
-
-  Scenario: GOBI api tests
-    Given call read('features/gobi-api-tests.feature')
-
-  Scenario: Find holdings by location and instance
-    Given call read('features/find-holdings-by-location-and-instance.feature')
-
-  Scenario: Wipe data
-    Given call read('classpath:common/destroy-data.feature')

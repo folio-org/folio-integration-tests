@@ -1,8 +1,13 @@
 Feature: EDIFACT orders export tests
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * call login testAdmin
+
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
   Scenario: If there is an open order for organization and organization has integration method with the same acquisition method as order THEN export job should be triggered and be 'SUCCESSFUL' (ediSchedulePeriod = 'DAY')
     # Create an organization
