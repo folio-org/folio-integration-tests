@@ -104,6 +104,8 @@ Feature: mod-data-import integration tests
       | 'converter-storage.matchprofile.post'                         |
       | 'mapping-rules.get'                                           |
       | 'mapping-rules.update'                                        |
+      | 'mapping-metadata.item.get'                                   |
+      | 'mapping-metadata.type.item.get'                              |
       | 'invoice-storage.invoice-lines.collection.get'                |
       | 'invoice-storage.invoices.item.get'                           |
       | 'orders.item.post'                                            |
