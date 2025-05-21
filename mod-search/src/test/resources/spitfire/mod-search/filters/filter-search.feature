@@ -4,6 +4,9 @@ Feature: Tests for filter terms
     * url baseUrl
     * callonce login testUser
     * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
+    * def now = new Date().getTime()
+    * def yesterday = new Date(now - 24 * 60 * 60 * 1000).toISOString()
+    * def tomorrow = new Date(now + 24 * 60 * 60 * 1000).toISOString()
 
   Scenario Outline: Can search by various filters
     Given path '/search/instances'
@@ -54,32 +57,18 @@ Feature: Tests for filter terms
     Then status 200
     Then assert response.instances.length == 1
 
-  Scenario: Can search by createdDate filter
+  Scenario Outline: Can search instances by createdDate/updatedDate filter,the instances were created today
     Given path '/search/instances'
-    And param query = 'metadata.createdDate>=2021-03-14'
+    And param query = <query>
     And param expandAll = true
     When method GET
     Then status 200
-    And response.totalRecords == 17
-
-    Given path '/search/instances'
-    And param query = 'metadata.createdDate<2021-03-14'
-    And param expandAll = true
-    When method GET
-    Then status 200
-    And response.totalRecords == 0
-
-  Scenario: Can search by updatedDate filter
-    Given path '/search/instances'
-    And param query = 'metadata.updatedDate>=2021-03-14'
-    And param expandAll = true
-    When method GET
-    Then status 200
-    And response.totalRecords == 17
-
-    Given path '/search/instances'
-    And param query = 'metadata.updatedDate<2021-03-14'
-    And param expandAll = true
-    When method GET
-    Then status 200
-    And response.totalRecords == 0
+    And response.totalRecords == <totalRecords>
+    Examples:
+      | field       | query                                                                          | totalRecords |
+      | createdDate | 'metadata.createdDate>=' + yesterday + ' and metadata.createdDate<' + tomorrow | 17           |
+      | createdDate | 'metadata.createdDate<' + tomorrow                                             | 17           |
+      | createdDate | 'metadata.createdDate>' + tomorrow                                             | 0            |
+      | updatedDate | 'metadata.updatedDate>=' + yesterday + ' and metadata.updatedDate<' + tomorrow | 17           |
+      | updatedDate | 'metadata.updatedDate<' + tomorrow                                             | 17           |
+      | updatedDate | 'metadata.updatedDate>' + tomorrow                                             | 0            |
