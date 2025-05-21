@@ -1,12 +1,9 @@
-Feature: init data for mod-data-export-spring
+Feature: Init data for mod-data-export-spring
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
-    # set default headers to 'user'
-    * configure headers = headersUser
     # define default values
     * def defaultOrganizationName = 'Default organization name for MODEXPS-202'
     * def defaultOrganizationCode = 'Default organization code for MODEXPS-202'
@@ -93,7 +90,7 @@ Feature: init data for mod-data-export-spring
     # set order.workflowStatus to 'Open'
     * def orderResponse = $
     * set orderResponse.workflowStatus = 'Open'
-    * remove order.poLines
+    * remove orderResponse.poLines
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse

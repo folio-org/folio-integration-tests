@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 public class EdgeOrdersApiTest extends TestBaseEureka {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:thunderjet/edge-orders/eureka/features/";
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/edge-orders/features/";
 
   public EdgeOrdersApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -41,7 +41,8 @@ public class EdgeOrdersApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void edgeOrdersApiTestBeforeAll() {
-    runFeature("classpath:thunderjet/edge-orders/eureka/edge-orders-junit.feature");
+    System.setProperty("testTenant", "testedgeorders");
+    runFeature("classpath:thunderjet/edge-orders/edge-orders-junit.feature");
   }
 
   @AfterAll

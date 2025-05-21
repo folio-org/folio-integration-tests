@@ -1,9 +1,11 @@
-Feature: find-holdings-by-location-and-instance
+Feature: Find holdings by location and instance
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+
+    * callonce login testUser
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
     * def locationId = 'b32c5ce2-6738-42db-a291-2796b1c3c4c8'
 

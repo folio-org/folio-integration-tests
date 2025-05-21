@@ -1,9 +1,11 @@
-Feature: mod-gobi api tests
+Feature: GOBI api tests
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+
+    * callonce login testUser
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, application/xml', 'x-okapi-tenant': '#(testTenant)' }
 
     * def locationId1 = call uuid
     * def locationId2 = call uuid

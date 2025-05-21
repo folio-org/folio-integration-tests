@@ -44,7 +44,7 @@ Feature: Applications
           if (result.indexOf(currentDep) === -1) {
             result.push(currentDep);
 
-            var neededApp = karate.filter(appDescriptions, app => app.name == currentDep).flatMap(x => x.dependencies.map(dep => dep.name))
+            var neededApp = karate.filter(appDescriptions, app => app.name == currentDep).flatMap(x => x.dependencies ? x.dependencies.map(dep => dep.name) : [])
 
             neededApp.forEach(function(name) {
               if (result.indexOf(name) === -1) {

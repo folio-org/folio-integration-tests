@@ -250,13 +250,13 @@ function fn() {
     // UI at https://folio-edev-thunderjet-diku.ci.folio.org/
     config.baseUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-thunderjet-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-thunderjet-kong.ci.folio.org:8000';
+    config.edgeUrl = 'https://folio-edev-thunderjet-edge.ci.folio.org';
     config.prototypeTenant= 'diku'
   } else if (env == 'rancher-consortia') {
     // UI at https://folio-edev-thunderjet-consortium.ci.folio.org/
     config.baseUrl = 'https://ecs-folio-edev-thunderjet-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-thunderjet-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://ecs-folio-edev-thunderjet-kong.ci.folio.org:8000';
+    config.edgeUrl = 'https://ecs-folio-edev-thunderjet-edge.ci.folio.org';
     config.prototypeTenant= 'consortium'
     config.admin = {
       tenant: 'consortium',

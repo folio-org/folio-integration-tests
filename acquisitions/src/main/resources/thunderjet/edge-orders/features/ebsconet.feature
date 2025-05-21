@@ -2,17 +2,17 @@
 Feature: Edge Orders Ebsconet
 
   Background:
-    * def testTenant = 'testedgeorders'
-    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+    * print karate.info.scenarioName
     * url baseUrl
-    * def edgeHeaders = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
+
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-    * def folioUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def folioHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def edgeHeaders = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+
     * callonce variables
     * def orderId = callonce uuid1
     * def poLineId = callonce uuid2
-    * def apiKey = 'eyJzIjoia1FoWUtGYzFJMFE5bVhKNmRUWU0iLCJ0IjoidGVzdF9lZGdlX29yZGVycyIsInUiOiJ0ZXN0LXVzZXIifQ=='
+    * def apiKey = 'eyJzIjoiYmRnZ2dvM0lwbHdvIiwidCI6InRlc3RlZGdlb3JkZXJzIiwidSI6InRlc3QtdXNlciJ9'
     * def poNumber = '10010'
     * def poLineNumber = '10010-1'
 
@@ -39,10 +39,10 @@ Feature: Edge Orders Ebsconet
       poNumber: '#(poNumber)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      poLines: [#(orderLine)]
+      poLines: ['#(orderLine)']
     }
     """
-    And headers folioUserHeaders
+    And headers folioHeaders
     When method POST
     Then status 201
 

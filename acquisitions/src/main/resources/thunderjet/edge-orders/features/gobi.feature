@@ -2,18 +2,25 @@
 Feature: Edge Orders GOBI
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * def edgeHeaders = { 'Content-Type': 'application/xml', 'Accept': 'application/xml'  }
-    * callonce login  { tenant: 'testedgeorders', name: 'test-admin', password: 'admin' }
-    * def okapitokenAdmin = okapitoken
-    * def folioAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-    * def apiKey = 'eyJzIjoia1FoWUtGYzFJMFE5bVhKNmRUWU0iLCJ0IjoidGVzdF9lZGdlX29yZGVycyIsInUiOiJ0ZXN0LXVzZXIifQ=='
+
+    * callonce login  testUser
+    * def folioHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def edgeHeaders = { 'Content-Type': 'application/xml', 'Accept': 'application/xml' }
+
+    * def apiKey = 'eyJzIjoiYmRnZ2dvM0lwbHdvIiwidCI6InRlc3RlZGdlb3JkZXJzIiwidSI6InRlc3QtdXNlciJ9'
     * configure lowerCaseResponseHeaders = true
 
   Scenario: Create GOBI organization
+    Given path 'organizations/organizations', 'c6dace5d-4574-411e-8ba1-036102fcdc93'
+    And headers folioHeaders
+    When method DELETE
+    Then status 204
+
     * def gobi_org = read('classpath:samples/edge-orders/gobi/gobi-organization.json')
-    Given path 'organizations-storage/organizations'
-    And headers folioAdminHeaders
+    Given path 'organizations/organizations'
+    And headers folioHeaders
     And request gobi_org
     When method POST
     Then status 201
@@ -23,7 +30,7 @@ Feature: Edge Orders GOBI
     And path 'orders/validate'
     And param type = 'GOBI'
     And param apiKey = apiKey
-    And headers { 'Accept': 'application/xml'  }
+    And headers { 'Accept': 'application/xml' }
     When method GET
     Then status 200
     And match responseHeaders['content-type'][0] == 'application/xml'
@@ -34,7 +41,7 @@ Feature: Edge Orders GOBI
     And path 'orders/validate'
     And param type = 'GOBI'
     And param apiKey = apiKey
-    And headers { 'Accept': 'application/json'  }
+    And headers { 'Accept': 'application/json' }
     When method GET
     Then status 400
     And match responseHeaders['content-type'][0] == 'application/json'
@@ -70,7 +77,7 @@ Feature: Edge Orders GOBI
     * def poLineNumber = '10000-1'
     Given path 'orders/order-lines'
     And param query = 'poLineNumber==' + poLineNumber
-    And headers folioAdminHeaders
+    And headers folioHeaders
     When method GET
     Then status 200
     And match $.poLines == '#[1]'
