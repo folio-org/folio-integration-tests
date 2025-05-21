@@ -55,10 +55,9 @@ Feature: Data Import Log deletion tests
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
