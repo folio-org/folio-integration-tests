@@ -345,9 +345,9 @@ Feature: Test Data-Import holdings records
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedPoLineInfo.actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedPoLineInfo.actionStatus == "CREATED"
@@ -355,9 +355,9 @@ Feature: Test Data-Import holdings records
     * def firstSourceRecordId = response.entries[0].incomingRecordId
     * def secondSourceRecordId = response.entries[1].incomingRecordId
 
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', firstSourceRecordId
     And headers headersUser
+    And retry until karate.get('response.relatedPoLineInfo.idList.length') > 0
     When method GET
     Then status 200
     * def firstRecordPoLineId = response.relatedPoLineInfo.idList[0]
@@ -415,9 +415,9 @@ Feature: Test Data-Import holdings records
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedPoLineInfo.actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedPoLineInfo.actionStatus == "CREATED"
@@ -425,9 +425,9 @@ Feature: Test Data-Import holdings records
     * def firstSourceRecordId = response.entries[0].incomingRecordId
     * def secondSourceRecordId = response.entries[1].incomingRecordId
 
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', firstSourceRecordId
     And headers headersUser
+    And retry until karate.get('response.relatedPoLineInfo.idList.length') > 0
     When method GET
     Then status 200
     * def firstRecordPoLineId = response.relatedPoLineInfo.idList[0]
@@ -485,9 +485,9 @@ Feature: Test Data-Import holdings records
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedPoLineInfo.actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == '#notpresent'
@@ -498,9 +498,9 @@ Feature: Test Data-Import holdings records
     * def firstSourceRecordId = response.entries[0].incomingRecordId
     * def secondSourceRecordId = response.entries[1].incomingRecordId
 
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', firstSourceRecordId
     And headers headersUser
+    And retry until karate.get('response.relatedPoLineInfo.idList.length') > 0
     When method GET
     Then status 200
     * def firstRecordPoLineId = response.relatedPoLineInfo.idList[0]
@@ -567,10 +567,9 @@ Feature: Test Data-Import holdings records
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 30000
-
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedPoLineInfo.actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
@@ -581,9 +580,9 @@ Feature: Test Data-Import holdings records
     * def firstSourceRecordId = response.entries[0].incomingRecordId
     * def secondSourceRecordId = response.entries[1].incomingRecordId
 
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId, 'records', firstSourceRecordId
     And headers headersUser
+    And retry until karate.get('response.relatedPoLineInfo.idList.length') > 0
     When method GET
     Then status 200
     And def firstRecordPoLineId = response.relatedPoLineInfo.idList[0]
