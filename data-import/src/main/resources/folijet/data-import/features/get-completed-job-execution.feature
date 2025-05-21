@@ -13,3 +13,6 @@ Feature: Get job execution by id
     And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
     When method GET
     Then status 200
+    * def jobStatus = response.status
+    # If status is ERROR, get job log entries
+    * if (jobStatus == 'ERROR') karate.call('classpath:folijet/data-import/global/check-job-log-entries.feature', { jobExecutionId: jobExecutionId, headersUser: headersUser })

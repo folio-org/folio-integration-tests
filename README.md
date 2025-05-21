@@ -44,6 +44,11 @@ This first builds the common and testrail-integration submodules and sets maven 
 
 To run only specific runner (Java) class test use `-DfailIfNoTests=false` and `-Dtest=<TestName>`.
 
+## Environment configuration
+
+The VALIDATION_INTERFACE_INTEGRITY_ENABLED parameter in the mgr-tenant-entitlements module should be set to 
+false in environments used for testing.
+
 ## Running tests for a specific module in a specific environment
 
 ```
