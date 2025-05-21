@@ -3,30 +3,13 @@ Feature: Tenant initialization for tests
   Background:
     * url baseUrl
     * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-tags'                  |
-      | 'mod-audit'                 |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-organizations-storage' |
-      | 'mod-organizations'         |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-template-engine'       |
-      | 'mod-feesfines'             |
-      | 'mod-search'                |
-      | 'mod-entities-links'        |
+      | name                    |
+      | 'mod-login'             |
+      | 'mod-permissions'       |
+      | 'mod-users'             |
+      | 'mod-inventory-storage' |
+      | 'mod-search'            |
+      | 'mod-entities-links'    |
 
     * table userPermissions
       | name                                                      |
