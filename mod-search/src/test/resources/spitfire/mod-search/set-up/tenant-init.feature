@@ -64,9 +64,7 @@ Feature: Tenant initialization for tests
       | 'users.collection.get'                                    |
       | 'users.item.post'                                         |
       | 'user-capabilities.all'                                   |
-      | 'user-capabilities.collection.get'                        |
-      | 'user-capabilities.collection.post'                       |
-      | 'user-capabilities.collection.put'                        |
+      | 'user-capabilities.collection.delete'                     |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
