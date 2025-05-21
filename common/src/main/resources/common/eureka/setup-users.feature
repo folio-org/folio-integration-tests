@@ -28,6 +28,7 @@ Feature: prepare data for api test
 
     * configure retry = { count: 40, interval: 30000 }
     Given path 'entitlement-flows', flowId
+    And param includeStages = true
     * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
     When method GET
     * def failCondition = response.status
@@ -124,24 +125,24 @@ Feature: prepare data for api test
             var capabilityIds = []
             var permissionsFound = []
             var missingPermissions = []
-            
+
             for (let i = 0; i < permissions.length; i += chunkSize) {
               var permissionsBatch = userPermissions.slice(i, i + chunkSize);
               var result = karate.call('classpath:common/eureka/capabilities.feature', {userPermissions: permissionsBatch});
               var foundCapabilities = result.response.capabilities;
-              
+
               // Track which permissions were found
               for (let j = 0; j < foundCapabilities.length; j++) {
                 permissionsFound.push(foundCapabilities[j].permission);
               }
-              
+
               // Add capability IDs
               capabilityIds = capabilityIds.concat(foundCapabilities.map(x => x.id));
             }
-            
+
             // Find missing permissions
             missingPermissions = permissions.filter(p => !permissionsFound.includes(p));
-            
+
             karate.log('capabilityIds: # #', capabilityIds.length, capabilityIds);
             if (missingPermissions.length > 0) {
               karate.log('***** Missing capabilities for permissions: *****');
@@ -149,12 +150,12 @@ Feature: prepare data for api test
                 karate.log('Missing capability for permission: ' + missingPermissions[i]);
               }
             }
-            
+
             if (capabilityIds.length == permissions.length) {
               karate.log('***** All capabilities have been successfully found *****');
               return capabilityIds;
             }
-            
+
             count--;
             if (count == 0) {
               karate.log('***** Not all capabilities found. Missing ' + missingPermissions.length + ' capabilities *****');
