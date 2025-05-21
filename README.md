@@ -46,7 +46,7 @@ To run only specific runner (Java) class test use `-DfailIfNoTests=false` and `-
 
 ## Environment configuration
 
-The VALIDATION_INTERFACE_INTEGRITY_ENABLED parameter in the mgr-tenant-entitlement module should be set to 
+The VALIDATION_INTERFACE_INTEGRITY_ENABLED parameter in the mgr-tenant-entitlements module should be set to 
 false in environments used for testing.
 
 ## Running tests for a specific module in a specific environment
