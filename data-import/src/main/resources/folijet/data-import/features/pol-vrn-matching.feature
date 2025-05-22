@@ -522,9 +522,9 @@ Feature: Test matching by POL number and vendor reference number
     And assert jobExecution.progress.total == 2
 
     # Verify that needed entities updated
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
@@ -1081,9 +1081,9 @@ Feature: Test matching by POL number and vendor reference number
     And assert jobExecution.progress.total == 2
 
     # Verify that needed entities updated
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'
@@ -1424,9 +1424,9 @@ Feature: Test matching by POL number and vendor reference number
     And assert jobExecution.progress.total == 1
 
     # Verify that needed entities updated
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
