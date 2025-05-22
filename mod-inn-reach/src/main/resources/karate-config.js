@@ -108,10 +108,10 @@ function fn() {
     config.edgeUrl = 'https://folio-edev-volaris-edge-inn-reach.ci.folio.org';
     config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org/';
     config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
-  } else if (env == 'folio-etesting-karate-eureka') {
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.centralServerUrl = karate.get('centralServerUrl') || 'https://folio-etesting-karate-eureka-mockserver.ci.folio.org'
+    config.centralServerUrl = karate.get('centralServerUrl') || 'https://folio-etesting-cikarate-mockserver.ci.folio.org'
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
