@@ -1,4 +1,4 @@
-Feature: Update Instance, Holdings & Items
+Feature: FAT-939 Update Instance, Holdings & Items
 
   Background:
     * url baseUrl

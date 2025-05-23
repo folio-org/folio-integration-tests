@@ -2,7 +2,7 @@ Feature: Util feature to import records
 
   Background:
     * url baseUrl
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
+    * def importHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure retry = { count: 30, interval: 5000 }
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
@@ -11,13 +11,16 @@ Feature: Util feature to import records
   Scenario: Import record
     * def fileName = fileName + '.mrc'
     * def jobName = jobName + '.json'
-    * def filePathFromSourceRoot = (typeof filePathFromSourceRoot !== 'undefined' && filePathFromSourceRoot) ? filePathFromSourceRoot : samplePath + 'mrc-files/' + fileName
+    # Use __arg to only get parameters explicitly passed to this feature call
+    * def passedParams = karate.get('__arg', {})
+    * def filePathFromSourceRoot = passedParams.filePathFromSourceRoot ? passedParams.filePathFromSourceRoot : samplePath + 'mrc-files/' + fileName
 
     # Create upload definition and upload/assemble file
     * call read('classpath:folijet/data-import/global/common-data-import.feature') ({ fileName: fileName, filePathFromSourceRoot: filePathFromSourceRoot, uiKey: '' })
 
     # Initiate data import job
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
+    And headers importHeaders
     And param defaultMapping = false
     And request read(samplePath + 'jobs/' + jobName)
     When method post
