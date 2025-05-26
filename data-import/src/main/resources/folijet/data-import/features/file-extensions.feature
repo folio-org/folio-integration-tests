@@ -132,18 +132,14 @@ Feature: File extensions
     Then status 200
 
   Scenario: Return a list of file extensions for which import is blocked
-
     * print 'Return a list of file extensions for which import is blocked'
 
     Given path '/data-import/fileExtensions'
-    And request
-    """
-    {
-      "importBlocked": true
-    }
-    """
+    And param query = 'importBlocked == true'
     When method GET
     Then status 200
+    And match each response.fileExtensions contains { "importBlocked": true }
+    And assert response.totalRecords == 6
 
   Scenario: Fail to delete non-existent extension
 
