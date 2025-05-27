@@ -8,11 +8,11 @@ Feature: Test Data-Import bib records
   Background:
     # Set up the base URL and authentication
     * url baseUrl
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
     # Define common headers and paths for API requests
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json' }
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
     * def getCompletedJobFeature = 'classpath:folijet/data-import/features/get-completed-job-execution.feature'
     * def samplePath = 'classpath:folijet/data-import/samples/'
@@ -202,6 +202,7 @@ Feature: Test Data-Import bib records
     # Check the job log entries to confirm the action status is UPDATED
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'
@@ -246,6 +247,7 @@ Feature: Test Data-Import bib records
     # Check the job log entries to confirm the action status is UPDATED
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'UPDATED'

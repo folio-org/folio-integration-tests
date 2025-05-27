@@ -51,9 +51,9 @@ Feature: Test import with match on identifier and identifier type
     And assert jobExecution.progress.total == 2
 
     # Check instance identifiers from the import log file:
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     * def sourceRecordId1 = response.entries[0].sourceRecordId
@@ -305,9 +305,9 @@ Feature: Test import with match on identifier and identifier type
     And assert jobExecution.progress.total == 2
 
     # Verify that needed entities updated
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries.length') > 0
     When method GET
     Then status 200
     And assert response.entries[0].relatedInstanceInfo.actionStatus == 'DISCARDED'
