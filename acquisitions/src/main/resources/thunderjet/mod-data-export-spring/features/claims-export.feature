@@ -9,11 +9,11 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    * def initData = read('util/export-claims/exportClaimUtils.feature@InitData')
-    * def verifyFileContentCsv = read('util/export-claims/exportClaimUtils.feature@VerifyFileContentCsv')
-    * def verifyFileContentEdi = read('util/export-claims/exportClaimUtils.feature@VerifyFileContentEdi')
-    * def createPiecesForPoLine = read('util/export-claims/exportClaimUtils.feature@CreatePiecesForPoLine')
-    * def getJobsByType = read('util/initData.feature@GetDataExportSpringJobsByType')
+    * def initData = read('this:util/export-claims/exportClaimUtils.feature@InitData')
+    * def verifyFileContentCsv = read('this:util/export-claims/exportClaimUtils.feature@VerifyFileContentCsv')
+    * def verifyFileContentEdi = read('this:util/export-claims/exportClaimUtils.feature@VerifyFileContentEdi')
+    * def createPiecesForPoLine = read('this:util/export-claims/exportClaimUtils.feature@CreatePiecesForPoLine')
+    * def getJobsByType = read('this:util/initData.feature@GetDataExportSpringJobsByType')
 
     * def convertStringToLines = function (file, sep) { return file.split(sep).filter(i => i.trim().length != 0); }
     * def jobSortKeyExporter = function(job) { return job.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.configName; }

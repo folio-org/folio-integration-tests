@@ -115,6 +115,7 @@ Feature: Cross-module integration tests
       | 'orders-storage.po-lines.item.put'                            |
       | 'users.collection.get'                                        |
 
+
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
 

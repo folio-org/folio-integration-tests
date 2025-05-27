@@ -207,6 +207,7 @@ Feature: Rollover and pay invoice using past fiscal year
     And match $.encumbered == 150
 
   ### Local reusable functions, @ignore indicator excludes these scenarios from test reports
+  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
 
   @ignore @CheckEncumbranceTransactionsInNewYear
   Scenario: Check encumbrance transactions in new year

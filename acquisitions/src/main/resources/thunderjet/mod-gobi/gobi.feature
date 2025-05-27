@@ -1,24 +1,24 @@
-Feature: mod-organizations integration tests
+Feature: mod-gobi integration tests
 
   Background:
     * print karate.info.scenarioName
     * url baseUrl
 
     * def random = callonce randomMillis
-    * def testTenant = 'testorg' + random
+    * def testTenant = 'testmodgobi' + random
     * def testTenantId = callonce uuid
     * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
 
     # Create tenant and users, initialize data
-    * def v = callonce read('classpath:thunderjet/mod-organizations/init-organizations.feature')
+    * def v = callonce read('classpath:thunderjet/mod-gobi/init-gobi.feature')
 
     # Wipe data afterwards
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
-  Scenario: Acquisitions API tests
-    * call read('features/acquisitions-api-tests.feature')
+  Scenario: GOBI api tests
+    * call read('features/gobi-api-tests.feature')
 
-  Scenario: Audit events for Organization
-    * call read('features/audit-event-organization.feature')
+  Scenario: Find holdings by location and instance
+    * call read('features/find-holdings-by-location-and-instance.feature')

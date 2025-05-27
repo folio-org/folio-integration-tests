@@ -22,9 +22,62 @@ public class CrossModulesApiTest extends TestBaseEureka {
         new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
+  @BeforeAll
+  public void crossModuleApiTestBeforeAll() {
+    System.setProperty("testTenant", "testcross" + RandomUtils.nextLong());
+    System.setProperty("testTenantId", UUID.randomUUID().toString());
+    runFeature("classpath:thunderjet/cross-modules/init-cross-modules.feature");
+  }
+
+  @AfterAll
+  public void crossModuleApiTestAfterAll() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
+
+
+  @Test
+  void approveInvoiceUsingDifferentFiscalYears() {
+    runFeatureTest("approve-invoice-using-different-fiscal-years");
+  }
+
   @Test
   void approveInvoiceWithNegativeLine() {
     runFeatureTest("approve-invoice-with-negative-line");
+  }
+
+  @Test
+  void cancelInvoiceAndUnrelease2Encumbrances() {
+    runFeatureTest("cancel-invoice-and-unrelease-2-encumbrances");
+  }
+
+  @Test
+  void cancelInvoiceLinkedToOrder() {
+    runFeatureTest("cancel-invoice-linked-to-order");
+  }
+
+  @Test
+  void cancelInvoiceWithEncumbrance() {
+    runFeatureTest("cancel-invoice-with-encumbrance");
+  }
+
+  @Test
+  void changeFdCheckInitialAmount() {
+    runFeatureTest("change-fd-check-initial-amount");
+  }
+
+  @Test
+  void changePolineFdAndPayInvoice() {
+    runFeatureTest("change-poline-fd-and-pay-invoice");
+  }
+
+  @Test
+  void checkApproveAndPayInvoiceWithInvoiceReferencesSamePoLine() {
+    runFeatureTest("check-approve-and-pay-invoice-with-invoice-references-same-po-line");
+  }
+
+  @Test
+  void checkEncumbrancesAfterIssuingCreditForPaidOrder() {
+    runFeatureTest("check-encumbrances-after-issuing-credit-for-paid-order");
   }
 
   @Test
@@ -39,7 +92,22 @@ public class CrossModulesApiTest extends TestBaseEureka {
 
   @Test
   void checkEncumbrancesAfterOrderLineExchangeRateUpdate() {
-    runFeatureTest("check-encumbrances-after-order-line-exchange-rate-update.feature");
+    runFeatureTest("check-encumbrances-after-order-line-exchange-rate-update");
+  }
+
+  @Test
+  void checkOrderReEncumberAfterPreviewRollover() {
+    runFeatureTest("check-order-re-encumber-after-preview-rollover");
+  }
+
+  @Test
+  void checkPaymentStatusAfterCancellingPaidInvoice() {
+    runFeatureTest("check-payment-status-after-cancelling-paid-invoice");
+  }
+
+  @Test
+  void checkPaymentStatusAfterReopen() {
+    runFeatureTest("check-paymentstatus-after-reopen");
   }
 
   @Test
@@ -48,8 +116,13 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
-  void createOrderWithInvoiceWithEnoughMoney() {
-    runFeatureTest("create-order-with-invoice-that-has-enough-money");
+  void chekPoNumbersUpdatesWhenIinvoiceLineDeleted() {
+    runFeatureTest("chek-po-numbers-updates-when-invoice-line-deleted");
+  }
+
+  @Test
+  void createOrderAndApproveInvoiceWerePolWithoutFundDistributions() {
+    runFeatureTest("create-order-and-approve-invoice-were-pol-without-fund-distributions");
   }
 
   @Test
@@ -58,8 +131,18 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void createOrderWithInvoiceWithEnoughMoney() {
+    runFeatureTest("create-order-with-invoice-that-has-enough-money");
+  }
+
+  @Test
   void deleteEncumbrance() {
     runFeatureTest("delete-encumbrance");
+  }
+
+  @Test
+  void invoiceEncumbranceUpdateWithoutAcquisitionUnit() {
+    runFeatureTest("invoice-encumbrance-update-without-acquisition-unit");
   }
 
   @Test
@@ -68,18 +151,18 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void deletePlannedBudgetWithoutTransactions() {
+    runFeatureTest("MODFISTO-270-delete-planned-budget-without-transactions");
+  }
+
+  @Test
+  void openOrderAfterApprovingInvoice() {
+    runFeatureTest("open-order-after-approving-invoice");
+  }
+
+  @Test
   void orderInvoiceRelation() {
     runFeatureTest("order-invoice-relation");
-  }
-
-  @Test
-  void unopen_order_and_add_addition_pol_and_check_encumbrances() {
-    runFeatureTest("unopen-order-and-add-addition-pol-and-check-encumbrances");
-  }
-
-  @Test
-  void unopen_order_simple_case() {
-    runFeatureTest("unopen-order-simple-case");
   }
 
   @Test
@@ -98,18 +181,13 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
-  void chekPoNumbersUpdatesWhenIinvoiceLineDeleted() {
-    runFeatureTest("chek-po-numbers-updates-when-invoice-line-deleted");
+  void partialRollover() {
+    runFeatureTest("partial-rollover");
   }
 
   @Test
-  void createOrderAndApproveInvoiceWerePolWithoutFundDistributions() {
-    runFeatureTest("create-order-and-approve-invoice-were-pol-without-fund-distributions");
-  }
-
-  @Test
-  void deletePlannedBudgetWithoutTransactions() {
-    runFeatureTest("MODFISTO-270-delete-planned-budget-without-transactions");
+  void payInvoiceAndDeletePiece() {
+    runFeatureTest("pay-invoice-and-delete-piece");
   }
 
   @Test
@@ -118,38 +196,23 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
-  void changePolineFdAndPayInvoice() {
-    runFeatureTest("change-poline-fd-and-pay-invoice");
+  void payInvoiceWithoutOrderAcqUnitPermission() {
+    runFeatureTest("pay-invoice-without-order-acq-unit-permission");
   }
 
   @Test
-  void cancelInvoiceLinkedToOrder() {
-    runFeatureTest("cancel-invoice-linked-to-order");
+  void pendingPaymentUpdateAfterEncumbranceDeletion() {
+    runFeatureTest("pending-payment-update-after-encumbrance-deletion");
   }
 
   @Test
-  void checkApproveAndPayInvoiceWithInvoiceReferencesSamePoLine() {
-    runFeatureTest("check-approve-and-pay-invoice-with-invoice-references-same-po-line");
-  }
-
-  @Test
-  void cancelInvoiceAndUnrelease2Encumbrances() {
-    runFeatureTest("cancel-invoice-and-unrelease-2-encumbrances");
-  }
-
-  @Test
-  void approveInvoiceUsingDifferentFiscalYears() {
-    runFeatureTest("approve-invoice-using-different-fiscal-years");
+  void removeFundDistributionAfterRolloverWhenReEncumberFalse() {
+    runFeatureTest("remove-fund-distribution-after-rollover-when-re-encumber-false");
   }
 
   @Test
   void rolloverAndPayInvoiceUsingPastFiscalYear() {
-    runFeatureTest("rollover-and-pay-invoice-using-past-fiscal-year.feature");
-  }
-
-  @Test
-  void partialRollover() {
-    runFeatureTest("partial-rollover");
+    runFeatureTest("rollover-and-pay-invoice-using-past-fiscal-year");
   }
 
   @Test
@@ -168,85 +231,23 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
-  void payInvoiceAndDeletePiece() {
-    runFeatureTest("pay-invoice-and-delete-piece");
-  }
-
-  @Test
   void unopenApproveInvoiceReopen() {
     runFeatureTest("unopen-approve-invoice-reopen");
   }
 
   @Test
-  void changeFdCheckInitialAmount() {
-    runFeatureTest("change-fd-check-initial-amount");
+  void unopen_order_and_add_addition_pol_and_check_encumbrances() {
+    runFeatureTest("unopen-order-and-add-addition-pol-and-check-encumbrances");
   }
 
   @Test
-  void openOrderAfterApprovingInvoice() {
-    runFeatureTest("open-order-after-approving-invoice");
+  void unopen_order_simple_case() {
+    runFeatureTest("unopen-order-simple-case");
   }
 
   @Test
   void updateEncumbranceLinksWithFiscalYear() {
     runFeatureTest("update-encumbrance-links-with-fiscal-year");
-  }
-
-  @Test
-  void checkOrderReEncumberAfterPreviewRollover() {
-    runFeatureTest("check-order-re-encumber-after-preview-rollover");
-  }
-
-  @Test
-  void pendingPaymentUpdateAfterEncumbranceDeletion() {
-    runFeatureTest("pending-payment-update-after-encumbrance-deletion");
-  }
-
-  @Test
-  void removeFundDistributionAfterRolloverWhenReEncumberFalse() {
-    runFeatureTest("remove-fund-distribution-after-rollover-when-re-encumber-false");
-  }
-
-  @Test
-  void payInvoiceWithoutOrderAcqUnitPermission() {
-    runFeatureTest("pay-invoice-without-order-acq-unit-permission");
-  }
-
-  @Test
-  void checkPaymentStatusAfterReopen() {
-    runFeatureTest("check-paymentstatus-after-reopen");
-  }
-
-  @Test
-  void invoiceEncumbranceUpdateWithoutAcquisitionUnit() {
-    runFeatureTest("invoice-encumbrance-update-without-acquisition-unit");
-  }
-
-  @Test
-  void checkPaymentStatusAfterCancellingPaidInvoice() {
-    runFeatureTest("check-payment-status-after-cancelling-paid-invoice");
-  }
-
-  @Test
-  void cancelInvoiceWithEncumbrance() {
-    runFeatureTest("cancel-invoice-with-encumbrance.feature");
-  }
-
-  @Test
-  void checkEncumbrancesAfterIssuingCreditForPaidOrder() {
-    runFeatureTest("check-encumbrances-after-issuing-credit-for-paid-order");
-  }
-
-  @BeforeAll
-  public void crossModuleApiTestBeforeAll() {
-    System.setProperty("testTenant", "testcross" + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/cross-modules/cross-modules-junit.feature");
-  }
-
-  @AfterAll
-  public void crossModuleApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
 }

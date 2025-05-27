@@ -177,6 +177,7 @@ Feature: Check invoice lines with VAT adjustments
     * def v = call read('@CheckInvoicesWithNoAppliedTopAdjustment') invoicesExpected
     * def v = call read('@CheckInvoiceLinesWithAppliedIndividualAdjustment') invoicesExpected
 
+  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
   @ignore @CheckInvoicesWithAppliedTopAdjustment
   Scenario: Check invoices with applied top adjustment
     Given path 'invoice/invoices', id

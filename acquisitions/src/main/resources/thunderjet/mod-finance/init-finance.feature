@@ -1,5 +1,5 @@
 @parallel=false
-Feature: mod-finance integration tests
+Feature: Initialize mod-finance integration tests
 
   Background:
     * print karate.info.scenarioName
@@ -145,6 +145,7 @@ Feature: mod-finance integration tests
       | 'organizations.organizations.item.post'                       |
       | 'organizations.organizations.item.put'                        |
       | 'users.collection.get'                                        |
+
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')

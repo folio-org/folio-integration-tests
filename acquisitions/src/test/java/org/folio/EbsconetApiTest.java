@@ -22,6 +22,24 @@ public class EbsconetApiTest extends TestBaseEureka {
       new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
+  @BeforeAll
+  public void ebsconetApiTestBeforeAll() {
+    System.setProperty("testTenant", "testebsconet" + RandomUtils.nextLong());
+    System.setProperty("testTenantId", UUID.randomUUID().toString());
+    runFeature("classpath:thunderjet/mod-ebsconet/init-ebsconet.feature");
+  }
+
+  @AfterAll
+  public void ebsconetApiTestAfterAll() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
+
+
+  @Test
+  void cancelOrderLinesWithEbsconet() {
+    runFeatureTest("cancel-order-lines-with-ebsconet");
+  }
+
   @Test
   void getEbsconetOrderLine() {
     runFeatureTest("get-ebsconet-order-line");
@@ -33,29 +51,13 @@ public class EbsconetApiTest extends TestBaseEureka {
   }
 
   @Test
-  void updateEbsconetOrderLineMixedFormat() {
-    runFeatureTest("update-mixed-order-line");
-  }
-
-  @Test
-  void cancelOrderLinesWithEbsconet() {
-    runFeatureTest("cancel-order-lines-with-ebsconet");
-  }
-  @Test
   void updateEbsconetOrderLineEmptyLocations() {
     runFeatureTest("update-ebsconet-order-line-empty-locations");
   }
 
-  @BeforeAll
-  public void ebsconetApiTestBeforeAll() {
-    System.setProperty("testTenant", "testebsconet" + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-ebsconet/ebsconet-junit.feature");
-  }
-
-  @AfterAll
-  public void ebsconetApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+  @Test
+  void updateEbsconetOrderLineMixedFormat() {
+    runFeatureTest("update-mixed-order-line");
   }
 
 }

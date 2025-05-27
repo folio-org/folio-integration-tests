@@ -1,5 +1,5 @@
 @parallel=false
-Feature: edge-orders integration tests
+Feature: Initialize edge-orders integration tests
 
   Background:
     * print karate.info.scenarioName
@@ -72,6 +72,7 @@ Feature: edge-orders integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.instances.item.post'                               |
       | 'organizations.organizations.item.post'                       |
+
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')

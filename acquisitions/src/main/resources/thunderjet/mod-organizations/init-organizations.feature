@@ -1,5 +1,5 @@
 @parallel=false
-Feature: mod-organizations integration tests
+Feature: Initialize mod-organizations integration tests
 
   Background:
     * print karate.info.scenarioName
@@ -33,6 +33,7 @@ Feature: mod-organizations integration tests
       | 'acquisitions-units-storage.units.item.post'                |
       | 'acquisitions-units.units.item.post'                        |
       | 'users.collection.get'                                      |
+
 
   Scenario: Create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')

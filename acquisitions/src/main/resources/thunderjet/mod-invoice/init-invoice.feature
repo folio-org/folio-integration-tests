@@ -1,5 +1,5 @@
 @parallel=false
-Feature: mod-invoice integration tests
+Feature: Initialize mod-invoice integration tests
 
   Background:
     * print karate.info.scenarioName
@@ -79,6 +79,7 @@ Feature: mod-invoice integration tests
       | 'orders.item.put'                                           |
       | 'orders.po-lines.item.post'                                 |
       | 'organizations.organizations.item.post'                     |
+
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
