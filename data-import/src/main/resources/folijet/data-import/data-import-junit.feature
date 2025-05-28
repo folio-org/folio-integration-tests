@@ -90,6 +90,7 @@ Feature: mod-data-import integration tests
       | 'data-import.fileExtensions.delete'                           |
       | 'data-import.fileExtensions.default.post'                     |
       | 'data-import.uploadUrl.item.get'                              |
+      | 'converter-storage.jobprofile.item.get'                       |
       | 'converter-storage.jobprofile.post'                           |
       | 'converter-storage.jobprofile.delete'                         |
       | 'converter-storage.actionprofile.post'                        |
