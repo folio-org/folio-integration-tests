@@ -71,13 +71,8 @@ class DataImportApiTest extends TestBaseEureka {
     }
 
     @Test
-    void marcBibsCreateTest() {
-        runFeatureTest("marc-bibs/create");
-    }
-
-    @Test
-    void marcBibsUpdateTest() {
-        runFeatureTest("marc-bibs/update");
+    void marcRecordsTest() {
+        runFeatureTest("marc-records/all");
     }
 
     @Test

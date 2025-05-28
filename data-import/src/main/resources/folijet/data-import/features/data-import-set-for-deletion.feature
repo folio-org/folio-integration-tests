@@ -147,7 +147,7 @@ Feature: Set for deletion logic
   @ImportRecordAndVerify
   Scenario: Import marc record
     # Import file
-    Given call read(utilFeature + '@ImportRecord') { fileName: '#(fileName)', jobName: '#(jobName)' }
+    Given call read(utilFeature + '@ImportRecord') { fileName: '#(__arg.fileName)', jobName: '#(__arg.jobName)', filePathFromSourceRoot: '#(__arg.filePathFromSourceRoot)' }
     Then match status != 'ERROR'
 
     # Verify job execution
