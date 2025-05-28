@@ -29,6 +29,18 @@ public class EdgeOrdersApiTest extends TestBaseEureka {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
+  @BeforeAll
+  public void edgeOrdersApiTestBeforeAll() {
+    System.setProperty("testTenant", "testedgeorders");
+    runFeature("classpath:thunderjet/edge-orders/init-edge-orders.feature");
+  }
+
+  @AfterAll
+  public void edgeOrdersApiTestAfterAll() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
+
+
   @Test
   void ebsconet() {
     runFeatureTest("ebsconet");
@@ -37,17 +49,6 @@ public class EdgeOrdersApiTest extends TestBaseEureka {
   @Test
   void gobi() {
     runFeatureTest("gobi");
-  }
-
-  @BeforeAll
-  public void edgeOrdersApiTestBeforeAll() {
-    System.setProperty("testTenant", "testedgeorders");
-    runFeature("classpath:thunderjet/edge-orders/edge-orders-junit.feature");
-  }
-
-  @AfterAll
-  public void edgeOrdersApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
 }

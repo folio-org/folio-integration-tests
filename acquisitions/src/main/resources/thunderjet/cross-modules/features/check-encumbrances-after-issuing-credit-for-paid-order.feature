@@ -69,6 +69,7 @@
       * def v = call payInvoice { invoiceId: '#(invoiceId2)' }
       * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
 
+  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
     @ignore @VerifyReleasedEncumbrance
     Scenario: verifyReleasedEncumbrance
       Given path '/finance/transactions', encId

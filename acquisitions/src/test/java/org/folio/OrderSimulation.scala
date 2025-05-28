@@ -27,12 +27,12 @@ class OrderSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before: ScenarioBuilder = scenario("before")
-    .exec(karateFeature("classpath:thunderjet/mod-orders/orders-junit.feature"))
+    .exec(karateFeature("classpath:thunderjet/mod-orders/init-orders.feature"))
   val create: ScenarioBuilder = scenario("create")
     .repeat(10) {
       exec(karateFeature("classpath:thunderjet/mod-orders/features/cancel-and-delete-order.feature"))
     }
-  val after: ScenarioBuilder = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
+  val after: ScenarioBuilder = scenario("after").exec(karateFeature("classpath:common/eureka/destroy-data.feature"))
 
   setUp(
     before.inject(atOnceUsers(1))

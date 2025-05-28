@@ -66,6 +66,7 @@ Feature: Audit events for Invoice
       | invoiceId     | "Edit"    | 52         |
     * def v = call read('@VerifyAuditEvents') eventData
 
+  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
   @ignore @VerifyAuditEvents
   Scenario: Verify Audit Events
     * configure headers = headersAdmin

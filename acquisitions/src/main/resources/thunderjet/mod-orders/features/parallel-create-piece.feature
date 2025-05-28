@@ -32,11 +32,7 @@ Feature: Create pieces for an open order in parallel
     * def pieceId4 = callonce uuid12
     * def pieceId5 = callonce uuid13
 
-    * def createOrder = read('../reusable/create-order.feature')
-    * def createOrderLine = read('../reusable/create-order-line.feature')
-    * def openOrder = read('../reusable/open-order.feature')
-    * def getOrderLineTitleId = read('../reusable/get-order-line-title-id.feature')
-    * def createPiece = read('../reusable/create-piece.feature')
+    * def getOrderLineTitleId = read('classpath:thunderjet/mod-orders/reusable/get-order-line-title-id.feature')
 
     * configure headers = headersAdmin
     * callonce createFund { 'id': '#(fundId)' }
@@ -63,7 +59,7 @@ Feature: Create pieces for an open order in parallel
   Scenario: Create pieces and check budget
     # it would be nice to put the contents of parallel-create-piece-2 here and use karate.afterFeature() to check the budget,
     # but errors are not reported with this method, so we have to use an additional feature file
-    * call read('parallel-create-piece-2.feature')
+    * call read('classpath:thunderjet/mod-orders/features/parallel-create-piece-2.feature')
 
     * configure headers = headersAdmin
     Given path '/finance/budgets'

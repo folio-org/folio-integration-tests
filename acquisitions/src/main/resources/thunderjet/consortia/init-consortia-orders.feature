@@ -1,5 +1,5 @@
 @parallel=false
-Feature: mod-consortia integration tests
+Feature: Initialize mod-consortia integration tests
 
   Background:
     * print karate.info.scenarioName
@@ -123,7 +123,7 @@ Feature: mod-consortia integration tests
     * def getAuthorizationToken = read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
     * def enableCentralOrdering = read('tenant-utils/consortium.feature@EnableCentralOrdering')
     * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
-    * def deleteTenantAndEntitlement = read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement')
+
 
   @SetupTenants
   Scenario: Create ['central', 'university'] tenants and set up admins
@@ -150,31 +150,8 @@ Feature: mod-consortia integration tests
       | 'mod-circulation'           |
       | 'mod-feesfines'             |
       | 'mod-consortia-keycloak'    |
-    * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
 
-    * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'okapi'                     |
-      | 'mod-configuration'         |
-      | 'mod-login-keycloak'        |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-audit'                 |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-organizations-storage' |
-      | 'mod-organizations'         |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-feesfines'             |
-      | 'mod-consortia-keycloak'    |
+    * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenant.id)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
 
     # Permissions for centralUser
@@ -256,32 +233,3 @@ Feature: mod-consortia integration tests
     * call read('order-utils/finances.feature')
     * call read('order-utils/organizations.feature')
     * call read('order-utils/orders.feature')
-
-  Scenario: Open order with locations from different tenants
-    * call read('features/open-order-with-locations-from-different-tenants.feature')
-
-  Scenario: Reopen order and change instance connection orderLine
-    * call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
-
-  Scenario: Performance Open order wtih many locations from different tenants
-    * call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
-
-  Scenario: Piece Api Test for cross tenant envs
-    * call read("features/pieces-api-test-for-cross-tenant-envs.feature")
-
-  Scenario: Bind pieces features in ECS environment
-    * call read("features/bind-pieces-ecs.feature")
-
-  Scenario: Update unaffiliated PoLine locations
-    * call read("features/update-unaffiliated-pol-locations.feature")
-
-  Scenario: Update inventory ownership changes order data
-    * call read("features/update-inventory-ownership-changes-order-data.feature")
-
-  Scenario: Move Item and Holding to update order data in ECS environment
-    * call read("features/mode-item-and-holding-to-update-order-data-ecs.feature")
-
-  @DestroyData
-  Scenario: Destroy created ['central', 'university'] tenants
-    * call deleteTenantAndEntitlement { tenantId: '#(universityTenantId)' }
-    * call deleteTenantAndEntitlement { tenantId: '#(centralTenantId)' }

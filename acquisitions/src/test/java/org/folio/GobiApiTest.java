@@ -21,6 +21,19 @@ public class GobiApiTest extends TestBaseEureka {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
+    @BeforeAll
+    public void gobiApiTestBeforeAll() {
+        System.setProperty("testTenant", "testmodgobi" + RandomUtils.nextLong());
+        System.setProperty("testTenantId", UUID.randomUUID().toString());
+        runFeature("classpath:thunderjet/mod-gobi/init-gobi.feature");
+    }
+
+    @AfterAll
+    public void gobiApiTestAfterAll() {
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
+
+
     @Test
     void gobiApiTests() {
         runFeatureTest("gobi-api-tests");
@@ -31,15 +44,4 @@ public class GobiApiTest extends TestBaseEureka {
         runFeatureTest("find-holdings-by-location-and-instance");
     }
 
-    @BeforeAll
-    public void gobiApiTestBeforeAll() {
-        System.setProperty("testTenant", "testmodgobi" + RandomUtils.nextLong());
-        System.setProperty("testTenantId", UUID.randomUUID().toString());
-        runFeature("classpath:thunderjet/mod-gobi/gobi-junit.feature");
-    }
-
-    @AfterAll
-    public void gobiApiTestAfterAll() {
-        runFeature("classpath:common/eureka/destroy-data.feature");
-    }
 }

@@ -25,7 +25,7 @@ public class OrganizationsApiTest extends TestBaseEureka {
     public void organizationsApiTestBeforeAll() {
         System.setProperty("testTenant", "testorg" + RandomUtils.nextLong());
         System.setProperty("testTenantId", UUID.randomUUID().toString());
-        runFeature("classpath:thunderjet/mod-organizations/organizations-junit.feature");
+        runFeature("classpath:thunderjet/mod-organizations/init-organizations.feature");
     }
 
     @AfterAll
@@ -33,7 +33,7 @@ public class OrganizationsApiTest extends TestBaseEureka {
         runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
-    // Feature(s) list :
+
     @Test
     void acquisitionsApiTests() {
         runFeatureTest("acquisitions-api-tests");

@@ -29,12 +29,12 @@ class EbsconetSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before: ScenarioBuilder = scenario("before")
-    .exec(karateFeature("classpath:thunderjet/mod-ebsconet/ebsconet-junit.feature"))
+    .exec(karateFeature("classpath:thunderjet/mod-ebsconet/init-ebsconet.feature"))
   val create: ScenarioBuilder = scenario("create")
     .repeat(10) {
       exec(karateFeature("classpath:thunderjet/mod-ebsconet/features/get-ebsconet-order-line.feature"))
     }
-  val after: ScenarioBuilder = scenario("after").exec(karateFeature("classpath:common/destroy-data.featuree"))
+  val after: ScenarioBuilder = scenario("after").exec(karateFeature("classpath:common/eureka/destroy-data.feature"))
 
   setUp(
     before.inject(atOnceUsers(1))

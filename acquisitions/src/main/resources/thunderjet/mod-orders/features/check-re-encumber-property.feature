@@ -25,21 +25,16 @@ Feature: Check needReEncumber flag populated correctly
     * def rolloverId = callonce uuid5
     * def rolloverErrorId = callonce uuid6
 
-    * def fundId = callonce uuid7
-    * def budgetId = callonce uuid8
+    * def ledgerId = callonce uuid7
+    * def fundId = callonce uuid8
+    * def budgetId = callonce uuid9
 
 
-  Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
-
+  Scenario: prepare finances for fund with <fundId> and budget with <budgetId>
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
-
-    Examples:
-      | fundId | budgetId |
-      | fundId | budgetId |
+    * def v = call createLedger { 'id': '#(ledgerId)' }
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
 
   Scenario: Create order
 
@@ -74,7 +69,7 @@ Feature: Check needReEncumber flag populated correctly
     """
       {
         "id": "#(rolloverId)",
-        "ledgerId": "#(globalLedgerId)",
+        "ledgerId": "#(ledgerId)",
         "fromFiscalYearId": "#(fiscalYearId)",
         "toFiscalYearId": "#(plannedFiscalYearId)",
         "budgetsRollover": [],
