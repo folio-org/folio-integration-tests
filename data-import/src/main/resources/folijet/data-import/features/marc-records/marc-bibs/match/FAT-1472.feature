@@ -585,7 +585,7 @@ Feature: FAT-1472
     * def updateJobProfileId = $.id
 
     * def marcRecord = read('classpath:folijet/data-import/samples/mrc-files/FAT-1472.mrc')
-    * def updatedMarcRecord = javaDemo.modifyMarcRecord(marcRecord, '001', ' ', ' ', ' ', instanceHrid)
+    * def updatedMarcRecord = javaWriteData.modifyMarcRecord(marcRecord, '001', ' ', ' ', ' ', instanceHrid)
 
     * def jobProfileId = updateJobProfileId
 

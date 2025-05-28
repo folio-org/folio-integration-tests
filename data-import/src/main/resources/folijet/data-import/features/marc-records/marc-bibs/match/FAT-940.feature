@@ -5,7 +5,6 @@ Feature: FAT-940 Match MARC-to-MARC
     * call read('classpath:folijet/data-import/global/auth.feature')
     * call read('classpath:folijet/data-import/global/common-functions.feature')
     * configure retry = { interval: 5000, count: 30 }
-    * def javaDemo = Java.type('test.java.WriteData')
 
   Scenario: FAT-940 Match MARC-to-MARC and update Instances, Holdings, and Items 2
     * print 'FAT-940 Match MARC-to-MARC and update Instance, Holdings, and Items'
@@ -610,7 +609,7 @@ Feature: FAT-940 Match MARC-to-MARC
     # Export MARC record by instance id
     * def fileName = 'FAT-940-1.mrc'
     * def result = call read(exportRecordFeature) { instanceId: "#(instanceId)", dataExportJobProfileId: "#(dataExportJobProfileId)", fileName: "#(fileName)" }
-    * javaDemo.writeByteArrayToFile(result.exportedBinaryMarcRecord, fileName)
+    * javaWriteData.writeByteArrayToFile(result.exportedBinaryMarcRecord, fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber

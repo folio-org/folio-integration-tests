@@ -5,3 +5,6 @@ Feature: FAT MARC Match Test Suite
 
   Scenario: MODDATAIMP-1031
     * call read('this:MODDATAIMP-1031.feature')
+
+  Scenario: FAT-13522
+    * call read('this:FAT-13522.feature')
