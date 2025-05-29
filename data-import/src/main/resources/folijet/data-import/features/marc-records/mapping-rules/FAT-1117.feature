@@ -5,7 +5,6 @@ Feature: FAT-1117
     * call read('classpath:folijet/data-import/global/auth.feature')
     * call read('classpath:folijet/data-import/global/common-functions.feature')
     * configure retry = { interval: 5000, count: 30 }
-    * def javaDemo = Java.type('test.java.WriteData')
 
   Scenario: FAT-1117 Default mapping rules updating and verification via data-import
     * print 'FAT-1117 Default mapping rules updating and verification via data-import'

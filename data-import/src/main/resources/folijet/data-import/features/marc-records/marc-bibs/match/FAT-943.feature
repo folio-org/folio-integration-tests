@@ -1006,7 +1006,7 @@ Feature: FAT-943
     # Export MARC record by instance id
     * def fileName = 'FAT-943-1.mrc'
     * def result = call read(exportRecordFeature) { instanceId: "#(instanceId)", dataExportJobProfileId: "#(dataExportJobProfileId)", fileName: "#(fileName)" }
-    * javaDemo.writeByteArrayToFile(result.exportedBinaryMarcRecord, fileName)
+    * javaWriteData.writeByteArrayToFile(result.exportedBinaryMarcRecord, fileName)
 
     * def randomNumber = callonce random
     * def uiKey = fileName + randomNumber
