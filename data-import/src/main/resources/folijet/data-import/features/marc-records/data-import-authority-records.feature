@@ -10,10 +10,11 @@ Feature: Test Data-Import authority records
     * def samplePath = 'classpath:folijet/data-import/samples/'
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
 
-    * def testAuthorityId = karate.properties['authorityId']
-    * def testAuthorityRecordId = karate.properties['authorityRecordId']
-    * def testInvalidAuthorityId = karate.properties['invalidAuthorityId']
-    * def testInvalidAuthorityRecordId = karate.properties['invalidAuthorityRecordId']
+    # Use the data from parent feature
+    * def testAuthorityId = authorityId
+    * def testAuthorityRecordId = authorityRecordId
+    * def testInvalidAuthorityId = invalidAuthorityId
+    * def testInvalidAuthorityRecordId = invalidAuthorityRecordId
     * def defaultActionCreateId = "7915c72e-c6af-4962-969d-403c7238b051"
 
     * def recordType = "MARC_AUTHORITY"
@@ -103,6 +104,7 @@ Feature: Test Data-Import authority records
     And param recordType = recordType
     And param snapshotId = jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.sourceRecords[0]') != null
     When method get
     Then status 200
     Then match response.sourceRecords[0].parsedRecord.content.fields[*].551.subfields[*].a contains only "Updated record"
@@ -158,6 +160,7 @@ Feature: Test Data-Import authority records
     And param recordType = recordType
     And param snapshotId = jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.sourceRecords[0]') != null
     When method get
     Then status 200
     Then match response.sourceRecords[0].parsedRecord.content.fields[*].551.subfields[*].a contains only "Updated record by non-repeatable field"

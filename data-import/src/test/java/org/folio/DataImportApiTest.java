@@ -19,54 +19,11 @@ class DataImportApiTest extends TestBaseEureka {
     public DataImportApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
-
-    // creates a number of records which are assumed to be there in later tests
+    
     @Test
     @Order(1)
-    void createMarcRecordsTest() {
-        runFeatureTest("create-marc-records");
-    }
-
-    @Test
-    @Order(2)
-    void orderImportTest() {
-        runFeatureTest("data-import-orders");
-    }
-
-    @Test
-    @Order(3)
-    void dataImportLogDeletionTest() {
-        runFeatureTest("data-import-delete-logs");
-    }
-
-    @Test
-    @Order(4)
-    void importHoldingsRecordsTest() {
-        runFeatureTest("data-import-holdings-records");
-    }
-
-    // one still broken :(
-    @Test
-    @Order(5)
-    void importInvoiceTest() {
-        runFeatureTest("import-edi-invoice");
-    }
-
-    @Test
-    @Order(6)
-    void importAuthorityRecordsTest() {
-        runFeatureTest("data-import-authority-records");
-    }
-
-    @Test
-    @Order(7)
-    void importPolAndVrnMatchingTest() {
-        runFeatureTest("pol-vrn-matching");
-    }
-
-    @Test
-    void marcRecordsTest() {
-        runFeatureTest("marc-records/all");
+    void dataImportTest() {
+        runFeatureTest("all");
     }
 
     @Test
@@ -97,11 +54,6 @@ class DataImportApiTest extends TestBaseEureka {
     @Test
     void dataImportMultipleItemsTest() {
         runFeatureTest("data-import-multiple-records-from-marc-bib");
-    }
-
-    @Test
-    void dataImportSetForDeletion() {
-        runFeatureTest("data-import-set-for-deletion");
     }
 
     @BeforeAll

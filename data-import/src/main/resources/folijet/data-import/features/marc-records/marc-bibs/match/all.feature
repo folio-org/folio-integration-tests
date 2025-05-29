@@ -32,3 +32,6 @@ Feature: FAT MARC Match Test Suite
 
   Scenario: MODINV-1094
     * call read('this:MODINV-1094.feature')
+
+  Scenario: POL VRN Matching Tests
+    * call read('this:pol-vrn-matching.feature')

@@ -6,8 +6,9 @@ Feature: Test Data-Import holdings records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json' }
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
 
-    * def testInstanceRecordId = karate.properties['instanceRecordId']
-    * def testHoldingsRecordId = karate.properties['holdingsRecordId']
+    # Use the data from parent feature
+    * def testInstanceRecordId = instanceRecordId
+    * def testHoldingsRecordId = holdingsRecordId
 
   Scenario: Record should contain valid 004 field
     Given path '/source-storage/source-records', testInstanceRecordId
