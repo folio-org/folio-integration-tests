@@ -120,6 +120,13 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
+  } else if (env == 'folio-testing-karate-local') {
+    config.baseUrl = 'https://folio-etesting-cikarate-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-etesting-cikarate-edge.ci.folio.org';
+    config.centralServerUrl = 'https://folio-etesting-cikarate-mockserver.ci.folio.org'
+    config.prototypeTenant = 'consortium';
+    karate.configure('ssl',true);
+    config.baseKeycloakUrl = 'https://folio-etesting-cikarate-keycloak.ci.folio.org';
   }
   return config;
 }
