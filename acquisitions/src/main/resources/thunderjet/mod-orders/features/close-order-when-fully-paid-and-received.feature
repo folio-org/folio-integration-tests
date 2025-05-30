@@ -76,6 +76,7 @@ Feature: Verify once poline fully paid and received order should be closed
       | 'Open'                 | 'Awaiting Payment' | 'Partially Received' |
     * def v = call orderStatusTest orderStatusTestParams
 
+  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
   @ignore @OrderStatusWithResolutionStatusesTest
   Scenario: Verify order status after updating PoLine payment and receipt statuses
     # Parameters: expectedWorkflowStatus, paymentStatus, receiptStatus

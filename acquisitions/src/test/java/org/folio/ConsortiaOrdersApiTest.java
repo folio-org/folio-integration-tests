@@ -16,9 +16,10 @@ class ConsortiaOrdersApiTest extends TestBaseEureka {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
+
   @Test
   void consortiaOrdersApiTest() {
-    runFeature("classpath:thunderjet/consortia/consortia-orders-junit.feature");
+    runFeature("classpath:thunderjet/consortia/consortia-orders.feature");
   }
 
 }

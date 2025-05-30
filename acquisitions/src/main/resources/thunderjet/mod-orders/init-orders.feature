@@ -1,5 +1,5 @@
 @parallel=false
-Feature: mod-orders integration tests
+Feature: Initialize mod-orders integration tests
 
   Background:
     * print karate.info.scenarioName
@@ -206,6 +206,7 @@ Feature: mod-orders integration tests
       | 'usergroups.item.post'                                        |
       | 'users.collection.get'                                        |
       | 'users.item.post'                                             |
+
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')

@@ -147,7 +147,7 @@ Feature: Set for deletion logic
   @ImportRecordAndVerify
   Scenario: Import marc record
     # Import file
-    Given call read(utilFeature + '@ImportRecord') { fileName: '#(fileName)', jobName: '#(jobName)' }
+    Given call read(utilFeature + '@ImportRecord') { fileName: '#(__arg.fileName)', jobName: '#(__arg.jobName)', filePathFromSourceRoot: '#(__arg.filePathFromSourceRoot)' }
     Then match status != 'ERROR'
 
     # Verify job execution
@@ -161,11 +161,11 @@ Feature: Set for deletion logic
     And match jobExecution.progress == '#present'
 
     # Verify instance created
-    * call pause 10000
     * call login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[0].sourceRecordActionStatus == "#(actionStatus)"

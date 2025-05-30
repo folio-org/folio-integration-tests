@@ -481,12 +481,10 @@ Feature: Import EDIFACT invoice
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 10000
-
     # Verify that needed entities created
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
+    And retry until karate.get('response.entries[0].relatedInvoiceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
@@ -807,7 +805,7 @@ Feature: Import EDIFACT invoice
     # Verify that needed entities created
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
+    And retry until karate.get('response.entries[0].relatedInvoiceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
@@ -1085,12 +1083,10 @@ Feature: Import EDIFACT invoice
     And match jobExecution.runBy == '#present'
     And match jobExecution.progress == '#present'
 
-    * call pause 20000
-
     # Verify that needed entities created
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.totalRecords == 8 && response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'
+    And retry until response.totalRecords == 8 && karate.get('response.entries[0].relatedInvoiceInfo.actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].relatedInvoiceInfo.actionStatus == 'CREATED'

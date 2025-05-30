@@ -10,7 +10,7 @@ Feature: Init data for mod-data-export-spring
 
   @CreateOrganization
   Scenario: Create organization
-    * def organizationEntityRequest = read('samples/organization-entity-request.json')
+    * def organizationEntityRequest = read('this:../samples/organization-entity-request.json')
     * organizationEntityRequest.id = karate.get('extOrganizationId', globalVendorId)
     * organizationEntityRequest.name = karate.get('extOrganizationName', defaultOrganizationName + ' ' + random_string())
     * organizationEntityRequest.code = karate.get('extOrganizationCode', defaultOrganizationCode + ' ' + random_string())
@@ -48,7 +48,7 @@ Feature: Init data for mod-data-export-spring
 
   @CreateOrderForOrganization
   Scenario: Create order for specified organization
-    * def orderEntityRequest = read('samples/order-entity-request.json')
+    * def orderEntityRequest = read('this:../samples/order-entity-request.json')
     * orderEntityRequest.id = karate.get('extOrderId')
     * orderEntityRequest.vendor = karate.get('extOrganizationId', globalVendorId)
     * orderEntityRequest.poNumber = karate.get('extPoNumber', '0000001')
@@ -61,7 +61,7 @@ Feature: Init data for mod-data-export-spring
 
   @CreateOrderLines
   Scenario: Create order for specified organization
-    * def poLineEntityRequest = read('samples/order-po-line-electronic.json')
+    * def poLineEntityRequest = read('this:../samples/order-po-line-electronic.json')
     * poLineEntityRequest.id = karate.get('extPoLineId')
     * poLineEntityRequest.eresource.accessProvider = karate.get('extOrganizationId')
     * poLineEntityRequest.purchaseOrderId = karate.get('extOrderId')
@@ -106,7 +106,7 @@ Feature: Init data for mod-data-export-spring
 
   @AddIntegrationToOrganization
   Scenario: Add integration to specified organization
-    * def exportConfigRequest = read('samples/export-config.json')
+    * def exportConfigRequest = read('this:../samples/export-config.json')
 
     * exportConfigRequest.id = karate.get('extExportConfigId')
 

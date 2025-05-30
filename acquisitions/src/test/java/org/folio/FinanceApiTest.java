@@ -23,9 +23,57 @@ public class FinanceApiTest extends TestBaseEureka {
         new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
+  @BeforeAll
+  public void financeApiTestBeforeAll() {
+    System.setProperty("testTenant", "testfinance" + RandomUtils.nextLong());
+    System.setProperty("testTenantId", UUID.randomUUID().toString());
+    runFeature("classpath:thunderjet/mod-finance/init-finance.feature");
+  }
+
+  @AfterAll
+  public void financeApiTestAfterAll() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
+
+
+  @Test
+  void allowableEncumbranceAndExpenditureRestrictions() {
+    runFeatureTest("allowable-encumbrance-and-expenditure-restrictions");
+  }
+
+  @Test
+  void batchTransactionApi() {
+    runFeatureTest("batch-transaction-api");
+  }
+
+  @Test
+  void budgetAndFundOptimisticLocking() {
+    runFeatureTest("budget-and-fund-optimistic-locking");
+  }
+
+  @Test
+  void budgetCanBeDeleteIfHaveOnlyAllocationTransactionsFromOrTo() {
+    runFeatureTest("budget-can-be-deleted-if-have-only-allocation-transactions-from-or-to");
+  }
+
+  @Test
+  void budgetCanNotBeDeletedIfHaveOtherThanAllocationTransactions() {
+    runFeatureTest("budget-can-not-be-deleted-if-have-other-than-allocation-transactions");
+  }
+
+  @Test
+  void budgetCanNotBeDeletedIfHaveToAndFromFundInAllocationTransactions() {
+    runFeatureTest("budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions");
+  }
+
   @Test
   void budgetExpenseClasses() {
     runFeatureTest("budget-expense-classes");
+  }
+
+  @Test
+  void shouldVerifyBudgetsTotalsCalculation () {
+    runFeatureTest("budgets-totals-calculation");
   }
 
   @Test
@@ -36,11 +84,6 @@ public class FinanceApiTest extends TestBaseEureka {
   @Test
   void budgetUpdate() {
     runFeatureTest("budget-update");
-  }
-
-  @Test
-  void allowableEncumbranceAndExpenditureRestrictions() {
-    runFeatureTest("allowable-encumbrance-and-expenditure-restrictions");
   }
 
   @Test
@@ -59,13 +102,14 @@ public class FinanceApiTest extends TestBaseEureka {
   }
 
   @Test
-  void groupExpenseClasses() {
-    runFeatureTest("group-expense-classes");
+  @Disabled
+  void returnCurrentFiscalYearConsiderTimeZone() {
+    runFeatureTest("curr-fiscal-year-for-ledger-consider-time-zone");
   }
 
   @Test
-  void ledgerTotals() {
-    runFeatureTest("ledger-totals");
+  void financeDataTest() {
+    runFeatureTest("finance-data");
   }
 
   @Test
@@ -74,33 +118,18 @@ public class FinanceApiTest extends TestBaseEureka {
   }
 
   @Test
+  void groupAndLedgerTransfersAfterRollover() {
+    runFeatureTest("group-and-ledger-transfers-after-rollover");
+  }
+
+  @Test
+  void groupExpenseClasses() {
+    runFeatureTest("group-expense-classes");
+  }
+
+  @Test
   void groupFiscalYearTotals() {
     runFeatureTest("group-fiscal-year-totals");
-  }
-
-  @Test
-  void unreleaseEncumbrance() {
-    runFeatureTest("unrelease-encumbrance.feature");
-  }
-
-  @Test
-  void updateEncumbranceTransactions() {
-    runFeatureTest("update-encumbrance-transactions");
-  }
-
-  @Test
-  void whenCreatingBudgetAddExpenseClassesFromPreviousBudgetAutomatically() {
-    runFeatureTest("when-creating-budget-add-expense-classes-from-previous-budget-automatically");
-  }
-
-  @Test
-  void whenCreatingBudgetAddExpenseClassesProvidedByUser() {
-    runFeatureTest("when-creating-budget-add-expense-classes-if-them-provided-by-user");
-  }
-
-  @Test
-  void ledgerRollover() {
-    runFeatureTest("ledger-fiscal-year-rollover");
   }
 
   @Test
@@ -109,34 +138,23 @@ public class FinanceApiTest extends TestBaseEureka {
   }
 
   @Test
-  void ledgerFiscalYearRolloverPolAndSystemCurrenciesAreDifferent() {
-    runFeatureTest("ledger-fiscal-year-rollover-pol-and-system-currencies-are-different");
+  void ledgerPreviewRolloverNeedCloseBudgets() {
+    runFeatureTest("ledger-fiscal-year-preview-rollover-need-close-budgets");
   }
 
   @Test
-  void verifyGetFundsWithQueryWhereUserHasUnits() {
-    runFeatureTest("acq-units/verify-get-funds-with-query-where-user-has-units");
+  void ledgerRollover() {
+    runFeatureTest("ledger-fiscal-year-rollover");
   }
 
   @Test
-  void verifyGetFundsWithoutQueryWhereUserHasUnitsFilerOnlyByUnits() {
-    runFeatureTest("acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units");
-  }
-
-
-  @Test
-  void budgetCanBeDeleteIfHaveOnlyAllocationTransactionsFromOrTo() {
-    runFeatureTest("budget-can-be-deleted-if-have-only-allocation-transactions-From-or-To");
+  void ledgerFiscalYearRolloverCashBalance() {
+    runFeatureTest("ledger-fiscal-year-rollover-cash-balance");
   }
 
   @Test
-  void budgetCanNotBeDeletedIfHaveOtherThanAllocationTransactions() {
-    runFeatureTest("budget-can-not-be-deleted-if-have-other-than-allocation-transactions");
-  }
-
-  @Test
-  void budgetCanNotBeDeletedIfHaveToAndFromFundInAllocationTransactions() {
-    runFeatureTest("budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions");
+  void ledgerFiscalYearRolloverFailResistanceWhenDuplicateEncumbrance() {
+    runFeatureTest("ledger-fiscal-year-rollover-fail-resistance-when-duplicate-encumbrance");
   }
 
   @Test
@@ -145,44 +163,18 @@ public class FinanceApiTest extends TestBaseEureka {
   }
 
   @Test
-  @Disabled
-  void returnCurrentFiscalYearConsiderTimeZone() {
-    runFeatureTest("curr-fiscal-year-for-ledger-consider-time-zone");
+  void ledgerFiscalYearRolloverOrderWithBrokenEncumbrance() {
+    runFeatureTest("ledger-fiscal-year-rollover-order-with-broken-encumbrance");
   }
 
   @Test
-  void unopenOrderAfterRolloverMODORDERS_542 () {
-    runFeatureTest("unopen-order-after-rollover-MODORDERS-542");
-  }
-
-  @Test
-  void shouldVerifyBudgetsTotalsCalculation () {
-    runFeatureTest("budgets-totals-calculation");
+  void ledgerFiscalYearRolloverPolAndSystemCurrenciesAreDifferent() {
+    runFeatureTest("ledger-fiscal-year-rollover-pol-and-system-currencies-are-different");
   }
 
   @Test
   void shouldVerifyLedgerFiscalYearRolloversMultiple () {
     runFeatureTest("ledger-fiscal-year-rollovers-multiple");
-  }
-
-  @Test
-  void ledgerPreviewRolloverNeedCloseBudgets() {
-    runFeatureTest("ledger-fiscal-year-preview-rollover-need-close-budgets");
-  }
-
-  @Test
-  void budgetAndFundOptimisticLocking() {
-    runFeatureTest("budget-and-fund-optimistic-locking");
-  }
-
-  @Test
-  void groupAndLedgerTransfersAfterRollover() {
-    runFeatureTest("group-and-ledger-transfers-after-rollover");
-  }
-
-  @Test
-  void ledgerFiscalYearRolloverCashBalance() {
-    runFeatureTest("ledger-fiscal-year-rollover-cash-balance");
   }
 
   @Test
@@ -196,35 +188,43 @@ public class FinanceApiTest extends TestBaseEureka {
   }
 
   @Test
-  void ledgerFiscalYearRolloverOrderWithBrokenEncumbrance() {
-    runFeatureTest("ledger-fiscal-year-rollover-order-with-broken-encumbrance");
+  void ledgerTotals() {
+    runFeatureTest("ledger-totals");
   }
 
   @Test
-  void ledgerFiscalYearRolloverFailResistanceWhenDuplicateEncumbrance() {
-    runFeatureTest("ledger-fiscal-year-rollover-fail-resistance-when-duplicate-encumbrance");
+  void unopenOrderAfterRolloverMODORDERS_542 () {
+    runFeatureTest("unopen-order-after-rollover-MODORDERS-542");
   }
 
   @Test
-  void batchTransactionApi() {
-    runFeatureTest("batch-transaction-api");
+  void unreleaseEncumbrance() {
+    runFeatureTest("unrelease-encumbrance");
   }
 
   @Test
-  void financeDataTest() {
-    runFeatureTest("finance-data");
+  void updateEncumbranceTransactions() {
+    runFeatureTest("update-encumbrance-transactions");
   }
 
-  @BeforeAll
-  public void financeApiTestBeforeAll() {
-    System.setProperty("testTenant", "testfinance" + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-finance/finance-junit.feature");
+  @Test
+  void verifyGetFundsWithoutQueryWhereUserHasUnitsFilerOnlyByUnits() {
+    runFeatureTest("acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units");
   }
 
-  @AfterAll
-  public void financeApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+  @Test
+  void verifyGetFundsWithQueryWhereUserHasUnits() {
+    runFeatureTest("acq-units/verify-get-funds-with-query-where-user-has-units");
+  }
+
+  @Test
+  void whenCreatingBudgetAddExpenseClassesFromPreviousBudgetAutomatically() {
+    runFeatureTest("when-creating-budget-add-expense-classes-from-previous-budget-automatically");
+  }
+
+  @Test
+  void whenCreatingBudgetAddExpenseClassesProvidedByUser() {
+    runFeatureTest("when-creating-budget-add-expense-classes-if-them-provided-by-user");
   }
 
 }

@@ -1,5 +1,5 @@
 @parallel=false
-Feature: mod-gobi integration tests
+Feature: Initialize mod-gobi integration tests
 
   Background:
     * print karate.info.scenarioName
@@ -68,6 +68,7 @@ Feature: mod-gobi integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.instances.item.post'                               |
       | 'organizations.organizations.item.post'                       |
+
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
