@@ -128,7 +128,7 @@ Feature: prepare data for api test
 
             for (let i = 0; i < permissions.length; i += chunkSize) {
               var permissionsBatch = userPermissions.slice(i, i + chunkSize);
-              var result = karate.call('classpath:common/eureka/capabilities.feature', {userPermissions: permissionsBatch});
+              var result = karate.call('classpath:common/eureka/capabilities.feature@getCapabilities', {userPermissions: permissionsBatch});
               var foundCapabilities = result.response.capabilities;
 
               // Track which permissions were found
@@ -176,5 +176,16 @@ Feature: prepare data for api test
     Given path 'users', 'capabilities'
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
     And request { "userId": '#(userId)', "capabilityIds" : '#(capabilityIds)' }
+    When method POST
+    Then status 201
+
+    * print "---add capability sets for test user---"
+    * def capabilitySets = call read('classpath:common/eureka/capabilities.feature@getCapabilitySets')
+    * def capabilitySetIds = capabilitySets.response.capabilitySets.map(x => x.id)
+
+    * print "send userCapabilitySets request"
+    Given path 'users', 'capability-sets'
+    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
+    And request { "userId": '#(userId)', "capabilitySetIds" : '#(capabilitySetIds)' }
     When method POST
     Then status 201
