@@ -55,4 +55,5 @@ Feature: mod-inn-reach integration tests
       | 'inn-reach.locations.collection.get'                     |
 
   Scenario: create tenant and users for testing for mod-inn-reach
-    Given call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 1800 }
