@@ -411,7 +411,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(result.s3UploadKey)'}
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(result.s3UploadKey)'}
 
     # Get child job execution
     Given path 'change-manager/jobExecutions', jobExecutionId

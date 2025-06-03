@@ -6,7 +6,7 @@ Feature: Get job execution by id
 
   @getJobWhenJobStatusCompleted
   Scenario: wait until job status will be 'completed'
-    Given path '/change-manager/jobExecutions', jobExecutionId
+    Given path '/change-manager/jobExecutions', __arg.jobExecutionId
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And headers headersUser
@@ -15,4 +15,4 @@ Feature: Get job execution by id
     Then status 200
     * def jobStatus = response.status
     # If status is ERROR, get job log entries
-    * if (jobStatus == 'ERROR') karate.call('classpath:folijet/data-import/global/check-job-log-entries.feature', { jobExecutionId: jobExecutionId, headersUser: headersUser })
+    * if (jobStatus == 'ERROR') karate.call('classpath:folijet/data-import/global/check-job-log-entries.feature', { jobExecutionId: __arg.jobExecutionId, headersUser: headersUser })

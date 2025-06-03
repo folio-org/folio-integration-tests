@@ -7,7 +7,7 @@ Feature: Set for deletion logic
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
     * def commonImportFeature = 'classpath:folijet/data-import/global/common-data-import.feature'
-    * def completeExecutionFeature = 'classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted'
+    * def completeExecutionFeature = 'classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted'
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
     * def javaDemo = Java.type('test.java.WriteData')
