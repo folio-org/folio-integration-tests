@@ -1,4 +1,4 @@
-# THIS SHOULD BE IN CROSS-MODULES TESTS
+# MODORDERS-1191, MODORDERS-1204, MODORDERS-1308
 Feature: Check that order total fields are calculated correctly
 
   Background:
@@ -15,7 +15,7 @@ Feature: Check that order total fields are calculated correctly
     * callonce variables
 
     ### Before All ###
-    * configure headers = headersAdmin
+    * configure headers = headersUser
     * def previousFiscalYear = callonce uuid1
     * def currentFiscalYear = callonce uuid2
     * def codePrefix = callonce random_string
@@ -47,7 +47,6 @@ Feature: Check that order total fields are calculated correctly
 
 
     ### Before Each ###
-    * configure headers = headersUser
     * def orderId = call uuid
     * def v = call createOrder { id: "#(orderId)" }
 
@@ -59,19 +58,15 @@ Feature: Check that order total fields are calculated correctly
 
     * def v = call openOrder { id: "#(orderId)" }
 
-    * configure headers = headersAdmin
     * def invoiceId = call uuid
     * table invoicesData
       | id        | fiscalYearId      |
       | invoiceId | currentFiscalYear |
     * def v = call createInvoice invoicesData
 
-    * configure headers = headersUser
-
   @Positive
   Scenario: Check total order fields with totalExpended being zero while invoice lines are opened
     # 1. Create Invoice Lines
-    * configure headers = headersAdmin
     * def invoiceLineId1 = call uuid
     * def invoiceLineId2 = call uuid
     * table invoiceLinesData
@@ -81,7 +76,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call createInvoiceLine invoiceLinesData
 
     # 2. Check that total fields are calculated correctly
-    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -92,7 +86,6 @@ Feature: Check that order total fields are calculated correctly
   @Positive
   Scenario: Check total order fields with totalExpended being zero while invoice lines are approved
     # 1. Create Invoice Lines
-    * configure headers = headersAdmin
     * def invoiceLineId1 = call uuid
     * def invoiceLineId2 = call uuid
     * table invoiceLinesData
@@ -103,7 +96,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call approveInvoice invoiceLinesData
 
     # 2. Check that total fields are calculated correctly
-    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -114,7 +106,6 @@ Feature: Check that order total fields are calculated correctly
   @Positive
   Scenario: Check order total fields with invoice lines having positive and negative sub-total values
     # 1. Create Invoice Lines
-    * configure headers = headersAdmin
     * def invoiceLineId1 = call uuid
     * def invoiceLineId2 = call uuid
     * table invoiceLinesData
@@ -126,7 +117,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call payInvoice invoiceLinesData
 
     # 2. Check that total fields are calculated correctly
-    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -137,7 +127,6 @@ Feature: Check that order total fields are calculated correctly
   @Positive
   Scenario: Check order total fields with invoice lines having only positive sub-total values
     # 1. Create Invoice Line
-    * configure headers = headersAdmin
     * def invoiceLineId1 = call uuid
     * table invoiceLinesData
       | invoiceLineId  | invoiceId | poLineId | fundId | total |
@@ -147,7 +136,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call payInvoice invoiceLinesData
 
     # 2. Check that total fields are calculated correctly
-    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -158,7 +146,6 @@ Feature: Check that order total fields are calculated correctly
   @Positive
   Scenario: Check order total fields with invoice lines having only negative sub-total values
     # 1. Create Invoice Line
-    * configure headers = headersAdmin
     * def invoiceLineId1 = call uuid
     * table invoiceLinesData
       | invoiceLineId  | invoiceId | poLineId | fundId | total |
@@ -168,7 +155,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call payInvoice invoiceLinesData
 
     # 2. Check that total fields are calculated correctly
-    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -193,7 +179,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call openOrder { id: "#(orderId2)" }
 
     # 1. Create Invoice Lines
-    * configure headers = headersAdmin
     * def invoiceLineId1 = call uuid
     * def invoiceLineId2 = call uuid
     * def invoiceLineId3 = call uuid
@@ -209,7 +194,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call payInvoice invoiceLinesData
 
     # 2. Check that total fields are calculated correctly
-    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -220,7 +204,6 @@ Feature: Check that order total fields are calculated correctly
   @Positive
   Scenario: Check order total fields with invoices having different fiscal year
     # 1. Create Invoice with previous fiscal year
-    * configure headers = headersAdmin
     * def invoiceId2 = call uuid
     * table invoicesData
       | id         | fiscalYearId       |
@@ -238,7 +221,6 @@ Feature: Check that order total fields are calculated correctly
 
     # 3. Check that total fields are calculated correctly
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
     And match response.totalEncumbered == 100
@@ -274,7 +256,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call openOrder { id: "#(orderId2)" }
 
     # 2. Create Invoice with previous fiscal year and Invoice Lines for previous and current fiscal years
-    * configure headers = headersAdmin
     * def invoiceId2 = call uuid
     * table invoicesData
       | id         | fiscalYearId       |
@@ -296,7 +277,6 @@ Feature: Check that order total fields are calculated correctly
     * def v = call payInvoice invoiceLinesData
 
     # 3. Check that total fields are calculated correctly with only current fiscal year and no encumbrances
-    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId2
     When method GET
     Then status 200
@@ -304,3 +284,41 @@ Feature: Check that order total fields are calculated correctly
     And match response.totalExpended == 140
     And match response.totalCredited == 420
 
+  @Positive
+  Scenario: Check order expended amount when using an invoice currency different from the system currency
+    # 1. Change the invoice currency to EUR
+    * call getInvoice
+    * set invoice.currency = 'EUR'
+    Given path 'invoice/invoices', invoiceId
+    And request invoice
+    When method PUT
+    Then status 204
+
+    # 2. Add an invoice line based on the order line
+    # Get the encumbrance id
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def poLine = $
+    * def encumbranceId = poLine.fundDistribution[0].encumbrance
+    # Create the invoice line
+    * def invoiceLineId = call uuid
+    * def v = call createInvoiceLine { invoiceLineId: "#(invoiceLineId)", invoiceId: "#(invoiceId)", poLineId: "#(poLineId)", fundId: "#(fundId)", encumbranceId: "#(encumbranceId)", total: 10 }
+
+    # 3. Approve the invoice
+    * def v = call approveInvoice { invoiceId: "#(invoiceId)" }
+
+    # 4. Pay the invoice
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
+
+    # 5. Get the expended amount from the encumbrance
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    * def amountExpended = $.encumbrance.amountExpended
+
+    # 6. Check the order expended amount is the same as the encumbrance
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+    And match $.totalExpended == amountExpended

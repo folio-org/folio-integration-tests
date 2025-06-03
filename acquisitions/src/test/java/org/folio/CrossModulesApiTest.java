@@ -101,6 +101,11 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void checkOrderTotalFieldsCalculatedCorrectly() {
+    runFeatureTest("check-order-total-fields-calculated-correctly");
+  }
+
+  @Test
   void checkPaymentStatusAfterCancellingPaidInvoice() {
     runFeatureTest("check-payment-status-after-cancelling-paid-invoice");
   }

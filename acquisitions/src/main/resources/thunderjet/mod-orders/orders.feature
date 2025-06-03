@@ -54,9 +54,6 @@ Feature: mod-orders integration tests
   Scenario: Check order re-encumber works correctly
     * call read('features/check-order-re-encumber-work-correctly.feature')
 
-  Scenario: Check that order total fields are calculated correctly
-    * call read('features/check-order-total-fields-calculated-correctly.feature')
-
   Scenario: Check needReEncumber flag populated correctly
     * call read('features/check-re-encumber-property.feature')
 
