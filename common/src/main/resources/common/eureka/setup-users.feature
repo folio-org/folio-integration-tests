@@ -26,6 +26,7 @@ Feature: prepare data for api test
     And param purgeOnRollback = false
     And request entitlementTamplate
     And header Authorization = 'Bearer ' + KeycloakMasterToken
+    And header x-okapi-token = KeycloakMasterToken
     When method POST
     * def flowId = response.flowId
 

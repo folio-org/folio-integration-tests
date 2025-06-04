@@ -8,8 +8,11 @@ Feature: init data for consortia
 
   @PostTenant
   Scenario: Create a new tenant
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def KeycloakMasterToken = keycloakResponse.response.access_token
     Given path 'tenants'
     And request { id: '#(tenantId)', name: '#(tenant)', description: '#(description)' }
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method POST
     Then status 201
 
@@ -17,6 +20,8 @@ Feature: init data for consortia
   Scenario: Create entitlements in tenant. The same ones like in diku tenant
     * print 'Get applications of consortium tenant'
     * def testTenantId = tenantId
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def KeycloakMasterToken = keycloakResponse.response.access_token
 
     * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
@@ -28,12 +33,14 @@ Feature: init data for consortia
     And param async = true
     And param purgeOnRollback = false
     And request entitlementTamplate
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method POST
     * def flowId = response.flowId
 
     * configure retry = { count: 40, interval: 30000 }
     Given path 'entitlement-flows', flowId
     * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method GET
     * def failCondition = response.status
     * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.fail('Entitlement creation failed.')
@@ -49,6 +56,7 @@ Feature: init data for consortia
     * print "---destroy entitlement---"
     Given path 'entitlements'
     And param query = 'tenantId==' + testTenantId
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method GET
     * def totalAmount = response.totalRecords
     * if(totalAmount < 1) karate.abort()
@@ -56,6 +64,7 @@ Feature: init data for consortia
     Given path 'entitlements'
     And param query = 'tenantId==' + testTenantId
     And param limit = totalAmount
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method GET
 
     * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
@@ -64,6 +73,7 @@ Feature: init data for consortia
     Given path 'entitlements'
     And param purge = true
     And request entitlementTamplate
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method DELETE
     Then status 200
 
