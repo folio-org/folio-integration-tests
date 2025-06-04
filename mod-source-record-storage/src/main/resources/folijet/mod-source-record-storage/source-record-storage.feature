@@ -16,6 +16,7 @@ Feature: mod-source-record-storage integration tests
       | 'source-storage.records.post'                  |
       | 'source-storage.records.put'                   |
       | 'source-storage.records.delete'                |
+      | 'source-storage.records.suppress-discovery.item.put' |
       | 'source-storage.snapshots.post'                |
       | 'source-storage.snapshots.put'                 |
       | 'source-storage.source-records.item.get'       |
