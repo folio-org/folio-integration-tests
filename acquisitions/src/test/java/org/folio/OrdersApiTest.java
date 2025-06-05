@@ -99,11 +99,6 @@ public class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
-  void checkOrderTotalFieldsCalculatedCorrectly() {
-    runFeatureTest("check-order-total-fields-calculated-correctly");
-  }
-
-  @Test
   void checkOrderNeedReEncumber() {
     runFeatureTest("check-re-encumber-property");
   }

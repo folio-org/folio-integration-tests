@@ -56,6 +56,9 @@ Feature: cross-module integration tests
   Scenario: Check order re-encumber after preview rollover
     * call read('features/check-order-re-encumber-after-preview-rollover.feature')
 
+  Scenario: Check that order total fields are calculated correctly
+    * call read('features/check-order-total-fields-calculated-correctly.feature')
+
   Scenario: Check payment status after cancelling paid invoice
     * call read('features/check-payment-status-after-cancelling-paid-invoice.feature')
 
