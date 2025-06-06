@@ -269,7 +269,9 @@ Feature: FAT-13522
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', importJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null
+    # it seems it is possible for this endpoint to return DISCARDED temporarily, so we need to retry
+    # until we get the UPDATED status for the relatedInstanceInfo.actionStatus
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') == 'UPDATED'
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'UPDATED'

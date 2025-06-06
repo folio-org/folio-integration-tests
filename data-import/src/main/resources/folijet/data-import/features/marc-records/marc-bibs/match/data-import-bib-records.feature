@@ -14,7 +14,7 @@ Feature: Test Data-Import bib records
     # Define common headers and paths for API requests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json' }
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
-    * def getCompletedJobFeature = 'classpath:folijet/data-import/features/get-completed-job-execution.feature'
+    * def getCompletedJobFeature = 'classpath:folijet/data-import/global/get-completed-job-execution.feature'
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
     # Define the record type for all tests in this feature

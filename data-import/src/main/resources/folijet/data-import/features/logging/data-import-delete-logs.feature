@@ -2,16 +2,12 @@ Feature: Data Import Log deletion tests
 
   Background:
     * url baseUrl
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
-
+    * call read('classpath:folijet/data-import/global/auth.feature')
+    * call read('classpath:folijet/data-import/global/common-functions.feature')
     * configure retry = { interval: 15000, count: 5 }
-
-    * def javaDemo = Java.type('test.java.WriteData')
-
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
+
+
 
   Scenario: FAT-1616 Deleting data-import logs
     * print 'FAT-1616 Deleting data-import logs'
@@ -45,7 +41,7 @@ Feature: Data Import Log deletion tests
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -85,10 +81,10 @@ Feature: Data Import Log deletion tests
     And assert response.jobExecutionDetails[0].isDeleted == true
 
     # verify job execution for data-import is not present
-    * call pause 5000
     Given path '/change-manager/jobExecutions', jobExecutionId
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And headers headersUser
+    And retry until responseStatus == 404
     When method GET
     Then status 404

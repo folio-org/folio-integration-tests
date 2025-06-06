@@ -472,7 +472,7 @@ Feature: Import EDIFACT invoice
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = $
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -793,7 +793,7 @@ Feature: Import EDIFACT invoice
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobByJobProfileId') { key: '#(sourcePath)', jobProfileId: '#(jobProfileId)' }
     * def jobExecution = $
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -1074,7 +1074,7 @@ Feature: Import EDIFACT invoice
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = $
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -1459,7 +1459,7 @@ Feature: Import EDIFACT invoice
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
     And assert jobExecution.progress.current == 1

@@ -574,7 +574,7 @@ Feature: FAT-1204
     * def jobExecutionId = result.jobExecutionId
 
     # Verify job execution for create instance, holdings and items
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -588,7 +588,7 @@ Feature: FAT-1204
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null
+    And retry until response.entries.length == 6 && karate.get('response.entries[5].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[5].relatedHoldingsInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And match response.entries[*].sourceRecordActionStatus == ["CREATED","CREATED","CREATED","CREATED","CREATED","CREATED"]
@@ -602,7 +602,7 @@ Feature: FAT-1204
     * def jobExecutionId = result.jobExecutionId
 
     # Verify job execution for update holdings and items
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution.feature@getJobWhenJobStatusCompleted') { jobExecutionId: '#(jobExecutionId)'}
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
