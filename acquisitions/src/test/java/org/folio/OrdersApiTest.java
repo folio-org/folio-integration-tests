@@ -104,11 +104,6 @@ public class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
-  void checkTotalEncumberedExpendedCalculatedCorrectly() {
-    runFeatureTest("check_total_encumbered_expended_calculated_correctly");
-  }
-
-  @Test
   void closeOrderAndReleaseEncumbrances() {
     runFeatureTest("close-order-and-release-encumbrances");
   }

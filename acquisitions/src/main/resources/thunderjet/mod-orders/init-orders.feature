@@ -149,7 +149,6 @@ Feature: Initialize mod-orders integration tests
       | 'finance-storage.ledger-rollovers-errors.item.delete'         |
       | 'finance-storage.ledger-rollovers-errors.item.post'           |
       | 'finance-storage.ledger-rollovers.item.post'                  |
-      | 'finance-storage.transactions.batch.execute'                  |
       | 'finance-storage.transactions.collection.get'                 |
       | 'finance.transactions.batch.execute'                          |
       | 'finance.transactions.collection.get'                         |
