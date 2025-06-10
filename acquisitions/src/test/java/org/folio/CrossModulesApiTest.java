@@ -121,8 +121,8 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
-  void chekPoNumbersUpdatesWhenIinvoiceLineDeleted() {
-    runFeatureTest("chek-po-numbers-updates-when-invoice-line-deleted");
+  void checkPoNumbersUpdatesWhenIinvoiceLineDeleted() {
+    runFeatureTest("check-po-numbers-updates-when-invoice-line-deleted");
   }
 
   @Test
