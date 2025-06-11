@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
 
   Background:
