@@ -121,7 +121,7 @@ Feature: prepare data for api test
         function(count) {
           while (true) {
             karate.log('****************** retry left # ', count);
-            var chunkSize = 100;
+            var chunkSize = 30;
             var capabilityIds = []
             var permissionsFound = []
             var missingPermissions = []
@@ -180,8 +180,23 @@ Feature: prepare data for api test
     Then status 201
 
     * print "---add capability sets for test user---"
-    * def capabilitySets = call read('classpath:common/eureka/capabilities.feature@getCapabilitySets')
-    * def capabilitySetIds = capabilitySets.response.capabilitySets.map(x => x.id)
+    * def chunkSize = 30
+    * def allCapabilitySetIds = []
+    * def getCapabilitySetsByChunks =
+        """
+        function() {
+          for (let i = 0; i < permissions.length; i += chunkSize) {
+            var permissionsBatch = userPermissions.slice(i, i + chunkSize);
+            var capabilitySetsResult = karate.call('classpath:common/eureka/capabilities.feature@getCapabilitySets', {userPermissions: permissionsBatch});
+            if (capabilitySetsResult.response && capabilitySetsResult.response.capabilitySets) {
+              var setIds = capabilitySetsResult.response.capabilitySets.map(x => x.id);
+              allCapabilitySetIds = allCapabilitySetIds.concat(setIds);
+            }
+          }
+          return allCapabilitySetIds;
+        }
+        """
+    * def capabilitySetIds = call getCapabilitySetsByChunks
     * if (capabilitySetIds.length == 0) karate.abort()
     * print "send userCapabilitySets request"
     Given path 'users', 'capability-sets'
