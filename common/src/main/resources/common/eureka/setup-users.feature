@@ -121,7 +121,7 @@ Feature: prepare data for api test
         function(count) {
           while (true) {
             karate.log('****************** retry left # ', count);
-            var chunkSize = 100;
+            var chunkSize = 50;
             var capabilityIds = []
             var permissionsFound = []
             var missingPermissions = []
@@ -184,7 +184,7 @@ Feature: prepare data for api test
     """
       function() {
         var capabilitySetIds = []
-        var chunkSize = 100;
+        var chunkSize = 50;
         for (let i = 0; i < permissions.length; i += chunkSize) {
           var permissionsBatch = userPermissions.slice(i, i + chunkSize);
           var result = karate.call('classpath:common/eureka/capabilities.feature@getCapabilitySets', {userPermissions: permissionsBatch});
