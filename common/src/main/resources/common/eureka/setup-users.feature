@@ -182,10 +182,5 @@ Feature: prepare data for api test
     * print "---add capability sets for test user---"
     * def capabilitySets = call read('classpath:common/eureka/capabilities.feature@getCapabilitySets')
     * def capabilitySetIds = capabilitySets.response.capabilitySets.map(x => x.id)
-    * if (capabilitySetIds.length == 0) karate.abort()
-    * print "send userCapabilitySets request"
-    Given path 'users', 'capability-sets'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
-    And request { "userId": '#(userId)', "capabilitySetIds" : '#(capabilitySetIds)' }
-    When method POST
-    Then status 201
+    * if (capabilitySetIds.length == 0) karate.log('No capability sets found for the user');
+    * if (capabilitySetIds.length > 0) karate.call('classpath:common/eureka/capabilities.feature@postCapabilitySets', {capabilitySetIds: capabilitySetIds});
