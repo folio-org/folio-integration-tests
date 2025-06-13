@@ -1629,7 +1629,9 @@ Feature: Requests tests
     * def createFirstServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
     * def createSecondServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
     * def firstServicePointName = createFirstServicePointResponse.response.name
+    * def firstServicePointDisplayName = createFirstServicePointResponse.response.discoveryDisplayName
     * def secondServicePointName = createSecondServicePointResponse.response.name
+    * def secondServicePointDisplayName = createSecondServicePointResponse.response.discoveryDisplayName
 
     # create non-pickup-location service point with pickup location true, but it will be updated later to false
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(nonPickupLocationServicePointId) }
@@ -1667,8 +1669,8 @@ Feature: Requests tests
     * param operation = requestOperation
     When method GET
     Then status 200
-    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
-    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
+    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)", "discoveryDisplayName": "#(firstServicePointDisplayName)"}
+    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)", "discoveryDisplayName": "#(secondServicePointDisplayName)"}
     And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
@@ -1678,8 +1680,8 @@ Feature: Requests tests
     * param operation = requestOperation
     When method GET
     Then status 200
-    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
-    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
+    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)", "discoveryDisplayName": "#(firstServicePointDisplayName)"}
+    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)", "discoveryDisplayName": "#(secondServicePointDisplayName)"}
     And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
@@ -1693,9 +1695,9 @@ Feature: Requests tests
     When method GET
     Then status 200
     And match response.Page == "#notpresent"
-    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
-    And match response.Recall contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
-    And match response.Recall contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
+    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)", "discoveryDisplayName": "#(firstServicePointDisplayName)"}
+    And match response.Recall contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)", "discoveryDisplayName": "#(firstServicePointDisplayName)"}
+    And match response.Recall contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)", "discoveryDisplayName": "#(secondServicePointDisplayName)"}
 
     # restore original circulation rules
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
