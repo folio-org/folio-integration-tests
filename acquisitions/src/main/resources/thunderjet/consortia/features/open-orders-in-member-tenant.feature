@@ -15,21 +15,44 @@ Feature: Open orders in member tenant, share instance in one case
     * callonce variablesCentral
     * callonce variablesUniversity
 
+    * def fiscalYearId = callonce uuid
+    * def ledgerId = callonce uuid
+    * def fundId = callonce uuid
+    * def budgetId = callonce uuid
+    * def vendorId = callonce uuid
+
+    * def currentYear = call getCurrentYear
+    * def codePrefix = call random_string
+    * def code = codePrefix + currentYear
+    * def periodStart = currentYear + '-01-01T00:00:00Z'
+    * def periodEnd = currentYear + '-12-30T23:59:59Z'
+
+    * def v = callonce createFiscalYear { id: '#(fiscalYearId)', code: '#(code)', periodStart: '#(periodStart)', periodEnd: '#(periodEnd)' }
+    * def v = callonce createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId)' }
+    * def v = callonce createFund { id: '#(fundId)' }
+    * def v = callonce createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+
+    * def v = callonce createOrganization { id: '#(vendorId)', name: 'University Vendor', code: 'UV', isVendor: true, status: 'Active' }
+
 
   Scenario: Create and open an order in university tenant, no central instance
     * def orderId = call uuid
     * def poLineId = call uuid
 
     # Create and open order in university tenant
-    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)' }
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(vendorId)' }
 
     * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
+    * set orderLine.fundDistribution[0].fundId = fundId
+    * set orderLine.fundDistribution[0].code = fundId
     * set orderLine.locations[2].tenantId = universityTenantName
     * set orderLine.locations[2].locationId = universityLocationsId
     * def productId = { productId: '12345', productIdType: '#(globalISBNIdentifierTypeId)' }
-    * set orderLine.details.productIds = [ productId ]
+    * set orderLine.details.productIds = [ '#(productId)' ]
+    * set orderLine.physical.materialSupplier = vendorId
+    * set orderLine.eresource.accessProvider = vendorId
     Given path 'orders/order-lines'
     And request orderLine
     When method POST
@@ -79,23 +102,30 @@ Feature: Open orders in member tenant, share instance in one case
 
 
   Scenario: Create and open an order in university tenant, with a central instance
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
     # Create an instance in central tenant
     * def instanceId = call uuid
     * configure headers = headersCentral
     * def identifiers = [ { value: '12345', identifierTypeId: '#(globalISBNIdentifierTypeId)' } ]
-    * def v = call createInstance { id: instanceId, title: 'instance title', instanceTypeId: '#(globalInstanceTypeId)', identifiers: '#(identifiers)' }
+    * def v = call createInstance { id: '#(instanceId)', title: 'instance title', instanceTypeId: '#(globalInstanceTypeId)', identifiers: '#(identifiers)' }
 
     # Create and open order in university tenant (using a matching productId)
     * configure headers = headersUniUser
-    * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)' }
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(vendorId)' }
 
     * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
+    * set orderLine.fundDistribution[0].fundId = fundId
+    * set orderLine.fundDistribution[0].code = fundId
     * set orderLine.locations[2].tenantId = universityTenantName
     * set orderLine.locations[2].locationId = universityLocationsId
     * def productId = { productId: '12345', productIdType: '#(globalISBNIdentifierTypeId)' }
-    * set orderLine.details.productIds = [ productId ]
+    * set orderLine.details.productIds = [ '#(productId)' ]
+    * set orderLine.physical.materialSupplier = vendorId
+    * set orderLine.eresource.accessProvider = vendorId
     Given path 'orders/order-lines'
     And request orderLine
     When method POST
