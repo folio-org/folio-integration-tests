@@ -34,3 +34,6 @@ Feature: consortia orders integration tests
 
   Scenario: Update unaffiliated PoLine locations
     * call read('features/update-unaffiliated-pol-locations.feature')
+
+  Scenario: Open orders in member tenant, share instance in one case
+    * call read('features/open-orders-in-member-tenant.feature')
