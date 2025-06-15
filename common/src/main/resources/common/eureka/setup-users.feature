@@ -150,6 +150,8 @@ Feature: prepare data for api test
 
             karate.log('capabilityIds: # #', capabilityIds.length, capabilityIds);
             karate.log('permissions: # #', permissions.length, permissions);
+            karate.log('permissionsFound: # #', permissionsFound.length, permissionsFound);
+            karate.log('missingPermissions: # #', missingPermissions.length, missingPermissions);
             if (missingPermissions.length > 0) {
               karate.log('***** Missing capabilities for permissions: *****');
               for (let i = 0; i < missingPermissions.length; i++) {
