@@ -37,5 +37,6 @@ Feature: capability
     When method GET
     Then status 200
 
+    * print "---Let's check capabilities---"
     * eval karate.sleep(600000)
 
