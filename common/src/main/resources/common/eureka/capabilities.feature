@@ -36,3 +36,5 @@ Feature: capability
     And param limit = permissions.length
     When method GET
     Then status 200
+
+    * call pause 5000
