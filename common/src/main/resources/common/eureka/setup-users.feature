@@ -149,6 +149,7 @@ Feature: prepare data for api test
             missingPermissions = permissions.filter(p => !permissionsFound.includes(p));
 
             karate.log('capabilityIds: # #', capabilityIds.length, capabilityIds);
+            karate.log('permissions: # #', permissions.length, permissions);
             if (missingPermissions.length > 0) {
               karate.log('***** Missing capabilities for permissions: *****');
               for (let i = 0; i < missingPermissions.length; i++) {
