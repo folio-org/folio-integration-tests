@@ -193,7 +193,13 @@ Feature: prepare data for api test
 
 
     * print "---Let's check capabilities---"
-    * sleep(600000)
+    * def sleepForCheck =
+        """
+        function() {
+            java.lang.Thread.sleep(600000); // Sleep for 10 minutes to allow the user to check the capabilities
+        }
+        """
+    * call sleepForCheck
 
     * print "send userCapabilitySets request"
     Given path 'users', 'capability-sets'
