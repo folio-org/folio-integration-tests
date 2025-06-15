@@ -36,7 +36,3 @@ Feature: capability
     And param limit = permissions.length
     When method GET
     Then status 200
-
-    * print "---Let's check capabilities---"
-    * call sleep(600000)
-

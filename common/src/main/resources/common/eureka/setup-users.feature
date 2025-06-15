@@ -191,6 +191,10 @@ Feature: prepare data for api test
     * def capabilitySets = call read('classpath:common/eureka/capabilities.feature@getCapabilitySets')
     * def capabilitySetIds = capabilitySets.response.capabilitySets.map(x => x.id)
 
+
+    * print "---Let's check capabilities---"
+    * sleep(600000)
+
     * print "send userCapabilitySets request"
     Given path 'users', 'capability-sets'
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
