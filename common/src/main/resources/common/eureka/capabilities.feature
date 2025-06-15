@@ -37,4 +37,5 @@ Feature: capability
     When method GET
     Then status 200
 
-    * call pause 50000
+    * eval karate.sleep(600000)
+
