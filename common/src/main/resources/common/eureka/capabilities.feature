@@ -38,5 +38,5 @@ Feature: capability
     Then status 200
 
     * print "---Let's check capabilities---"
-    * eval karate.sleep(600000)
+    * sleep 600000
 
