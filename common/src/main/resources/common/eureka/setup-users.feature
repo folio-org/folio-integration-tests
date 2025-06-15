@@ -206,12 +206,3 @@ Feature: prepare data for api test
     * def capabilitySetIds = call loadCapabilitySetIds
     * if (capabilitySetIds.length == 0) karate.log('No capability sets found for the user');
     * if (capabilitySetIds.length > 0) karate.call('classpath:common/eureka/capabilities.feature@postCapabilitySets', {capabilitySetIds: capabilitySetIds});
-
-    * print "---Let's check capabilities---"
-    * def sleepForCheck =
-        """
-        function() {
-            java.lang.Thread.sleep(600000); // Sleep for 10 minutes to allow the user to check the capabilities
-        }
-        """
-    * call sleepForCheck
