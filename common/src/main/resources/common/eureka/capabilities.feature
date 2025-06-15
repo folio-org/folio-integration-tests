@@ -38,5 +38,5 @@ Feature: capability
     Then status 200
 
     * print "---Let's check capabilities---"
-    * call sleep 600000
+    * call sleep(600000)
 
