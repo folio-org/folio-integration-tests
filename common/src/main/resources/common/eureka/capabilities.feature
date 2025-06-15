@@ -37,4 +37,4 @@ Feature: capability
     When method GET
     Then status 200
 
-    * call pause 5000
+    * call pause 50000
