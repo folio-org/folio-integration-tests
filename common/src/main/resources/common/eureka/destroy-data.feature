@@ -11,14 +11,18 @@ Feature: destroy data for tenant
   @destroyEntitlement
   Scenario: delete entitlement
     * print "---destroy entitlement---"
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def KeycloakMasterToken = keycloakResponse.response.access_token
     Given path 'entitlements'
     And param query = 'tenantId==' + testTenantId
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method GET
     * def totalAmount = response.totalRecords
 
     Given path 'entitlements'
     And param query = 'tenantId==' + testTenantId
     And param limit = totalAmount
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method GET
 
     * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
@@ -26,6 +30,7 @@ Feature: destroy data for tenant
     Given path 'entitlements'
     And param purge = true
     And request entitlementTamplate
+    And header Authorization = 'Bearer ' + KeycloakMasterToken
     When method DELETE
     Then status 200
 
