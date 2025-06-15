@@ -36,3 +36,15 @@ Feature: capability
     And param limit = permissions.length
     When method GET
     Then status 200
+
+  @postCapabilitySets
+  Scenario: search capability sets
+    * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
+    * print 'Adding capability sets for the user: ' + capabilitySetIds
+    * def accesstoken = karate.get('accessToken')
+    * print "send userCapabilitySets request"
+    Given path 'users', 'capability-sets'
+    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
+    And request { "userId": '#(userId)', "capabilitySetIds" : '#(capabilitySetIds)' }
+    When method POST
+    Then status 201
