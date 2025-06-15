@@ -1,5 +1,6 @@
 Feature: FAT-1117
-
+  # This feature tests the updating of default mapping rules and verifies the changes via data-import.
+  # Due to this, it should not be run in parallel with other tests.
   Background:
     * url baseUrl
     * call read('classpath:folijet/data-import/global/auth.feature')

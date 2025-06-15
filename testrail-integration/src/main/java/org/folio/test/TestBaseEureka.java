@@ -146,4 +146,96 @@ public abstract class TestBaseEureka {
         return shouldCreateTenant;
     }
 
+    /**
+     * Builder for running features with custom configuration
+     */
+    public FeatureRunner feature(String featurePath) {
+        return new FeatureRunner(featurePath);
+    }
+
+    /**
+     * Helper method to generate timestamped report directory
+     */
+    protected String timestampedReportDir() {
+        return "target/karate-reports-" + System.currentTimeMillis();
+    }
+
+    public class FeatureRunner {
+        private final String featurePath;
+        private String reportDir;
+        private int threadCount = DEFAULT_THREAD_COUNT;
+        private TestInfo testInfo;
+        private boolean outputHtmlReport = true;
+
+        private FeatureRunner(String featurePath) {
+            this.featurePath = featurePath;
+        }
+
+        public FeatureRunner reportDir(String reportDir) {
+            this.reportDir = reportDir;
+            return this;
+        }
+
+        public FeatureRunner threadCount(int threadCount) {
+            this.threadCount = threadCount;
+            return this;
+        }
+
+        public FeatureRunner testInfo(TestInfo testInfo) {
+            this.testInfo = testInfo;
+            return this;
+        }
+
+        public FeatureRunner outputHtmlReport(boolean outputHtmlReport) {
+            this.outputHtmlReport = outputHtmlReport;
+            return this;
+        }
+
+        public void run() {
+            if (StringUtils.isBlank(featurePath)) {
+                logger.warn("No feature path specified");
+                return;
+            }
+
+            String actualFeaturePath = featurePath;
+            if (!featurePath.startsWith("classpath:")) {
+                actualFeaturePath = testIntegrationService.getTestConfiguration()
+                        .getBasePath()
+                        .concat(featurePath);
+            }
+
+            AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
+            RuntimeHook hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
+
+            Runner.Builder builder = Runner.path(actualFeaturePath)
+                    .outputCucumberJson(true)
+                    .outputJunitXml(true)
+                    .outputHtmlReport(outputHtmlReport)
+                    .hook(hook)
+                    .tags("~@Ignore", "~@NoTestRail");
+
+            if (reportDir != null) {
+                builder = builder.reportDir(reportDir);
+            }
+
+            Results results = builder.parallel(threadCount);
+
+            // Only generate report if not using custom reportDir or if explicitly enabled
+            if (reportDir == null || outputHtmlReport) {
+                try {
+                    testIntegrationService.generateReport(results.getReportDir());
+                } catch (IOException ioe) {
+                    logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
+                }
+            }
+
+            int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
+            String featureName = featurePath.substring(++idx);
+            testIntegrationService.addResult(featureName, results);
+
+            Assertions.assertEquals(0, results.getFailCount());
+            logger.debug("feature {} run result {} ", featurePath, results.getErrorMessages());
+        }
+    }
+
 }

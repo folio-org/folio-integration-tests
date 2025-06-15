@@ -10,18 +10,19 @@ Feature: mod-source-record-storage integration tests
       | 'mod-inventory'             |
 
     * table userPermissions
-      | name                                           |
-      | 'source-storage.records.collection.get'        |
-      | 'source-storage.records.item.get'              |
-      | 'source-storage.records.post'                  |
-      | 'source-storage.records.put'                   |
-      | 'source-storage.records.delete'                |
-      | 'source-storage.snapshots.post'                |
-      | 'source-storage.snapshots.put'                 |
-      | 'source-storage.source-records.item.get'       |
-      | 'source-storage.source-records.collection.get' |
-      | 'inventory-storage.instances.item.post'        |
-      | 'inventory-storage.instance-types.item.post'   |
+      | name                                                 |
+      | 'source-storage.records.collection.get'              |
+      | 'source-storage.records.item.get'                    |
+      | 'source-storage.records.post'                        |
+      | 'source-storage.records.put'                         |
+      | 'source-storage.records.delete'                      |
+      | 'source-storage.records.suppress-discovery.item.put' |
+      | 'source-storage.snapshots.post'                      |
+      | 'source-storage.snapshots.put'                       |
+      | 'source-storage.source-records.item.get'             |
+      | 'source-storage.source-records.collection.get'       |
+      | 'inventory-storage.instances.item.post'              |
+      | 'inventory-storage.instance-types.item.post'         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

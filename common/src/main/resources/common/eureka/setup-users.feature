@@ -126,7 +126,7 @@ Feature: prepare data for api test
         function(count) {
           while (true) {
             karate.log('****************** retry left # ', count);
-            var chunkSize = 100;
+            var chunkSize = 50;
             var capabilityIds = []
             var permissionsFound = []
             var missingPermissions = []
@@ -185,12 +185,21 @@ Feature: prepare data for api test
     Then status 201
 
     * print "---add capability sets for test user---"
-    * def capabilitySets = call read('classpath:common/eureka/capabilities.feature@getCapabilitySets')
-    * def capabilitySetIds = capabilitySets.response.capabilitySets.map(x => x.id)
+    * def loadCapabilitySetIds =
+    """
+      function() {
+        var capabilitySetIds = []
+        var chunkSize = 50;
+        for (let i = 0; i < permissions.length; i += chunkSize) {
+          var permissionsBatch = userPermissions.slice(i, i + chunkSize);
+          var result = karate.call('classpath:common/eureka/capabilities.feature@getCapabilitySets', {userPermissions: permissionsBatch});
+          var foundCapabilitySets = result.response.capabilitySets;
+          capabilitySetIds = capabilitySetIds.concat(foundCapabilitySets.map(x => x.id));
+        }
 
-    * print "send userCapabilitySets request"
-    Given path 'users', 'capability-sets'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
-    And request { "userId": '#(userId)', "capabilitySetIds" : '#(capabilitySetIds)' }
-    When method POST
-    Then status 201
+        return capabilitySetIds;
+      }
+    """
+    * def capabilitySetIds = call loadCapabilitySetIds
+    * if (capabilitySetIds.length == 0) karate.log('No capability sets found for the user');
+    * if (capabilitySetIds.length > 0) karate.call('classpath:common/eureka/capabilities.feature@postCapabilitySets', {capabilitySetIds: capabilitySetIds});

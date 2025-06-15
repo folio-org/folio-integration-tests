@@ -101,6 +101,11 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void checkOrderTotalFieldsCalculatedCorrectly() {
+    runFeatureTest("check-order-total-fields-calculated-correctly");
+  }
+
+  @Test
   void checkPaymentStatusAfterCancellingPaidInvoice() {
     runFeatureTest("check-payment-status-after-cancelling-paid-invoice");
   }
@@ -116,8 +121,8 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
-  void chekPoNumbersUpdatesWhenIinvoiceLineDeleted() {
-    runFeatureTest("chek-po-numbers-updates-when-invoice-line-deleted");
+  void checkPoNumbersUpdatesWhenIinvoiceLineDeleted() {
+    runFeatureTest("check-po-numbers-updates-when-invoice-line-deleted");
   }
 
   @Test
