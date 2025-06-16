@@ -54,6 +54,8 @@ Feature: init data for consortia
   @DeleteEntitlement
   Scenario: delete entitlements in tenant
     * configure abortedStepsShouldPass = true
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def KeycloakMasterToken = keycloakResponse.response.access_token
     * print "---destroy entitlement---"
     Given path 'entitlements'
     And param query = 'tenantId==' + testTenantId
