@@ -15,7 +15,7 @@ Feature: Data Import integration tests
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
     * def importHoldingFeature = 'classpath:folijet/data-import/global/default-import-instance-holding-item.feature@importInstanceHoldingItem'
     * def commonImportFeature = 'classpath:folijet/data-import/global/common-data-import.feature'
-    * def completeExecutionFeature = 'classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted'
+    * def completeExecutionFeature = 'classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted'
     * def exportRecordFeature = 'classpath:folijet/data-import/global/export-record.feature'
     * def createExportMappingProfile = read('classpath:folijet/data-import/global/data-export-profiles.feature@createMappingProfile')
     * def createExportJobProfile = read('classpath:folijet/data-import/global/data-export-profiles.feature@createJobProfile')

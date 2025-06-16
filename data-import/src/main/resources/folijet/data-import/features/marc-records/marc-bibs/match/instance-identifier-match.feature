@@ -42,7 +42,7 @@ Feature: Test import with match on identifier and identifier type
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'
@@ -296,7 +296,7 @@ Feature: Test import with match on identifier and identifier type
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(sourcePath)' }
     * def jobExecution = response
     And assert jobExecution.status == 'COMMITTED'
     And assert jobExecution.uiStatus == 'RUNNING_COMPLETE'

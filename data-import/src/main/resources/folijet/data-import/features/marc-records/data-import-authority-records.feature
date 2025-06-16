@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Test Data-Import authority records
 
   Background:
@@ -103,6 +104,7 @@ Feature: Test Data-Import authority records
     And param recordType = recordType
     And param snapshotId = jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.sourceRecords[0]') != null
     When method get
     Then status 200
     Then match response.sourceRecords[0].parsedRecord.content.fields[*].551.subfields[*].a contains only "Updated record"
@@ -158,6 +160,7 @@ Feature: Test Data-Import authority records
     And param recordType = recordType
     And param snapshotId = jobExecutionId
     And headers headersUser
+    And retry until karate.get('response.sourceRecords[0]') != null
     When method get
     Then status 200
     Then match response.sourceRecords[0].parsedRecord.content.fields[*].551.subfields[*].a contains only "Updated record by non-repeatable field"

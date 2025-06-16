@@ -56,6 +56,9 @@ Feature: cross-module integration tests
   Scenario: Check order re-encumber after preview rollover
     * call read('features/check-order-re-encumber-after-preview-rollover.feature')
 
+  Scenario: Check that order total fields are calculated correctly
+    * call read('features/check-order-total-fields-calculated-correctly.feature')
+
   Scenario: Check payment status after cancelling paid invoice
     * call read('features/check-payment-status-after-cancelling-paid-invoice.feature')
 
@@ -65,8 +68,8 @@ Feature: cross-module integration tests
   Scenario: Check poNumbers updates
     * call read('features/check-po-numbers-updates.feature')
 
-  Scenario: Chek po numbers updates when invoice line deleted
-    * call read('features/chek-po-numbers-updates-when-invoice-line-deleted.feature')
+  Scenario: Check po numbers updates when invoice line deleted
+    * call read('features/check-po-numbers-updates-when-invoice-line-deleted.feature')
 
   Scenario: Create order and approve invoice were pol without fund distributions
     * call read('features/create-order-and-approve-invoice-were-pol-without-fund-distributions.feature')
