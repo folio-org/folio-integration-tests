@@ -9,14 +9,18 @@ Feature: Applications
     * def appIds = []
     * def dependencyNames = []
     * def dependencyIds = []
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
 
     Given path 'applications'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def totalAmount = response.totalRecords
 
     Given path 'applications'
     And param limit = totalAmount
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def appDescriptions = response.applicationDescriptors
