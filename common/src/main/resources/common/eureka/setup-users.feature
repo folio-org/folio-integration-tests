@@ -18,22 +18,22 @@ Feature: prepare data for api test
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
     * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
-    * def KeycloakMasterToken = keycloakResponse.response.access_token
+    * def keycloakMasterToken = keycloakResponse.response.access_token
     Given url baseUrl
     Given path 'entitlements'
     And param tenantParameters = tenantParameters
     And param async = true
     And param purgeOnRollback = false
     And request entitlementTamplate
-    And header Authorization = 'Bearer ' + KeycloakMasterToken
-    And header x-okapi-token = KeycloakMasterToken
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    And header x-okapi-token = keycloakMasterToken
     When method POST
     * def flowId = response.flowId
 
     * configure retry = { count: 40, interval: 30000 }
     Given path 'entitlement-flows', flowId
     And param includeStages = true
-    And header Authorization = 'Bearer ' + KeycloakMasterToken
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
     When method GET
     * def failCondition = response.status
@@ -43,18 +43,18 @@ Feature: prepare data for api test
   Scenario: get authorization token for new tenant
     * print "---extracting authorization token---"
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
-    * def KeycloakMasterToken = keycloakResponse.response.access_token
+    * def keycloakMasterToken = keycloakResponse.response.access_token
 
     Given url baseKeycloakUrl
     And path 'admin', 'realms', testTenant, 'clients'
-    And header Authorization = 'Bearer ' + KeycloakMasterToken
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def clientId = response.filter(x => x.clientId == 'sidecar-module-access-client')[0].id
 
     Given url baseKeycloakUrl
     And path 'admin', 'realms', testTenant, 'clients', clientId, 'client-secret'
-    And header Authorization = 'Bearer ' + KeycloakMasterToken
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def sidecarSecret = response.value
