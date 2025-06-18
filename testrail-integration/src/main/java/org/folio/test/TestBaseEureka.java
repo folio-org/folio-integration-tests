@@ -204,8 +204,10 @@ public abstract class TestBaseEureka {
                         .concat(featurePath);
             }
 
-            AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
-            RuntimeHook hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
+            // Use TestBaseEureka.this.getClass() to get the actual test class (e.g., DataImportApiTest)
+            // instead of the inner FeatureRunner class, so FolioRuntimeHook can find the @FolioTest annotation
+            AtomicInteger testCount = testCounts.computeIfAbsent(TestBaseEureka.this.getClass(), key -> new AtomicInteger());
+            RuntimeHook hook = new FolioRuntimeHook(TestBaseEureka.this.getClass(), testInfo, testCount.incrementAndGet());
 
             Runner.Builder builder = Runner.path(actualFeaturePath)
                     .outputCucumberJson(true)

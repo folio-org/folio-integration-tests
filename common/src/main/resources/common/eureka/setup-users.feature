@@ -17,18 +17,23 @@ Feature: prepare data for api test
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
     * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
     Given url baseUrl
     Given path 'entitlements'
     And param tenantParameters = tenantParameters
     And param async = true
     And param purgeOnRollback = false
     And request entitlementTamplate
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    And header x-okapi-token = keycloakMasterToken
     When method POST
     * def flowId = response.flowId
 
     * configure retry = { count: 40, interval: 30000 }
     Given path 'entitlement-flows', flowId
     And param includeStages = true
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
     When method GET
     * def failCondition = response.status
@@ -38,18 +43,18 @@ Feature: prepare data for api test
   Scenario: get authorization token for new tenant
     * print "---extracting authorization token---"
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
-    * def accessToken = keycloakResponse.response.access_token
+    * def keycloakMasterToken = keycloakResponse.response.access_token
 
     Given url baseKeycloakUrl
     And path 'admin', 'realms', testTenant, 'clients'
-    And header Authorization = 'Bearer ' + accessToken
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def clientId = response.filter(x => x.clientId == 'sidecar-module-access-client')[0].id
 
     Given url baseKeycloakUrl
     And path 'admin', 'realms', testTenant, 'clients', clientId, 'client-secret'
-    And header Authorization = 'Bearer ' + accessToken
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def sidecarSecret = response.value
@@ -121,7 +126,7 @@ Feature: prepare data for api test
         function(count) {
           while (true) {
             karate.log('****************** retry left # ', count);
-            var chunkSize = 100;
+            var chunkSize = 50;
             var capabilityIds = []
             var permissionsFound = []
             var missingPermissions = []
@@ -180,12 +185,21 @@ Feature: prepare data for api test
     Then status 201
 
     * print "---add capability sets for test user---"
-    * def capabilitySets = call read('classpath:common/eureka/capabilities.feature@getCapabilitySets')
-    * def capabilitySetIds = capabilitySets.response.capabilitySets.map(x => x.id)
-    * if (capabilitySetIds.length == 0) karate.abort()
-    * print "send userCapabilitySets request"
-    Given path 'users', 'capability-sets'
-    And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
-    And request { "userId": '#(userId)', "capabilitySetIds" : '#(capabilitySetIds)' }
-    When method POST
-    Then status 201
+    * def loadCapabilitySetIds =
+    """
+      function() {
+        var capabilitySetIds = []
+        var chunkSize = 50;
+        for (let i = 0; i < permissions.length; i += chunkSize) {
+          var permissionsBatch = userPermissions.slice(i, i + chunkSize);
+          var result = karate.call('classpath:common/eureka/capabilities.feature@getCapabilitySets', {userPermissions: permissionsBatch});
+          var foundCapabilitySets = result.response.capabilitySets;
+          capabilitySetIds = capabilitySetIds.concat(foundCapabilitySets.map(x => x.id));
+        }
+
+        return capabilitySetIds;
+      }
+    """
+    * def capabilitySetIds = call loadCapabilitySetIds
+    * if (capabilitySetIds.length == 0) karate.log('No capability sets found for the user');
+    * if (capabilitySetIds.length > 0) karate.call('classpath:common/eureka/capabilities.feature@postCapabilitySets', {capabilitySetIds: capabilitySetIds});

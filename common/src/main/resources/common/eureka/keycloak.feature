@@ -19,16 +19,16 @@ Feature: keycloak
   @configureAccessTokenTime
   Scenario: adjust access token lifespan
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
-    * def accessToken = keycloakResponse.response.access_token
+    * def keycloakMasterToken = keycloakResponse.response.access_token
 
     * def tokenLifespan = karate.get('AccessTokenLifespance', 600)
     Given path 'admin', 'realms', testTenant
-    And header Authorization = 'Bearer ' + accessToken
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     * def realmInfo = response
     * realmInfo.accessTokenLifespan = tokenLifespan
 
     Given path 'admin', 'realms', testTenant
-    And header Authorization = 'Bearer ' + accessToken
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     And request realmInfo
     When method PUT
