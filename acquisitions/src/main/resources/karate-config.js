@@ -88,6 +88,7 @@ function fn() {
     updateHoldingOwnership: karate.read('classpath:thunderjet/consortia/reusable/updateHoldingOwnership.feature'),
     updateItemOwnership: karate.read('classpath:thunderjet/consortia/reusable/updateItemOwnership.feature'),
     shareInstance: karate.read('classpath:thunderjet/consortia/reusable/shareInstance.feature'),
+    updateHridSettings: karate.read('classpath:thunderjet/consortia/reusable/updateHridSettings.feature'),
     verifyOwnership: karate.read('classpath:thunderjet/consortia/reusable/verifyOwnership.feature'),
 
     // orders
@@ -252,6 +253,17 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-edev-thunderjet-keycloak.ci.folio.org';
     config.edgeUrl = 'https://folio-edev-thunderjet-edge.ci.folio.org';
     config.prototypeTenant= 'diku'
+  } else if (env == 'rancher-2nd') {
+    // UI at https://folio-edev-thunderjet-2nd-consortium.ci.folio.org/
+    config.baseUrl = 'https://ecs-folio-edev-thunderjet-2nd-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-thunderjet-2nd-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://ecs-folio-edev-thunderjet-2nd-edge.ci.folio.org';
+    config.prototypeTenant= 'consortium'
+    config.admin = {
+      tenant: 'consortium',
+      name: 'consortium_admin',
+      password: 'admin'
+    }
   } else if (env == 'rancher-consortia') {
     // UI at https://folio-edev-thunderjet-consortium.ci.folio.org/
     config.baseUrl = 'https://ecs-folio-edev-thunderjet-kong.ci.folio.org';

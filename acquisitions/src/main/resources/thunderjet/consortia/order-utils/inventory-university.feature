@@ -6,6 +6,9 @@ Feature: Global inventory
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': '*/*' }
     * callonce variablesUniversity
 
+  Scenario: Change HRID settings to use different prefixes than central tenant
+    * def v = call updateHridSettings { instancesPrefix: 'inu', holdingsPrefix: 'hou', itemsPrefix: 'itu' }
+
   Scenario: Create instance types
     * table instanceTypes
       | id                             | code                       |
