@@ -58,13 +58,13 @@ Feature: Verify once poline fully paid and received order should be closed
   Scenario: Closed order should not be reopened when it has at least one resolved status
     * def orderStatusTest = read('@OrderStatusWithResolutionStatusesTest')
     * table orderStatusTestParams
-      | expectedWorkflowStatus | paymentStatus          | receiptStatus          |
-      | 'Closed'               | 'Fully Paid'           | 'Cancelled'            |
-      | 'Closed'               | 'Fully Paid'           | 'Partially Received'   |
-      | 'Closed'               | 'Fully Paid'           | 'Receipt Not Required' |
-      | 'Closed'               | 'Cancelled'            | 'Fully Received'       |
-      | 'Closed'               | 'Payment Not Required' | 'Awaiting Receipt'     |
-      | 'Closed'               | 'Partially Paid'       | 'Fully Received'       |
+      | expectedWorkflowStatus | paymentStatus          | receiptStatus          | checkinItems |
+      | 'Closed'               | 'Fully Paid'           | 'Cancelled'            | false        |
+      | 'Closed'               | 'Fully Paid'           | 'Partially Received'   | false        |
+      | 'Closed'               | 'Fully Paid'           | 'Receipt Not Required' | true         |
+      | 'Closed'               | 'Cancelled'            | 'Fully Received'       | false        |
+      | 'Closed'               | 'Payment Not Required' | 'Awaiting Receipt'     | false        |
+      | 'Closed'               | 'Partially Paid'       | 'Fully Received'       | false        |
     * def v = call orderStatusTest orderStatusTestParams
 
   @Positive
@@ -100,6 +100,7 @@ Feature: Verify once poline fully paid and received order should be closed
     * def poLineResponse = response
     * set poLineResponse.paymentStatus = paymentStatus
     * set poLineResponse.receiptStatus = receiptStatus
+    * set poLineResponse.checkinItems = karate.get('checkinItems', poLineResponse.checkinItems)
 
     Given path 'orders/order-lines', poLineId
     And request poLineResponse

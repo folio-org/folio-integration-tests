@@ -47,7 +47,7 @@
   "publisher": "MIT Press",
   "purchaseOrderId": "#(purchaseOrderId)",
   "source": "User",
-  "receiptStatus": "Receipt Not Required",
+  "receiptStatus": "Awaiting Receipt",
   "titleOrPackage": "A semantic web primer",
   "vendorDetail": {
     "instructions": "",
