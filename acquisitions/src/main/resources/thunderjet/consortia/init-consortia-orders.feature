@@ -31,8 +31,6 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory-storage.holdings.collection.get'                 |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
-      | 'inventory-storage.hrid-settings.item.get'                  |
-      | 'inventory-storage.hrid-settings.item.put'                  |
       | 'inventory-storage.instance-statuses.item.post'             |
       | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.instances.item.get'                      |
@@ -200,6 +198,8 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
       | 'inventory-storage.holdings-sources.item.post'              |
+      | 'inventory-storage.hrid-settings.item.get'                  |
+      | 'inventory-storage.hrid-settings.item.put'                  |
       | 'inventory-storage.instance-statuses.item.post'             |
       | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.instances.item.get'                      |
