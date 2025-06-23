@@ -514,6 +514,8 @@ Feature: mod bulk operations holdings features
     When method POST
     Then status 200
 
+    * pause(15000)
+
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
     When method GET
@@ -629,6 +631,8 @@ Feature: mod bulk operations holdings features
     """
     When method POST
     Then status 200
+
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -754,6 +758,8 @@ Feature: mod bulk operations holdings features
     """
     When method POST
     Then status 200
+
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -897,6 +903,8 @@ Feature: mod bulk operations holdings features
     """
     When method POST
     Then status 200
+
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
