@@ -106,4 +106,4 @@ Feature: Claiming Active/Claiming interval checks
     When method GET
     Then status 200
     * def poLine = $
-    And match poLine.claimingInterval == 2
+    And match poLine.claimingInterval == 3
