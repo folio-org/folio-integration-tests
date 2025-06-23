@@ -90,7 +90,7 @@ Feature: Claiming Active/Claiming interval checks
     * def title = $.titles[0]
     * def titleId = title.id
     And match title.claimingActive == true
-    And match title.claimingInterval == 1
+    And match title.claimingInterval == 2
 
     # update claimingInterval in title
     * set title.claimingInterval = 3
