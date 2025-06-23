@@ -630,7 +630,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[45] == 'new500'
+    And match response.rows[0].row[46] == 'new500'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
