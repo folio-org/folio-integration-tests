@@ -26,7 +26,7 @@ Feature: Create Order From P/E Mix Template
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create an Order Template
-    * def orderTemplate = read('classpath:samples/mod-mosaic/pe-mix-order-template.json')
+    * def orderTemplate = read("classpath:samples/mod-mosaic/pe-mix-order-template.json")
     Given path "/orders/order-templates"
     And request orderTemplate
     When method POST
@@ -55,5 +55,8 @@ Feature: Create Order From P/E Mix Template
     * def v = call checkOrder { poNumber: "#(poNumber)", orderTemplateId: "#(orderTemplateId)" }
 
     # 5. Check Order Line
-    * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, listUnitPriceElectronic: 50.01, quantityPhysical: 1, quantityElectronic: 1 }
+    * def assertOrderPoLine =
+      """
+      { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, listUnitPriceElectronic: 50.01, quantityPhysical: 1, quantityElectronic: 1 }
+      """
     * def v = call checkOrderLine assertOrderPoLine

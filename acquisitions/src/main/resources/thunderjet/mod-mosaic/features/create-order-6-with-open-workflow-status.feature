@@ -26,7 +26,7 @@ Feature: Create Order With Open Workflow Status
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create an Order Template
-    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    * def orderTemplate = read("classpath:samples/mod-mosaic/physical-order-template.json")
     * set orderTemplate.workflowStatus = "Pending"
     Given path "/orders/order-templates"
     And request orderTemplate
@@ -57,5 +57,8 @@ Feature: Create Order With Open Workflow Status
     * def v = call checkOrder { poNumber: "#(poNumber)", orderTemplateId: "#(orderTemplateId)", workflowStatus: "Open" }
 
     # 5. Check Order Line
-    * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, quantityPhysical: 1, paymentStatus: "Awaiting Payment", receiptStatus: "Awaiting Receipt" }
+    * def assertOrderPoLine =
+      """
+      { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, quantityPhysical: 1, paymentStatus: "Awaiting Payment", receiptStatus: "Awaiting Receipt" }
+      """
     * def v = call checkOrderLine assertOrderPoLine

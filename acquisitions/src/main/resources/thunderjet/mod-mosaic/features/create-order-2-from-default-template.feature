@@ -27,7 +27,7 @@ Feature: Create Order From Default Template
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create Order Template
-    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    * def orderTemplate = read("classpath:samples/mod-mosaic/physical-order-template.json")
     Given path "/orders/order-templates"
     And request orderTemplate
     When method POST
@@ -83,7 +83,7 @@ Feature: Create Order From Default Template
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create Order Template
-    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    * def orderTemplate = read("classpath:samples/mod-mosaic/physical-order-template.json")
     Given path "/orders/order-templates"
     And request orderTemplate
     When method POST

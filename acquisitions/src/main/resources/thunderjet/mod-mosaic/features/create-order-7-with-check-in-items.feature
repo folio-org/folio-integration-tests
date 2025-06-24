@@ -26,7 +26,7 @@ Feature: Create Order With Check In Items
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create an Order Template
-    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    * def orderTemplate = read("classpath:samples/mod-mosaic/physical-order-template.json")
     * set orderTemplate.checkinItems = true
     Given path "/orders/order-templates"
     And request orderTemplate
@@ -72,7 +72,7 @@ Feature: Create Order With Check In Items
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create an Order Template
-    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    * def orderTemplate = read("classpath:samples/mod-mosaic/physical-order-template.json")
     Given path "/orders/order-templates"
     And request orderTemplate
     When method POST
@@ -118,7 +118,7 @@ Feature: Create Order With Check In Items
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create an Order Template
-    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    * def orderTemplate = read("classpath:samples/mod-mosaic/physical-order-template.json")
     * set orderTemplate.checkinItems = true
     Given path "/orders/order-templates"
     And request orderTemplate
@@ -149,5 +149,8 @@ Feature: Create Order With Check In Items
     * def v = call checkOrder { poNumber: "#(poNumber)", orderTemplateId: "#(orderTemplateId)", workflowStatus: "Pending" }
 
     # 5. Check Order Line
-    * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, quantityPhysical: 1, checkinItems: false }
+    * def assertOrderPoLine =
+      """
+      { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, quantityPhysical: 1, checkinItems: false }
+      """
     * def v = call checkOrderLine assertOrderPoLine
