@@ -472,4 +472,9 @@ public class OrdersApiTest extends TestBaseEureka {
     runFeatureTest("validate-fund-distribution-for-zero-price", THREAD_COUNT);
   }
 
+  @Test
+  void validatePoLineReceiptNotRequiredWithCheckinItems() {
+    runFeatureTest("validate-pol-receipt-not-required-with-checkin-items");
+  }
+
 }
