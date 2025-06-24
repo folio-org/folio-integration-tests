@@ -26,10 +26,6 @@ Feature: Initialize mod-mosaic integration tests
       | name                                                      |
       | 'mosaic.validate.get'                                     |
       | 'mosaic.orders.item.post'                                 |
-      | 'mosaic.configuration.item.get'                           |
-      | 'mosaic.configuration.item.post'                          |
-      | 'mosaic.configuration.item.put'                           |
-      | 'mosaic.configuration.item.delete'                        |
       | 'orders.order-templates.collection.get'                   |
       | 'orders-storage.custom-fields.collection.get'             |
       | 'okapi.proxy.tenants.modules.list'                        |
@@ -49,6 +45,10 @@ Feature: Initialize mod-mosaic integration tests
 
     * table adminPermissions
       | name                                                          |
+      | 'mosaic.configuration.item.get'                               |
+      | 'mosaic.configuration.item.post'                              |
+      | 'mosaic.configuration.item.put'                               |
+      | 'mosaic.configuration.item.delete'                            |
       | 'acquisitions-units.memberships.item.post'                    |
       | 'acquisitions-units.units.item.post'                          |
       | 'configuration.entries.item.post'                             |

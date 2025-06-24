@@ -18,6 +18,7 @@ Feature: Create Order From Electronic Template
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderTemplateId = call uuid
+    * def templateName = "Template" + orderTemplateId
 
     # 1. Create Funds and Budgets
     * configure headers = headersAdmin
@@ -25,54 +26,13 @@ Feature: Create Order From Electronic Template
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create an Order Template
-    * def templateName = "Template" + orderTemplateId
+    * def orderTemplate = read('classpath:samples/mod-mosaic/electronic-order-template.json')
     Given path "/orders/order-templates"
-    And request
-      """
-      {
-        "id": "#(orderTemplateId)",
-        "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
-        "vendor": "#(globalVendorId)",
-        "cost": {
-          "listUnitPriceElectronic": 49.99,
-          "currency": "USD",
-          "quantityPhysical": 0,
-          "quantityElectronic": 1,
-        },
-        "eresource": {
-          "materialType": "#(globalMaterialTypeIdElec)",
-          "accessProvider": "#(globalVendorId)",
-          "createInventory": "Instance, Holding"
-        },
-        "isPackage": false,
-        "locations": [
-          {
-            "locationId": "#(globalLocationsId)",
-            "quantityPhysical": 0,
-            "quantityElectronic": 1
-          }
-        ],
-        "orderType": "One-Time",
-        "instanceId": null,
-        "categoryIds": [],
-        "orderFormat": "Electronic Resource",
-        "checkinItems": false,
-        "templateName": "#(templateName)",
-        "titleOrPackage": "Test",
-        "fundDistribution": [
-          {
-            "fundId": "#(fundId)",
-            "code": "FUND-CODE",
-            "distributionType": "percentage",
-            "value": 100.0
-          }
-        ]
-      }
-      """
+    And request orderTemplate
     When method POST
     Then status 201
 
-    # 3. Create an Order
+    # 3. Create Mosaic Order
     * configure headers = headersUser
     Given path "/mosaic/orders"
     And request
@@ -92,25 +52,8 @@ Feature: Create Order From Electronic Template
 
     # 4. Check Order
     * configure headers = headersAdmin
-    Given path "orders/composite-orders"
-    And param query = "poNumber==" + poNumber
-    When method GET
-    Then status 200
-    And match $.purchaseOrders == "#[1]"
-    And match each $.purchaseOrders[*].template == orderTemplateId
-    And match each $.purchaseOrders[*].workflowStatus == "Pending"
+    * def v = call checkOrder { poNumber: "#(poNumber)", orderTemplateId: "#(orderTemplateId)" }
 
     # 5. Check Order Line
-    Given path "orders/order-lines"
-    And param query = "poLineNumber==" + poLineNumber
-    When method GET
-    Then status 200
-    And match $.poLines == "#[1]"
-    And match each $.poLines[*].titleOrPackage == "TestOverride"
-    And match each $.poLines[*].cost.listUnitPriceElectronic == 49.99
-    And match each $.poLines[*].cost.currency == "USD"
-    And match each $.poLines[*].cost.quantityPhysical == 0
-    And match each $.poLines[*].cost.quantityElectronic == 1
-    And match each $.poLines[*].paymentStatus == 'Pending'
-    And match each $.poLines[*].receiptStatus == 'Pending'
-    And match each $.poLines[*].checkinItems == false
+    * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPriceElectronic: 49.99, quantityElectronic: 1 }
+    * def v = call checkOrderLine assertOrderPoLine

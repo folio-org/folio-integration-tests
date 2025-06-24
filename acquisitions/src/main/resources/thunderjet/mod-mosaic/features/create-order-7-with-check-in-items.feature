@@ -14,10 +14,11 @@ Feature: Create Order With Check In Items
     * callonce variables
 
   @Positive
-  Scenario: Create Order With Check In Items
+  Scenario: Create Order With Check In Items (set in Order Template)
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderTemplateId = call uuid
+    * def templateName = "Template" + orderTemplateId
 
     # 1. Create Funds and Budgets
     * configure headers = headersAdmin
@@ -25,55 +26,59 @@ Feature: Create Order With Check In Items
     * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
 
     # 2. Create an Order Template
-    * def templateName = "Template" + orderTemplateId
+    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    * set orderTemplate.checkinItems = true
     Given path "/orders/order-templates"
+    And request orderTemplate
+    When method POST
+    Then status 201
+
+    # 3. Create Mosaic Order
+    * configure headers = headersUser
+    Given path "/mosaic/orders"
     And request
       """
       {
-        "id": "#(orderTemplateId)",
-        "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
-        "vendor": "#(globalVendorId)",
-        "cost": {
-          "listUnitPrice": 49.99,
-          "currency": "USD",
-          "quantityPhysical": 1,
-          "quantityElectronic": 0
-        },
-        "physical": {
-          "materialType": "#(globalMaterialTypeIdPhys)",
-          "materialSupplier": "#(globalVendorId)",
-          "createInventory": "Instance, Holding, Item",
-          "volumes": []
-        },
-        "isPackage": false,
-        "locations": [
-          {
-            "locationId": "#(globalLocationsId)",
-            "quantityPhysical": 1,
-            "quantityElectronic": 0
-          }
-        ],
-        "orderType": "One-Time",
-        "instanceId": null,
-        "categoryIds": [],
-        "orderFormat": "Physical Resource",
-        "checkinItems": false,
-        "templateName": "#(templateName)",
-        "titleOrPackage": "Test",
-        "fundDistribution": [
-          {
-            "fundId": "#(fundId)",
-            "code": "FUND-CODE",
-            "distributionType": "percentage",
-            "value": 100.0
-          }
-        ]
+        "orderTemplateId": "#(orderTemplateId)",
+        "orderData": {
+          "title": "TestOverride",
+        }
       }
       """
     When method POST
     Then status 201
+    * def poLineNumber = $
+    * def delimiter = poLineNumber.lastIndexOf("-")
+    * def poNumber = poLineNumber.substr(0, delimiter)
 
-    # 3. Create an Order
+    # 4. Check Order
+    * configure headers = headersAdmin
+    * def v = call checkOrder { poNumber: "#(poNumber)", orderTemplateId: "#(orderTemplateId)", workflowStatus: "Pending" }
+
+    # 5. Check Order Line
+    * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, quantityPhysical: 1, checkinItems: true }
+    * def v = call checkOrderLine assertOrderPoLine
+
+  @Positive
+  Scenario: Create Order With Check In Items (set in Mosaic Order)
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderTemplateId = call uuid
+    * def templateName = "Template" + orderTemplateId
+
+    # 1. Create Funds and Budgets
+    * configure headers = headersAdmin
+    * call createFund { "id": "#(fundId)", "ledgerId": "#(globalLedgerWithRestrictionsId)" }
+    * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
+
+    # 2. Create an Order Template
+    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    Given path "/orders/order-templates"
+    And request orderTemplate
+    When method POST
+    Then status 201
+
+    # 3. Create Mosaic Order
     * configure headers = headersUser
     Given path "/mosaic/orders"
     And request
@@ -94,25 +99,55 @@ Feature: Create Order With Check In Items
 
     # 4. Check Order
     * configure headers = headersAdmin
-    Given path "orders/composite-orders"
-    And param query = "poNumber==" + poNumber
-    When method GET
-    Then status 200
-    And match $.purchaseOrders == "#[1]"
-    And match each $.purchaseOrders[*].template == orderTemplateId
-    And match each $.purchaseOrders[*].workflowStatus == "Pending"
+    * def v = call checkOrder { poNumber: "#(poNumber)", orderTemplateId: "#(orderTemplateId)", workflowStatus: "Pending" }
 
     # 5. Check Order Line
-    Given path "orders/order-lines"
-    And param query = "poLineNumber==" + poLineNumber
-    When method GET
-    Then status 200
-    And match $.poLines == "#[1]"
-    And match each $.poLines[*].titleOrPackage == "TestOverride"
-    And match each $.poLines[*].cost.listUnitPrice == 49.99
-    And match each $.poLines[*].cost.currency == "USD"
-    And match each $.poLines[*].cost.quantityPhysical == 1
-    And match each $.poLines[*].cost.quantityElectronic == 0
-    And match each $.poLines[*].paymentStatus == 'Pending'
-    And match each $.poLines[*].receiptStatus == 'Pending'
-    And match each $.poLines[*].checkinItems == true
+    * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, quantityPhysical: 1, checkinItems: true }
+    * def v = call checkOrderLine assertOrderPoLine
+
+  @Positive
+  Scenario: Create Order With Check In Items (overriden by Mosaic Order)
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderTemplateId = call uuid
+    * def templateName = "Template" + orderTemplateId
+
+    # 1. Create Funds and Budgets
+    * configure headers = headersAdmin
+    * call createFund { "id": "#(fundId)", "ledgerId": "#(globalLedgerWithRestrictionsId)" }
+    * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
+
+    # 2. Create an Order Template
+    * def orderTemplate = read('classpath:samples/mod-mosaic/physical-order-template.json')
+    * set orderTemplate.checkinItems = true
+    Given path "/orders/order-templates"
+    And request orderTemplate
+    When method POST
+    Then status 201
+
+    # 3. Create Mosaic Order
+    * configure headers = headersUser
+    Given path "/mosaic/orders"
+    And request
+      """
+      {
+        "orderTemplateId": "#(orderTemplateId)",
+        "orderData": {
+          "title": "TestOverride",
+          "checkinItems": false
+        }
+      }
+      """
+    When method POST
+    Then status 201
+    * def poLineNumber = $
+    * def delimiter = poLineNumber.lastIndexOf("-")
+    * def poNumber = poLineNumber.substr(0, delimiter)
+
+    # 4. Check Order
+    * configure headers = headersAdmin
+    * def v = call checkOrder { poNumber: "#(poNumber)", orderTemplateId: "#(orderTemplateId)", workflowStatus: "Pending" }
+
+    # 5. Check Order Line
+    * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPrice: 49.99, quantityPhysical: 1, checkinItems: false }
+    * def v = call checkOrderLine assertOrderPoLine

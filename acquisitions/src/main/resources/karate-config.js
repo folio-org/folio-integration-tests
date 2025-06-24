@@ -133,6 +133,10 @@ function fn() {
     verifyExportJobFile: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/verify-export-job-file.feature'),
     resendExportJobFile: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/resend-export-job-file.feature'),
 
+    // mosaic
+    checkOrder: karate.read('classpath:thunderjet/mod-mosaic/reusable/check-order.feature'),
+    checkOrderLine: karate.read('classpath:thunderjet/mod-mosaic/reusable/check-order-line.feature'),
+
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''

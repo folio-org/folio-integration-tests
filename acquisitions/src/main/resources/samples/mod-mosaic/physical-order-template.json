@@ -1,0 +1,40 @@
+{
+  "id": "#(orderTemplateId)",
+  "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
+  "vendor": "#(globalVendorId)",
+  "cost": {
+    "listUnitPrice": 49.99,
+    "currency": "USD",
+    "quantityPhysical": 1,
+    "quantityElectronic": 0
+  },
+  "physical": {
+    "materialType": "#(globalMaterialTypeIdPhys)",
+    "materialSupplier": "#(globalVendorId)",
+    "createInventory": "Instance, Holding, Item",
+    "volumes": []
+  },
+  "isPackage": false,
+  "locations": [
+    {
+      "locationId": "#(globalLocationsId)",
+      "quantityPhysical": 1,
+      "quantityElectronic": 0
+    }
+  ],
+  "orderType": "One-Time",
+  "instanceId": null,
+  "categoryIds": [],
+  "orderFormat": "Physical Resource",
+  "checkinItems": false,
+  "templateName": "#(templateName)",
+  "titleOrPackage": "Test",
+  "fundDistribution": [
+    {
+      "fundId": "#(fundId)",
+      "code": "FUND-CODE",
+      "value": 100.0,
+      "distributionType": "percentage"
+    }
+  ]
+}

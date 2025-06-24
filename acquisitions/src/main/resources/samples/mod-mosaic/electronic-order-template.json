@@ -1,0 +1,39 @@
+{
+  "id": "#(orderTemplateId)",
+  "acquisitionMethod": "#(globalApprovalPlanAcqMethodId)",
+  "vendor": "#(globalVendorId)",
+  "cost": {
+    "listUnitPriceElectronic": 49.99,
+    "currency": "USD",
+    "quantityPhysical": 0,
+    "quantityElectronic": 1
+  },
+  "eresource": {
+    "materialType": "#(globalMaterialTypeIdElec)",
+    "accessProvider": "#(globalVendorId)",
+    "createInventory": "Instance, Holding"
+  },
+  "isPackage": false,
+  "locations": [
+    {
+      "locationId": "#(globalLocationsId)",
+      "quantityPhysical": 0,
+      "quantityElectronic": 1
+    }
+  ],
+  "orderType": "One-Time",
+  "instanceId": null,
+  "categoryIds": [],
+  "orderFormat": "Electronic Resource",
+  "checkinItems": false,
+  "templateName": "#(templateName)",
+  "titleOrPackage": "Test",
+  "fundDistribution": [
+    {
+      "fundId": "#(fundId)",
+      "code": "FUND-CODE",
+      "value": 100.0,
+      "distributionType": "percentage"
+    }
+  ]
+}
