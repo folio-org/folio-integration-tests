@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Ledger fiscal year rollover pol and system currencies are different
 
   Background:

@@ -68,11 +68,6 @@ public class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
-  void checkEncumbranceStatusAfterMovingExpendedValue() {
-    runFeatureTest("check-encumbrance-status-after-moving-expended-value");
-  }
-
-  @Test
   void checkEstimatedPriceWithCompositeOrder() {
     runFeatureTest("check-estimated-price-with-composite-order");
   }
@@ -91,11 +86,6 @@ public class OrdersApiTest extends TestBaseEureka {
   @Test
   void checkOrderLinesNumberRetrieveLimit() {
     runFeatureTest("check-order-lines-number-retrieve-limit");
-  }
-
-  @Test
-  void checkOrderReEncumberWorksCorrectly() {
-    runFeatureTest("check-order-re-encumber-work-correctly");
   }
 
   @Test
@@ -219,22 +209,9 @@ public class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
-  void movingEncumberedValueToDifferentBudget() {
-    runFeatureTest("moving_encumbered_value_to_different_budget");
-  }
-
-  @Test
-  void movingExpendedValueToNewlyCreatedEncumbrance() {
-    runFeatureTest("moving_expended_value_to_newly_created_encumbrance");
-  }
-
-  @Test
   void openAndUnopenOrder() {
     runFeatureTest("open-and-unopen-order", THREAD_COUNT);
   }
-
-  @Test
-  void openApproveAndPayOrderWith50Lines() {runFeatureTest("open-approve-and-pay-order-with-50-lines");}
 
   @Test
   void openOngoingOrder() {
@@ -388,11 +365,6 @@ public class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
-  void removeLinkedInvoiceLinesFundDistributionEncumbranceReference() {
-    runFeatureTest("remove_linked_invoice_lines_fund_distribution_encumbrance_reference");
-  }
-
-  @Test
   void reopenOrderCreatesEncumbrances() {
     runFeatureTest("reopen-order-creates-encumbrances");
   }
@@ -450,11 +422,6 @@ public class OrdersApiTest extends TestBaseEureka {
   @Test
   void updateFieldsInItemAfterUpdatingInPiece() {
     runFeatureTest("update_fields_in_item", THREAD_COUNT);
-  }
-
-  @Test
-  void updateFundInPoLineWhenInvoiceApproved() {
-    runFeatureTest("update_fund_in_poline_when_invoice_approved");
   }
 
   @Test

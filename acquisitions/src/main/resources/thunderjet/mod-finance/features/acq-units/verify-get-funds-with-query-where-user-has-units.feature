@@ -32,7 +32,7 @@ Feature: Get funds where filter is provided should take into account acquisition
     * def protectRead = <protectRead>
     * def protectUpdate = <protectUpdate>
     * def protectDelete = <protectDelete>
-    Given path 'acquisitions-units-storage/units'
+    Given path 'acquisitions-units/units'
     And headers headersAdmin
     And request
     """
@@ -92,7 +92,7 @@ Feature: Get funds where filter is provided should take into account acquisition
     And match funds[*].id contains ["#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign restrict view acquisitions units memberships to user
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And headers headersAdmin
     And request
     """
@@ -115,7 +115,7 @@ Feature: Get funds where filter is provided should take into account acquisition
     And match funds[*].id contains ["#(fundRestrictViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign allow view acquisitions units memberships to user
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And headers headersAdmin
     And param query = 'acquisitionsUnitId==' + restrictFundViewAcqUnitId + ' and userId==' + testUserId
     When method GET
@@ -123,7 +123,7 @@ Feature: Get funds where filter is provided should take into account acquisition
     * def acqMember = $.acquisitionsUnitMemberships[0]
     * def acqMemberId = acqMember.id
 
-    Given path 'acquisitions-units-storage/memberships', acqMemberId
+    Given path 'acquisitions-units/memberships', acqMemberId
     * set acqMember.acquisitionsUnitId = fundAllowFundViewAcqUnitId
     * remove acqMember.metadata
     And headers headersAdmin
@@ -143,7 +143,7 @@ Feature: Get funds where filter is provided should take into account acquisition
     And match funds[*].id contains ["#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Again assign restrict view acquisitions units memberships to user
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And headers headersAdmin
     And request
     """
@@ -167,7 +167,7 @@ Feature: Get funds where filter is provided should take into account acquisition
 
   Scenario Outline: DELETE acquisitions units and memberships <acqUnitId>
     * def acqUnitId = <acqUnitId>
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And headers headersAdmin
     And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==' + testUserId
     When method GET
@@ -175,13 +175,13 @@ Feature: Get funds where filter is provided should take into account acquisition
     * def acqMember = $.acquisitionsUnitMemberships[0]
     * def acqMemberId = acqMember.id
 
-    Given path 'acquisitions-units-storage/memberships', acqMemberId
+    Given path 'acquisitions-units/memberships', acqMemberId
     And headers headersAdmin
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204
 
-    Given path 'acquisitions-units-storage/units', acqUnitId
+    Given path 'acquisitions-units/units', acqUnitId
     And headers headersAdmin
     And header Accept = 'text/plain'
     When method DELETE

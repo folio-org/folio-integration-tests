@@ -1,4 +1,3 @@
-# THIS SHOULD BE IN MOD-INVOICE
 @parallel=false
 # for https://folio-org.atlassian.net/browse/MODORDERS-1021
 Feature: Approve and pay order with 50 lines
@@ -14,12 +13,8 @@ Feature: Approve and pay order with 50 lines
     * print karate.info.scenarioName
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -36,7 +31,6 @@ Feature: Approve and pay order with 50 lines
     * configure readTimeout = 60000
 
   Scenario: Prepare finances
-    * configure headers = headersAdmin
     * call createFund { id: #(fundId), code: #(fundId), ledgerId: #(globalLedgerId) }
     * call createBudget { id: #(budgetId), fundId: #(fundId), fiscalYearId: #(globalFiscalYearId), allocated: 1000, status: 'Active' }
 
@@ -65,7 +59,6 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Create an invoice
-    * configure headers = headersAdmin
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -75,7 +68,6 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Create 50 invoiceLines for 50 poLines
-    * configure headers = headersAdmin
     * def lineParameters = []
     * def createParameterArray =
       """
@@ -98,7 +90,6 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Approve the invoice
-    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -111,7 +102,6 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Pay the invoice
-    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -124,7 +114,6 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Verify payed invoice
-    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -132,7 +121,6 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario Outline: Check that payments created with 10$ amount of money
-    * configure headers = headersAdmin
     * def invoiceLineId = <invoiceLineId>
     * def amount = <amount>
     Given path 'finance/transactions'

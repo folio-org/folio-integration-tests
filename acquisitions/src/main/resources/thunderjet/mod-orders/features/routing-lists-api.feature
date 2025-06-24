@@ -1,4 +1,5 @@
 # for https://folio-org.atlassian.net/browse/MODORDERS-1006
+@parallel=false
 Feature: Test routing list API
 
   Background:
@@ -19,9 +20,11 @@ Feature: Test routing list API
     * def rListId = callonce uuid4
     * def rListUserId = callonce uuid5
 
+    * def listName = call random_string
     * def rListSample = read('classpath:samples/mod-orders/routingLists/a1d13648-347b-4ac9-8c2f-5bc47248b87e.json')
     * set rListSample.id = rListId;
     * set rListSample.poLineId = poLineId;
+    * set rListSample.name = listName;
 
     * callonce createOrder { id: #(orderId) }
     * callonce createOrderLine { id: #(poLineId), orderId: #(orderId) }
@@ -41,7 +44,7 @@ Feature: Test routing list API
     When method GET
     Then status 200
     And match $.id == '#(rListId)'
-    And match $.name == 'Biography room'
+    And match $.name == '#(listName)'
     And match $.poLineId == '#(poLineId)'
 
 
@@ -67,7 +70,7 @@ Feature: Test routing list API
   Scenario: Get edited routing list by query
     # Query for original routing list
     Given path '/orders/routing-lists/'
-    And param query = 'name=="Biography room"'
+    And param query = 'name=="#(listName)"'
     When method GET
     Then status 200
     And match $.routingLists == []
@@ -90,13 +93,14 @@ Feature: Test routing list API
     Then status 204
 
 
-  @Positive
-  Scenario: Get all routing lists
-    Given path '/orders/routing-lists'
-    When method GET
-    Then status 200
-    And match $.routingLists == []
-    And match $.totalRecords == 0
+# This scenario doesn't work in parallel with other features using routing lists
+#  @Positive
+#  Scenario: Get all routing lists
+#    Given path '/orders/routing-lists'
+#    When method GET
+#    Then status 200
+#    And match $.routingLists == []
+#    And match $.totalRecords == 0
 
 
   @Negative

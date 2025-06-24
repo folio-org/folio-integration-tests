@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Ledger fiscal year rollover
 
   Background:
@@ -9,15 +10,10 @@ Feature: Ledger fiscal year rollover
     * callonce login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
-
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
 
     * def fromFiscalYearId = callonce uuid1
     * def toFiscalYearId = callonce uuid2
@@ -233,18 +229,20 @@ Feature: Ledger fiscal year rollover
     * def fundCode = <fundCode>
     * def fundTypeId = <fundTypeId>
 
-    Given path 'finance-storage/funds'
+    Given path 'finance/funds'
     And request
     """
     {
-      "id": "#(fundId)",
-      "code": "#(codePrefix + fundCode)",
-      "description": "Fund #(codePrefix + fundCode) for rollover API Tests",
-      "externalAccountNo": "#(fundId)",
-      "fundStatus": <status>,
-      "ledgerId": "#(ledgerId)",
-      "name": "Fund #(codePrefix + fundCode) for rollover API Tests",
-      "fundTypeId": "#(fundTypeId)"
+      "fund": {
+        "id": "#(fundId)",
+        "code": "#(codePrefix + fundCode)",
+        "description": "Fund #(codePrefix + fundCode) for rollover API Tests",
+        "externalAccountNo": "#(fundId)",
+        "fundStatus": <status>,
+        "ledgerId": "#(ledgerId)",
+        "name": "Fund #(codePrefix + fundCode) for rollover API Tests",
+        "fundTypeId": "#(fundTypeId)",
+      }
     }
     """
     When method POST
@@ -350,8 +348,6 @@ Feature: Ledger fiscal year rollover
     Then status 204
 
   Scenario Outline: Create open orders with 1 fund distribution
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fundId = <fundId>
@@ -407,8 +403,6 @@ Feature: Ledger fiscal year rollover
 
 
   Scenario Outline: Create open orders with 2 fund distributions
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fund1Id = <fund1Id>
@@ -467,8 +461,6 @@ Feature: Ledger fiscal year rollover
 
 
   Scenario Outline: Create orders with different amount types
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>, "interval": 182, "renewalDate": "2022-12-03T00:00:00.000+00:00"} : null
     Given path 'orders/composite-orders'
@@ -490,8 +482,6 @@ Feature: Ledger fiscal year rollover
       | libOrder | 'One-Time' | false        | true       |
 
   Scenario Outline: Create open orders with 2 fund distribution and different amount type
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     * def poLineId = <poLineId>
     * def fund = <fund>
@@ -530,8 +520,6 @@ Feature: Ledger fiscal year rollover
       | libOrder | libOrderLine2 | [{"id":"#(libFund1)", "value":18, type:"percentage"},{"id": "#(libFund2)", "value":41, type:"percentage"},{"id":"#(libFund3)", "value":41, type:"percentage"}] | 'One-Time' | false        | 102.26 |
 
   Scenario Outline: Open order
-    * configure headers = headersAdmin
-
     * def orderId = <orderId>
     Given path 'orders/composite-orders', orderId
     When method GET
@@ -551,8 +539,6 @@ Feature: Ledger fiscal year rollover
 
 
   Scenario: Create open orders with 3 fund distributions
-    * configure headers = headersAdmin
-
     Given path 'orders/composite-orders'
     And request
     """
@@ -640,7 +626,6 @@ Feature: Ledger fiscal year rollover
     When method POST
     Then status 204
 
-    * configure headers = headersAdmin
     Given path 'orders/composite-orders'
     And request
     """
@@ -808,9 +793,7 @@ Feature: Ledger fiscal year rollover
     * def total = <amount>
 
     * print "Create an invoice"
-    * configure headers = headersAdmin
     * def v = call createInvoice { id: '#(invoiceIdCredit)' }
-    * configure headers = headersUser
 
     Given path 'finance/transactions'
     And param query = 'fromFundId==' + fromFundId + ' AND encumbrance.sourcePoLineId==' + poLineId
@@ -818,7 +801,6 @@ Feature: Ledger fiscal year rollover
     Then status 200
     * def encumbranceId = karate.sizeOf(response.transactions) > 0 ? response.transactions[0].id :null
 
-    * configure headers = headersAdmin
     * print "Add an invoice line with a credit"
     * def v = call createInvoiceLine { invoiceLineId: '#(invoiceIdLineCredit)', invoiceId: '#(invoiceIdCredit)', poLineId: '#(poLineId)', fundId: '#(fromFundId)', encumbranceId: '#(encumbranceId)', total: '#(amount)' }
 
@@ -1008,7 +990,7 @@ Feature: Ledger fiscal year rollover
     When method GET
     Then status 200
 
-    Given path 'finance-storage/group-fund-fiscal-years'
+    Given path 'finance/group-fund-fiscal-years'
     When param query = 'budgetId==' + response.budgets[0].id
     And method GET
     Then status 200
@@ -1072,7 +1054,7 @@ Feature: Ledger fiscal year rollover
       | africanHist | 50     |
 
   Scenario: Check expected number of encumbrances for new fiscal year
-    Given path 'finance-storage/transactions'
+    Given path 'finance/transactions'
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND transactionType==Encumbrance'
     When method GET
     Then status 200
@@ -1082,7 +1064,7 @@ Feature: Ledger fiscal year rollover
     * def fundId = <fundId>
     * def orderId = <orderId>
 
-    Given path 'finance-storage/transactions'
+    Given path 'finance/transactions'
     And param query = 'fromFundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     Then status 200
@@ -1119,7 +1101,7 @@ Feature: Ledger fiscal year rollover
     * def poLineId = <poLineId>
     * def fundId = <fundId>
 
-    Given path 'finance-storage/ledger-rollovers-errors'
+    Given path 'finance/ledger-rollovers-errors'
     And param query = 'ledgerRolloverId==' + rolloverId + ' AND details.purchaseOrderId==' + orderId
     When method GET
     Then status 200
@@ -1137,7 +1119,7 @@ Feature: Ledger fiscal year rollover
   Scenario Outline: Check order line after rollover
     * def poLineId = <poLineId>
 
-    Given path 'finance-storage/transactions'
+    Given path 'finance/transactions'
     And param query = 'fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePoLineId==' + poLineId
     When method GET
     Then status 200
@@ -1146,7 +1128,6 @@ Feature: Ledger fiscal year rollover
     * def sum = function(item) {var BigDecimal = Java.type('java.math.BigDecimal'); var sum=new BigDecimal("0"); for(var i=0; i<item.length; i++) {sum = sum.add(new BigDecimal(item[i]));} return sum.setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();}
     * match sum(total) == <transactionAmount>
 
-    * configure headers = headersAdmin
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -1176,10 +1157,12 @@ Feature: Ledger fiscal year rollover
     Then status 204
 
   Scenario: Delete rollover with In Progress status
+    * configure headers = headersAdmin
     Given path '/finance-storage/ledger-rollovers', rolloverId
     When method DELETE
     Then status 422
     * match response == "Can't delete in progress rollover"
+    * configure headers = headersUser
 
 
   Scenario: Change rollover status to Success to check restriction
@@ -1196,6 +1179,7 @@ Feature: Ledger fiscal year rollover
     Then status 204
 
   Scenario: Delete rollover with Success status
+    * configure headers = headersAdmin
     Given path '/finance-storage/ledger-rollovers', rolloverId
     When method DELETE
     Then status 204

@@ -1,5 +1,4 @@
 # For https://issues.folio.org/browse/MODORDERS-712
-@parallel=false
 Feature: Rollover with closed order
 
   Background:
@@ -15,30 +14,32 @@ Feature: Rollover with closed order
     * configure headers = headersUser
 
     * callonce variables
-    * def fromYear = callonce getCurrentYear
-    * def toYear = parseInt(fromYear) + 1
-    * def fyId1 = callonce uuid1
-    * def fyId2 = callonce uuid2
-    * def ledgerId = callonce uuid3
-    * def fundId = callonce uuid4
-    * def budgetId1 = callonce uuid5
-    * def budgetId2 = callonce uuid6
-    * def orderId = callonce uuid7
-    * def poLineId = callonce uuid8
-    * def rolloverId = callonce uuid9
-    * def emptyEncumbrancePoLineId = callonce uuid10
 
     * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
 
 
   Scenario: Rollover with closed order
+    * def series = call random_string
+    * def fromYear = callonce getCurrentYear
+    * def toYear = parseInt(fromYear) + 1
+    * def fyId1 = call uuid
+    * def fyId2 = call uuid
+    * def ledgerId = call uuid
+    * def fundId = call uuid
+    * def budgetId1 = call uuid
+    * def budgetId2 = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def rolloverId = call uuid
+    * def emptyEncumbrancePoLineId = call uuid
+
   ## Create fiscal years and associated ledgers
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId1), code: 'TESTFY0011', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: 'TESTFY' }
+    * def v = call createFiscalYear { id: #(fyId1), code: '#(series + "0001")', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: '#(series)' }
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId2), code: 'TESTFY0012', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: 'TESTFY' }
+    * def v = call createFiscalYear { id: #(fyId2), code: '#(series + "0002")', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: '#(series)' }
     * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(fyId1) }
 
 

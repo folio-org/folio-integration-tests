@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Verify calculation of the Ledger totals for the fiscal year
 
   Background:

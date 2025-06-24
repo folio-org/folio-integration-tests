@@ -23,6 +23,9 @@ Feature: cross-module integration tests
   Scenario: Approve invoice with negative line
     * call read('features/approve-invoice-with-negative-line.feature')
 
+  Scenario: Audit events for Invoice Line
+    * call read('features/audit-event-invoice-line.feature')
+
   Scenario: Cancel invoice and unrelease 2 encumbrances
     * call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')
 
@@ -41,6 +44,9 @@ Feature: cross-module integration tests
   Scenario: Check approve and pay invoice with more than 15 invoice lines, several of which reference to same POL
     * call read('features/check-approve-and-pay-invoice-with-invoice-references-same-po-line.feature')
 
+  Scenario: Check encumbrance status after moving expended value
+    * call read('features/check-encumbrance-status-after-moving-expended-value.feature')
+
   Scenario: Check the encumbrances after issuing credit when the order is fully paid
     * call read('features/check-encumbrances-after-issuing-credit-for-paid-order.feature')
 
@@ -55,6 +61,9 @@ Feature: cross-module integration tests
 
   Scenario: Check order re-encumber after preview rollover
     * call read('features/check-order-re-encumber-after-preview-rollover.feature')
+
+  Scenario: Check order re-encumber works correctly
+    * call read('features/check-order-re-encumber-work-correctly.feature')
 
   Scenario: Check that order total fields are calculated correctly
     * call read('features/check-order-total-fields-calculated-correctly.feature')
@@ -86,11 +95,26 @@ Feature: cross-module integration tests
   Scenario: Invoice encumbrance update without acquisition unit
     * call read('features/invoice-encumbrance-update-without-acquisition-unit.feature')
 
+  Scenario: Test ledger rollover
+    * call read('features/ledger-fiscal-year-rollover.feature')
+
+  Scenario: Test ledger fiscal year rollover based on cash balance value
+    * call read('features/ledger-fiscal-year-rollover-cash-balance.feature')
+
   Scenario: Link invoice line to po line
     * call read('features/link-invoice-line-to-po-line.feature')
 
   Scenario: Delete planned budget without transactions
     * call read('features/MODFISTO-270-delete-planned-budget-without-transactions.feature')
+
+  Scenario: Moving encumbered value from budget 1 to budget 2
+    * call read('features/moving_encumbered_value_to_different_budget.feature')
+
+  Scenario: Moving expended amount when editing fund distribution for POL
+    * call read('features/moving_expended_value_to_newly_created_encumbrance.feature')
+
+  Scenario: Approve and pay order with 50 lines
+    * call read('features/open-approve-and-pay-order-with-50-lines.feature')
 
   Scenario: Open order after approving invoice
     * call read('features/open-order-after-approving-invoice.feature')
@@ -125,6 +149,9 @@ Feature: cross-module integration tests
   Scenario: Remove fund distribution after rollover from open order with re-encumber flag is false
     * call read('features/remove-fund-distribution-after-rollover-when-re-encumber-false.feature')
 
+  Scenario: Update linked invoice lines fund distribution reference when update POL
+    * call read('features/remove_linked_invoice_lines_fund_distribution_encumbrance_reference.feature')
+
   Scenario: Rollover and pay invoice using past fiscal year
     * call read('features/rollover-and-pay-invoice-using-past-fiscal-year.feature')
 
@@ -148,3 +175,6 @@ Feature: cross-module integration tests
 
   Scenario: Update encumbrance links with fiscal year
     * call read('features/update-encumbrance-links-with-fiscal-year.feature')
+
+  Scenario: Update fund in poLine when invoice approved
+    * call read('features/update_fund_in_poline_when_invoice_approved.feature')

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Should decrease quantity when delete piece with no location
 
   Background:

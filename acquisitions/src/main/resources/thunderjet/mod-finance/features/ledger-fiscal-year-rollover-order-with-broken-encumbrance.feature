@@ -15,13 +15,6 @@ Feature: Verify that order with broken encumbrance will be rolled over successfu
 
     * callonce variables
 
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createLedger = read('classpath:thunderjet/mod-finance/reusable/createLedger.feature')
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def getOrderLine = read('classpath:thunderjet/mod-orders/reusable/get-order-line.feature')
-
     * def fromFiscalYearId = callonce uuid1
     * def toFiscalYearId = callonce uuid2
     * def ledgerId = callonce uuid3

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Fiscal year totals
 
   Background:

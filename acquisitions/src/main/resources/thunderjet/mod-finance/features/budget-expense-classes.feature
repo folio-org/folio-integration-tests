@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Budget expense classes
 
   Background:

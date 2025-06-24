@@ -1,4 +1,5 @@
   # for MODORDERS-1026
+  @parallel=false
   Feature: Should check processing of printing routing list functionlity
 
     Background:

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Create planned and current budgets with expense classes
 
   Background:

@@ -15,8 +15,6 @@ Feature: Initialize mod-finance integration tests
       | 'mod-finance'               |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |
       | 'mod-organizations-storage' |
@@ -27,7 +25,6 @@ Feature: Initialize mod-finance integration tests
       | 'finance-storage.budget-expense-classes.item.post'            |
       | 'finance-storage.budgets.item.get'                            |
       | 'finance-storage.budgets.item.post'                           |
-      | 'finance-storage.budgets.item.put'                            |
       | 'finance-storage.fund-update-logs.collection.get'             |
       | 'finance-storage.funds.item.delete'                           |
       | 'finance-storage.funds.item.post'                             |
@@ -81,16 +78,11 @@ Feature: Initialize mod-finance integration tests
 
     * table adminPermissions
       | name                                                          |
-      | 'acquisitions-units-storage.memberships.collection.get'       |
-      | 'acquisitions-units-storage.memberships.item.delete'          |
-      | 'acquisitions-units-storage.memberships.item.post'            |
-      | 'acquisitions-units-storage.memberships.item.put'             |
-      | 'acquisitions-units-storage.units.item.delete'                |
-      | 'acquisitions-units-storage.units.item.get'                   |
-      | 'acquisitions-units-storage.units.item.post'                  |
-      | 'acquisitions-units-storage.units.item.put'                   |
+      | 'acquisitions-units.memberships.collection.get'               |
       | 'acquisitions-units.memberships.item.delete'                  |
       | 'acquisitions-units.memberships.item.post'                    |
+      | 'acquisitions-units.memberships.item.put'                     |
+      | 'acquisitions-units.units.item.delete'                        |
       | 'acquisitions-units.units.item.post'                          |
       | 'configuration.entries.collection.get'                        |
       | 'configuration.entries.item.delete'                           |
@@ -111,39 +103,16 @@ Feature: Initialize mod-finance integration tests
       | 'inventory-storage.material-types.item.post'                  |
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.instances.item.post'                               |
-      | 'invoice.invoice-lines.item.post'                             |
-      | 'invoice.invoices.item.get'                                   |
-      | 'invoice.invoices.item.post'                                  |
-      | 'invoice.invoices.item.put'                                   |
-      | 'invoice.item.approve.execute'                                |
-      | 'invoice.item.pay.execute'                                    |
-      | 'orders-storage.order-invoice-relationships.collection.get'   |
-      | 'orders-storage.po-lines.item.get'                            |
-      | 'orders-storage.po-lines.item.put'                            |
-      | 'orders.check-in.collection.post'                             |
       | 'orders.collection.get'                                       |
-      | 'orders.item.approve'                                         |
-      | 'orders.item.delete'                                          |
       | 'orders.item.get'                                             |
       | 'orders.item.post'                                            |
       | 'orders.item.put'                                             |
-      | 'orders.item.reopen'                                          |
       | 'orders.item.unopen'                                          |
-      | 'orders.pieces.collection.get'                                |
-      | 'orders.pieces.item.delete'                                   |
-      | 'orders.pieces.item.post'                                     |
       | 'orders.po-lines.collection.get'                              |
-      | 'orders.po-lines.item.delete'                                 |
       | 'orders.po-lines.item.get'                                    |
       | 'orders.po-lines.item.post'                                   |
       | 'orders.po-lines.item.put'                                    |
-      | 'orders.re-encumber.item.post'                                |
-      | 'orders.titles.collection.get'                                |
-      | 'orders.titles.item.post'                                     |
-      | 'organizations-storage.organizations.item.post'               |
-      | 'organizations.organizations.item.get'                        |
       | 'organizations.organizations.item.post'                       |
-      | 'organizations.organizations.item.put'                        |
       | 'users.collection.get'                                        |
 
 

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Group expense classes
 
   Background:

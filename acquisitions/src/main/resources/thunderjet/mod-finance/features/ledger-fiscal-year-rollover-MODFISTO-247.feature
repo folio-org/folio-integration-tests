@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Ledger fiscal year rollover issue MODFISTO-247
 
   Background:

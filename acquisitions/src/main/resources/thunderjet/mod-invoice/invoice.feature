@@ -23,9 +23,6 @@ Feature: mod-invoice integration tests
   Scenario: Audit events for Invoice
     * call read('features/audit-event-invoice.feature')
 
-  Scenario: Audit events for Invoice Line
-    * call read('features/audit-event-invoice-line.feature')
-
   Scenario: Batch voucher export with many lines
     * call read('features/batch-voucher-export-with-many-lines.feature')
 

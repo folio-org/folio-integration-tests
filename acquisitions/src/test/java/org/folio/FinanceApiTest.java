@@ -143,16 +143,6 @@ public class FinanceApiTest extends TestBaseEureka {
   }
 
   @Test
-  void ledgerRollover() {
-    runFeatureTest("ledger-fiscal-year-rollover");
-  }
-
-  @Test
-  void ledgerFiscalYearRolloverCashBalance() {
-    runFeatureTest("ledger-fiscal-year-rollover-cash-balance");
-  }
-
-  @Test
   void ledgerFiscalYearRolloverFailResistanceWhenDuplicateEncumbrance() {
     runFeatureTest("ledger-fiscal-year-rollover-fail-resistance-when-duplicate-encumbrance");
   }

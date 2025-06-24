@@ -15,7 +15,7 @@ Feature: Reusable components for acquisition units
     * def protectDelete = karate.get('protectDelete', true)
     * def isDeleted = karate.get('isDeleted', false)
 
-    Given path 'acquisitions-units-storage/units'
+    Given path 'acquisitions-units/units'
     And request
       """
       {
@@ -36,7 +36,7 @@ Feature: Reusable components for acquisition units
   Scenario: Assign user to acquisition unit
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
 
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And request
       """
       {
@@ -52,7 +52,7 @@ Feature: Reusable components for acquisition units
   Scenario: Delete user from acquisition unit
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
 
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==' + userId
     When method GET
     Then status 200
@@ -61,6 +61,6 @@ Feature: Reusable components for acquisition units
     * def acqMemberId = acqMember.id
 
     # Note: this requires a 'text/plain' Accept header
-    Given path 'acquisitions-units-storage/memberships', acqMemberId
+    Given path 'acquisitions-units/memberships', acqMemberId
     When method DELETE
     Then status 204

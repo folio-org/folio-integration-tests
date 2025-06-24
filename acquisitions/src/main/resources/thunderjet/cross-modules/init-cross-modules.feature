@@ -4,8 +4,8 @@ Feature: Cross-module integration tests
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    # Order of the modules below is important: mod-pubsub should come before mod-circulation
 
+    # Order of the modules below is important: mod-pubsub should come before mod-circulation
     * table modules
       | name                        |
       | 'mod-permissions'           |
@@ -15,6 +15,7 @@ Feature: Cross-module integration tests
       | 'mod-pubsub'                |
       | 'mod-circulation-storage'   |
       | 'mod-circulation'           |
+      | 'mod-audit'                 |
       | 'mod-finance-storage'       |
       | 'mod-finance'               |
       | 'mod-inventory-storage'     |
@@ -41,10 +42,15 @@ Feature: Cross-module integration tests
       | 'finance.funds.item.post'                                     |
       | 'finance.funds.item.put'                                      |
       | 'finance.fund-types.item.post'                                |
+      | 'finance.group-fund-fiscal-years.collection.get'              |
+      | 'finance.groups.item.post'                                    |
+      | 'finance.ledger-rollovers-budgets.collection.get'             |
+      | 'finance.ledger-rollovers-budgets.item.get'                   |
       | 'finance.ledger-rollovers-errors.collection.get'              |
       | 'finance.ledger-rollovers.item.post'                          |
       | 'finance.ledger-rollovers-logs.item.get'                      |
       | 'finance.ledger-rollovers-progress.collection.get'            |
+      | 'finance.ledger-rollovers-progress.item.put'                  |
       | 'finance.ledgers.item.post'                                   |
       | 'finance.release-encumbrance.item.post'                       |
       | 'finance.transactions.batch.execute'                          |
@@ -89,10 +95,18 @@ Feature: Cross-module integration tests
     # Admin permissions: all the other permissions needed
     * table adminPermissions
       | name                                                          |
+      | 'acquisition.invoice-line.events.get'                         |
+      | 'acquisitions-units.memberships.collection.get'               |
       | 'acquisitions-units.memberships.item.delete'                  |
       | 'acquisitions-units.memberships.item.post'                    |
       | 'acquisitions-units.units.item.post'                          |
+      | 'configuration.entries.collection.get'                        |
       | 'configuration.entries.item.post'                             |
+      | 'configuration.entries.item.put'                              |
+      | 'finance-storage.budgets.item.get'                            |
+      | 'finance-storage.budgets.item.put'                            |
+      | 'finance-storage.ledger-rollovers.item.delete'                |
+      | 'finance-storage.ledger-rollovers-errors.item.post'           |
       | 'inventory.instances.item.post'                               |
       | 'inventory-storage.contributor-name-types.item.post'          |
       | 'inventory-storage.electronic-access-relationships.item.post' |
@@ -112,7 +126,9 @@ Feature: Cross-module integration tests
       | 'invoice-storage.invoices.item.put'                           |
       | 'orders-storage.order-invoice-relationships.collection.get'   |
       | 'orders-storage.po-lines.item.get'                            |
+      | 'orders-storage.po-lines.item.post'                           |
       | 'orders-storage.po-lines.item.put'                            |
+      | 'orders-storage.purchase-orders.item.post'                    |
       | 'users.collection.get'                                        |
 
 

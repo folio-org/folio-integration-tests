@@ -17,8 +17,6 @@ Feature: Initialize mod-orders integration tests
       | 'mod-audit'                 |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |
-      | 'mod-invoice-storage'       |
-      | 'mod-invoice'               |
       | 'mod-finance-storage'       |
       | 'mod-finance'               |
       | 'mod-organizations-storage' |
@@ -35,7 +33,6 @@ Feature: Initialize mod-orders integration tests
       | 'orders.acquisition-method.item.post'                         |
       | 'orders.acquisitions-units-assignments.assign'                |
       | 'orders.acquisitions-units-assignments.manage'                |
-      | 'orders.acquisition-units.bypass.execute'                     |
       | 'orders.bind-pieces.collection.post'                          |
       | 'orders.bind-pieces.item.delete'                              |
       | 'orders.check-in.collection.post'                             |
@@ -89,14 +86,11 @@ Feature: Initialize mod-orders integration tests
       | 'acquisition.order-line.events.get'                           |
       | 'acquisition.piece.events.get'                                |
       | 'acquisition.piece.events.history.get'                        |
+      | 'acquisitions-units.memberships.collection.get'               |
       | 'acquisitions-units.memberships.item.delete'                  |
+      | 'acquisitions-units.memberships.item.get'                     |
       | 'acquisitions-units.memberships.item.post'                    |
-      | 'acquisitions-units-storage.memberships.collection.get'       |
-      | 'acquisitions-units-storage.memberships.item.delete'          |
-      | 'acquisitions-units-storage.memberships.item.get'             |
-      | 'acquisitions-units-storage.memberships.item.post'            |
-      | 'acquisitions-units-storage.memberships.item.put'             |
-      | 'acquisitions-units-storage.units.item.post'                  |
+      | 'acquisitions-units.memberships.item.put'                     |
       | 'acquisitions-units.units.item.post'                          |
       | 'acquisitions-units.units.item.put'                           |
       | 'addresstypes.item.post'                                      |
@@ -134,11 +128,8 @@ Feature: Initialize mod-orders integration tests
       | 'finance.fund-types.item.post'                                |
       | 'finance.group-fund-fiscal-years.item.post'                   |
       | 'finance.groups-expense-classes-totals.collection.get'        |
-      | 'finance.ledger-rollovers-budgets.collection.get'             |
-      | 'finance.ledger-rollovers-budgets.item.get'                   |
       | 'finance.ledger-rollovers-errors.collection.get'              |
       | 'finance.ledger-rollovers.item.post'                          |
-      | 'finance.ledger-rollovers-progress.collection.get'            |
       | 'finance.ledgers.collection.get'                              |
       | 'finance.ledgers.current-fiscal-year.item.get'                |
       | 'finance.ledgers.item.delete'                                 |
@@ -172,7 +163,6 @@ Feature: Initialize mod-orders integration tests
       | 'inventory-storage.instances.item.get'                        |
       | 'inventory-storage.instance-statuses.item.post'               |
       | 'inventory-storage.instance-types.item.post'                  |
-      | 'inventory-storage.items.item.get'                            |
       | 'inventory-storage.loan-types.item.post'                      |
       | 'inventory-storage.locations.item.post'                       |
       | 'inventory-storage.location-units.campuses.item.post'         |
@@ -181,18 +171,6 @@ Feature: Initialize mod-orders integration tests
       | 'inventory-storage.material-types.item.post'                  |
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.tenant-items.collection.get'                       |
-      | 'invoice.invoice-lines.collection.get'                        |
-      | 'invoice.invoice-lines.item.get'                              |
-      | 'invoice.invoice-lines.item.post'                             |
-      | 'invoice.invoice-lines.item.put'                              |
-      | 'invoice.invoices.item.get'                                   |
-      | 'invoice.invoices.item.post'                                  |
-      | 'invoice.invoices.item.put'                                   |
-      | 'invoice.item.approve.execute'                                |
-      | 'invoice.item.cancel.execute'                                 |
-      | 'invoice.item.pay.execute'                                    |
-      | 'invoices.acquisitions-units-assignments.assign'              |
-      | 'invoices.acquisitions-units-assignments.manage'              |
       | 'lost-item-fees-policies.collection.get'                      |
       | 'lost-item-fees-policies.item.post'                           |
       | 'organizations.organizations.item.post'                       |
