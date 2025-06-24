@@ -42,7 +42,7 @@ Feature: Validate POL receipt status with checkin items
 
   @Positive
   Scenario: Send order with receipt not required and checkin items true
-    // Set receiving workflow mapping default to "INDEPENDENT" instead of "SYNCHRONIZED"
+    # Set receiving workflow mapping default to "INDEPENDENT" instead of "SYNCHRONIZED"
     * set mapping.mappings[17].dataSource.default = "INDEPENDENT"
     Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
