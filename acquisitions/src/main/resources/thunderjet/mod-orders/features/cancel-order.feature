@@ -32,11 +32,11 @@ Feature: Cancel order
 
     * print '3. Create order lines'
     * table statusTable
-      | paymentStatus          | receiptStatus          |
-      | 'Awaiting Payment'     | 'Partially Received'   |
-      | 'Payment Not Required' | 'Awaiting Receipt'     |
-      | 'Fully Paid'           | 'Receipt Not Required' |
-      | 'Partially Paid'       | 'Fully Received'       |
+      | paymentStatus          | receiptStatus          | checkinItems |
+      | 'Awaiting Payment'     | 'Partially Received'   | false        |
+      | 'Payment Not Required' | 'Awaiting Receipt'     | false        |
+      | 'Fully Paid'           | 'Receipt Not Required' | true         |
+      | 'Partially Paid'       | 'Fully Received'       | false        |
     * def v = call createOrderLine statusTable
 
     * print '4. Open the order'

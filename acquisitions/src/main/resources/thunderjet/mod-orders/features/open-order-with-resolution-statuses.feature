@@ -32,7 +32,7 @@ Feature: Close order if order line has resolution statuses that should make it a
     * def v = call createOrder { id: #(orderId) }
 
     # 3. Create an order line
-    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), paymentStatus: 'Payment Not Required', receiptStatus: 'Receipt Not Required' }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), paymentStatus: 'Payment Not Required', receiptStatus: 'Receipt Not Required', checkinItems: true }
 
     # 4. Open the order
     * def v = call openOrder { orderId: #(orderId) }

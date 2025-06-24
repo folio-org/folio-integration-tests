@@ -44,4 +44,9 @@ public class GobiApiTest extends TestBaseEureka {
         runFeatureTest("find-holdings-by-location-and-instance");
     }
 
+    @Test
+    void validatePoLineReceiptNotRequiredWithCheckinItems() {
+        runFeatureTest("validate-pol-receipt-not-required-with-checkin-items");
+    }
+
 }
