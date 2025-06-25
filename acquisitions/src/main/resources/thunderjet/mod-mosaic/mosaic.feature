@@ -33,4 +33,4 @@ Feature: mod-mosaic integration tests
     Given call read("features/create-order-7-with-check-in-items.feature")
 
   Scenario: Wipe data
-    Given call read("classpath:common/destroy-data.feature")
+    Given call read("classpath:common/eureka/destroy-data.feature")

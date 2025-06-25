@@ -7,10 +7,10 @@ Feature: Initialize mod-mosaic integration tests
 
     * table modules
       | name                        |
+      | "mod-permissions"           |
       | "mod-configuration"         |
       | "mod-login"                 |
       | "mod-users"                 |
-      | "mod-permissions"           |
       | "mod-audit"                 |
       | "mod-orders-storage"        |
       | "mod-orders"                |
@@ -26,22 +26,6 @@ Feature: Initialize mod-mosaic integration tests
       | name                                                      |
       | "mosaic.validate.get"                                     |
       | "mosaic.orders.item.post"                                 |
-      | "orders.order-templates.collection.get"                   |
-      | "orders-storage.custom-fields.collection.get"             |
-      | "okapi.proxy.tenants.modules.list"                        |
-      | "finance.funds.collection.get"                            |
-      | "finance.expense-classes.collection.get"                  |
-      | "finance.fund-codes-expense-classes.collection.get"       |
-      | "acquisitions-units.units.collection.get"                 |
-      | "orders.acquisitions-units-assignments.manage"            |
-      | "orders.acquisition-methods.collection.get"               |
-      | "organizations.organizations.collection.get"              |
-      | "configuration.entries.collection.get"                    |
-      | "inventory-storage.locations.collection.get"              |
-      | "inventory-storage.material-types.collection.get"         |
-      | "inventory-storage.identifier-types.collection.get"       |
-      | "inventory-storage.contributor-name-types.collection.get" |
-      | "users.collection.get"                                    |
 
     * table adminPermissions
       | name                                                          |
