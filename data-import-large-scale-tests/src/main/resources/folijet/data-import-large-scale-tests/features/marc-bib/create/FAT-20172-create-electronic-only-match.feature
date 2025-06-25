@@ -50,7 +50,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def s3UploadKey = result.s3UploadKey
 
     # waiting import results
-    * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { headersUser: #(headersUser), key: #(s3UploadKey) }
+    * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions
     * match each jobExecutions contains { "status": "COMMITTED" }
     * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
@@ -78,7 +78,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def s3UploadKey = result.s3UploadKey
 
     # Check the import results
-    * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { headersUser: #(headersUser), key: #(s3UploadKey) }
+    * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions
     * match each jobExecutions contains { "status": "COMMITTED" }
     * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
