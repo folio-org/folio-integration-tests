@@ -34,25 +34,31 @@ Feature: Open orders in member tenant, share instance in one case
 
     * def v = callonce createOrganization { id: '#(vendorId)', name: 'University Vendor', code: 'UV', isVendor: true, status: 'Active' }
 
-
-  Scenario: Create and open an order in university tenant, no central instance
     * def orderId = call uuid
     * def poLineId = call uuid
-
-    # Create and open order in university tenant
-    * def v = call createOrder { id: '#(orderId)', vendor: '#(vendorId)' }
 
     * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
     * set orderLine.id = poLineId
     * set orderLine.purchaseOrderId = orderId
     * set orderLine.fundDistribution[0].fundId = fundId
     * set orderLine.fundDistribution[0].code = fundId
-    * set orderLine.locations[2].tenantId = universityTenantName
-    * set orderLine.locations[2].locationId = universityLocationsId
+    * set orderLine.locations[0].tenantId = universityTenantName
+    * set orderLine.locations[0].locationId = universityLocationsId
+    * set orderLine.locations[1].tenantId = universityTenantName
+    * set orderLine.locations[1].locationId = universityLocationsId2
+    * remove orderLine.locations[2]
+    * set orderLine.cost.quantityPhysical = 2
+    * set orderLine.cost.poLineEstimatedPrice = 2.0
     * def productId = { productId: '12345', productIdType: '#(globalISBNIdentifierTypeId)' }
     * set orderLine.details.productIds = [ '#(productId)' ]
     * set orderLine.physical.materialSupplier = vendorId
     * set orderLine.eresource.accessProvider = vendorId
+
+
+  Scenario: Create and open an order in university tenant, no central instance
+    # Create and open order in university tenant
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(vendorId)' }
+
     Given path 'orders/order-lines'
     And request orderLine
     When method POST
@@ -81,6 +87,7 @@ Feature: Open orders in member tenant, share instance in one case
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
+    Then status 200
     And match $.totalRecords == 2
 
     # Verify nothing was created in the central tenant
@@ -98,13 +105,11 @@ Feature: Open orders in member tenant, share instance in one case
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
+    Then status 200
     And match $.totalRecords == 0
 
 
   Scenario: Create and open an order in university tenant, with a central instance
-    * def orderId = call uuid
-    * def poLineId = call uuid
-
     # Create an instance in central tenant
     * def instanceId = call uuid
     * configure headers = headersCentral
@@ -115,17 +120,6 @@ Feature: Open orders in member tenant, share instance in one case
     * configure headers = headersUniUser
     * def v = call createOrder { id: '#(orderId)', vendor: '#(vendorId)' }
 
-    * def orderLine = read('classpath:samples/consortia/orderLines/multi-tenant-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.fundDistribution[0].fundId = fundId
-    * set orderLine.fundDistribution[0].code = fundId
-    * set orderLine.locations[2].tenantId = universityTenantName
-    * set orderLine.locations[2].locationId = universityLocationsId
-    * def productId = { productId: '12345', productIdType: '#(globalISBNIdentifierTypeId)' }
-    * set orderLine.details.productIds = [ '#(productId)' ]
-    * set orderLine.physical.materialSupplier = vendorId
-    * set orderLine.eresource.accessProvider = vendorId
     Given path 'orders/order-lines'
     And request orderLine
     When method POST
@@ -147,4 +141,5 @@ Feature: Open orders in member tenant, share instance in one case
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
+    Then status 200
     And match $.totalRecords == 2
