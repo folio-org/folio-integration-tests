@@ -1,0 +1,665 @@
+{
+  "id" : "dde1318f-864d-4c2b-a748-53494e154cee",
+  "profileId" : "8d959755-b399-40eb-be61-0b091c3abc15",
+  "profileWrapperId" : "caae6903-5297-4be0-997c-1324e09a1b01",
+  "contentType" : "JOB_PROFILE",
+  "content" : {
+    "id" : "8d959755-b399-40eb-be61-0b091c3abc15",
+    "name" : "FCBLT Inventory CREATE ELECTRONIC Records for ADDITIONAL Holding and Item ONLY Match to Existing SRS Marc (035 9 to 035 9)",
+    "description" : "This FCBLT default profile creates one additional holding and item using a match from the incoming marc field 035 9 to the existing srs 035 9. Refer to the documentation for how to map the information needed for holdings and item records.",
+    "dataType" : "MARC",
+    "userInfo" : {
+      "firstName" : "test",
+      "lastName" : "user",
+      "userName" : "test@user.edu"
+    },
+    "parentProfiles" : [ ],
+    "childProfiles" : [ ],
+    "hidden" : false,
+    "metadata" : {
+      "createdDate" : "2023-11-06T15:01:15.467+00:00",
+      "createdByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400",
+      "updatedDate" : "2023-11-06T15:01:15.467+00:00",
+      "updatedByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400"
+    }
+  },
+  "order" : 0,
+  "childSnapshotWrappers" : [ {
+    "id" : "4e2982f6-7ac0-4ae3-a947-01eb2b85d82d",
+    "profileId" : "decfd94e-2db9-4023-97e3-a304b4e84dee",
+    "profileWrapperId" : "926c2924-0130-470c-9709-38e103e40f4d",
+    "contentType" : "MATCH_PROFILE",
+    "content" : {
+      "id" : "decfd94e-2db9-4023-97e3-a304b4e84dee",
+      "name" : "FCBLT Default Inventory Match from Incoming 0359 MARC to Existing MARC SRS 0359",
+      "description" : "FCBLT Default Inventory Match from Incoming 0359 MARC to Existing MARC SRS 0359 meant as a generic use and template match profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
+      "incomingRecordType" : "MARC_BIBLIOGRAPHIC",
+      "existingRecordType" : "MARC_BIBLIOGRAPHIC",
+      "matchDetails" : [ {
+        "incomingRecordType" : "MARC_BIBLIOGRAPHIC",
+        "existingRecordType" : "MARC_BIBLIOGRAPHIC",
+        "incomingMatchExpression" : {
+          "dataValueType" : "VALUE_FROM_RECORD",
+          "fields" : [ {
+            "label" : "field",
+            "value" : "035"
+          }, {
+            "label" : "indicator1",
+            "value" : "9"
+          }, {
+            "label" : "indicator2",
+            "value" : " "
+          }, {
+            "label" : "recordSubfield",
+            "value" : "a"
+          } ]
+        },
+        "matchCriterion" : "EXACTLY_MATCHES",
+        "existingMatchExpression" : {
+          "dataValueType" : "VALUE_FROM_RECORD",
+          "fields" : [ {
+            "label" : "field",
+            "value" : "035"
+          }, {
+            "label" : "indicator1",
+            "value" : "9"
+          }, {
+            "label" : "indicator2",
+            "value" : " "
+          }, {
+            "label" : "recordSubfield",
+            "value" : "a"
+          } ]
+        }
+      } ],
+      "userInfo" : {
+        "firstName" : "test",
+        "lastName" : "user",
+        "userName" : "test@user.edu"
+      },
+      "parentProfiles" : [ ],
+      "childProfiles" : [ ],
+      "hidden" : false,
+      "metadata" : {
+        "createdDate" : "2023-10-20T20:24:26.206+00:00",
+        "createdByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400",
+        "updatedDate" : "2023-10-20T20:24:26.206+00:00",
+        "updatedByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400"
+      }
+    },
+    "order" : 0,
+    "childSnapshotWrappers" : [ {
+      "id" : "1d1dbc47-361b-4bad-b765-15ed0bf02b6d",
+      "profileId" : "72ce33dd-ada9-4b1a-8de8-3bfff3d5f357",
+      "profileWrapperId" : "854b1d13-7087-401f-bd9d-fefeeaa11c7b",
+      "contentType" : "ACTION_PROFILE",
+      "reactTo" : "MATCH",
+      "content" : {
+        "id" : "72ce33dd-ada9-4b1a-8de8-3bfff3d5f357",
+        "name" : "FCBLT Default Inventory Electronic Holding",
+        "description" : "FCBLT Default Inventory Electronic Holding meant as a generic use and template action profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
+        "action" : "CREATE",
+        "folioRecord" : "HOLDINGS",
+        "userInfo" : {
+          "firstName" : "test",
+          "lastName" : "user",
+          "userName" : "test@user.edu"
+        },
+        "parentProfiles" : [ ],
+        "childProfiles" : [ ],
+        "hidden" : false,
+        "remove9Subfields" : false,
+        "metadata" : {
+          "createdDate" : "2022-09-16T18:01:50.660+00:00",
+          "createdByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e",
+          "updatedDate" : "2022-09-16T18:01:50.660+00:00",
+          "updatedByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e"
+        }
+      },
+      "order" : 0,
+      "childSnapshotWrappers" : [ {
+        "id" : "f86ea81a-f698-43b9-963b-7044e4ba2df8",
+        "profileId" : "a0365b74-33cc-4f12-966a-2ca529f8c94a",
+        "profileWrapperId" : "f98a226d-1851-4e32-9a10-987a60516e67",
+        "contentType" : "MAPPING_PROFILE",
+        "content" : {
+          "id" : "a0365b74-33cc-4f12-966a-2ca529f8c94a",
+          "name" : "FCBLT Default Inventory Electronic Holding",
+          "description" : "FCBLT Default Inventory Electronic Holding meant as a generic use and template field mapping profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
+          "incomingRecordType" : "MARC_BIBLIOGRAPHIC",
+          "existingRecordType" : "HOLDINGS",
+          "userInfo" : {
+            "firstName" : "test",
+            "lastName" : "user",
+            "userName" : "test@user.edu"
+          },
+          "marcFieldProtectionSettings" : [ ],
+          "parentProfiles" : [ ],
+          "childProfiles" : [ ],
+          "mappingDetails" : {
+            "name" : "holdings",
+            "recordType" : "HOLDINGS",
+            "mappingFields" : [ {
+              "name" : "discoverySuppress",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.discoverySuppress",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "hrid",
+              "enabled" : "false",
+              "required" : false,
+              "path" : "holdings.discoverySuppress",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "formerIds",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.formerIds[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "holdingsTypeId",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.holdingsTypeId",
+              "value" : "\"Electronic\"",
+              "subfields" : [ ]
+            }, {
+              "name" : "statisticalCodeIds",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.statisticalCodeIds[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "administrativeNotes",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.administrativeNotes[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "permanentLocationId",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.permanentLocationId",
+              "value" : "852$l",
+              "subfields" : [ ]
+            }, {
+              "name" : "temporaryLocationId",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.temporaryLocationId",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "shelvingOrder",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.shelvingOrder",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "shelvingTitle",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.shelvingTitle",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "copyNumber",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.copyNumber",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "callNumberTypeId",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.callNumberTypeId",
+              "value" : "852$t",
+              "subfields" : [ ]
+            }, {
+              "name" : "callNumberPrefix",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.callNumberPrefix",
+              "value" : "852$p",
+              "subfields" : [ ]
+            }, {
+              "name" : "callNumber",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.callNumber",
+              "value" : "852$h",
+              "subfields" : [ ]
+            }, {
+              "name" : "callNumberSuffix",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.callNumberSuffix",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "numberOfItems",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.numberOfItems",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "holdingsStatements",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.holdingsStatements[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "holdingsStatementsForSupplements",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.holdingsStatementsForSupplements[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "holdingsStatementsForIndexes",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.holdingsStatementsForIndexes[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "illPolicyId",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.illPolicyId",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "digitizationPolicy",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.digitizationPolicy",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "retentionPolicy",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.retentionPolicy",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "notes",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.notes[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "electronicAccess",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.electronicAccess[]",
+              "value" : "",
+              "repeatableFieldAction" : "EXTEND_EXISTING",
+              "subfields" : [ {
+                "order" : 0,
+                "path" : "holdings.electronicAccess[]",
+                "fields" : [ {
+                  "name" : "relationshipId",
+                  "enabled" : "true",
+                  "required" : false,
+                  "path" : "holdings.electronicAccess[].relationshipId",
+                  "value" : "\"Resource\"",
+                  "subfields" : [ ]
+                }, {
+                  "name" : "uri",
+                  "enabled" : "true",
+                  "required" : true,
+                  "path" : "holdings.electronicAccess[].uri",
+                  "value" : "856$u",
+                  "subfields" : [ ]
+                }, {
+                  "name" : "linkText",
+                  "enabled" : "true",
+                  "required" : false,
+                  "path" : "holdings.electronicAccess[].linkText",
+                  "value" : "856$y",
+                  "subfields" : [ ]
+                }, {
+                  "name" : "materialsSpecification",
+                  "enabled" : "true",
+                  "required" : false,
+                  "path" : "holdings.electronicAccess[].materialsSpecification",
+                  "value" : "856$3",
+                  "subfields" : [ ]
+                }, {
+                  "name" : "publicNote",
+                  "enabled" : "true",
+                  "required" : false,
+                  "path" : "holdings.electronicAccess[].publicNote",
+                  "value" : "856$z",
+                  "subfields" : [ ]
+                } ]
+              } ]
+            }, {
+              "name" : "receivingHistory.entries",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "holdings.receivingHistory.entries[]",
+              "value" : "",
+              "subfields" : [ ]
+            } ],
+            "marcMappingDetails" : [ ]
+          },
+          "hidden" : false,
+          "metadata" : {
+            "createdDate" : "2022-09-16T17:52:54.847+00:00",
+            "createdByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e",
+            "updatedDate" : "2024-10-11T19:10:26.091+00:00",
+            "updatedByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400"
+          }
+        },
+        "order" : 0,
+        "childSnapshotWrappers" : [ ]
+      } ]
+    }, {
+      "id" : "616728f1-e436-4ab5-804e-2eed21761afb",
+      "profileId" : "dc973bb6-7403-4f46-bb07-23a0d6a2538e",
+      "profileWrapperId" : "ff9eb718-408a-451c-aa0d-f9d856a9cfe5",
+      "contentType" : "ACTION_PROFILE",
+      "reactTo" : "MATCH",
+      "content" : {
+        "id" : "dc973bb6-7403-4f46-bb07-23a0d6a2538e",
+        "name" : "FCBLT Default Inventory Electronic Item",
+        "description" : "FCBLT Default Inventory Electronic Item meant as a generic use and template action profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
+        "action" : "CREATE",
+        "folioRecord" : "ITEM",
+        "userInfo" : {
+          "firstName" : "test",
+          "lastName" : "user",
+          "userName" : "test@user.edu"
+        },
+        "parentProfiles" : [ ],
+        "childProfiles" : [ ],
+        "hidden" : false,
+        "remove9Subfields" : false,
+        "metadata" : {
+          "createdDate" : "2022-09-16T18:00:59.320+00:00",
+          "createdByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e",
+          "updatedDate" : "2022-09-16T18:00:59.320+00:00",
+          "updatedByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e"
+        }
+      },
+      "order" : 1,
+      "childSnapshotWrappers" : [ {
+        "id" : "750af4a1-fcb2-42cc-a86e-a71d04c36654",
+        "profileId" : "dfd9186f-65be-4d45-a5c4-cd00b7e990ec",
+        "profileWrapperId" : "5ff43bfd-442a-4760-8904-f9128bbc5594",
+        "contentType" : "MAPPING_PROFILE",
+        "content" : {
+          "id" : "dfd9186f-65be-4d45-a5c4-cd00b7e990ec",
+          "name" : "FCBLT Default Inventory Electronic Item",
+          "description" : "FCBLT Default Inventory Electronic Item meant as a generic use and template field mapping profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
+          "incomingRecordType" : "MARC_BIBLIOGRAPHIC",
+          "existingRecordType" : "ITEM",
+          "userInfo" : {
+            "firstName" : "test",
+            "lastName" : "user",
+            "userName" : "test@user.edu"
+          },
+          "marcFieldProtectionSettings" : [ ],
+          "parentProfiles" : [ ],
+          "childProfiles" : [ ],
+          "mappingDetails" : {
+            "name" : "item",
+            "recordType" : "ITEM",
+            "mappingFields" : [ {
+              "name" : "discoverySuppress",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.discoverySuppress",
+              "subfields" : [ ]
+            }, {
+              "name" : "hrid",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.hrid",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "barcode",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.barcode",
+              "value" : "876$a",
+              "subfields" : [ ]
+            }, {
+              "name" : "accessionNumber",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.accessionNumber",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "itemIdentifier",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.itemIdentifier",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "formerIds",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.formerIds[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "statisticalCodeIds",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.statisticalCodeIds[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "administrativeNotes",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.administrativeNotes[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "materialType.id",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.materialType.id",
+              "value" : "877$m",
+              "subfields" : [ ]
+            }, {
+              "name" : "copyNumber",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.copyNumber",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "itemLevelCallNumberTypeId",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.itemLevelCallNumberTypeId",
+              "subfields" : [ ]
+            }, {
+              "name" : "itemLevelCallNumberPrefix",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.itemLevelCallNumberPrefix",
+              "subfields" : [ ]
+            }, {
+              "name" : "itemLevelCallNumber",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.itemLevelCallNumber",
+              "subfields" : [ ]
+            }, {
+              "name" : "itemLevelCallNumberSuffix",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.itemLevelCallNumberSuffix",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "numberOfPieces",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.numberOfPieces",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "descriptionOfPieces",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.descriptionOfPieces",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "enumeration",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.enumeration",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "chronology",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.chronology",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "volume",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.volume",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "yearCaption",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.yearCaption[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "numberOfMissingPieces",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.numberOfMissingPieces",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "missingPieces",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.missingPieces",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "missingPiecesDate",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.missingPiecesDate",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "itemDamagedStatusId",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.itemDamagedStatusId",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "itemDamagedStatusDate",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.itemDamagedStatusDate",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "notes",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.notes[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "permanentLoanType.id",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.permanentLoanType.id",
+              "value" : "876$l",
+              "subfields" : [ ]
+            }, {
+              "name" : "temporaryLoanType.id",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.temporaryLoanType.id",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "status.name",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.status.name",
+              "value" : "\"Available\"",
+              "subfields" : [ ]
+            }, {
+              "name" : "circulationNotes",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.circulationNotes[]",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "permanentLocation.id",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.permanentLocation.id",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "temporaryLocation.id",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.temporaryLocation.id",
+              "value" : "",
+              "subfields" : [ ]
+            }, {
+              "name" : "electronicAccess",
+              "enabled" : "true",
+              "required" : false,
+              "path" : "item.electronicAccess[]",
+              "value" : "",
+              "subfields" : [ ]
+            } ],
+            "marcMappingDetails" : [ ]
+          },
+          "hidden" : false,
+          "metadata" : {
+            "createdDate" : "2022-09-16T17:48:47.445+00:00",
+            "createdByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e",
+            "updatedDate" : "2022-09-16T17:48:47.445+00:00",
+            "updatedByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e"
+          }
+        },
+        "order" : 0,
+        "childSnapshotWrappers" : [ ]
+      } ]
+    } ]
+  } ]
+}

@@ -75,8 +75,11 @@ function fn() {
   } else if (env === 'snapshot-2') {
     config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
+  } else if (env === 'etesting-sprint') {
+    config.baseUrl = 'https://folio-etesting-sprint-kong.ci.folio.org';
+    config.testUser = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
   } else if (env === 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
     config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
@@ -91,7 +94,10 @@ function fn() {
     config.edgeUrl = '${edgeUrl}';
     config.admin = {tenant: '${admin.tenant}', name: '${admin.name}', password: '${admin.password}'}
     config.prototypeTenant = '${prototypeTenant}';
-    karate.configure('ssl',true);
+    karate.configure('ssl', true);
+  } else if (env === 'edev') {
+    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
+    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
   } else if(env === 'dev') {
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';

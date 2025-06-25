@@ -8,7 +8,7 @@ Feature: Import records file
 
     @importFile
     Scenario: Import records file
-      * print 'Started loading from import-file feature: ', 'fineName: ', fileName, 'filePath: ', filePathFromSourceRoot, 'profileId: ', jobProfileInfo.id
+      * print 'Started loading from import-file feature: ', 'fileName: ', fileName, 'filePath: ', filePathFromSourceRoot, 'profileId: ', jobProfileInfo.id
 
       # Create uploadDefinition
       * def randomNumber = callonce random
