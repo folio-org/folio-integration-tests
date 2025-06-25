@@ -5,9 +5,8 @@ Feature: mod-mosaic integration tests
     * url baseUrl
 
   Scenario: Create tenant and users for testing
-    * call read("classpath:common/setup-users.feature")
+    * call read("classpath:common/eureka/setup-users.feature")
 
-  # Custom scenario(s):
   Scenario: Validate Order
     Given call read("features/validate-order.feature")
 

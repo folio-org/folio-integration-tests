@@ -11,7 +11,7 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:8000',
-    edgeUrl: 'http://localhost:8000',
+    edgeUrl: 'http://localhost:9000',
     ftpUrl: 'ftp://ftp.ci.folio.org',
     ftpPort:  21,
     ftpUser: 'folio',
@@ -27,7 +27,6 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
-    dummyUser: {tenant: testTenant, name: 'dummy-user', password: 'dummy'},
 
     // define global features
     createAdditionalUser: karate.read('classpath:common/eureka/create-additional-user.feature'),
@@ -39,7 +38,7 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 
-    // common reusables
+    // common reusable features
     resourceExists: karate.read('classpath:common/resource-exists.feature'),
     deleteResource: karate.read('classpath:common/delete-resource.feature'),
 
