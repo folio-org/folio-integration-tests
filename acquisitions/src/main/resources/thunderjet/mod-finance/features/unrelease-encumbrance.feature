@@ -5,20 +5,25 @@ Feature: Test changing encumbrance from Released to Unreleased
     * url baseUrl
 
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
-    * def orderId1 = callonce uuid1
-    * def orderId2 = callonce uuid2
-    * def poLineId1 = callonce uuid3
-    * def poLineId2 = callonce uuid4
+
 
   Scenario: Test Encumbrance Transition from Released to Unreleased
 
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    * print '1. Prepare finances'
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+
     # retrieve budge info for later
-    Given path '/finance/budgets', globalBudgetId
+    Given path '/finance/budgets', budgetId
     When method GET
     Then status 200
     * def budgetBefore = $
@@ -34,7 +39,7 @@ Feature: Test changing encumbrance from Released to Unreleased
       "description": "PO_Line: History of Incas",
       "fiscalYearId": "#(globalFiscalYearId)",
       "source": "User",
-      "fromFundId": "#(globalFundId)",
+      "fromFundId": "#(fundId)",
       "transactionType": "Encumbrance",
       "encumbrance": {
         "initialAmountEncumbered": 10,
@@ -43,8 +48,8 @@ Feature: Test changing encumbrance from Released to Unreleased
         "orderType": "One-Time",
         "subscription": false,
         "reEncumber": false,
-        "sourcePurchaseOrderId": '#(orderId1)',
-        "sourcePoLineId": '#(poLineId1)'
+        "sourcePurchaseOrderId": '#(orderId)',
+        "sourcePoLineId": '#(poLineId)'
       }
     }
     """
@@ -66,7 +71,7 @@ Feature: Test changing encumbrance from Released to Unreleased
     Then status 204
 
     # check the budget was not changed
-    Given path '/finance/budgets', globalBudgetId
+    Given path '/finance/budgets', budgetId
     When method GET
     Then status 200
     And match $.encumbered == budgetBefore.encumbered
@@ -97,13 +102,15 @@ Feature: Test changing encumbrance from Released to Unreleased
     And match $.amount == 10
 
     # check the budget's encumbered total was updated
-    Given path '/finance/budgets', globalBudgetId
+    Given path '/finance/budgets', budgetId
     When method GET
     Then status 200
     And match $.encumbered == budgetBefore.encumbered + 10
 
 
   Scenario: Test Error when trying to unrelease expended encumbrance
+    * def orderId = call uuid
+    * def poLineId = call uuid
     * def encumbranceId = call uuid
     # create a pending encumbrance transaction with a positive amountExpended
     * def transaction =
@@ -124,8 +131,8 @@ Feature: Test changing encumbrance from Released to Unreleased
         "orderType": "One-Time",
         "subscription": false,
         "reEncumber": false,
-        "sourcePurchaseOrderId": '#(orderId2)',
-        "sourcePoLineId": '#(poLineId2)'
+        "sourcePurchaseOrderId": '#(orderId)',
+        "sourcePoLineId": '#(poLineId)'
       }
     }
     """

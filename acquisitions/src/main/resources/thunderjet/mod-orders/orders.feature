@@ -35,9 +35,6 @@ Feature: mod-orders integration tests
   Scenario: Change pending distribution with inactive budget
     * call read('features/change-pending-distribution-with-inactive-budget.feature')
 
-  Scenario: Check encumbrance status after moving expended value
-    * call read('features/check-encumbrance-status-after-moving-expended-value.feature')
-
   Scenario: Check estimated price with composite order
     * call read('features/check-estimated-price-with-composite-order.feature')
 
@@ -50,9 +47,6 @@ Feature: mod-orders integration tests
   @ignore
   Scenario: Check order lines number retrieve limit
     * call read('features/check-order-lines-number-retrieve-limit.feature')
-
-  Scenario: Check order re-encumber works correctly
-    * call read('features/check-order-re-encumber-work-correctly.feature')
 
   Scenario: Check needReEncumber flag populated correctly
     * call read('features/check-re-encumber-property.feature')
@@ -126,17 +120,8 @@ Feature: mod-orders integration tests
   Scenario: Move Item and Holding to update order data
     * call read('features/move-item-and-holding-to-update-order-data.feature')
 
-  Scenario: Moving encumbered value from budget 1 to budget 2
-    * call read('features/moving_encumbered_value_to_different_budget.feature')
-
-  Scenario: Moving expended amount when editing fund distribution for POL
-    * call read('features/moving_expended_value_to_newly_created_encumbrance.feature')
-
   Scenario: Open and unopen order
     * call read('features/open-and-unopen-order.feature')
-
-  Scenario: Approve and pay order with 50 lines
-    * call read('features/open-approve-and-pay-order-with-50-lines.feature')
 
   Scenario: Open ongoing order
     * call read('features/open-ongoing-order.feature')
@@ -231,9 +216,6 @@ Feature: mod-orders integration tests
   Scenario: Receive piece against package POL
     * call read('features/receive-piece-against-package-pol.feature')
 
-  Scenario: Update linked invoice lines fund distribution reference when update POL
-    * call read('features/remove_linked_invoice_lines_fund_distribution_encumbrance_reference.feature')
-
   Scenario: Reopen an order creates encumbrances
     * call read('features/reopen-order-creates-encumbrances.feature')
 
@@ -269,9 +251,6 @@ Feature: mod-orders integration tests
 
   Scenario: Update fields in item after updating in piece
     * call read('features/update_fields_in_item.feature')
-
-  Scenario: Update fund in poLine when invoice approved
-    * call read('features/update_fund_in_poline_when_invoice_approved.feature')
 
   Scenario: Update purchase order with order lines
     * call read('features/update-purchase-order-with-order-lines.feature')

@@ -1,4 +1,5 @@
 # For https://issues.folio.org/browse/MODFISTO-441
+@parallel=false
 Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance)
 
   # 1) create 3 sequential fiscal years: fiscalYearId1, fiscalYearId2, fiscalYearId3. fiscalYearId1 contains current date

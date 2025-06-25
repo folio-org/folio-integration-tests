@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Create planned budget without expense classes when there is no current budget
 
   Background:

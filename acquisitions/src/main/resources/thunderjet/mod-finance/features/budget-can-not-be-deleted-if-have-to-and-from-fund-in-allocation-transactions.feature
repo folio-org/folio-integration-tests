@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Budget can not be deleted if have to and from fund in allocation transactions
 
   Background:

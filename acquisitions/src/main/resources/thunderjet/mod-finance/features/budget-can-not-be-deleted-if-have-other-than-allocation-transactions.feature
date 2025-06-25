@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Budget can not be deleted if have other than allocation transactions
 
   Background:

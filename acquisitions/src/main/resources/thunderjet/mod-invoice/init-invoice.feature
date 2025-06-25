@@ -19,8 +19,6 @@ Feature: Initialize mod-invoice integration tests
       | 'mod-finance-storage'       |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
-      | 'mod-orders'                |
-      | 'mod-orders-storage'        |
 
     * table userPermissions
       | name                                                        |
@@ -74,10 +72,6 @@ Feature: Initialize mod-invoice integration tests
       | 'finance-storage.budget-expense-classes.item.post'          |
       | 'finance.transactions.collection.get'                       |
       | 'finance.transactions.item.get'                             |
-      | 'orders.item.get'                                           |
-      | 'orders.item.post'                                          |
-      | 'orders.item.put'                                           |
-      | 'orders.po-lines.item.post'                                 |
       | 'organizations.organizations.item.post'                     |
 
 

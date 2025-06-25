@@ -46,6 +46,11 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void auditEventInvoiceLine() {
+    runFeatureTest("audit-event-invoice-line");
+  }
+
+  @Test
   void cancelInvoiceAndUnrelease2Encumbrances() {
     runFeatureTest("cancel-invoice-and-unrelease-2-encumbrances");
   }
@@ -76,6 +81,11 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void checkEncumbranceStatusAfterMovingExpendedValue() {
+    runFeatureTest("check-encumbrance-status-after-moving-expended-value");
+  }
+
+  @Test
   void checkEncumbrancesAfterIssuingCreditForPaidOrder() {
     runFeatureTest("check-encumbrances-after-issuing-credit-for-paid-order");
   }
@@ -98,6 +108,11 @@ public class CrossModulesApiTest extends TestBaseEureka {
   @Test
   void checkOrderReEncumberAfterPreviewRollover() {
     runFeatureTest("check-order-re-encumber-after-preview-rollover");
+  }
+
+  @Test
+  void checkOrderReEncumberWorksCorrectly() {
+    runFeatureTest("check-order-re-encumber-work-correctly");
   }
 
   @Test
@@ -151,6 +166,16 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void ledgerRollover() {
+    runFeatureTest("ledger-fiscal-year-rollover");
+  }
+
+  @Test
+  void ledgerFiscalYearRolloverCashBalance() {
+    runFeatureTest("ledger-fiscal-year-rollover-cash-balance");
+  }
+
+  @Test
   void linkInvoiceLineToPoLine() {
     runFeatureTest("link-invoice-line-to-po-line");
   }
@@ -159,6 +184,19 @@ public class CrossModulesApiTest extends TestBaseEureka {
   void deletePlannedBudgetWithoutTransactions() {
     runFeatureTest("MODFISTO-270-delete-planned-budget-without-transactions");
   }
+
+  @Test
+  void movingEncumberedValueToDifferentBudget() {
+    runFeatureTest("moving_encumbered_value_to_different_budget");
+  }
+
+  @Test
+  void movingExpendedValueToNewlyCreatedEncumbrance() {
+    runFeatureTest("moving_expended_value_to_newly_created_encumbrance");
+  }
+
+  @Test
+  void openApproveAndPayOrderWith50Lines() {runFeatureTest("open-approve-and-pay-order-with-50-lines");}
 
   @Test
   void openOrderAfterApprovingInvoice() {
@@ -216,6 +254,11 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void removeLinkedInvoiceLinesFundDistributionEncumbranceReference() {
+    runFeatureTest("remove_linked_invoice_lines_fund_distribution_encumbrance_reference");
+  }
+
+  @Test
   void rolloverAndPayInvoiceUsingPastFiscalYear() {
     runFeatureTest("rollover-and-pay-invoice-using-past-fiscal-year");
   }
@@ -253,6 +296,11 @@ public class CrossModulesApiTest extends TestBaseEureka {
   @Test
   void updateEncumbranceLinksWithFiscalYear() {
     runFeatureTest("update-encumbrance-links-with-fiscal-year");
+  }
+
+  @Test
+  void updateFundInPoLineWhenInvoiceApproved() {
+    runFeatureTest("update_fund_in_poline_when_invoice_approved");
   }
 
 }

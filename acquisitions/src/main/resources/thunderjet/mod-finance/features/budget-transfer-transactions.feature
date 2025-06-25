@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Make transfer transaction and verify budget updates
 
   Background:

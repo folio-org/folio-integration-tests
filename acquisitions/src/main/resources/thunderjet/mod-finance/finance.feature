@@ -81,12 +81,6 @@ Feature: mod-finance integration tests
   Scenario: Ledger fiscal year rollover when "Close all current budgets" flag is true
     * call read('features/ledger-fiscal-year-preview-rollover-need-close-budgets.feature')
 
-  Scenario: Test ledger rollover
-    * call read('features/ledger-fiscal-year-rollover.feature')
-
-  Scenario: Test ledger fiscal year rollover based on cash balance value
-    * call read('features/ledger-fiscal-year-rollover-cash-balance.feature')
-
   Scenario: Verify fault tolerance ledger fiscal year rollover when occurred duplicate encumbrance
     * call read('features/ledger-fiscal-year-rollover-fail-resistance-when-duplicate-encumbrance.feature')
 

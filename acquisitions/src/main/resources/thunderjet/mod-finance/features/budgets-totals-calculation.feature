@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Should tests budget total amounts calculation
 
   Background:

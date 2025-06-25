@@ -46,11 +46,6 @@ public class InvoicesApiTest extends TestBaseEureka {
   }
 
   @Test
-  void auditEventInvoiceLine() {
-    runFeatureTest("audit-event-invoice-line");
-  }
-
-  @Test
   void batchVoucherExportWithManyLines() {
     runFeatureTest("batch-voucher-export-with-many-lines");
   }

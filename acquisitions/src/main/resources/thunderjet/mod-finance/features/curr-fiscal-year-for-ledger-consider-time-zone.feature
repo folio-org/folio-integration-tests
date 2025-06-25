@@ -1,3 +1,4 @@
+@parallel=false
 Feature:  Return current fiscal year consider time zone
 
   Background:

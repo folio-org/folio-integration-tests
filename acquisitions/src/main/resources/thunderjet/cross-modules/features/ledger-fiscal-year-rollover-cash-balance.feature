@@ -1,6 +1,5 @@
 @parallel=false
 # for https://issues.folio.org/browse/MODFISTO-371
-# NOTE: THIS TEST SHOULD BE IN CROSS-MODULES
 Feature: Test ledger fiscal year rollover based on cash balance value
 
   Background:
@@ -12,7 +11,7 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     * callonce login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -44,10 +43,10 @@ Feature: Test ledger fiscal year rollover based on cash balance value
   Scenario: Create fiscal years and associated ledger
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId1), code: 'TESTFY0001', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: 'TESTFY' }
+    * def v = call createFiscalYear { id: #(fyId1), code: 'TESTFY0003', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: 'TESTFY' }
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId2), code: 'TESTFY0002', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: 'TESTFY' }
+    * def v = call createFiscalYear { id: #(fyId2), code: 'TESTFY0004', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: 'TESTFY' }
     * call createLedger { 'id': '#(ledgerId)', fiscalYearId: '#(fyId1)'}
 
 
@@ -58,7 +57,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
 
 
   Scenario: Create an order
-    * configure headers = headersAdmin
     Given path 'orders/composite-orders'
     And request
     """
@@ -73,7 +71,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 201
 
   Scenario Outline: Create a po lines
-    * configure headers = headersAdmin
     * copy poLine = orderLineTemplate
     * set poLine.id = <poLineId>
     * set poLine.purchaseOrderId = orderId
@@ -95,7 +92,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
       | 10.0        | poLineId2   |
 
   Scenario: Open the order
-    * configure headers = headersAdmin
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -109,7 +105,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 204
 
   Scenario: Create an invoice
-    * configure headers = headersAdmin
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -118,7 +113,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 201
 
   Scenario: Create a invoice line
-    * configure headers = headersAdmin
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId1
     When method GET
@@ -142,7 +136,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 201
 
   Scenario: Create a invoice line
-    * configure headers = headersAdmin
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId1
     When method GET
@@ -166,7 +159,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 201
 
   Scenario: Approve the invoice
-    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -178,7 +170,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 204
 
   Scenario: Pay the invoice
-    * configure headers = headersAdmin
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -190,6 +181,7 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     Then status 204
 
   Scenario: Check the budget before preview rollover
+    * configure headers = headersAdmin
     Given path 'finance-storage/budgets', budgetId
     When method GET
     Then status 200

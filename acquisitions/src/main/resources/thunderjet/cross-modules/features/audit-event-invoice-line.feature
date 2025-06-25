@@ -22,7 +22,6 @@ Feature: Audit events for Invoice Line
     * def invoiceId = callonce uuid3
     * def invoiceLineId = callonce uuid4
 
-    * configure headers = headersAdmin
     * table orderData
       | id      | fundId | createInventory |
       | orderId | fundId | 'None'          |

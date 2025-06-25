@@ -15,12 +15,6 @@ Feature: Verify fault tolerance ledger fiscal year rollover when occurred duplic
 
     * callonce variables
 
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createLedger = read('classpath:thunderjet/mod-finance/reusable/createLedger.feature')
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-
     * def fromFiscalYearId = callonce uuid1
     * def toFiscalYearId = callonce uuid2
     * def ledgerId = callonce uuid3

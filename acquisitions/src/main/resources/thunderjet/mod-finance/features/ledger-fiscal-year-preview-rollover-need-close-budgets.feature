@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Ledger fiscal year rollover when "Close all current budgets" flag is true
 
   Background:

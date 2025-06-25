@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Group fiscal year totals
 
   Background:

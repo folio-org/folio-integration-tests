@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Test API to get current budget by fund
 
   Background:

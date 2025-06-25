@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Ledger fiscal year sequential rollovers
 
   # 1) create 3 sequential fiscal years: fiscalYearId1, fiscalYearId2, fiscalYearId3. fiscalYearId1 contains current date

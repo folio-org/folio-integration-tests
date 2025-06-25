@@ -1,4 +1,3 @@
-# THIS SHOULD BE IN CROSS-MODULES TESTS
 @parallel=false
 Feature: Check re-encumber works correctly
 
@@ -81,7 +80,6 @@ Feature: Check re-encumber works correctly
 
 
   Scenario Outline: prepare finances for fiscal year with <fiscalYearId> for re-encumber
-    * configure headers = headersAdmin
     * def fiscalYearId = <fiscalYearId>
     * def code = <code>
 
@@ -105,7 +103,6 @@ Feature: Check re-encumber works correctly
       | toFiscalYearId   | toYear   |
 
   Scenario Outline: prepare finances for ledger with <ledgerId> for re-encumber
-    * configure headers = headersAdmin
     * def ledgerId = <ledgerId>
 
     Given path 'finance/ledgers'
@@ -132,7 +129,6 @@ Feature: Check re-encumber works correctly
       | initialAmountOngoingRolloverLedger | true                |
 
   Scenario Outline: prepare finances for rollover with <rolloverId>
-    * configure headers = headersAdmin
     * def rolloverId = <rolloverId>
     * def ledgerId = <ledgerId>
     * def oneTime = {"orderType": 'One-time', "basedOn": <basedOn>, "increaseBy": <increaseBy>}
@@ -167,7 +163,6 @@ Feature: Check re-encumber works correctly
       | initialAmountOngoingRollover| initialAmountOngoingRolloverLedger| [#(initialAmountOngoing)] | 'InitialAmount'  | 0          |
 
   Scenario Outline: prepare finances for funds with <fundId>
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
 
@@ -199,7 +194,6 @@ Feature: Check re-encumber works correctly
       | initialAmountEncumberedFund  | initialAmountOngoingRolloverLedger |
 
   Scenario Outline: prepare finances for budget with <fundId> and <fiscalYearId>
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def fiscalYearId = <fiscalYearId>
 
@@ -239,6 +233,7 @@ Feature: Check re-encumber works correctly
     * def orderId = <orderId>
     * def ongoing = <orderType> == 'Ongoing' ? {"isSubscription": <subscription>} : null
 
+    * configure headers = headersAdmin
     Given path 'orders-storage/purchase-orders'
     And request
     """
@@ -275,6 +270,7 @@ Feature: Check re-encumber works correctly
     * def fundDistributions = [{"fundId": "#(fund1Id)", "encumbrance": "#(encumbrance1Id)", "distributionType": "percentage", "value": <value1>}]
     * def void = fund2Id == null ? null : karate.appendTo(fundDistributions, {"fundId": fund2Id, "encumbrance": encumbrance2Id, "distributionType": "percentage", "value": <value2>})
 
+    * configure headers = headersAdmin
     Given path 'orders-storage/po-lines'
     And request
     """
@@ -312,7 +308,6 @@ Feature: Check re-encumber works correctly
       | successInitialAmountLine  | successInitialAmountOrder   | initialAmountEncumberedFund  | successInitialAmountEnc  | 100    | null                      | null                  | null   | 100    |
 
   Scenario Outline: prepare finances for transactions with <transactionId>
-    * configure headers = headersAdmin
     * def transactionId = <transactionId>
     * def fiscalYearId = <fiscalYearId>
     * def fromFundId = <fromFundId>
@@ -422,7 +417,6 @@ Feature: Check re-encumber works correctly
       | successInitialAmountOrder   | null                   | 204      |
 
   Scenario Outline: check encumbrances and orderLine <poLineId> after re-encumber
-    * configure headers = headersAdmin
     * def poLineId = <poLineId>
 
     Given path 'finance/transactions'
@@ -437,7 +431,6 @@ Feature: Check re-encumber works correctly
     * def encumbrance1Id = <encumbrance1Id> == 'newEncumbrance1' ? newEncumbrance1.id : <encumbrance1Id>
     * def encumbrance2Id = <encumbrance2Id> == 'newEncumbrance2' ? newEncumbrance2.id : <encumbrance2Id>
 
-    * configure headers = headersUser
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -458,10 +451,9 @@ Feature: Check re-encumber works correctly
       | successInitialAmountLine  | 'newEncumbrance1'     | null                  | 0                    | 100           | '#notpresent' | 1      | initialAmountEncumberedFund  | null                      |
 
   Scenario Outline: check rollover errors after re-encumbrance
-    * configure headers = headersAdmin
     * def rolloverId = <rolloverId>
 
-    Given path 'finance-storage/ledger-rollovers-errors'
+    Given path 'finance/ledger-rollovers-errors'
     And param query = "ledgerRolloverId==" + rolloverId
     When method GET
     Then status 200
