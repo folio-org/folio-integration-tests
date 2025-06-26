@@ -23,9 +23,9 @@ Feature: Initialize mod-mosaic integration tests
       | "mod-okapi-facade"          |
 
     * table userPermissions
-      | name                                                      |
-      | "mosaic.validate.get"                                     |
-      | "mosaic.orders.item.post"                                 |
+      | name                      |
+      | "mosaic.validate.get"     |
+      | "mosaic.orders.item.post" |
 
     * table adminPermissions
       | name                                                          |
