@@ -23,7 +23,7 @@ class MosaicApiTest extends TestBaseEureka {
 
   @BeforeAll
   void mosaicApiTestBeforeAll() {
-    System.setProperty("testTenant", "testmosaic" +  RandomUtils.nextLong());
+    System.setProperty("testTenant", "testmosaic" + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-mosaic/init-mosaic.feature");
   }

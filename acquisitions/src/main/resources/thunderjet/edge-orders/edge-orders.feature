@@ -16,5 +16,8 @@ Feature: edge-orders integration tests
   Scenario: MOSAIC
     Given call read("features/mosaic.feature")
 
+  Scenario: COMMON
+    Given call read("features/common.feature")
+
   Scenario: Wipe data
     Given call read("classpath:common/eureka/destroy-data.feature")

@@ -38,7 +38,7 @@ class EdgeOrdersApiTest extends TestBaseEureka {
 
   @AfterAll
   void edgeOrdersApiTestAfterAll() {
-     runFeature("classpath:common/eureka/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
   @Test
@@ -54,5 +54,10 @@ class EdgeOrdersApiTest extends TestBaseEureka {
   @Test
   void mosaic() {
     runFeatureTest("mosaic");
+  }
+
+  @Test
+  void common() {
+    runFeatureTest("common");
   }
 }
