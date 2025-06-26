@@ -260,7 +260,6 @@ Feature: Set for deletion logic
     And match response.state == 'ACTUAL'
     And match response.leaderRecordStatus == 'c'
 
-  ### MODINV-1232
   Scenario: MODSOURCE-898 - Update deleted instance using MARC-MARC matching
     # Step 1: Create MARC instance using default job profile for creating instance
     * def marcBibJson = read('classpath:folijet/data-import/samples/marcBib.mrc.json')
@@ -326,6 +325,11 @@ Feature: Set for deletion logic
     And headers headersUser
     When method GET
     Then status 200
+    ### MODINV-1232
+    # Verify the response contains parsedRecord with content and leader
+    Then match response.parsedRecord.content.fields == '#present'
+    And match response.parsedRecord.content.leader == '#present'
+    ### END
     * def sourceRecordId = response.id
     * def updatedParsedContent = response.parsedRecord.content
     * def finalMarcJson = (typeof updatedParsedContent === 'string') ? JSON.parse(updatedParsedContent) : updatedParsedContent
