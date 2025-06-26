@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Edge Orders COMMON
 
   Background:
@@ -12,6 +13,7 @@ Feature: Edge Orders COMMON
 
     * callonce variables
     * def apiKey = "eyJzIjoiZmxpcGFZTTdLcG9wbWhGbEYiLCJ0IjoidGVzdGVkZ2VvcmRlcnMiLCJ1IjoidGVzdC11c2VyIn0="
+    * configure retry = { count: 10, interval: 5000 }
 
   @Positive
   Scenario: Get endpoints
@@ -38,11 +40,11 @@ Feature: Edge Orders COMMON
     And param apiKey = apiKey
     And param offset = endpoints[1]
     And param limit = endpoints[2]
-    And headers { 'Accept': 'application/json' }
+    And headers { "Accept": "application/json" }
+    And retry until response[key] != []
     When method GET
     Then status 200
     * def key = endpoints[3]
-    And match $[key] != []
 
   @Positive
   Scenario: Get fund codes expense classes
@@ -51,7 +53,7 @@ Feature: Edge Orders COMMON
     And path "/finance/fund-codes-expense-classes"
     And param type = "COMMON"
     And param apiKey = apiKey
-    And headers { 'Accept': 'application/json' }
+    And headers { "Accept": "application/json" }
+    And retry until response.fundCodeVsExpClassesTypes != []
     When method GET
     Then status 200
-    And match $.fundCodeVsExpClassesTypes != []

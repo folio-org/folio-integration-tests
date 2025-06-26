@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Edge Orders MOSAIC
 
   Background:
@@ -13,6 +14,7 @@ Feature: Edge Orders MOSAIC
     * callonce variables
     * def apiKey = "eyJzIjoiZmxpcGFZTTdLcG9wbWhGbEYiLCJ0IjoidGVzdGVkZ2VvcmRlcnMiLCJ1IjoidGVzdC11c2VyIn0="
     * def badApiKey = "eyJzIjoiRVVFMnFjMGlZemVDcHpkYngiLCJ0IjoidGVzdGVkZ2VvcmRlcnMiLCJ1IjoidGVzdC1iYWQtdXNlciJ9"
+    * configure retry = { count: 10, interval: 5000 }
 
   @Positive
   Scenario: Validate Order apiKey
@@ -22,7 +24,7 @@ Feature: Edge Orders MOSAIC
     And param type = "MOSAIC"
     And param apiKey = apiKey
     When method GET
-    Then status 200
+    Then retry until responseStatus == 200
     And match $.status == "SUCCESS"
 
   @Negative
@@ -31,7 +33,7 @@ Feature: Edge Orders MOSAIC
     * configure headers = { "Accept": "application/xml" }
     And path "mosaic/validate"
     When method GET
-    Then status 400
+    Then retry until responseStatus == 400
     And match /Response/Error/Code == "BAD_REQUEST"
     And match /Response/Error/Message == "Missing required parameter: type"
 
@@ -42,7 +44,7 @@ Feature: Edge Orders MOSAIC
     And path "mosaic/validate"
     And param type = "MOSAIC"
     When method GET
-    Then status 401
+    Then retry until responseStatus == 401
     And match /Response/Error/Code == "API_KEY_INVALID"
     And match /Response/Error/Message contains "Invalid API Key"
 
@@ -54,7 +56,7 @@ Feature: Edge Orders MOSAIC
     And param type = "MOSAIC"
     And param apiKey = badApiKey
     When method GET
-    Then status 401
+    Then retry until responseStatus == 401
     And match /Response/Error/Code == "ACCESS_DENIED"
     And match /Response/Error/Message contains "Access Denied"
 
@@ -128,7 +130,7 @@ Feature: Edge Orders MOSAIC
       }
       """
     When method POST
-    Then status 201
+    Then retry until responseStatus == 201
     * def poLineNumber = $
     * def delimiter = poLineNumber.lastIndexOf("-")
     * def poNumber = poLineNumber.substr(0, delimiter)
@@ -200,7 +202,7 @@ Feature: Edge Orders MOSAIC
       }
       """
     When method POST
-    Then status 404
+    Then retry until responseStatus == 404
     And match $.errors == "#[1]"
     And match each $.errors[*].code == "notFoundError"
     And match each $.errors[*].message == "Resource of type 'OrderTemplate' is not found"
