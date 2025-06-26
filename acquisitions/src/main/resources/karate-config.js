@@ -136,6 +136,9 @@ function fn() {
     checkOrder: karate.read('classpath:thunderjet/mod-mosaic/reusable/check-order.feature'),
     checkOrderLine: karate.read('classpath:thunderjet/mod-mosaic/reusable/check-order-line.feature'),
 
+    // edge-orders
+    checkEndpoint: karate.read('classpath:thunderjet/edge-orders/reusable/check-endpoint.feature'),
+
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''
