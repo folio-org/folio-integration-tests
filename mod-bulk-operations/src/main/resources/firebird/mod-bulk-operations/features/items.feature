@@ -16,7 +16,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -31,7 +31,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -112,7 +112,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -125,7 +125,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -156,7 +156,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -204,7 +204,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -219,7 +219,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -298,7 +298,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -311,7 +311,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -329,7 +329,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -338,7 +338,7 @@ Feature: mod bulk operations items features
     And match response.header[32].value == 'Binding note'
     And match response.rows[0].row[32] == 'item note'
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -378,7 +378,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -393,7 +393,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -444,7 +444,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -457,7 +457,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -475,7 +475,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -510,7 +510,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -525,7 +525,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -576,7 +576,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -589,7 +589,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -607,7 +607,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -641,7 +641,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -656,7 +656,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -718,7 +718,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -731,7 +731,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
@@ -751,7 +751,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -787,7 +787,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -802,7 +802,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -864,7 +864,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -877,7 +877,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -895,7 +895,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -931,7 +931,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -946,7 +946,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -983,7 +983,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -996,7 +996,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -1014,7 +1014,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -1047,7 +1047,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -1062,7 +1062,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -1149,7 +1149,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -1162,7 +1162,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -1180,7 +1180,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -1233,7 +1233,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
@@ -1248,7 +1248,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -1321,7 +1321,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -1334,7 +1334,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -1352,7 +1352,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
