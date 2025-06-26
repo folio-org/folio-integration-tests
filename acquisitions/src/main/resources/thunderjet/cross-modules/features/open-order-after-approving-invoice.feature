@@ -36,6 +36,7 @@ Feature: Open order after approving invoice
     * set poLine.fundDistribution[0].fundId = fundId
     * set poLine.fundDistribution[0].code = fundId
     * set poLine.receiptStatus = 'Receipt Not Required'
+    * set poLine.checkinItems = true
 
     Given path 'orders/order-lines'
     And request poLine

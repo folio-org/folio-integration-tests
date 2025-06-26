@@ -49,7 +49,7 @@ Feature: GOBI api tests
     And headers headers
     When method GET
     Then status 200
-    And match $.poLines[0].checkinItems == false
+    And match $.poLines[0].checkinItems == true
     And match $.poLines[0].contributors[0].contributor == 'ANDERSON, KENNETH, 1956-'
     And match $.poLines[0].cost.listUnitPriceElectronic == 14.95
     And match $.poLines[0].cost.poLineEstimatedPrice == 14.95
@@ -61,6 +61,7 @@ Feature: GOBI api tests
     And match $.poLines[0].poLineNumber == poLineNumber
     And match $.poLines[0].publisher == 'HOOVER INSTITUTION PRESS,'
     And match $.poLines[0].publicationDate == '2012.'
+    And match $.poLines[0].receiptStatus == 'Receipt Not Required'
     And match $.poLines[0].titleOrPackage == 'LIVING WITH THE UN[electronic resource] :AMERICAN RESPONSIBILITIES AND INTERNATIONAL ORDER.'
     And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99952919209'
 
@@ -355,12 +356,13 @@ Feature: GOBI api tests
     And match response.purchaseOrders[0].approved == true
 
     # Verify order line data
+    # New order is not created, as one already exists
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
     And headers headers
     When method GET
     Then status 200
-    And match $.poLines[0].checkinItems == false
+    And match $.poLines[0].checkinItems == true
     And match $.poLines[0].cost.listUnitPrice == 1.0
     And match $.poLines[0].cost.poLineEstimatedPrice == 1.0
     And match $.poLines[0].cost.currency == 'USD'
@@ -370,8 +372,9 @@ Feature: GOBI api tests
     And match $.poLines[0].fundDistribution[0].value == 100.0
     And match $.poLines[0].orderFormat == 'Physical Resource'
     And match $.poLines[0].poLineNumber == poLineNumber
-    And match $.poLines[0].titleOrPackage == 'Lightspeed Magazine'
     And match $.poLines[0].requester == 'GOBI'
+    And match $.poLines[0].receiptStatus == 'Receipt Not Required'
+    And match $.poLines[0].titleOrPackage == 'Lightspeed Magazine'
     And match $.poLines[0].tags.tagList[0] == 'po_6733180275-1'
     And match $.poLines[0].vendorDetail.vendorAccount == '891080'
     And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99974828479'

@@ -65,3 +65,9 @@ Feature: Validate POL receipt status with checkin items
     When method GET
     Then status 200
     And match $.poLines[0].checkinItems == true
+
+    # Delete custom mapping
+    Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    When method DELETE
+    Then status 200
