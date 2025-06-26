@@ -79,7 +79,7 @@ Feature: Open orders in member tenant, share instance in one case
     Then status 200
 
     Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + instanceId
+    And param query = 'instanceId==' + poLineInstanceId
     When method GET
     Then status 200
     And match $.totalRecords == 2
