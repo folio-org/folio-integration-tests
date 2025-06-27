@@ -11,7 +11,7 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:8000',
-    edgeUrl: 'http://localhost:8000',
+    edgeUrl: 'http://localhost:9000',
     ftpUrl: 'ftp://ftp.ci.folio.org',
     ftpPort:  21,
     ftpUser: 'folio',
@@ -27,7 +27,6 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
-    dummyUser: {tenant: testTenant, name: 'dummy-user', password: 'dummy'},
 
     // define global features
     createAdditionalUser: karate.read('classpath:common/eureka/create-additional-user.feature'),
@@ -39,7 +38,7 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 
-    // common reusables
+    // common reusable features
     resourceExists: karate.read('classpath:common/resource-exists.feature'),
     deleteResource: karate.read('classpath:common/delete-resource.feature'),
 
@@ -132,6 +131,13 @@ function fn() {
     createIntegrationDetails: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/create-integration-details.feature'),
     verifyExportJobFile: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/verify-export-job-file.feature'),
     resendExportJobFile: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/resend-export-job-file.feature'),
+
+    // mosaic
+    checkOrder: karate.read('classpath:thunderjet/mod-mosaic/reusable/check-order.feature'),
+    checkOrderLine: karate.read('classpath:thunderjet/mod-mosaic/reusable/check-order-line.feature'),
+
+    // edge-orders
+    checkEndpoint: karate.read('classpath:thunderjet/edge-orders/reusable/check-endpoint.feature'),
 
     // define global functions
     uuid: function () {
@@ -255,13 +261,14 @@ function fn() {
     config.prototypeTenant= 'diku'
   } else if (env == 'rancher-2nd') {
     // UI at https://folio-edev-thunderjet-2nd-consortium.ci.folio.org/
-    config.baseUrl = 'https://ecs-folio-edev-thunderjet-2nd-kong.ci.folio.org';
+    config.checkDepsDuringModInstall = 'false';
+    config.baseUrl = 'https://folio-edev-thunderjet-2nd-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-thunderjet-2nd-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://ecs-folio-edev-thunderjet-2nd-edge.ci.folio.org';
-    config.prototypeTenant= 'consortium'
+    config.edgeUrl = 'https://folio-edev-thunderjet-2nd-edge.ci.folio.org';
+    config.prototypeTenant= 'diku'
     config.admin = {
-      tenant: 'consortium',
-      name: 'consortium_admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
   } else if (env == 'rancher-consortia') {

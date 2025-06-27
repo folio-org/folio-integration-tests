@@ -18,8 +18,14 @@ Feature: edge-orders integration tests
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
-  Scenario: Ebsconet
-    * call read('features/ebsconet.feature')
+  Scenario: COMMON
+    Given call read("features/common.feature")
+
+  Scenario: EBSCONET
+    Given call read("features/ebsconet.feature")
 
   Scenario: GOBI
-    * call read('features/gobi.feature')
+    Given call read("features/gobi.feature")
+
+  Scenario: MOSAIC
+    Given call read("features/mosaic.feature")

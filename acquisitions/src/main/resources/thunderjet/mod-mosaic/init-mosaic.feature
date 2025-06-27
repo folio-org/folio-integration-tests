@@ -1,5 +1,5 @@
 @parallel=false
-Feature: Initialize edge-orders integration tests
+Feature: Initialize mod-mosaic integration tests
 
   Background:
     * print karate.info.scenarioName
@@ -9,10 +9,8 @@ Feature: Initialize edge-orders integration tests
       | name                        |
       | "mod-audit"                 |
       | "mod-configuration"         |
-      | "mod-ebsconet"              |
       | "mod-finance"               |
       | "mod-finance-storage"       |
-      | "mod-gobi"                  |
       | "mod-inventory"             |
       | "mod-inventory-storage"     |
       | "mod-login"                 |
@@ -26,38 +24,9 @@ Feature: Initialize edge-orders integration tests
       | "mod-users"                 |
 
     * table userPermissions
-      | name                                                      |
-      | "acquisitions-units.units.collection.get"                 |
-      | "configuration.entries.collection.get"                    |
-      | "ebsconet.order-lines.item.get"                           |
-      | "ebsconet.order-lines.item.put"                           |
-      | "ebsconet.orders.validate.get"                            |
-      | "finance.expense-classes.collection.get"                  |
-      | "finance.fund-codes-expense-classes.collection.get"       |
-      | "finance.funds.collection.get"                            |
-      | "gobi.orders.item.post"                                   |
-      | "gobi.validate.item.get"                                  |
-      | "gobi.validate.item.post"                                 |
-      | "inventory-storage.contributor-name-types.collection.get" |
-      | "inventory-storage.identifier-types.collection.get"       |
-      | "inventory-storage.locations.collection.get"              |
-      | "inventory-storage.material-types.collection.get"         |
-      | "mosaic.orders.item.post"                                 |
-      | "mosaic.validate.get"                                     |
-      | "okapi.proxy.tenants.modules.list"                        |
-      | "orders.acquisitions-units-assignments.manage"            |
-      | "orders.acquisition-methods.collection.get"               |
-      | "orders.item.get"                                         |
-      | "orders.item.post"                                        |
-      | "orders.order-templates.collection.get"                   |
-      | "orders.po-lines.collection.get"                          |
-      | "orders.po-lines.item.get"                                |
-      | "orders.po-lines.item.put"                                |
-      | "organizations.organizations.collection.get"              |
-      | "organizations.organizations.item.delete"                 |
-      | "organizations.organizations.item.post"                   |
-      | "orders-storage.custom-fields.collection.get"             |
-      | "users.collection.get"                                    |
+      | name                      |
+      | "mosaic.orders.item.post" |
+      | "mosaic.validate.get"     |
 
     * table adminPermissions
       | name                                                          |
