@@ -1,3 +1,4 @@
+@parallel=false
 Feature: edge-orders integration tests
 
   Background:

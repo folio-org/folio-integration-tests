@@ -261,13 +261,14 @@ function fn() {
     config.prototypeTenant= 'diku'
   } else if (env == 'rancher-2nd') {
     // UI at https://folio-edev-thunderjet-2nd-consortium.ci.folio.org/
-    config.baseUrl = 'https://ecs-folio-edev-thunderjet-2nd-kong.ci.folio.org';
+    config.checkDepsDuringModInstall = 'false';
+    config.baseUrl = 'https://folio-edev-thunderjet-2nd-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-thunderjet-2nd-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://ecs-folio-edev-thunderjet-2nd-edge.ci.folio.org';
-    config.prototypeTenant= 'consortium'
+    config.edgeUrl = 'https://folio-edev-thunderjet-2nd-edge.ci.folio.org';
+    config.prototypeTenant= 'diku'
     config.admin = {
-      tenant: 'consortium',
-      name: 'consortium_admin',
+      tenant: 'diku',
+      name: 'diku_admin',
       password: 'admin'
     }
   } else if (env == 'rancher-consortia') {

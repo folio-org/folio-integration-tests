@@ -1,3 +1,4 @@
+@parallel=false
 Feature: mod-mosaic integration tests
 
   Background:

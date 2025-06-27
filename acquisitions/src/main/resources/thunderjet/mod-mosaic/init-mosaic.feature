@@ -21,6 +21,7 @@ Feature: Initialize mod-mosaic integration tests
       | "mod-organizations-storage" |
       | "mod-organizations"         |
       | "mod-okapi-facade"          |
+      | "mod-mosaic"                |
 
     * table userPermissions
       | name                      |
