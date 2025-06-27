@@ -24,7 +24,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     Then status 201
     * def importedProfileName = $.content.name
 
-    #Find the imported job profile by name
+    #Find the imported Job Profile by name
     Given path 'data-import-profiles/jobProfiles'
     And param query = 'name=="' + importedProfileName + '"'
     When method GET
@@ -46,10 +46,10 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     # Import a file using the default profile: "Default - Create instance and SRS MARC Bib"
     * def fileName = 'FAT-20172_20K_marc_bib_create.mrc'
     * def filePath = recordFilesDir + fileName
-    * def result = call importFile { headersUser, fileName: #(fileName), filePathFromSourceRoot : #(filePath), jobProfileInfo: #(jobProfileInfo) }
+    * def result = call importFile { fileName: #(fileName), filePathFromSourceRoot : #(filePath), jobProfileInfo: #(jobProfileInfo) }
     * def s3UploadKey = result.s3UploadKey
 
-    # waiting import results
+    # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * configure headers = result.updatedHeaders
     * print 'Headers updated in main flow with new token.'
@@ -77,10 +77,10 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
       }
       """
 
-    * def result = call importFile { headersUser, fileName: #(fileName), filePathFromSourceRoot: #(filePath), jobProfileInfo: #(updatedJobProfileInfo) }
+    * def result = call importFile { fileName: #(fileName), filePathFromSourceRoot: #(filePath), jobProfileInfo: #(updatedJobProfileInfo) }
     * def s3UploadKey = result.s3UploadKey
 
-    # Check the import results
+    # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions
     * match each jobExecutions contains { "status": "COMMITTED" }

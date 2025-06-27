@@ -20,10 +20,10 @@ Feature: Util feature to get job executions by S3 key with retries
       """
       function(){
         if (responseStatus == 401) {
-          karate.log('!!! 401 Unauthorized detected. Refreshing token...');
+          karate.log('ERROR: 401 Unauthorized detected. Refreshing token...');
           var loginResult = karate.call('classpath:common/login.feature');
           karate.configure('headers', { 'Content-Type': 'application/json', 'x-okapi-token': loginResult.okapitoken, 'x-okapi-tenant': tenant, 'Accept': '*/*' });
-          karate.log('+++ Token refreshed. Continuing retry.');
+          karate.log('Token refreshed. Continuing retry.');
           return false;
         }
 
@@ -48,13 +48,11 @@ Feature: Util feature to get job executions by S3 key with retries
     And retry until retryLogic()
     When method get
     Then status 200
-    #response.jobExecutions[0].status == 'COMMITTED' || response.jobExecutions[0].status == 'ERROR' || response.jobExecutions[0].status == 'DISCARDED'
 
     * def parentJobExecutionId = response.jobExecutions.find(exec => exec.sourcePath == key).id
 
     # get children-jobs where each of them corresponds to part of the split original file
     Given path 'change-manager/jobExecutions', parentJobExecutionId, 'children'
-    #And headers headersUser
     And retry until response.jobExecutions.length > 0
     When method get
     Then status 200
@@ -62,7 +60,6 @@ Feature: Util feature to get job executions by S3 key with retries
 
     # Wait till entire job finishes
     Given path 'change-manager/jobExecutions', parentJobExecutionId
-    #And headers headersUser
     And retry until response.status == 'COMMITTED' || response.status == 'ERROR' || response.status == 'DISCARDED'
     When method get
     And print response.status
