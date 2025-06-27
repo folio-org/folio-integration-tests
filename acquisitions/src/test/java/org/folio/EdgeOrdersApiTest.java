@@ -42,6 +42,11 @@ class EdgeOrdersApiTest extends TestBaseEureka {
   }
 
   @Test
+  void common() {
+    runFeatureTest("common");
+  }
+
+  @Test
   void ebsconet() {
     runFeatureTest("ebsconet");
   }
@@ -54,10 +59,5 @@ class EdgeOrdersApiTest extends TestBaseEureka {
   @Test
   void mosaic() {
     runFeatureTest("mosaic");
-  }
-
-  @Test
-  void common() {
-    runFeatureTest("common");
   }
 }

@@ -34,11 +34,6 @@ class MosaicApiTest extends TestBaseEureka {
   }
 
   @Test
-  void validateOrder() {
-    runFeatureTest("validate-order.feature");
-  }
-
-  @Test
   void createOrder1FromMinimalTemplate() {
     runFeatureTest("create-order-1-from-minimal-template.feature");
   }
@@ -71,5 +66,10 @@ class MosaicApiTest extends TestBaseEureka {
   @Test
   void createOrder7WithCheckInItems() {
     runFeatureTest("create-order-7-with-check-in-items.feature");
+  }
+
+  @Test
+  void validateOrder() {
+    runFeatureTest("validate-order.feature");
   }
 }

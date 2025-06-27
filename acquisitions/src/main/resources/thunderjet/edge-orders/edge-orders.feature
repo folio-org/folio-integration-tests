@@ -4,10 +4,26 @@ Feature: edge-orders integration tests
     * print karate.info.scenarioName
     * url baseUrl
 
+    * def random = callonce randomMillis
+    * def testTenant = 'testedgeorders' + random
+    * def testTenantId = callonce uuid
+    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+
+    # Create tenant and users, initialize data
+    * def v = callonce read('classpath:thunderjet/edge-orders/init-edge-orders.feature')
+
+    # Wipe data afterwards
+    * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
+
+
   Scenario: Create tenant and users for testing
     * call read("classpath:common/eureka/setup-users.feature")
 
-  Scenario: Ebsconet
+  Scenario: COMMON
+    Given call read("features/common.feature")
+
+  Scenario: EBSCONET
     Given call read("features/ebsconet.feature")
 
   Scenario: GOBI
@@ -15,9 +31,3 @@ Feature: edge-orders integration tests
 
   Scenario: MOSAIC
     Given call read("features/mosaic.feature")
-
-  Scenario: COMMON
-    Given call read("features/common.feature")
-
-  Scenario: Wipe data
-    Given call read("classpath:common/eureka/destroy-data.feature")

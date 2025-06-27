@@ -4,11 +4,21 @@ Feature: mod-mosaic integration tests
     * print karate.info.scenarioName
     * url baseUrl
 
+    * def random = callonce randomMillis
+    * def testTenant = 'testmosaic' + random
+    * def testTenantId = callonce uuid
+    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+
+    # Create tenant and users, initialize data
+    * def v = callonce read('classpath:thunderjet/mod-mosaic/init-mosaic.feature')
+
+    # Wipe data afterwards
+    * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
+
+
   Scenario: Create tenant and users for testing
     * call read("classpath:common/eureka/setup-users.feature")
-
-  Scenario: Validate Order
-    Given call read("features/validate-order.feature")
 
   Scenario: Create Order From Minimal Template
     Given call read("features/create-order-1-from-minimal-template.feature")
@@ -31,5 +41,5 @@ Feature: mod-mosaic integration tests
   Scenario: Create Order With Check In Items
     Given call read("features/create-order-7-with-check-in-items.feature")
 
-  Scenario: Wipe data
-    Given call read("classpath:common/eureka/destroy-data.feature")
+  Scenario: Validate Order
+    Given call read("features/validate-order.feature")
