@@ -17,9 +17,6 @@ Feature: mod-mosaic integration tests
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
-  Scenario: Create tenant and users for testing
-    * call read("classpath:common/eureka/setup-users.feature")
-
   Scenario: Create Order From Minimal Template
     Given call read("features/create-order-1-from-minimal-template.feature")
 

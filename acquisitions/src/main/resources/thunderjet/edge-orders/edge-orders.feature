@@ -17,9 +17,6 @@ Feature: edge-orders integration tests
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
-  Scenario: Create tenant and users for testing
-    * call read("classpath:common/eureka/setup-users.feature")
-
   Scenario: COMMON
     Given call read("features/common.feature")
 
