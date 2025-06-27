@@ -7,65 +7,65 @@ Feature: Initialize mod-mosaic integration tests
 
     * table modules
       | name                        |
-      | "mod-permissions"           |
-      | "mod-configuration"         |
-      | "mod-login"                 |
-      | "mod-users"                 |
       | "mod-audit"                 |
-      | "mod-orders-storage"        |
-      | "mod-orders"                |
-      | "mod-finance-storage"       |
+      | "mod-configuration"         |
       | "mod-finance"               |
-      | "mod-inventory-storage"     |
+      | "mod-finance-storage"       |
       | "mod-inventory"             |
-      | "mod-organizations-storage" |
-      | "mod-organizations"         |
-      | "mod-okapi-facade"          |
+      | "mod-inventory-storage"     |
+      | "mod-login"                 |
       | "mod-mosaic"                |
+      | "mod-okapi-facade"          |
+      | "mod-orders"                |
+      | "mod-orders-storage"        |
+      | "mod-organizations"         |
+      | "mod-organizations-storage" |
+      | "mod-permissions"           |
+      | "mod-users"                 |
 
     * table userPermissions
       | name                      |
-      | "mosaic.validate.get"     |
       | "mosaic.orders.item.post" |
+      | "mosaic.validate.get"     |
 
     * table adminPermissions
       | name                                                          |
-      | "mosaic.configuration.item.get"                               |
-      | "mosaic.configuration.item.post"                              |
-      | "mosaic.configuration.item.put"                               |
-      | "mosaic.configuration.item.delete"                            |
       | "acquisitions-units.memberships.item.post"                    |
       | "acquisitions-units.units.item.post"                          |
       | "configuration.entries.item.post"                             |
-      | "inventory.instances.item.post"                               |
-      | "inventory-storage.contributor-name-types.item.post"          |
-      | "inventory-storage.electronic-access-relationships.item.post" |
-      | "inventory-storage.holdings.item.post"                        |
-      | "inventory-storage.holdings-sources.item.post"                |
-      | "inventory-storage.identifier-types.item.post"                |
-      | "inventory-storage.instance-statuses.item.post"               |
-      | "inventory-storage.instance-types.item.post"                  |
-      | "inventory-storage.loan-types.item.post"                      |
-      | "inventory-storage.locations.item.post"                       |
-      | "inventory-storage.location-units.campuses.item.post"         |
-      | "inventory-storage.location-units.institutions.item.post"     |
-      | "inventory-storage.location-units.libraries.item.post"        |
-      | "inventory-storage.material-types.item.post"                  |
-      | "inventory-storage.service-points.item.post"                  |
-      | "orders.collection.get"                                       |
-      | "orders.po-lines.collection.get"                              |
-      | "orders.order-templates.item.post"                            |
-      | "orders.order-templates.item.get"                             |
       | "finance.budgets.collection.get"                              |
       | "finance.budgets.item.get"                                    |
       | "finance.budgets.item.post"                                   |
       | "finance.expense-classes.item.post"                           |
       | "finance.fiscal-years.item.get"                               |
       | "finance.fiscal-years.item.post"                              |
+      | "finance.fund-types.item.post"                                |
       | "finance.funds.item.get"                                      |
       | "finance.funds.item.post"                                     |
-      | "finance.fund-types.item.post"                                |
       | "finance.ledgers.item.post"                                   |
+      | "inventory-storage.contributor-name-types.item.post"          |
+      | "inventory-storage.electronic-access-relationships.item.post" |
+      | "inventory-storage.holdings-sources.item.post"                |
+      | "inventory-storage.holdings.item.post"                        |
+      | "inventory-storage.identifier-types.item.post"                |
+      | "inventory-storage.instance-statuses.item.post"               |
+      | "inventory-storage.instance-types.item.post"                  |
+      | "inventory-storage.loan-types.item.post"                      |
+      | "inventory-storage.location-units.campuses.item.post"         |
+      | "inventory-storage.location-units.institutions.item.post"     |
+      | "inventory-storage.location-units.libraries.item.post"        |
+      | "inventory-storage.locations.item.post"                       |
+      | "inventory-storage.material-types.item.post"                  |
+      | "inventory-storage.service-points.item.post"                  |
+      | "inventory.instances.item.post"                               |
+      | "mosaic.configuration.item.delete"                            |
+      | "mosaic.configuration.item.get"                               |
+      | "mosaic.configuration.item.post"                              |
+      | "mosaic.configuration.item.put"                               |
+      | "orders.collection.get"                                       |
+      | "orders.order-templates.item.get"                             |
+      | "orders.order-templates.item.post"                            |
+      | "orders.po-lines.collection.get"                              |
       | "organizations.organizations.item.post"                       |
       | "users.collection.get"                                        |
 
