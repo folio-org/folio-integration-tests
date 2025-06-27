@@ -95,7 +95,7 @@ function fn() {
     config.admin = {tenant: '${admin.tenant}', name: '${admin.name}', password: '${admin.password}'}
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl', true);
-  } else if (env === 'edev') {
+  } else if (env === 'edev-folijet') {
     config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
   } else if(env === 'dev') {
