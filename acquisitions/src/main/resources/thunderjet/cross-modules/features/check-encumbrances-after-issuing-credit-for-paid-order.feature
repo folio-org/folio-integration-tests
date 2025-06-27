@@ -48,11 +48,11 @@
 
       # 5. Approve invoice and check the encumbrance transaction amount
       * def v = call approveInvoice { invoiceId: '#(invoiceId1)' }
-      * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
+      * def v = call verifyReleasedEncumbrance { encId: '#(encumbranceId)' }
 
       # 6. Pay invoice and check the encumbrance transaction amount
       * def v = call payInvoice { invoiceId: '#(invoiceId1)' }
-      * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
+      * def v = call verifyReleasedEncumbrance { encId: '#(encumbranceId)' }
 
       # 7. Create second invoice and invoice line
       * def v = call createInvoice { id: '#(invoiceId2)' }
@@ -63,17 +63,8 @@
 
       # 8. Approve second invoice and check the encumbrance transaction amount
       * def v = call approveInvoice { invoiceId: '#(invoiceId2)' }
-      * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
+      * def v = call verifyReleasedEncumbrance { encId: '#(encumbranceId)' }
 
       # 9. Pay second invoice and check the encumbrance transaction amount
       * def v = call payInvoice { invoiceId: '#(invoiceId2)' }
-      * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
-
-  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
-    @ignore @VerifyReleasedEncumbrance
-    Scenario: verifyReleasedEncumbrance
-      Given path '/finance/transactions', encId
-      When method GET
-      Then status 200
-      And match each response.transactions[0].encumbrance.status == 'Released'
-      And match each response.transactions[0].amount == 0
+      * def v = call verifyReleasedEncumbrance { encId: '#(encumbranceId)' }

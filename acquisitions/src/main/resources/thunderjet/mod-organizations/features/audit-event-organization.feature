@@ -12,7 +12,6 @@ Feature: Audit events for Organization
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-
     * configure retry = { count: 10, interval: 10000 }
 
     * callonce variables
@@ -27,23 +26,16 @@ Feature: Audit events for Organization
     * table eventData
       | eventEntityId | eventType | eventCount |
       | orgId         | "Create"  | 1          |
-    * def v = call read('@VerifyAuditEvents') eventData
+    * def v = call verifyOrganizationAuditEvents eventData
 
   Scenario: Updating Organization should produce "Edit" event
-    Given path 'organizations/organizations', orgId
-    When method GET
-    Then status 200
-    * def org = response
-
-    Given path 'organizations/organizations', orgId
-    And request org
-    When method PUT
-    Then status 204
+    * def orgIds = [{'orgId': "#(orgId)"}]
+    * def v = call updateOrganization orgIds
 
     * table eventData
       | eventEntityId | eventType | eventCount |
       | orgId         | "Edit"    | 2          |
-    * def v = call read('@VerifyAuditEvents') eventData
+    * def v = call verifyOrganizationAuditEvents eventData
 
   Scenario: Update Organization 50 times
     * def orgIds = []
@@ -51,39 +43,14 @@ Feature: Audit events for Organization
       """
       function() {
         for (let i = 0; i < 50; i++) {
-          orgIds.push({'newOrgId': orgId});
+          orgIds.push({'orgId': orgId});
         }
       }
       """
     * eval populateOrgIds()
-    * def v = call read('@UpdateOrganization') orgIds
+    * def v = call updateOrganization orgIds
 
     * table eventData
       | eventEntityId | eventType | eventCount |
       | orgId         | "Edit"    | 52         |
-    * def v = call read('@VerifyAuditEvents') eventData
-
-  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
-  @ignore @VerifyAuditEvents
-  Scenario: Verify Audit Events
-    * configure headers = headersAdmin
-    Given path '/audit-data/acquisition/organization', eventEntityId
-    And retry until response.totalItems == eventCount
-    When method GET
-    Then status 200
-    And match response.totalItems == eventCount
-    And match response.organizationAuditEvents[*].action contains eventType
-    And match response.organizationAuditEvents[*].organizationId contains eventEntityId
-    * configure headers = headersUser
-
-  @ignore @UpdateOrganization
-  Scenario: Update Organization
-    Given path 'organizations/organizations', newOrgId
-    When method GET
-    Then status 200
-    * def org = response
-
-    Given path 'organizations/organizations', newOrgId
-    And request org
-    When method PUT
-    Then status 204
+    * def v = call verifyOrganizationAuditEvents eventData

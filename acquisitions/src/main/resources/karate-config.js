@@ -66,6 +66,7 @@ function fn() {
     createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
     createBudgetExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createBudgetExpenseClass.feature'),
     rollover: karate.read('classpath:thunderjet/mod-finance/reusable/rollover.feature'),
+    verifyReleasedEncumbrance: karate.read('classpath:thunderjet/mod-finance/reusable/verify-released-encumbrance.feature'),
 
     // inventory
     createItem: karate.read('classpath:thunderjet/consortia/reusable/createItem.feature'),
@@ -121,11 +122,17 @@ function fn() {
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
     payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
+    updateInvoice: read('classpath:thunderjet/mod-invoice/reusable/update-invoice.feature'),
+    updateInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/update-invoice-line.feature'),
     verifyInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line.feature'),
+    verifyInvoiceAuditEvents: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-audit-events.feature'),
+    verifyInvoiceLineAuditEvents: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line-audit-events.feature'),
 
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),
     createOrganization: karate.read('classpath:thunderjet/mod-organizations/reusable/create-organization.feature'),
+    updateOrganization: karate.read('classpath:thunderjet/mod-organizations/reusable/update-organization.feature'),
+    verifyOrganizationAuditEvents: read('classpath:thunderjet/mod-organizations/reusable/verify-organization-audit-events.feature'),
 
     // data export
     createIntegrationDetails: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/create-integration-details.feature'),
