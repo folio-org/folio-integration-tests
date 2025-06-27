@@ -128,6 +128,8 @@ function fn() {
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),
     createOrganization: karate.read('classpath:thunderjet/mod-organizations/reusable/create-organization.feature'),
+    updateOrganization: karate.read('classpath:thunderjet/mod-organizations/reusable/update-organization.feature'),
+    verifyOrganizationAuditEvents: read('classpath:thunderjet/mod-organizations/reusable/verify-organization-audit-events.feature'),
 
     // data export
     createIntegrationDetails: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/create-integration-details.feature'),
