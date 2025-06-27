@@ -54,6 +54,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * configure headers = result.updatedHeaders
     * print 'Headers updated in main flow with new token.'
 
+    * call pause 120000
     * def jobExecutions = result.jobExecutions
     * match each jobExecutions contains { "status": "COMMITTED" }
     * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
@@ -80,6 +81,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def result = call importFile { fileName: #(fileName), filePathFromSourceRoot: #(filePath), jobProfileInfo: #(updatedJobProfileInfo) }
     * def s3UploadKey = result.s3UploadKey
 
+    * call pause 120000
     # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions
