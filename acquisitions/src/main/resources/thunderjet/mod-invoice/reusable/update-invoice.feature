@@ -1,17 +1,15 @@
 @ignore
-Feature: Approve invoice
+Feature: Update invoice
   # parameters: invoiceId
 
   Background:
     * url baseUrl
 
-  Scenario: Approve invoice
+  Scenario: updateInvoice
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
-
-    * def invoice = $
-    * set invoice.status = 'Approved'
+    * def invoice = response
 
     Given path 'invoice/invoices', invoiceId
     And request invoice

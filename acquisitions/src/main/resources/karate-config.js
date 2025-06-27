@@ -121,7 +121,9 @@ function fn() {
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
     payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
+    updateInvoice: read('classpath:thunderjet/mod-invoice/reusable/update-invoice.feature'),
     verifyInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line.feature'),
+    verifyInvoiceAuditEvents: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-audit-events.feature'),
 
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),
