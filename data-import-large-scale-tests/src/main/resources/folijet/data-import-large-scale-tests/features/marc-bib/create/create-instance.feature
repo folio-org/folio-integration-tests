@@ -42,13 +42,13 @@ Feature: Create instance
     # Verify that entities have been created
     * call pause 5000
     * def logEntriesLimit = 1000
-    * def verifyLogsInstanceCreated = function(job) { karate.call('@verifyInstanceCreated', { jobId: job.id, limit: logEntriesLimit }) }
+    * def verifyLogsInstanceCreated = function(job) { karate.call('@verifyInstanceCreated', { headersUser: headersUser, jobId: job.id, limit: logEntriesLimit }) }
     * karate.forEach(jobExecutions, verifyLogsInstanceCreated)
 
   @ignore
   @verifyInstanceCreated
   Scenario: Verify log entries that instances created
-    * def result = call getJobLogEntriesByJobId { jobExecutionId: '#(jobId)', logEntriesLimit: '#(limit)' }
+    * def result = call getJobLogEntriesByJobId { headersUser: #(headersUser), jobExecutionId: #(jobId), logEntriesLimit: #(limit) }
     * def logEntriesCollection = result.jobLogEntries
     * assert logEntriesCollection.entries.length == limit
     * match each logEntriesCollection.entries contains { "sourceRecordActionStatus": "CREATED" }
