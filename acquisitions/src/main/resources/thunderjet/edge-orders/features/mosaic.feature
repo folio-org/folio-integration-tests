@@ -206,3 +206,14 @@ Feature: Edge Orders MOSAIC
     And match $.errors == "#[1]"
     And match each $.errors[*].code == "notFoundError"
     And match each $.errors[*].message == "Resource of type 'OrderTemplate' is not found"
+
+  @Negative
+  Scenario: Get orders (missing endpoint)
+    * url edgeUrl
+    * configure headers = { "Accept": "application/json" }
+    And path "mosaic/orders"
+    And param type = "MOSAIC"
+    And param apiKey = apiKey
+    Then retry until responseStatus == 404
+    When method GET
+    And match response contains "<html><body><h1>Resource not found</h1></body></html>"

@@ -99,3 +99,16 @@ Feature: Edge Orders COMMON
     And match response.fundCodeVsExpClassesTypes == "#present"
     And match response.fundCodeVsExpClassesTypes == "#notnull"
     And assert response.fundCodeVsExpClassesTypes.length == 0
+
+  @Negative
+  Scenario: Get order templates (missing endpoint)
+    * url edgeUrl
+    * configure headers = { "Accept": "application/json" }
+    And path "/orders/templates"
+    And param type = "COMMON"
+    And param apiKey = apiKey
+    And param offset = 0
+    And param limit = 10
+    Then retry until responseStatus == 404
+    When method GET
+    And match response contains "<html><body><h1>Resource not found</h1></body></html>"
