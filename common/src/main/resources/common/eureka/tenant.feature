@@ -22,6 +22,7 @@ Feature: Tenants
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
     * def keycloakMasterToken = keycloakResponse.response.access_token
     Given path 'tenants', __arg.tenantId
+    And param purgeKafkaTopics = true
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header Authorization = 'Bearer ' + keycloakMasterToken
