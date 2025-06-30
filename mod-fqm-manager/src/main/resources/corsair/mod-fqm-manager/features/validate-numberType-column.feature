@@ -12,11 +12,11 @@ Feature: Validate Number Columns
     * match fieldValue == '#number'
 
     # Construct the FQL query JSON properly
-    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}}'
+    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}, "_version": "' + fqmVersion + '"}'
 
     # Post the query for the valid field value
     Given path 'query'
-    And request { entityTypeId: '#(entityTypeId)', fqlQuery: '#(fqlQuery)', _version: '#(fqmVersion)' }
+    And request { entityTypeId: '#(entityTypeId)', fqlQuery: '#(fqlQuery)' }
     When method POST
     Then status 201
     And match $.queryId == '#present'
