@@ -25,8 +25,8 @@ Feature: Audit events for Invoice
 
     * configure headers = headersAdmin
     * table eventData
-      | resourcePath | eventEntityId | eventType | eventCount |
-      | "invoice"    | invoiceId     | "Create"  | 1          |
+      | resourcePath | eventEntityId | eventType | eventCount | entityName |
+      | "invoice"    | invoiceId     | "Create"  | 1          | "invoice"  |
     * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Updating Invoice should produce "Edit" event
@@ -35,8 +35,8 @@ Feature: Audit events for Invoice
 
     * configure headers = headersAdmin
     * table eventData
-      | resourcePath | eventEntityId | eventType | eventCount |
-      | "invoice"    | invoiceId     | "Edit"    | 2          |
+      | resourcePath | eventEntityId | eventType | eventCount | entityName |
+      | "invoice"    | invoiceId     | "Edit"    | 2          | "invoice"  |
     * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Update invoice 50 times
@@ -54,6 +54,6 @@ Feature: Audit events for Invoice
 
     * configure headers = headersAdmin
     * table eventData
-      | resourcePath | eventEntityId | eventType | eventCount |
-      | "invoice"    | invoiceId     | "Edit"    | 52         |
+      | resourcePath | eventEntityId | eventType | eventCount | entityName |
+      | "invoice"    | invoiceId     | "Edit"    | 52         | "invoice"  |
     * def v = call verifyResourceAuditEvents eventData

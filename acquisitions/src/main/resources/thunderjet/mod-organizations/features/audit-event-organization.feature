@@ -24,8 +24,8 @@ Feature: Audit events for Organization
     * def v = call createOrganization organizationData
 
     * table eventData
-      | resourcePath   | eventEntityId | eventType | eventCount |
-      | "organization" | orgId         | "Create"  | 1          |
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName     |
+      | "organization" | orgId         | "Create"  | 1          | "organization" |
     * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Updating Organization should produce "Edit" event
@@ -33,8 +33,8 @@ Feature: Audit events for Organization
     * def v = call updateResource orgIds
 
     * table eventData
-      | resourcePath   | eventEntityId | eventType | eventCount |
-      | "organization" | orgId         | "Edit"    | 2          |
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName     |
+      | "organization" | orgId         | "Edit"    | 2          | "organization" |
     * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Update Organization 50 times
@@ -51,6 +51,6 @@ Feature: Audit events for Organization
     * def v = call updateResource orgIds
 
     * table eventData
-      | resourcePath   | eventEntityId | eventType | eventCount |
-      | "organization" | orgId         | "Edit"    | 52         |
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName     |
+      | "organization" | orgId         | "Edit"    | 52         | "organization" |
     * def v = call verifyResourceAuditEvents eventData

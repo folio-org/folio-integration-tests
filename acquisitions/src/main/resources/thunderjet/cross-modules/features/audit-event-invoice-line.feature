@@ -44,8 +44,8 @@ Feature: Audit events for Invoice Line
     * def v = call createInvoiceLine invoiceLinesData
 
     * table eventData
-      | resourcePath   | eventEntityId | eventType | eventCount |
-      | "invoice-line" | invoiceLineId | "Create"  | 1          |
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName    |
+      | "invoice-line" | invoiceLineId | "Create"  | 1          | "invoiceLine" |
     * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Updating Invoice Line should produce "Edit" event
@@ -53,8 +53,8 @@ Feature: Audit events for Invoice Line
     * def v = call updateResource invoiceLineIds
 
     * table eventData
-      | resourcePath   | eventEntityId | eventType | eventCount |
-      | "invoice-line" | invoiceLineId | "Edit"    | 2          |
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName    |
+      | "invoice-line" | invoiceLineId | "Edit"    | 2          | "invoiceLine" |
     * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Update invoice line 50 times
@@ -71,6 +71,6 @@ Feature: Audit events for Invoice Line
     * def v = call updateResource invoiceLineIds
 
     * table eventData
-      | resourcePath   | eventEntityId | eventType | eventCount |
-      | "invoice-line" | invoiceLineId | "Edit"    | 52         |
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName    |
+      | "invoice-line" | invoiceLineId | "Edit"    | 52         | "invoiceLine" |
     * def v = call verifyResourceAuditEvents eventData

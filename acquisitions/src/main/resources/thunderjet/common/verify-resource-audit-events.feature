@@ -1,6 +1,6 @@
 @ignore
 Feature: Verify resource audit event
-  # parameters: resourcePath, eventEntityId, eventCount, eventType
+  # parameters: resourcePath, entityName, eventEntityId, eventCount, eventType
 
   Background:
     * url baseUrl
@@ -12,6 +12,6 @@ Feature: Verify resource audit event
     When method GET
     Then status 200
     And match response.totalItems == eventCount
-    And match response.organizationAuditEvents[*].action contains eventType
-    And match response.organizationAuditEvents[*].organizationId contains eventEntityId
+    And match karate.jsonPath(response, '$.' + entityName + 'AuditEvents[*].action') contains eventType
+    And match karate.jsonPath(response, '$.' + entityName + 'AuditEvents[*].' + entityName + 'Id') contains eventEntityId
     * configure headers = headersUser
