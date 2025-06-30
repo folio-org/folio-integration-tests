@@ -52,7 +52,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * call pause 120000
     # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
-    * configure headers = result.updatedHeaders
+    * configure headers = result.headersUser
     * print 'Headers updated in main flow with new token.'
 
     * def jobExecutions = result.jobExecutions
@@ -99,7 +99,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
   @verifyHoldingsItemsCreated
   Scenario: Verify log entries that instances created
     * def result = call getJobLogEntriesByJobId { headersUser: #(headersUser), jobExecutionId: #(jobId), logEntriesLimit: #(limit) }
-    * def logEntriesCollection = result.jobLogEntries
+    * def logEntriesCollection = result.entries
     * assert logEntriesCollection.entries.length == limit
     * match each logEntriesCollection.entries..relatedHoldingsInfo.actionStatus contains 'CREATED'
     * match each logEntriesCollection.entries..relatedItemInfo.actionStatus contains 'CREATED'
