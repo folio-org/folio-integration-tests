@@ -8,20 +8,9 @@
     "name" : "FCBLT Inventory CREATE ELECTRONIC Records for ADDITIONAL Holding and Item ONLY Match to Existing SRS Marc (035 9 to 035 9)",
     "description" : "This FCBLT default profile creates one additional holding and item using a match from the incoming marc field 035 9 to the existing srs 035 9. Refer to the documentation for how to map the information needed for holdings and item records.",
     "dataType" : "MARC",
-    "userInfo" : {
-      "firstName" : "test",
-      "lastName" : "user",
-      "userName" : "test@user.edu"
-    },
     "parentProfiles" : [ ],
     "childProfiles" : [ ],
-    "hidden" : false,
-    "metadata" : {
-      "createdDate" : "2023-11-06T15:01:15.467+00:00",
-      "createdByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400",
-      "updatedDate" : "2023-11-06T15:01:15.467+00:00",
-      "updatedByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400"
-    }
+    "hidden" : false
   },
   "order" : 0,
   "childSnapshotWrappers" : [ {
@@ -72,20 +61,9 @@
           } ]
         }
       } ],
-      "userInfo" : {
-        "firstName" : "test",
-        "lastName" : "user",
-        "userName" : "test@user.edu"
-      },
       "parentProfiles" : [ ],
       "childProfiles" : [ ],
-      "hidden" : false,
-      "metadata" : {
-        "createdDate" : "2023-10-20T20:24:26.206+00:00",
-        "createdByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400",
-        "updatedDate" : "2023-10-20T20:24:26.206+00:00",
-        "updatedByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400"
-      }
+      "hidden" : false
     },
     "order" : 0,
     "childSnapshotWrappers" : [ {
@@ -100,21 +78,10 @@
         "description" : "FCBLT Default Inventory Electronic Holding meant as a generic use and template action profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
         "action" : "CREATE",
         "folioRecord" : "HOLDINGS",
-        "userInfo" : {
-          "firstName" : "test",
-          "lastName" : "user",
-          "userName" : "test@user.edu"
-        },
         "parentProfiles" : [ ],
         "childProfiles" : [ ],
         "hidden" : false,
-        "remove9Subfields" : false,
-        "metadata" : {
-          "createdDate" : "2022-09-16T18:01:50.660+00:00",
-          "createdByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e",
-          "updatedDate" : "2022-09-16T18:01:50.660+00:00",
-          "updatedByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e"
-        }
+        "remove9Subfields" : false
       },
       "order" : 0,
       "childSnapshotWrappers" : [ {
@@ -128,11 +95,6 @@
           "description" : "FCBLT Default Inventory Electronic Holding meant as a generic use and template field mapping profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
           "incomingRecordType" : "MARC_BIBLIOGRAPHIC",
           "existingRecordType" : "HOLDINGS",
-          "userInfo" : {
-            "firstName" : "test",
-            "lastName" : "user",
-            "userName" : "test@user.edu"
-          },
           "marcFieldProtectionSettings" : [ ],
           "parentProfiles" : [ ],
           "childProfiles" : [ ],
@@ -357,13 +319,7 @@
             } ],
             "marcMappingDetails" : [ ]
           },
-          "hidden" : false,
-          "metadata" : {
-            "createdDate" : "2022-09-16T17:52:54.847+00:00",
-            "createdByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e",
-            "updatedDate" : "2024-10-11T19:10:26.091+00:00",
-            "updatedByUserId" : "540b37d6-2656-4463-9869-4f1b040fc400"
-          }
+          "hidden" : false
         },
         "order" : 0,
         "childSnapshotWrappers" : [ ]
@@ -380,21 +336,10 @@
         "description" : "FCBLT Default Inventory Electronic Item meant as a generic use and template action profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
         "action" : "CREATE",
         "folioRecord" : "ITEM",
-        "userInfo" : {
-          "firstName" : "test",
-          "lastName" : "user",
-          "userName" : "test@user.edu"
-        },
         "parentProfiles" : [ ],
         "childProfiles" : [ ],
         "hidden" : false,
-        "remove9Subfields" : false,
-        "metadata" : {
-          "createdDate" : "2022-09-16T18:00:59.320+00:00",
-          "createdByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e",
-          "updatedDate" : "2022-09-16T18:00:59.320+00:00",
-          "updatedByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e"
-        }
+        "remove9Subfields" : false
       },
       "order" : 1,
       "childSnapshotWrappers" : [ {
@@ -408,11 +353,6 @@
           "description" : "FCBLT Default Inventory Electronic Item meant as a generic use and template field mapping profile. Please DUPLICATE and then make any changes to make specific for your own purposes/use.",
           "incomingRecordType" : "MARC_BIBLIOGRAPHIC",
           "existingRecordType" : "ITEM",
-          "userInfo" : {
-            "firstName" : "test",
-            "lastName" : "user",
-            "userName" : "test@user.edu"
-          },
           "marcFieldProtectionSettings" : [ ],
           "parentProfiles" : [ ],
           "childProfiles" : [ ],
@@ -649,13 +589,7 @@
             } ],
             "marcMappingDetails" : [ ]
           },
-          "hidden" : false,
-          "metadata" : {
-            "createdDate" : "2022-09-16T17:48:47.445+00:00",
-            "createdByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e",
-            "updatedDate" : "2022-09-16T17:48:47.445+00:00",
-            "updatedByUserId" : "2a1a2251-214d-4dd5-aacd-db1892a6273e"
-          }
+          "hidden" : false
         },
         "order" : 0,
         "childSnapshotWrappers" : [ ]
