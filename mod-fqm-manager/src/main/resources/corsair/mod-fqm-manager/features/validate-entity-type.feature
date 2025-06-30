@@ -5,6 +5,12 @@ Feature: Validate all Entity types
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
+    # Get FQM version
+    Given path 'fqm/version'
+    When method GET
+    Then status 200
+    * def fqmVersion = response
+
   Scenario: Get all entity types (no ids provided)
     Given path 'entity-types'
     When method GET
