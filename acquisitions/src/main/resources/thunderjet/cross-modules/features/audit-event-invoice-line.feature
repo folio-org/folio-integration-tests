@@ -44,18 +44,18 @@ Feature: Audit events for Invoice Line
     * def v = call createInvoiceLine invoiceLinesData
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceLineId | "Create"  | 1          |
-    * def v = call verifyInvoiceLineAuditEvents eventData
+      | resourcePath   | eventEntityId | eventType | eventCount |
+      | "invoice-line" | invoiceLineId | "Create"  | 1          |
+    * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Updating Invoice Line should produce "Edit" event
-    * def invoiceLineIds = [{'invoiceLineId': "#(invoiceLineId)"}]
-    * def v = call updateInvoiceLine invoiceLineIds
+    * def invoiceLineIds = [{'resourcePath': 'invoice/invoice-lines', 'resourceId': "#(invoiceLineId)" }]
+    * def v = call updateResource invoiceLineIds
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceLineId | "Edit"    | 2          |
-    * def v = call verifyInvoiceLineAuditEvents eventData
+      | resourcePath   | eventEntityId | eventType | eventCount |
+      | "invoice-line" | invoiceLineId | "Edit"    | 2          |
+    * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Update invoice line 50 times
     * def invoiceLineIds = []
@@ -63,14 +63,14 @@ Feature: Audit events for Invoice Line
       """
       function() {
         for (let i = 0; i < 50; i++) {
-          invoiceLineIds.push({'invoiceLineId': invoiceLineId});
+          invoiceLineIds.push({'resourcePath': 'invoice/invoice-lines', 'resourceId': invoiceLineId});
         }
       }
       """
     * eval populateInvoiceLineIds()
-    * def v = call updateInvoiceLine invoiceLineIds
+    * def v = call updateResource invoiceLineIds
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceLineId | "Edit"    | 52         |
-    * def v = call verifyInvoiceLineAuditEvents eventData
+      | resourcePath   | eventEntityId | eventType | eventCount |
+      | "invoice-line" | invoiceLineId | "Edit"    | 52         |
+    * def v = call verifyResourceAuditEvents eventData

@@ -24,18 +24,18 @@ Feature: Audit events for Organization
     * def v = call createOrganization organizationData
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | orgId         | "Create"  | 1          |
-    * def v = call verifyOrganizationAuditEvents eventData
+      | resourcePath   | eventEntityId | eventType | eventCount |
+      | "organization" | orgId         | "Create"  | 1          |
+    * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Updating Organization should produce "Edit" event
-    * def orgIds = [{'orgId': "#(orgId)"}]
-    * def v = call updateOrganization orgIds
+    * def orgIds = [{'resourcePath': 'organizations/organizations', 'resourceId': "#(orgId)"}]
+    * def v = call updateResource orgIds
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | orgId         | "Edit"    | 2          |
-    * def v = call verifyOrganizationAuditEvents eventData
+      | resourcePath   | eventEntityId | eventType | eventCount |
+      | "organization" | orgId         | "Edit"    | 2          |
+    * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Update Organization 50 times
     * def orgIds = []
@@ -43,14 +43,14 @@ Feature: Audit events for Organization
       """
       function() {
         for (let i = 0; i < 50; i++) {
-          orgIds.push({'orgId': orgId});
+          orgIds.push({'resourcePath': 'organizations/organizations', 'resourceId': orgId});
         }
       }
       """
     * eval populateOrgIds()
-    * def v = call updateOrganization orgIds
+    * def v = call updateResource orgIds
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | orgId         | "Edit"    | 52         |
-    * def v = call verifyOrganizationAuditEvents eventData
+      | resourcePath   | eventEntityId | eventType | eventCount |
+      | "organization" | orgId         | "Edit"    | 52         |
+    * def v = call verifyResourceAuditEvents eventData

@@ -1,13 +1,13 @@
 @ignore
-Feature: Verify invoice audit event
-  # parameters: eventEntityId, eventCount, eventType
+Feature: Verify resource audit event
+  # parameters: resourcePath, eventEntityId, eventCount, eventType
 
   Background:
     * url baseUrl
 
-  Scenario: verifyOrganizationAuditEvents
+  Scenario: verifyResourceAuditEvents
     * configure headers = headersAdmin
-    Given path '/audit-data/acquisition/organization', eventEntityId
+    Given path '/audit-data/acquisition', resourcePath, eventEntityId
     And retry until response.totalItems == eventCount
     When method GET
     Then status 200

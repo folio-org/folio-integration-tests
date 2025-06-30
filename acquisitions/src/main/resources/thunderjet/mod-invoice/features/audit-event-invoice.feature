@@ -25,19 +25,19 @@ Feature: Audit events for Invoice
 
     * configure headers = headersAdmin
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceId     | "Create"  | 1          |
-    * def v = call verifyInvoiceAuditEvents eventData
+      | resourcePath | eventEntityId | eventType | eventCount |
+      | "invoice"    | invoiceId     | "Create"  | 1          |
+    * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Updating Invoice should produce "Edit" event
-    * def invoiceIds = [{'invoiceId': "#(invoiceId)"}]
-    * def v = call updateInvoice invoiceIds
+    * def invoiceIds = [{'resourcePath': 'invoice/invoices', 'resourceId': "#(invoiceId)"}]
+    * def v = call updateResource invoiceIds
 
     * configure headers = headersAdmin
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceId     | "Edit"    | 2          |
-    * def v = call verifyInvoiceAuditEvents eventData
+      | resourcePath | eventEntityId | eventType | eventCount |
+      | "invoice"    | invoiceId     | "Edit"    | 2          |
+    * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Update invoice 50 times
     * def invoiceIds = []
@@ -45,15 +45,15 @@ Feature: Audit events for Invoice
       """
       function() {
         for (let i = 0; i < 50; i++) {
-          invoiceIds.push({'invoiceId': invoiceId});
+          invoiceIds.push({'resourcePath': 'invoice/invoices', 'resourceId': invoiceId});
         }
       }
       """
     * eval populateInvoiceIds()
-    * def v = call updateInvoice invoiceIds
+    * def v = call updateResource invoiceIds
 
     * configure headers = headersAdmin
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceId     | "Edit"    | 52         |
-    * def v = call verifyInvoiceAuditEvents eventData
+      | resourcePath | eventEntityId | eventType | eventCount |
+      | "invoice"    | invoiceId     | "Edit"    | 52         |
+    * def v = call verifyResourceAuditEvents eventData
