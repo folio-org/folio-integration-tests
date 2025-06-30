@@ -15,7 +15,7 @@ Feature: Verify once poline fully paid and received order should be closed
 
     * callonce variables
 
-    * def verifyOrderStatusAfterPoLinePaymentReceiptUpdate = read('classpath:thunderjet/mod-orders/reusable/verify-order-status-after-pol-payment-receipt-update.feature')
+    * def verifyOrderStatusAfterPoLinePaymentReceiptUpdate = read('classpath:thunderjet/mod-orders/helpers/helper-close-order-when-fully-paid-and-received.feature@VerifyOrderStatusAfterPoLinePaymentReceiptUpdate')
     
   @Positive
   Scenario: Closed order should not be reopened when it has at least one resolution status

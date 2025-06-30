@@ -1,8 +1,19 @@
 @ignore
-Feature: Verify Rollover Transactions
+Feature: Helper for "rollover-and-pay-invoice-using-past-fiscal-year.feature"
 
   Background:
     * url baseUrl
+
+    @CheckOrderLineStatuses #(id, orderType, paymentStatus, receiptStatus)
+    Scenario: checkOrderLineStatuses
+    # Parameters:
+    Given path 'orders/order-lines', id
+    When method GET
+    Then status 200
+    * def paymentStatus = orderType == 'One-Time' ? 'Fully Paid' : 'Ongoing'
+    * def receiptStatus = orderType == 'One-Time' ? 'Awaiting Receipt' : 'Ongoing'
+    And match $.paymentStatus == paymentStatus
+    And match $.receiptStatus == receiptStatus
 
   @VerifyEncumbranceTransactionsInNewYear
   Scenario: verifyEncumbranceTransactionsInNewYear

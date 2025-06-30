@@ -10,9 +10,9 @@ Feature: Rollover and pay invoice using past fiscal year
     * configure headers = headersUser
     * callonce variables
 
-    * def checkOrderLineStatuses = read('classpath:thunderjet/mod-orders/reusable/check-order-line-statuses.feature')
-    * def verifyEncumbranceTransactionsInNewYear = read('classpath:thunderjet/mod-finance/reusable/verify-rollover-transactions.feature@VerifyEncumbranceTransactionsInNewYear')
-    * def verifyPendingPaymentsWereCreatedInPastFiscalYear = read('classpath:thunderjet/mod-finance/reusable/verify-rollover-transactions.feature@VerifyPendingPaymentsWereCreatedInPastFiscalYear')
+    * def checkOrderLineStatuses = read('classpath:thunderjet/cross-modules/helpers/helper-rollover-and-pay-invoice-using-past-fiscal-year.feature.feature@CheckOrderLineStatuses')
+    * def verifyEncumbranceTransactionsInNewYear = read('classpath:thunderjet/cross-modules/helpers/helper-rollover-and-pay-invoice-using-past-fiscal-year.feature@VerifyEncumbranceTransactionsInNewYear')
+    * def verifyPendingPaymentsWereCreatedInPastFiscalYear = read('classpath:thunderjet/cross-modules/helpers/helper-rollover-and-pay-invoice-using-past-fiscal-year.feature@VerifyPendingPaymentsWereCreatedInPastFiscalYear')
 
   @Positive
   Scenario: Rollover and pay invoice using past fiscal year

@@ -1,12 +1,11 @@
 @ignore
-Feature: Check Invoices and Invoice Lines with VAT
+Feature: Helper for "check-invoice-lines-with-vat-adjustments.feature"
 
   Background:
     * url baseUrl
 
-  @CheckInvoicesWithAppliedTopAdjustment
+  @CheckInvoicesWithAppliedTopAdjustment #(id, status, total, subTotal, adjustmentsTotal, adjustmentId)
   Scenario: Check invoices with applied top adjustment
-    # parameters: id, status, total, subTotal, adjustmentsTotal, adjustmentId
     Given path 'invoice/invoices', id
     When method GET
     Then status 200
@@ -22,9 +21,8 @@ Feature: Check Invoices and Invoice Lines with VAT
     And match each response.adjustments[*].description == 'VAT'
     And match each response.adjustments[*].relationToTotal == 'Included in'
 
-  @CheckInvoicesWithNoAppliedTopAdjustment
+  @CheckInvoicesWithNoAppliedTopAdjustment #(id, status, total, subTotal, adjustmentsTotal)
   Scenario: Check invoices with no applied top adjustment
-    # parameters: id, status, total, subTotal, adjustmentsTotal
     Given path 'invoice/invoices', id
     When method GET
     Then status 200
@@ -35,9 +33,8 @@ Feature: Check Invoices and Invoice Lines with VAT
     And match response.adjustmentsTotal == adjustmentsTotal
     And match response.adjustments == '#[0]'
 
-  @CheckInvoiceLinesWithAppliedTopAdjustment
+  @CheckInvoiceLinesWithAppliedTopAdjustment #(id, invoiceLines, lineTotal, lineSubTotals, lineAdjustments, status, adjustmentId)
   Scenario: Check invoice line with applied top adjustment
-    # parameters: id, invoiceLines, lineTotal, lineSubTotals, lineAdjustments, status, adjustmentId
     Given path 'invoice/invoice-lines'
     And param query = 'invoiceId==' + id
     When method GET
@@ -55,9 +52,8 @@ Feature: Check Invoices and Invoice Lines with VAT
     And match each response.invoiceLines[*].adjustments[*].description == 'VAT'
     And match each response.invoiceLines[*].adjustments[*].relationToTotal == 'Included in'
 
-  @CheckInvoiceLinesWithAppliedIndividualAdjustment
+  @CheckInvoiceLinesWithAppliedIndividualAdjustment #(id, invoiceLines, lineTotal, lineSubTotals, lineAdjustments, status)
   Scenario: Check invoice line with applied individual adjustment
-    # parameters: id, invoiceLines, lineTotal, lineSubTotals, lineAdjustments, status
     Given path 'invoice/invoice-lines'
     And param query = 'invoiceId==' + id
     When method GET

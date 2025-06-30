@@ -15,10 +15,10 @@ Feature: Check invoice lines with VAT adjustments
 
     * callonce variables
 
-    * def checkInvoicesWithAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/reusable/check-invoices-and-invoice-lines-vat.feature@CheckInvoicesWithAppliedTopAdjustment')
-    * def checkInvoicesWithNoAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/reusable/check-invoices-and-invoice-lines-vat.feature@CheckInvoicesWithNoAppliedTopAdjustment')
-    * def checkInvoiceLinesWithAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/reusable/check-invoices-and-invoice-lines-vat.feature@CheckInvoiceLinesWithAppliedTopAdjustment')
-    * def checkInvoiceLinesWithAppliedIndividualAdjustment = read('classpath:thunderjet/mod-invoice/reusable/check-invoices-and-invoice-lines-vat.feature@CheckInvoiceLinesWithAppliedIndividualAdjustment')
+    * def checkInvoicesWithAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/helpers/helper-check-invoice-lines-with-vat-adjustments.feature@CheckInvoicesWithAppliedTopAdjustment')
+    * def checkInvoicesWithNoAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/helpers/helper-check-invoice-lines-with-vat-adjustments.feature@CheckInvoicesWithNoAppliedTopAdjustment')
+    * def checkInvoiceLinesWithAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/helpers/helper-check-invoice-lines-with-vat-adjustments.feature@CheckInvoiceLinesWithAppliedTopAdjustment')
+    * def checkInvoiceLinesWithAppliedIndividualAdjustment = read('classpath:thunderjet/mod-invoice/helpers/helper-check-invoice-lines-with-vat-adjustments.feature@CheckInvoiceLinesWithAppliedIndividualAdjustment')
 
   @Positive
   Scenario: Check invoice lines with VAT adjustments

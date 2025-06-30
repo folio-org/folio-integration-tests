@@ -1,12 +1,12 @@
 @ignore
-Feature: Verify order status after updating PoLine payment and receipt statuses
+Feature: Helper for "close-order-when-fully-paid-and-received"
 
   Background:
     * url baseUrl
 
+  @VerifyOrderStatusAfterPoLinePaymentReceiptUpdate #(expectedWorkflowStatus, paymentStatus, receiptStatus)
   Scenario: verifyOrderStatusAfterPoLinePaymentReceiptUpdate
-    # Parameters: expectedWorkflowStatus, paymentStatus, receiptStatus
-    * print 'OrderStatusWithResolutionStatusesTest:: expectedWorkflowStatus: ' + expectedWorkflowStatus + ', paymentStatus: ' + paymentStatus + ', receiptStatus: ' + receiptStatus
+    * print 'VerifyOrderStatusAfterPoLinePaymentReceiptUpdate:: expectedWorkflowStatus: ' + expectedWorkflowStatus + ', paymentStatus: ' + paymentStatus + ', receiptStatus: ' + receiptStatus
 
     # 1.1 Create order and order line
     * def orderId = call uuid

@@ -39,8 +39,10 @@ function fn() {
     variables: karate.read('classpath:global/variables.feature'),
 
     // common reusable features
-    resourceExists: karate.read('classpath:common/resource-exists.feature'),
-    deleteResource: karate.read('classpath:common/delete-resource.feature'),
+    resourceExists: karate.read('classpath:thunderjet/common/resource-exists.feature'),
+    deleteResource: karate.read('classpath:thunderjet/common/delete-resource.feature'),
+    updateResource: karate.read('classpath:thunderjet/common/update-resource.feature'),
+    verifyResourceAuditEvents: karate.read('classpath:thunderjet/common/verify-resource-audit-events.feature'),
 
     // acquisitions units
     createAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@CreateAcqUnit'),
@@ -122,17 +124,11 @@ function fn() {
     approveInvoice: read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature'),
     payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
-    updateInvoice: read('classpath:thunderjet/mod-invoice/reusable/update-invoice.feature'),
-    updateInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/update-invoice-line.feature'),
     verifyInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line.feature'),
-    verifyInvoiceAuditEvents: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-audit-events.feature'),
-    verifyInvoiceLineAuditEvents: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line-audit-events.feature'),
 
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),
     createOrganization: karate.read('classpath:thunderjet/mod-organizations/reusable/create-organization.feature'),
-    updateOrganization: karate.read('classpath:thunderjet/mod-organizations/reusable/update-organization.feature'),
-    verifyOrganizationAuditEvents: read('classpath:thunderjet/mod-organizations/reusable/verify-organization-audit-events.feature'),
 
     // data export
     createIntegrationDetails: karate.read('classpath:thunderjet/mod-data-export-spring/reusables/create-integration-details.feature'),
