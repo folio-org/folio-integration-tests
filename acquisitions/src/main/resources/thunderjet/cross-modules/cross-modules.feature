@@ -23,8 +23,14 @@ Feature: cross-module integration tests
   Scenario: Approve invoice with negative line
     * call read('features/approve-invoice-with-negative-line.feature')
 
+  Scenario: Audit events for Invoice
+    * call read('features/audit-event-invoice.feature')
+
   Scenario: Audit events for Invoice Line
     * call read('features/audit-event-invoice-line.feature')
+
+  Scenario: Audit events for Organization
+    * call read('features/audit-event-organization.feature')
 
   Scenario: Cancel invoice and unrelease 2 encumbrances
     * call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')

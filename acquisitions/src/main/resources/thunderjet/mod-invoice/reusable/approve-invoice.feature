@@ -1,3 +1,4 @@
+@ignore
 Feature: Approve invoice
   # parameters: invoiceId
 

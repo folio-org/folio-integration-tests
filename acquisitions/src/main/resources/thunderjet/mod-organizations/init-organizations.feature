@@ -11,7 +11,6 @@ Feature: Initialize mod-organizations integration tests
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-permissions'           |
-      | 'mod-audit'                 |
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
@@ -25,7 +24,6 @@ Feature: Initialize mod-organizations integration tests
 
     * table adminPermissions
       | name                                                        |
-      | 'acquisition.organization.events.get'                       |
       | 'acquisitions-units.memberships.item.get'                   |
       | 'acquisitions-units.memberships.item.post'                  |
       | 'acquisitions-units-storage.memberships.item.post'          |

@@ -11,7 +11,6 @@ Feature: Audit events for Invoice Line
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-
     * configure retry = { count: 10, interval: 10000 }
 
     ### Before All ###
@@ -45,25 +44,18 @@ Feature: Audit events for Invoice Line
     * def v = call createInvoiceLine invoiceLinesData
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceLineId | "Create"  | 1          |
-    * def v = call read('@VerifyAuditEvents') eventData
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName    |
+      | "invoice-line" | invoiceLineId | "Create"  | 1          | "invoiceLine" |
+    * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Updating Invoice Line should produce "Edit" event
-    Given path 'invoice/invoice-lines', invoiceLineId
-    When method GET
-    Then status 200
-    * def invoiceLine = response
-
-    Given path 'invoice/invoice-lines', invoiceLineId
-    And request invoiceLine
-    When method PUT
-    Then status 204
+    * def invoiceLineIds = [{'resourcePath': 'invoice/invoice-lines', 'resourceId': "#(invoiceLineId)" }]
+    * def v = call updateResource invoiceLineIds
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceLineId | "Edit"    | 2          |
-    * def v = call read('@VerifyAuditEvents') eventData
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName    |
+      | "invoice-line" | invoiceLineId | "Edit"    | 2          | "invoiceLine" |
+    * def v = call verifyResourceAuditEvents eventData
 
   Scenario: Update invoice line 50 times
     * def invoiceLineIds = []
@@ -71,38 +63,14 @@ Feature: Audit events for Invoice Line
       """
       function() {
         for (let i = 0; i < 50; i++) {
-          invoiceLineIds.push({'newInvoiceLineId': invoiceLineId});
+          invoiceLineIds.push({'resourcePath': 'invoice/invoice-lines', 'resourceId': invoiceLineId});
         }
       }
       """
     * eval populateInvoiceLineIds()
-    * def v = call read('@UpdateInvoiceLine') invoiceLineIds
+    * def v = call updateResource invoiceLineIds
 
     * table eventData
-      | eventEntityId | eventType | eventCount |
-      | invoiceLineId | "Edit"    | 52         |
-    * def v = call read('@VerifyAuditEvents') eventData
-
-  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
-  @ignore @VerifyAuditEvents
-  Scenario: Verify Audit Events
-    * configure headers = headersAdmin
-    Given path 'audit-data/acquisition/invoice-line', eventEntityId
-    And retry until response.totalItems == eventCount
-    When method GET
-    Then status 200
-    And match response.totalItems == eventCount
-    And match response.invoiceLineAuditEvents[*].action contains eventType
-    And match response.invoiceLineAuditEvents[*].invoiceLineId contains eventEntityId
-
-  @ignore @UpdateInvoiceLine
-  Scenario: Update invoice line
-    Given path 'invoice/invoice-lines', newInvoiceLineId
-    When method GET
-    Then status 200
-    * def invoiceLine = response
-
-    Given path 'invoice/invoice-lines', newInvoiceLineId
-    And request invoiceLine
-    When method PUT
-    Then status 204
+      | resourcePath   | eventEntityId | eventType | eventCount | entityName    |
+      | "invoice-line" | invoiceLineId | "Edit"    | 52         | "invoiceLine" |
+    * def v = call verifyResourceAuditEvents eventData

@@ -19,6 +19,3 @@ Feature: mod-organizations integration tests
 
   Scenario: Acquisitions API tests
     * call read('features/acquisitions-api-tests.feature')
-
-  Scenario: Audit events for Organization
-    * call read('features/audit-event-organization.feature')

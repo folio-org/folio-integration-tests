@@ -20,9 +20,6 @@ Feature: mod-invoice integration tests
   Scenario: Approve and pay invoice with past fiscal year
     * call read('features/approve-and-pay-invoice-with-past-fiscal-year.feature')
 
-  Scenario: Audit events for Invoice
-    * call read('features/audit-event-invoice.feature')
-
   Scenario: Batch voucher export with many lines
     * call read('features/batch-voucher-export-with-many-lines.feature')
 

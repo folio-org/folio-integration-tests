@@ -15,6 +15,11 @@ Feature: Check invoice lines with VAT adjustments
 
     * callonce variables
 
+    * def checkInvoicesWithAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/helpers/helper-check-invoice-lines-with-vat-adjustments.feature@CheckInvoicesWithAppliedTopAdjustment')
+    * def checkInvoicesWithNoAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/helpers/helper-check-invoice-lines-with-vat-adjustments.feature@CheckInvoicesWithNoAppliedTopAdjustment')
+    * def checkInvoiceLinesWithAppliedTopAdjustment = read('classpath:thunderjet/mod-invoice/helpers/helper-check-invoice-lines-with-vat-adjustments.feature@CheckInvoiceLinesWithAppliedTopAdjustment')
+    * def checkInvoiceLinesWithAppliedIndividualAdjustment = read('classpath:thunderjet/mod-invoice/helpers/helper-check-invoice-lines-with-vat-adjustments.feature@CheckInvoiceLinesWithAppliedIndividualAdjustment')
+
   @Positive
   Scenario: Check invoice lines with VAT adjustments
     # Check that each invoice line VAT calculation is unaffected by other invoice lines
@@ -70,8 +75,8 @@ Feature: Check invoice lines with VAT adjustments
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status |
       | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | 28.04         | 1.96            | 30.0      | 'Open' |
       | invoiceId2 | 5.88             | 84.12    | 90.0  | 3            | 28.04         | 1.96            | 30.0      | 'Open' |
-    * def v = call read('@CheckInvoicesWithAppliedTopAdjustment') invoicesExpected
-    * def v = call read('@CheckInvoiceLinesWithAppliedTopAdjustment') invoicesExpected
+    * def v = call checkInvoicesWithAppliedTopAdjustment invoicesExpected
+    * def v = call checkInvoiceLinesWithAppliedTopAdjustment invoicesExpected
 
     ### 5. Remove a single invoice line from the second invoice
     Given path 'invoice/invoice-lines', invoiceLineId4
@@ -83,8 +88,8 @@ Feature: Check invoice lines with VAT adjustments
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status |
       | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | 28.04         | 1.96            | 30.0      | 'Open' |
       | invoiceId2 | 3.92             | 56.08    | 60.0  | 2            | 28.04         | 1.96            | 30.0      | 'Open' |
-    * def v = call read('@CheckInvoicesWithAppliedTopAdjustment') invoicesExpected
-    * def v = call read('@CheckInvoiceLinesWithAppliedTopAdjustment') invoicesExpected
+    * def v = call checkInvoicesWithAppliedTopAdjustment invoicesExpected
+    * def v = call checkInvoiceLinesWithAppliedTopAdjustment invoicesExpected
 
     ### 7. Approve the invoices
     * def v = call approveInvoice invoices
@@ -94,8 +99,8 @@ Feature: Check invoice lines with VAT adjustments
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status     |
       | invoiceId1 | 1.96             | 28.04    | 30    | 1            | 28.04         | 1.96            | 30.0      | 'Approved' |
       | invoiceId2 | 3.92             | 56.08    | 60    | 2            | 28.04         | 1.96            | 30.0      | 'Approved' |
-    * def v = call read('@CheckInvoicesWithAppliedTopAdjustment') invoicesExpected
-    * def v = call read('@CheckInvoiceLinesWithAppliedTopAdjustment') invoicesExpected
+    * def v = call checkInvoicesWithAppliedTopAdjustment invoicesExpected
+    * def v = call checkInvoiceLinesWithAppliedTopAdjustment invoicesExpected
 
   @Positive
   Scenario: Check invoice lines with VAT adjustments added to the Invoice Line directly
@@ -150,8 +155,8 @@ Feature: Check invoice lines with VAT adjustments
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals       | lineAdjustments | lineTotal | status |
       | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | [28.04]             | [1.96]          | 30.0      | 'Open' |
       | invoiceId2 | 3.92             | 86.08    | 90.0  | 3            | [28.04,28.04,30.0]  | [1.96,1.96,0.0] | 30.0      | 'Open' |
-    * def v = call read('@CheckInvoicesWithNoAppliedTopAdjustment') invoicesExpected
-    * def v = call read('@CheckInvoiceLinesWithAppliedIndividualAdjustment') invoicesExpected
+    * def v = call checkInvoicesWithNoAppliedTopAdjustment invoicesExpected
+    * def v = call checkInvoiceLinesWithAppliedIndividualAdjustment invoicesExpected
 
     ### 5. Remove a single invoice line from the second invoice
     Given path 'invoice/invoice-lines', invoiceLineId3
@@ -163,8 +168,8 @@ Feature: Check invoice lines with VAT adjustments
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals  | lineAdjustments | lineTotal | status |
       | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | [28.04]        | [1.96]          | 30.0      | 'Open' |
       | invoiceId2 | 1.96             | 58.04    | 60.0  | 2            | [28.04,30.0]   | [1.96,0.0]      | 30.0      | 'Open' |
-    * def v = call read('@CheckInvoicesWithNoAppliedTopAdjustment') invoicesExpected
-    * def v = call read('@CheckInvoiceLinesWithAppliedIndividualAdjustment') invoicesExpected
+    * def v = call checkInvoicesWithNoAppliedTopAdjustment invoicesExpected
+    * def v = call checkInvoiceLinesWithAppliedIndividualAdjustment invoicesExpected
 
     ### 7. Approve the invoices
     * def v = call approveInvoice invoices
@@ -174,72 +179,5 @@ Feature: Check invoice lines with VAT adjustments
       | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals  | lineAdjustments | lineTotal | status     |
       | invoiceId1 | 1.96             | 28.04    | 30    | 1            | [28.04]        | [1.96]          | 30.0      | 'Approved' |
       | invoiceId2 | 1.96             | 58.04    | 60    | 2            | [28.04,30.0]   | [1.96,0.0]      | 30.0      | 'Approved' |
-    * def v = call read('@CheckInvoicesWithNoAppliedTopAdjustment') invoicesExpected
-    * def v = call read('@CheckInvoiceLinesWithAppliedIndividualAdjustment') invoicesExpected
-
-  # FIXME: @ignore is not ignored with call(), as in orders.feature - the solution is to create a separate feature for this
-  @ignore @CheckInvoicesWithAppliedTopAdjustment
-  Scenario: Check invoices with applied top adjustment
-    Given path 'invoice/invoices', id
-    When method GET
-    Then status 200
-    And match response.currency == 'EUR'
-    And match response.status == status
-    And match response.total == total
-    And match response.subTotal == subTotal
-    And match response.adjustmentsTotal == adjustmentsTotal
-    And match each response.adjustments[*].id == adjustmentId
-    And match each response.adjustments[*].value == 7.0
-    And match each response.adjustments[*].type == 'Amount'
-    And match each response.adjustments[*].prorate == 'By amount'
-    And match each response.adjustments[*].description == 'VAT'
-    And match each response.adjustments[*].relationToTotal == 'Included in'
-
-  @ignore @CheckInvoicesWithNoAppliedTopAdjustment
-  Scenario: Check invoices with no applied top adjustment
-    Given path 'invoice/invoices', id
-    When method GET
-    Then status 200
-    And match response.currency == 'EUR'
-    And match response.status == status
-    And match response.total == total
-    And match response.subTotal == subTotal
-    And match response.adjustmentsTotal == adjustmentsTotal
-    And match response.adjustments == '#[0]'
-
-  @ignore @CheckInvoiceLinesWithAppliedTopAdjustment
-  Scenario: Check invoice line with applied top adjustment
-    Given path 'invoice/invoice-lines'
-    And param query = 'invoiceId==' + id
-    When method GET
-    Then status 200
-    And match response.totalRecords == invoiceLines
-    And match each response.invoiceLines[*].quantity == 1
-    And match each response.invoiceLines[*].total == lineTotal
-    And match each response.invoiceLines[*].subTotal == lineSubTotals
-    And match each response.invoiceLines[*].adjustmentsTotal == lineAdjustments
-    And match each response.invoiceLines[*].invoiceLineStatus == status
-    And match each response.invoiceLines[*].adjustments[*].adjustmentId == adjustmentId
-    And match each response.invoiceLines[*].adjustments[*].value == lineAdjustments
-    And match each response.invoiceLines[*].adjustments[*].type == 'Amount'
-    And match each response.invoiceLines[*].adjustments[*].prorate == 'Not prorated'
-    And match each response.invoiceLines[*].adjustments[*].description == 'VAT'
-    And match each response.invoiceLines[*].adjustments[*].relationToTotal == 'Included in'
-
-  @ignore @CheckInvoiceLinesWithAppliedIndividualAdjustment
-  Scenario: Check invoice line with applied individual adjustment
-    Given path 'invoice/invoice-lines'
-    And param query = 'invoiceId==' + id
-    When method GET
-    Then status 200
-    And match response.totalRecords == invoiceLines
-    And match each response.invoiceLines[*].quantity == 1
-    And match each response.invoiceLines[*].total == lineTotal
-    And match response.invoiceLines[*].subTotal contains any lineSubTotals
-    And match response.invoiceLines[*].adjustmentsTotal contains any lineAdjustments
-    And match each response.invoiceLines[*].invoiceLineStatus == status
-    And match response.invoiceLines[*].adjustments[*].value contains any lineAdjustments
-    And match each response.invoiceLines[*].adjustments[*].type == 'Amount'
-    And match each response.invoiceLines[*].adjustments[*].prorate == 'Not prorated'
-    And match each response.invoiceLines[*].adjustments[*].description == 'VAT'
-    And match each response.invoiceLines[*].adjustments[*].relationToTotal == 'Included in'
+    * def v = call checkInvoicesWithNoAppliedTopAdjustment invoicesExpected
+    * def v = call checkInvoiceLinesWithAppliedIndividualAdjustment invoicesExpected

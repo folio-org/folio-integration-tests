@@ -3,7 +3,6 @@ Feature:
 
   Background:
     * url baseUrl
-    * def resourceExists = read('classpath:common/resource-exists.feature')
 
   @CreateGroup
   Scenario: Create User Group if not exists

@@ -39,8 +39,10 @@ function fn() {
     variables: karate.read('classpath:global/variables.feature'),
 
     // common reusable features
-    resourceExists: karate.read('classpath:common/resource-exists.feature'),
-    deleteResource: karate.read('classpath:common/delete-resource.feature'),
+    resourceExists: karate.read('classpath:thunderjet/common/resource-exists.feature'),
+    deleteResource: karate.read('classpath:thunderjet/common/delete-resource.feature'),
+    updateResource: karate.read('classpath:thunderjet/common/update-resource.feature'),
+    verifyResourceAuditEvents: karate.read('classpath:thunderjet/common/verify-resource-audit-events.feature'),
 
     // acquisitions units
     createAcqUnit: karate.read('classpath:thunderjet/mod-orders/reusable/acq-unit.feature@CreateAcqUnit'),
@@ -66,6 +68,7 @@ function fn() {
     createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
     createBudgetExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createBudgetExpenseClass.feature'),
     rollover: karate.read('classpath:thunderjet/mod-finance/reusable/rollover.feature'),
+    verifyReleasedEncumbrance: karate.read('classpath:thunderjet/mod-finance/reusable/verify-released-encumbrance.feature'),
 
     // inventory
     createItem: karate.read('classpath:thunderjet/consortia/reusable/createItem.feature'),

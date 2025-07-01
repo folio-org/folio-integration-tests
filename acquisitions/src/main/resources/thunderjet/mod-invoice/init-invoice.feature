@@ -11,7 +11,6 @@ Feature: Initialize mod-invoice integration tests
       | 'mod-permissions'           |
       | 'mod-users'                 |
       | 'mod-permissions'           |
-      | 'mod-audit'                 |
       | 'mod-configuration'         |
       | 'mod-invoice'               |
       | 'mod-invoice-storage'       |
@@ -55,8 +54,6 @@ Feature: Initialize mod-invoice integration tests
 
     * table adminPermissions
       | name                                                        |
-      | 'acquisition.invoice.events.get'                            |
-      | 'acquisition.invoice-line.events.get'                       |
       | 'finance.budgets.item.get'                                  |
       | 'finance.budgets.item.post'                                 |
       | 'finance.budgets.item.put'                                  |
