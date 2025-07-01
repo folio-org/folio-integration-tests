@@ -46,8 +46,18 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @Test
+  void auditEventInvoice() {
+    runFeatureTest("audit-event-invoice");
+  }
+
+  @Test
   void auditEventInvoiceLine() {
     runFeatureTest("audit-event-invoice-line");
+  }
+
+  @Test
+  void auditEventOrganization() {
+    runFeatureTest("audit-event-organization");
   }
 
   @Test

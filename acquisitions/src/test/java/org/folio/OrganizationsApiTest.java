@@ -39,9 +39,4 @@ public class OrganizationsApiTest extends TestBaseEureka {
         runFeatureTest("acquisitions-api-tests");
     }
 
-    @Test
-    void auditEventOrganization() {
-        runFeatureTest("audit-event-organization");
-    }
-
 }

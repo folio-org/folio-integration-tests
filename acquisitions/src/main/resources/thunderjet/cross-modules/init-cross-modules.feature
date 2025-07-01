@@ -28,74 +28,78 @@ Feature: Cross-module integration tests
 
     # User permissions: non-storage permissions for finance, orders, invoices and organizations
     * table userPermissions
-      | name                                                          |
-      | 'finance.budgets.collection.get'                              |
-      | 'finance.budgets.item.delete'                                 |
-      | 'finance.budgets.item.get'                                    |
-      | 'finance.budgets.item.post'                                   |
-      | 'finance.budgets.item.put'                                    |
-      | 'finance.expense-classes.item.post'                           |
-      | 'finance.fiscal-years.item.get'                               |
-      | 'finance.fiscal-years.item.post'                              |
-      | 'finance.fiscal-years.item.put'                               |
-      | 'finance.funds.item.get'                                      |
-      | 'finance.funds.item.post'                                     |
-      | 'finance.funds.item.put'                                      |
-      | 'finance.fund-types.item.post'                                |
-      | 'finance.group-fund-fiscal-years.collection.get'              |
-      | 'finance.groups.item.post'                                    |
-      | 'finance.ledger-rollovers-budgets.collection.get'             |
-      | 'finance.ledger-rollovers-budgets.item.get'                   |
-      | 'finance.ledger-rollovers-errors.collection.get'              |
-      | 'finance.ledger-rollovers.item.post'                          |
-      | 'finance.ledger-rollovers-logs.item.get'                      |
-      | 'finance.ledger-rollovers-progress.collection.get'            |
-      | 'finance.ledger-rollovers-progress.item.put'                  |
-      | 'finance.ledgers.item.post'                                   |
-      | 'finance.release-encumbrance.item.post'                       |
-      | 'finance.transactions.batch.execute'                          |
-      | 'finance.transactions.collection.get'                         |
-      | 'finance.transactions.item.get'                               |
-      | 'invoice.invoice-lines.collection.get'                        |
-      | 'invoice.invoice-lines.item.delete'                           |
-      | 'invoice.invoice-lines.item.get'                              |
-      | 'invoice.invoice-lines.item.post'                             |
-      | 'invoice.invoice-lines.item.put'                              |
-      | 'invoice.invoices.item.delete'                                |
-      | 'invoice.invoices.item.get'                                   |
-      | 'invoice.invoices.item.post'                                  |
-      | 'invoice.invoices.item.put'                                   |
-      | 'invoice.item.approve.execute'                                |
-      | 'invoice.item.cancel.execute'                                 |
-      | 'invoice.item.pay.execute'                                    |
-      | 'invoices.acquisitions-units-assignments.assign'              |
-      | 'invoices.acquisitions-units-assignments.manage'              |
-      | 'invoices.fiscal-year.update.execute'                         |
-      | 'orders.acquisitions-units-assignments.assign'                |
-      | 'orders.acquisitions-units-assignments.manage'                |
-      | 'orders.check-in.collection.post'                             |
-      | 'orders.collection.get'                                       |
-      | 'orders.item.approve'                                         |
-      | 'orders.item.get'                                             |
-      | 'orders.item.post'                                            |
-      | 'orders.item.put'                                             |
-      | 'orders.item.reopen'                                          |
-      | 'orders.item.unopen'                                          |
-      | 'orders.pieces.collection.get'                                |
-      | 'orders.pieces.item.delete'                                   |
-      | 'orders.po-lines.collection.get'                              |
-      | 'orders.po-lines.item.delete'                                 |
-      | 'orders.po-lines.item.get'                                    |
-      | 'orders.po-lines.item.post'                                   |
-      | 'orders.po-lines.item.put'                                    |
-      | 'orders.re-encumber.item.post'                                |
-      | 'organizations.organizations.item.post'                       |
-      | 'voucher.vouchers.collection.get'                             |
+      | name                                               |
+      | 'finance.budgets.collection.get'                   |
+      | 'finance.budgets.item.delete'                      |
+      | 'finance.budgets.item.get'                         |
+      | 'finance.budgets.item.post'                        |
+      | 'finance.budgets.item.put'                         |
+      | 'finance.expense-classes.item.post'                |
+      | 'finance.fiscal-years.item.get'                    |
+      | 'finance.fiscal-years.item.post'                   |
+      | 'finance.fiscal-years.item.put'                    |
+      | 'finance.funds.item.get'                           |
+      | 'finance.funds.item.post'                          |
+      | 'finance.funds.item.put'                           |
+      | 'finance.fund-types.item.post'                     |
+      | 'finance.group-fund-fiscal-years.collection.get'   |
+      | 'finance.groups.item.post'                         |
+      | 'finance.ledger-rollovers-budgets.collection.get'  |
+      | 'finance.ledger-rollovers-budgets.item.get'        |
+      | 'finance.ledger-rollovers-errors.collection.get'   |
+      | 'finance.ledger-rollovers.item.post'               |
+      | 'finance.ledger-rollovers-logs.item.get'           |
+      | 'finance.ledger-rollovers-progress.collection.get' |
+      | 'finance.ledger-rollovers-progress.item.put'       |
+      | 'finance.ledgers.item.post'                        |
+      | 'finance.release-encumbrance.item.post'            |
+      | 'finance.transactions.batch.execute'               |
+      | 'finance.transactions.collection.get'              |
+      | 'finance.transactions.item.get'                    |
+      | 'invoice.invoice-lines.collection.get'             |
+      | 'invoice.invoice-lines.item.delete'                |
+      | 'invoice.invoice-lines.item.get'                   |
+      | 'invoice.invoice-lines.item.post'                  |
+      | 'invoice.invoice-lines.item.put'                   |
+      | 'invoice.invoices.item.delete'                     |
+      | 'invoice.invoices.item.get'                        |
+      | 'invoice.invoices.item.post'                       |
+      | 'invoice.invoices.item.put'                        |
+      | 'invoice.item.approve.execute'                     |
+      | 'invoice.item.cancel.execute'                      |
+      | 'invoice.item.pay.execute'                         |
+      | 'invoices.acquisitions-units-assignments.assign'   |
+      | 'invoices.acquisitions-units-assignments.manage'   |
+      | 'invoices.fiscal-year.update.execute'              |
+      | 'orders.acquisitions-units-assignments.assign'     |
+      | 'orders.acquisitions-units-assignments.manage'     |
+      | 'orders.check-in.collection.post'                  |
+      | 'orders.collection.get'                            |
+      | 'orders.item.approve'                              |
+      | 'orders.item.get'                                  |
+      | 'orders.item.post'                                 |
+      | 'orders.item.put'                                  |
+      | 'orders.item.reopen'                               |
+      | 'orders.item.unopen'                               |
+      | 'orders.pieces.collection.get'                     |
+      | 'orders.pieces.item.delete'                        |
+      | 'orders.po-lines.collection.get'                   |
+      | 'orders.po-lines.item.delete'                      |
+      | 'orders.po-lines.item.get'                         |
+      | 'orders.po-lines.item.post'                        |
+      | 'orders.po-lines.item.put'                         |
+      | 'orders.re-encumber.item.post'                     |
+      | 'organizations.organizations.item.get'             |
+      | 'organizations.organizations.item.post'            |
+      | 'organizations.organizations.item.put'             |
+      | 'voucher.vouchers.collection.get'                  |
 
     # Admin permissions: all the other permissions needed
     * table adminPermissions
       | name                                                          |
+      | 'acquisition.invoice.events.get'                              |
       | 'acquisition.invoice-line.events.get'                         |
+      | 'acquisition.organization.events.get'                         |
       | 'acquisitions-units.memberships.collection.get'               |
       | 'acquisitions-units.memberships.item.delete'                  |
       | 'acquisitions-units.memberships.item.post'                    |
@@ -136,7 +140,7 @@ Feature: Cross-module integration tests
     * call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: Create admin user
-    * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
+    * def v = call createAdditionalUser { testUser: '#(testAdmin)', userPermissions: '#(adminPermissions)' }
 
   Scenario: Init global data
     * call login testAdmin
