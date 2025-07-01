@@ -4,9 +4,8 @@ Feature: Helper for "rollover-and-pay-invoice-using-past-fiscal-year.feature"
   Background:
     * url baseUrl
 
-    @CheckOrderLineStatuses #(id, orderType, paymentStatus, receiptStatus)
-    Scenario: checkOrderLineStatuses
-    # Parameters:
+  @CheckOrderLineStatuses #(id, orderType, paymentStatus, receiptStatus)
+  Scenario: checkOrderLineStatuses
     Given path 'orders/order-lines', id
     When method GET
     Then status 200
@@ -15,9 +14,8 @@ Feature: Helper for "rollover-and-pay-invoice-using-past-fiscal-year.feature"
     And match $.paymentStatus == paymentStatus
     And match $.receiptStatus == receiptStatus
 
-  @VerifyEncumbranceTransactionsInNewYear
+  @VerifyEncumbranceTransactionsInNewYear #(fiscalYearId, reEncumber, totalRecords, amount, status)
   Scenario: verifyEncumbranceTransactionsInNewYear
-    # parameters: fiscalYearId, reEncumber, totalRecords, amount, status
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance And fiscalYearId==' + fiscalYearId + ' And encumbrance.reEncumber==' + reEncumber
     When method GET
@@ -29,9 +27,8 @@ Feature: Helper for "rollover-and-pay-invoice-using-past-fiscal-year.feature"
     And match each $.transactions[*].encumbrance.status == status
     And match each $.transactions[*].encumbrance.initialAmountEncumbered == amount
 
-  @VerifyPendingPaymentsWereCreatedInPastFiscalYear
+  @VerifyPendingPaymentsWereCreatedInPastFiscalYear #(fiscalYearId, invoiceLineId)
   Scenario: verifyPendingPaymentsWereCreatedInPastFiscalYear
-    # parameters: fiscalYearId, invoiceLineId
     Given path 'finance/transactions'
     And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' And transactionType==Pending payment'
     When method GET
