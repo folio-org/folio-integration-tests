@@ -8,14 +8,18 @@ Feature: Import records file
 
     @importFile
     Scenario: Import records file
-      * print 'Started loading from import-file feature: ', 'fineName: ', fileName, 'filePath: ', filePathFromSourceRoot, 'profileId: ', jobProfileInfo.id
+      * print 'Started loading from import-file feature: ', 'fileName: ', fileName, 'filePath: ', filePathFromSourceRoot, 'profileId: ', jobProfileInfo.id
+      * configure headers = null
+      * call login testUser
+      * def okapitokenUser = okapitoken
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(tenant)', 'Accept': '*/*' }
+      * configure headers = headersUser
 
       # Create uploadDefinition
       * def randomNumber = callonce random
       * def uiKey = fileName + randomNumber
 
       Given path 'data-import/uploadDefinitions'
-      And headers headersUser
       And request
       """
       {
@@ -37,7 +41,6 @@ Feature: Import records file
       * def jobExecutionId = createdUploadDefinition.fileDefinitions[0].jobExecutionId
 
       Given path 'data-import/uploadUrl'
-      And headers headersUser
       And param filename = fileName
       When method get
       Then status 200
@@ -46,7 +49,6 @@ Feature: Import records file
       And def uploadUrl = response.url
 
       Given url uploadUrl
-      And headers headersUser
       And header Content-Type = 'application/octet-stream'
       And request read(filePathFromSourceRoot)
       When method put
@@ -57,7 +59,6 @@ Feature: Import records file
       * url baseUrl
 
       Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'files', fileId, 'assembleStorageFile'
-      And headers headersUser
       And request { key: '#(s3UploadKey)', tags: ['#(s3Etag)'], uploadId: '#(s3UploadId)' }
       When method post
       Then status 204
@@ -65,7 +66,6 @@ Feature: Import records file
       * print 'Uploaded file: ', fileName, ' to S3 storage as key: ', s3UploadKey
 
       Given path 'data-import/uploadDefinitions', uploadDefinitionId
-      And headers headersUser
       When method get
       Then status 200
       And assert response.fileDefinitions[0].status == 'UPLOADED'
@@ -73,7 +73,6 @@ Feature: Import records file
 
       # Process file
       Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-      And headers headersUser
       And request
       """
       {

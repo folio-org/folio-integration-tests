@@ -13,7 +13,7 @@ Feature: Util feature to retrieve data import logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And param limit = logEntriesLimit
     And headers headersUser
-    And retry until response.entries.length == 1000
+    And retry until response.entries.length == logEntriesLimit
     When method GET
     Then status 200
     And def jobLogEntries = response
