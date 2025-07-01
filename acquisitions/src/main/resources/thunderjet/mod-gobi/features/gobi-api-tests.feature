@@ -362,7 +362,7 @@ Feature: GOBI api tests
     And headers headers
     When method GET
     Then status 200
-    And match $.poLines[0].checkinItems == true
+    And match $.poLines[0].checkinItems == false
     And match $.poLines[0].cost.listUnitPrice == 1.0
     And match $.poLines[0].cost.poLineEstimatedPrice == 1.0
     And match $.poLines[0].cost.currency == 'USD'
@@ -373,7 +373,7 @@ Feature: GOBI api tests
     And match $.poLines[0].orderFormat == 'Physical Resource'
     And match $.poLines[0].poLineNumber == poLineNumber
     And match $.poLines[0].requester == 'GOBI'
-    And match $.poLines[0].receiptStatus == 'Receipt Not Required'
+    And match $.poLines[0].receiptStatus == 'Awaiting Receipt'
     And match $.poLines[0].titleOrPackage == 'Lightspeed Magazine'
     And match $.poLines[0].tags.tagList[0] == 'po_6733180275-1'
     And match $.poLines[0].vendorDetail.vendorAccount == '891080'
