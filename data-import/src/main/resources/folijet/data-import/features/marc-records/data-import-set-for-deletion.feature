@@ -256,6 +256,11 @@ Feature: Set for deletion logic
     When method GET
     Then status 200
     And match response.deleted == false
+    ### MODINV-1232
+    # Verify the response contains parsedRecord with content and leader
+    And match response.parsedRecord.content.fields == '#present'
+    And match response.parsedRecord.content.leader == '#present'
+    ### END
     And match response.additionalInfo.suppressDiscovery == true
     And match response.state == 'ACTUAL'
     And match response.leaderRecordStatus == 'c'
@@ -325,11 +330,6 @@ Feature: Set for deletion logic
     And headers headersUser
     When method GET
     Then status 200
-    ### MODINV-1232
-    # Verify the response contains parsedRecord with content and leader
-    Then match response.parsedRecord.content.fields == '#present'
-    And match response.parsedRecord.content.leader == '#present'
-    ### END
     * def sourceRecordId = response.id
     * def updatedParsedContent = response.parsedRecord.content
     * def finalMarcJson = (typeof updatedParsedContent === 'string') ? JSON.parse(updatedParsedContent) : updatedParsedContent
