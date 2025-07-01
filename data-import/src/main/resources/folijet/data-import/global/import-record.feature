@@ -9,6 +9,7 @@ Feature: Util feature to import records
   ## Util scenario accept fileName and jobName
   @ImportRecord
   Scenario: Import record
+    # TODO: Add explicit parameters for jobProfileId
     * def fileName = fileName + '.mrc'
     * def jobName = jobName + '.json'
     # Use __arg to only get parameters explicitly passed to this feature call
