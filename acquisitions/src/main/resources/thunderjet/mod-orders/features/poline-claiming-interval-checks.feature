@@ -5,54 +5,33 @@ Feature: Claiming Active/Claiming interval checks
     * print karate.info.scenarioName
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
 
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
+  Scenario: Check that claiming fields are inherited from poLine to title
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
-
-  Scenario: Create finances
-    * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
-
-
-  Scenario: Create an order
-    * print "Create an order"
-    * def v = call createOrder { id: #(orderId) }
-
-  Scenario: Create an order line
-    * print "Create an order line"
-
+    # 1. Create Order and Po Line with claiming fields
+    * def v = call createOrder { 'id': '#(orderId)' }
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
     * set poLine.cost.listUnitPrice = 10
     * set poLine.claimingActive = true
     * set poLine.claimingInterval = 1
-
     Given path 'orders/order-lines'
     And request poLine
     When method POST
     Then status 201
 
-  Scenario: Validate claim in title
-    * print "Validate claim in title"
-    * print "Validate that metadata is populated"
-
+    # 2. Check that claiming fields are inherited to title and metadata is set
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -65,23 +44,34 @@ Feature: Claiming Active/Claiming interval checks
     And match title.metadata.createdDate != null
     And match title.metadata.createdByUserId != null
 
-  Scenario: Update claim for poLine
-    * print "Update claim for poLine"
+  Scenario: Update claiming values for poLine and title
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
+    # 1. Create Order and Po Line with claiming fields
+    * call createOrder { 'id': '#(orderId)' }
+    * copy poLine = orderLineTemplate
+    * set poLine.id = poLineId
+    * set poLine.purchaseOrderId = orderId
+    * set poLine.claimingActive = true
+    * set poLine.claimingInterval = 2
+    Given path 'orders/order-lines'
+    And request poLine
+    When method POST
+    Then status 201
+
+    # 2. Update Po Line claiming fields
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * def poLine = $
-    * set poLine.claimingInterval = 2
-
+    * set poLine.claimingInterval = 3
     Given path 'orders/order-lines', poLineId
     And request poLine
     When method PUT
     Then status 204
 
-  Scenario: Validate claim in title after poLine updated and update title
-    * print "Validate claim in title after poLine updated and update title"
-
+    # 3. Check that title claiming fields are updated
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -90,18 +80,16 @@ Feature: Claiming Active/Claiming interval checks
     * def title = $.titles[0]
     * def titleId = title.id
     And match title.claimingActive == true
-    And match title.claimingInterval == 2
+    And match title.claimingInterval == 3
 
-    # update claimingInterval in title
-    * set title.claimingInterval = 3
+    # 4. Update claimingInterval in title
+    * set title.claimingInterval = 5
     Given path 'orders/titles', titleId
     And request title
     When method PUT
     Then status 204
 
-  Scenario: Validate claim in poLine after title updated
-    * print "Validate claim in poLine after title updated"
-
+    # 5. Validate that claiming interval in poLine is untouched
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
