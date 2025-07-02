@@ -80,3 +80,4 @@ Feature: bulk operations integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
