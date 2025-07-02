@@ -13,29 +13,27 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 @FolioTest(team = "thunderjet", module = "mod-orders")
-public class OrdersApiTest extends TestBaseEureka {
+class OrdersApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final int THREAD_COUNT = 4;
 
   public OrdersApiTest() {
-    super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
-  public void ordersApiTestBeforeAll() {
+  void ordersApiTestBeforeAll() {
     System.setProperty("testTenant", "testorders" + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-orders/init-orders.feature");
   }
 
   @AfterAll
-  public void ordersApiTestAfterAll() {
+  void ordersApiTestAfterAll() {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
-
 
   @Test
   void bindPiece() {
@@ -82,8 +80,8 @@ public class OrdersApiTest extends TestBaseEureka {
     runFeatureTest("check-new-tags-in-central-tag-repository");
   }
 
-  @Disabled
   @Test
+  @Disabled
   void checkOrderLinesNumberRetrieveLimit() {
     runFeatureTest("check-order-lines-number-retrieve-limit");
   }
@@ -318,8 +316,8 @@ public class OrdersApiTest extends TestBaseEureka {
     runFeatureTest("piece-deletion-restriction");
   }
 
-  @Disabled
   @Test
+  @Disabled
   void pieceOperations() {
     runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
   }
@@ -444,4 +442,8 @@ public class OrdersApiTest extends TestBaseEureka {
     runFeatureTest("validate-pol-receipt-not-required-with-checkin-items");
   }
 
+  @Test
+  void createOrderWithSuppressInstanceFromDiscovery() {
+    runFeatureTest("create-order-with-suppress-instance-from-discovery");
+  }
 }

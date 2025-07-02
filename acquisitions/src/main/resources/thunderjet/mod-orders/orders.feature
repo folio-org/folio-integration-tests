@@ -260,3 +260,6 @@ Feature: mod-orders integration tests
 
   Scenario: Validate fund distribution for zero price
     * call read('features/validate-fund-distribution-for-zero-price.feature')
+
+  Scenario: Create order with suppress instance from discovery
+    * call read("features/create-order-with-suppress-instance-from-discovery.feature")
