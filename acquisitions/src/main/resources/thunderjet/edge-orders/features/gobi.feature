@@ -71,10 +71,10 @@ Feature: Edge Orders GOBI
     When method POST
     Then status 201
     And match responseHeaders['content-type'][0] == 'application/xml'
-    And match /Response/PoLineNumber == '10000-1'
+    And match /Response/PoLineNumber == '10001-1'
 
   Scenario: Check New Order Line
-    * def poLineNumber = '10000-1'
+    * def poLineNumber = '10001-1'
     Given path 'orders/order-lines'
     And param query = 'poLineNumber==' + poLineNumber
     And headers folioHeaders
