@@ -13,6 +13,7 @@ Feature: Change location when receiving a piece
     * def headersAdmin = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenAdmin)", "Accept": "application/json", "x-okapi-tenant": "#(testTenant)" }
 
     * callonce variables
+    * configure retry = { count: 10, interval: 5000 }
 
   @Positive
   Scenario: Change location when receiving a piece
@@ -103,9 +104,9 @@ Feature: Change location when receiving a piece
 
     # 6. Check piece location and get piece holdingId
     Given path "orders/pieces", pieceId
+    And retry until response.locationId == globalLocationsId2
     When method GET
     Then status 200
-    And match $.locationId == globalLocationsId2
     * def pieceHoldingId = $.holdingId
 
     # 7. Get the instanceId from the po line
