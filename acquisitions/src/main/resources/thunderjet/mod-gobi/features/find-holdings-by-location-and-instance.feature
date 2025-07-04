@@ -4,6 +4,9 @@ Feature: Find holdings by location and instance
     * print karate.info.scenarioName
     * url baseUrl
 
+    * callonce login testAdmin
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+
     * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
@@ -26,6 +29,10 @@ Feature: Find holdings by location and instance
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
+    * def orderId = response.purchaseOrders[0].id
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }
 
   Scenario: Create second order
     * def sample_po_2 = read('classpath:samples/mod-gobi/po-physical-annex-holding-2.xml')
@@ -44,6 +51,7 @@ Feature: Find holdings by location and instance
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
+    * def orderId = response.purchaseOrders[0].id
 
     # matched order lines requested and stored information
     Given path '/orders/order-lines'
@@ -61,3 +69,6 @@ Feature: Find holdings by location and instance
     When method GET
     Then status 200
     And match $.totalRecords == 1
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }

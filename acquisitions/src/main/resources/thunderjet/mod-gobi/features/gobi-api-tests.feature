@@ -4,6 +4,9 @@ Feature: GOBI api tests
     * print karate.info.scenarioName
     * url baseUrl
 
+    * callonce login testAdmin
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+
     * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, application/xml', 'x-okapi-tenant': '#(testTenant)' }
 
@@ -42,6 +45,7 @@ Feature: GOBI api tests
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
+    * def orderId = response.purchaseOrders[0].id
 
     # matched order lines requested and stored information
     Given path '/orders/order-lines'
@@ -65,6 +69,9 @@ Feature: GOBI api tests
     And match $.poLines[0].titleOrPackage == 'LIVING WITH THE UN[electronic resource] :AMERICAN RESPONSIBILITIES AND INTERNATIONAL ORDER.'
     And match $.poLines[0].vendorDetail.referenceNumbers[0].refNumber == '99952919209'
 
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }
+
   # Created for https://issues.folio.org/browse/MODGOBI-195
   Scenario: Try to create an order with invalid custom mapping and check error response
     # post invalid UnlistedPrintMonograph
@@ -83,6 +90,7 @@ Feature: GOBI api tests
     When method POST
     Then status 500
     And match responseHeaders['Content-Type'][0] == 'application/xml'
+
     # delete old UnlistedPrintMonograph
     Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
@@ -227,6 +235,7 @@ Feature: GOBI api tests
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
+    And def orderId1 = response.purchaseOrders[0].id
 
     # Verify order line data
     Given path '/orders/order-lines'
@@ -267,6 +276,7 @@ Feature: GOBI api tests
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == false
+    * def orderId2 = response.purchaseOrders[0].id
 
     # Verify order line data
     Given path '/orders/order-lines'
@@ -281,6 +291,10 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     When method DELETE
     Then status 200
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId1)" }
+    * def v = call cleanupOrderData { orderId: "#(orderId2)" }
 
   Scenario: Verify order fields after successful mapping update
     # Update mapping
@@ -307,6 +321,7 @@ Feature: GOBI api tests
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == false
+    * def orderId = response.purchaseOrders[0].id
 
     # Verify order line data
     Given path '/orders/order-lines'
@@ -328,6 +343,9 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     When method DELETE
     Then status 200
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }
 
   Scenario: Verify the lookup service integration endpoints work correctly
     # Update mapping
@@ -354,6 +372,7 @@ Feature: GOBI api tests
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
+    * def orderId = response.purchaseOrders[0].id
 
     # Verify order line data
     # New order is not created, as one already exists
@@ -384,6 +403,9 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     When method DELETE
     Then status 200
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }
 
   Scenario: Verify that fetching all mappings include custom ones
     # Verify all mappings are default at first
