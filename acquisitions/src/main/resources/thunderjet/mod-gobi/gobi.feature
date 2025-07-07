@@ -22,3 +22,7 @@ Feature: mod-gobi integration tests
 
   Scenario: Find holdings by location and instance
     * call read('features/find-holdings-by-location-and-instance.feature')
+
+  Scenario: Validate POL receipt not required with checkin items
+    * call read('features/validate-pol-receipt-not-required-with-checkin-items.feature')
+

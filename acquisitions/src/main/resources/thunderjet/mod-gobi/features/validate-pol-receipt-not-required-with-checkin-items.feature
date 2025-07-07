@@ -4,6 +4,9 @@ Feature: Validate POL receipt status with checkin items
     * print karate.info.scenarioName
     * url baseUrl
 
+    * callonce login testAdmin
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+
     * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
@@ -39,6 +42,10 @@ Feature: Validate POL receipt status with checkin items
     When method GET
     Then status 200
     And match $.poLines[0].checkinItems == true
+    * def orderId = $.poLines[0].purchaseOrderId
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }
 
   @Positive
   Scenario: Send order with receipt not required and checkin items true
@@ -65,9 +72,13 @@ Feature: Validate POL receipt status with checkin items
     When method GET
     Then status 200
     And match $.poLines[0].checkinItems == true
+    * def orderId = $.poLines[0].purchaseOrderId
 
     # Delete custom mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     When method DELETE
     Then status 200
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }

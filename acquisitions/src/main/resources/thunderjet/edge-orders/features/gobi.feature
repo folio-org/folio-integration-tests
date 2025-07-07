@@ -47,7 +47,7 @@ Feature: Edge Orders GOBI
     And match responseHeaders['content-type'][0] == 'application/json'
     And match $.Error.Code == "BAD_REQUEST"
 
-  Scenario: Validate POST
+  Scenario: Validate Create Order
     * def sample_po_1 = read('classpath:samples/edge-orders/gobi/po-listed-electronic-serial.xml')
     Given url edgeUrl
     And path 'orders/validate'
@@ -60,7 +60,7 @@ Feature: Edge Orders GOBI
     And match responseHeaders['content-type'][0] == 'application/xml'
     And match /test == 'POST - OK'
 
-  Scenario: POST
+  Scenario: Create and Check Order
     * def sample_po_2 = read('classpath:samples/edge-orders/gobi/po-listed-print-monograph.xml')
     Given url edgeUrl
     And path 'orders'
@@ -71,10 +71,9 @@ Feature: Edge Orders GOBI
     When method POST
     Then status 201
     And match responseHeaders['content-type'][0] == 'application/xml'
-    And match /Response/PoLineNumber == '10000-1'
+    * def poLineNumber = /Response/PoLineNumber
 
-  Scenario: Check New Order Line
-    * def poLineNumber = '10000-1'
+    Given url baseUrl
     Given path 'orders/order-lines'
     And param query = 'poLineNumber==' + poLineNumber
     And headers folioHeaders
