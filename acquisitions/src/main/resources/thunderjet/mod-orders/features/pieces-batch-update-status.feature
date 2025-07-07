@@ -174,12 +174,14 @@ Feature: Update Pieces statuses in batch
 
   @Positive
   Scenario: Update Piece statuses in batch with claimingInterval, internalNote and externalNote
-    # 1. Create order with 2 pieces
     * def orderId = call uuid
     * def poLineId = call uuid
-    * def v = callonce createOrder { id: '#(orderId)' }
-    * def v = callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
-    * def v = callonce createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
+    * def titleId = callonce uuid
+
+    # 1. Create order with 2 pieces
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
+    * def v = call createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
     * table pieceData
       | pieceId  | titleId | poLineId |
       | pieceId1 | titleId | poLineId |
