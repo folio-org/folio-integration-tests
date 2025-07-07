@@ -5,11 +5,11 @@ Feature: Util feature to get job executions by S3 key with retries
   Background:
     # do this again since, while waiting, the access token can time out
     * configure headers = null
-
     * call login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(tenant)', 'Accept': '*/*' }
     * configure headers = headersUser
+
     * url baseUrl
     * configure retry = { interval: 30000, count: 50 }
 
