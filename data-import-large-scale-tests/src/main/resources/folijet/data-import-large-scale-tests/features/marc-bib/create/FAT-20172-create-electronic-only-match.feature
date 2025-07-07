@@ -53,6 +53,10 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions
+    * match each jobExecutions contains { "status": "COMMITTED" }
+    * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
+    * match each jobExecutions contains { "runBy": "#present" }
+    * match each jobExecutions contains { "progress": "#present" }
 
     # Update headers with new token after import
     * call login testUser
@@ -60,11 +64,6 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(tenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * print 'Headers updated in main flow with new token.'
-
-    * match each jobExecutions contains { "status": "COMMITTED" }
-    * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
-    * match each jobExecutions contains { "runBy": "#present" }
-    * match each jobExecutions contains { "progress": "#present" }
 
     # Verify that entities have been created
     * call pause 5000
