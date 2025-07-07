@@ -173,6 +173,42 @@ Feature: Update Pieces statuses in batch
     * def v = call verifyPieceReceivingStatus verifyPieceData
 
   @Positive
+  Scenario: Update Piece statuses in batch with claimingInterval, internalNote and externalNote
+    # 1. Create order with 2 pieces
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def v = callonce createOrder { id: '#(orderId)' }
+    * def v = callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
+    * table pieceData
+      | pieceId  | titleId | poLineId |
+      | pieceId1 | titleId | poLineId |
+      | pieceId2 | titleId | poLineId |
+    * def v = callonce createPiece pieceData
+
+    # 2. Update Pieces statuses in batch with additional fields
+    Given path 'orders/pieces-batch/status'
+    And request { pieceIds: ["#(pieceId1)", "#(pieceId2)"], receivingStatus: 'Claim delayed', claimingInterval: 15, internalNote: 'Internal test note', externalNote: 'External test note' }
+    When method PUT
+    Then status 204
+
+    # 3. Verify Piece status and fields are updated correctly
+    Given path 'orders/pieces', pieceId1
+    When method GET
+    Then status 200
+    And match $.receivingStatus == 'Claim delayed'
+    And match $.claimingInterval == 15
+    And match $.internalNote == 'Internal test note'
+    And match $.externalNote == 'External test note'
+
+    Given path 'orders/pieces', pieceId2
+    When method GET
+    Then status 200
+    And match $.receivingStatus == 'Claim delayed'
+    And match $.claimingInterval == 15
+    And match $.internalNote == 'Internal test note'
+    And match $.externalNote == 'External test note'
+
+  @Positive
   Scenario: Update 100 pieces statuses in batch to delay claim, late claim and unreceivable
     ## Relogin to avoid login expry problem
     * call login testAdmin
