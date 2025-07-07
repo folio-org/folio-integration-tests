@@ -176,7 +176,7 @@ Feature: Update Pieces statuses in batch
   Scenario: Update Piece statuses in batch with claimingInterval, internalNote and externalNote
     * def orderId = call uuid
     * def poLineId = call uuid
-    * def titleId = callonce uuid
+    * def titleId = call uuid
 
     # 1. Create order with 2 pieces
     * def v = call createOrder { id: '#(orderId)' }
@@ -186,7 +186,7 @@ Feature: Update Pieces statuses in batch
       | pieceId  | titleId | poLineId |
       | pieceId1 | titleId | poLineId |
       | pieceId2 | titleId | poLineId |
-    * def v = callonce createPiece pieceData
+    * def v = call createPiece pieceData
 
     # 2. Update Pieces statuses in batch with additional fields
     Given path 'orders/pieces-batch/status'
