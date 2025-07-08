@@ -61,7 +61,7 @@ Feature: linking-records tests
     * set record.relatedRecordVersion = 4
 
     * def field = karate.jsonPath(record, "$.fields[?(@.tag=='010')]")[0]
-    * set field.content = 'Updated010'
+    * set field.content = '$a n 00001265'
     * remove record.fields[?(@.tag=='010')]
     * record.fields.push(field)
     * set record._actionType = 'edit'
@@ -78,7 +78,7 @@ Feature: linking-records tests
     And retry until response.generation == 10
     When method GET
     Then status 200
-    And match response.parsedRecord.content.fields[*].100.subfields[*].a contains 'Updated010'
+    And match response.parsedRecord.content.fields[*].100.subfields[*].0 contains 'http://id.loc.gov/authorities/names/n00001265'
 
   @Positive
   Scenario: Delete linking authority - should remove $9 subfield from bib record
