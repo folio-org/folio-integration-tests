@@ -67,13 +67,6 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * configure headers = headersUser
     * print 'Headers updated in main flow with new token.'
 
-    # Update headers with new token after import
-    * call login testUser
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(tenant)', 'Accept': '*/*' }
-    * configure headers = headersUser
-    * print 'Headers updated in main flow with new token.'
-
     # Verify that entities have been created
     * call pause 5000
     * def logEntriesLimit = jobExecutions[0].progress.current
