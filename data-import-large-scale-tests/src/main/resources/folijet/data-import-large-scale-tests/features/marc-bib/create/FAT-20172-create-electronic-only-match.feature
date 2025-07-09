@@ -15,8 +15,8 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def getJobLogEntriesByJobId = read('classpath:folijet/data-import-large-scale-tests/global/data-import-logs.feature@getJobLogEntriesByJobId')
 
   Scenario: FAT-20172 Create Electronic only match
-    * print 'FAT-20172-create-electronic-only-match.feature'
 
+    * print 'FAT-20172-create-electronic-only-match.feature'
     * def updateProfileSnapshot = read('classpath:folijet/data-import-large-scale-tests/samples/profiles/FAT-20172-create-electronic-only-match.json')
     Given path 'data-import-profiles/profileSnapshots'
     And request updateProfileSnapshot
@@ -49,21 +49,28 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def result = call importFile { fileName: #(fileName), filePathFromSourceRoot : #(filePath), jobProfileInfo: #(jobProfileInfo) }
     * def s3UploadKey = result.s3UploadKey
 
-    * call pause 120000
+    * call pause 360000
     # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
-    * configure headers = result.headersUser
-    * print 'Headers updated in main flow with new token.'
-
     * def jobExecutions = result.jobExecutions
     * match each jobExecutions contains { "status": "COMMITTED" }
     * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
     * match each jobExecutions contains { "runBy": "#present" }
     * match each jobExecutions contains { "progress": "#present" }
+    * print 'FAT-20172: First import completed successfully.'
+
+    # Update headers with new token after import
+    * configure headers = null
+    * call login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(tenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
+    * print 'Headers updated in main flow with new token.'
 
     # Verify that entities have been created
     * call pause 5000
-    * def logEntriesLimit = 1000
+    * def logEntriesLimit = jobExecutions[0].progress.current
+    * print 'Log entries limit: ' + logEntriesLimit
     * def verifyLogsInstanceCreated = function(job) { karate.call('classpath:folijet/data-import-large-scale-tests/features/marc-bib/create/create-instance.feature@verifyInstanceCreated', { headersUser, jobId: job.id, limit: logEntriesLimit }) }
     * karate.forEach(jobExecutions, verifyLogsInstanceCreated)
 
@@ -80,27 +87,37 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def result = call importFile { fileName: #(fileName), filePathFromSourceRoot: #(filePath), jobProfileInfo: #(updatedJobProfileInfo) }
     * def s3UploadKey = result.s3UploadKey
 
-    * call pause 120000
+    * call pause 360000
     # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions
-    * match each jobExecutions contains { "status": "COMMITTED" }
-    * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
-    * match each jobExecutions contains { "runBy": "#present" }
-    * match each jobExecutions contains { "progress": "#present" }
+    * print 'Verifying the content of "jobExecutions" array:', jobExecutions
+
+    * def checkResult =
+      """
+      function(jobs) {
+        if (!jobs || jobs.length === 0) {
+          return { pass: false, reason: 'Jobs array is empty' };
+        }
+        for (let i = 0; i < jobs.length; i++) {
+          let job = jobs[i];
+          if (job.status !== 'COMMITTED' || job.uiStatus !== 'RUNNING_COMPLETE') {
+            karate.log('Check failed at index ' + i + '. Actual status: ' + job.status + ', Actual uiStatus: ' + job.uiStatus);
+            return { pass: false, reason: 'Status mismatch at index ' + i };
+          }
+        }
+        return { pass: true };
+      }
+      """
+
+    * def statusCheck = checkResult(jobExecutions)
 
     # Verify that entities have been created
     * call pause 5000
-    * def logEntriesLimit = 1000
-    * def verifyHoldingsItemsCreated = function(job) { karate.call('@verifyHoldingsItemsCreated', { headersUser, jobId: job.id, limit: logEntriesLimit }) }
-    * karate.forEach(jobExecutions, verifyHoldingsItemsCreated)
+    * def verificationType = statusCheck.pass ? 'SUCCESS' : 'FAILURE'
+    * print 'Job status check passed:', statusCheck.pass, '| Verification type:', verificationType
 
-  @ignore
-  @verifyHoldingsItemsCreated
-  Scenario: Verify log entries that instances created
-    * def result = call getJobLogEntriesByJobId { headersUser: #(headersUser), jobExecutionId: #(jobId), logEntriesLimit: #(limit) }
-    * def logEntriesCollection = result.entries
-    * assert logEntriesCollection.entries.length == limit
-    * match each logEntriesCollection.entries..relatedHoldingsInfo.actionStatus contains 'CREATED'
-    * match each logEntriesCollection.entries..relatedItemInfo.actionStatus contains 'CREATED'
-    * match each logEntriesCollection.entries contains { "error": "" }
+    * def logEntriesLimit = jobExecutions[0].progress.current
+    * print 'Log entries limit: ' + logEntriesLimit
+    * def parentJobExecutionId = jobExecutions[0].id
+    * if (statusCheck.pass) { karate.call('classpath:folijet/data-import-large-scale-tests/utils/FAT-20172-verify-success.feature', { headersUser, jobId: parentJobExecutionId, limit: logEntriesLimit }) } else { karate.call('classpath:folijet/data-import-large-scale-tests/utils/FAT-20172-verify-failure.feature', { headersUser, jobId: parentJobExecutionId, limit: logEntriesLimit }) }

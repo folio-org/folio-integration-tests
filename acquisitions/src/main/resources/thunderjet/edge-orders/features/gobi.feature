@@ -73,6 +73,7 @@ Feature: Edge Orders GOBI
     And match responseHeaders['content-type'][0] == 'application/xml'
     * def poLineNumber = /Response/PoLineNumber
 
+    Given url baseUrl
     Given path 'orders/order-lines'
     And param query = 'poLineNumber==' + poLineNumber
     And headers folioHeaders

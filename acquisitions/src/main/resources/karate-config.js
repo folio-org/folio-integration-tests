@@ -100,6 +100,7 @@ function fn() {
     unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
     cancelOrder: read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature'),
+    deleteOrder: read('classpath:thunderjet/mod-orders/reusable/delete-order.feature'),
     getOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/get-order-line.feature'),
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
     createOrderLineWithInstance: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line-with-instance.feature'),
@@ -141,6 +142,9 @@ function fn() {
 
     // edge-orders
     checkEndpoint: karate.read('classpath:thunderjet/edge-orders/reusable/check-endpoint.feature'),
+    
+    // gobi
+    cleanupOrderData: karate.read('classpath:thunderjet/mod-gobi/reusable/cleanup-order-data.feature'),
 
     // define global functions
     uuid: function () {
