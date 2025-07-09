@@ -35,12 +35,12 @@ Feature: linking-records tests
     * sleep(5000)
 
     # retrieve bib record
-    Given path '/source-storage/records'
-    And param state = 'ACTUAL'
+    Given path '/source-storage/records', instanceId, 'formatted'
+    And param idType = 'INSTANCE'
+    And retry until response.generation == 9
     When method GET
     Then status 200
-    And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].a contains 'Updated'
+    And match response.parsedRecord.content.fields[*].100.subfields[*].a contains 'Updated'
 
     # retrieve instance record
     Given path '/instance-storage/instances', instanceId
@@ -61,7 +61,7 @@ Feature: linking-records tests
     * set record.relatedRecordVersion = 4
 
     * def field = karate.jsonPath(record, "$.fields[?(@.tag=='010')]")[0]
-    * set field.content = 'Updated'
+    * set field.content = '$a n 00001265'
     * remove record.fields[?(@.tag=='010')]
     * record.fields.push(field)
     * set record._actionType = 'edit'
@@ -73,24 +73,23 @@ Feature: linking-records tests
     Then status 202
 
     # retrieve bib srs record
-    Given path '/source-storage/records'
-    And param state = 'ACTUAL'
+    Given path '/source-storage/records', instanceId, 'formatted'
+    And param idType = 'INSTANCE'
+    And retry until response.generation == 10
     When method GET
     Then status 200
-    And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].a contains 'Updated'
+    And match response.parsedRecord.content.fields[*].100.subfields[*].0 contains 'http://id.loc.gov/authorities/names/n00001265'
 
   @Positive
   Scenario: Delete linking authority - should remove $9 subfield from bib record
     # retrieve bib srs record - should have authority link
-    Given path '/source-storage/records'
-    And param state = 'ACTUAL'
+    Given path '/source-storage/records', instanceId, 'formatted'
+    And param idType = 'INSTANCE'
     When method GET
     Then status 200
-    And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].100 != null
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].0 != []
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 != []
+    And match response.parsedRecord.content.fields[*].100 != null
+    And match response.parsedRecord.content.fields[*].100.subfields[*].0 != []
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 != []
 
     # delete linking authority
     Given path 'authority-storage/authorities', authorityId
@@ -100,10 +99,10 @@ Feature: linking-records tests
     And eval if (responseStatus == 408) sleep(20000)
 
     # retrieve bib srs record - should delete authority link
-    Given path '/source-storage/records'
-    And param state = 'ACTUAL'
+    Given path '/source-storage/records', instanceId, 'formatted'
+    And param idType = 'INSTANCE'
+    And retry until response.generation == 11
     When method GET
     Then status 200
-    And def bibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match bibRecord.parsedRecord.content.fields[*].100 != []
-    And match bibRecord.parsedRecord.content.fields[*].100.subfields[*].9 == []
+    And match response.parsedRecord.content.fields[*].100 != []
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 == []
