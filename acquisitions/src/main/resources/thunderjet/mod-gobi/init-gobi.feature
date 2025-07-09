@@ -30,18 +30,19 @@ Feature: Initialize mod-gobi integration tests
       | 'mod-users'                 |
 
     * table userPermissions
-      | name                                                          |
-      | 'gobi.custom-mappings.collection.get'                         |
-      | 'gobi.custom-mappings.item.delete'                            |
-      | 'gobi.custom-mappings.item.get'                               |
-      | 'gobi.custom-mappings.item.post'                              |
-      | 'gobi.custom-mappings.item.put'                               |
-      | 'gobi.orders.item.post'                                       |
-      | 'gobi.validate.item.get'                                      |
-      | 'gobi.validate.item.post'                                     |
-      | 'inventory-storage.holdings.collection.get'                   |
-      | 'orders.collection.get'                                       |
-      | 'orders.po-lines.collection.get'                              |
+      | name                                        |
+      | 'gobi.custom-mappings.collection.get'       |
+      | 'gobi.custom-mappings.item.delete'          |
+      | 'gobi.custom-mappings.item.get'             |
+      | 'gobi.custom-mappings.item.post'            |
+      | 'gobi.custom-mappings.item.put'             |
+      | 'gobi.orders.item.post'                     |
+      | 'gobi.validate.item.get'                    |
+      | 'gobi.validate.item.post'                   |
+      | 'inventory-storage.holdings.collection.get' |
+      | 'inventory-storage.instances.item.get'      |
+      | 'orders.collection.get'                     |
+      | 'orders.po-lines.collection.get'            |
 
     # testAdmin is only used to initialize global data
     * table adminPermissions

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Validate POL suppress instance from discovery
 
   Background:
@@ -28,7 +29,7 @@ Feature: Validate POL suppress instance from discovery
     Then status 201
     * def poLineNumber = /Response/PoLineNumber
 
-    # Verify order line was created with checkinItems flag
+    # Verify order line
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
     And headers headersUser
@@ -36,6 +37,14 @@ Feature: Validate POL suppress instance from discovery
     Then retry until responseStatus == 200
     And match $.poLines[0].suppressInstanceFromDiscovery == true
     * def orderId = $.poLines[0].purchaseOrderId
+    * def localInstanceId1 = $.poLines[0].instanceId
+
+    # Verify instance
+     Given path '/instance-storage/instances/', localInstanceId1
+     And headers headersUser
+     When method GET
+     Then retry until responseStatus == 200
+     And match $.discoverySuppress == true
 
     # Cleanup order data
     * def v = call cleanupOrderData { orderId: "#(orderId)" }
@@ -50,7 +59,7 @@ Feature: Validate POL suppress instance from discovery
     Then status 201
     * def poLineNumber = /Response/PoLineNumber
 
-    # Verify order line was created with checkinItems flag
+    # Verify order line
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
     And headers headersUser
@@ -58,6 +67,14 @@ Feature: Validate POL suppress instance from discovery
     Then retry until responseStatus == 200
     And match $.poLines[0].suppressInstanceFromDiscovery == false
     * def orderId = $.poLines[0].purchaseOrderId
+    * def localInstanceId2 = $.poLines[0].instanceId
+
+    # Verify instance
+    Given path '/instance-storage/instances/', localInstanceId2
+    And headers headersUser
+    When method GET
+    Then retry until responseStatus == 200
+    And match $.discoverySuppress == false
 
     # Cleanup order data
     * def v = call cleanupOrderData { orderId: "#(orderId)" }
@@ -72,7 +89,7 @@ Feature: Validate POL suppress instance from discovery
     Then status 201
     * def poLineNumber = /Response/PoLineNumber
 
-    # Verify order line was created with checkinItems flag
+    # Verify order line
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
     And headers headersUser
@@ -80,6 +97,14 @@ Feature: Validate POL suppress instance from discovery
     Then retry until responseStatus == 200
     And match $.poLines[0].suppressInstanceFromDiscovery == false
     * def orderId = $.poLines[0].purchaseOrderId
+    * def localInstanceId3 = $.poLines[0].instanceId
+
+    # Verify instance
+    Given path '/instance-storage/instances/', localInstanceId3
+    And headers headersUser
+    When method GET
+    Then retry until responseStatus == 200
+    And match $.discoverySuppress == false
 
     # Cleanup order data
     * def v = call cleanupOrderData { orderId: "#(orderId)" }
