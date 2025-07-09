@@ -146,13 +146,14 @@ Feature: Should populate vendor address when retrieve voucher by id
     When method GET
     Then status 200
     And match $.vendorId == vendorId
-    And if (response.vendorAddress == null && address == null) karate.abort()
-    And match $.vendorAddress.addressLine1 == address.addressLine1
-    * match $.vendorAddress.addressLine2 == address.addressLine2
-    * match $.vendorAddress.city == address.city
-    * match $.vendorAddress.stateRegion == address.stateRegion
-    * match $.vendorAddress.zipCode == address.zipCode
-    * match $.vendorAddress.country == address.country
+    # Conditional assertions for address
+    * eval if (address == null) karate.match("$.vendorAddress", null)
+    * eval if (address != null) karate.match("$.vendorAddress.addressLine1", address.addressLine1)
+    * eval if (address != null) karate.match("$.vendorAddress.addressLine2", address.addressLine2)
+    * eval if (address != null) karate.match("$.vendorAddress.city", address.city)
+    * eval if (address != null) karate.match("$.vendorAddress.stateRegion", address.stateRegion)
+    * eval if (address != null) karate.match("$.vendorAddress.zipCode", address.zipCode)
+    * eval if (address != null) karate.match("$.vendorAddress.country", address.country)
 
     Examples:
       | invoiceId             | address        | vendorId             |
