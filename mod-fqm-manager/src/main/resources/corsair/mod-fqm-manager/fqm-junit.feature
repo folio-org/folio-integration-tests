@@ -31,11 +31,13 @@ Feature: mod-fqm-manager integration tests
       | 'circulation.loans.collection.get'                          |
       | 'configuration.entries.collection.get'                      |
       | 'departments.collection.get'                                |
+      | 'finance.budgets.collection.get'                            |
       | 'finance.exchange-rate.item.get'                            |
       | 'finance.expense-classes.collection.get'                    |
       | 'finance.fiscal-years.collection.get'                       |
       | 'finance.fund-types.collection.get'                         |
       | 'finance.funds.collection.get'                              |
+      | 'finance.groups.collection.get'                             |
       | 'finance.ledgers.collection.get'                            |
       | 'finance.transactions.collection.get'                       |
       | 'fqm.entityTypes.collection.get'                            |
@@ -44,12 +46,15 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.materializedViews.post'                                |
       | 'fqm.migrate.post'                                          |
       | 'fqm.query.all'                                             |
+      | 'fqm.query.async.delete'                                    |
+      | 'fqm.query.async.post'                                      |
       | 'fqm.query.async.results.get'                               |
       | 'fqm.query.async.results.post'                              |
       | 'fqm.query.async.results.query.get'                         |
       | 'fqm.query.async.results.sortedids.get'                     |
       | 'fqm.query.privileged.async.results.post'                   |
       | 'fqm.query.purge.post'                                      |
+      | 'fqm.query.sync.get'                                        |
       | 'fqm.version.get'                                           |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.classification-types.collection.get'     |
@@ -93,7 +98,9 @@ Feature: mod-fqm-manager integration tests
       | 'organizations-storage.organizations.item.post'             |
       | 'organizations.organizations.collection.get'                |
       | 'organizations.organizations.item.get'                      |
+      | 'patron-blocks.user-summary.item.get'                       |
       | 'search.instances.collection.get'                           |
+      | 'source-storage.records.collection.get'                     |
       | 'user-tenants.collection.get'                               |
       | 'usergroups.collection.get'                                 |
       | 'users.collection.get'                                      |
@@ -102,14 +109,6 @@ Feature: mod-fqm-manager integration tests
       | 'users.item.post'                                           |
       | 'voucher.voucher-lines.collection.get'                      |
       | 'voucher.vouchers.collection.get'                           |
-      | 'fqm.query.sync.get'                                        |
-      | 'fqm.query.purge.post'                                      |
-      | 'fqm.query.async.results.query.get'                         |
-      | 'fqm.query.async.post'                                      |
-      | 'fqm.query.async.delete'                                    |
-      | 'finance.budgets.collection.get'                            |
-      | 'finance.groups.collection.get'                             |
-
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
