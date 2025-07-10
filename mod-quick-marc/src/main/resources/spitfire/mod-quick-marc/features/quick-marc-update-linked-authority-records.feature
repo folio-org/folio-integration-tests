@@ -14,13 +14,15 @@ Feature: update of two authorities records linked to one instance tests
 
   Scenario: Should unlink bib record on first authority field update making it unlinkable
     # retrieve marc bib record and check it contains a link
-    Given path '/source-storage/records'
-    And param state = 'ACTUAL'
+    Given path '/source-storage/records', instanceId, 'formatted'
+    And param idType = 'INSTANCE'
     When method GET
     Then status 200
-    And def srsBibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match srsBibRecord.parsedRecord.content.fields[*].100 != null
-    And match srsBibRecord.parsedRecord.content.fields[*].100.subfields[*].9 != []
+    And match response.parsedRecord.content.fields[*].100 != null
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 != []
+
+    # save bib snapshotId to use for retry later
+    * def bibSnapshotId = response.snapshotId
 
     # retrieve quick marc authority record
     Given path '/records-editor/records'
@@ -46,18 +48,19 @@ Feature: update of two authorities records linked to one instance tests
     # count links
     Given path '/links/authorities/bulk/count'
     And request {"ids": [#(authorityId1)]}
+    And retry until response.links[0].totalLinks == 0
     When method POST
     Then status 200
     Then match response.links[0].totalLinks == 0
 
     # retrieve marc bib record
-    Given path '/source-storage/records'
-    And param state = 'ACTUAL'
+    Given path '/source-storage/records', instanceId, 'formatted'
+    And param idType = 'INSTANCE'
+    And retry until response.snapshotId != bibSnapshotId
     When method GET
     Then status 200
-    And def srsBibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match srsBibRecord.parsedRecord.content.fields[*].100 != null
-    And match srsBibRecord.parsedRecord.content.fields[*].100.subfields[*].9 == []
+    And match response.parsedRecord.content.fields[*].100 != null
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 == []
 
     # retrieve quick marc authority record
     Given path '/records-editor/records'
@@ -93,13 +96,15 @@ Feature: update of two authorities records linked to one instance tests
 
   Scenario: Should unlink bib record on second authority field update making it unlinkable
     # retrieve marc bib record and check it contains a link
-    Given path '/source-storage/records'
-    And param state = 'ACTUAL'
+    Given path '/source-storage/records', instanceId, 'formatted'
+    And param idType = 'INSTANCE'
     When method GET
     Then status 200
-    And def srsBibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match srsBibRecord.parsedRecord.content.fields[*].240 != null
-    And match srsBibRecord.parsedRecord.content.fields[*].240.subfields[*].9 != []
+    And match response.parsedRecord.content.fields[*].240 != null
+    And match response.parsedRecord.content.fields[*].240.subfields[*].9 != []
+
+    # save bib snapshotId to use for retry later
+    * def bibSnapshotId = response.snapshotId
 
     # retrieve quick marc authority record
     Given path '/records-editor/records'
@@ -125,15 +130,16 @@ Feature: update of two authorities records linked to one instance tests
     # count links
     Given path '/links/authorities/bulk/count'
     And request {"ids": [#(authorityId2)]}
+    And retry until response.links[0].totalLinks == 0
     When method POST
     Then status 200
     Then match response.links[0].totalLinks == 0
 
     # retrieve marc bib record
-    Given path '/source-storage/records'
-    And param state = 'ACTUAL'
+    Given path '/source-storage/records', instanceId, 'formatted'
+    And param idType = 'INSTANCE'
+    And retry until response.snapshotId != bibSnapshotId
     When method GET
     Then status 200
-    And def srsBibRecord = response.records.find(x => x.externalIdsHolder.instanceId==instanceId)
-    And match srsBibRecord.parsedRecord.content.fields[*].240 != null
-    And match srsBibRecord.parsedRecord.content.fields[*].240.subfields[*].9 == []
+    And match response.parsedRecord.content.fields[*].240 != null
+    And match response.parsedRecord.content.fields[*].240.subfields[*].9 == []

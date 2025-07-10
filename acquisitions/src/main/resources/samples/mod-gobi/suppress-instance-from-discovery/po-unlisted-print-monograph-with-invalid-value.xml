@@ -1,0 +1,50 @@
+<PurchaseOrder>
+    <CustomerDetail>
+        <BaseAccount>8910</BaseAccount>
+        <SubAccount>891080</SubAccount>
+    </CustomerDetail>
+    <Order>
+        <UnlistedPrintMonograph>
+            <collection>
+                <record>
+                    <leader>00000nYs a2200000u  4500</leader>
+                    <datafield tag="245" ind1="0" ind2="0">
+                        <subfield code="a">Lightspeed Magazine</subfield>
+                    </datafield>
+                </record>
+            </collection>
+            <OrderDetail>
+                <FundCode>USHIST</FundCode>
+                <SuppressFromDiscovery>true</SuppressFromDiscovery>
+                <Location>LOC3</Location>
+                <Quantity>1</Quantity>
+                <YBPOrderKey>99974828479</YBPOrderKey>
+                <OrderPlaced>2019-09-05T15:38:55</OrderPlaced>
+                <ListPrice>
+                    <Amount>1.0</Amount>
+                    <Currency>USD</Currency>
+                </ListPrice>
+                <LocalData>
+                    <Description>LocalData1</Description>
+                    <Value>suf</Value>
+                </LocalData>
+                <LocalData>
+                    <Description>LocalData2</Description>
+                    <Value>pref</Value>
+                </LocalData>
+                <LocalData>
+                    <Description>LocalData3</Description>
+                    <Value>GOBI</Value>
+                </LocalData>
+                <LocalData>
+                    <Description>LocalData4</Description>
+                    <Value>PO_6733180275-1</Value>
+                </LocalData>
+                <LocalData>
+                    <Description>LocalData5</Description>
+                    <Value>Print</Value>
+                </LocalData>
+            </OrderDetail>
+        </UnlistedPrintMonograph>
+    </Order>
+</PurchaseOrder>

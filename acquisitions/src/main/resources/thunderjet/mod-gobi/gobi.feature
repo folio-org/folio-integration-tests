@@ -26,3 +26,5 @@ Feature: mod-gobi integration tests
   Scenario: Validate POL receipt not required with checkin items
     * call read('features/validate-pol-receipt-not-required-with-checkin-items.feature')
 
+  Scenario: Validate POL suppress instance from discovery
+    * call read('features/validate-pol-suppress-instance-from-discovery.feature')
