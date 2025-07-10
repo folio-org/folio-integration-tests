@@ -19,6 +19,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-organizations-storage' |
       | 'mod-entities-links'        |
       | 'mod-pubsub'                |
+      | 'mod-patron-blocks'         |
 
     * table userPermissions
       | name                                                        |
