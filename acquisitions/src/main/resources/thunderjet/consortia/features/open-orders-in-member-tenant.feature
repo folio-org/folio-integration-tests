@@ -1,3 +1,4 @@
+@parallel=false
 # MODORDERS-1310
 Feature: Open orders in member tenant, share instance in one case
 
@@ -10,6 +11,8 @@ Feature: Open orders in member tenant, share instance in one case
     * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
     * def headersUniUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
     * configure headers = headersUniUser
+
+    * configure retry = { interval: 5000, count: 5 }
 
     * callonce variables
     * callonce variablesCentral
@@ -34,6 +37,7 @@ Feature: Open orders in member tenant, share instance in one case
 
     * def v = callonce createOrganization { id: '#(vendorId)', name: 'University Vendor', code: 'UV', isVendor: true, status: 'Active' }
 
+    # Every line below is called by each test cleanly
     * def orderId = call uuid
     * def poLineId = call uuid
 
@@ -54,69 +58,15 @@ Feature: Open orders in member tenant, share instance in one case
     * set orderLine.physical.materialSupplier = vendorId
     * set orderLine.eresource.accessProvider = vendorId
 
-
-  Scenario: Create and open an order in university tenant, no central instance
-    # Create and open order in university tenant
-    * def v = call createOrder { id: '#(orderId)', vendor: '#(vendorId)' }
-
-    Given path 'orders/order-lines'
-    And request orderLine
-    When method POST
-    Then status 201
-
-    * def v = call openOrder { orderId: '#(orderId)' }
-
-    # Get the instance id
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    And match $.instanceId == '#present'
-    * def poLineInstanceId = $.instanceId
-
-    # Verify instance, holdings and items in university tenant
-    Given path 'inventory/instances', poLineInstanceId
-    When method GET
-    Then status 200
-
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
-    When method GET
-    Then status 200
-    And match $.totalRecords == 2
-
-    Given path 'inventory/items'
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    When method GET
-    Then status 200
-    And match $.totalRecords == 2
-
-    # Verify nothing was created in the central tenant
+  @Positive
+  Scenario: Create and open an order in university tenant (with a central instance)
+    # 1. Create an instance in central tenant
     * configure headers = headersCentral
-    Given path 'inventory/instances', poLineInstanceId
-    When method GET
-    Then status 404
-
-    Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + poLineInstanceId
-    When method GET
-    Then status 200
-    And match $.totalRecords == 0
-
-    Given path 'inventory/items'
-    And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    When method GET
-    Then status 200
-    And match $.totalRecords == 0
-
-
-  Scenario: Create and open an order in university tenant, with a central instance
-    # Create an instance in central tenant
     * def instanceId = call uuid
-    * configure headers = headersCentral
     * def identifiers = [ { value: '12345', identifierTypeId: '#(globalISBNIdentifierTypeId)' } ]
     * def v = call createInstance { id: '#(instanceId)', title: 'instance title', instanceTypeId: '#(globalInstanceTypeId)', identifiers: '#(identifiers)' }
 
-    # Create and open order in university tenant (using a matching productId)
+    # 2. Create and open order in university tenant (using a matching productId)
     * configure headers = headersUniUser
     * def v = call createOrder { id: '#(orderId)', vendor: '#(vendorId)' }
 
@@ -127,19 +77,99 @@ Feature: Open orders in member tenant, share instance in one case
 
     * def v = call openOrder { orderId: '#(orderId)' }
 
-    # Verify shadow instance, holdings and items in university tenant
+    # 3. Verify shadow instance, holdings and items in university tenant
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    And match $.instanceId == instanceId
+
     Given path 'inventory/instances', instanceId
+    Then retry until responseStatus == 200
+    When method GET
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    Then retry until responseStatus == 200
+    And retry until response.totalRecords == 2
+    When method GET
+
+    Given path 'inventory/items'
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    Then retry until responseStatus == 200
+    And retry until response.totalRecords == 2
+    When method GET
+
+    # 4. Unopen order with delete holdings
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+
+    * def orderResponse = $
+    * set orderResponse.workflowStatus = 'Pending'
+    * remove order.poLines
+
+    Given path 'orders/composite-orders', orderId
+    And param deleteHoldings = true
+    And request orderResponse
+    When method PUT
+    Then status 204
+
+    # 5. Delete instance to avoid the instance being used by the next test
+    * configure headers = headersCentral
+    Given path 'inventory/instances', instanceId
+    When method DELETE
+    Then status 204
+
+  @Positive
+  Scenario: Create and open an order in university tenant (with no central instance)
+    # 1. Create and open order in university tenant
+    * def v = call createOrder { id: '#(orderId)', vendor: '#(vendorId)' }
+
+    Given path 'orders/order-lines'
+    And request orderLine
+    When method POST
+    Then status 201
+
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    # 2. Get the instance id
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    And match $.instanceId == '#present'
+    * def poLineInstanceId = $.instanceId
+
+    # 3. Verify instance, holdings and items in university tenant
+    Given path 'inventory/instances', poLineInstanceId
     When method GET
     Then status 200
 
     Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + instanceId
+    And param query = 'instanceId==' + poLineInstanceId
+    And retry until response.totalRecords == 2
     When method GET
     Then status 200
-    And match $.totalRecords == 2
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    And retry until response.totalRecords == 2
     When method GET
     Then status 200
-    And match $.totalRecords == 2
+
+    # 4. Verify nothing was created in the central tenant
+    * configure headers = headersCentral
+    Given path 'inventory/instances', poLineInstanceId
+    Then retry until responseStatus == 404
+    When method GET
+
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + poLineInstanceId
+    And retry until response.totalRecords == 0
+    When method GET
+    Then status 200
+
+    Given path 'inventory/items'
+    And param query = 'purchaseOrderLineIdentifier==' + poLineId
+    And retry until response.totalRecords == 0
+    When method GET
+    Then status 200

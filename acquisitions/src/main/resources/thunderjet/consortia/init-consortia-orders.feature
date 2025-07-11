@@ -45,6 +45,7 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory.holdings.update-ownership.item.post'             |
       | 'inventory.instances.item.get'                              |
       | 'inventory.instances.item.post'                             |
+      | 'inventory.instances.item.delete'                           |
       | 'inventory.items-by-holdings-id.collection.get'             |
       | 'inventory.items.collection.get'                            |
       | 'inventory.items.item.delete'                               |
@@ -194,6 +195,7 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory.items-by-holdings-id.collection.get'             |
       | 'inventory.items.collection.get'                            |
       | 'inventory.items.item.delete'                               |
+      | 'inventory.instances.item.delete'                           |
       | 'inventory-storage.holdings.collection.get'                 |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |

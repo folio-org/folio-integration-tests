@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Move Item and Holding to update order data
 
   Background:
