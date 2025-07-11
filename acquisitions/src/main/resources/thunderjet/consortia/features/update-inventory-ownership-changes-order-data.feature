@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Updating Holding ownership changes order data
 
   Background:

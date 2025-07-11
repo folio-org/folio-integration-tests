@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Update PoLine locations with tenantIds the user do not have affiliations with
 
   Background:

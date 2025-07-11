@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Verify Bind Piece feature in ECS environment
 
   Background:
