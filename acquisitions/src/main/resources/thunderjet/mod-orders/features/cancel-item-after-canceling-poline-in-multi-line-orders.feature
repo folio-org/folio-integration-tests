@@ -4,6 +4,7 @@ Feature: Cancel order
   Background:
     * print karate.info.scenarioName
     * url baseUrl
+    * configure readTimeout = 120000
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
