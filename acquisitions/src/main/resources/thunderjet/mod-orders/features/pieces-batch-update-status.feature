@@ -177,10 +177,13 @@ Feature: Update Pieces statuses in batch
     * def orderId = call uuid
     * def poLineId = call uuid
     * def titleId = call uuid
+    * def pieceId1 = call uuid
+    * def pieceId2 = call uuid
 
     # 1. Create order with 2 pieces
     * def v = call createOrder { id: '#(orderId)' }
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
+    * def v = call openOrder { orderId: '#(orderId)' }
     * def v = call createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
     * table pieceData
       | pieceId  | titleId | poLineId |
