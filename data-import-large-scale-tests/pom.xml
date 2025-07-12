@@ -40,7 +40,7 @@
                 <configuration>
                     <skipTests>${skipTests}</skipTests>
                     <testFailureIgnore>true</testFailureIgnore>
-                    <argLine>-Xmx3072 -XX:MaxMetaspaceSize=1024m</argLine>
+                    <argLine>-Xmx3g -XX:MaxMetaspaceSize=1g</argLine>
                 </configuration>
             </plugin>
         </plugins>
