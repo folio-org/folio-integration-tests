@@ -69,7 +69,7 @@ function fn() {
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
-  if (env === 'lsdi') {
+  if (env === 'etesting-lsdi') {
     config.baseUrl = 'https://folio-etesting-lsdi-kong.ci.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
   } else if (env === 'snapshot-2') {
