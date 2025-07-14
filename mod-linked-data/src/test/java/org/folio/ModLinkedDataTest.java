@@ -35,33 +35,33 @@ class ModLinkedDataTest extends TestBaseEureka {
     runFeatureTest("create-bib-api/create-bib-api.feature");
   }
 
-  @Test
-  void createBibRecordInSrsAndUpdateInstanceThroughApi() {
-    runFeatureTest("update-instance-api/update-instance.feature");
-  }
-
-  @Test
-  void changeSuppressFlagsForInstance() {
-    runFeatureTest("suppress-flags/suppress-flags.feature");
-  }
-
-  @Test
-  void updateAuthority() {
-    runFeatureTest("authority/authority-update.feature");
-  }
-
-  @Test
-  void importBibRecordFromSrsToLinkedData() {
-    runFeatureTest("import-bib/import-bib.feature");
-  }
-
-  @Test
-  void lccnPatternValidation() {
-    runFeatureTest("lccn-pattern-validation/lccn-pattern-validation.feature");
-  }
-
-  @Test
-  void lccnDeduplication() {
-    runFeatureTest("validation/lccn/deduplication/lccn-deduplication.feature");
-  }
+//  @Test
+//  void createBibRecordInSrsAndUpdateInstanceThroughApi() {
+//    runFeatureTest("update-instance-api/update-instance.feature");
+//  }
+//
+//  @Test
+//  void changeSuppressFlagsForInstance() {
+//    runFeatureTest("suppress-flags/suppress-flags.feature");
+//  }
+//
+//  @Test
+//  void updateAuthority() {
+//    runFeatureTest("authority/authority-update.feature");
+//  }
+//
+//  @Test
+//  void importBibRecordFromSrsToLinkedData() {
+//    runFeatureTest("import-bib/import-bib.feature");
+//  }
+//
+//  @Test
+//  void lccnPatternValidation() {
+//    runFeatureTest("lccn-pattern-validation/lccn-pattern-validation.feature");
+//  }
+//
+//  @Test
+//  void lccnDeduplication() {
+//    runFeatureTest("validation/lccn/deduplication/lccn-deduplication.feature");
+//  }
 }

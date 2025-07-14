@@ -78,6 +78,14 @@
       "type": [
         "http://bibfra.me/vocab/marc/bibliographyNote"
       ]
+    },
+    {
+      "type":[
+        "http://bibfra.me/vocab/marc/awardsNote"
+      ],
+      "value":[
+        "Award note"
+      ]
     }
   ],
   "http://bibfra.me/vocab/lite/classification": [

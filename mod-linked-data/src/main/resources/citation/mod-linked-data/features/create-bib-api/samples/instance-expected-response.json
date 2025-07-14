@@ -233,9 +233,12 @@
   ],
   "http://bibfra.me/vocab/lite/extentV2": [
     {
-      "id": "566631628311263962",
-      "http://bibfra.me/vocab/marc/materialsSpecified": [
+      "id": "4608970706152786754",
+      "http://bibfra.me/vocab/lite/label": [
         "20 pages"
+      ],
+      "http://bibfra.me/vocab/marc/materialsSpecified": [
+        "ref print."
       ]
     }
   ],
@@ -345,6 +348,22 @@
       ],
       "type": [
         "http://bibfra.me/vocab/marc/issuanceNote"
+      ]
+    },
+    {
+      "type":[
+        "http://bibfra.me/vocab/marc/adminhist"
+      ],
+      "value":[
+        "Instance note - Administrative history note"
+      ]
+    },
+    {
+      "type":[
+        "http://bibfra.me/vocab/marc/biogdata"
+      ],
+      "value":[
+        "Instance note - Biographical data note"
       ]
     }
   ],
