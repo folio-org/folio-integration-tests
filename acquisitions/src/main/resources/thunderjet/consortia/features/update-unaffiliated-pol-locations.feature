@@ -35,7 +35,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }
     * def poLine = orderLineResponse.response
 
-
+  @Negative
   Scenario: Modify unaffiliated locations
     # Update PoLine locations with centralLocationsId2 and universityLocationsId
     * set poLine.locations[1].quantityPhysical = 2
@@ -47,7 +47,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     Then status 422
     And match response.errors[0].code == "locationUpdateWithoutAffiliation"
 
-
+  @Negative
   Scenario: Remove unaffiliated location
     # Update PoLine locations with universityLocationsId2 removed
     * set poLine.locations = karate.filter(poLine.locations, (loc) => loc.locationId != universityLocationsId)

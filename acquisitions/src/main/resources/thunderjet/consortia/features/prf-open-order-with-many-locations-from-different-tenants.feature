@@ -10,8 +10,6 @@ Feature: Open order with many locations from different tenants
     * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
     * configure headers = headersCentral
 
-    * configure retry = { count: 5, interval: 1000 }
-
     * callonce variables
     * callonce variablesCentral
     * callonce variablesUniversity
@@ -21,7 +19,6 @@ Feature: Open order with many locations from different tenants
 
     * def centralLocationsId = '6ee65782-ab71-4e07-9561-c400e3004a'
     * def universityLocationsId = '7ee65782-ab71-4e07-9561-c400e3004a'
-
 
   @Positive
   Scenario: Prepare data: create fund and budget, and locations
@@ -44,7 +41,6 @@ Feature: Open order with many locations from different tenants
             campusId: centralLocationUnitsCampusesId,
             libraryId: centralLocationUnitsLibrariesId,
             servicePointId: centralServicePointsId,
-
           })
         }
       }
@@ -75,6 +71,9 @@ Feature: Open order with many locations from different tenants
     * eval createUniversityParameterArray()
 
     * def v = call createLocation universityLocations
+
+    # * def disableInstanceMatchingId = call uuid
+    # * def v = call disableInstanceMatching { "id": "#(disableInstanceMatchingId)" }
 
   @Positive
   Scenario: Create Open 'ongoing' order and Verify Instance, Holdings and items in each tenant

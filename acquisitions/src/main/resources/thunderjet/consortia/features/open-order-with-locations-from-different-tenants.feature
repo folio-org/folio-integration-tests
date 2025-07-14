@@ -10,7 +10,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
     * configure headers = headersCentral
 
-    * configure retry = { count: 5, interval: 5000 }
+    * configure retry = { interval: 10000, count: 5 }
 
     * callonce variables
     * callonce variablesCentral
@@ -24,6 +24,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * def titleId = call uuid
     * def ongoing = { interval: 123, isSubscription: true, renewalDate: '2022-05-08T00:00:00.000+00:00' }
 
+  @Positive
   Scenario: Prepare data: create fund and budget
     * def v = call createFund { 'id': '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active' }
@@ -34,6 +35,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     When method GET
     Then status 200
 
+  @Positive
   Scenario: Create Open 'ongoing' order and Verify Instance, Holdings and items in each tenant
     # 1.1 Create order
     * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
@@ -125,6 +127,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     And match physicalItemAfterOpenOrder != null
     And match physicalItemAfterOpenOrder.status.name == 'On order'
 
+  @Positive
   Scenario: Create PO Line using free-text and open order. Verify creation of instance in central tenant and share with other tenant
     # 1.1 Create orders
     * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
@@ -204,6 +207,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     And retry until response.totalRecords == 2
     When method GET
 
+  @Positive
   Scenario: Create 'on-time' order with different tenant location and Verify Instnace, Holding and Item in each tenant
     # 1.1 Create orders
     * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'One-Time', ongoing: null }
@@ -272,6 +276,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     And retry until response.totalRecords == 2
     When method GET
 
+  @Positive
   Scenario: Open order with 'centralTenant' and 'universityTenant' locations. Verify items status changed from 'On order to 'Order closed in both 'centralTenant' and 'universityTenant'
     # 1.1 Create orders
     * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'Ongoing', ongoing: '#(ongoing)'}
@@ -379,6 +384,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     And match physicalItemAfterOpenOrder2 != null
     And match physicalItemAfterOpenOrder2.status.name == 'Order closed'
 
+  @Positive
   Scenario: Do unopen the order, check appropriate state of Inventory objects
     # 1.1 Create orders
     * def v = call createOrder { id: '#(orderId)', vendor: '#(centralVendorId)', orderType: 'Ongoing', ongoing: '#(ongoing)'}

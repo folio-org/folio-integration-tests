@@ -124,10 +124,10 @@ Feature: Initialize mod-consortia integration tests
     * def getAuthorizationToken = read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
     * def enableCentralOrdering = read('tenant-utils/consortium.feature@EnableCentralOrdering')
     * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
+    * def disableInstanceMatching = read('classpath:thunderjet/consortia/reusable/disableInstanceMatching.feature')
 
 
-  @SetupTenants
-  Scenario: Create ['central', 'university'] tenants and set up admins
+  Scenario: Create Central and University tenants and Set up Admins
     * table modules
       | name                        |
       | 'mod-permissions'           |
@@ -165,16 +165,15 @@ Feature: Initialize mod-consortia integration tests
     * call postUser { tenant: '#(centralTenantName)', user: '#(centralUser)' }
     * call putCaps { tenant: '#(centralTenantName)', user: '#(centralUser)' }
 
-  @SetupConsortia
   Scenario: Setup Consortia
     # 1. Create Consortia
     * def result = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
     * call read('tenant-utils/consortium.feature@SetupConsortia') { token: '#(result.okapitoken)', tenant: '#(centralTenant)' }
 
-#     2. Add 2 tenants to consortium
+    # 2. Add 2 tenants to consortium
     * call read('tenant-utils/tenant.feature') { token: '#(result.okapitoken)', centralTenantName: '#(centralTenantName)', uniTenant: '#(universityTenant)', consortiaAdmin: '#(consortiaAdmin)' }
 
-#     3. Add permissions to consortia_admin
+    # 3. Add permissions to consortia_admin
     # Permissions for shadowConsortiaAdmin (consortia_admin in university tenant)
     * table userPermissions
       | name                                                        |
@@ -187,6 +186,8 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.collection.get'       |
       | 'circulation-storage.request-policies.item.post'            |
+      | 'configuration.entries.item.get'                            |
+      | 'configuration.entries.item.post'                           |
       | 'consortia.sharing-instances.collection.get'                |
       | 'consortia.sharing-instances.item.post'                     |
       | 'inventory.holdings.update-ownership.item.post'             |
