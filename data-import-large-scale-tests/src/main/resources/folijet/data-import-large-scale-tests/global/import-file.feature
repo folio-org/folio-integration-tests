@@ -9,6 +9,7 @@ Feature: Import records file
     @importFile
     Scenario: Import records file
       * print 'Started loading from import-file feature: ', 'fileName: ', fileName, 'filePath: ', filePathFromSourceRoot, 'profileId: ', jobProfileInfo.id
+
       * configure headers = null
       * call login testUser
       * def okapitokenUser = okapitoken
@@ -48,12 +49,16 @@ Feature: Import records file
       And def s3UploadId = response.uploadId
       And def uploadUrl = response.url
 
+      * configure logPrettyRequest = false
+
       Given url uploadUrl
       And header Content-Type = 'application/octet-stream'
       And request read(filePathFromSourceRoot)
       When method put
       Then status 200
       And def s3Etag = responseHeaders['ETag'][0]
+
+      * configure logPrettyRequest = true
 
       # revert url
       * url baseUrl
