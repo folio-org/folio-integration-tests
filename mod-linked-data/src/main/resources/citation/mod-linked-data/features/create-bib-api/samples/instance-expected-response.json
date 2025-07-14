@@ -365,6 +365,22 @@
       "value":[
         "Instance note - Biographical data note"
       ]
+    },
+    {
+      "type":[
+        "http://bibfra.me/vocab/marc/physicalDescription"
+      ],
+      "value":[
+        "illustrations (some color)"
+      ]
+    },
+    {
+      "type":[
+        "http://bibfra.me/vocab/marc/accompanyingMaterial"
+      ],
+      "value":[
+        "reference manual"
+      ]
     }
   ],
   "_workReference": ["#(expectedWorkResponse)"],
