@@ -11,11 +11,6 @@ Feature: Import records file
       * print 'Started loading from import-file feature: ', 'fileName: ', fileName, 'filePath: ', filePathFromSourceRoot, 'profileId: ', jobProfileInfo.id
       * print 'File name: ', filePathFromSourceRoot
 
-      # Calculate file size
-      * def resourcePath = 'folijet/data-import-large-scale-tests/samples/records/marc/' + fileName
-      * def fileToUpload = KarateUtils.getFileFromClasspath(resourcePath)
-      * def fileLength = fileToUpload.length()
-
       * configure headers = null
       * call login testUser
       * def okapitokenUser = okapitoken
@@ -55,7 +50,7 @@ Feature: Import records file
       And def s3UploadId = response.uploadId
       And def uploadUrl = response.url
 
-      * print 'Starting upload file: ', fileName, ' with size: ', fileLength
+      * print 'Starting upload file: ', fileName
       # Disable logs
       * configure logPrettyRequest = false
       Given url uploadUrl
