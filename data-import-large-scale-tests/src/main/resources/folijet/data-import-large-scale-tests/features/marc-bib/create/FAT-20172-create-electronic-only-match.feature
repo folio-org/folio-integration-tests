@@ -15,8 +15,8 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def getJobLogEntriesByJobId = read('classpath:folijet/data-import-large-scale-tests/global/data-import-logs.feature@getJobLogEntriesByJobId')
 
   Scenario: FAT-20172 Create Electronic only match
-    * print 'FAT-20172-create-electronic-only-match.feature'
 
+    * print 'FAT-20172-create-electronic-only-match.feature'
     * def updateProfileSnapshot = read('classpath:folijet/data-import-large-scale-tests/samples/profiles/FAT-20172-create-electronic-only-match.json')
     Given path 'data-import-profiles/profileSnapshots'
     And request updateProfileSnapshot
@@ -49,7 +49,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def result = call importFile { fileName: #(fileName), filePathFromSourceRoot : #(filePath), jobProfileInfo: #(jobProfileInfo) }
     * def s3UploadKey = result.s3UploadKey
 
-    * call pause 480000
+    * call pause 360000
     # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions
@@ -57,8 +57,10 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
     * match each jobExecutions contains { "runBy": "#present" }
     * match each jobExecutions contains { "progress": "#present" }
+    * print 'FAT-20172: First import completed successfully.'
 
     # Update headers with new token after import
+    * configure headers = null
     * call login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(tenant)', 'Accept': '*/*' }
@@ -85,7 +87,7 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     * def result = call importFile { fileName: #(fileName), filePathFromSourceRoot: #(filePath), jobProfileInfo: #(updatedJobProfileInfo) }
     * def s3UploadKey = result.s3UploadKey
 
-    * call pause 480000
+    * call pause 360000
     # Waiting import results
     * def result = call read('classpath:folijet/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions

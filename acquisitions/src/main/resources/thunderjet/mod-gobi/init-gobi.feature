@@ -7,41 +7,42 @@ Feature: Initialize mod-gobi integration tests
 
     * table modules
       | name                        |
-      | 'mod-permissions'           |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
       | 'mod-audit'                 |
-      | 'mod-gobi'                  |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-finance-storage'       |
+      | 'mod-circulation'           |
+      | 'mod-circulation-storage'   |
+      | 'mod-configuration'         |
+      | 'mod-entities-links'        |
       | 'mod-finance'               |
-      | 'mod-organizations-storage' |
-      | 'mod-organizations'         |
-      | 'mod-inventory-storage'     |
+      | 'mod-finance-storage'       |
+      | 'mod-gobi'                  |
       | 'mod-inventory'             |
+      | 'mod-inventory-storage'     |
+      | 'mod-login'                 |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
+      | 'mod-permissions'           |
+      | 'mod-pubsub'                |
       | 'mod-search'                |
       | 'mod-source-record-manager' |
-      | 'mod-entities-links'        |
       | 'mod-tags'                  |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
+      | 'mod-users'                 |
 
     * table userPermissions
-      | name                                                          |
-      | 'gobi.custom-mappings.collection.get'                         |
-      | 'gobi.custom-mappings.item.delete'                            |
-      | 'gobi.custom-mappings.item.get'                               |
-      | 'gobi.custom-mappings.item.post'                              |
-      | 'gobi.custom-mappings.item.put'                               |
-      | 'gobi.orders.item.post'                                       |
-      | 'gobi.validate.item.get'                                      |
-      | 'gobi.validate.item.post'                                     |
-      | 'inventory-storage.holdings.collection.get'                   |
-      | 'orders.collection.get'                                       |
-      | 'orders.po-lines.collection.get'                              |
+      | name                                        |
+      | 'gobi.custom-mappings.collection.get'       |
+      | 'gobi.custom-mappings.item.delete'          |
+      | 'gobi.custom-mappings.item.get'             |
+      | 'gobi.custom-mappings.item.post'            |
+      | 'gobi.custom-mappings.item.put'             |
+      | 'gobi.orders.item.post'                     |
+      | 'gobi.validate.item.get'                    |
+      | 'gobi.validate.item.post'                   |
+      | 'inventory-storage.holdings.collection.get' |
+      | 'inventory-storage.instances.item.get'      |
+      | 'orders.collection.get'                     |
+      | 'orders.po-lines.collection.get'            |
 
     # testAdmin is only used to initialize global data
     * table adminPermissions
@@ -69,7 +70,6 @@ Feature: Initialize mod-gobi integration tests
       | 'inventory.instances.item.post'                               |
       | 'organizations.organizations.item.post'                       |
       | 'orders.item.delete'                                          |
-
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')

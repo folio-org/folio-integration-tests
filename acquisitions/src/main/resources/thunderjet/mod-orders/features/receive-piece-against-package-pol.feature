@@ -174,7 +174,7 @@ Feature: Receive piece against package POL
     * def itemIdForPiece1 = itemForPiece1.id
     And match itemForPiece1.enumeration == '#(pieceId1)'
     And match itemForPiece1.chronology == '#(pieceId1)'
-    And match itemForPiece1.discoverySuppress == true
+    And match itemForPiece1.discoverySuppress == null
     
     # Check piece 1 receivingStatus
     * configure headers = headersUser

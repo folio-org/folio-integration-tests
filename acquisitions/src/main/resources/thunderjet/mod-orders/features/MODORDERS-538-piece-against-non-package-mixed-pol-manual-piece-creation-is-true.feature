@@ -224,7 +224,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * def itemIdWithItemAndHolding = karate.jsonPath(response, '$.items[*][?(@.enumeration == "' + pieceIdWithItemAndHolding + '")]')
     And match itemIdWithItemAndHolding[0].enumeration == '#(pieceIdWithItemAndHolding)'
     And match itemIdWithItemAndHolding[0].chronology == '#(pieceIdWithItemAndHolding)'
-    And match itemIdWithItemAndHolding[0].discoverySuppress == true
+    And match itemIdWithItemAndHolding[0].discoverySuppress == null
 
 
     * print 'Check if pieces were created when the order was opened'

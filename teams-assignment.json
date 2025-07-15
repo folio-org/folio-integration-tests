@@ -138,13 +138,6 @@
     "slackChannel": "#volaris-dev"
   },
   {
-    "team": "Odin",
-    "modules": [
-      "mod-batch-print"
-    ],
-    "slackChannel": "#odin"
-  },
-  {
     "team": "Citation",
     "modules": [
       "mod-linked-data"
