@@ -9,6 +9,12 @@ Feature: Import records file
     @importFile
     Scenario: Import records file
       * print 'Started loading from import-file feature: ', 'fileName: ', fileName, 'filePath: ', filePathFromSourceRoot, 'profileId: ', jobProfileInfo.id
+      * print 'File name: ', filePathFromSourceRoot
+
+      # Calculate file size
+      * def resourcePath = 'folijet/data-import-large-scale-tests/samples/records/marc/' + fileName
+      * def fileToUpload = KarateUtils.getFileFromClasspath(resourcePath)
+      * def fileLength = fileToUpload.length()
 
       * configure headers = null
       * call login testUser
@@ -49,15 +55,16 @@ Feature: Import records file
       And def s3UploadId = response.uploadId
       And def uploadUrl = response.url
 
+      * print 'Starting upload file: ', fileName, ' with size: ', fileLength
+      # Disable logs
       * configure logPrettyRequest = false
-
       Given url uploadUrl
       And header Content-Type = 'application/octet-stream'
       And request read(filePathFromSourceRoot)
       When method put
       Then status 200
       And def s3Etag = responseHeaders['ETag'][0]
-
+      # Enable logs
       * configure logPrettyRequest = true
 
       # revert url

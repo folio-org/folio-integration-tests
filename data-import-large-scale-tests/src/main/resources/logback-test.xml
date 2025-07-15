@@ -20,14 +20,15 @@
         </encoder>
     </appender>
 
-    <logger name="com.intuit.karate" level="DEBUG"/>
+    <!-- Change the log level for reading outgoing messages here-->
+    <!-- Do not delete this line: the binary content of large marc files will be logged -->
+    <logger name="org.apache.http" level="WARN"/>
 
-    <root level="info">
+    <logger name="com.intuit.karate" level="INFO"/>
+
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
-    </root>
-
-    <root level="debug">
         <appender-ref ref="RP" />
     </root>
 
