@@ -52,7 +52,7 @@ Feature: Import records file
 
       * print 'Starting upload file: ', fileName
       # Disable logs
-      * configure logPrettyRequest = false
+      #* configure logPrettyRequest = false
       Given url uploadUrl
       And header Content-Type = 'application/octet-stream'
       And request read(filePathFromSourceRoot)
@@ -60,7 +60,7 @@ Feature: Import records file
       Then status 200
       And def s3Etag = responseHeaders['ETag'][0]
       # Enable logs
-      * configure logPrettyRequest = true
+      #* configure logPrettyRequest = true
 
       # revert url
       * url baseUrl
