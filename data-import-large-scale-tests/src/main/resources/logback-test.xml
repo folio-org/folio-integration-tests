@@ -16,7 +16,7 @@
 
     <appender name="RP" class="com.epam.reportportal.logback.appender.ReportPortalAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %.-1024msg%n</pattern>
         </encoder>
     </appender>
 
