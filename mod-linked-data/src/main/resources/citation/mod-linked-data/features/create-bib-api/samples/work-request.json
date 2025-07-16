@@ -145,6 +145,14 @@
           "value":[
             "General note"
           ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/awardsNote"
+          ],
+          "value":[
+            "Award note"
+          ]
         }
       ],
       "http://bibfra.me/vocab/scholar/dissertation": [
