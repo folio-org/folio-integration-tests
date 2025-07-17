@@ -17,6 +17,15 @@
       <artifactId>cucumber-reporting</artifactId>
       <version>${cucumber.reporting.version}</version>
     </dependency>
+    <!-- Remove when cucumber-reporting comes with commons-lang3 >= 3.18.0
+            that fixes this vulnerability:
+            https://github.com/advisories/GHSA-j288-q9x7-2f5v
+    -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.18.0</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
