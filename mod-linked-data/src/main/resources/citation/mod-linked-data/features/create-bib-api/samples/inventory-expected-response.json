@@ -4,7 +4,19 @@
   "title": "create-bib-title Instance Sub title 3 part 3",
   "editions": [ "Second edition" ],
   "languages": [ "eng" ],
-  "physicalDescriptions": [ "8x8 20 pages" ],
+  "physicalDescriptions": [ "20 pages illustrations (some color) 8x8 reference manual ref print." ],
+  "alternativeTitles":[
+    {
+      "authorityId":null,
+      "alternativeTitleTypeId":"#notnull",
+      "alternativeTitle":"Variant title of the instance variant sub title 2024 2 part 2"
+    },
+    {
+      "authorityId":null,
+      "alternativeTitleTypeId":"#notnull",
+      "alternativeTitle":"Parallel title of the instance Parallel sub title 2025 4 part 4"
+    }
+  ],
   "publication": [
     { "publisher": "Publisher name", "place": "Canberra", "dateOfPublication": "01-01-2020", "role": "Publication" },
     { "publisher": "Distributor name", "place": "Angola", "dateOfPublication": "02-02-2021", "role": "Distribution" },
@@ -35,9 +47,12 @@
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - original version", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - Funding information", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - related material", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Biographical data note", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Administrative history note", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Language note", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - Issuing body", "staffOnly": false },
     { "instanceNoteTypeId": "#notnull", "note": "Instance note - Finding aid", "staffOnly": false },
-    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Exhibition", "staffOnly": false }
+    { "instanceNoteTypeId": "#notnull", "note": "Instance note - Exhibition", "staffOnly": false },
+    { "instanceNoteTypeId": "#notnull", "note": "Award note", "staffOnly": false }
   ]
 }
