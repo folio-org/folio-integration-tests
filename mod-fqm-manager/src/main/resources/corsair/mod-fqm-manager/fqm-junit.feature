@@ -20,6 +20,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-entities-links'        |
       | 'mod-pubsub'                |
       | 'mod-patron-blocks'         |
+      | 'mod-feesfines'             |
 
     * table userPermissions
       | name                                                        |
