@@ -119,5 +119,27 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
 
     * def logEntriesLimit = jobExecutions[0].progress.current
     * print 'Log entries limit: ' + logEntriesLimit
-    * def parentJobExecutionId = jobExecutions[0].id
-    * if (statusCheck.pass) { karate.call('classpath:folijet/data-import-large-scale-tests/utils/FAT-20172-verify-success.feature', { headersUser, jobId: parentJobExecutionId, limit: logEntriesLimit }) } else { karate.call('classpath:folijet/data-import-large-scale-tests/utils/FAT-20172-verify-failure.feature', { headersUser, jobId: parentJobExecutionId, limit: logEntriesLimit }) }
+
+    * def processJobExecution =
+        """
+        function(jobs, pass, headersUser) {
+          var results = [];
+          for (var i = 0; i < jobs.length; i++) {
+            karate.log('Processing job iteration:', i);
+            var job = jobs[i];
+            var limit = job.progress.current;
+            var jobId = job.id;
+            var res;
+            if (pass) {
+              res = karate.call('classpath:folijet/data-import-large-scale-tests/global/FAT-20172-verify-success.feature', { headersUser: headersUser, jobId: jobId, limit: limit });
+            } else {
+              res = karate.call('classpath:folijet/data-import-large-scale-tests/global/FAT-20172-verify-failure.feature', { headersUser: headersUser, jobId: jobId, limit: limit });
+              results.push({ jobId: jobId, result: res });
+            }
+          }
+          return results;
+        }
+        """
+
+    * def allResults = processJobExecution(jobExecutions, statusCheck.pass, headersUser)
+    * print 'Verification results:', allResults
