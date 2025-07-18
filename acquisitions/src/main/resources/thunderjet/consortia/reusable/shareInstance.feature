@@ -1,3 +1,4 @@
+@ignore
 Feature: Share Instance
 
   Background:

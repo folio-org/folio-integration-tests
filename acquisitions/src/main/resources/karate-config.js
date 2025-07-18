@@ -260,6 +260,16 @@ function fn() {
       name: 'testing_admin',
       password: 'admin'
     }
+  } else if (env == 'sprint') {
+    // UI: https://folio-etesting-snapshot-diku.ci.folio.org/
+    config.baseUrl = 'https://folio-etesting-sprint-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-sprint-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-etesting-sprint-kong.ci.folio.org:8000';
+    config.admin = {
+      tenant: 'supertenant',
+      name: 'testing_admin',
+      password: 'admin'
+    }
   } else if (env == 'cypress') {
     // UI: https://folio-etesting-snapshot-diku.ci.folio.org/
     config.baseUrl = 'https://folio-etesting-cypress-kong.ci.folio.org';

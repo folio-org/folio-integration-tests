@@ -36,7 +36,7 @@ Feature: Pieces API tests for cross-tenant envs
     * callonce createOrderLine { 'id': '#(poLineId)', 'orderId': '#(orderId)', 'checkinItems': true, isPackage: True }
     * callonce createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
 
-
+  @Positive
   Scenario: Check ShadowInstance, Holding and Item created in member tenant when creating piece
     # Create a new piece
     * set minimalPiece.id = pieceId
@@ -79,6 +79,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(holdingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
+  @Positive
   Scenario: Check receivingTenantId populated when openining order with 'Instance, Holding'
     * def orderId = call uuid
     * def poLineId = call uuid
@@ -131,8 +132,8 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.pieces[*].receivingTenantId contains universityTenantName
     And match $.pieces[*].receivingTenantId contains universityTenantName
 
+  @Positive
   Scenario: Check receivingTenantId populated when openining order with 'Instance, Holding, Item'
-  `
     * def orderId = call uuid
     * def poLineId = call uuid
 
@@ -184,6 +185,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match $.pieces[*].receivingTenantId contains universityTenantName
     And match $.pieces[*].receivingTenantId contains centralTenantName
 
+  @Positive
   Scenario: Check Holding and Item updated in member tenant when updating piece without itemId and deleteHolding=true
     # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
@@ -248,7 +250,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(holdingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
-
+  @Positive
   Scenario: Check Holding and Item after receiving the piece
     # Receive piece
     Given path 'orders/check-in'
@@ -302,7 +304,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
     And match response.items[0].status.name == 'In process'
 
-
+  @Positive
   Scenario: Check Holding and Item after unreceiving the piece
     # Unreceive piece
     Given path 'orders/receive'
@@ -354,7 +356,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
     And match response.items[0].status.name == 'On order'
 
-
+  @Positive
   Scenario: Check Holding and Item updated in member tenant when updating piece with itemId and deleteHolding=false
     # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
@@ -412,7 +414,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(holdingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
-
+  @Positive
   Scenario: Check Holding and Item updated in member tenant when updating piece with itemId and deleteHolding=true
     # Get existing holdingId and itemId in specified tenant
     Given path 'orders/pieces', pieceId
@@ -477,7 +479,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.items[0].holdingsRecordId == '#(holdingId)'
     And match response.items[0].purchaseOrderLineIdentifier == '#(poLineId)'
 
-
+  @Positive
   Scenario: Check Holding and Item deleted in member tenant when deleting piece
     # Get existing holdingId in specified tenant
     Given path 'orders/pieces', pieceId
@@ -506,7 +508,7 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 200
     And match response.totalRecords == 0
 
-
+  @Positive
   Scenario: Fetch circulation requests by Piece ids
     * def patronGroupId = call uuid
 
@@ -636,7 +638,7 @@ Feature: Pieces API tests for cross-tenant envs
     And match response.circulationRequests[*].id contains requestId1
     And match response.circulationRequests[*].id contains requestId2
 
-
+  @Positive
   Scenario: Change affiliation in Piece and check that item and holding was re-created in correct tenant
     # 1. Create piece for central
     * set minimalPiece.id = pieceId
@@ -741,7 +743,7 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 200
     And match response.totalRecords == 0
 
-
+  @Positive
   Scenario: Get all pieces filtered by user tenants
     * def pieceId1 = call uuid
     * def pieceId2 = call uuid

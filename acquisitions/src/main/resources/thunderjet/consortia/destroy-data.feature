@@ -7,6 +7,6 @@ Feature: Destroy data of consortia orders tests
     * def deleteTenantAndEntitlement = read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement')
 
 
-  Scenario: Destroy created ['central', 'university'] tenants
+  Scenario: Destroy Central and University tenants
     * call deleteTenantAndEntitlement { tenantId: '#(universityTenantId)' }
     * call deleteTenantAndEntitlement { tenantId: '#(centralTenantId)' }

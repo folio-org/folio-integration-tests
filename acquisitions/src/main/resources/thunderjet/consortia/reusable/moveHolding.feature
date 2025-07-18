@@ -1,3 +1,4 @@
+@ignore
 Feature: Move holding
 
   Background:
