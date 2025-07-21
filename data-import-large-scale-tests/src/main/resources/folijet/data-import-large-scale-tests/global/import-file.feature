@@ -9,6 +9,10 @@ Feature: Import records file
     @importFile
     Scenario: Import records file
       * print 'Started loading from import-file feature: ', 'fileName: ', fileName, 'filePath: ', filePathFromSourceRoot, 'profileId: ', jobProfileInfo.id
+      * print 'File name: ', filePathFromSourceRoot
+      * def fileResourcePath = filePathFromSourceRoot.replace('classpath:', '')
+      * def fileBytes = karate.read(filePathFromSourceRoot)
+
       * configure headers = null
       * call login testUser
       * def okapitokenUser = okapitoken
@@ -48,12 +52,15 @@ Feature: Import records file
       And def s3UploadId = response.uploadId
       And def uploadUrl = response.url
 
-      Given url uploadUrl
-      And header Content-Type = 'application/octet-stream'
-      And request read(filePathFromSourceRoot)
-      When method put
-      Then status 200
-      And def s3Etag = responseHeaders['ETag'][0]
+      * print 'Starting upload file: ', fileName
+      * def FileUploader = Java.type('org.folio.FileUploader')
+      * def uploadResponse = FileUploader.uploadBytes(uploadUrl, 'application/octet-stream', fileBytes)
+      * def status = uploadResponse.getStatusLine().getStatusCode()
+      * match status == 200
+
+      * def allHeaders = uploadResponse.getAllHeaders()
+      * eval var s3Etag = null; for(var i=0;i<allHeaders.length;i++){var h=allHeaders[i]; if(h.getName().toLowerCase()==='etag'){s3Etag=h.getValue(); break;} }
+      * match s3Etag != null && s3Etag != ''
 
       # revert url
       * url baseUrl
