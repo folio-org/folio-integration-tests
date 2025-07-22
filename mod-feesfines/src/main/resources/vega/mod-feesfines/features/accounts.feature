@@ -92,8 +92,6 @@ Feature: Fee/fine accounts tests
     When method GET
     Then status 404
 
-
-
   Scenario: Can not create an account with invalid UUID for any of the referenced entities
     * def requestEntity = read('samples/account-request-entity.json')
     * requestEntity.id = "invalid-uuid"
