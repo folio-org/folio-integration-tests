@@ -231,7 +231,7 @@
       ]
     }
   ],
-  "http://bibfra.me/vocab/lite/extentV2": [
+  "http://bibfra.me/vocab/lite/extent": [
     {
       "id": "4608970706152786754",
       "http://bibfra.me/vocab/lite/label": [
