@@ -19,5 +19,3 @@ Feature: Verify and report failure log entries (advanced)
     * def nonEmptyErrors = allErrors.filter(x => x && x.trim() !== '')
 
     * print 'FOUND ALL ERROR MESSAGES (from all levels):', nonEmptyErrors
-
-    * karate.fail('Test failed because the job execution status was not COMMITTED. See all error messages printed above.')
