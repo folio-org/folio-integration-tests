@@ -76,7 +76,7 @@ function fn() {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
       password: '${admin.password}',
-      clientId: '${admin.clientId',
+      clientId: '${admin.clientId}',
       clientSecret: '${admin.clientSecret}'
     }
     config.prototypeTenant = '${prototypeTenant}';
