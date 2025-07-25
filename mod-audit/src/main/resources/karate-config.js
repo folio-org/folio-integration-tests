@@ -78,7 +78,7 @@ function fn() {
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
-      password: '${admin.password}',
+      password: '${admin.password}'
     }
     config.kcClientId = '${clientId}',
     config.kcClientSecret = '${clientSecret}'
