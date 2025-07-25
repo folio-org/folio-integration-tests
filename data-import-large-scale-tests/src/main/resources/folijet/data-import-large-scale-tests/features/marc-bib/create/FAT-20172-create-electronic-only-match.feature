@@ -141,5 +141,5 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
         }
         """
 
-    * def allResults = processJobExecution(jobExecutions, statusCheck.pass, headersUser)
-    * print 'Verification results:', allResults
+    * def errResults = processJobExecution(jobExecutions, statusCheck.pass, headersUser)
+    * if (errResults && errResults.length > 0) karate.fail('The test failed because the status of some tasks was not COMMITTED. See all error messages printed above. ' + karate.pretty(errResults))
