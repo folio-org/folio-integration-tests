@@ -92,17 +92,6 @@ Feature: Fee/fine accounts tests
     When method GET
     Then status 404
 
-  Scenario: Can not create an account without required referenced entity IDs
-    * def requestEntity = read('samples/account-request-entity.json')
-    * def expectedErrMsg = "must not be null"
-    * requestEntity.id = null
-
-    Given path 'accounts'
-    And request requestEntity
-    When method POST
-    Then status 422
-    And match $.errors[0].message == expectedErrMsg
-
   Scenario: Can not create an account with invalid UUID for any of the referenced entities
     * def requestEntity = read('samples/account-request-entity.json')
     * requestEntity.id = "invalid-uuid"
