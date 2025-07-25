@@ -107,7 +107,6 @@ function fn() {
     config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
-    config.edgeUrl = '${edgeUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',

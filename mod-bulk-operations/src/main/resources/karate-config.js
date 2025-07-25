@@ -92,7 +92,6 @@ function fn() {
     karate.configure('ssl',true)
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
-    config.edgeUrl = '${edgeUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',

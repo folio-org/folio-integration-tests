@@ -78,7 +78,6 @@ function configuration() {
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
-    config.edgeUrl = '${edgeUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
