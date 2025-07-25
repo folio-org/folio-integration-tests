@@ -1,3 +1,4 @@
+@ignore
 Feature: Create location
 
   Background:

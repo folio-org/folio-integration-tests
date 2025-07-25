@@ -1,3 +1,4 @@
+@ignore
 Feature: Create loan type
 
   Background:

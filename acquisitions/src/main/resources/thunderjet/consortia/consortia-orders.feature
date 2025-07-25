@@ -1,3 +1,4 @@
+@parallel=false
 Feature: consortia orders integration tests
 
   Background:
