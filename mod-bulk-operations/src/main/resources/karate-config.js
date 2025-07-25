@@ -92,11 +92,14 @@ function fn() {
     karate.configure('ssl',true)
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
+    config.edgeUrl = '${edgeUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
-      password: '${admin.password}'
+      password: '${admin.password}',
     }
+    config.kcClientId = '${clientId}',
+    config.kcClientSecret = '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
