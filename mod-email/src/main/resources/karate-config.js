@@ -76,9 +76,9 @@ function fn() {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
       password: '${admin.password}',
-      kcClientId: '${admin.clientId}',
-      kcClientSecret: '${admin.clientSecret}'
     }
+    config.kcClientId: '${clientId}',
+    config.kcClientSecret: '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
