@@ -75,7 +75,9 @@ function fn() {
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
-      password: '${admin.password}'
+      password: '${admin.password}',
+      clientId: '${admin.clientId',
+      clientSecret: '${admin.clientSecret}'
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
