@@ -186,7 +186,7 @@
           ]
         }
       ],
-      "http://bibfra.me/vocab/lite/extentV2": [
+      "http://bibfra.me/vocab/lite/extent": [
         {
           "http://bibfra.me/vocab/marc/materialsSpecified": [
             "ref print."
