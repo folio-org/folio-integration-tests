@@ -17,4 +17,4 @@ Feature: Enable Instance Matching
     And request config
     When method PUT
     Then status 204
-    * call pause 32000
+    * call pause 40000
