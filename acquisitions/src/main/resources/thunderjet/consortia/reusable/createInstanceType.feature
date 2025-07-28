@@ -1,3 +1,4 @@
+@ignore
 Feature: Create instance type
 
   Background:

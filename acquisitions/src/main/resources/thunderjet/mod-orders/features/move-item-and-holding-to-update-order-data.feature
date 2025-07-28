@@ -15,7 +15,8 @@ Feature: Move Item and Holding to update order data
 
     * callonce variables
 
-    ### Before Each ###
+  @Positive
+  Scenario: Test for changing ownership of Holdings to affect Pieces and PoLines
     * configure headers = headersAdmin
     # Inventory: instance, holding
     * def instanceId = call uuid
@@ -58,9 +59,6 @@ Feature: Move Item and Holding to update order data
     Then status 200
     * def titleId = response.titles[0].id
 
-
-  @Positive
-  Scenario: Test for changing ownership of Holdings to affect Pieces and PoLines
     # 1. Create new instance
     * configure headers = headersAdmin
     * def instanceId2 = call uuid
@@ -94,9 +92,57 @@ Feature: Move Item and Holding to update order data
     When method GET
     Then status 200
 
+    # 5. Unopen orders with delete holdings
+    * def v = call unopenOrderDeleteHoldings { "orderId": "#(orderId)" }
+
+    # 6. Delete instance to avoid the instance being used by the next test
+    * def v = call deleteInstance { "id": "#(instanceId)" }
+    * def v = call deleteInstance { "id": "#(instanceId2)" }
 
   @Positive
   Scenario: Test for changing ownership of Item to affect Pieces
+    * configure headers = headersAdmin
+    # Inventory: instance, holding
+    * def instanceId = call uuid
+    * table instanceData
+      | id         | title      | instanceTypeId       |
+      | instanceId | instanceId | globalInstanceTypeId |
+    * def v = call createInstance instanceData
+
+    * def holdingId = call uuid
+    * table holdingData
+      | id        | instanceId | locationId        | sourceId               |
+      | holdingId | instanceId | globalLocationsId | globalHoldingsSourceId |
+    * def v = call createHolding holdingData
+
+    # Finance: budget, fund
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)' }
+
+    # Orders: order, poline, piece
+    * configure headers = headersUser
+    * def orderId = call uuid
+    * def v = call createOrder { id: '#(orderId)' }
+
+    * def poLineId = call uuid
+    * table poLineLocations
+      | holdingId | quantity | quantityPhysical |
+      | holdingId | 1        | 1                |
+    * table orderLineData
+      | id       | orderId | locations       | quantity | fundId | instanceId | titleOrPackage        |
+      | poLineId | orderId | poLineLocations | 1        | fundId | instanceId | 'TestOwnershipTitle1' |
+    * def v = call createOrderLineWithInstance orderLineData
+
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    Given path 'orders/titles'
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    * def titleId = response.titles[0].id
+
     # 1 Create a new piece
     * def pieceId = call uuid
     * table pieceData
@@ -131,3 +177,9 @@ Feature: Move Item and Holding to update order data
     And retry until response.holdingId == holdingId2
     When method GET
     Then status 200
+
+    # 5. Unopen orders with delete holdings
+    * def v = call unopenOrderDeleteHoldings { "orderId": "#(orderId)" }
+
+    # 6. Delete instance to avoid the instance being used by the next test
+    * def v = call deleteInstance { "id": "#(instanceId)" }

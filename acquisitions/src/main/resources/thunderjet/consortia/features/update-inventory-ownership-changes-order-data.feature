@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Updating Holding ownership changes order data
 
   Background:
@@ -9,7 +10,7 @@ Feature: Updating Holding ownership changes order data
     * def headersUniversity = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(universityTenantName)' }
     * configure headers = headersUniversity
 
-    * configure retry = { interval: 1000, count: 5 }
+    * configure retry = { interval: 5000, count: 5 }
 
     ### Before All ###
     * callonce variables
@@ -28,7 +29,6 @@ Feature: Updating Holding ownership changes order data
       | instanceId | sourceTenantId       | targetTenantId     | consortiumId |
       | instanceId | universityTenantName | centralTenantName  | consortiumId |
     * callonce shareInstance shareInstanceData
-
 
     ### Before Each ###
     * def holdingId = call uuid
@@ -71,7 +71,6 @@ Feature: Updating Holding ownership changes order data
     When method GET
     Then status 200
     * def itemId = response.items[0].id
-
 
   @Positive
   Scenario: Test for changing ownership of Holdings to affect Pieces and PoLines
