@@ -263,5 +263,5 @@ Feature: Initialize mod-consortia integration tests
       """
     When method POST
     Then status 201
-    * call pause 32000
+    * call pause 40000
     * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
