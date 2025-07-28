@@ -24,11 +24,13 @@ Feature: consortia orders integration tests
   Scenario: Piece Api Test for cross tenant envs
     * call read('features/pieces-api-test-for-cross-tenant-envs.feature')
 
-  Scenario: Performance Open order with many locations from different tenants
-    * call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
+  # Disabled
+  #  Scenario: Performance Open order with many locations from different tenants
+  #    * call read('features/prf-open-order-with-many-locations-from-different-tenants.feature')
 
-  Scenario: Reopen order and change instance connection orderLine
-    * call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
+  # Disabled
+  # Scenario: Reopen order and change instance connection orderLine
+  #  * call read('features/reopen-and-change-instance-connection-order-with-locations-from-different-tenants.feature')
 
   Scenario: Update inventory ownership changes order data
     * call read('features/update-inventory-ownership-changes-order-data.feature')

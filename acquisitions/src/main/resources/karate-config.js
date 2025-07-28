@@ -98,6 +98,8 @@ function fn() {
     updateOrder: karate.read('classpath:thunderjet/mod-orders/reusable/update-order.feature'),
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
     unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
+    unopenOrderDeleteHoldings: read('classpath:thunderjet/mod-orders/reusable/unopen-order-delete-holdings.feature'),
+    deleteInstance: read('classpath:thunderjet/mod-orders/reusable/delete-instance.feature'),
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
     cancelOrder: read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature'),
     deleteOrder: read('classpath:thunderjet/mod-orders/reusable/delete-order.feature'),

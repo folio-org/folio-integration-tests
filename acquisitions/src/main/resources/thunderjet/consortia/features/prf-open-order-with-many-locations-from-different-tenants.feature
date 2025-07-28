@@ -72,9 +72,6 @@ Feature: Open order with many locations from different tenants
 
     * def v = call createLocation universityLocations
 
-    # * def disableInstanceMatchingId = call uuid
-    # * def v = call disableInstanceMatching { "id": "#(disableInstanceMatchingId)" }
-
   @Positive
   Scenario: Create Open 'ongoing' order and Verify Instance, Holdings and items in each tenant
     * def orderId = call uuid

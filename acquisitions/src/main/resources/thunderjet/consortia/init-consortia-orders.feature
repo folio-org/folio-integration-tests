@@ -20,7 +20,11 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.collection.get'       |
       | 'circulation-storage.request-policies.item.post'            |
+      | 'configuration.entries.collection.get'                      |
+      | 'configuration.entries.item.delete'                         |
+      | 'configuration.entries.item.get'                            |
       | 'configuration.entries.item.post'                           |
+      | 'configuration.entries.item.put'                            |
       | 'finance.budgets.collection.get'                            |
       | 'finance.budgets.item.post'                                 |
       | 'finance.expense-classes.item.post'                         |
@@ -95,6 +99,8 @@ Feature: Initialize mod-consortia integration tests
     * callonce variablesCentral
     # load university tenant variables
     * callonce variablesUniversity
+    # create disable instance matching config id for university tenant
+    * def isInstanceMatchingDisabledId = callonce uuid
 
     # generate names for tenants
     * def random = callonce randomMillis
@@ -124,8 +130,7 @@ Feature: Initialize mod-consortia integration tests
     * def getAuthorizationToken = read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
     * def enableCentralOrdering = read('tenant-utils/consortium.feature@EnableCentralOrdering')
     * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
-    * def disableInstanceMatching = read('classpath:thunderjet/consortia/reusable/disableInstanceMatching.feature')
-
+    * def enableInstanceMatching = read('classpath:thunderjet/consortia/reusable/enableInstanceMatching.feature')
 
   Scenario: Create Central and University tenants and Set up Admins
     * table modules
@@ -186,8 +191,11 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.collection.get'       |
       | 'circulation-storage.request-policies.item.post'            |
+      | 'configuration.entries.collection.get'                      |
       | 'configuration.entries.item.get'                            |
+      | 'configuration.entries.item.delete'                         |
       | 'configuration.entries.item.post'                           |
+      | 'configuration.entries.item.put'                            |
       | 'consortia.sharing-instances.collection.get'                |
       | 'consortia.sharing-instances.item.post'                     |
       | 'inventory.holdings.update-ownership.item.post'             |
@@ -229,7 +237,6 @@ Feature: Initialize mod-consortia integration tests
 
     * call configureAccessTokenTime { 'AccessTokenLifespance' : 3600, testTenant: '#(centralTenantName)' }
 
-  @InitData
   Scenario: Prepare data
     * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
     * call read('order-utils/inventory.feature')
@@ -238,3 +245,23 @@ Feature: Initialize mod-consortia integration tests
     * call read('order-utils/finances.feature')
     * call read('order-utils/organizations.feature')
     * call read('order-utils/orders.feature')
+
+    # 5. Disable instance matching in university tenant
+    * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
+    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
+    * configure headers = headersUni
+    Given path 'configurations/entries'
+    And request
+      """
+      {
+        "id": "#(isInstanceMatchingDisabledId)",
+        "module" : "ORDERS",
+        "configName" : "disableInstanceMatching",
+        "enabled" : true,
+        "value" : "{\"isInstanceMatchingDisabled\":true}"
+      }
+      """
+    When method POST
+    Then status 201
+    * call pause 32000
+    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }

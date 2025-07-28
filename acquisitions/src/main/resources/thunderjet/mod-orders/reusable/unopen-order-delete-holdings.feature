@@ -5,7 +5,7 @@ Feature: Unopen order
   Background:
     * url baseUrl
 
-  Scenario: unopenOrder
+  Scenario: unopenOrderDeleteHoldings
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -15,6 +15,7 @@ Feature: Unopen order
     * remove order.poLines
 
     Given path 'orders/composite-orders', orderId
+    And param deleteHoldings = true
     And request orderResponse
     When method PUT
     Then status 204

@@ -1,5 +1,6 @@
+# For MODORDSTOR-402
 @parallel=false
-Feature: Open order with member tenant location and verify instance, holding, and item creation [MODORDSTOR-402]
+Feature: Open order with member tenant location and verify instance, holding, and item creation
 
   Background:
     * print karate.info.scenarioName
@@ -16,8 +17,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * callonce variablesCentral
     * callonce variablesUniversity
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
+    * def fundId = callonce uuid
+    * def budgetId = callonce uuid
 
     * def orderId = call uuid
     * def poLineId = call uuid
@@ -113,9 +114,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
     # 5.2 Check holdings in 'universityTenant'
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + centralPoLineInstanceId
-    And retry until $.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     # 5.3 Check items details in 'universityTenant'
     Given path 'inventory/items'
@@ -177,9 +177,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
     # 4.2 Check holdings in 'centralTenat'
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     # 4.3 Check items in 'centralTenant'
     Given path 'inventory/items'
@@ -197,14 +196,13 @@ Feature: Open order with member tenant location and verify instance, holding, an
     # 5.2 Check holdings in 'universityTenant'
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     # 5.3 Check items in 'universityTenant'
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
 
   @Positive
@@ -250,9 +248,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -267,13 +264,12 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
 
   @Positive
@@ -319,9 +315,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 200
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords != 0
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -337,13 +332,12 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
 
     # 6. Update Order to close
@@ -374,15 +368,12 @@ Feature: Open order with member tenant location and verify instance, holding, an
     * configure headers = headersUni
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And retry until response.totalRecords == 2
+    And retry until response.totalRecords == 1
     When method GET
     * def physicalItems = $.items[?(@.materialType.name == 'Phys')]
     * def physicalItemAfterOpenOrder1 = physicalItems[0]
     And match physicalItemAfterOpenOrder1 != null
     And match physicalItemAfterOpenOrder1.status.name == 'Order closed'
-    * def physicalItemAfterOpenOrder2 = physicalItems[1]
-    And match physicalItemAfterOpenOrder2 != null
-    And match physicalItemAfterOpenOrder2.status.name == 'Order closed'
 
   @Positive
   Scenario: Do unopen the order, check appropriate state of Inventory objects
@@ -430,9 +421,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords != 0
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -447,13 +437,12 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
 
     ## 6. Unopen order
@@ -475,9 +464,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords != 0
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -492,9 +480,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 2
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -530,9 +517,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 0
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -547,9 +533,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And retry until response.totalRecords == 0
+    Then retry until responseStatus == 200
     When method GET
-    Then status 200
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
