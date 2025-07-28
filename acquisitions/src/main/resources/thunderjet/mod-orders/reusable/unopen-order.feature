@@ -5,7 +5,7 @@ Feature: Unopen order
   Background:
     * url baseUrl
 
-  Scenario: Unopen order
+  Scenario: unopenOrder
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200

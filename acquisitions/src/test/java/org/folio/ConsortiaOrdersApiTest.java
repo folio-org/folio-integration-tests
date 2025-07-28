@@ -12,14 +12,12 @@ class ConsortiaOrdersApiTest extends TestBaseEureka {
   // Default module settings :
   private static final String TEST_BASE_PATH = "classpath:thunderjet/consortia/features/";
 
-  public ConsortiaOrdersApiTest() {
+  ConsortiaOrdersApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
-
 
   @Test
   void consortiaOrdersApiTest() {
     runFeature("classpath:thunderjet/consortia/consortia-orders.feature");
   }
-
 }
