@@ -70,47 +70,19 @@ function fn() {
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
-  config.baseUrl = 'https://folio-etesting-lsdi-kong.ci.folio.org';
-  config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-
-  // if (env === 'etesting-lsdi') {
-  //   config.baseUrl = 'https://folio-etesting-lsdi-kong.ci.folio.org';
-  //   config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  // } else if (env === 'snapshot-2') {
-  //   config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
-  //   config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  // } else if (env === 'etesting-sprint') {
-  //   config.baseUrl = 'https://folio-etesting-sprint-kong.ci.folio.org';
-  //   config.testUser = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
-  // } else if (env === 'snapshot') {
-  //   config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
-  //   config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  //   config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
-  //   config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
-  // } else if (env === 'rancher') {
-  //   config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
-  //   config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  // } else if (env === 'folijet-perf') {
-  //   config.baseUrl = 'https://folio-perf-folijet-okapi.ci.folio.org';
-  //   config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  // } else if(env === 'folio-testing-karate') {
-  //   config.baseUrl = '${baseUrl}';
-  //   config.edgeUrl = '${edgeUrl}';
-  //   config.admin = {tenant: '${admin.tenant}', name: '${admin.name}', password: '${admin.password}'}
-  //   config.prototypeTenant = '${prototypeTenant}';
-  //   karate.configure('ssl', true);
-  // } else if (env === 'edev-folijet') {
-  //   config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
-  //   config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  // } else if(env === 'dev') {
-  //   config.checkDepsDuringModInstall = 'false';
-  //   config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
-  //   config.kcClientId = 'supersecret';
-  //   config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
-  // } else if (env?.match(/^ec2-\d+/)) {
-  //   config.baseUrl = 'http://' + env + ':8000';
-  //   config.testUser = {tenant: 'supertenant', name: 'admin', password: 'admin'}
-  // }
+  if (env === null || env === 'etesting-lsdi') {
+    config.baseUrl = 'https://folio-etesting-lsdi-kong.ci.folio.org';
+    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
+  } else if (env === 'etesting-sprint') {
+    config.baseUrl = 'https://folio-etesting-sprint-kong.ci.folio.org';
+    config.testUser = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
+  } else if (env === 'edev-folijet') {
+    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
+    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
+  } else if (env === 'snapshot') {
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
+  }
 
   return config;
 }
