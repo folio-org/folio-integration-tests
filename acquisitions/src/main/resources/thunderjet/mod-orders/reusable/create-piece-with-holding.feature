@@ -1,6 +1,6 @@
 @ignore
 Feature: Create piece with holding id
-  # Parameters: id*, poLineId*, titleId*, holdingId, receivingTenantId, format, createItem
+  # Parameters: id, poLineId, titleId, holdingId?, receivingTenantId?, format?, createItem?
 
   Background:
     * url baseUrl

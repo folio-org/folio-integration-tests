@@ -1,4 +1,3 @@
-@ignore
 Feature: Change order line instance connection with holdings items
 
   Background:
@@ -17,7 +16,6 @@ Feature: Change order line instance connection with holdings items
 
     * callonce variables
     * def fundId = globalFundId
-
 
   Scenario: Change instance connection with "Create" and then "Find or Create" holdings operations
     # 1. Create instance
