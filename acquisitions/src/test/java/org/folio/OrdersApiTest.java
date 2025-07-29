@@ -338,6 +338,11 @@ class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
+  void poLineChangeInstanceConnectionWithHoldingsItems() {
+    runFeatureTest("poline-change-instance-connection-with-holdings-items");
+  }
+
+  @Test
   void polineClaimingIntervalChecks() {
     runFeatureTest("poline-claiming-interval-checks");
   }

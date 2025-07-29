@@ -201,6 +201,9 @@ Feature: mod-orders integration tests
   Scenario: PoLine change instance connection
     * call read('features/poline_change_instance_connection.feature')
 
+  Scenario: PoLine change instance connection with holdings and items
+    * call read('features/poline-change-instance-connection-with-holdings-items.feature')
+
   Scenario: Claiming Active/Claiming interval checks
     * call read('features/poline-claiming-interval-checks.feature')
 
