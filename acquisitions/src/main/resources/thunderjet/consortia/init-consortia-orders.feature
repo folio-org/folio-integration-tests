@@ -47,9 +47,9 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory-storage.service-points.item.post'                |
       | 'inventory.holdings.move.item.post'                         |
       | 'inventory.holdings.update-ownership.item.post'             |
+      | 'inventory.instances.item.delete'                           |
       | 'inventory.instances.item.get'                              |
       | 'inventory.instances.item.post'                             |
-      | 'inventory.instances.item.delete'                           |
       | 'inventory.items-by-holdings-id.collection.get'             |
       | 'inventory.items.collection.get'                            |
       | 'inventory.items.item.delete'                               |
@@ -199,12 +199,12 @@ Feature: Initialize mod-consortia integration tests
       | 'consortia.sharing-instances.collection.get'                |
       | 'consortia.sharing-instances.item.post'                     |
       | 'inventory.holdings.update-ownership.item.post'             |
+      | 'inventory.instances.item.delete'                           |
       | 'inventory.instances.item.get'                              |
       | 'inventory.instances.item.post'                             |
       | 'inventory.items-by-holdings-id.collection.get'             |
       | 'inventory.items.collection.get'                            |
       | 'inventory.items.item.delete'                               |
-      | 'inventory.instances.item.delete'                           |
       | 'inventory-storage.holdings.collection.get'                 |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
