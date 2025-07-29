@@ -8,28 +8,39 @@ Feature: Initialize mod-orders integration tests
     # Including all only required modules is needed for dev env, where checkDepsDuringModInstall is false
     * table modules
       | name                        |
-      | 'mod-permissions'           |
-      | 'mod-configuration'         |
-      | 'mod-login'                 |
-      | 'mod-users'                 |
-      | 'mod-pubsub'                |
-      | 'mod-tags'                  |
       | 'mod-audit'                 |
-      | 'mod-orders-storage'        |
-      | 'mod-orders'                |
-      | 'mod-finance-storage'       |
-      | 'mod-finance'               |
-      | 'mod-organizations-storage' |
-      | 'mod-organizations'         |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-template-engine'       |
+      | 'mod-configuration'         |
       | 'mod-feesfines'             |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-inventory'             |
+      | 'mod-inventory-storage'     |
+      | 'mod-login'                 |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
+      | 'mod-permissions'           |
+      | 'mod-pubsub'                |
+      | 'mod-circulation'           |
+      | 'mod-circulation-storage'   |
+      | 'mod-tags'                  |
+      | 'mod-template-engine'       |
+      | 'mod-users'                 |
 
     * table userPermissions
       | name                                                          |
+      | 'inventory.instances.item.delete'                             |
+      | 'inventory.instances.item.post'                               |
+      | 'inventory.instances.item.put'                                |
+      | 'orders-storage.claiming.process.execute'                     |
+      | 'orders-storage.pieces.collection.get'                        |
+      | 'orders-storage.po-lines.item.get'                            |
+      | 'orders-storage.po-lines.item.post'                           |
+      | 'orders-storage.po-lines.item.put'                            |
+      | 'orders-storage.purchase-orders.item.post'                    |
+      | 'orders-storage.routing-lists.item.post'                      |
+      | 'orders-storage.settings.item.post'                           |
       | 'orders.acquisition-method.item.post'                         |
       | 'orders.acquisitions-units-assignments.assign'                |
       | 'orders.acquisitions-units-assignments.manage'                |
@@ -64,14 +75,6 @@ Feature: Initialize mod-orders integration tests
       | 'orders.routing-lists.item.post'                              |
       | 'orders.routing-lists.item.put'                               |
       | 'orders.routing-lists-template.item.get'                      |
-      | 'orders-storage.claiming.process.execute'                     |
-      | 'orders-storage.pieces.collection.get'                        |
-      | 'orders-storage.po-lines.item.get'                            |
-      | 'orders-storage.po-lines.item.post'                           |
-      | 'orders-storage.po-lines.item.put'                            |
-      | 'orders-storage.purchase-orders.item.post'                    |
-      | 'orders-storage.routing-lists.item.post'                      |
-      | 'orders-storage.settings.item.post'                           |
       | 'orders.titles.collection.get'                                |
       | 'orders.titles.item.delete'                                   |
       | 'orders.titles.item.get'                                      |
@@ -80,10 +83,10 @@ Feature: Initialize mod-orders integration tests
 
     * table adminPermissions
       | name                                                          |
-      | 'acquisition.invoice.events.get'                              |
       | 'acquisition.invoice-line.events.get'                         |
-      | 'acquisition.order.events.get'                                |
+      | 'acquisition.invoice.events.get'                              |
       | 'acquisition.order-line.events.get'                           |
+      | 'acquisition.order.events.get'                                |
       | 'acquisition.piece.events.get'                                |
       | 'acquisition.piece.events.history.get'                        |
       | 'acquisitions-units.memberships.collection.get'               |
@@ -94,22 +97,28 @@ Feature: Initialize mod-orders integration tests
       | 'acquisitions-units.units.item.post'                          |
       | 'acquisitions-units.units.item.put'                           |
       | 'addresstypes.item.post'                                      |
-      | 'circulation.requests.item.get'                               |
-      | 'circulation.requests.item.move.post'                         |
-      | 'circulation.requests.item.post'                              |
-      | 'circulation.rules.put'                                       |
       | 'circulation-storage.loan-policies.collection.get'            |
       | 'circulation-storage.loan-policies.item.post'                 |
       | 'circulation-storage.patron-notice-policies.collection.get'   |
       | 'circulation-storage.patron-notice-policies.item.post'        |
       | 'circulation-storage.request-policies.collection.get'         |
       | 'circulation-storage.request-policies.item.post'              |
+      | 'circulation.requests.item.get'                               |
+      | 'circulation.requests.item.move.post'                         |
+      | 'circulation.requests.item.post'                              |
+      | 'circulation.rules.put'                                       |
       | 'configuration.entries.collection.get'                        |
       | 'configuration.entries.item.delete'                           |
       | 'configuration.entries.item.post'                             |
       | 'configuration.entries.item.put'                              |
-      | 'finance.budgets.collection.get'                              |
+      | 'finance-storage.budget-expense-classes.item.post'            |
+      | 'finance-storage.ledger-rollovers-errors.collection.get'      |
+      | 'finance-storage.ledger-rollovers-errors.item.delete'         |
+      | 'finance-storage.ledger-rollovers-errors.item.post'           |
+      | 'finance-storage.ledger-rollovers.item.post'                  |
+      | 'finance-storage.transactions.collection.get'                 |
       | 'finance.budgets-expense-classes-totals.collection.get'       |
+      | 'finance.budgets.collection.get'                              |
       | 'finance.budgets.item.delete'                                 |
       | 'finance.budgets.item.get'                                    |
       | 'finance.budgets.item.post'                                   |
@@ -135,41 +144,36 @@ Feature: Initialize mod-orders integration tests
       | 'finance.ledgers.item.delete'                                 |
       | 'finance.ledgers.item.get'                                    |
       | 'finance.ledgers.item.post'                                   |
-      | 'finance-storage.budget-expense-classes.item.post'            |
-      | 'finance-storage.ledger-rollovers-errors.collection.get'      |
-      | 'finance-storage.ledger-rollovers-errors.item.delete'         |
-      | 'finance-storage.ledger-rollovers-errors.item.post'           |
-      | 'finance-storage.ledger-rollovers.item.post'                  |
-      | 'finance-storage.transactions.collection.get'                 |
       | 'finance.transactions.batch.execute'                          |
       | 'finance.transactions.collection.get'                         |
       | 'finance.transactions.item.get'                               |
+      | 'inventory-storage.contributor-name-types.item.post'          |
+      | 'inventory-storage.electronic-access-relationships.item.post' |
+      | 'inventory-storage.holdings-sources.item.post'                |
+      | 'inventory-storage.holdings.collection.get'                   |
+      | 'inventory-storage.holdings.item.get'                         |
+      | 'inventory-storage.holdings.item.post'                        |
+      | 'inventory-storage.holdings.retrieve.collection.post'         |
+      | 'inventory-storage.identifier-types.item.post'                |
+      | 'inventory-storage.instances.item.get'                        |
+      | 'inventory-storage.instance-statuses.item.post'               |
+      | 'inventory-storage.instance-types.item.post'                  |
+      | 'inventory-storage.loan-types.item.post'                      |
+      | 'inventory-storage.location-units.campuses.item.post'         |
+      | 'inventory-storage.location-units.institutions.item.post'     |
+      | 'inventory-storage.location-units.libraries.item.post'        |
+      | 'inventory-storage.locations.item.post'                       |
+      | 'inventory-storage.material-types.item.post'                  |
+      | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.holdings.move.item.post'                           |
       | 'inventory.instances.collection.get'                          |
+      | 'inventory.instances.item.delete'                             |
       | 'inventory.instances.item.post'                               |
       | 'inventory.instances.item.put'                                |
       | 'inventory.items-by-holdings-id.collection.get'               |
       | 'inventory.items.collection.get'                              |
       | 'inventory.items.item.get'                                    |
       | 'inventory.items.move.item.post'                              |
-      | 'inventory-storage.contributor-name-types.item.post'          |
-      | 'inventory-storage.electronic-access-relationships.item.post' |
-      | 'inventory-storage.holdings.collection.get'                   |
-      | 'inventory-storage.holdings.item.get'                         |
-      | 'inventory-storage.holdings.item.post'                        |
-      | 'inventory-storage.holdings.retrieve.collection.post'         |
-      | 'inventory-storage.holdings-sources.item.post'                |
-      | 'inventory-storage.identifier-types.item.post'                |
-      | 'inventory-storage.instances.item.get'                        |
-      | 'inventory-storage.instance-statuses.item.post'               |
-      | 'inventory-storage.instance-types.item.post'                  |
-      | 'inventory-storage.loan-types.item.post'                      |
-      | 'inventory-storage.locations.item.post'                       |
-      | 'inventory-storage.location-units.campuses.item.post'         |
-      | 'inventory-storage.location-units.institutions.item.post'     |
-      | 'inventory-storage.location-units.libraries.item.post'        |
-      | 'inventory-storage.material-types.item.post'                  |
-      | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.tenant-items.collection.get'                       |
       | 'lost-item-fees-policies.collection.get'                      |
       | 'lost-item-fees-policies.item.post'                           |
