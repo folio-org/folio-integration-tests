@@ -3,14 +3,15 @@
 Feature: check Items and holding process.
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    #* callonce dev {tenant: 'testorders1'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * configure retry = { count: 10, interval: 10000 }
@@ -28,11 +29,10 @@ Feature: check Items and holding process.
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
   Scenario: Create an order
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -55,7 +55,6 @@ Feature: check Items and holding process.
     * remove poLine.locations[0].locationId
     * set poLine.locations[0].holdingId = initialHoldingId
     Given path 'orders/order-lines'
-    * configure headers = headersUser
     And request poLine
     When method POST
     Then status 201
@@ -64,7 +63,6 @@ Feature: check Items and holding process.
 
   Scenario: Open the order
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -79,13 +77,13 @@ Feature: check Items and holding process.
   Scenario: Check inventory and order items after open order
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def instanceId = response.instanceId
     * def holdingId = response.locations[0].holdingId
 
     * print 'Check items'
+    * configure headers = headersAdmin
     Given path 'inventory/items'
     * configure headers = headersAdmin
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -101,7 +99,6 @@ Feature: check Items and holding process.
 
   Scenario: unOpen the order with deleteHoldings = false
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -117,13 +114,13 @@ Feature: check Items and holding process.
   Scenario: Check inventory and order items after Unopen order
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def instanceId = response.instanceId
     * def holdingId = response.locations[0].holdingId
 
     * print 'Check items'
+    * configure headers = headersAdmin
     Given path 'inventory/items'
     * configure headers = headersAdmin
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -138,7 +135,6 @@ Feature: check Items and holding process.
 
   Scenario: Open the order again
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -153,13 +149,13 @@ Feature: check Items and holding process.
   Scenario: Check inventory and order items after open order
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def instanceId = response.instanceId
     * def holdingId = response.locations[0].holdingId
 
     * print 'Check items'
+    * configure headers = headersAdmin
     Given path 'inventory/items'
     * configure headers = headersAdmin
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -175,7 +171,6 @@ Feature: check Items and holding process.
 
   Scenario: unOpen the order again with deleteHoldings = true
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -191,13 +186,13 @@ Feature: check Items and holding process.
   Scenario: Check inventory and order items after unOpen order
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def instanceId = response.instanceId
     * def holdingId = response.locations[0].holdingId
 
     * print 'Check items'
+    * configure headers = headersAdmin
     Given path 'inventory/items'
     * configure headers = headersAdmin
     And param query = 'purchaseOrderLineIdentifier==' + poLineId

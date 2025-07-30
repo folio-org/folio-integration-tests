@@ -1,16 +1,20 @@
+@parallel=false
 Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
 
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
 
-    * def initData = read('util/export-claims/exportClaimUtils.feature@InitData')
-    * def verifyFileContentCsv = read('util/export-claims/exportClaimUtils.feature@VerifyFileContentCsv')
-    * def verifyFileContentEdi = read('util/export-claims/exportClaimUtils.feature@VerifyFileContentEdi')
-    * def createPiecesForPoLine = read('util/export-claims/exportClaimUtils.feature@CreatePiecesForPoLine')
-    * def getJobsByType = read('util/initData.feature@GetDataExportSpringJobsByType')
+    * callonce login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
+    * def initData = read('this:util/export-claims/exportClaimUtils.feature@InitData')
+    * def verifyFileContentCsv = read('this:util/export-claims/exportClaimUtils.feature@VerifyFileContentCsv')
+    * def verifyFileContentEdi = read('this:util/export-claims/exportClaimUtils.feature@VerifyFileContentEdi')
+    * def createPiecesForPoLine = read('this:util/export-claims/exportClaimUtils.feature@CreatePiecesForPoLine')
+    * def getJobsByType = read('this:util/initData.feature@GetDataExportSpringJobsByType')
 
     * def convertStringToLines = function (file, sep) { return file.split(sep).filter(i => i.trim().length != 0); }
     * def jobSortKeyExporter = function(job) { return job.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.configName; }
@@ -93,6 +97,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
       | orgId3 | "ORG3"  | "ACC3"    | configId3 | "EDI3"     | "FTP"     | "EDI"      | "FTP"     | "33333"  | "33333-1"    | pieceId3 | fundId | currentDate |
       | orgId4 | "ORG4"  | "ACC4"    | configId4 | "EDI4"     | "FTP"     | "EDI"      | "SFTP"    | "44444"  | "44444-1"    | pieceId4 | fundId | currentDate |
     * def v = call initData testData
+    * call pause 10000
 
     # 2. Send Claims for piece 3 and 4
     * def v = call claimPieces { claimingPieceIds: "#([pieceId3, pieceId4])", claimingInterval: 1 }
@@ -127,6 +132,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
       | orgId | orgCode   | accountNo | configId | configName | transMeth | fileFormat | ftpFormat | poNumber | poLineNumber | pieceId | fundId | currentDate |
       | orgId | "ORG_NEG" | "ACC_NEG" | configId | "NEG"      | "FTP"     | "CSV"      | "FTP"     | "55555"  | "55555-1"    | pieceId | fundId | currentDate |
     * def v = call initData testData
+    * call pause 10000
 
     # 2. Delete export config
     Given path 'data-export-spring/configs', configId
@@ -157,6 +163,7 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
       | orgId1 | "ORG1_500" | "ACC1_500" | configId1 | "CSV1_500" | "File download" | "CSV"      | "FTP"     | "11250"  | "11250-1"    | pieceId1 | fundId | currentDate |
       | orgId2 | "ORG2_500" | "ACC2_500" | configId2 | "EDI1_500" | "File download" | "EDI"      | "FTP"     | "22250"  | "22250-1"    | pieceId2 | fundId | currentDate |
     * def v = call initData testData
+    * call pause 20000
 
     # 2. Create additional 249 pieces for each organization
     * def pieceIds1 = call uuids 249
@@ -167,6 +174,8 @@ Feature: Claims export with CSV and EDI for both FTP and SFTP uploads
       | "22250-1"     | pieceIds2 |
     * def v = call createPiecesForPoLine createPieceData
 
+    * configure readTimeout = 3000000
+    * configure connectTimeout = 3000000
     # 3. Send Claims for piece
     * pieceIds1.push(pieceId1)
     * pieceIds2.push(pieceId2)

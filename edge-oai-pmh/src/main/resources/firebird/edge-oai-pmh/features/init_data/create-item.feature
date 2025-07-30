@@ -2,7 +2,7 @@ Feature: create item
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapiTokenAdmin = okapitoken
 
   Scenario: Create item
@@ -10,6 +10,7 @@ Feature: create item
     Given path 'item-storage/items'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     * def item = read('classpath:samples/item.json')
     * set item.holdingsRecordId = holdingId
     * set item.id = itemId

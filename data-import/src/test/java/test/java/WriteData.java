@@ -1,5 +1,6 @@
 package test.java;
 
+import com.intuit.karate.Logger;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcStreamReader;
 import org.marc4j.MarcStreamWriter;
@@ -15,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.BufferedOutputStream;
 
 public class WriteData {
+    private static Logger LOGGER = new Logger();
+
     public static void writeByteArrayToFile(byte[] buffer, String fileName) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(fileName);
              BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)) {
@@ -67,6 +70,11 @@ public class WriteData {
                     subfield.setData(subfieldValue);
                     record.addVariableField(field);
                 }
+                else {
+                    LOGGER.info("modifyMarcRecord:: subfield " + subfieldCode + " not found in field " + fieldTag);
+                }
+            } else {
+                LOGGER.info("modifyMarcRecord:: Field " + fieldTag + " not found in the record.");
             }
         }
 

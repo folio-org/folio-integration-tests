@@ -3,13 +3,16 @@
 Feature: Create fives pieces for an open order
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -32,8 +35,6 @@ Feature: Create fives pieces for an open order
     * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def getOrderLineTitleId = read('classpath:thunderjet/mod-orders/reusable/get-order-line-title-id.feature')
     * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
-
-    * configure headers = headersUser
 
   Scenario: Create finances
     * configure headers = headersAdmin
@@ -71,6 +72,7 @@ Feature: Create fives pieces for an open order
     * call createPiece { pieceId: "#(pieceId5)", poLineId: "#(poLineId5)", titleId: "#(titleId5)" }
 
   Scenario: Check budget
+    * configure headers = headersAdmin
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET

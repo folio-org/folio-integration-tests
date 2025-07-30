@@ -2,16 +2,16 @@
 Feature: Change pending distribution with inactive budget
 
   Background:
-    * url baseUrl
     * print karate.info.scenarioName
+    * url baseUrl
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -30,9 +30,9 @@ Feature: Change pending distribution with inactive budget
     * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId1)', allocated: 1000 }
     * def v = call createFund { id: '#(fundId2)' }
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', allocated: 1000 }
-    * configure headers = headersUser
 
     * print '2. Create order and line'
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)' }
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId1)' }
 
@@ -53,6 +53,7 @@ Feature: Change pending distribution with inactive budget
     And request budget
     When method PUT
     Then status 204
+
     * configure headers = headersUser
 
 

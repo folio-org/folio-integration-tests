@@ -1,16 +1,21 @@
-Feature: find-holdings-by-location-and-instance
+Feature: Find holdings by location and instance
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
-    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+
+    * callonce login testAdmin
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+
+    * callonce login testUser
+    * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
     * def locationId = 'b32c5ce2-6738-42db-a291-2796b1c3c4c8'
 
   Scenario: Create first order
     * def sample_po_1 = read('classpath:samples/mod-gobi/po-physical-annex-holding-1.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po_1
     When method POST
     Then status 201
@@ -24,11 +29,15 @@ Feature: find-holdings-by-location-and-instance
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
+    * def orderId = response.purchaseOrders[0].id
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }
 
   Scenario: Create second order
     * def sample_po_2 = read('classpath:samples/mod-gobi/po-physical-annex-holding-2.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po_2
     When method POST
     Then status 201
@@ -42,6 +51,7 @@ Feature: find-holdings-by-location-and-instance
     When method GET
     Then status 200
     And match response.purchaseOrders[0].approved == true
+    * def orderId = response.purchaseOrders[0].id
 
     # matched order lines requested and stored information
     Given path '/orders/order-lines'
@@ -59,3 +69,6 @@ Feature: find-holdings-by-location-and-instance
     When method GET
     Then status 200
     And match $.totalRecords == 1
+
+    # Cleanup order data
+    * def v = call cleanupOrderData { orderId: "#(orderId)" }

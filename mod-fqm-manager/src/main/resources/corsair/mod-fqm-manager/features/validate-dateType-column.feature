@@ -2,8 +2,7 @@ Feature: Validate Date Columns
 
   Background:
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Validate a date column
     # Check if the field value is not null
@@ -13,7 +12,7 @@ Feature: Validate Date Columns
     * match fieldValue == '#regex ^\\d{4}-\\d{2}-\\d{2}$'
 
     # Construct the FQL query JSON properly
-    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}}'
+    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}, "_version": "' + fqmVersion + '"}'
 
     # Post the query for the valid field value
     Given path 'query'

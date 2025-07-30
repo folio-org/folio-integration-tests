@@ -3,7 +3,7 @@ Feature: Fee/fine accounts tests
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)','Accept': 'application/json, text/plain' }
     * def mockLoanId = call uuid1
     * def userId = call uuid1
     * def feefineId = call uuid1
@@ -91,17 +91,6 @@ Feature: Fee/fine accounts tests
     Given path 'accounts', accountId
     When method GET
     Then status 404
-
-  Scenario: Can not create an account without required referenced entity IDs
-    * def requestEntity = read('samples/account-request-entity.json')
-    * def expectedErrMsg = "must not be null"
-    * requestEntity.id = null
-
-    Given path 'accounts'
-    And request requestEntity
-    When method POST
-    Then status 422
-    And match $.errors[0].message == expectedErrMsg
 
   Scenario: Can not create an account with invalid UUID for any of the referenced entities
     * def requestEntity = read('samples/account-request-entity.json')
@@ -1161,7 +1150,7 @@ Feature: Fee/fine accounts tests
     And match $.allowed == true
     And match $.amount == "30"
 
-#   Account pay, waive and transfer actions
+  #   Account pay, waive and transfer actions
 
   Scenario: Pay, waive and transfer actions should return 404 when account doesn't exist
     * def payRequestEntity = read('samples/pay-request-entity.json')

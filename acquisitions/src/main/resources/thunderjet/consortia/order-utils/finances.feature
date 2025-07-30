@@ -1,28 +1,28 @@
-Feature: central finances
+@parallel=false
+Feature: Central finances
 
   Background:
     * url baseUrl
-    * call login consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': '*/*' }
 
     # load central variables
     * callonce variablesCentral
 
-  Scenario: create fiscal year
+  Scenario: Create fiscal years
     * table fiscalYears
       | id                         | code     | periodStart            | periodEnd              | series |
       | centralFiscalYearId        | 'FY2025' | '2025-01-01T00:00:00Z' | '2025-12-31T23:59:59Z' | 'FY'   |
       | centralPlannedFiscalYearId | 'FY2026' | '2026-01-01T00:00:00Z' | '2026-12-31T23:59:59Z' | 'FY'   |
     * def v = call createFiscalYear fiscalYears
 
-  Scenario: create ledgers
+  Scenario: Create ledgers
     * table ledgers
       | id                              | fiscalYearId        | restrictEncumbrance | restrictExpenditure |
       | centralLedgerId                 | centralFiscalYearId | false               | false               |
       | centralLedgerWithRestrictionsId | centralFiscalYearId | true                | true                |
     * def v = call createLedger ledgers
 
-  Scenario: create funds
+  Scenario: Create funds
     * table funds
       | id                       | code                         | ledgerId        | externalAccountNo              |
       | centralFundId            | centralFundCode              | centralLedgerId | '1111111111111111111111111'    |
@@ -31,7 +31,7 @@ Feature: central finances
       | centralFundWithoutBudget | centralFundWithoutBudgetCode | centralLedgerId | '2111111111111111111111111'    |
     * def v = call createFund funds
 
-  Scenario: create budgets
+  Scenario: Create budgets
     * table budgets
       | id               | fundId         | fiscalYearId        | allocated |
       | centralBudgetId  | centralFundId  | centralFiscalYearId | 9999999   |
@@ -39,7 +39,7 @@ Feature: central finances
       | centralBudgetId3 | centralFundId3 | centralFiscalYearId | 9999999   |
     * def v = call createBudget budgets
 
-  Scenario: create expense classes
+  Scenario: Create expense classes
     * table expenseClasses
       | id                         | code   | name         | externalAccountNumberExt |
       | centralElecExpenseClassId  | "Elec" | "Electronic" | "01"                     |

@@ -8,7 +8,7 @@ Feature: mod bulk operations items features
     * def itemBarcode = '7010'
 
   Scenario: In-App approach bulk edit of item
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -16,9 +16,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -31,7 +31,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -112,7 +112,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -125,7 +125,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -156,7 +156,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -196,7 +196,7 @@ Feature: mod bulk operations items features
     And match response.items[0].temporaryLocation.name == '#notpresent'
 
   Scenario: In-App approach add notes to item
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -204,9 +204,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -219,7 +219,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -298,7 +298,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -311,7 +311,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -329,7 +329,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
@@ -338,7 +338,7 @@ Feature: mod bulk operations items features
     And match response.header[32].value == 'Binding note'
     And match response.rows[0].row[32] == 'item note'
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -370,7 +370,7 @@ Feature: mod bulk operations items features
 
 
   Scenario: In-App approach mark notes as staff only
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -378,9 +378,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -393,7 +393,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -444,7 +444,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -457,7 +457,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -475,7 +475,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -502,7 +502,7 @@ Feature: mod bulk operations items features
 
 
   Scenario: In-App approach remove mark as staff only for notes
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -510,9 +510,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -525,7 +525,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -576,7 +576,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -589,7 +589,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -607,7 +607,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -633,7 +633,7 @@ Feature: mod bulk operations items features
     And match response.items[0].notes[0].staffOnly == false
 
   Scenario: In-App approach find and replace for notes
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -641,9 +641,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -656,7 +656,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -718,7 +718,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -731,8 +731,10 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
     When method GET
@@ -749,7 +751,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -776,7 +778,8 @@ Feature: mod bulk operations items features
     And match response.items[0].notes[0].itemNoteTypeId == '87c450be-2033-41fb-80ba-dd2409883681'
 
   Scenario: In-App approach change type of notes
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -784,9 +787,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -799,7 +802,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -861,7 +864,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -874,7 +877,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -892,7 +895,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -919,7 +922,8 @@ Feature: mod bulk operations items features
     And match response.items[0].notes[1].itemNoteTypeId == 'acb3a58f-1d72-461d-97c3-0e7119e8d544'
 
   Scenario: In-App approach duplicate for circ notes
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -927,9 +931,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -942,7 +946,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -979,7 +983,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -992,7 +996,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -1010,7 +1014,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -1034,7 +1038,8 @@ Feature: mod bulk operations items features
     And match response.items[0].circulationNotes[0].noteType == 'Check out'
 
   Scenario: In-App approach find and remove for notes
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -1042,9 +1047,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -1057,7 +1062,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -1144,7 +1149,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -1157,7 +1162,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -1175,7 +1180,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -1200,8 +1205,8 @@ Feature: mod bulk operations items features
     And match response.items[0].notes[0].note == ''
 
   Scenario: In-App approach remove notes
-    * callonce login testAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def query = 'barcode==' + itemBarcode
     Given path 'inventory', 'items'
     And param query = query
@@ -1218,9 +1223,9 @@ Feature: mod bulk operations items features
     And request item
     When method PUT
 
-    * callonce login testUser
+    * call login testUser
     * def itemBarcode = '7010'
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'ITEM'
     And param identifierType = 'BARCODE'
@@ -1228,9 +1233,9 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -1243,7 +1248,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'MATCHED_RECORDS_FILE'
@@ -1316,7 +1321,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -1329,7 +1334,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -1347,7 +1352,7 @@ Feature: mod bulk operations items features
     When method POST
     Then status 200
 
-    * pause(10000)
+    * pause(15000)
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'

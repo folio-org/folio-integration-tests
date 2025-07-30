@@ -8,6 +8,7 @@ function fn() {
 
   var env = karate.env;
   var testTenant = karate.properties['testTenant'] || 'testtenant';
+  var testTenantId = karate.properties['testTenantId'];
   var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
   var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
   var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
@@ -31,11 +32,15 @@ function fn() {
 
   var config = {
     tenantParams: {loadReferenceData: true},
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
+
     testTenant: testTenant,
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
     testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword},
 
@@ -71,6 +76,12 @@ function fn() {
       }
       return result;
     },
+    orWhereQuery: function(field, values) {
+      var orStr = ' or ';
+      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
+
+      return string;
+    },
     containsDuplicatesOfFields: function(array, fields) {
       let keys = [];
       let result = false;
@@ -94,57 +105,39 @@ function fn() {
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
-  if (env === 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-  } else if (env === 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-    config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
-    config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
-  } else if (env == 'task-force-orchid') {
-    config.baseUrl = 'https://folio-dev-task-force-okapi.ci.folio.org:443';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-  } else if (env == 'task-force-poppy') {
-    config.baseUrl = 'https://folio-dev-task-force-2nd-okapi.ci.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-  } else if (env === 'rancher') {
-    config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
-    config.prototypeTenant = 'consortium';
-    config.admin = {
-      tenant: 'consortium',
-      name: 'consortium_admin',
-      password: 'admin'
-    }
-  }
-  else if (env == 'folijet-perf') {
-    config.baseUrl = 'https://folio-perf-folijet-okapi.ci.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
-  }
-  else if(env == 'folio-testing-karate') {
+  if (env == 'snapshot') {
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+  } else if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
-    config.edgeUrl = '${edgeUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
       password: '${admin.password}'
     }
+    config.kcClientId = '${clientId}',
+    config.kcClientSecret = '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if(env == 'dev') {
-    config.checkDepsDuringModInstall = 'false'
-  } else if (env?.match(/^ec2-\d+/)) {
-    config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {tenant: 'supertenant', name: 'admin', password: 'admin'}
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
+  } else if (env == 'rancher') {
+    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
+    config.prototypeTenant = 'consortium';
+    config.admin = {
+      tenant: 'consortium',
+      name: 'consortium_admin',
+      password: 'admin'
+    };
+    config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org';
+  } else if (env == 'dev') {
+    config.checkDepsDuringModInstall = 'false';
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   }
-
-//   uncomment to run on local
-//   karate.callSingle('classpath:folijet/data-import/global/add-okapi-permissions.feature', config);
-
   return config;
 }
 

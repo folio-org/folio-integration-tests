@@ -2,20 +2,17 @@
 Feature: Rollover and pay invoice using past fiscal year
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * call login testAdmin
-    * def okapitokenAdmin = okapitoken
-
-    * call login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-
     * callonce variables
+
+    * def checkOrderLineStatuses = read('classpath:thunderjet/cross-modules/helpers/helper-rollover-and-pay-invoice-using-past-fiscal-year.feature@CheckOrderLineStatuses')
+    * def verifyEncumbranceTransactionsInNewYear = read('classpath:thunderjet/cross-modules/helpers/helper-rollover-and-pay-invoice-using-past-fiscal-year.feature@VerifyEncumbranceTransactionsInNewYear')
+    * def verifyPendingPaymentsWereCreatedInPastFiscalYear = read('classpath:thunderjet/cross-modules/helpers/helper-rollover-and-pay-invoice-using-past-fiscal-year.feature@VerifyPendingPaymentsWereCreatedInPastFiscalYear')
 
   @Positive
   Scenario: Rollover and pay invoice using past fiscal year
@@ -67,14 +64,12 @@ Feature: Rollover and pay invoice using past fiscal year
     * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId1)' }
 
     ### 2. Create fund and budgets
-    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
     * table budgets
       | id        | fundId | fiscalYearId  | allocated | status   |
       | budgetId1 | fundId | fiscalYearId1 | 1000      | 'Active' |
       | budgetId2 | fundId | fiscalYearId2 | 1000      | 'Active' |
     * def v = call createBudget budgets
-    * configure headers = headersUser
 
     ### 3. Create orders and order lines
     * def emptyOngoingObj = { }
@@ -158,7 +153,7 @@ Feature: Rollover and pay invoice using past fiscal year
       | fiscalYearId  | reEncumber | amount | status       | totalRecords |
       | fiscalYearId2 | true       | 50.0   | 'Unreleased' | 3            |
       | fiscalYearId2 | false      | 0.0    | 'Released'   | 3            |
-    * def v = call read('@CheckEncumbranceTransactionsInNewYear') newYearEncumbrances
+    * def v = call verifyEncumbranceTransactionsInNewYear newYearEncumbrances
 
     ### 9. Create invoices
     * table invoices
@@ -186,13 +181,13 @@ Feature: Rollover and pay invoice using past fiscal year
     * def v = call approveInvoice invoices
 
     ### 12. Check pending payments were created in past fiscal year
-    * def v = call read('@CheckPendingPaymentsWereCreatedInPastFiscalYear') invoiceLines
+    * def v = call verifyPendingPaymentsWereCreatedInPastFiscalYear invoiceLines
 
     ### 13. Pay the invoices
     * def v = call payInvoice invoices
 
     ### 14. Check order line statuses
-    * def v = call read('@CheckOrderLineStatuses') orderLines
+    * def v = call checkOrderLineStatuses orderLines
 
     ### 15. Check the past budget
     Given path 'finance/budgets', budgetId1
@@ -213,37 +208,3 @@ Feature: Rollover and pay invoice using past fiscal year
     And match $.cashBalance == 2000
     And match $.overExpended == 0
     And match $.encumbered == 150
-
-  ### Local reusable functions, @ignore indicator excludes these scenarios from test reports
-
-  @ignore @CheckEncumbranceTransactionsInNewYear
-  Scenario: Check encumbrance transactions in new year
-    Given path 'finance/transactions'
-    And param query = 'transactionType==Encumbrance And fiscalYearId==' + fiscalYearId + ' And encumbrance.reEncumber==' + reEncumber
-    When method GET
-    Then status 200
-    And match $.totalRecords == totalRecords
-    And match each $.transactions[*].amount == amount
-    And match each $.transactions[*].currency == 'USD'
-    And match each $.transactions[*].encumbrance.orderStatus == 'Open'
-    And match each $.transactions[*].encumbrance.status == status
-    And match each $.transactions[*].encumbrance.initialAmountEncumbered == amount
-
-  @ignore @CheckPendingPaymentsWereCreatedInPastFiscalYear
-  Scenario: Check pending payments were created in past fiscal year
-    Given path 'finance/transactions'
-    And headers headersAdmin
-    And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' And transactionType==Pending payment'
-    When method GET
-    Then status 200
-    And match each $.transactions[*].fiscalYearId == fiscalYearId
-
-  @ignore @CheckOrderLineStatuses
-  Scenario: Check order line statuses
-    Given path 'orders/order-lines', id
-    When method GET
-    Then status 200
-    * def paymentStatus = orderType == 'One-Time' ? 'Fully Paid' : 'Ongoing'
-    * def receiptStatus = orderType == 'One-Time' ? 'Awaiting Receipt' : 'Ongoing'
-    And match $.paymentStatus == paymentStatus
-    And match $.receiptStatus == receiptStatus

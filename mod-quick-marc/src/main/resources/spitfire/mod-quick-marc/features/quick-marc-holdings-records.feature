@@ -1,10 +1,10 @@
 Feature: Test quickMARC holdings records
   Background:
     * url baseUrl
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
 
     * def testInstanceId = karate.properties['instanceId']

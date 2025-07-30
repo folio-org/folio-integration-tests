@@ -5,15 +5,14 @@ Feature: Approve an invoice using different fiscal years
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -47,7 +46,6 @@ Feature: Approve an invoice using different fiscal years
 
 
   Scenario: Create a new fiscal year using the same range as the current one, and the associated ledger
-    * configure headers = headersAdmin
     Given path 'finance/fiscal-years', globalFiscalYearId
     When method GET
     Then status 200
@@ -73,7 +71,6 @@ Feature: Approve an invoice using different fiscal years
 
 
   Scenario: Create funds and budgets
-    * configure headers = headersAdmin
     # funds 1 and 2 use the same fiscal year, fund 3 uses the other one
     * call createFund { id: #(fundId1), code: #(fundId1), ledgerId: #(globalLedgerId) }
     * call createBudget { id: #(budgetId1), fundId: #(fundId1), fiscalYearId: #(globalFiscalYearId), allocated: 1000, status: 'Active' }

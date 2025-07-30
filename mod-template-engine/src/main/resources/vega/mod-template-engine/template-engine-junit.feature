@@ -18,4 +18,4 @@ Feature: mod-template-engine integration tests
       | 'template-request.post'             |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')

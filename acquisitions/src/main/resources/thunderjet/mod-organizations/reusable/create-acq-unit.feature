@@ -8,7 +8,7 @@ Feature: Create ACQ Unit
   Scenario: createAcqUnit
     * def newId = callonce uuid
     * def id = karate.get('id', newId)
-    Given path '/acquisitions-units-storage/units'
+    Given path '/acquisitions-units/units'
     And request
       """
       {

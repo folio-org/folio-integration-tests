@@ -1,21 +1,17 @@
+@parallel=false
 Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
 
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance'}
 
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
-
-    * configure headers = headersAdmin
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -117,6 +113,7 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * def toYear = parseInt(fromYear) + 1
 
   Scenario: Update po line limit
+    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And param query = 'configName==poLines-limit'
     When method GET
@@ -218,7 +215,6 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
       | groupId2 |
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
@@ -632,7 +628,6 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
 
 
   Scenario: Start rollover for ledger 1
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -687,7 +682,6 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * call pause 1000
 
   Scenario: Start rollover for ledger 2
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -742,7 +736,6 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * call pause 1000
 
   Scenario: Start rollover for ledger 3
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -797,7 +790,6 @@ Feature: Ledger fiscal year rollover issues MODFISTO-309 and MODFISTO-311
     * call pause 1000
 
   Scenario: Start rollover for ledger 4
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """

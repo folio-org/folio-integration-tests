@@ -1,17 +1,17 @@
+@parallel=false
 Feature: Expense classes validation upon invoice approval
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testinvoices'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -167,7 +167,6 @@ Feature: Expense classes validation upon invoice approval
 
     * def fundId = <fundId>
     * def expenseClassId = <expenseClassId>
-    * configure headers = headersUser
 
     Given path 'invoice/invoices'
     And request
@@ -242,8 +241,6 @@ Feature: Expense classes validation upon invoice approval
 
     * def fundId = <fundId>
     * def expenseClassId = <expenseClassId>
-
-    * configure headers = headersUser
 
     Given path 'invoice/invoices'
     And request

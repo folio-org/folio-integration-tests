@@ -37,14 +37,15 @@ Feature: Test operations affecting pieces with different po line options
   # - Check items after deleting the order line
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce dev {tenant: 'testorders1'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -72,8 +73,9 @@ Feature: Test operations affecting pieces with different po line options
     * print 'Create finances'
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)' }
+    * configure headers = headersUser
 
     # When an instance is connected to the po line
     * if (<instance> || locations == 'holdingLocation') karate.log('Create an instance (for cases with a connected instance or a holding location)')
@@ -84,7 +86,6 @@ Feature: Test operations affecting pieces with different po line options
     * if (locations == 'holdingLocation') karate.call('../reusable/create-holdings.feature', { holdingId: initialHoldingId, instanceId: initialInstanceId, locationId: locationId })
 
     * print 'Create an order'
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -172,8 +173,8 @@ Feature: Test operations affecting pieces with different po line options
     * if (<isPackage>) karate.log('Create a title (for isPackage only)')
     * if (<isPackage>) karate.call('../reusable/create-title.feature', { titleId: packageTitleId, poLineId })
 
-    * configure headers = headersUser
     * print 'Check titles'
+    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -307,6 +308,7 @@ Feature: Test operations affecting pieces with different po line options
     And assert response.locations.length == 0 || response.locations[0].holdingId == holdingId
 
     * print 'Check items after unopen'
+    * configure headers = headersAdmin
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
@@ -315,6 +317,7 @@ Feature: Test operations affecting pieces with different po line options
 
 
     * print 'Reopen the order'
+    * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -364,6 +367,7 @@ Feature: Test operations affecting pieces with different po line options
     And assert physicalItem == null || physicalItem.status.name == 'On order'
 
     * print 'Check titles after reopen'
+    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET

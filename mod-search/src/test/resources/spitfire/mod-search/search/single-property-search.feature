@@ -3,7 +3,7 @@ Feature: Tests that searches by a single property
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': #(okapitoken)}
+    * configure headers = {'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
 
   Scenario Outline: Can search by title that matches '<field>' component
     Given path '/search/instances'
@@ -74,8 +74,10 @@ Feature: Tests that searches by a single property
     Then match response.totalRecords == <totalRecords>
     Examples:
       | field                | operator | value      | totalRecords |
-      | metadata.createdDate | >=       | 2020-12-08 | 2            |
-      | metadata.updatedDate | >        | 2021-01-15 | 1            |
+      | metadata.createdDate | >=       | 2020-12-08 | 17           |
+      | metadata.createdDate | <        | 2020-12-08 | 0            |
+      | metadata.updatedDate | >        | 2021-01-15 | 17           |
+      | metadata.updatedDate | <        | 2021-01-15 | 0            |
       | normalizedDate1      | >        | 2021       | 11           |
       | normalizedDate1      | <        | 2021       | 2            |
       | normalizedDate1      | >=       | 2022       | 11           |

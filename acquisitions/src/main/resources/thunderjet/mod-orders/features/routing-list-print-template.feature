@@ -1,17 +1,17 @@
   # for MODORDERS-1026
+  @parallel=false
   Feature: Should check processing of printing routing list functionlity
 
     Background:
+      * print karate.info.scenarioName
       * url baseUrl
-      * callonce loginAdmin testAdmin
+
+      * callonce login testAdmin
       * def okapitokenAdmin = okapitoken
-
-      * callonce loginRegularUser testUser
+      * callonce login testUser
       * def okapitokenUser = okapitoken
-
-      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
       * configure headers = headersUser
 
       * callonce variables
@@ -77,7 +77,6 @@
 
 
       * print "Create two users with different addressType are related to routingLists"
-      * configure headers = headersAdmin
       * set user1.personal.addresses[0].addressTypeId = officeAddressTypeId
       * set user1.personal.addresses[0].addressLine1 = officeAddressLine1V1
       * set user1.personal.addresses[1].addressTypeId = homeAddressTypeId
@@ -149,7 +148,6 @@
 
 
       * print "POST setting with addressTypId"
-      * configure headers = headersAdmin
       Given path 'orders-storage/settings'
       And request
         """
@@ -186,7 +184,6 @@
       * set routingList.userIds[0] = user1.id
       * set routingList.userIds[1] = user2.id
       * set routingList.userIds[2] = user3.id
-      * configure headers = headersAdmin
 
       Given path 'orders-storage/routing-lists'
       And request routingList
@@ -196,7 +193,6 @@
 
 
       * print "Verify GET template feature"
-      * configure headers = headersUser
       Given path 'orders/routing-lists/' + routingListId + '/template'
       When method GET
       Then status 200

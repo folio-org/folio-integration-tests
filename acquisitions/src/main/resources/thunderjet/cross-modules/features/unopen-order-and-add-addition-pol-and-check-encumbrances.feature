@@ -1,22 +1,20 @@
+@parallel=false
 Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testcrossmodules'}
 
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    # load global variables
+
     * callonce variables
 
     * def orderId = callonce uuid1
     * def orderLineIdOne = callonce uuid2
     * def unOpenOrderLineId = callonce uuid3
+
 
   Scenario: Create orders
     Given path 'orders/composite-orders'
@@ -30,6 +28,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
     """
     When method POST
     Then status 201
+
 
   Scenario Outline: Create order lines for <orderLineId>
     * def orderId = <orderId>
@@ -46,6 +45,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
       | orderId | orderLineId    |
       | orderId | orderLineIdOne |
 
+
   Scenario: Open order
     # ============= get order to open ===================
     Given path 'orders/composite-orders', orderId
@@ -61,6 +61,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
     When method PUT
     Then status 204
 
+
   Scenario: Check that order status Open in encumbrance after Open order
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
@@ -72,6 +73,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
     And match transaction.encumbrance.initialAmountEncumbered == 1.0
     And match transaction.encumbrance.status == 'Unreleased'
     And match transaction.encumbrance.orderStatus == 'Open'
+
 
   Scenario: UnOpen order
     # ============= get order to open ===================
@@ -88,6 +90,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
     When method PUT
     Then status 204
 
+
   Scenario: Check order workflow status is Pending after UnOpen
     # ============= get order to open ===================
     Given path 'orders/composite-orders', orderId
@@ -95,6 +98,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
     Then status 200
     * def orderResponse = $
     And match orderResponse.workflowStatus == "Pending"
+
 
   Scenario: Check that order status Pending in encumbrance after UnOpen order
     Given path 'finance/transactions'
@@ -126,6 +130,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
       | orderId | unOpenOrderLineId |
       | orderId | unOpenOrderLineId |
 
+
   Scenario: ReOpen order
     # ============= get order to open ===================
     Given path 'orders/composite-orders', orderId
@@ -141,6 +146,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
     When method PUT
     Then status 204
 
+
   Scenario: Check order after ReOpen
     # ============= get order to open ===================
     Given path 'orders/composite-orders', orderId
@@ -148,6 +154,7 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
     Then status 200
     * def orderResponse = $
     * set orderResponse.workflowStatus = "Open"
+
 
   Scenario: Check that order status Open in encumbrance after ReOpen order
     Given path 'finance/transactions'

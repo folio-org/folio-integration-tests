@@ -4,27 +4,13 @@ Feature: Change fund distribution and check initial amount encumbered
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
 
     * def fundAId = callonce uuid1
     * def fundBId = callonce uuid2
@@ -41,7 +27,6 @@ Feature: Change fund distribution and check initial amount encumbered
 
 
   Scenario: Prepare finances with 4 funds
-    * configure headers = headersAdmin
     * def v = call createFund { id: #(fundAId) }
     * def v = call createFund { id: #(fundBId) }
     * def v = call createFund { id: #(fundCId) }

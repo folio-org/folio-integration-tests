@@ -411,7 +411,7 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     Then status 204
 
     # Verify job execution for data-import
-    * call read('classpath:folijet/data-import/features/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(result.s3UploadKey)'}
+    * call read('classpath:folijet/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(result.s3UploadKey)'}
 
     # Get child job execution
     Given path 'change-manager/jobExecutions', jobExecutionId
@@ -430,10 +430,9 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     And match jobExecution.progress == '#present'
 
     # Verify that needed entities created
-    * call pause 10000
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
     And headers headersUser
-    And retry until response.entries[0].relatedInstanceInfo.actionStatus != null && response.entries[0].relatedHoldingsInfo[0].actionStatus != null && response.entries[0].relatedItemInfo[0].actionStatus != null
+    And retry until karate.get('response.entries[0].relatedInstanceInfo.actionStatus') != null && karate.get('response.entries[0].relatedHoldingsInfo[0].actionStatus') != null && karate.get('response.entries[0].relatedItemInfo[0].actionStatus') != null
     When method GET
     Then status 200
     And assert response.entries[0].sourceRecordActionStatus == 'CREATED'

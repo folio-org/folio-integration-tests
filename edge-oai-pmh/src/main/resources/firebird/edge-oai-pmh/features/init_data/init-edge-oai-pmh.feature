@@ -3,7 +3,7 @@ Feature: post instance, holdings and items
   Background:
     * url baseUrl
     * callonce variables
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapiTokenAdmin = okapitoken
     * def holdingsSource = read('classpath:samples/holdings_source.json');
 
@@ -11,6 +11,7 @@ Feature: post instance, holdings and items
     Given path 'holdings-sources'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request holdingsSource
     When method POST
     Then status 201
@@ -19,6 +20,7 @@ Feature: post instance, holdings and items
     Given path 'instance-types'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request
     """
      {
@@ -38,6 +40,7 @@ Feature: post instance, holdings and items
     Given path 'location-units/institutions'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request
     """
     {
@@ -52,6 +55,7 @@ Feature: post instance, holdings and items
     Given path 'location-units/campuses'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request
     """
     {
@@ -67,6 +71,7 @@ Feature: post instance, holdings and items
     Given path 'location-units/libraries'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request
     """
     {
@@ -82,6 +87,7 @@ Feature: post instance, holdings and items
     Given path 'locations'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request
     """
      {
@@ -106,6 +112,7 @@ Feature: post instance, holdings and items
     Given path 'call-number-types'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request
     """
         {
@@ -133,6 +140,7 @@ Feature: post instance, holdings and items
     Given path 'loan-types'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request
     """
     {
@@ -146,6 +154,7 @@ Feature: post instance, holdings and items
     Given path 'material-types'
     And header Accept = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
     And request
     """
     {

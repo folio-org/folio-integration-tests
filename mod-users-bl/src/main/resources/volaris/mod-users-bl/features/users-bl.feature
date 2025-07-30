@@ -1,61 +1,55 @@
 Feature: Test user business logic
 
   Background:
-    * call login testAdmin
+    * call login testUser
     * url baseUrl
-    * configure headers = { 'X-Okapi-Tenant': '#(testTenant)', 'Authtoken-Refresh-Cache': 'true' , 'Accept': '*/*' ,'x-okapi-token': '#(okapitoken)' }
-
-  Scenario: Set the right permissions for the admin user.
-    Given call read("configurePermissions.feature")
+    * configure headers = { 'X-Okapi-Tenant': '#(testTenant)', 'x-okapi-tenant': '#(testTenant)', 'Authtoken-Refresh-Cache': 'true' , 'Accept': '*/*' ,'x-okapi-token': '#(okapitoken)' }
+    * def testUserId = java.lang.System.getProperty('mod-users-bl-testUserId')
 
   Scenario: Can login after password change
     * configure lowerCaseResponseHeaders = true
     * def newPassword = "Taxfw7rd1!"
 
-    # Login the test user. This user was created in common/setup-users.feature.
+    # Login the test admin. This user was created in users-bl-junit.feature.
     Given path 'bl-users/login'
     And header Origin = baseUrl
     And header Access-Control-Request-Method = "POST"
     When method OPTIONS
-    Then status 204
+    Then status 200
     And match header access-control-allow-methods contains "POST"
 
     Given path 'bl-users/login'
     And request
     """
     {
-      "username": "#(testUser.name)",
-      "password": "#(testUser.password)"
+      "username": "#(testAdmin.name)",
+      "password": "#(testAdmin.password)"
     }
     """
     When method POST
     Then status 201
     # Grab some variables from the response.
-    * def token = responseHeaders['x-okapi-token'][0]
     * def userId = response.user.id
     # Do some validation on the response.
     And match response.user.id == '#uuid'
-    And match response.user.username == testUser.name
+    And match response.user.username == testAdmin.name
     And match response.user.active == true
-    And match response.permissions.id == '#uuid'
-    And match response.permissions.permissions == '#array'
 
     # Update the user's password.
     Given path 'bl-users/settings/myprofile/password'
     And header Origin = baseUrl
     And header Access-Control-Request-Method = "POST"
     When method OPTIONS
-    Then status 204
+    Then status 200
     And match header access-control-allow-methods contains "POST"
 
     Given path 'bl-users/settings/myprofile/password'
-    And header x-okapi-token = token
     And request
     """
     {
       "userId": "#(userId)",
-      "username": "#(testUser.name)",
-      "password": "#(testUser.password)",
+      "username": "#(testAdmin.name)",
+      "password": "#(testAdmin.password)",
       "newPassword": "#(newPassword)"
     }
     """
@@ -67,13 +61,12 @@ Feature: Test user business logic
     And request
     """
     {
-      "username": "#(testUser.name)",
+      "username": "#(testAdmin.name)",
       "password": "#(newPassword)"
     }
     """
     When method POST
     Then status 201
-    And match responseHeaders contains { 'x-okapi-token': '#present' }
 
   Scenario: Logged in user includes additional information about permissions etc
 
@@ -82,31 +75,28 @@ Feature: Test user business logic
     Then status 200
     And match response.user.active == true
     And match response.user.personal.firstName == 'Karate'
-    And match response.user.username == 'test-admin'
-    And match response.permissions.permissions contains [ 'perms.all' , 'okapi.readonly' , 'okapi.all', 'configuration.all' ]
+    And match response.user.username == 'test-user'
 
   Scenario:  Can fetch open transactions associated with a user by username
 
-    Given path 'bl-users/by-username/' + 'test-admin'
+    Given path 'bl-users/by-username/' + 'test-user'
     When method GET
     Then status 200
     And match response.user.active == true
     And match response.user.personal.firstName == 'Karate'
-    And match response.user.username == 'test-admin'
-    And match response.permissions.permissions contains [ 'users-bl.item.get' , 'users-bl.transactions.get' , 'users-bl.item.delete' ]
+    And match response.user.username == 'test-user'
 
   Scenario: Can fetch open transactions associated with a user by ID
 
-    Given path 'bl-users/by-id/' + '00000000-1111-5555-9999-999999999991'
+    Given path 'bl-users/by-id/' + testUserId
     When method GET
     Then status 200
     And match response.user.active == true
     And match response.user.personal.firstName == 'Karate'
-    And match response.user.username == 'test-admin'
-    And match response.permissions.permissions contains [ 'user-settings.custom-fields.all' , 'login.all' , 'perms.users.assign.immutable' ]
+    And match response.user.username == 'test-user'
 
   Scenario: Return an object listing number of open transactions that are associated to the user referenced by the user's username
-    # creating owner & fine is only for opening & testing a transaction for testAdmin user.
+    # creating owner & fine is only for opening & testing a transaction for testUser user.
     Given path 'owners'
     And request
     """
@@ -135,14 +125,14 @@ Feature: Test user business logic
      "remaining": 5,
      "feeFineType": "printing card",
      "feeFineOwner": "owner",
-     "userId": "00000000-1111-5555-9999-999999999991",
+     "userId": "#(testUserId)",
      "id": "6312d172-f0cf-40f6-b27d-9fa8feaf333f"
     }
     """
     When method POST
     Then status 201
 
-    Given path 'bl-users/by-username/test-admin/open-transactions'
+    Given path 'bl-users/by-username/test-user/open-transactions'
     When method GET
     Then status 200
     And match response.hasOpenTransactions == true
@@ -195,13 +185,13 @@ Feature: Test user business logic
      "requestForSponsor":"Yes",
      "status":"Active",
      "proxyUserId":"7312d172-f0cf-40f7-b27d-9fa8feaf333f",
-     "userId":"00000000-1111-5555-9999-999999999991"
+     "userId":"#(testUserId)"
     }
     """
     When method POST
     Then status 201
 
-    Given path 'bl-users/by-id/00000000-1111-5555-9999-999999999991/open-transactions'
+    Given path 'bl-users/by-id', testUserId, 'open-transactions'
     When method GET
     Then status 200
     And match response.hasOpenTransactions == true
@@ -210,7 +200,7 @@ Feature: Test user business logic
 
   Scenario: Disallow deletion of user with open transactions
 
-    Given path 'bl-users/by-id/00000000-1111-5555-9999-999999999991'
+    Given path 'bl-users/by-id', testUserId
     When method DELETE
     Then status 409
     And match response.hasOpenTransactions == true

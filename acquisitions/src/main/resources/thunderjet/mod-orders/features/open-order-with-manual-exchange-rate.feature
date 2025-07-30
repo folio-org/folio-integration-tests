@@ -2,20 +2,17 @@
 Feature: Open order with manual exchange rate
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testorders'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    # load global variables
+
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -31,8 +28,8 @@ Feature: Open order with manual exchange rate
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999}
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
+    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
 
     Examples:
       | fundId | budgetId |
@@ -92,6 +89,7 @@ Feature: Open order with manual exchange rate
     Then status 204
 
   Scenario Outline: get encumbrances transaction
+    * configure headers = headersAdmin
     * def poLineId = <orderLineId>
 
     Given path 'finance/transactions'

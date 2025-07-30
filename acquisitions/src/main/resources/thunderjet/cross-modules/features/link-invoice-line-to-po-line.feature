@@ -2,18 +2,16 @@
 Feature: Link an invoice line to a po line
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-    #* configure headers = headersUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -32,7 +30,6 @@ Feature: Link an invoice line to a po line
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
-    And headers headersUser
     And request invoice
     When method POST
     Then status 201
@@ -43,14 +40,12 @@ Feature: Link an invoice line to a po line
     * set invoiceLine.invoiceId = invoiceId
     * remove invoiceLine.fundDistributions[0].expenseClassId
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request invoiceLine
     When method POST
     Then status 201
 
     # Create order
     Given path 'orders/composite-orders'
-    And headers headersUser
     And request
     """
     {
@@ -68,7 +63,6 @@ Feature: Link an invoice line to a po line
     * set poLine.purchaseOrderId = orderId
     * set poLine.fundDistribution[0].fundId = globalFundId
     Given path 'orders/order-lines'
-    And headers headersUser
     And request poLine
     When method POST
     Then status 201
@@ -76,21 +70,19 @@ Feature: Link an invoice line to a po line
     # Update invoice line to link with po line
     * set invoiceLine.poLineId = poLineId
     Given path 'invoice/invoice-lines', invoiceLineId
-    And headers headersUser
     And request invoiceLine
     When method PUT
     Then status 204
 
     # Check the link was actually saved
     Given path 'invoice/invoice-lines', invoiceLineId
-    And headers headersUser
     When method GET
     Then status 200
     And match $.poLineId == poLineId
 
     # Check an order-invoice relationship was created as well
+    * configure headers = headersAdmin
     Given path 'orders-storage/order-invoice-relns'
-    And headers headersAdmin
     And param query = 'invoiceId==' + invoiceId
     When method GET
     Then status 200

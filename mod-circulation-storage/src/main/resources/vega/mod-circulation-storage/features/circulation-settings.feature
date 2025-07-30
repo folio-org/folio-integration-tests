@@ -3,7 +3,7 @@ Feature: Tests For Circulation Settings
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * call read('classpath:common/util/uuid1.feature')
 
   Scenario:  EnableRequestPrintDetailsSetting

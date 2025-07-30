@@ -3,10 +3,9 @@ Feature: init data for mod-inventory-storage
   Background:
     * url baseUrl
 
-    * call login testAdmin
-    * def okapitokenAdmin = okapitoken
+    * call login testUser
 
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def prepareHolding = function(holding, instanceId) {return holding.replaceAll("replace_instanceId", instanceId);}
     * def prepareItem = function(item, holdingId) {return item.replaceAll("replace_holdingId", holdingId);}
 
@@ -20,7 +19,7 @@ Feature: init data for mod-inventory-storage
         "source": "rdacontent"
       }
     """
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostInstanceType') {instanceType: #(instanceType)}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostInstanceType') {instanceType: '#(instanceType)'}
 
   Scenario: create holdings type
     * def holdingsType =
@@ -32,7 +31,7 @@ Feature: init data for mod-inventory-storage
        }
 
     """
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostHoldingsType') {holdingsType: #(holdingsType)}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostHoldingsType') {holdingsType: '#(holdingsType)'}
 
   Scenario: create identifier type
     * def identifierType =
@@ -43,64 +42,64 @@ Feature: init data for mod-inventory-storage
         "source": "folio"
       }
     """
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIdentifierType') {identifierType: #(identifierType)}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIdentifierType') {identifierType: '#(identifierType)'}
 
   Scenario: setup common data
     #setup locations
     * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostInstitution')
     * json campuses = read('classpath:folijet/data-import/samples/location/campus.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCampus') {campus: #(campuses[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCampus') {campus: #(campuses[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCampus') {campus: '#(campuses[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCampus') {campus: '#(campuses[1])'}
     * json libraries = read('classpath:folijet/data-import/samples/location/library.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLibrary') {library: #(libraries[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLibrary') {library: #(libraries[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLibrary') {library: '#(libraries[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLibrary') {library: '#(libraries[1])'}
     * json locations = read('classpath:folijet/data-import/samples/location/locations.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[1])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[2])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[3])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: #(locations[4])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[1])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[2])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[3])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostLocation') {location: '#(locations[4])'}
     #setup call number type
     * json callNumberTypes = read('classpath:folijet/data-import/samples/call_number/call_number_type.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: #(callNumberTypes[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: #(callNumberTypes[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: '#(callNumberTypes[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostCallNumberType') {callNumberType: '#(callNumberTypes[1])'}
     #setup item loan types
     * json itemLoanTypes = read('classpath:folijet/data-import/samples/item_loan_type/item_loan_types.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemLoanType') {itemLoanType: #(itemLoanTypes[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemLoanType') {itemLoanType: #(itemLoanTypes[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemLoanType') {itemLoanType: '#(itemLoanTypes[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemLoanType') {itemLoanType: '#(itemLoanTypes[1])'}
     #setup item material type
     * json itemMaterialTypes = read('classpath:folijet/data-import/samples/material_type/item_material_type.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemMaterialType') {materialType: #(itemMaterialTypes[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemMaterialType') {materialType: #(itemMaterialTypes[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemMaterialType') {materialType: '#(itemMaterialTypes[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemMaterialType') {materialType: '#(itemMaterialTypes[1])'}
     #setup statistical code type
     * json statisticalCodeTypes = read('classpath:folijet/data-import/samples/statistical_code/statistical_code_type.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: #(statisticalCodeTypes[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: #(statisticalCodeTypes[1])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: #(statisticalCodeTypes[2])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: '#(statisticalCodeTypes[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: '#(statisticalCodeTypes[1])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCodeType') {statisticalCodeType: '#(statisticalCodeTypes[2])'}
     #setup statistical code
     * json statisticalCodes = read('classpath:folijet/data-import/samples/statistical_code/statistical_code.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: #(statisticalCodes[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: #(statisticalCodes[1])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: #(statisticalCodes[2])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: '#(statisticalCodes[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: '#(statisticalCodes[1])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostStatisticalCode') {statisticalCode: '#(statisticalCodes[2])'}
     #setup URL relationships
     * json relationships = read('classpath:folijet/data-import/samples/url_relationship/url_relationship.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: #(relationships[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: #(relationships[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: '#(relationships[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostUrlRelationship') {urlRelationship: '#(relationships[1])'}
     #setup instance status types
     * json instanceStatusTypes = read('classpath:folijet/data-import/samples/instance_status_type/instance_status_type.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostInstanceStatusType') {instanceStatusType: #(instanceStatusTypes[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostInstanceStatusType') {instanceStatusType: #(instanceStatusTypes[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostInstanceStatusType') {instanceStatusType: '#(instanceStatusTypes[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostInstanceStatusType') {instanceStatusType: '#(instanceStatusTypes[1])'}
      #setup item note types
     * json itemNoteTypes = read('classpath:folijet/data-import/samples/item_note_type/item_note_type.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemNoteType') {itemNoteType: #(itemNoteTypes[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemNoteType') {itemNoteType: #(itemNoteTypes[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemNoteType') {itemNoteType: '#(itemNoteTypes[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostItemNoteType') {itemNoteType: '#(itemNoteTypes[1])'}
     #setup ill policy
     * json illPolicies = read('classpath:folijet/data-import/samples/ill_policy.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: #(illPolicies[0])}
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: #(illPolicies[1])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: '#(illPolicies[0])'}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIllPolicy') {illPolicy: '#(illPolicies[1])'}
     #setup identifier type
     * json identTypes = read('classpath:folijet/data-import/samples/identifier_type.json')
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIdentifierType') {identType: #(identTypes[0])}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostIdentifierType') {identType: '#(identTypes[0])'}
 
   Scenario: create holdings source type
     * def holdingsSource =
@@ -111,7 +110,7 @@ Feature: init data for mod-inventory-storage
         "source": "folio"
       }
       """
-    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostHoldingsSource') {holdingsSource: #(holdingsSource)}
+    * call read('classpath:folijet/data-import/global/inventory_data_setup_util.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}
 
   Scenario: create instance
     Given path 'instance-storage/instances'
@@ -126,8 +125,8 @@ Feature: init data for mod-inventory-storage
   Scenario: create holding
     * string holdingTemplate = read('classpath:folijet/data-import/samples/holding.json')
     * def holdingId = uuid()
-    * json holding = prepareHolding(holdingTemplate, instanceId);
-    * set holding.id = holdingId;
+    * json holding = prepareHolding(holdingTemplate, instanceId)
+    * set holding.id = holdingId
     Given path 'holdings-storage/holdings'
     And request holding
     When method POST
@@ -135,8 +134,8 @@ Feature: init data for mod-inventory-storage
 
   Scenario: create item
     * string itemTemplate = read('classpath:folijet/data-import/samples/item.json')
-    * json item = prepareItem(itemTemplate, holdingId);
-    * set item.barcode = '123456';
+    * json item = prepareItem(itemTemplate, holdingId)
+    * set item.barcode = '123456'
     Given path 'item-storage/items'
     And request item
     When method POST

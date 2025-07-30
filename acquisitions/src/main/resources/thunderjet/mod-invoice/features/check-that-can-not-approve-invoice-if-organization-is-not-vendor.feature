@@ -1,20 +1,13 @@
 Feature: Check that can not approve invoice if organization is not vendor
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testinvoices'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    # load global variables
     * callonce variables
 
     # prepare sample data

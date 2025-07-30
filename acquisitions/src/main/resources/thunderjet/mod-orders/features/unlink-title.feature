@@ -4,14 +4,14 @@ Feature: unlink title from package. DELETE Title
     * print karate.info.scenarioName
     * url baseUrl
 
-    * call loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * call loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+
     * configure retry = { count: 10, interval: 5000 }
-    * configure headers = headersAdmin
 
     * callonce variables
     * def fundId = callonce uuid
@@ -19,6 +19,7 @@ Feature: unlink title from package. DELETE Title
 
     ### Before All ###
     # 1. Prepare finance data
+    * configure headers = headersAdmin
     * def v = callonce createFund { id: '#(fundId)' }
     * def v = callonce createBudget { id: '#(budgetId)', allocated: 100, fundId: '#(fundId)', status: 'Active' }
 
@@ -62,12 +63,14 @@ Feature: unlink title from package. DELETE Title
       * def instanceTitle1 = "Instance 1" + instanceId1
 
       # 1. Create instances using table and createInstance method
+      * configure headers = headersAdmin
       * table instances
         | id          | title       | instanceTypeId       |
         | instanceId1 | instanceId1 | globalInstanceTypeId |
       * def v = call createInstance instances
 
       # 2. Prepare acquisitions data
+      * configure headers = headersUser
       * def v = call createOrder { id: '#(orderId)' }
       * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
       * def v = call openOrder { orderId: '#(orderId)' }
@@ -91,12 +94,14 @@ Feature: unlink title from package. DELETE Title
     * def instanceTitle1 = "Instance 1" + instanceId1
 
     # 1. Create instances using table and createInstance method
+    * configure headers = headersAdmin
     * table instances
       | id          | title       | instanceTypeId       |
       | instanceId1 | instanceId1 | globalInstanceTypeId |
     * def v = call createInstance instances
 
     # 2. Prepare data
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)' }
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId)' }
@@ -132,9 +137,9 @@ Feature: unlink title from package. DELETE Title
     When method GET
     Then status 200
     And match $.holdingsRecordId == holdingId
-    * configure headers = headersUser
 
     # 5. Verify existing holding confirmation error
+    * configure headers = headersUser
     Given path 'orders/titles', titleId
     When method DELETE
     Then status 400
@@ -156,12 +161,14 @@ Feature: unlink title from package. DELETE Title
     * def instanceTitle2 = "Instance 2" + instanceId2
 
     # 1. Create instances using table and createInstance method
+    * configure headers = headersAdmin
     * table instances
       | id          | title       | instanceTypeId       |
       | instanceId1 | instanceId1 | globalInstanceTypeId |
     * def v = call createInstance instances
 
     # 2. Prepare data
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)' }
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId)' }
@@ -195,14 +202,13 @@ Feature: unlink title from package. DELETE Title
     * def holdingId = $.holdingsRecords[0].id
 
     Given path 'inventory/items', pieceItemId
-    * configure headers = headersAdmin
     When method GET
     Then status 200
     And match $.holdingsRecordId == holdingId
-    * configure headers = headersUser
 
 
     # 5. Unlink title (Delete title)
+    * configure headers = headersUser
     Given path 'orders/titles', titleId
     And param deleteHoldings = false
     When method DELETE
@@ -219,11 +225,10 @@ Feature: unlink title from package. DELETE Title
     * def holdingId = $.holdingsRecords[0].id
 
     Given path 'inventory/items', pieceItemId
-    * configure headers = headersAdmin
     When method GET
     Then status 404
-    * configure headers = headersUser
 
+    * configure headers = headersUser
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 404
@@ -245,12 +250,14 @@ Feature: unlink title from package. DELETE Title
     * def instanceTitle1 = "Instance 1" + instanceId1
 
     # 1. Create instances using table and createInstance method
+    * configure headers = headersAdmin
     * table instances
       | id          | title       | instanceTypeId       |
       | instanceId1 | instanceId1 | globalInstanceTypeId |
     * def v = call createInstance instances
 
     # 2. Prepare data
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)' }
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId)' }
@@ -287,10 +294,10 @@ Feature: unlink title from package. DELETE Title
     When method GET
     Then status 200
     And match $.holdingsRecordId == holdingId
-    * configure headers = headersUser
 
 
     # 5. Unlink title (Delete title)
+    * configure headers = headersUser
     Given path 'orders/titles', titleId
     And param deleteHoldings = true
     When method DELETE
@@ -308,8 +315,8 @@ Feature: unlink title from package. DELETE Title
     Given path 'inventory/items', pieceItemId
     When method GET
     Then status 404
-    * configure headers = headersUser
 
+    * configure headers = headersUser
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 404
@@ -332,6 +339,7 @@ Feature: unlink title from package. DELETE Title
     * def instanceTitle2 = "Instance 2" + instanceId2
 
     # 1. Create instances using table and createInstance method
+    * configure headers = headersAdmin
     * table instances
       | id          | title       | instanceTypeId       |
       | instanceId1 | instanceId1 | globalInstanceTypeId |
@@ -339,6 +347,7 @@ Feature: unlink title from package. DELETE Title
     * def v = call createInstance instances
 
     # 2. Prepare data for first order
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)' }
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId)' }
@@ -369,10 +378,10 @@ Feature: unlink title from package. DELETE Title
     Then status 200
     And match $.totalRecords == 1
     * def holdingId1 = $.holdingsRecords[0].id
-    * configure headers = headersUser
 
 
     # 5. Prepare acquisitions data for second order
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId2)' }
     * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId2)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId2)' }
@@ -397,11 +406,11 @@ Feature: unlink title from package. DELETE Title
 
 
     # 7. Move to first holding to make holding to used by two poLines
+    * configure headers = headersAdmin
     * def v = call moveItem { holdingId: '#(holdingId1)', itemId: '#(pieceItemId2)' }
 
 
     # 8. Check holding and item existence
-    * configure headers = headersAdmin
     Given path 'inventory/items', pieceItemId1
     When method GET
     Then status 200
@@ -411,10 +420,10 @@ Feature: unlink title from package. DELETE Title
     When method GET
     Then status 200
     And match $.holdingsRecordId == holdingId1
-    * configure headers = headersUser
 
 
     # 9. Delete Title and holdings
+    * configure headers = headersUser
     Given path 'orders/titles', titleId
     And param deleteHoldings = true
     When method DELETE
@@ -436,9 +445,9 @@ Feature: unlink title from package. DELETE Title
     Given path 'inventory/items', pieceItemId2
     When method GET
     Then status 200
-    * configure headers = headersUser
 
     # 10.4 Verify that piece belong to poLineId1 and unlinking title is deleted
+    * configure headers = headersUser
     Given path 'orders/pieces', pieceId1
     When method GET
     Then status 404

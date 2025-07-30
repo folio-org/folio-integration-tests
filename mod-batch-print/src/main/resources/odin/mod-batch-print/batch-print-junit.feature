@@ -17,6 +17,8 @@ Feature: mod-batch-print integration tests
       | 'batch-print.entries.item.delete'       |
       | 'batch-print.entries.mail.post'         |
       | 'batch-print.entries.collection.delete' |
+      | 'batch-print.print.read'                |
+      | 'batch-print.print.write'               |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')

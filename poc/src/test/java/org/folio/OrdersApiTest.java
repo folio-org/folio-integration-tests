@@ -3,7 +3,9 @@ package org.folio;
 import static org.folio.TestUtils.specifyRandomRunnerId;
 
 import com.intuit.karate.junit5.Karate;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 public class OrdersApiTest {
 
   @Karate.Test

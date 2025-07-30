@@ -3,7 +3,7 @@ Feature: Email
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)','Accept': 'application/json, text/plain' }
 
   Scenario: Get all emails
     Given path 'email'
@@ -20,7 +20,7 @@ Feature: Email
 
   Scenario: Post email should return 200 on success
     * def requestEntity = read('samples/email-request-entity.json')
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-url': '#(baseUrl)', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-url': '#(baseUrl)', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * def expectedErrMsg = 'The \'mod-config\' module doesn\'t have a minimum config for SMTP server, the min config is: [EMAIL_SMTP_PORT, EMAIL_PASSWORD, EMAIL_SMTP_HOST, EMAIL_USERNAME]'
 
     Given path 'email'
@@ -29,15 +29,16 @@ Feature: Email
     Then status 200
     And match response == expectedErrMsg
 
-  Scenario: Post email should return 400 if authorization token is invalid
-    * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
+  Scenario: Post email should return 401 if authorization token is invalid
+    * configure headers = { 'x-okapi-tenant': '#(testTenant)','x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
 
     Given path 'email'
     And request {}
     When method POST
-    Then status 400
-    And match response contains 'Invalid Token: Failed to decode:Unrecognized token'
-
+    Then status 401
+    And match response.errors[0].type == 'UnauthorizedException'
+    And match response.errors[0].code == 'authorization_error'
+    And match response.errors[0].message == 'Unauthorized'
   Scenario: Post email should return 422 if request did not pass validation
     * def values = { key: ['body', 'to', 'notificationId', 'header'] }
 

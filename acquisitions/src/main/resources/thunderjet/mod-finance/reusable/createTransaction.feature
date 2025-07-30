@@ -13,7 +13,7 @@ Feature: transaction
     * def transactionEncumbrance = { initialAmountEncumbered: #(amount), status: 'Unreleased', sourcePurchaseOrderId: #(sourcePurchaseOrderId), sourcePoLineId: #(poLineId), orderType: 'One-Time', subscription: false, reEncumber: false }
     * def transactionEncumbrance = transactionType == 'Encumbrance' ? transactionEncumbrance : null
 
-    Given path 'finance-storage/transactions/batch-all-or-nothing'
+    Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
     {

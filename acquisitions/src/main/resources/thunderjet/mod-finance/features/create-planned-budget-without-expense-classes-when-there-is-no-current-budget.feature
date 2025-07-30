@@ -1,19 +1,15 @@
+@parallel=false
 Feature: Create planned budget without expense classes when there is no current budget
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-   # * callonce dev {tenant: 'testfinance35'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+
     * callonce variables
 
     #Budget without expense classes and current budget when there is no current budget

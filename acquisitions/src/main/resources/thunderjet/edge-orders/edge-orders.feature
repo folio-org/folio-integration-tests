@@ -2,42 +2,30 @@
 Feature: edge-orders integration tests
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * table modules
-      | name                |
-      | 'mod-configuration' |
-      | 'mod-ebsconet'      |
-      | 'mod-gobi'          |
-      | 'mod-login'         |
-      | 'mod-orders'        |
-      | 'mod-organizations' |
-      | 'mod-permissions'   |
 
-    * def testTenant = 'testedgeorders'
+    * def random = callonce randomMillis
+    * def testTenant = 'testedgeorders' + random
+    * def testTenantId = callonce uuid
     * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
 
-    * table userPermissions
-      | name           |
-      | 'ebsconet.all'      |
-      | 'orders.all'        |
-      | 'gobi.all'          |
+    # Create tenant and users, initialize data
+    * def v = callonce read('classpath:thunderjet/edge-orders/init-edge-orders.feature')
 
-  Scenario: create tenant and users for testing
-    * call read('classpath:common/setup-users.feature')
+    # Wipe data afterwards
+    * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
-  Scenario: init global data
-    * call login testAdmin
-    * callonce read('classpath:global/inventory.feature')
-    * callonce read('classpath:global/configuration.feature')
-    * callonce read('classpath:global/finances.feature')
-    * callonce read('classpath:global/organizations.feature')
 
-  Scenario: Ebsconet
-    Given call read('features/ebsconet.feature')
+  Scenario: COMMON
+    Given call read("features/common.feature")
+
+  Scenario: EBSCONET
+    Given call read("features/ebsconet.feature")
 
   Scenario: GOBI
-    Given call read('features/gobi-junit.feature')
+    Given call read("features/gobi.feature")
 
-  Scenario: wipe data
-    Given call read('edge-orders-destroy-data.feature')
+  Scenario: MOSAIC
+    Given call read("features/mosaic.feature")

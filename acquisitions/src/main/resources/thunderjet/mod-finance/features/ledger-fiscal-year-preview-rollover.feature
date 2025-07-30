@@ -1,19 +1,17 @@
+@parallel=false
 Feature: Ledger fiscal year rollover
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'test_finance1'}
-    * callonce loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
 
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
-
-    * configure headers = headersAdmin
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -124,6 +122,8 @@ Feature: Ledger fiscal year rollover
     * def iLine18 = callonce uuid85
 
   Scenario: Update po line limit
+    * configure headers = headersAdmin
+
     Given path 'configurations/entries'
     And param query = 'configName==poLines-limit'
     When method GET
@@ -227,7 +227,6 @@ Feature: Ledger fiscal year rollover
       | groupId2 |
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
@@ -550,6 +549,7 @@ Feature: Ledger fiscal year rollover
 
 
   Scenario: Create open orders with 3 fund distributions
+    * configure headers = headersAdmin
 
     Given path 'orders/composite-orders'
     And request
@@ -607,7 +607,6 @@ Feature: Ledger fiscal year rollover
     Then status 201
 
   Scenario: Create closed order and encumbrance with orderStatus closed
-    * configure headers = headersAdmin
     * def encumbranceId = call uuid
     Given path 'finance/transactions/batch-all-or-nothing'
     And request
@@ -639,6 +638,7 @@ Feature: Ledger fiscal year rollover
     When method POST
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'orders/composite-orders'
     And request
     """
@@ -912,8 +912,6 @@ Feature: Ledger fiscal year rollover
       | rolloverLedger2 | rolloverId2 |
 
   Scenario Outline: Check that budget <id> status is <status> after rollover, budget status should not be changed
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -1009,8 +1007,6 @@ Feature: Ledger fiscal year rollover
 
 
   Scenario Outline: Check rollover errors for rolloverId=<rolloverId>
-    * configure headers = headersAdmin
-
     * def rolloverId = <rolloverId>
     * def orderId = <orderId>
     * def poLineId = <poLineId>
@@ -1057,7 +1053,6 @@ Feature: Ledger fiscal year rollover
   Scenario Outline: Delete rollover with In Progress status for rolloverId=<rolloverId>
     * def rolloverId = <rolloverId>
 
-    * configure headers = headersAdmin
     Given path '/finance-storage/ledger-rollovers', rolloverId
     When method DELETE
     Then status 422
@@ -1090,7 +1085,6 @@ Feature: Ledger fiscal year rollover
       | rolloverId2 |
 
   Scenario Outline: Delete rollover with Success status for rolloverId=<rolloverId>
-    * configure headers = headersAdmin
     * def rolloverId = <rolloverId>
 
     Given path '/finance-storage/ledger-rollovers', rolloverId

@@ -8,7 +8,7 @@ Feature: mod bulk operations user positive scenarios
 
   Scenario: In-App approach bulk edit of user
     * print 'In-App approach bulk edit of user'
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
     And param identifierType = 'BARCODE'
@@ -16,7 +16,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -162,7 +162,7 @@ Feature: mod bulk operations user positive scenarios
 
   Scenario: Csv approach bulk edit of user
     * print 'Csv approach bulk edit of user'
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
     And param identifierType = 'BARCODE'
@@ -172,7 +172,7 @@ Feature: mod bulk operations user positive scenarios
     Then status 200
 
     * def operationId = $.id
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
     Given path 'bulk-operations', operationId, 'start'
     And request
@@ -192,7 +192,7 @@ Feature: mod bulk operations user positive scenarios
     When method GET
     Then status 200
 
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
     Given path 'bulk-operations/upload'
     And param entityType = 'USER'
@@ -203,7 +203,7 @@ Feature: mod bulk operations user positive scenarios
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * pause(15000)
 
     Given path 'bulk-operations', operationId, 'start'
@@ -265,7 +265,7 @@ Feature: mod bulk operations user positive scenarios
 
 
   Scenario: Verify list-users endpoint
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/list-users'
     And param query = '(entityType==\"USER\")'
     And param limit = 100

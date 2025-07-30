@@ -3,7 +3,6 @@ Feature:
 
   Background:
     * url baseUrl
-    * def resourceExists = read('classpath:common/resource-exists.feature')
 
   @CreateGroup
   Scenario: Create User Group if not exists
@@ -67,14 +66,12 @@ Feature:
     * set userData.type = 'patron'
     * set userData.patronGroup = groupId
 
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'text/plain' }
     # update user
     Given path 'users', userId
     And header Accept = 'text/plain'
     And request userData
     When method PUT
     Then status 204
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'application/json' }
 
     Given path 'users', userId
     When method GET

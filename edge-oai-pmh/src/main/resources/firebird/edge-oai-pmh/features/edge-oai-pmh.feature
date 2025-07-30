@@ -43,13 +43,15 @@ Feature: edge-oai-pmh features
   Scenario: ListRecords: SRS Verify that changes to holdings are triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'holdings-storage/holdings', holdingId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
     * def holding = response
     * set holding.electronicAccess[] = {"uri" : "uri3","linkText" : "No information provided updated","materialsSpecification" : "materialsSpecification3","publicNote" : "publicNote3","relationshipId" : "f5d0068e-6272-458e-8a81-b85e7b9a14aa"}
     Given path 'holdings-storage/holdings', holdingId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     And request holding
     When method PUT
     Then status 204
@@ -92,13 +94,15 @@ Feature: edge-oai-pmh features
   Scenario: ListRecords: SRS Verify that changes to items are triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'item-storage/items', itemId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
     * def item = response
     * set item.electronicAccess[] = {"uri": "uri9","linkText": "Version of component part(s) of resource updated","materialsSpecification": "materialsSpecification9","publicNote": "publicNote9","relationshipId": "f0d0068e-6272-458e-8a81-b85e7b9a14aa"}
     Given path 'item-storage/items', itemId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     And request item
     When method PUT
     Then status 204
@@ -142,14 +146,16 @@ Feature: edge-oai-pmh features
     * url baseUrl
 
     Given path 'instance-storage/instances', instanceId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
     * def version = $._version
 
     Given path 'records-editor/records'
     And param externalId = instanceId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
     * def instance = response
@@ -162,7 +168,8 @@ Feature: edge-oai-pmh features
     * set instance.externalHrid = 'inst000000000145'
     * set instance.parsedRecordId = instanceId
     Given path 'records-editor/records', instanceId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     And request instance
     When method PUT
     Then status 202
@@ -205,7 +212,8 @@ Feature: edge-oai-pmh features
   Scenario: ListRecords: SRS: Verify that adding a new item to the existing instance is triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'item-storage/items'
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     * def item = read('classpath:samples/item2.json')
     And request item
     When method POST
@@ -250,14 +258,16 @@ Feature: edge-oai-pmh features
     * url baseUrl
 
     Given path 'instance-storage/instances', instanceId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
     * def version = $._version
 
     Given path 'records-editor/records'
     And param externalId = instanceId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
     * def instance = response
@@ -268,7 +278,8 @@ Feature: edge-oai-pmh features
     * set instance.externalHrid = 'inst000000000145'
     * set instance.parsedRecordId = instanceId
     Given path 'records-editor/records', instanceId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     And request instance
     When method PUT
     Then status 202
@@ -286,24 +297,28 @@ Feature: edge-oai-pmh features
   Scenario: ListRecords: SRS: Verify that changes to holdings and item are triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'item-storage/items', itemId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
     * def item = response
     * set item.electronicAccess[4].publicNote = 'publicNote7 UPDATED'
     Given path 'item-storage/items', itemId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     And request item
     When method PUT
     Then status 204
     Given path 'holdings-storage/holdings', holdingId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
     * def holdings = response
     * set holdings.electronicAccess[1].materialsSpecification = 'materialsSpecification2 UPDATED'
     Given path 'holdings-storage/holdings', holdingId
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     And request holdings
     When method PUT
     Then status 204
@@ -346,7 +361,8 @@ Feature: edge-oai-pmh features
   Scenario: ListRecords: SRS: Verify that adding a new holdings (FOLIO) to the existing instance is triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'holdings-storage/holdings'
-    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
     * def holdings = read('classpath:samples/holding2.json')
     And request holdings
     When method POST

@@ -2,20 +2,17 @@
 Feature: Check new tags created in central tag repository
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testorders'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    # load global variables
+
     * callonce variables
 
     * def orderId = callonce uuid3
@@ -51,6 +48,7 @@ Feature: Check new tags created in central tag repository
     Then status 201
 
     # ============= check tags in central repository (lowercase, no spaces) ===================
+    * configure headers = headersAdmin
     Given path 'tags'
     And param query = "label==check-central-tag OR label==another_tag"
 

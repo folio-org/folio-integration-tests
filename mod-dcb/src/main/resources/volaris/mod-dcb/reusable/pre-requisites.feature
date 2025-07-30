@@ -7,7 +7,7 @@ Feature: Testing Lending Flow
     * print 'user  is', user
     * callonce login user
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain'  }
     * configure headers = headersUser
 
       # load global variables

@@ -4,15 +4,10 @@ Feature: Partial rollover
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -30,11 +25,6 @@ Feature: Partial rollover
     * def poLineId2 = callonce uuid10
     * def rolloverId = callonce uuid11
 
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-
 
   Scenario: Create fiscal years and associated ledgers
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
@@ -47,7 +37,6 @@ Feature: Partial rollover
 
 
   Scenario: Create fund and budgets
-    * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId), code: #(fundId), ledgerId: #(ledgerId) }
     * def v = call createBudget { id: #(budgetId1), fundId: #(fundId), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
     * def v = call createBudget { id: #(budgetId2), fundId: #(fundId), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }

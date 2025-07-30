@@ -2,9 +2,8 @@ Feature: global orders
 
   Background:
     * url baseUrl
-    * call login testAdmin
 
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
 
     * callonce variables
 

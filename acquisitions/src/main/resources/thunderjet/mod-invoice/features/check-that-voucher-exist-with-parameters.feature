@@ -1,20 +1,19 @@
-# created for MODINVOSTO-56
+# Created for MODINVOSTO-56
+@parallel=false
 Feature: Check voucher from invoice with lines
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testinvoices124'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-    # load global variables
     * callonce variables
 
     # prepare sample data for creating invoice
@@ -61,14 +60,12 @@ Feature: Check voucher from invoice with lines
 
      # ============= create invoice ===================
     Given path 'invoice/invoices'
-    And headers headersUser
     And request invoicePayload
     When method POST
     Then status 201
 
   Scenario: Check invoice
     Given path '/invoice/invoices/' + invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     And match response.id == invoiceId
@@ -78,7 +75,6 @@ Feature: Check voucher from invoice with lines
 
     # ============= create invoice lines 1 ===================
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -111,7 +107,6 @@ Feature: Check voucher from invoice with lines
 
     # ============= create invoice lines 2 ===================
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -144,7 +139,6 @@ Feature: Check voucher from invoice with lines
 
     # ============= create invoice lines 3 ===================
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -179,7 +173,6 @@ Feature: Check voucher from invoice with lines
   Scenario: invoice with approve it, check voucher lines
 
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoiceBody = $
@@ -187,7 +180,6 @@ Feature: Check voucher from invoice with lines
 
     # ============= put approved invoice ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoiceBody
     When method PUT
     Then status 204
@@ -196,7 +188,6 @@ Feature: Check voucher from invoice with lines
 
         # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
-    And headers headersUser
     And param limit = '2147483647'
     And param query = 'invoiceId==' + invoiceId
     When method GET
@@ -208,7 +199,6 @@ Feature: Check voucher from invoice with lines
     And match voucher.amount == 44
 
     Given path '/voucher/voucher-lines'
-    And headers headersUser
     And param limit = '1000'
     And param query = 'voucherId==' + voucher.id
     When method GET

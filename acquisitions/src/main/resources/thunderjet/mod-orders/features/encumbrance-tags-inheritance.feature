@@ -2,22 +2,17 @@
 Feature: Verify once order is opened or poline is updated, encumbrance inherit poline's tags
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testorders'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * print okapitokenAdmin
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    # load global variables
     * callonce variables
 
     * def orderId = callonce uuid1
@@ -66,6 +61,7 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
     Then status 204
 
   Scenario: Verify created encumbrance
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePoLineId==' + poLineId
     When method get
@@ -102,6 +98,7 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
     Then status 204
 
   Scenario: Verify updated encumbrances
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePoLineId==' + poLineId
     When method get

@@ -1,18 +1,16 @@
 # For https://issues.folio.org/browse/MODINVOICE-449
-@parallel=false
 Feature: Check invoiceLine validation with  adjustments
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -32,9 +30,9 @@ Feature: Check invoiceLine validation with  adjustments
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
-    * configure headers = headersUser
 
     * print "Create an invoice"
+    * configure headers = headersUser
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -66,7 +64,6 @@ Feature: Check invoiceLine validation with  adjustments
     When method PUT
     Then status 204
 
-
     * print "Check the invoice line status"
     Given path 'invoice/invoice-lines', invoiceLineId
     When method GET
@@ -83,9 +80,9 @@ Feature: Check invoiceLine validation with  adjustments
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
-    * configure headers = headersUser
 
     * print "Create an invoice"
+    * configure headers = headersUser
     * copy invoice = invoiceTemplateWithNoFunds
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'

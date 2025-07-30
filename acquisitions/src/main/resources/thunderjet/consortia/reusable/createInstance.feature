@@ -1,9 +1,12 @@
+@ignore
 Feature: Create instance
 
   Background:
     * url baseUrl
 
   Scenario: createInstance
+    * def identifiers = karate.get('identifiers', [])
+
     Given path 'inventory/instances'
     And request
       """
@@ -11,7 +14,8 @@ Feature: Create instance
         "id": "#(id)",
         "title": "#(title)",
         "instanceTypeId": "#(instanceTypeId)",
-        "source": "FOLIO"
+        "source": "FOLIO",
+        "identifiers": "#(identifiers)"
       }
       """
     When method POST

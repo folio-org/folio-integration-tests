@@ -4,24 +4,17 @@ Feature: Cancel and delete order
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
 
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * call login testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * call variables
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
     * def fundId = call uuid1
     * def budgetId = call uuid2
@@ -38,6 +31,7 @@ Feature: Cancel and delete order
 
 
     * print '## Create an order'
+    * configure headers = headersUser
     * def v = call createOrder { id: "#(orderId)" }
 
 

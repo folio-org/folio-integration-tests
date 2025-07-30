@@ -51,4 +51,4 @@ Feature: Central variables
 
   Scenario: User IDs
     * def centralAdminId = '122b3d2b-4788-4f1e-9117-56daa91cb75c'
-    * def centralUser1Id = '6d27d190-b6e4-4075-b80f-01517bafb2d4'
+    * def centralUserId = '6d27d190-b6e4-4075-b80f-01517bafb2d4'

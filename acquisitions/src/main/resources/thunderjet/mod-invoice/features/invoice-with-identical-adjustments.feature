@@ -2,16 +2,15 @@
   Feature: Invoice with identical adjustments
 
     Background:
+      * print karate.info.scenarioName
       * url baseUrl
-      * call login testAdmin
+
+      * callonce login testAdmin
       * def okapitokenAdmin = okapitoken
-
-      * call login testUser
+      * callonce login testUser
       * def okapitokenUser = okapitoken
-
-      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
       * configure headers = headersUser
 
       * call variables
@@ -27,9 +26,9 @@
       * configure headers = headersAdmin
       * def v = call createFund { id: '#(fundId)' }
       * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
-      * configure headers = headersUser
 
       * print "2. Create the invoice"
+      * configure headers = headersUser
       * def adj1 =
       """
         {

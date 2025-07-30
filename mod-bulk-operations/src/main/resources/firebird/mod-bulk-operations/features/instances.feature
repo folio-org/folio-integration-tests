@@ -14,7 +14,7 @@ Feature: mod bulk operations instances features
     # an instance with the source LINKED_DATA. To achieve this, an attempt is made to initiate
     # the bulk operation process for a pre-created instance with the source LINKED_DATA.
 
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'INSTANCE'
     And param identifierType = 'HRID'
@@ -22,7 +22,7 @@ Feature: mod bulk operations instances features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -57,7 +57,7 @@ Feature: mod bulk operations instances features
     And match response.errors[0].type == 'ERROR'
 
   Scenario: Edit staff suppress for instances
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'INSTANCE'
     And param identifierType = 'HRID'
@@ -65,7 +65,7 @@ Feature: mod bulk operations instances features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -183,7 +183,7 @@ Feature: mod bulk operations instances features
     And match response.instances[0].staffSuppress == true
 
   Scenario: Edit suppress from discovery including holdings
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'INSTANCE'
     And param identifierType = 'HRID'
@@ -191,7 +191,7 @@ Feature: mod bulk operations instances features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -351,7 +351,7 @@ Feature: mod bulk operations instances features
     And match response.items[0].discoverySuppress == '#null'
 
   Scenario: Edit suppress from discovery including items
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'INSTANCE'
     And param identifierType = 'HRID'
@@ -359,7 +359,7 @@ Feature: mod bulk operations instances features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     * def holding = read('classpath:samples/instances/holdings.json')
@@ -522,7 +522,7 @@ Feature: mod bulk operations instances features
     And match response.items[0].discoverySuppress == true
 
   Scenario: Edit marc instances with duplicate SRS
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'INSTANCE'
     And param identifierType = 'ID'
@@ -530,7 +530,7 @@ Feature: mod bulk operations instances features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -619,7 +619,8 @@ Feature: mod bulk operations instances features
     Then status 200
 
     * pause(30000)
-
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations', operationId
     And retry until response.status == 'REVIEW_CHANGES'
     When method GET
@@ -629,7 +630,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[45] == 'new500'
+    And match response.rows[0].row[46] == 'new500'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -664,7 +665,8 @@ Feature: mod bulk operations instances features
     And match response.linkToCommittedRecordsMarcFile == '#present'
 
   Scenario: Add statistical codes
-    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
     And param entityType = 'INSTANCE'
     And param identifierType = 'HRID'
@@ -672,7 +674,7 @@ Feature: mod bulk operations instances features
     When method POST
     Then status 200
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def operationId = $.id
 
     Given path 'bulk-operations', operationId, 'start'
@@ -789,3 +791,178 @@ Feature: mod bulk operations instances features
     And match response.instances[0].hrid == instanceHRID
     And match response.instances[0].statisticalCodeIds == ['7776b1c1-c9df-445c-8deb-68bb3580edc2']
 
+  Scenario: Skip SRS update if inventory instance update fails
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    Given path 'bulk-operations/upload'
+    And param entityType = 'INSTANCE'
+    And param identifierType = 'ID'
+    And multipart file file = { read: 'classpath:samples/instances/marc-instance-uuid.csv', contentType: 'text/csv' }
+    When method POST
+    Then status 200
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def operationId = $.id
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step": "UPLOAD"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'MATCHED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'UPLOAD'
+    When method GET
+    Then status 200
+    * def instanceId = response.rows[0].row[0]
+
+    Given path 'bulk-operations', operationId, 'content-update'
+    And request
+      """
+      {
+        "bulkOperationRules": [
+          {
+            "bulkOperationId": "#(operationId)",
+            "rule_details": {
+              "option": "ADMINISTRATIVE_NOTE",
+              "tenants": [],
+              "actions": [
+                {
+                  "type": "ADD_TO_EXISTING",
+                  "updated": "new note",
+                  "parameters": [],
+                  "tenants": [],
+                  "updated_tenants": []
+                }
+              ]
+            }
+          }
+        ],
+        "totalRecords": 1
+      }
+      """
+    When method POST
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'marc-content-update'
+    And request
+      """
+      {
+        "bulkOperationMarcRules": [
+          {
+            "tag": "500",
+            "ind1": "\\",
+            "ind2": "\\",
+            "subfield": "a",
+            "actions": [
+              {
+                "name": "ADD_TO_EXISTING",
+                "data": [
+                  {
+                    "key": "VALUE",
+                    "value": "new general note"
+                  }
+                ]
+              }
+            ],
+            "parameters": [],
+            "subfields": [],
+            "bulkOperationId": "#(operationId)"
+          }
+        ],
+        "totalRecords": 1
+      }
+      """
+    When method POST
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step":"EDIT",
+        "approach":"IN_APP"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId
+    And retry until response.status == 'REVIEW_CHANGES'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'EDIT'
+    When method GET
+    And match response.rows[0].row[10] == 'new note'
+    And match response.rows[0].row[46] == 'new general note | new500'
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_MARC_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    * def instanceJson = response
+    * instanceJson.administrativeNotes = ['note']
+
+    Given path 'inventory/instances', instanceId
+    And request instanceJson
+    When method PUT
+    Then status 204
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'COMMIT'
+    When method GET
+    And match response.rows.length == '#notpresent'
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    And param offset = '0'
+    And param errorType = ''
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+
+    Given path 'bulk-operations', operationId
+    When method GET
+    Then status 200
+    And match response.linkToCommittedRecordsCsvFile == '#notpresent'
+    And match response.linkToCommittedRecordsMarcFile == '#notpresent'

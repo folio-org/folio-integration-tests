@@ -2,8 +2,7 @@ Feature: Validate Number Columns
 
   Background:
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Validate a number column
     # Check if the field value is not null
@@ -13,7 +12,7 @@ Feature: Validate Number Columns
     * match fieldValue == '#number'
 
     # Construct the FQL query JSON properly
-    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}}'
+    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}, "_version": "' + fqmVersion + '"}'
 
     # Post the query for the valid field value
     Given path 'query'

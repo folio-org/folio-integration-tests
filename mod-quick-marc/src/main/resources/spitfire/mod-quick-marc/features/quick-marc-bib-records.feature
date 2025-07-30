@@ -4,12 +4,14 @@ Feature: Test quickMARC
     * callonce login testUser
     * def okapitokenUser = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
     * def testInstanceId = karate.properties['instanceId']
-    * def linkedAuthorityId = karate.properties['linkedAuthorityId']
-    * def authorityNaturalId = karate.properties['authorityNaturalId']
+    * def linkedAuthorityId1 = karate.properties['linkedAuthorityId1']
+    * def authorityNaturalId1 = karate.properties['authorityNaturalId1']
+    * def authorityNaturalId2 = karate.properties['authorityNaturalId2']
+    * def linkedAuthorityId2 = karate.properties['linkedAuthorityId2']
 
   # ================= positive test cases =================
   Scenario: Retrieve existing quickMarcJson by instanceId
@@ -19,10 +21,10 @@ Feature: Test quickMARC
     When method GET
     Then status 200
     * def result = $
-    * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
-    * def fieldWithLink = {"tag": "100", "indicators": [ "\\", "1" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId":1, "status":"ACTUAL" } }
+    * def linkContent = ' $0 ' + authorityNaturalId1 + ' $9 ' + linkedAuthorityId1
+    * def fieldWithLink = {"tag": "100", "indicators": [ "\\", "1" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId1), "authorityNaturalId":#(authorityNaturalId1), "linkingRuleId":1, "status":"ACTUAL" } }
     * def repeatedFieldNoLink = {"tag": "600", "indicators": [ "0", "1" ], "content":"$a Linkable field", "isProtected":false }
-    * def repeatedFieldWithLink = {"tag": "600", "indicators": [ "\\", "\\" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId":8, "status":"ACTUAL" } }
+    * def repeatedFieldWithLink = {"tag": "600", "indicators": [ "\\", "\\" ], "content":'#("$a Johnson" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId1), "authorityNaturalId":#(authorityNaturalId1), "linkingRuleId":8, "status":"ACTUAL" } }
     And match result.fields contains fieldWithLink
     And match result.fields contains repeatedFieldNoLink
     And match result.fields contains repeatedFieldWithLink
@@ -68,8 +70,8 @@ Feature: Test quickMARC
     * def quickMarcJson = $
     * def recordId = quickMarcJson.parsedRecordId
     * def fields = quickMarcJson.fields
-    * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + linkedAuthorityId
-    * def newField = { "tag": "240", "indicators": [ "\\", "\\" ], "content":'#("$a Test note" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId": 5, "status":"ERROR", "errorCause":"test"  } }
+    * def linkContent = ' $0 ' + authorityNaturalId2 + ' $9 ' + linkedAuthorityId2
+    * def newField = { "tag": "240", "indicators": [ "\\", "\\" ], "content":'#("$a Test note" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId2), "authorityNaturalId":#(authorityNaturalId2), "linkingRuleId": 5, "status":"ERROR", "errorCause":"test"  } }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
     * set quickMarcJson.relatedRecordVersion = 3
@@ -80,7 +82,7 @@ Feature: Test quickMARC
     When method PUT
     Then status 202
 
-    * def newLink = { "id":3, "authorityId": #(linkedAuthorityId), "authorityNaturalId": #(authorityNaturalId), "instanceId": #(testInstanceId), "linkingRuleId": #(newField.linkDetails.linkingRuleId), "status":"ACTUAL" }
+    * def newLink = { "id":3, "authorityId": #(linkedAuthorityId2), "authorityNaturalId": #(authorityNaturalId2), "instanceId": #(testInstanceId), "linkingRuleId": #(newField.linkDetails.linkingRuleId), "status":"ACTUAL" }
 
     Given path 'links/instances', testInstanceId
     And headers headersUser

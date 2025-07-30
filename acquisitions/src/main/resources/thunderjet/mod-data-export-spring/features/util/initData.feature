@@ -1,24 +1,16 @@
-Feature: init data for mod-data-export-spring
+Feature: Init data for mod-data-export-spring
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-    * callonce login testUser
-    * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-    # set default headers to 'user'
-    * configure headers = headersUser
     # define default values
     * def defaultOrganizationName = 'Default organization name for MODEXPS-202'
     * def defaultOrganizationCode = 'Default organization code for MODEXPS-202'
 
   @CreateOrganization
   Scenario: Create organization
-    * configure headers = headersAdmin
-    * def organizationEntityRequest = read('samples/organization-entity-request.json')
+    * def organizationEntityRequest = read('this:../samples/organization-entity-request.json')
     * organizationEntityRequest.id = karate.get('extOrganizationId', globalVendorId)
     * organizationEntityRequest.name = karate.get('extOrganizationName', defaultOrganizationName + ' ' + random_string())
     * organizationEntityRequest.code = karate.get('extOrganizationCode', defaultOrganizationCode + ' ' + random_string())
@@ -56,7 +48,7 @@ Feature: init data for mod-data-export-spring
 
   @CreateOrderForOrganization
   Scenario: Create order for specified organization
-    * def orderEntityRequest = read('samples/order-entity-request.json')
+    * def orderEntityRequest = read('this:../samples/order-entity-request.json')
     * orderEntityRequest.id = karate.get('extOrderId')
     * orderEntityRequest.vendor = karate.get('extOrganizationId', globalVendorId)
     * orderEntityRequest.poNumber = karate.get('extPoNumber', '0000001')
@@ -69,7 +61,7 @@ Feature: init data for mod-data-export-spring
 
   @CreateOrderLines
   Scenario: Create order for specified organization
-    * def poLineEntityRequest = read('samples/order-po-line-electronic.json')
+    * def poLineEntityRequest = read('this:../samples/order-po-line-electronic.json')
     * poLineEntityRequest.id = karate.get('extPoLineId')
     * poLineEntityRequest.eresource.accessProvider = karate.get('extOrganizationId')
     * poLineEntityRequest.purchaseOrderId = karate.get('extOrderId')
@@ -98,7 +90,7 @@ Feature: init data for mod-data-export-spring
     # set order.workflowStatus to 'Open'
     * def orderResponse = $
     * set orderResponse.workflowStatus = 'Open'
-    * remove order.poLines
+    * remove orderResponse.poLines
 
     Given path 'orders/composite-orders', orderId
     And request orderResponse
@@ -107,7 +99,6 @@ Feature: init data for mod-data-export-spring
 
   @GetLocaleSettings
   Scenario: Get locale settings
-    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And param query = '(configName==localeSettings)'
     When method GET
@@ -115,7 +106,7 @@ Feature: init data for mod-data-export-spring
 
   @AddIntegrationToOrganization
   Scenario: Add integration to specified organization
-    * def exportConfigRequest = read('samples/export-config.json')
+    * def exportConfigRequest = read('this:../samples/export-config.json')
 
     * exportConfigRequest.id = karate.get('extExportConfigId')
 

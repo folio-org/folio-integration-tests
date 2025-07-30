@@ -7,6 +7,7 @@ Feature: postRecord
     Given path 'source-storage/records'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
     * def record = read('classpath:samples/marc_record.json')
     * set record.id = id
     * set record.matchedId = id

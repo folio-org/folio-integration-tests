@@ -3,7 +3,7 @@ Feature: Overdue fine policies tests
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * def overdueFinePoliciesId = call uuid1
 
   # CRUD
@@ -125,7 +125,7 @@ Feature: Overdue fine policies tests
     Then status 422
     And match $.errors[0].message == expectedErrMsg
 
-  Scenario: Should return 400 when overdue fine policy is posted with incorrect x-okapi-tenant header
+  Scenario: Should return 401 when overdue fine policy is posted with incorrect x-okapi-tenant header
     * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
     * def requestEntity = read('samples/policies/overdue-fine-policy-entity-request.json')
     * requestEntity.name = "name 7"
@@ -133,5 +133,7 @@ Feature: Overdue fine policies tests
     Given path 'overdue-fines-policies'
     And request requestEntity
     When method POST
-    Then status 400
-    And match response contains 'Invalid Token: Failed to decode:Unrecognized token'
+    Then status 401
+    And match response.errors[0].type == 'UnauthorizedException'
+    And match response.errors[0].code == 'authorization_error'
+    And match response.errors[0].message == 'Unauthorized'

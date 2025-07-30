@@ -2,25 +2,19 @@
 Feature: Unreceive a piece and check the order line
 
   Background:
-    * url baseUrl
     * print karate.info.scenarioName
+    * url baseUrl
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createPiece = read('classpath:thunderjet/mod-orders/reusable/create-piece.feature')
     * def unreceivePiece = read('classpath:thunderjet/mod-orders/reusable/unreceive-piece.feature')
 
     * configure retry = { count: 10, interval: 5000 }
@@ -42,6 +36,7 @@ Feature: Unreceive a piece and check the order line
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 100 }
 
     * print '2. Create an order'
+    * configure headers = headersUser
     * def v = callonce createOrder { id: '#(orderId)' }
 
     * print '3. Create a package order line'

@@ -1,19 +1,14 @@
+@parallel=false
 Feature: Checking that it is impossible to pay for the invoice if no voucher for invoice
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-   #* callonce dev {tenant: 'testinvoices1'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
-    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
-    # load global variables
     * callonce variables
 
     # prepare sample data
@@ -32,7 +27,6 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
     * set invoicePayload.lockTotal = 10.02
     # ============= create invoice ===================
     Given path 'invoice/invoices'
-    And headers headersUser
     And request invoicePayload
     When method POST
     Then status 201
@@ -46,7 +40,6 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
   Scenario: Add invoice line to created invoice
      # ============= create invoice lines ===================
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     * set invoiceLinePayload.id = invoiceLineId
     * set invoiceLinePayload.invoiceId = invoiceId
     * set invoiceLinePayload.quantity = 1
@@ -63,21 +56,18 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
 
   Scenario: Approve invoice with lock total which equal to calculated total
   Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = "Approved"
 
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoicePayload
     When method PUT
     Then status 204
 
   Scenario: Delete voucher with voucher lines after invoice approve
     Given path '/voucher/vouchers'
-    And headers headersUser
     And param limit = '2147483647'
     And param query = 'invoiceId==' + invoiceId
     When method GET
@@ -85,7 +75,6 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
     * def voucherId = $.vouchers[0].id
 
     Given path '/voucher/voucher-lines'
-    And headers headersUser
     And param limit = '1000'
     And param query = 'voucherId==' + voucherId
     When method GET
@@ -93,25 +82,21 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
     * def voucherLineId = $.voucherLines[0].id
 
     Given path '/voucher-storage/voucher-lines', voucherLineId
-    And headers headersAdmin
     When method DELETE
     Then status 204
 
     Given path '/voucher-storage/vouchers', voucherId
-    And headers headersAdmin
     When method DELETE
     Then status 204
     
   Scenario: Pay for the invoice without voucher
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = 'Paid'
 
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoicePayload
     When method PUT
     Then status 404

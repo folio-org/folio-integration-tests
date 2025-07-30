@@ -2,6 +2,7 @@ Feature: mod-circulation integration tests
 
   Background:
     * url baseUrl
+
     * table modules
       | name                      |
       | 'mod-login'               |
@@ -10,7 +11,7 @@ Feature: mod-circulation integration tests
       | 'mod-users-bl'            |
       | 'mod-configuration'       |
       | 'mod-settings'            |
-      | 'okapi'                   |
+      | 'mod-okapi-facade'        |
       | 'mod-pubsub'              |
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
@@ -24,8 +25,8 @@ Feature: mod-circulation integration tests
       | name                                                           |
       | 'accounts.collection.get'                                      |
       | 'accounts.item.put'                                            |
-      | 'accounts.check-pay.post'                                      |
-      | 'accounts.pay.post'                                            |
+      | 'feesfines.accounts.check-pay.post'                            |
+      | 'feesfines.accounts.pay.post'                                  |
       | 'patron-blocks.automated-patron-blocks.collection.get'         |
       | 'check-in-storage.check-ins.collection.get'                    |
       | 'check-in-storage.check-ins.item.get'                          |
@@ -96,10 +97,10 @@ Feature: mod-circulation integration tests
       | 'overdue-fines-policies.item.get'                              |
       | 'owners.item.post'                                             |
       | 'payments.item.post'                                           |
-      | 'patron-block-conditions.collection.get'                       |
-      | 'patron-block-conditions.item.put'                             |
-      | 'patron-block-limits.item.post'                                |
-      | 'patron-block-limits.item.delete'                              |
+      | 'patron-blocks.patron-block-conditions.collection.get'         |
+      | 'patron-blocks.patron-block-conditions.item.put'               |
+      | 'patron-blocks.patron-block-limits.item.post'                  |
+      | 'patron-blocks.patron-block-limits.item.delete'                |
       | 'patron-blocks.synchronization.job.post'                       |
       | 'pubsub.publishers.get'                                        |
       | 'pubsub.publishers.delete'                                     |
@@ -108,8 +109,8 @@ Feature: mod-circulation integration tests
       | 'usergroups.collection.get'                                    |
       | 'users.item.post'                                              |
       | 'users.item.get'                                               |
-      | 'user-summary.item.get'                                        |
-      | 'circulation.requests.queue.collection.get'                    |
+      | 'patron-blocks.user-summary.item.get'                          |
+      | 'modperms.circulation.requests.queue.collection.get'           |
       | 'okapi.proxy.self.timers.patch'                                |
       | 'circulation.rules.loan-policy.get'                            |
       | 'circulation.rules.overdue-fine-policy.get'                    |
@@ -134,5 +135,27 @@ Feature: mod-circulation integration tests
       | 'perms.permissions.get'                                        |
       | 'perms.users.item.post'                                        |
 
+
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')
+
+    #there is a limit of characters on server for query ,so additional logic for adding user permissions is created
+    * table userPermissions
+      | name                                                          |
+      | 'calendar.endpoint.calendars.calendarId.delete'               |
+      | 'scheduler.collection.get'                                    |
+      | 'scheduler.item.put'                                          |
+      | 'calendar.endpoint.calendars.post'                            |
+      | 'calendar.endpoint.calendars.surroundingOpenings.get'         |
+      | 'circulation.requests.queue.item-reorder.collection.post'     |
+      | 'circulation.requests.allowed-service-points.get'             |
+      | 'circulation-storage.request-policies.item.get'               |
+      | 'circulation.requests.queue.instance-reorder.collection.post' |
+      | 'circulation.requests.queue-instance.collection.get'          |
+      | 'mod-settings.entries.collection.get'                         |
+      | 'mod-settings.entries.item.get'                               |
+      | 'mod-settings.global.read.mod-circulation'                    |
+      | 'mod-settings.global.read.circulation'                        |
+      | 'feesfines.accounts-bulk.check-waive.post'                    |
+      | 'circulation-storage.circulation-rules.get'                   |
+    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')

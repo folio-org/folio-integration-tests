@@ -2,26 +2,18 @@
 Feature: Open and unopen order
 
   Background:
-    * url baseUrl
     * print karate.info.scenarioName
+    * url baseUrl
 
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def unopenOrder = read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature')
 
   @Positive
   Scenario: Open and unopen one-time order
@@ -32,10 +24,11 @@ Feature: Open and unopen order
 
     * print '1. Create a fund and budget'
     * configure headers = headersAdmin
-    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
-    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active' }]}
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active' }] }
 
     * print '2. Create a composite one-time order'
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)',vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
     * print '3. Create an order line'
@@ -74,6 +67,7 @@ Feature: Open and unopen order
     * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active' }]}
 
     * print '2. Create a composite ongoing order'
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)',vendor: '#(globalVendorId)', orderType: 'Ongoing', "ongoing": {"interval" : 123, "isSubscription" : true, "renewalDate" : "2022-05-08T00:00:00.000+00:00"}}
 
     * print '3. Create an order line'

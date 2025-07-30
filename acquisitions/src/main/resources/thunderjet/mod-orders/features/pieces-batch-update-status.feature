@@ -5,14 +5,14 @@ Feature: Update Pieces statuses in batch
     * print karate.info.scenarioName
     * url baseUrl
 
-    * call loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * call loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+
     * configure retry = { count: 10, interval: 5000 }
-    * configure headers = headersAdmin
 
     * callonce variables
     * def fundId = callonce uuid
@@ -26,10 +26,12 @@ Feature: Update Pieces statuses in batch
 
     ### Before All ###
     # 1. Prepare finance data
+    * configure headers = headersAdmin
     * def v = callonce createFund { id: '#(fundId)' }
     * def v = callonce createBudget { id: '#(budgetId)', allocated: 100, fundId: '#(fundId)', status: 'Active' }
 
     # 2. Prepare acquisitions data
+    * configure headers = headersUser
     * def v = callonce createOrder { id: '#(orderId)' }
     * def v = callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
     * def v = callonce openOrder { orderId: '#(orderId)' }
@@ -42,7 +44,6 @@ Feature: Update Pieces statuses in batch
       | pieceId2 | titleId | poLineId |
       | pieceId3 | titleId | poLineId |
     * def v = callonce createPiece pieceData
-    * configure headers = headersUser
 
   @Positive
   Scenario: Update once Piece status in batch to received and verify PoLine receipt status
@@ -59,6 +60,7 @@ Feature: Update Pieces statuses in batch
     * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
+    * configure headers = headersAdmin
     * table verifyPieceAuditData
       | _pieceId | _receivingStatus | _eventCount |
       | pieceId1 | 'Unreceivable'   | 2           |
@@ -81,6 +83,7 @@ Feature: Update Pieces statuses in batch
     * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
+    * configure headers = headersAdmin
     * table verifyPieceAuditData
       | _pieceId | _receivingStatus | _eventCount |
       | pieceId2 | 'Received'       | 2           |
@@ -105,6 +108,7 @@ Feature: Update Pieces statuses in batch
     * def v = call verifyPieceReceivingStatus verifyPieceData
 
     # 4. Verify Piece status change audit events
+    * configure headers = headersAdmin
     * table verifyPieceAuditData
       | _pieceId | _receivingStatus | _eventCount |
       | pieceId1 | 'Expected'       | 3           |
@@ -169,47 +173,92 @@ Feature: Update Pieces statuses in batch
     * def v = call verifyPieceReceivingStatus verifyPieceData
 
   @Positive
+  Scenario: Update Piece statuses in batch with claimingInterval, internalNote and externalNote
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def titleId = call uuid
+    * def pieceId1 = call uuid
+    * def pieceId2 = call uuid
+
+    # 1. Create order with 2 pieces
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, claimingActive: true, claimingInterval: 1 }
+    * def v = call openOrder { orderId: '#(orderId)' }
+    * def v = call createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
+    * table pieceData
+      | pieceId  | titleId | poLineId |
+      | pieceId1 | titleId | poLineId |
+      | pieceId2 | titleId | poLineId |
+    * def v = call createPiece pieceData
+
+    # 2. Update Pieces statuses in batch with additional fields
+    Given path 'orders/pieces-batch/status'
+    And request { pieceIds: ["#(pieceId1)", "#(pieceId2)"], receivingStatus: 'Claim delayed', claimingInterval: 15, internalNote: 'Internal test note', externalNote: 'External test note' }
+    When method PUT
+    Then status 204
+
+    # 3. Verify Piece status and fields are updated correctly
+    Given path 'orders/pieces', pieceId1
+    When method GET
+    Then status 200
+    And match $.receivingStatus == 'Claim delayed'
+    And match $.claimingInterval == 15
+    And match $.internalNote == 'Internal test note'
+    And match $.externalNote == 'External test note'
+
+    Given path 'orders/pieces', pieceId2
+    When method GET
+    Then status 200
+    And match $.receivingStatus == 'Claim delayed'
+    And match $.claimingInterval == 15
+    And match $.internalNote == 'Internal test note'
+    And match $.externalNote == 'External test note'
+
+  @Positive
   Scenario: Update 100 pieces statuses in batch to delay claim, late claim and unreceivable
+    ## Relogin to avoid login expry problem
+    * call login testAdmin
+    * def okapitokenAdmin = okapitoken
+    * call login testUser
+    * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
+
     # 1. Create 100 Pieces
-    * def piecesIds = []
     * def piecesData = []
     * def populatePiecesData =
       """
       function() {
         for (let i = 0; i < 100; i++) {
           const randomPieceId = uuid();
-          piecesIds.push(randomPieceId);
           piecesData.push({ id: randomPieceId, titleId: titleId, poLineId: poLineId, format: 'Physical', locationId: globalLocationsId });
         }
       }
       """
     * eval populatePiecesData()
+    * def piecesIds = piecesData.map(x => x.id)
+    * print 'piecesIds:' + piecesIds
     * def pieceCollection = { pieces: '#(piecesData)', totalRecords: 100 }
     * def v = call createPiecesBatch pieceCollection
-
-    ## Relogin to avoid login expry problem
-    * def headersAdmin = { 'Content-Type': 'application/json', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'Accept': '*/*'  }
-    * configure headers = headersUser
-    * call loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
-    * call loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
 
     # 2 Update Pieces statuses in batch to "Claim delayed"
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim delayed' }
     * def verifyPiecesData1 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim delayed', _eventCount: 2 } } )
+    * configure headers = headersAdmin
     * def v = call verifyPieceAuditEvents verifyPiecesData1
 
     # 3 Update Pieces statuses in batch to "Claim sent"
+    * configure headers = headersUser
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Claim sent' }
     * def verifyPiecesData2 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Claim sent', _eventCount: 3 } } )
+    * configure headers = headersAdmin
     * def v = call verifyPieceAuditEvents verifyPiecesData2
 
     # 4 Update Pieces statuses in batch to "Unreceivable"
+    * configure headers = headersUser
     * def v = call updatePiecesBatchStatus { pieceIds: '#(piecesIds)', receivingStatus: 'Unreceivable' }
     * def verifyPiecesData3 = karate.map(piecesIds, function(id) { return { _pieceId: id, _receivingStatus: 'Unreceivable', _eventCount: 4 } } )
+
+    * configure headers = headersAdmin
     * def v = call verifyPieceAuditEvents verifyPiecesData3

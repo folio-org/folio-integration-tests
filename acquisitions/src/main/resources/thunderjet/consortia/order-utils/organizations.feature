@@ -1,14 +1,14 @@
-Feature: global organizations
+Feature: Global organizations
 
   Background:
     * url baseUrl
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+
     * callonce variablesCentral
 
-  Scenario: create vendor
-    Given path 'organizations-storage/organizations'
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
+  Scenario: Create vendor
+    Given path 'organizations/organizations'
     And request
     """
     {
@@ -22,11 +22,8 @@ Feature: global organizations
     When method POST
     Then status 201
 
-  Scenario: create organization which is not a vendor
-    Given path 'organizations-storage/organizations'
-    And header Accept = 'application/json'
-    And header Content-Type = 'application/json'
-    And header x-okapi-token = okapitoken
+  Scenario: Create organization which is not a vendor
+    Given path 'organizations/organizations'
     And request
     """
     {

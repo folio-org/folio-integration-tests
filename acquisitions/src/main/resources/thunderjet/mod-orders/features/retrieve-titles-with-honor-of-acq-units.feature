@@ -3,17 +3,15 @@
 Feature: Retrieve titles with honor of acquisition units
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -27,15 +25,13 @@ Feature: Retrieve titles with honor of acquisition units
 
   Scenario: Create a fund and budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}]}
-    * configure headers = headersUser
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
+    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}] }
 
 
   Scenario: Create acq unit
     * configure headers = headersAdmin
     Given path 'acquisitions-units/units'
-    And headers headersAdmin
     And request
     """
     {
@@ -52,13 +48,14 @@ Feature: Retrieve titles with honor of acquisition units
 
   Scenario: Create acq unit membership
     * configure headers = headersAdmin
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def userId = res.userId
     Given path 'acquisitions-units/memberships'
-    And headers headersAdmin
     And request
     """
       {
         "id": '#(acqUnitMembershipId)',
-        "userId": "00000000-1111-5555-9999-999999999992",
+        "userId": "#(userId)",
         "acquisitionsUnitId": "#(acqUnitId)"
       }
     """
@@ -67,7 +64,6 @@ Feature: Retrieve titles with honor of acquisition units
 
 
   Scenario: Create a composite order
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -109,7 +105,6 @@ Feature: Retrieve titles with honor of acquisition units
     Then status 204
 
   Scenario: Retrieve title having acq units membership
-    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -125,7 +120,6 @@ Feature: Retrieve titles with honor of acquisition units
     Then status 204
 
   Scenario: Retrieve title without acq units membership
-    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET

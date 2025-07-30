@@ -34,7 +34,6 @@ Feature: edge-patron integration tests
       | 'addresstypes.collection.get'                                  |
       | 'addresstypes.item.post'                                       |
       | 'patron.account.item.get'                                      |
-      | 'patron.account.item.put'                                      |
       | 'patron.item.post'                                             |
       | 'patron.item.put'                                              |
       | 'staging-users.external-system-id.put'                         |
@@ -46,4 +45,4 @@ Feature: edge-patron integration tests
   * def testUser = { tenant: '#(testTenant)', name: 'testpatron', password: 'password' }
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
+    Given call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }

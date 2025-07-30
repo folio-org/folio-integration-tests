@@ -111,6 +111,42 @@
           ]
         }
       ],
+      "_languages": [
+        {
+          "http://bibfra.me/vocab/marc/term":[
+            "English"
+          ],
+          "http://bibfra.me/vocab/lite/link":[
+            "http://id.loc.gov/vocabulary/languages/eng"
+          ],
+          "_types":[
+            "http://bibfra.me/vocab/lite/language"
+          ]
+        },
+        {
+          "http://bibfra.me/vocab/marc/term":[
+            "French"
+          ],
+          "http://bibfra.me/vocab/lite/link":[
+            "http://id.loc.gov/vocabulary/languages/fre"
+          ],
+          "_types":[
+            "http://bibfra.me/vocab/lite/summaryLanguage",
+            "http://bibfra.me/vocab/lite/originalLanguage"
+          ]
+        },
+        {
+          "http://bibfra.me/vocab/marc/term":[
+            "German"
+          ],
+          "http://bibfra.me/vocab/lite/link":[
+            "http://id.loc.gov/vocabulary/languages/ger"
+          ],
+          "_types":[
+            "http://bibfra.me/vocab/lite/accompanyingTranscriptsLanguage"
+          ]
+        }
+      ],
       "http://bibfra.me/vocab/lite/language":[
         {
           "http://bibfra.me/vocab/marc/term": [
@@ -144,6 +180,14 @@
           ],
           "value":[
             "General note"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/awardsNote"
+          ],
+          "value":[
+            "Award note"
           ]
         }
       ],

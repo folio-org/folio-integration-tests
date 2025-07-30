@@ -2,17 +2,15 @@
 Feature: Update purchase order with order lines
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * call login testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * call login testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -30,9 +28,9 @@ Feature: Update purchase order with order lines
     * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
-    * configure headers = headersUser
 
     ### 2. Create orders and order lines
+    * configure headers = headersUser
     * def ongoingObj = { "interval": 123, "isSubscription": true, "renewalDate": "2022-05-08T00:00:00.000+00:00" }
     * table orders
       | id       | orderId  | orderType  | ongoing    |

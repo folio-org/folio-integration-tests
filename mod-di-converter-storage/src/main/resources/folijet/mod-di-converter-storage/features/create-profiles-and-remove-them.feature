@@ -2,15 +2,8 @@ Feature: Create job profile for CREATE
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
   Scenario: Create Job Profile for create Instance, Holdings, Item
   .

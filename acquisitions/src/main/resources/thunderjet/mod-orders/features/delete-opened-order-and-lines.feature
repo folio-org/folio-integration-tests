@@ -2,20 +2,17 @@
 Feature: Delete opened order and lines
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testorders'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    # load global variables
+
     * callonce variables
 
     * def orderId = callonce uuid1
@@ -95,7 +92,7 @@ Feature: Delete opened order and lines
 
 
   Scenario: Delete order line after order is opened
-
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
@@ -118,10 +115,12 @@ Feature: Delete opened order and lines
     * def unavailableBefore2 = response.budgets[0].unavailable
     * def encumbered2 = response.budgets[0].encumbered
 
+    * configure headers = headersUser
     Given  path 'orders/order-lines/', orderLineId
     When method DELETE
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
@@ -151,10 +150,12 @@ Feature: Delete opened order and lines
     * match response.budgets[0].encumbered == encumbered2 - 60
 
 
+    * configure headers = headersUser
     Given  path 'orders/composite-orders/', orderId
     When method DELETE
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET

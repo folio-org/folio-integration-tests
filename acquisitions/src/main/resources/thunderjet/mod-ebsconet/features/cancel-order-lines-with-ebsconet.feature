@@ -4,25 +4,16 @@ Feature: Cancel order lines with ebsconet
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
 
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -34,7 +25,6 @@ Feature: Cancel order lines with ebsconet
 
 
   Scenario: Prepare finances
-    * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId) }
     * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
 
@@ -51,6 +41,7 @@ Feature: Cancel order lines with ebsconet
     * set poLine.fundDistribution[0].code = fundId
     * set poLine.paymentStatus = '<paymentStatus>'
     * set poLine.receiptStatus = '<receiptStatus>'
+    * set poLine.checkinItems = '<checkinItems>'
 
     Given path 'orders/order-lines'
     And request poLine
@@ -58,11 +49,11 @@ Feature: Cancel order lines with ebsconet
     Then status 201
 
     Examples:
-      | id        | paymentStatus        | receiptStatus        |
-      | poLineId1 | Awaiting Payment     | Partially Received   |
-      | poLineId2 | Payment Not Required | Awaiting Receipt     |
-      | poLineId3 | Fully Paid           | Receipt Not Required |
-      | poLineId4 | Partially Paid       | Fully Received       |
+      | id        | paymentStatus        | receiptStatus        | checkinItems |
+      | poLineId1 | Awaiting Payment     | Partially Received   | false        |
+      | poLineId2 | Payment Not Required | Awaiting Receipt     | false        |
+      | poLineId3 | Fully Paid           | Receipt Not Required | true         |
+      | poLineId4 | Partially Paid       | Fully Received       | false        |
 
 
   Scenario: Open the order

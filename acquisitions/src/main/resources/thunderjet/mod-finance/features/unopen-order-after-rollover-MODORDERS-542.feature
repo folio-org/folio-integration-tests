@@ -1,20 +1,17 @@
+@parallel=false
 Feature: Ledger fiscal year rollover issue MODORDERS-542
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance'}
 
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
-
-    * configure headers = headersAdmin
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -55,6 +52,7 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
     * def toYear = parseInt(fromYear) + 1
 
   Scenario: Update po line limit
+    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And param query = 'configName==poLines-limit'
     When method GET
@@ -154,7 +152,6 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
       | groupId1 |
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
@@ -281,7 +278,6 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
 
 
   Scenario: Start rollover for ledger
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -336,7 +332,6 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
 
 
   Scenario: Delete rollover with Success status
-    * configure headers = headersAdmin
     Given path '/finance-storage/ledger-rollovers', rolloverId
     When method DELETE
     Then status 204
@@ -371,6 +366,7 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
     When method GET
     Then status 200
 
+    * configure headers = headersAdmin
     Given path 'orders/composite-orders', encumberRemaining2
     When method GET
     Then status 200
@@ -381,9 +377,9 @@ Feature: Ledger fiscal year rollover issue MODORDERS-542
     Given path 'orders/composite-orders', encumberRemaining2
     And request order
     And header X-Okapi-Permissions = 'orders.item.unopen'
-
     When method PUT
     Then status 204
+    * configure headers = headersUser
 
     Given path 'finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + encumberRemaining2

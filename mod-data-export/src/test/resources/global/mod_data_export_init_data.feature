@@ -3,10 +3,10 @@ Feature: init data for mod-data-export
   Background:
     * url baseUrl
 
-    * callonce login testAdmin
+    * callonce login testUser
     * def okapitokenAdmin = okapitoken
 
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
 
   Scenario: create custom mapping profile
     * def mappingProfile = read('classpath:samples/mapping-profile/mapping_profile_with_many_fields.json')

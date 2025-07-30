@@ -44,6 +44,11 @@ This first builds the common and testrail-integration submodules and sets maven 
 
 To run only specific runner (Java) class test use `-DfailIfNoTests=false` and `-Dtest=<TestName>`.
 
+## Environment configuration
+
+The VALIDATION_INTERFACE_INTEGRITY_ENABLED parameter in the mgr-tenant-entitlements module should be set to 
+false in environments used for testing.
+
 ## Running tests for a specific module in a specific environment
 
 ```
@@ -113,6 +118,17 @@ sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 ```
 
 Also possible to run integration tests trough IDE by:
+
+There are 4 main variables in karate-config.js we have to take into account
+```
+1: baseUrl            - url to kong(api-gateway)
+2: baseKeycloakUrl    - url to keycloak(authorization)
+3: kcClientId         - master keycloak id
+4: kcClientSecret     - master keycloak password
+```
+
+Either you hardcode these values in karate-config.js or use a predefined block for karate.env
+![img.png](img.png) and set the env variable during start ![img_1.png](img_1.png) ![img_2.png](img_2.png)
 
 - Any test runner like FinanceApiTest
 - Directly from root feature file resources/domain/mod-orders/orders.feature

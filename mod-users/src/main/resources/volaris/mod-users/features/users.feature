@@ -6,14 +6,14 @@ Feature: Users tests
     * call read('classpath:common/util/uuid1.feature')
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': '*/*'  }
     * def status = true
     * def lastName = call random_string
     * def firstName = call random_string
     * def username = call random_string
     * def email = 'abc@pqr.com'
 
-    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json'  }
+    * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
   Scenario: Create a new User with PatronGroup.
     * def username = call random_string
@@ -221,7 +221,7 @@ Feature: Users tests
     Then status 201
     * def profileId = response.id
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': '*/*'  }
 
     # Create User with Profile Picture
     * def barcode = call random_numbers
@@ -281,7 +281,7 @@ Feature: Users tests
     Then status 201
     * def profileId = response.id
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': '*/*'  }
 
     # Create User with Profile Picture
     * def barcode = call random_numbers
@@ -331,7 +331,7 @@ Feature: Users tests
     Then status 201
     * def profileId = response.id
 
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)','Accept': '*/*'  }
 
     # Create User with Profile Picture
     * def barcode = call random_numbers

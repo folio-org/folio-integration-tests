@@ -1,20 +1,14 @@
+@parallel=false
 Feature: Create orders and invoices with odd penny
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testcrossmodules'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    # load global variables
+
     * callonce variables
 
     * def fundId1 = callonce uuid1
@@ -45,10 +39,9 @@ Feature: Create orders and invoices with odd penny
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>, <statusExpenseClasses>
     * def fundId = <fundId>
     * def budgetId = <budgetId>
-    * configure headers = headersAdmin
 
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
     Examples:
       | fundId  | budgetId  |

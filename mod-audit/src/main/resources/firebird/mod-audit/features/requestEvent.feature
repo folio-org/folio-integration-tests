@@ -3,7 +3,7 @@ Feature: mod audit data REQUEST event
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
     * callonce variables
 
   # Should be added new log record
@@ -119,13 +119,14 @@ Feature: mod audit data REQUEST event
     When method GET
     Then status 200
     * def num_records = $.totalRecords
+    * def invalidItemId = uuid()
     Given path 'circulation/requests'
     And request
     """
     {
     "id": "#(requestId)",
     "requesterId": "#(userid)",
-    "itemId": "#(itemIdRequest)",
+    "itemId": "#(invalidItemId)",
     "instanceId" : "#(instanceId)",
     "requestLevel" : "Item",
     "holdingsRecordId" : "#(holdingsRecordId)",
@@ -150,12 +151,13 @@ Feature: mod audit data REQUEST event
     When method GET
     Then status 200
     * def num_records = $.totalRecords
+    * def invalidRequesterId = uuid()
     Given path 'circulation/requests'
     And request
     """
     {
     "id": "#(requestId)",
-    "requesterId": "#(userid)",
+    "requesterId": "#(invalidRequesterId)",
     "itemId": "#(itemIdRequest)",
     "instanceId" : "#(instanceId)",
     "requestLevel" : "Item",

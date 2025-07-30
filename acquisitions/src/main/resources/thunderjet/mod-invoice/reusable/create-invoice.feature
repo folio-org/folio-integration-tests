@@ -1,3 +1,4 @@
+@ignore
 Feature: Create invoice
   # parameters: id, fiscalYearId?, acqUnitIds?, currency?, adjustments?
 

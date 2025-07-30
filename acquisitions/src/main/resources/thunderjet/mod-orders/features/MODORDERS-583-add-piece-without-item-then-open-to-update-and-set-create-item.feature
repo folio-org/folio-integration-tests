@@ -3,14 +3,15 @@
 Feature: If I don't choose to create an item when creating the piece. If I edit that piece and select create item the item must created
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    #* callonce dev {tenant: 'testorders1'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -28,12 +29,11 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
 
   Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -59,7 +59,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     * set poLine.locations[0].quantityPhysical = 1
     * set poLine.cost.quantityPhysical = 1
     Given path 'orders/order-lines'
-    * configure headers = headersUser
     And request poLine
     When method POST
     Then status 201
@@ -68,9 +67,8 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     And match $.instanceId == initialInstanceId
 
 
-  * print 'Open the order with 1 items'
+    * print 'Open the order with 1 items'
     Given path 'orders/composite-orders', orderId
-    * configure headers = headersUser
     When method GET
     Then status 200
 
@@ -85,15 +83,14 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
   * print 'Check inventory and order items after open order'
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     * def poLineInstanceId = response.instanceId
     * def poLineHoldingId = response.locations[0].holdingId
 
     * print 'Check items'
-    Given path 'inventory/items'
     * configure headers = headersAdmin
+    Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
     And match $.totalRecords == 1
@@ -105,8 +102,8 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
 
     * print 'Check if pieces were created when the order was opened'
-    Given path 'orders/pieces'
     * configure headers = headersUser
+    Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -118,14 +115,14 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
 
     * print 'Check holdings'
-    Given path 'holdings-storage/holdings', poLineHoldingId
     * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', poLineHoldingId
     When method GET
     Then status 200
     And assert response.id == poLineHoldingId
 
     * print 'Retrieve POL titles'
-    * configure headers = headersAdmin
+    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -135,7 +132,6 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
     * print 'Create piece without item creation and provided location'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
     """
     {
@@ -152,14 +148,12 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
     * print 'Update piece with item creation and provided location'
     Given path 'orders/pieces', newCreatedPiece.id
-    * configure headers = headersUser
     And request newCreatedPiece
     And param createItem = true
     When method PUT
     Then status 204
 
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
@@ -170,23 +164,21 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
     And assert physicalPieceAfterUpdate2.receivingStatus == 'Expected'
 
     * print 'Check physical item should be updated'
-    Given path 'inventory/items', physicalPieceAfterUpdate2.itemId
     * configure headers = headersAdmin
+    Given path 'inventory/items', physicalPieceAfterUpdate2.itemId
     When method GET
     Then status 200
     And match $.holdingsRecordId == holdingToPiece2
 
-
     * print 'Check holding should not be deleted, because flag "deleteHolding" was not provided and exist item'
     Given path 'holdings-storage/holdings', initialHoldingId
-    * configure headers = headersAdmin
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
 
     * print 'Check order and transaction after Physical piece update'
-    Given path 'orders/composite-orders', orderId
     * configure headers = headersUser
+    Given path 'orders/composite-orders', orderId
     When method GET
     * def poLine = $.poLines[0]
     And match $.workflowStatus == 'Open'
@@ -205,8 +197,8 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
 
     * print 'Check encumbrances initial value'
-    Given path 'finance/transactions'
     * configure headers = headersAdmin
+    Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     And match $.totalRecords == 1

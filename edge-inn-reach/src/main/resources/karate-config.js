@@ -7,18 +7,23 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9703',
     centralServerUrl: 'https://folio-dev-volaris-mockserver.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
+
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'testedgeinnreach', name: 'innreachClient', password: 'password'},
+    testUser: {tenant: 'default', name: 'innreachClient', password: 'default'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -65,53 +70,39 @@ function fn() {
   }
   karate.repeat(100, rand);
 
-  if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot-2.dev.folio.org:8000';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
+  if (env == 'dev') {
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+  } else if (env == 'snapshot-2') {
+    config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
+    config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
+    config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
+    config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-volaris-okapi.ci.folio.org/';
-    config.edgeUrl = 'http://folio-dev-volaris-edge.ci.folio.org/innreach';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
-  } else if(env == 'folio-testing-karate') {
+    config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
+    config.edgeUrl = 'https://folio-edev-volaris-edge-inn-reach.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
-    config.edgeUrl = '${edgeUrl}';
+    config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
+    config.edgeUrl = '${edgeUrl}'
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
       password: '${admin.password}'
     }
+    config.kcClientId = '${clientId}',
+    config.kcClientSecret = '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.edgeUrl = 'http://' + env + ':8000';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
   }
-
-  // uncomment to run on local
-  //karate.callSingle('classpath:volaris/edge-inn-reach/global/add-okapi-permissions.feature', config);
-
   return config;
 }

@@ -1,6 +1,7 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.apache.commons.lang3.RandomUtils;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
@@ -9,21 +10,115 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 @FolioTest(team = "thunderjet", module = "mod-orders")
-public class OrdersApiTest extends TestBase {
+class OrdersApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final int THREAD_COUNT = 4;
 
   public OrdersApiTest() {
-    super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
+
+  @BeforeAll
+  void ordersApiTestBeforeAll() {
+    System.setProperty("testTenant", "testorders" + RandomUtils.nextLong());
+    System.setProperty("testTenantId", UUID.randomUUID().toString());
+    runFeature("classpath:thunderjet/mod-orders/init-orders.feature");
+  }
+
+  @AfterAll
+  void ordersApiTestAfterAll() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
+
+  @Test
+  void bindPiece() {
+    runFeatureTest("bind-piece");
+  }
+
+  @Test
+  void cancelAndDeleteOrder() {
+    runFeatureTest("cancel-and-delete-order");
+  }
+
+  @Test
+  void cancelItemAfterCancelingPolineInMultiLineOrders() {
+    runFeatureTest("cancel-item-after-canceling-poline-in-multi-line-orders");
+  }
+
+  @Test
+  void cancelOrder() {
+    runFeatureTest("cancel-order", THREAD_COUNT);
   }
 
   @Test
   void changeLocationWhenReceivingPiece() {
     runFeatureTest("change-location-when-receiving-piece");
+  }
+
+  @Test
+  void changePendingDistributionWithInactiveBudget() {
+    runFeatureTest("change-pending-distribution-with-inactive-budget");
+  }
+
+  @Test
+  void checkEstimatedPriceWithCompositeOrder() {
+    runFeatureTest("check-estimated-price-with-composite-order");
+  }
+
+  @Test
+  void checkHoldingInstanceCreationWithCreateInventoryOptions() {
+    runFeatureTest("check-holding-instance-creation-with-createInventory-options");
+  }
+
+  @Test
+  void checkNewTagsCreatedInCentralTagRepository() {
+    runFeatureTest("check-new-tags-in-central-tag-repository");
+  }
+
+  @Test
+  @Disabled
+  void checkOrderLinesNumberRetrieveLimit() {
+    runFeatureTest("check-order-lines-number-retrieve-limit");
+  }
+
+  @Test
+  void checkOrderNeedReEncumber() {
+    runFeatureTest("check-re-encumber-property");
+  }
+
+  @Test
+  void closeOrderAndReleaseEncumbrances() {
+    runFeatureTest("close-order-and-release-encumbrances");
+  }
+
+  @Test
+  void closeOrderIncludingLines() {
+    runFeatureTest("close-order-including-lines");
+  }
+
+  @Test
+  void closeOrderWhenFullyPaidAndReceived() {
+    runFeatureTest("close-order-when-fully-paid-and-received");
+  }
+
+  @Test
+  void createFivePieces() {
+    runFeatureTest("create-five-pieces");
+  }
+
+  @Test
+  void createOpenCompositeOrder() {
+    runFeatureTest("create-open-composite-order");
+  }
+
+  @Test
+  void createOrderWithNotEnoughMoney() {
+    runFeatureTest("create-order-that-has-not-enough-money");
   }
 
   @Test
@@ -33,17 +128,12 @@ public class OrdersApiTest extends TestBase {
 
   @Test
   void deleteOpenedOrderAndOrderLines() {
-    runFeatureTest("delete-opened-order-and-lines.feature");
+    runFeatureTest("delete-opened-order-and-lines");
   }
 
   @Test
-  void closeOrderWhenFullyPaidAndReceived() {
-    runFeatureTest("close-order-when-fully-paid-and-received");
-  }
-
-  @Test
-  void createOrderWithNotEnoughMoney() {
-    runFeatureTest("create-order-that-has-not-enough-money");
+  void encumbranceReleasedWhenOrderCloses() {
+    runFeatureTest("encumbrance-released-when-order-closes");
   }
 
   @Test
@@ -52,8 +142,23 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void encumbranceUpdateAfterExpenseClassChange() {
+    runFeatureTest("encumbrance-update-after-expense-class-change");
+  }
+
+  @Test
   void expenseClassHandlingOrderWithLines() {
     runFeatureTest("expense-class-handling-for-order-and-lines");
+  }
+
+  @Test
+  void findHoldingForMixedPol() {
+    runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol");
+  }
+
+  @Test
+  void fundCodesInOpenOrderError() {
+    runFeatureTest("fund-codes-in-open-order-error");
   }
 
   @Test
@@ -62,85 +167,13 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void openOrderWithDifferentPoLineCurrency() {
-    runFeatureTest("open-order-with-different-po-line-currency");
+  void independentAcquisitionsUnitForOrderReceiving() {
+    runFeatureTest("independent-acquisitions-unit-for-ordering-and-receiving");
   }
 
   @Test
-  void checkOrderNeedReEncumber() {
-    runFeatureTest("check-re-encumber-property");
-  }
-
-  @Test
-  void openOrderWithManualExchangeRate() {
-    runFeatureTest("open-order-with-manual-exchange-rate");
-  }
-
-
-  @Test
-  void checkOrderReEncumberWorksCorrectly() {
-    runFeatureTest("check-order-re-encumber-work-correctly");
-  }
-
-  @Test
-  void openOngoingOrder() {
-    runFeatureTest("open-ongoing-order");
-  }
-
-  @Test
-  void openOrderWithRestrictedLocations() {
-    runFeatureTest("open-order-with-restricted-locations");
-  }
-
-  @Disabled
-  @Test
-  void checkOrderLinesNumberRetrieveLimit() {
-    runFeatureTest("check-order-lines-number-retrieve-limit");
-  }
-
-  @Test
-  void checkNewTagsCreatedInCentralTagRepository() {
-    runFeatureTest("check-new-tags-in-central-tag-repository");
-  }
-
-  @Test
-  void closeOrderAndReleaseEncumbrances() {
-    runFeatureTest("close-order-and-release-encumbrances");
-  }
-
-  @Test
-  void openOngoingOrderIfIntervalOrRenewalDateNotSet() {
-    runFeatureTest("open-ongoing-order-if-interval-or-renewaldate-notset");
-  }
-
-  @Test
-  void openOrderFailureSideEffects() {
-    runFeatureTest("open-order-failure-side-effects");
-  }
-
-  @Test
-  void openOrderInstanceLink() {
-    runFeatureTest("open-order-instance-link");
-  }
-
-  @Test
-  void openOrderWithoutHoldings() {
-    runFeatureTest("open-order-without-holdings");
-  }
-
-  @Test
-  void openOrderWithTheSameFundDistributions() {
-    runFeatureTest("open-order-with-the-same-fund-distributions");
-  }
-
-  @Test
-  void receivePieceAgainstNonPackagePol() {
-    runFeatureTest("receive-piece-against-non-package-pol");
-  }
-
-  @Test
-  void receivePieceAgainstPackagePol() {
-     runFeatureTest("receive-piece-against-package-pol");
+  void itemAndHoldingsOperations() {
+    runFeatureTest("item-and-holding-operations-for-order-flows");
   }
 
   @Test
@@ -169,13 +202,8 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void parallelUpdateOrderLinesDifferentOrders() {
-    runFeatureTest("parallel-update-order-lines-different-orders", 5);
-  }
-
-  @Test
-  void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
-    runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
+  void moveItemAndHoldingToUpdateOrderData() {
+    runFeatureTest("move-item-and-holding-to-update-order-data");
   }
 
   @Test
@@ -184,114 +212,48 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void unOpenOrderWithDifferentFund() {
-    runFeatureTest("unopen-order-with-different-fund.feature", THREAD_COUNT);
+  void openOngoingOrder() {
+    runFeatureTest("open-ongoing-order");
   }
 
   @Test
-  void fundCodesInOpenOrderError() {
-    runFeatureTest("fund-codes-in-open-order-error");
+  void openOngoingOrderIfIntervalOrRenewalDateNotSet() {
+    runFeatureTest("open-ongoing-order-if-interval-or-renewaldate-notset");
   }
 
   @Test
-  void threeFundDistributions() {
-    runFeatureTest("three-fund-distributions");
+  void openOrderFailureSideEffects() {
+    runFeatureTest("open-order-failure-side-effects");
   }
 
   @Test
-  void cancelOrder() {
-    runFeatureTest("cancel-order", THREAD_COUNT);
+  void openOrderInstanceLink() {
+    runFeatureTest("open-order-instance-link");
   }
 
   @Test
-  void getPutCompositeOrder() {
-    runFeatureTest("productIds-field-error-when-attempting-to-update-unmodified-order");
+  void openOrderSuccessWithExpenditureRestrictions() {
+    runFeatureTest("open-order-success-with-expenditure-restrictions");
   }
 
   @Test
-  void createFivePieces() {
-    runFeatureTest("create-five-pieces");
+  void openOrdersWithPoLines() {
+    runFeatureTest("open-orders-with-poLines");
   }
 
   @Test
-  void reopenOrderCreatesEncumbrances() {
-    runFeatureTest("reopen-order-creates-encumbrances");
+  void openOrderWithDifferentPoLineCurrency() {
+    runFeatureTest("open-order-with-different-po-line-currency");
   }
 
   @Test
-  void cancelAndDeleteOrder() {
-    runFeatureTest("cancel-and-delete-order");
+  void openOrderWithManualExchangeRate() {
+    runFeatureTest("open-order-with-manual-exchange-rate");
   }
 
   @Test
-  void validateFundDistributionForZeroPrice() {
-    runFeatureTest("validate-fund-distribution-for-zero-price", THREAD_COUNT);
-  }
-
-  @Disabled
-  @Test
-  void pieceOperations() {
-    runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
-  }
-
-  @Test
-  void itemAndHoldingsOperations() { runFeatureTest("item-and-holding-operations-for-order-flows"); }
-
-  @Test
-  void retrieveTitlesWithHonorOfAcqUnits() {
-    runFeatureTest("retrieve-titles-with-honor-of-acq-units");
-  }
-
-  @Test
-  void movingEncumberedValueToDifferentBudget() {
-    runFeatureTest("moving_encumbered_value_to_different_budget");
-  }
-
-  @Test
-  void movingExpendedValueToNewlyCreatedEncumbrance() {
-    runFeatureTest("moving_expended_value_to_newly_created_encumbrance");
-  }
-
-  @Test
-  void checkEncumbranceStatusAfterMovingExpendedValue() {
-    runFeatureTest("check-encumbrance-status-after-moving-expended-value");
-  }
-
-  @Test
-  void removeLinkedInvoiceLinesFundDistributionEncumbranceReference() {
-    runFeatureTest("remove_linked_invoice_lines_fund_distribution_encumbrance_reference");
-  }
-
-  @Test
-  void updateFieldsInItemAfterUpdatingInPiece() {
-    runFeatureTest("update_fields_in_item", THREAD_COUNT);
-  }
-
-  @Test
-  void updateFundInPoLineWhenInvoiceApproved() {
-    runFeatureTest("update_fund_in_poline_when_invoice_approved");
-  }
-
-  @Test
-  void orderEventTests() { runFeatureTest("order-event"); }
-
-  @Test
-  void orderLineEventTests() { runFeatureTest("order-line-event"); }
-
-  @Test
-  void encumbranceReleasedWhenOrderCloses() { runFeatureTest("encumbrance-released-when-order-closes"); }
-
-  @Test
-  void receive20Pieces() { runFeatureTest("receive-20-pieces"); }
-
-  @Test
-  void reopenOrderWith50Lines() {
-    runFeatureTest("reopen-order-with-50-lines");
-  }
-
-  @Test
-  void closeOrderIncludingLines() {
-    runFeatureTest("close-order-including-lines");
+  void openOrderWithoutHoldings() {
+    runFeatureTest("open-order-without-holdings");
   }
 
   @Test
@@ -300,33 +262,43 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
-  void findHoldingForMixedPol() {
-    runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol");
+  void openOrderWithRestrictedLocations() {
+    runFeatureTest("open-order-with-restricted-locations");
   }
 
   @Test
-  void checkHoldingInstanceCreationWithCreateInventoryOptions() {
-    runFeatureTest("check-holding-instance-creation-with-createInventory-options.feature");
+  void openOrderWithTheSameFundDistributions() {
+    runFeatureTest("open-order-with-the-same-fund-distributions");
   }
 
   @Test
-  void poLineChangeInstanceConnection() {
-    runFeatureTest("poline_change_instance_connection");
+  void orderEventTests() {
+    runFeatureTest("order-event");
   }
 
   @Test
-  void unreceivePieceAndCheckOrderLine() {
-    runFeatureTest("unreceive-piece-and-check-order-line", THREAD_COUNT);
+  void orderLineEventTests() {
+    runFeatureTest("order-line-event");
   }
 
   @Test
-  void independentAcquisitionsUnitForOrderReceiving() {
-    runFeatureTest("independent-acquisitions-unit-for-ordering-and-receiving.feature");
+  void parallelCreatePiece() {
+    runFeatureTest("parallel-create-piece", 5);
   }
 
   @Test
-  void pieceStatusTransitions() {
-    runFeatureTest("piece-status-transitions");
+  void parallelUpdateOrderLinesDifferentOrders() {
+    runFeatureTest("parallel-update-order-lines-different-orders", 5);
+  }
+
+  @Test
+  void parallelUpdateOrderLinesSameOrder() {
+    runFeatureTest("parallel-update-order-lines-same-order", 5);
+  }
+
+  @Test
+  void peMixUpdatePiece() {
+    runFeatureTest("pe-mix-update-piece");
   }
 
   @Test
@@ -340,31 +312,79 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void pieceDeletionRestriction() {
+    runFeatureTest("piece-deletion-restriction");
+  }
+
+  @Test
+  @Disabled
+  void pieceOperations() {
+    runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
+  }
+
+  @Test
+  void updatePiecesBatchStatus() {
+    runFeatureTest("pieces-batch-update-status");
+  }
+
+  @Test
+  void pieceStatusTransitions() {
+    runFeatureTest("piece-status-transitions");
+  }
+
+  @Test
+  void poLineChangeInstanceConnection() {
+    runFeatureTest("poline_change_instance_connection");
+  }
+
+  @Test
+  void poLineChangeInstanceConnectionWithHoldingsItems() {
+    runFeatureTest("poline-change-instance-connection-with-holdings-items");
+  }
+
+  @Test
   void polineClaimingIntervalChecks() {
     runFeatureTest("poline-claiming-interval-checks");
   }
 
   @Test
-  void openApproveAndPayOrderWith50Lines() {runFeatureTest("open-approve-and-pay-order-with-50-lines.feature");}
-
-  @Test
-  void parallelCreatePiece() {
-    runFeatureTest("parallel-create-piece", 5);
+  void getPutCompositeOrder() {
+    runFeatureTest("productIds-field-error-when-attempting-to-update-unmodified-order");
   }
 
   @Test
-  void parallelUpdateOrderLinesSameOrder() {
-    runFeatureTest("parallel-update-order-lines-same-order", 5);
+  void receive20Pieces() {
+    runFeatureTest("receive-20-pieces");
   }
 
   @Test
-  void encumbranceUpdateAfterExpenseClassChange() {
-    runFeatureTest("encumbrance-update-after-expense-class-change");
+  void receivePieceAgainstNonPackagePol() {
+    runFeatureTest("receive-piece-against-non-package-pol");
   }
 
   @Test
-  void openOrderSuccessWithExpenditureRestrictions() {
-    runFeatureTest("open-order-success-with-expenditure-restrictions");
+  void receivePieceAgainstPackagePol() {
+    runFeatureTest("receive-piece-against-package-pol");
+  }
+
+  @Test
+  void reopenOrderCreatesEncumbrances() {
+    runFeatureTest("reopen-order-creates-encumbrances");
+  }
+
+  @Test
+  void reopenOrderWith50Lines() {
+    runFeatureTest("reopen-order-with-50-lines");
+  }
+
+  @Test
+  void retrieveTitlesWithHonorOfAcqUnits() {
+    runFeatureTest("retrieve-titles-with-honor-of-acq-units");
+  }
+
+  @Test
+  void routingListPrintTemplate() {
+    runFeatureTest("routing-list-print-template");
   }
 
   @Test
@@ -373,86 +393,62 @@ public class OrdersApiTest extends TestBase {
   }
 
   @Test
+  void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
+    runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
+  }
+
+  @Test
+  void threeFundDistributions() {
+    runFeatureTest("three-fund-distributions");
+  }
+
+  @Test
   void testTitleInstanceCreation() {
     runFeatureTest("title-instance-creation");
   }
 
   @Test
-  void routingListPrintTemplate() {
-    runFeatureTest("routing-list-print-template.feature");
+  void unlinkTitle() {
+    runFeatureTest("unlink-title");
   }
 
   @Test
-  void peMixUpdatePiece() {
-    runFeatureTest("pe-mix-update-piece");
+  void unOpenOrderWithDifferentFund() {
+    runFeatureTest("unopen-order-with-different-fund", THREAD_COUNT);
   }
 
   @Test
-  void checkEstimatedPriceWithCompositeOrder() {
-    runFeatureTest("check-estimated-price-with-composite-order");
+  void unreceivePieceAndCheckOrderLine() {
+    runFeatureTest("unreceive-piece-and-check-order-line", THREAD_COUNT);
   }
 
   @Test
-  void createOpenCompositeOrder() {
-    runFeatureTest("create-open-composite-order");
-  }
-
-  @Test
-  void bindPiece() {
-    runFeatureTest("bind-piece.feature");
+  void updateFieldsInItemAfterUpdatingInPiece() {
+    runFeatureTest("update_fields_in_item", THREAD_COUNT);
   }
 
   @Test
   void updatePurchaseOrderWithOrderLines() {
-    runFeatureTest("update-purchase-order-with-order-lines.feature");
+    runFeatureTest("update-purchase-order-with-order-lines");
   }
 
   @Test
   void updatePurchaseOrderWorkflowStatus() {
-    runFeatureTest("update-purchase-order-workflow-status.feature");
+    runFeatureTest("update-purchase-order-workflow-status");
   }
 
   @Test
-  void pieceDeletionRestriction() {
-    runFeatureTest("piece-deletion-restriction.feature");
+  void validateFundDistributionForZeroPrice() {
+    runFeatureTest("validate-fund-distribution-for-zero-price", THREAD_COUNT);
   }
 
   @Test
-  void updateInventoryOwnershipChangesOrderData() {
-    runFeatureTest("mode-item-and-holding-to-update-order-data.feature");
+  void validatePoLineReceiptNotRequiredWithCheckinItems() {
+    runFeatureTest("validate-pol-receipt-not-required-with-checkin-items");
   }
 
   @Test
-  void checkOrderTotalFieldsCalculatedCorrectly() {
-    runFeatureTest("check-order-total-fields-calculated-correctly.feature");
+  void createOrderWithSuppressInstanceFromDiscovery() {
+    runFeatureTest("create-order-with-suppress-instance-from-discovery");
   }
-
-  @Test
-  void updatePiecesBatchStatus() {
-    runFeatureTest("pieces-batch-update-status.feature");
-  }
-
-  @Test
-  void openOrdersWithPoLines() {
-    runFeatureTest("open-orders-with-poLines.feature");
-  }
-
-  @Test
-  void changePendingDistributionWithInactiveBudget() {
-    runFeatureTest("change-pending-distribution-with-inactive-budget.feature");
-  }
-
-  @Test
-  void unlinkTitle() {runFeatureTest("unlink-title.feature");}
-
-  @BeforeAll
-  public void ordersApiTestBeforeAll() {
-    runFeature("classpath:thunderjet/mod-orders/orders-junit.feature");
-  }
-
-  @AfterAll
-  public void ordersApiTestAfterAll() {
-    runFeature("classpath:common/destroy-data.feature");
-  }
-
 }

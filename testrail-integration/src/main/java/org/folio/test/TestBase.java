@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(ReportPortalExtension.class)
+@Deprecated(forRemoval = true)
 public abstract class TestBase {
 
 

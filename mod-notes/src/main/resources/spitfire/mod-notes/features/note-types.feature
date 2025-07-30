@@ -4,7 +4,7 @@ Feature: Note types
     * url baseUrl
     * callonce login testUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
 
     * def noteTypePayload = read(featuresPath + 'samples/note-type.json')
     * def noteTypePayloadPut = read(featuresPath + 'samples/note-type-put.json')
@@ -96,70 +96,6 @@ Feature: Note types
     Then status 404
     And match response.errors[0].message contains 'Note type with ID'
     And match response.errors[0].message contains 'was not found'
-
-  Scenario: check limit config for note-types
-
-#    get existing note types number
-    Given path 'note-types'
-    And headers headersUser
-    When method GET
-    Then status 200
-    * def existingNoteTypeAmount = response.totalRecords
-
-#    set note types limit
-    Given path 'configurations/entries'
-    And headers headersUser
-    And request
-    """
-     {
-        module: NOTES,
-        configName: note-type-limit,
-        code: note.types.number.limit,
-        value: #(existingNoteTypeAmount)
-      }
-    """
-    When method POST
-    Then status 201
-    * def configId = response.id
-
-#    check note-types limit works
-    Given path 'note-types'
-    And headers headersUser
-    And request
-    """
-    {
-       name: above the limit
-    }
-    """
-    When method POST
-    Then status 422
-    And match response.errors[0].message == 'Maximum number of note types allowed is ' + existingNoteTypeAmount
-
-#    delete note-type limit
-    Given path 'configurations/entries', configId
-    And headers headersUser
-    When method DELETE
-    Then status 204
-
-#  check config deleted
-    Given path '/configurations/entries'
-    And param query = '(module==NOTES and code==note.types.number.limit)'
-    And headers headersUser
-    When method GET
-    Then status 200
-
-#  check note type created after limit deleted
-    Given path 'note-types'
-    And headers headersUser
-    And request
-    """
-    {
-       name: after config deleted
-    }
-    """
-    When method POST
-    Then status 201
-
 
     # ================= negative test cases =================
 

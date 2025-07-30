@@ -1,22 +1,19 @@
 # Created for MODINVOICE-279
+@parallel=false
 Feature: Check approve and pay invoice with 0$ amount
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    #* callonce dev {tenant: 'testinvoices'}
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    # load global variables
     * callonce variables
 
     # prepare sample data
@@ -110,6 +107,7 @@ Feature: Check approve and pay invoice with 0$ amount
     And match $.status == 'Paid'
 
   Scenario: Check that payments created with 0$ amount of money
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'sourceInvoiceLineId==' + invoiceLineId + ' and transactionType==Payment'
     When method GET

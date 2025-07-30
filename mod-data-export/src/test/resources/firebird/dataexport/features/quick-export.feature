@@ -3,14 +3,11 @@ Feature: Test quick export
   Background:
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapiAdminToken = okapitoken
 
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiAdminToken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure retry = { interval: 15000, count: 10 }
     * configure headers = headersUser
 

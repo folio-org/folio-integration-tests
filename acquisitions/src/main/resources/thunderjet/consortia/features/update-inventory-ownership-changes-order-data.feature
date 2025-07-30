@@ -1,13 +1,16 @@
+@parallel=false
 Feature: Updating Holding ownership changes order data
 
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * call login consortiaAdmin
-    * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenant)' }
-    * def headersUniversity = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(universityTenant)' }
+
+    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+    * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)' }
+    * def headersUniversity = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(universityTenantName)' }
     * configure headers = headersUniversity
-    * configure retry = { interval: 1000, count: 5 }
+
+    * configure retry = { interval: 5000, count: 5 }
 
     ### Before All ###
     * callonce variables
@@ -23,10 +26,9 @@ Feature: Updating Holding ownership changes order data
     * callonce createInstanceWithHrid instanceData
 
     * table shareInstanceData
-      | instanceId | sourceTenantId   | targetTenantId | consortiumId |
-      | instanceId | universityTenant | centralTenant  | consortiumId |
+      | instanceId | sourceTenantId       | targetTenantId     | consortiumId |
+      | instanceId | universityTenantName | centralTenantName  | consortiumId |
     * callonce shareInstance shareInstanceData
-
 
     ### Before Each ###
     * def holdingId = call uuid
@@ -41,9 +43,9 @@ Feature: Updating Holding ownership changes order data
 
     * def poLineId = call uuid
     * table poLineLocations
-      | holdingId            | quantity | quantityPhysical | tenantId         |
-      | holdingId            | 1        | 1                | universityTenant |
-      | universityHoldingId1 | 1        | 1                | universityTenant |
+      | holdingId            | quantity | quantityPhysical | tenantId             |
+      | holdingId            | 1        | 1                | universityTenantName |
+      | universityHoldingId1 | 1        | 1                | universityTenantName |
     * table orderLineData
       | id       | orderId | locations       | quantity | fundId        | instanceId | titleOrPackage |
       | poLineId | orderId | poLineLocations | 2        | centralFundId | instanceId | instanceId     |
@@ -70,13 +72,12 @@ Feature: Updating Holding ownership changes order data
     Then status 200
     * def itemId = response.items[0].id
 
-
   @Positive
   Scenario: Test for changing ownership of Holdings to affect Pieces and PoLines
     # 1.1 Update holding ownership
     * table updateHoldingOwnershipData
-      | instanceId | holdingId | targetTenantId | targetLocationId   |
-      | instanceId | holdingId | centralTenant  | centralLocationsId |
+      | instanceId | holdingId | targetTenantId     | targetLocationId   |
+      | instanceId | holdingId | centralTenantName  | centralLocationsId |
     * def v = call updateHoldingOwnership updateHoldingOwnershipData
 
     # 1.2 Verify holding ownership
@@ -88,18 +89,18 @@ Feature: Updating Holding ownership changes order data
 
     # 2. Verify updated PoLine contains updated locations
     Given path 'orders/order-lines', poLineId
-    And retry until response.locations[0].tenantId == centralTenant || response.locations[1].tenantId == centralTenant
+    And retry until response.locations[0].tenantId == centralTenantName || response.locations[1].tenantId == centralTenantName
     When method GET
     Then status 200
-    And match response.locations[*].tenantId contains centralTenant
-    And match response.locations[*].tenantId contains universityTenant
+    And match response.locations[*].tenantId contains centralTenantName
+    And match response.locations[*].tenantId contains universityTenantName
     And match response.locations[*].holdingId contains holdingId
     And match response.locations[*].holdingId contains universityHoldingId1
 
     # 3. Verify updated Piece contains updated receivingTenantId and holdingId
     Given path 'orders/pieces', pieceId
-    And retry until response.receivingTenantId == centralTenant
+    And retry until response.receivingTenantId == centralTenantName
     When method GET
     Then status 200
     And match response.holdingId == holdingId
-    And match response.receivingTenantId == centralTenant
+    And match response.receivingTenantId == centralTenantName

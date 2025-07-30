@@ -3,14 +3,14 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
 
     * configure retry = { count: 10, interval: 1000 }
     * callonce variables
@@ -27,15 +27,16 @@ Feature: Karate tests for FY finance bulk get/update functionality
     * def budgetId1 = callonce uuid { n: 10 }
     * def budgetId2 = callonce uuid { n: 11 }
 
-    * def userId = "00000000-1111-5555-9999-999999999992"
-
-    * configure headers = headersAdmin
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def testUserId = res.userId
 
     ### Before All ###
 
     # Create Acq Unit and assign user (each scenario)
+    * configure headers = headersAdmin
     * def v = callonce createAcqUnit { id: '#(acqUnitId)', name: '#(acqUnitId)', isDeleted: false, protectCreate: true, protectRead: true, protectUpdate: true, protectDelete: true }
-    * def v = callonce assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * def v = callonce assignUserToAcqUnit { userId: '#(testUserId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * configure headers = headersUser
 
     # Prepare finance data
     * table fiscalYears
@@ -63,8 +64,6 @@ Feature: Karate tests for FY finance bulk get/update functionality
       | budgetId1 | fundId1 | fiscalYearId1 | 1000      |
       | budgetId2 | fundId2 | fiscalYearId2 | 2000      |
     * def v = callonce createBudget budgets
-
-    * configure headers = headersUser
 
     * def createFinanceDataEntry =
       """
@@ -172,7 +171,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
 
     # 3. Verify get finance data with acq unit id restrictions, fiscal year id2 should be empty for user after removing acq unit
     * configure headers = headersAdmin
-    * def v = call deleteUserFromAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * def v = call deleteUserFromAcqUnit { userId: '#(testUserId)', acquisitionsUnitId: '#(acqUnitId)' }
     * configure headers = headersUser
 
     Given path 'finance/finance-data'
@@ -182,7 +181,7 @@ Feature: Karate tests for FY finance bulk get/update functionality
     And match $.totalRecords == 0
 
     * configure headers = headersAdmin
-    * def v = call assignUserToAcqUnit { userId: '#(userId)', acquisitionsUnitId: '#(acqUnitId)' }
+    * def v = call assignUserToAcqUnit { userId: '#(testUserId)', acquisitionsUnitId: '#(acqUnitId)' }
     * configure headers = headersUser
 
     Given path 'finance/finance-data'

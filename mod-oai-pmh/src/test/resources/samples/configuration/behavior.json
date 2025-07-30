@@ -2,5 +2,5 @@
   "module" : "OAIPMH",
   "configName" : "behavior",
   "enabled" : true,
-  "value" : "{\"deletedRecordsSupport\":\"persistent\",\"suppressedRecordsProcessing\":\"false\",\"errorsProcessing\":\"200\",\"suppressedRecordsProcessing\":\"false\",\"recordsSource\":\"Source record storage\"}"
+  "value" : "{\"deletedRecordsSupport\":\"persistent\",\"suppressedRecordsProcessing\":\"false\",\"errorsProcessing\":\"200\",\\\"suppressedRecordsProcessing\\\":\\\"false\\\",\\\"recordsSource\\\":\\\"Source record storage\\\"}"
 }

@@ -1,20 +1,14 @@
+@parallel=false
 Feature: Create order with invoice that has enough money
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testcrossmodules'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    # load global variables
+
     * callonce variables
 
     * def fundId = callonce uuid1
@@ -34,7 +28,6 @@ Feature: Create order with invoice that has enough money
     * def invoiceLineIdWithExpenseClasses = callonce uuid12
 
   Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>, <statusExpenseClasses>
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
@@ -45,8 +38,6 @@ Feature: Create order with invoice that has enough money
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
     * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000, 'statusExpenseClasses': #(statusExpenseClasses)}
 
-
-    * configure headers = headersUser
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET
@@ -68,7 +59,6 @@ Feature: Create order with invoice that has enough money
   Scenario: Create orders
 
     Given path 'orders/composite-orders'
-    And headers headersUser
     And request
     """
     {
@@ -89,7 +79,6 @@ Feature: Create order with invoice that has enough money
     * def fundDistributionPrint = { 'fundId': #(fundWithExpenseClassesId), 'distributionType': 'percentage', 'value': 50, 'expenseClassId': #(globalPrnExpenseClassId)}
 
     Given path 'orders/order-lines'
-    And headers headersUser
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.id = poLineId
@@ -110,7 +99,6 @@ Feature: Create order with invoice that has enough money
   Scenario: Open order
     # ============= get order to open ===================
     Given path 'orders/composite-orders', orderId
-    And headers headersUser
     When method GET
     Then status 200
 
@@ -119,7 +107,6 @@ Feature: Create order with invoice that has enough money
 
     # ============= update order to open ===================
     Given path 'orders/composite-orders', orderId
-    And headers headersUser
     And request orderResponse
     When method PUT
     Then status 204
@@ -129,7 +116,6 @@ Feature: Create order with invoice that has enough money
     * def expectedEncumbered = <amount>
 
     Given path '/finance/budgets'
-    And headers headersUser
     And param query = 'fundId==' + fundId
     When method GET
     Then status 200
@@ -149,7 +135,6 @@ Feature: Create order with invoice that has enough money
 
     Scenario: check encumbrances
       Given path 'finance/transactions'
-      And headers headersUser
       And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
       When method GET
       Then status 200
@@ -157,7 +142,6 @@ Feature: Create order with invoice that has enough money
 
   Scenario: Create invoice
     Given path 'invoice/invoices'
-    And headers headersUser
     And request
     """
     {
@@ -183,7 +167,6 @@ Feature: Create order with invoice that has enough money
 
     # ============= get order line with fund distribution ===================
     Given path 'orders/order-lines', orderLineId
-    And headers headersUser
     When method GET
     Then status 200
     * def fd = response.fundDistribution
@@ -192,7 +175,6 @@ Feature: Create order with invoice that has enough money
     # ============= Create lines ===================
 
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -216,14 +198,12 @@ Feature: Create order with invoice that has enough money
   Scenario: approve invoice
     # ============= approve invoice ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = "Approved"
 
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoicePayload
     When method PUT
     Then status 204
@@ -233,7 +213,6 @@ Feature: Create order with invoice that has enough money
     * def awaitingPayment = <amount>
 
     Given path '/finance/budgets'
-    And headers headersUser
     And param query = 'fundId==' + fundId
     When method GET
     Then status 200
@@ -253,7 +232,6 @@ Feature: Create order with invoice that has enough money
 
   Scenario: check pending payments
     Given path 'finance/transactions'
-    And headers headersUser
     And param query = 'sourceInvoiceId==' + invoiceId
     When method GET
     Then status 200
@@ -262,14 +240,12 @@ Feature: Create order with invoice that has enough money
   Scenario: pay invoice
     # ============= pay invoice ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoicePayload = $
     * set invoicePayload.status = "Paid"
 
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoicePayload
     When method PUT
     Then status 204
@@ -279,7 +255,6 @@ Feature: Create order with invoice that has enough money
     * def expenditures = <amount>
 
     Given path '/finance/budgets'
-    And headers headersUser
     And param query = 'fundId==' + fundId
     When method GET
     Then status 200
@@ -299,7 +274,6 @@ Feature: Create order with invoice that has enough money
 
   Scenario: check payments
     Given path 'finance/transactions'
-    And headers headersUser
     And param query = 'sourceInvoiceId==' + invoiceId
     When method GET
     Then status 200

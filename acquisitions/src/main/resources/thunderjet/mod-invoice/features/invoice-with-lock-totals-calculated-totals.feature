@@ -1,20 +1,18 @@
+@parallel=false
 Feature: Check invoice and invoice lines total amount calculation, when adjustment exists and lockTotal set
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-   # * callonce dev {tenant: 'testinvoices1'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    # load global variables
     * callonce variables
 
     # prepare sample data
@@ -78,7 +76,7 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     And match $.total == 35.0
 
   Scenario: Add first invoice line with adjustment to created invoice
-     # ============= create invoice lines ===================
+    # ============= create invoice lines ===================
     Given path 'invoice/invoice-lines'
     * set invoiceLinePayload.id = firstInvoiceLineId
     * set invoiceLinePayload.invoiceId = firstInvoiceId
@@ -113,7 +111,7 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     And match $.total == 117.58
 
   Scenario: Add second invoice line with adjustment to created invoice
-     # ============= create invoice lines ===================
+    # ============= create invoice lines ===================
     Given path 'invoice/invoice-lines'
     * set invoiceLinePayload.id = secondInvoiceLineId
     * set invoiceLinePayload.invoiceId = firstInvoiceId
@@ -195,7 +193,7 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     And match $.total == 127.75
 
   Scenario: Delete second invoice line
-     # ============= try to delete approved invoice line ===================
+    # ============= try to delete approved invoice line ===================
     Given path 'invoice/invoice-lines', secondInvoiceLineId
     When method DELETE
     Then status 204

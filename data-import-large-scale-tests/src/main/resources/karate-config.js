@@ -7,6 +7,7 @@ function fn() {
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
+  console.log('karate.env system property is set to:', env);
   var testTenant = karate.properties['testTenant'] || 'testtenant';
   var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
   var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
@@ -31,7 +32,7 @@ function fn() {
 
   var config = {
     tenantParams: {loadReferenceData: true},
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -69,34 +70,18 @@ function fn() {
 
   config.getModuleByIdPath = '_/proxy/tenants/' + config.admin.tenant + '/modules';
 
-  if (env === 'etesting-lsdi') {
+  if (env === null || env === 'etesting-lsdi') {
     config.baseUrl = 'https://folio-etesting-lsdi-kong.ci.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  } else if (env === 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org';
+  } else if (env === 'etesting-sprint') {
+    config.baseUrl = 'https://folio-etesting-sprint-kong.ci.folio.org';
+    config.testUser = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
+  } else if (env === 'edev-folijet') {
+    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
   } else if (env === 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org';
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-    config.edgeHost = 'https://folio-snapshot.dev.folio.org:8000';
-    config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
-  } else if (env === 'rancher') {
-    config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
-    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  } else if (env === 'folijet-perf') {
-    config.baseUrl = 'https://folio-perf-folijet-okapi.ci.folio.org';
-    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
-  } else if(env === 'folio-testing-karate') {
-    config.baseUrl = '${baseUrl}';
-    config.edgeUrl = '${edgeUrl}';
-    config.admin = {tenant: '${admin.tenant}', name: '${admin.name}', password: '${admin.password}'}
-    config.prototypeTenant = '${prototypeTenant}';
-    karate.configure('ssl',true);
-  } else if(env === 'dev') {
-    config.checkDepsDuringModInstall = 'false'
-  } else if (env?.match(/^ec2-\d+/)) {
-    config.baseUrl = 'http://' + env + ':9130';
-    config.testUser = {tenant: 'supertenant', name: 'admin', password: 'admin'}
   }
 
   return config;

@@ -3,15 +3,10 @@
 
     Background:
       * print karate.info.scenarioName
-
       * url baseUrl
-      * callonce login testAdmin
-      * def okapitokenAdmin = okapitoken
-      * callonce login testUser
-      * def okapitokenUser = okapitoken
 
-      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain' }
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain' }
+      * callonce login testUser
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
       * configure headers = headersUser
 
       * callonce variables
@@ -44,11 +39,9 @@
 
 
       ## Create fund and budgets
-      * configure headers = headersAdmin
       * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
       * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 100, status: 'Active' }
       * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId)', fiscalYearId: '#(fyId2)', allocated: 100, status: 'Active' }
-      * configure headers = headersUser
 
 
       ## Create the order and line

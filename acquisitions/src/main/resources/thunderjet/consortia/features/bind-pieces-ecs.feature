@@ -1,12 +1,29 @@
+@parallel=false
 Feature: Verify Bind Piece feature in ECS environment
 
   Background:
     * def bindPiecesFeatures = read('classpath:thunderjet/mod-orders/features/bind-piece.feature')
 
   Scenario: Test bind pieces features
-    * set consortiaAdmin.name = consortiaAdmin.username
-    * set centralUser1.name = centralUser1.username
-    * table tenants
-      | tenantId1     | tenantId2        | adminUser      | regularUser    | holdingId1        | holdingId2           | holdingId3        |
-      | centralTenant | universityTenant | consortiaAdmin | consortiaAdmin | centralHoldingId1 | universityHoldingId1 | centralHoldingId2 |
-    * def v = call bindPiecesFeatures tenants
+    * def proxyConsortiaAdmin =
+      """
+      {
+        name: '#(consortiaAdmin.username)',
+        password: '#(consortiaAdmin.password)',
+        tenant: '#(centralTenantName)'
+      }
+      """
+    * def payload =
+      """
+      {
+        tenantId1: '#(centralTenantName)',
+        tenantId2: '#(universityTenantName)',
+        holdingId1: '#(centralHoldingId1)',
+        holdingId2: '#(universityHoldingId1)',
+        holdingId3: '#(centralHoldingId2)',
+        testAdmin: '#(proxyConsortiaAdmin)',
+        testUser: '#(proxyConsortiaAdmin)',
+        testTenant: '#(centralTenantName)'
+      }
+      """
+    * def v = call bindPiecesFeatures payload

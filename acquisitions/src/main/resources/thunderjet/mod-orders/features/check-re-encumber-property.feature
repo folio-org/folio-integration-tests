@@ -2,20 +2,17 @@
 Feature: Check needReEncumber flag populated correctly
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    # * callonce dev {tenant: 'testorders'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    # load global variables
+
     * callonce variables
 
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
@@ -28,24 +25,18 @@ Feature: Check needReEncumber flag populated correctly
     * def rolloverId = callonce uuid5
     * def rolloverErrorId = callonce uuid6
 
-    * def fundId = callonce uuid7
-    * def budgetId = callonce uuid8
+    * def ledgerId = callonce uuid7
+    * def fundId = callonce uuid8
+    * def budgetId = callonce uuid9
 
 
-  Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
-
+  Scenario: prepare finances for fund with <fundId> and budget with <budgetId>
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)'}
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
-
-    Examples:
-      | fundId | budgetId |
-      | fundId | budgetId |
+    * def v = call createLedger { 'id': '#(ledgerId)' }
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
 
   Scenario: Create order
-    * configure headers = headersUser
 
     Given path 'orders/composite-orders'
     And request
@@ -60,7 +51,6 @@ Feature: Check needReEncumber flag populated correctly
     Then status 201
 
   Scenario: Create order line
-    * configure headers = headersUser
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')
@@ -79,7 +69,7 @@ Feature: Check needReEncumber flag populated correctly
     """
       {
         "id": "#(rolloverId)",
-        "ledgerId": "#(globalLedgerId)",
+        "ledgerId": "#(ledgerId)",
         "fromFiscalYearId": "#(fiscalYearId)",
         "toFiscalYearId": "#(plannedFiscalYearId)",
         "budgetsRollover": [],

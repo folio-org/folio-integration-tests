@@ -1,3 +1,4 @@
+@ignore
 Feature: Update Item Ownership
 
   Background:

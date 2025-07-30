@@ -1,8 +1,7 @@
 Feature: Validate RangedUUID Columns
   Background:
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Validate a rangedUUID column
      # Check if the field value is not null or empty
@@ -13,7 +12,7 @@ Feature: Validate RangedUUID Columns
     * match fieldValue == '#regex([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})'
 
     # Construct the FQL query JSON properly
-    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}}'
+    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}, "_version": "' + fqmVersion + '"}'
 
     # Post the query for the valid field value
     Given path 'query'

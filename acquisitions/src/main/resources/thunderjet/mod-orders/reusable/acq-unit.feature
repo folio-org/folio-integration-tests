@@ -4,7 +4,6 @@ Feature: Reusable components for acquisition units
   Background:
     * url baseUrl
     * def randomAcqUnitId = call uuid
-    * def headersAdminTextPlain = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'text/plain' }
 
   @CreateAcqUnit
   Scenario: Create acquisition unit
@@ -16,8 +15,7 @@ Feature: Reusable components for acquisition units
     * def protectDelete = karate.get('protectDelete', true)
     * def isDeleted = karate.get('isDeleted', false)
 
-    Given path 'acquisitions-units-storage/units'
-    And headers headersAdmin
+    Given path 'acquisitions-units/units'
     And request
       """
       {
@@ -36,10 +34,9 @@ Feature: Reusable components for acquisition units
 
   @AssignUserToAcqUnit
   Scenario: Assign user to acquisition unit
-    * def userId = karate.get('userId', '00000000-1111-5555-9999-999999999992')
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
-    Given path 'acquisitions-units-storage/memberships'
-    And headers headersAdmin
+
+    Given path 'acquisitions-units/memberships'
     And request
       """
       {
@@ -53,12 +50,9 @@ Feature: Reusable components for acquisition units
 
   @DeleteUserFromAcqUnit
   Scenario: Delete user from acquisition unit
-    * configure headers = headersAdminTextPlain
-
-    * def userId = karate.get('userId', '00000000-1111-5555-9999-999999999992')
     * def acqUnitId = karate.get('acqUnitId', randomAcqUnitId)
 
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==' + userId
     When method GET
     Then status 200
@@ -66,9 +60,7 @@ Feature: Reusable components for acquisition units
     * def acqMember = $.acquisitionsUnitMemberships[0]
     * def acqMemberId = acqMember.id
 
-    Given path 'acquisitions-units-storage/memberships', acqMemberId
-    And header Accept = 'text/plain'
+    # Note: this requires a 'text/plain' Accept header
+    Given path 'acquisitions-units/memberships', acqMemberId
     When method DELETE
     Then status 204
-
-    * configure headers = headersUser

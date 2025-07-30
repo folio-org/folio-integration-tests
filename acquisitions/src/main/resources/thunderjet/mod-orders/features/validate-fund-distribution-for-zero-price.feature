@@ -2,23 +2,19 @@
 Feature: Validate fund distribution for zero price
 
   Background:
-    * url baseUrl
     * print karate.info.scenarioName
+    * url baseUrl
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
 
   @Positive
@@ -39,6 +35,7 @@ Feature: Validate fund distribution for zero price
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', allocated: 1000 }
 
     * print '2. Create an order'
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)' }
 
     * print '3. Create an order line with a fund distribution using amounts'

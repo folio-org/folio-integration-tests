@@ -1,19 +1,18 @@
+@parallel=false
 Feature: Test order invoice relation logic
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testcrossmodules'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
-    # load global variables
     * callonce variables
 
     * def orderId = callonce uuid1
@@ -31,7 +30,6 @@ Feature: Test order invoice relation logic
     * def orderId = <orderId>
 
     Given path 'orders/composite-orders'
-    And headers headersUser
     And request
     """
     {
@@ -53,7 +51,6 @@ Feature: Test order invoice relation logic
     * def poLineId = <orderLineId>
 
     Given path 'orders/order-lines'
-    And headers headersUser
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.id = poLineId
@@ -73,7 +70,6 @@ Feature: Test order invoice relation logic
 
   Scenario: Create invoice
     Given path 'invoice/invoices'
-    And headers headersUser
     And request
     """
     {
@@ -99,7 +95,6 @@ Feature: Test order invoice relation logic
 
     # ============= get order line with fund distribution ===================
     Given path 'orders/order-lines', orderLineId
-    And headers headersUser
     When method GET
     Then status 200
     * def fd = response.fundDistribution
@@ -108,7 +103,6 @@ Feature: Test order invoice relation logic
     # ============= Create lines ===================
 
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -135,8 +129,8 @@ Feature: Test order invoice relation logic
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
+    * configure headers = headersAdmin
     Given path 'orders-storage/order-invoice-relns'
-    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200
@@ -149,7 +143,6 @@ Feature: Test order invoice relation logic
 
   Scenario Outline: delete invoice lines
     Given path 'invoice/invoice-lines', <invoiceLineId>
-    And headers headersUser
     When method DELETE
     Then status 204
 
@@ -163,8 +156,8 @@ Feature: Test order invoice relation logic
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
+    * configure headers = headersAdmin
     Given path 'orders-storage/order-invoice-relns'
-    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200
@@ -177,7 +170,6 @@ Feature: Test order invoice relation logic
 
   Scenario: check that delete order line delete order invoice relation
     Given path 'invoice/invoice-lines', invoiceLineIdTwo
-    And headers headersUser
     When method DELETE
     Then status 204
 
@@ -186,8 +178,8 @@ Feature: Test order invoice relation logic
     * def invoiceId = <invoiceId>
     * def query = 'purchaseOrderId==' + orderId + ' AND invoiceId==' + invoiceId
     * print query
+    * configure headers = headersAdmin
     Given path 'orders-storage/order-invoice-relns'
-    And headers headersAdmin
     And param query = query
     When method GET
     Then status 200

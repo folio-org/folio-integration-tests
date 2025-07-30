@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "citation", module = "mod-linked-data")
-class ModLinkedDataTest extends TestBase {
+class ModLinkedDataTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH =
     "classpath:citation/mod-linked-data/features/";
@@ -23,12 +23,11 @@ class ModLinkedDataTest extends TestBase {
   @BeforeAll
   public void setup() {
     runFeature("classpath:citation/mod-linked-data/linked-data-junit.feature");
-    runFeature("classpath:citation/mod-linked-data/restart-mod-search-kafka-listeners.feature");
   }
 
   @AfterAll
   public void tearDown() {
-    runFeature("classpath:common/destroy-data.feature");
+    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
   @Test

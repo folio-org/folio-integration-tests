@@ -1,19 +1,18 @@
+@parallel=false
 Feature: Test order invoice relation can be deleted
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testcrossmodules'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
-    # load global variables
     * callonce variables
 
     * def orderIdOne = callonce uuid1
@@ -27,7 +26,6 @@ Feature: Test order invoice relation can be deleted
 
   Scenario Outline: Create orders
     * def orderId = <orderId>
-    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -45,10 +43,10 @@ Feature: Test order invoice relation can be deleted
       | orderIdOne |
       | orderIdTwo |
 
+
   Scenario Outline: Create order lines for <orderLineId>
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
-    * configure headers = headersUser
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -67,7 +65,6 @@ Feature: Test order invoice relation can be deleted
 
 
   Scenario: Create invoice
-    * configure headers = headersUser
     Given path 'invoice/invoices'
     And request
     """
@@ -88,8 +85,8 @@ Feature: Test order invoice relation can be deleted
     When method POST
     Then status 201
 
+
   Scenario Outline: Create invoice lines
-    * configure headers = headersUser
     * def orderLineId = <orderLineId>
     * def invoiceLineId = <invoiceLineId>
 
@@ -138,8 +135,8 @@ Feature: Test order invoice relation can be deleted
       | orderId    | invoiceId |
       | orderIdOne | invoiceId |
 
+
   Scenario: Update order line reference in the invoice line
-    * configure headers = headersUser
     Given path 'invoice/invoice-lines', invoiceLineIdOne
     When method GET
     Then status 200
@@ -150,6 +147,7 @@ Feature: Test order invoice relation can be deleted
     And request invoiceLinePayload
     When method PUT
     Then status 204
+
 
   Scenario Outline: Check that order invoice relation has been changed
     * configure headers = headersAdmin

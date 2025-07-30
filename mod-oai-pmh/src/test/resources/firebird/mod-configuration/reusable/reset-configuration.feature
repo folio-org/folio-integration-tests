@@ -6,7 +6,7 @@ Feature: Reset default OAIPMH configs
     #Init variables for templates
     * callonce variables
 
-    * callonce read('classpath:common/login.feature') testUser
+    * callonce login testUser
 
   Scenario: reset oai-pmh configuration
 

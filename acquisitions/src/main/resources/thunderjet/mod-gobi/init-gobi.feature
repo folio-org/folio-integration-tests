@@ -1,0 +1,84 @@
+@parallel=false
+Feature: Initialize mod-gobi integration tests
+
+  Background:
+    * print karate.info.scenarioName
+    * url baseUrl
+
+    * table modules
+      | name                        |
+      | 'mod-audit'                 |
+      | 'mod-circulation'           |
+      | 'mod-circulation-storage'   |
+      | 'mod-configuration'         |
+      | 'mod-entities-links'        |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-gobi'                  |
+      | 'mod-inventory'             |
+      | 'mod-inventory-storage'     |
+      | 'mod-login'                 |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
+      | 'mod-permissions'           |
+      | 'mod-pubsub'                |
+      | 'mod-search'                |
+      | 'mod-source-record-manager' |
+      | 'mod-tags'                  |
+      | 'mod-users'                 |
+
+    * table userPermissions
+      | name                                        |
+      | 'gobi.custom-mappings.collection.get'       |
+      | 'gobi.custom-mappings.item.delete'          |
+      | 'gobi.custom-mappings.item.get'             |
+      | 'gobi.custom-mappings.item.post'            |
+      | 'gobi.custom-mappings.item.put'             |
+      | 'gobi.orders.item.post'                     |
+      | 'gobi.validate.item.get'                    |
+      | 'gobi.validate.item.post'                   |
+      | 'inventory-storage.holdings.collection.get' |
+      | 'inventory-storage.instances.item.get'      |
+      | 'orders.collection.get'                     |
+      | 'orders.po-lines.collection.get'            |
+
+    # testAdmin is only used to initialize global data
+    * table adminPermissions
+      | name                                                          |
+      | 'finance.budgets.item.post'                                   |
+      | 'finance.expense-classes.item.post'                           |
+      | 'finance.fiscal-years.item.post'                              |
+      | 'finance.fund-types.item.post'                                |
+      | 'finance.funds.item.post'                                     |
+      | 'finance.ledgers.item.post'                                   |
+      | 'inventory-storage.contributor-name-types.item.post'          |
+      | 'inventory-storage.electronic-access-relationships.item.post' |
+      | 'inventory-storage.holdings-sources.item.post'                |
+      | 'inventory-storage.holdings.item.post'                        |
+      | 'inventory-storage.identifier-types.item.post'                |
+      | 'inventory-storage.instance-statuses.item.post'               |
+      | 'inventory-storage.instance-types.item.post'                  |
+      | 'inventory-storage.loan-types.item.post'                      |
+      | 'inventory-storage.location-units.campuses.item.post'         |
+      | 'inventory-storage.location-units.institutions.item.post'     |
+      | 'inventory-storage.location-units.libraries.item.post'        |
+      | 'inventory-storage.locations.item.post'                       |
+      | 'inventory-storage.material-types.item.post'                  |
+      | 'inventory-storage.service-points.item.post'                  |
+      | 'inventory.instances.item.post'                               |
+      | 'organizations.organizations.item.post'                       |
+      | 'orders.item.delete'                                          |
+
+  Scenario: Create tenant and test user
+    * call read('classpath:common/eureka/setup-users.feature')
+
+  Scenario: Create admin user
+    * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
+
+  Scenario: Init global data
+    * call login testAdmin
+    * callonce read('classpath:global/finances.feature')
+    * callonce read('classpath:global/inventory.feature')
+    * callonce read('classpath:global/organizations.feature')

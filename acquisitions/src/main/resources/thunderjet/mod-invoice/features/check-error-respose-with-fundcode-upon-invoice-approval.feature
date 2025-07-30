@@ -1,17 +1,17 @@
 Feature: Check error response with fundcode upon invoice approval
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#   * callonce dev {tenant: 'testinvoices'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
 
   Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> amount to get code <httpCode> & <fundCode>
 
@@ -24,18 +24,19 @@ Feature: Check error response with fundcode upon invoice approval
 
     # ============= Create funds =============
     * configure headers = headersAdmin
-    Given path 'finance-storage/funds'
+    Given path 'finance/funds'
     And request
     """
     {
-
-      "id": "#(fundId)",
-      "code": "<fundCode>",
-      "description": "Fund for orders API Tests",
-      "externalAccountNo": "1111111111111111111111111",
-      "fundStatus": "Active",
-      "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
-      "name": "Fund for orders API Tests"
+      "fund": {
+        "id": "#(fundId)",
+        "code": "<fundCode>",
+        "description": "Fund for orders API Tests",
+        "externalAccountNo": "1111111111111111111111111",
+        "fundStatus": "Active",
+        "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
+        "name": "Fund for orders API Tests",
+      }
     }
     """
     When method POST
@@ -63,7 +64,6 @@ Feature: Check error response with fundcode upon invoice approval
 
     # ============= Create invoices ===================
     * configure headers = headersUser
-
     Given path 'invoice/invoices'
     And request
     """

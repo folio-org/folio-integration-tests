@@ -3,13 +3,12 @@
 Feature: Check encumbrances after order is reopened - 2
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
-    * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -17,10 +16,8 @@ Feature: Check encumbrances after order is reopened - 2
     * def budgetId = call uuid
 
     # Create a fund and budget
-    * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000}
-    * configure headers = headersUser
+    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
+    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000 }
 
 
   Scenario: Use Case 1 - Allow encumbrance with expended value to be unreleased

@@ -5,27 +5,12 @@ Feature: Pending payment update after encumbrance deletion
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def unopenOrder = read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def cancelInvoice = read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature')
 
 
   Scenario: Check update to pending payment after deleting an encumbrance for an open order
@@ -37,10 +22,8 @@ Feature: Pending payment update after encumbrance deletion
     * def invoiceLineId = call uuid
 
     * print "Create finances"
-    * configure headers = headersAdmin
     * call createFund { id: "#(fundId)" }
     * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     * print "Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }
@@ -115,10 +98,8 @@ Feature: Pending payment update after encumbrance deletion
     * def invoiceLineId = call uuid
 
     * print "Create finances"
-    * configure headers = headersAdmin
     * call createFund { id: "#(fundId)" }
     * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     * print "Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }

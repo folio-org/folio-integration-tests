@@ -3,13 +3,14 @@ Feature: Source-Record-Storage
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
 
     * def samplesPath = 'classpath:folijet/mod-source-record-storage/features/samples/'
     * def snapshotPath = samplesPath + 'snapshot.json'
     * def recordPath = samplesPath + 'record.json'
     * def recordWith999fieldPath = samplesPath + 'recordWith999field.json'
     * def errorRecordPath = samplesPath + 'errorRecord.json'
+    * def postInstanceFeature = read('classpath:folijet/mod-source-record-storage/features/global/postToInventory.feature')
 
     * def instanceId = uuid()
     * def hrId = 'inst000000000001'
@@ -324,7 +325,7 @@ Feature: Source-Record-Storage
     * def instanceId = uuid()
     * def hrId = 'inst000000000019'
     * def instanceHrid = 'in' + ("00000000000" + Math.floor(Math.random() * 10000000000)).slice(-11)
-    Given call read('classpath:folijet/mod-source-record-storage/features/global/postToInventory.feature')
+    Given call postInstanceFeature
 
     * print 'Create snapshot, create record, mark snapshot committed, create another snapshot, save record with the same matched id, verify records generation'
     * def snapshotId = uuid()
@@ -376,7 +377,7 @@ Feature: Source-Record-Storage
   Scenario: Test return error for duplicate records if snapshot is not committed
     * def instanceId = uuid()
     * def hrId = 'inst000000000020'
-    Given call read('classpath:folijet/mod-source-record-storage/features/global/postToInventory.feature')
+    Given call postInstanceFeature
 
     * print 'Create snapshot, create record, create another snapshot, save record with the same matched id, verify records generation'
     * def snapshotId = uuid()

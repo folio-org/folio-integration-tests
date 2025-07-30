@@ -2,10 +2,15 @@
 Feature: Test instance creation with new title
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginRegularUser testUser
+
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -14,9 +19,6 @@ Feature: Test instance creation with new title
     * def poLineId = callonce uuid2
     * def fundId = callonce uuid3
     * def titleId = callonce uuid4
-
-    * def createOrder = read('../reusable/create-order.feature')
-    * def createOrderLine = read('../reusable/create-order-line.feature')
 
     * callonce createOrder { id: #(orderId) }
     * callonce createOrderLine { id: #(poLineId), orderId: #(orderId), isPackage: true }
@@ -39,6 +41,7 @@ Feature: Test instance creation with new title
     * def instId = response.instanceId
 
     # Check instance creation
+    * configure headers = headersAdmin
     Given path '/instance-storage/instances', instId
     When method GET
     Then status 200
@@ -46,6 +49,7 @@ Feature: Test instance creation with new title
     And match response.title == "New Title 1"
 
     # Check title by poLineId contains same instance
+    * configure headers = headersUser
     Given path '/orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET

@@ -3,13 +3,15 @@
 Feature: Open order failure side effects
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -74,6 +76,7 @@ Feature: Open order failure side effects
     Then status 422
 
     # We are checking that inventory records were not created during the failed open order operation
+    * configure headers = headersAdmin
     * print 'Check instances'
     Given path 'inventory/instances'
     And param query = 'title==' + titleOrPackage
@@ -81,6 +84,7 @@ Feature: Open order failure side effects
     And match $.totalRecords == 0
 
     * print 'Check pieces'
+    * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -88,6 +92,7 @@ Feature: Open order failure side effects
     And match $.totalRecords == 0
 
     * print 'Check items'
+    * configure headers = headersAdmin
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET
@@ -96,7 +101,7 @@ Feature: Open order failure side effects
 
   Scenario: Create a budget with insufficient allocation
     * configure headers = headersAdmin
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)'}
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)' }
 
 
   Scenario: Try to open the order again
@@ -114,12 +119,14 @@ Feature: Open order failure side effects
     Then status 422
 
     * print 'Check instances'
+    * configure headers = headersAdmin
     Given path 'inventory/instances'
     And param query = 'title==' + titleOrPackage
     When method GET
     And match $.totalRecords == 0
 
     * print 'Check pieces'
+    * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -127,6 +134,7 @@ Feature: Open order failure side effects
     And match $.totalRecords == 0
 
     * print 'Check items'
+    * configure headers = headersAdmin
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
     When method GET

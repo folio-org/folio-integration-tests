@@ -1,8 +1,8 @@
 Feature: Validate String Columns
   Background:
     * url baseUrl
-    * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+#    * callonce login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Validate a string column
     # Check if the field value is not null or empty
@@ -13,7 +13,7 @@ Feature: Validate String Columns
     * assert fieldValue.length() > 0
 
     # Construct the FQL query JSON properly
-    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}}'
+    * def fqlQuery = '{"' + columnName + '": {"$eq": "' + fieldValue + '"}, "_version": "' + fqmVersion + '"}'
     # Post the query for the valid field value
     Given path 'query'
     And request { entityTypeId: '#(entityTypeId)', fqlQuery: '#(fqlQuery)' }

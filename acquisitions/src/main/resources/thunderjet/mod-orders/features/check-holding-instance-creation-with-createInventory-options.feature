@@ -2,14 +2,15 @@
 Feature: check-holding-instance-creation-with-createInventory-options
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * configure headers = headersUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
     * callonce variables
     * def fundId = callonce uuid1
@@ -17,8 +18,8 @@ Feature: check-holding-instance-creation-with-createInventory-options
 
     ## Prepare finances
     * configure headers = headersAdmin
-    * callonce createFund { 'id': '#(fundId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * callonce createFund { 'id': '#(fundId)' }
+    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
     * configure headers = headersUser
 
   @Positive
@@ -31,7 +32,6 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def v = call openOrder { id: #(orderId)}
 
     # Verify instance is not being created
-    * configure headers = headersAdmin
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -47,7 +47,6 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def v = call openOrder { id: #(orderId)}
 
     # Verify holding is not being created
-    * configure headers = headersAdmin
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -56,6 +55,7 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def instanceId = response.instanceId
 
     Given path 'holdings-storage/holdings'
+    * configure headers = headersAdmin
     And param query = 'instanceId==' + instanceId
     When method GET
     And match $.totalRecords == 0
@@ -70,7 +70,6 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def v = call openOrder { id: #(orderId)}
 
     # Verify instance, holding, item creation
-    * configure headers = headersAdmin
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -78,6 +77,7 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def holdingId = response.locations[0].holdingId
 
     Given path 'holdings-storage/holdings'
+    * configure headers = headersAdmin
     And param query = 'instanceId==' + instanceId
     When method GET
     And match $.totalRecords == 1

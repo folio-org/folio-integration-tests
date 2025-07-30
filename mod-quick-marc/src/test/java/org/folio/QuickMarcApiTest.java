@@ -1,12 +1,11 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -14,8 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @FolioTest(team = "spitfire", module = "mod-quick-marc")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Disabled("Migrated to Eureka")
-class QuickMarcApiTest extends TestBase {
+class QuickMarcApiTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-quick-marc/features/";
 
@@ -50,8 +48,26 @@ class QuickMarcApiTest extends TestBase {
 
     @Test
     @Order(5)
+    void testQuickMarcParallelUpdateOfLinkedAuthorityRecordsFeature() {
+        runFeatureTest("quick-marc-update-linked-authority-records.feature", 2);
+    }
+
+    @Test
+    @Order(6)
     void testQuickMarcLinkingRecordsFeature() {
         runFeatureTest("quick-marc-linking-records.feature");
+    }
+
+    @Test
+    @Order(7)
+    void testQuickMarcTagsOrderFeature() {
+        runFeatureTest("quick-marc-tags-order.feature");
+    }
+
+    @Test
+    @Order(8)
+    void testQuickMarcHandleLiteralDollarFeature() {
+        runFeatureTest("quick-marc-handle-literal-dollar.feature");
     }
 
     @BeforeAll
@@ -62,6 +78,6 @@ class QuickMarcApiTest extends TestBase {
 
     @AfterAll
     public void quickMarcApiTestAfterAll() {
-        runFeature("classpath:common/destroy-data.feature");
+        runFeature("classpath:common/eureka/destroy-data.feature");
     }
 }

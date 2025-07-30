@@ -5,15 +5,15 @@ Feature: Do Data Import Using Parameters
     * def parameters =
     """
     {
-      uiKey: "#(uiKey)",
-      name: "#(fileName)",
-      filePath: "#(filePathFromSourceRoot)"
+      uiKey: "#(__arg.uiKey)",
+      name: "#(__arg.fileName)",
+      filePath: "#(__arg.filePathFromSourceRoot)"
     }
     """
 
   Scenario: Import File as per requirement
 
-    * print 'Started Loading From Common-Data-Import : ', 'uiKey : ', uiKey, 'name : ',fileName, 'filePath : ', filePathFromSourceRoot
+    * print 'Started Loading From Common-Data-Import : ', 'uiKey : ', uiKey, 'name : ',fileName, 'filePath : ', __arg.filePathFromSourceRoot
     ## Create file definition
     Given path 'data-import/uploadDefinitions'
     And headers headersUser
@@ -43,7 +43,7 @@ Feature: Do Data Import Using Parameters
     Given path 'data-import/uploadUrl'
     And headers headersUser
     And param filename = fileName
-    When method get
+    When method GET
     Then status 200
     And def s3UploadKey = response.key
     And def s3UploadId = response.uploadId
@@ -52,7 +52,7 @@ Feature: Do Data Import Using Parameters
     Given url uploadUrl
     And headers headersUser
     And header Content-Type = 'application/octet-stream'
-    And request read(filePathFromSourceRoot)
+    And request read(__arg.filePathFromSourceRoot)
     When method put
     Then status 200
     And def s3Etag = responseHeaders['ETag'][0]

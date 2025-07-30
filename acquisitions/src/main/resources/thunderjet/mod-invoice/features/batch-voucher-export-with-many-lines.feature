@@ -3,16 +3,15 @@
 Feature: Batch voucher export with many lines
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -51,8 +50,8 @@ Feature: Batch voucher export with many lines
     * configure headers = headersAdmin
     * call createFund { id: '#(fundId)', externalAccountNo: '#(externalAccountNo)' }
     * call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
-    * configure headers = headersUser
 
+    * configure headers = headersUser
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = call uuid
     * set invoiceLine.invoiceId = invoiceId

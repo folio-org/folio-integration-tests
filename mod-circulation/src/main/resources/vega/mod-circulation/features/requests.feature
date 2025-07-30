@@ -2,10 +2,8 @@ Feature: Requests tests
 
   Background:
     * url baseUrl
-    * callonce login testAdmin
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
     * callonce login testUser
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
     * def servicePointId = call uuid1
     * def groupId = call uuid1
@@ -1604,7 +1602,8 @@ Feature: Requests tests
     And print response
 
   Scenario: Only valid allowed service points are returned for item and instance
-    * configure headers = headersAdmin
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def requesterBarcode = "FAT-7137-5"
     * def borrowerBarcode = "FAT-7137-7"
     * def itemBarcode = "FAT-7137-6"
@@ -1630,7 +1629,9 @@ Feature: Requests tests
     * def createFirstServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(firstServicePointId) }
     * def createSecondServicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(secondServicePointId) }
     * def firstServicePointName = createFirstServicePointResponse.response.name
+    * def firstServicePointDisplayName = createFirstServicePointResponse.response.discoveryDisplayName
     * def secondServicePointName = createSecondServicePointResponse.response.name
+    * def secondServicePointDisplayName = createSecondServicePointResponse.response.discoveryDisplayName
 
     # create non-pickup-location service point with pickup location true, but it will be updated later to false
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(nonPickupLocationServicePointId) }
@@ -1668,8 +1669,8 @@ Feature: Requests tests
     * param operation = requestOperation
     When method GET
     Then status 200
-    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
-    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
+    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)", "discoveryDisplayName": "#(firstServicePointDisplayName)"}
+    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)", "discoveryDisplayName": "#(secondServicePointDisplayName)"}
     And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
@@ -1679,8 +1680,8 @@ Feature: Requests tests
     * param operation = requestOperation
     When method GET
     Then status 200
-    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
-    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
+    And match response.Page contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)", "discoveryDisplayName": "#(firstServicePointDisplayName)"}
+    And match response.Page contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)", "discoveryDisplayName": "#(secondServicePointDisplayName)"}
     And match response.Hold == "#notpresent"
     And match response.Recall == "#notpresent"
 
@@ -1694,9 +1695,9 @@ Feature: Requests tests
     When method GET
     Then status 200
     And match response.Page == "#notpresent"
-    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
-    And match response.Recall contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)"}
-    And match response.Recall contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)"}
+    And match response.Hold contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)", "discoveryDisplayName": "#(firstServicePointDisplayName)"}
+    And match response.Recall contains {"id": "#(firstServicePointId)", "name": "#(firstServicePointName)", "discoveryDisplayName": "#(firstServicePointDisplayName)"}
+    And match response.Recall contains {"id": "#(secondServicePointId)", "name": "#(secondServicePointName)", "discoveryDisplayName": "#(secondServicePointDisplayName)"}
 
     # restore original circulation rules
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRulesAsText)" }
@@ -1706,7 +1707,8 @@ Feature: Requests tests
     Then status 204
 
   Scenario: Item-level request is not placed when requested pickup service point is not allowed by request policy
-    * configure headers = headersAdmin
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def requesterBarcode = "FAT-7216-1"
     * def borrowerBarcode = "FAT-7216-2"
     * def itemBarcode = "FAT-7216-3"
@@ -1829,7 +1831,8 @@ Feature: Requests tests
     Then status 204
 
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
-    * configure headers = headersAdmin
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
     * def requesterBarcode = "FAT-7490-1"
     * def itemBarcode = "FAT-7490-2"
     * def requesterId = call uuid1

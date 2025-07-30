@@ -3,23 +3,21 @@ Feature: Piece batch job testing
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+
     * configure retry = { count: 10, interval: 5000 }
 
     * callonce variables
 
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -40,7 +38,7 @@ Feature: Piece batch job testing
 
   Scenario: Create finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
 
   Scenario Outline: Create 6 orders
@@ -166,6 +164,7 @@ Feature: Piece batch job testing
     And match $.totalRecords == 1
     * def pieceId = $.pieces[0].id
 
+    * configure headers = headersAdmin
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     And retry until response.totalItems == <eventQuantity>
     When method GET

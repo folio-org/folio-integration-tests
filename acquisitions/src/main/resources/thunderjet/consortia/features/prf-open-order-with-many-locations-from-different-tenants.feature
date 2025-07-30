@@ -1,10 +1,14 @@
+@parallel=false
 Feature: Open order with many locations from different tenants
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * call login consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
-    * configure retry = { count: 5, interval: 1000 }
+
+    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+    * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
+    * configure headers = headersCentral
 
     * callonce variables
     * callonce variablesCentral
@@ -15,7 +19,6 @@ Feature: Open order with many locations from different tenants
 
     * def centralLocationsId = '6ee65782-ab71-4e07-9561-c400e3004a'
     * def universityLocationsId = '7ee65782-ab71-4e07-9561-c400e3004a'
-
 
   @Positive
   Scenario: Prepare data: create fund and budget, and locations
@@ -38,7 +41,6 @@ Feature: Open order with many locations from different tenants
             campusId: centralLocationUnitsCampusesId,
             libraryId: centralLocationUnitsLibrariesId,
             servicePointId: centralServicePointsId,
-
           })
         }
       }
@@ -48,7 +50,7 @@ Feature: Open order with many locations from different tenants
     * def v = call createLocation centralLocations
 
     # Create 25 locations in university tenant
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
+    * configure headers = headersUni
     * def universityLocations = []
     * def createUniversityParameterArray =
       """
@@ -92,7 +94,7 @@ Feature: Open order with many locations from different tenants
         for (let i = 10; i < 35; i++) {
           locations.push(
           {
-            tenantId: centralTenant,
+            tenantId: centralTenantName,
             locationId: centralLocationsId + i,
             quantity: 1,
             quantityPhysical: 1
@@ -109,7 +111,7 @@ Feature: Open order with many locations from different tenants
         for (let i = 10; i < 35; i++) {
           locations.push(
           {
-            tenantId: universityTenant,
+            tenantId: universityTenantName,
             locationId: universityLocationsId + i,
             quantity: 1,
             quantityPhysical: 1
@@ -123,7 +125,6 @@ Feature: Open order with many locations from different tenants
     * set orderLine.locations = locations
     * set orderLine.cost.quantityPhysical = 50
     Given path 'orders/order-lines'
-    And header x-okapi-tenant = centralTenant
     And request orderLine
     When method POST
     Then status 201
@@ -133,7 +134,6 @@ Feature: Open order with many locations from different tenants
 
     ## 3. Check locations and searchLocationIds length and Get instanceId from poLine
     Given path 'orders/order-lines', poLineId
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match $.locations.length() == 50
@@ -142,40 +142,35 @@ Feature: Open order with many locations from different tenants
 
     ## 4. Verify Instance, Holdings and items in centralTenant
     Given path 'inventory/instances', poLineInstanceId
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match $.totalRecords == 25
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match $.totalRecords == 25
 
     ## 5. Verify Instance, Holdings and items in universityTenant
+    * configure headers = headersUni
     Given path 'inventory/instances', poLineInstanceId
-    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match $.totalRecords == 25
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
-    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match $.totalRecords == 25
@@ -196,7 +191,7 @@ Feature: Open order with many locations from different tenants
         for (let i = 10; i < 15; i++) {
           locations.push(
           {
-            tenantId: centralTenant,
+            tenantId: centralTenantName,
             locationId: centralLocationsId + i,
             quantity: 1,
             quantityPhysical: 1
@@ -212,7 +207,7 @@ Feature: Open order with many locations from different tenants
         for (let i = 10; i < 15; i++) {
           locations.push(
           {
-            tenantId: universityTenant,
+            tenantId: universityTenantName,
             locationId: universityLocationsId + i,
             quantity: 1,
             quantityPhysical: 1
@@ -257,7 +252,6 @@ Feature: Open order with many locations from different tenants
 
     Given path 'orders/order-lines'
     And param query = 'id==(' + poLineIds.join(' or ') + ')'
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match $.totalRecords == 10
@@ -266,7 +260,6 @@ Feature: Open order with many locations from different tenants
 
     ## 5. Check locations and searchLocationIds length
     Given path 'orders/order-lines', poLineUuid + 10
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match $.locations.length() == 10
@@ -275,40 +268,35 @@ Feature: Open order with many locations from different tenants
 
     ## 6. Verify Instance, Holdings and items in centralTenant
     Given path 'inventory/instances', poLineInstanceId
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match $.totalRecords == 5
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineUuid + 10
-    And header x-okapi-tenant = centralTenant
     When method GET
     Then status 200
     And match $.totalRecords == 5
 
     ## 7. Verify Instance, Holdings and items in universityTenant
+    * configure headers = headersUni
     Given path 'inventory/instances', poLineInstanceId
-    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
 
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + poLineInstanceId
-    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match $.totalRecords == 5
 
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineUuid + 10
-    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match $.totalRecords == 5

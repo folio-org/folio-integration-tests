@@ -1,4 +1,5 @@
 # For https://issues.folio.org/browse/MODFISTO-441
+@parallel=false
 Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance)
 
   # 1) create 3 sequential fiscal years: fiscalYearId1, fiscalYearId2, fiscalYearId3. fiscalYearId1 contains current date
@@ -8,19 +9,16 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
   # 5) rollover fiscalYearId2 -> fiscalYearId3
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance1'}
-    * callonce loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
 
+    * callonce login testAdmin
+    * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain'  }
-
-    * configure headers = headersAdmin
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -51,6 +49,7 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
     * def updatedSecondFiscalYearStart = callonce getCurrentDate
 
   Scenario: Update po line limit
+    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And param query = 'configName==poLines-limit'
     When method GET
@@ -130,7 +129,6 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
       | books      | 'Books'      |
 
   Scenario Outline: prepare fund with <fundId>, <ledgerId> for rollover
-    * configure headers = headersAdmin
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def fundCode = <fundCode>
@@ -249,7 +247,6 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
       | encumberRemaining | encumberRemainingLine | latin        | 'One-Time' | false        | true       | 10     |
 
   Scenario: Start first rollover for ledger 1
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -313,8 +310,6 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
     Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -412,7 +407,6 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
     * def encumbrance = $.transactions[0]
     * set encumbrance.fiscalYearId = fiscalYearId2
 
-    * configure headers = headersAdmin
     Given path 'finance/transactions/batch-all-or-nothing'
     And request
     """
@@ -426,7 +420,6 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
     Then status 204
 
   Scenario: Start second rollover for ledger 1
-    * configure headers = headersUser
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -489,8 +482,6 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
     Then status 200
 
   Scenario Outline: Check that budget <id> status is <status> after rollover
-    * configure headers = headersAdmin
-
     Given path 'finance/budgets', <id>
     When method GET
     Then status 200
@@ -549,7 +540,6 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
       | latin       | 1210      | 1200      | 10          | 0            | 10         | 100.0                | 100.0                | [#(globalElecExpenseClassId), #(globalPrnExpenseClassId)] |
 
   Scenario: Check expected number of encumbrances for new fiscal year
-    * configure headers = headersAdmin
     Given path 'finance-storage/transactions'
     And param query = 'fiscalYearId==' + fiscalYearId3 + ' AND transactionType==Encumbrance'
     When method GET

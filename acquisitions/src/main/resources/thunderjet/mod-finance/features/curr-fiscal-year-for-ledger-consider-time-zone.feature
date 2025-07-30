@@ -1,19 +1,18 @@
+@parallel=false
 Feature:  Return current fiscal year consider time zone
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+
     * callonce variables
 
     * def fiscalYearId = callonce uuid1
@@ -28,15 +27,15 @@ Feature:  Return current fiscal year consider time zone
 
     Given path 'finance/fiscal-years'
     And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + year)',
-      "code": '#(codePrefix + year)',
-      "periodStart": '#(yesterday + "T00:00:00Z")',
-      "periodEnd": '#(yesterday + "T23:59:59Z")'
-    }
-    """
+      """
+      {
+        "id": '#(fiscalYearId)',
+        "name": '#(codePrefix + year)',
+        "code": '#(codePrefix + year)',
+        "periodStart": '#(yesterday + "T00:00:00Z")',
+        "periodEnd": '#(yesterday + "T23:59:59Z")'
+      }
+      """
     When method POST
     Then status 201
 
@@ -44,30 +43,32 @@ Feature:  Return current fiscal year consider time zone
   Scenario: prepare finances for ledger
     Given path 'finance/ledgers'
     And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(fiscalYearId)"
-    }
-    """
+      """
+      {
+        "id": "#(ledgerId)",
+        "ledgerStatus": "Active",
+        "name": "#(ledgerId)",
+        "code": "#(ledgerId)",
+        "fiscalYearOneId":"#(fiscalYearId)"
+      }
+      """
     When method POST
     Then status 201
 
   Scenario: Create configuration with Pacific/Midway timezone
+    * configure headers = headersAdmin
     Given path 'configurations/entries'
     And request
-    """
-    {
-      "id": "#(configUUID)",
-      "module": "ORG",
-      "configName": "localeSettings",
-      "enabled": true,
-      "value": "{\"locale\":\"en-US\",\"timezone\":\"Pacific/Midway\",\"currency\":\"USD\"}"
-    }
-    """
+      """
+      {
+        "id": "#(configUUID)",
+        "module": "ORG",
+        "configName": "localeSettings",
+        "enabled": true,
+        "code": "#(configUUID)",
+        "value": "{\"locale\":\"en-US\",\"timezone\":\"Pacific/Midway\",\"currency\":\"USD\"}"
+      }
+      """
     When method POST
     Then status 201
 
@@ -78,17 +79,19 @@ Feature:  Return current fiscal year consider time zone
     And match $.id == '#(fiscalYearId)'
 
   Scenario: update configuration with UTC timezone
+    * configure headers = headersAdmin
     Given path 'configurations/entries', configUUID
     And request
-    """
-    {
-      "id": "#(configUUID)",
-      "module": "ORG",
-      "configName": "localeSettings",
-      "enabled": true,
-      "value": "{\"locale\":\"en-US\",\"timezone\":\"Europe/Minsk\",\"currency\":\"USD\"}"
-    }
-    """
+      """
+      {
+        "id": "#(configUUID)",
+        "module": "ORG",
+        "configName": "localeSettings",
+        "enabled": true,
+        "code": "#(configUUID)",
+        "value": "{\"locale\":\"en-US\",\"timezone\":\"Europe/Minsk\",\"currency\":\"USD\"}"
+      }
+      """
     When method PUT
     Then status 204
 
@@ -109,6 +112,7 @@ Feature:  Return current fiscal year consider time zone
     Then status 204
 
   Scenario: Delete configuration with Pacific/Midway timezone
+    * configure headers = headersAdmin
     Given path 'configurations/entries',configUUID
     When method DELETE
     Then status 204

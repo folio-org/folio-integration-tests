@@ -6,7 +6,7 @@ Feature: Test job profiles
     * callonce login testUser
     * def okapiUserToken = okapitoken
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
     * def rule = read('classpath:samples/rules/no_user_name.json')
 

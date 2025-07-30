@@ -10,17 +10,22 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
   var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
   var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
   var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
   var testUserPassword = karate.properties['testUserPassword'] || 'test';
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
+
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
     testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword, barcode: 125091},
 
@@ -47,7 +52,7 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
-    }
+    },
   };
 
   // Create 100 functions for uuid generation
@@ -59,22 +64,14 @@ function fn() {
   karate.repeat(100, rand);
 
   if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
   } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-dev-vega-okapi.ci.folio.org';
-    config.admin = {tenant: 'supertenant', name: 'testing_admin', password: 'admin'};
+    config.baseUrl = 'https://folio-edev-vega-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-keycloak.ci.folio.org';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
@@ -82,18 +79,16 @@ function fn() {
       name: '${admin.name}',
       password: '${admin.password}'
     }
+    config.kcClientId = '${clientId}',
+    config.kcClientSecret = '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if(env == 'dev') {
-    config.checkDepsDuringModInstall = 'false'
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
+  } else if (env == 'dev') {
+    config.checkDepsDuringModInstall = 'false';
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   }
   return config;
 }

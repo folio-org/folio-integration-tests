@@ -1,145 +1,117 @@
 Feature: mod-invoice integration tests
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * table modules
-      | name                        |
-      | 'mod-login'                 |
-      | 'mod-permissions'           |
-      | 'mod-users'                 |
-      | 'mod-permissions'           |
-      | 'mod-audit'                 |
-      | 'mod-configuration'         |
-      | 'mod-invoice'               |
-      | 'mod-invoice-storage'       |
-      | 'mod-finance'               |
-      | 'mod-finance-storage'       |
-      | 'mod-organizations'         |
-      | 'mod-organizations-storage' |
-      | 'mod-orders'                |
-      | 'mod-orders-storage'        |
 
     * def random = callonce randomMillis
-    * def testTenant = 'testinvoices' + random
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
+    * def testTenant = 'testinvoice' + random
+    * def testTenantId = callonce uuid
+    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
 
-    * table adminAdditionalPermissions
-      | name                                                        |
-      | 'finance.all'                                               |
-      | 'voucher-storage.module.all'                                |
-      | 'orders-storage.order-invoice-relationships.collection.get' |
-      | 'organizations-storage.organizations.item.post'             |
+    # Create tenant and users, initialize data
+    * def v = callonce read('classpath:thunderjet/mod-invoice/init-invoice.feature')
 
-    * table userPermissions
-      | name                                  |
-      | 'orders.all'                          |
-      | 'invoice.all'                         |
-      | 'finance.all'                         |
-      | 'invoices.fiscal-year.update.execute' |
-      | 'invoice.item.approve.execute'        |
-      | 'invoice.item.pay.execute'            |
-      | 'invoice.item.cancel.execute'         |
-      | 'acquisition.invoice.events.get'      |
-      | 'acquisition.invoice-line.events.get' |
+    # Wipe data afterwards
+    * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
-  Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
-
-  Scenario: init global data
-    * call login testAdmin
-    * callonce read('classpath:global/finances.feature')
-    * callonce read('classpath:global/organizations.feature')
-
-  Scenario: Batch voucher export with many lines
-    Given call read('features/batch-voucher-export-with-many-lines.feature')
-
-  Scenario: Prorated adjustments special cases
-    Given call read('features/prorated-adjustments-special-cases.feature')
-
-  Scenario: Check remaining amount upon invoice approval
-    Given call read('features/check-remaining-amount-upon-invoice-approval.feature')
-
-  Scenario: Check invoice and invoice lines deletion restrictions
-    Given call read('features/check-invoice-and-invoice-lines-deletion-restrictions.feature')
-
-  Scenario: Check invoice lines and documents are deleted with invoice
-    Given call read('features/check-invoice-lines-and-documents-are-deleted-with-invoice.feature')
-
-  Scenario: Checking that voucher lines are created taking into account the expense classes
-    Given call read('features/create-voucher-lines-honor-expense-classes.feature')
-
-  Scenario: Update exchange rate after invoice approval
-    Given call read('features/exchange-rate-update-after-invoice-approval.feature')
-
-  Scenario: Expense classes validation upon invoice approval
-    Given call read('features/expense-classes-validation.feature')
-
-  Scenario: Invoice with lock totals calculated totals
-    Given call read('features/invoice-with-lock-totals-calculated-totals.feature')
-
-  Scenario: Check invoice approve flow if lockTotal is specified
-    Given call read('features/check-lock-totals-and-calculated-totals-in-invoice-approve-time.feature')
-
-  Scenario: Voucher with lines using same external account
-    Given call read('features/voucher-with-lines-using-same-external-account.feature')
-
-  Scenario: Vendor address must be populated when retrieve voucher by id
-    Given call read('features/should_populate_vendor_address_on_get_voucher_by_id.feature')
-
-  Scenario: Check approve and pay invoice with odd number of pennies in total
-    Given call read('features/check-approve-and-pay-invoice-with-odd-pennies-number.feature')
-#
-#  Scenario: Check vendor address included with batch voucher
-#    Given call read('features/check-vendor-address-included-with-batch-voucher.feature')
-
-  Scenario: Check that can not approve invoice if organization is not vendor
-    Given call read('features/check-that-can-not-approve-invoice-if-organization-is-not-vendor.feature')
-
-  Scenario: Voucher numbers
-    Given call read('features/voucher-numbers.feature')
-
-  Scenario: Check approve and pay invoice with 0$ amount
-    Given call read('features/check-approve-and-pay-invoice-with-zero-dollar-amount.feature')
-
-  Scenario: Check that voucher exist with parameters
-    Given call read('features/check-that-voucher-exist-with-parameters.feature')
-
-  Scenario: Check that it is not impossible to pay for the invoice without approved status
-    Given call read('features/check-that-not-possible-pay-for-invoice-without-approved.feature')
-
-  Scenario: Cancel invoice
-    Given call read('features/cancel-invoice.feature')
-
-  Scenario: Check that error response should have fundcode included when when there is not enough budget
-    Given call read('features/check-error-respose-with-fundcode-upon-invoice-approval.feature')
-
-  Scenario: Edit subscription dates after invoice is paid
-    Given call read('features/edit-subscription-dates-after-invoice-paid.feature')
-
-  Scenario: Check fiscal year balance when using a negative available
-    Given call read('features/fiscal-year-balance-with-negative-available.feature')
-
-  Scenario: Invoice fiscal years
-    Given call read('features/invoice-fiscal-years.feature')
 
   Scenario: Approve and pay invoice with past fiscal year
-    Given call read('features/approve-and-pay-invoice-with-past-fiscal-year.feature')
+    * call read('features/approve-and-pay-invoice-with-past-fiscal-year.feature')
 
-  Scenario: Set invoice fiscal year automatically
-    Given call read('features/set-invoice-fiscal-year-automatically.feature')
+  Scenario: Batch voucher export with many lines
+    * call read('features/batch-voucher-export-with-many-lines.feature')
 
-  Scenario: Audit events for Invoice
-    Given call read('features/audit-event-invoice.feature')
+  Scenario: Check vendor address included with batch voucher
+    * call read('features/batch-voucher-uploaded.feature')
 
-  Scenario: Audit events for Invoice Line
-    Given call read('features/audit-event-invoice-line.feature')
+  Scenario: Cancel invoice
+    * call read('features/cancel-invoice.feature')
+
+  Scenario: Check approve and pay invoice with odd number of pennies in total
+    * call read('features/check-approve-and-pay-invoice-with-odd-pennies-number.feature')
+
+  Scenario: Check approve and pay invoice with 0$ amount
+    * call read('features/check-approve-and-pay-invoice-with-zero-dollar-amount.feature')
+
+  Scenario: Check that error response should have fundcode included when when there is not enough budget
+    * call read('features/check-error-respose-with-fundcode-upon-invoice-approval.feature')
+
+  Scenario: Check invoice and invoice lines deletion restrictions
+    * call read('features/check-invoice-and-invoice-lines-deletion-restrictions.feature')
+
+  Scenario: Check invoice full flow where sub total is negative
+    * call read('features/check-invoice-full-flow-where-subTotal-is-negative.feature')
+
+  Scenario: Check invoice lines and documents are deleted with invoice
+    * call read('features/check-invoice-lines-and-documents-are-deleted-with-invoice.feature')
 
   Scenario: Check invoice line with VAT adjustments
-    Given call read('features/check-invoice-lines-with-vat-adjustments.feature')
+    * call read('features/check-invoice-lines-with-vat-adjustments.feature')
+
+  Scenario: Check invoiceLine validation with  adjustments
+    * call read('features/check-invoice-line-validation-with-adjustments.feature')
+
+  Scenario: Check invoice approve flow if lockTotal is specified
+    * call read('features/check-lock-totals-and-calculated-totals-in-invoice-approve-time.feature')
+
+  Scenario: Check remaining amount upon invoice approval
+    * call read('features/check-remaining-amount-upon-invoice-approval.feature')
+
+  Scenario: Check that can not approve invoice if organization is not vendor
+    * call read('features/check-that-can-not-approve-invoice-if-organization-is-not-vendor.feature')
+
+  Scenario: Checking that it is impossible to pay for the invoice if no voucher for invoice
+    * call read('features/check-that-changing-protected-fields-forbidden-for-approved-invoice.feature')
+
+  Scenario: Checking that it is impossible to add a invoice line to already approved invoice
+    * call read('features/check-that-not-possible-add-invoice-line-to-approved-invoice.feature')
+
+  Scenario: Checking that it is impossible to pay for the invoice if no voucher for invoice
+    * call read('features/check-that-not-possible-pay-for-invoice-if-no-voucher.feature')
+
+  Scenario: Check that it is not impossible to pay for the invoice without approved status
+    * call read('features/check-that-not-possible-pay-for-invoice-without-approved.feature')
+
+  Scenario: Check that voucher exist with parameters
+    * call read('features/check-that-voucher-exist-with-parameters.feature')
+
+  Scenario: Checking that voucher lines are created taking into account the expense classes
+    * call read('features/create-voucher-lines-honor-expense-classes.feature')
+
+  Scenario: Edit subscription dates after invoice is paid
+    * call read('features/edit-subscription-dates-after-invoice-paid.feature')
+
+  Scenario: Update exchange rate after invoice approval
+    * call read('features/exchange-rate-update-after-invoice-approval.feature')
+
+  Scenario: Expense classes validation upon invoice approval
+    * call read('features/expense-classes-validation.feature')
+
+  Scenario: Check fiscal year balance when using a negative available
+    * call read('features/fiscal-year-balance-with-negative-available.feature')
+
+  Scenario: Invoice fiscal years
+    * call read('features/invoice-fiscal-years.feature')
 
   Scenario: Invoice with identical adjustments
-    Given call read('features/invoice-with-identical-adjustments.feature')
+    * call read('features/invoice-with-identical-adjustments.feature')
 
-  Scenario: wipe data
-    Given call read('classpath:common/destroy-data.feature')
+  Scenario: Invoice with lock totals calculated totals
+    * call read('features/invoice-with-lock-totals-calculated-totals.feature')
+
+  Scenario: Prorated adjustments special cases
+    * call read('features/prorated-adjustments-special-cases.feature')
+
+  Scenario: Set invoice fiscal year automatically
+    * call read('features/set-invoice-fiscal-year-automatically.feature')
+
+  Scenario: Vendor address must be populated when retrieve voucher by id
+    * call read('features/should_populate_vendor_address_on_get_voucher_by_id.feature')
+
+  Scenario: Voucher numbers
+    * call read('features/voucher-numbers.feature')
+
+  Scenario: Voucher with lines using same external account
+    * call read('features/voucher-with-lines-using-same-external-account.feature')

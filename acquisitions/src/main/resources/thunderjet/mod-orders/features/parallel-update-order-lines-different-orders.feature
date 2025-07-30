@@ -3,13 +3,16 @@
 Feature: Update order lines for different open orders in parallel (using the same fund), and check budget
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -24,16 +27,11 @@ Feature: Update order lines for different open orders in parallel (using the sam
     * def poLineId3 = callonce uuid9
     * def poLineId4 = callonce uuid10
 
-    * def createOrder = read('../reusable/create-order.feature')
-    * def createOrderLine = read('../reusable/create-order-line.feature')
-    * def openOrder = read('../reusable/open-order.feature')
-    * def getOrderLine = read('../reusable/get-order-line.feature')
-
     * configure headers = headersAdmin
     * callonce createFund { id: '#(fundId)' }
     * callonce createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)' }
-    * configure headers = headersUser
 
+    * configure headers = headersUser
     * callonce createOrder { id: '#(orderId1)' }
     * callonce createOrder { id: '#(orderId2)' }
     * callonce createOrder { id: '#(orderId3)' }
@@ -101,6 +99,7 @@ Feature: Update order lines for different open orders in parallel (using the sam
     # So we have to wait for the updates in a parallel thread before checking the budget.
     * call pause 2000
 
+    * configure headers = headersAdmin
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET

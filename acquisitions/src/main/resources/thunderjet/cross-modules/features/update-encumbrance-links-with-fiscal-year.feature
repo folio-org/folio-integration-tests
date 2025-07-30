@@ -5,26 +5,12 @@ Feature: Update encumbrance links with fiscal year
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-audit-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createTransaction = read('classpath:thunderjet/mod-finance/reusable/createTransaction.feature')
 
     * def currentYear = callonce getCurrentYear
     * def currentStart = currentYear + '-01-01T00:00:00Z'
@@ -38,7 +24,6 @@ Feature: Update encumbrance links with fiscal year
 
 
   Scenario: Create finances
-    * configure headers = headersAdmin
     * def v = call createFiscalYear { id: #(pastFiscalYearId), code: 'INVTEST2020', periodStart: '2020-01-01T00:00:00Z', periodEnd: '2020-12-30T23:59:59Z', series: 'INVTEST' }
     * def v = call createFiscalYear { id: #(currentFiscalYearId), code: #('INVTEST' + currentYear), periodStart: #(currentStart), periodEnd: #(currentEnd), series: 'INVTEST' }
     * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(pastFiscalYearId), restrictEncumbrance: false, restrictExpenditures: false }
@@ -67,9 +52,7 @@ Feature: Update encumbrance links with fiscal year
     * def currentEncumbranceId = poLine.fundDistribution[0].encumbrance
 
     * print "Create the past encumbrance"
-    * configure headers = headersAdmin
     * def v = call createTransaction { id: #(pastEncumbranceId), transactionType: 'Encumbrance', fiscalYearId: #(pastFiscalYearId), fundId: #(fundId), amount: 10.0, orderId: #(orderId), poLineId: #(poLineId) }
-    * configure headers = headersUser
 
     * print "Create an invoice in the past fiscal year"
     * def v = call createInvoice { id: #(invoiceId), fiscalYearId: #(pastFiscalYearId) }
@@ -112,9 +95,7 @@ Feature: Update encumbrance links with fiscal year
     * def currentEncumbranceId2 = poLine.fundDistribution[0].encumbrance
 
     * print "Create one past encumbrance"
-    * configure headers = headersAdmin
     * def v = call createTransaction { id: #(pastEncumbranceId), transactionType: 'Encumbrance', fiscalYearId: #(pastFiscalYearId), fundId: #(fundId), amount: 10.0, orderId: #(orderId), poLineId: #(poLineId1) }
-    * configure headers = headersUser
 
     * print "Create an invoice in the current fiscal year"
     * def v = call createInvoice { id: #(invoiceId) }

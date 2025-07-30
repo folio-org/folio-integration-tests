@@ -1,3 +1,4 @@
+@ignore
 Feature: Pay invoice
   # parameters: invoiceId, poLinePaymentStatus?
 

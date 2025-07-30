@@ -1,25 +1,23 @@
+@parallel=false
 Feature: Verify Bind Piece feature
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * def tenantId1 = karate.get('tenantId1', testTenant);
-    * def tenantId2 = karate.get('tenantId2', testTenant);
-    * def adminUser = karate.get('adminUser', testAdmin);
-    * def regularUser = karate.get('regularUser', testUser);
-
-    * callonce loginAdmin adminUser
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser regularUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+
+    * def tenantId1 = karate.get('tenantId1', testTenant)
+    * def tenantId2 = karate.get('tenantId2', testTenant)
+
     * configure retry = { count: 5, interval: 1000 }
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def createPieceWithHolding = read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature')
     * def createCirculationPolicy = read('classpath:thunderjet/mod-orders/reusable/create-circulation-policy.feature')
     * def createCirculationRequest = read('classpath:thunderjet/mod-orders/reusable/create-circulation-request.feature')
     * def createUserGroup = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@CreateGroup')
@@ -28,9 +26,9 @@ Feature: Verify Bind Piece feature
 
     * callonce variables
 
-    * def holdingId1 = karate.get('holdingId1', globalHoldingId1);
-    * def holdingId2 = karate.get('holdingId2', globalHoldingId2);
-    * def holdingId3 = karate.get('holdingId3', globalHoldingId3);
+    * def holdingId1 = karate.get('holdingId1', globalHoldingId1)
+    * def holdingId2 = karate.get('holdingId2', globalHoldingId2)
+    * def holdingId3 = karate.get('holdingId3', globalHoldingId3)
 
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
@@ -58,16 +56,16 @@ Feature: Verify Bind Piece feature
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
 
     # 2. Create an order
+    * configure headers = headersUser
     * call createOrder { id: '#(orderId)' }
 
     # 3. Create patron and user
+    * configure headers = headersAdmin
     * def v = call createUserGroup { id: '#(patronId)', group: 'patron', tenantId: '#(tenantId1)' }
     * def v = call createUser { id: '#(userId)', patronId: '#(patronId)'}
 
     # 4. Setup Circulation Policy
     * call createCirculationPolicy { tenant: '#(tenantId1)' }
-
-    * configure headers = headersUser
 
   @Negative
   Scenario: Verify ERROR cases for Bindary active can be set only for Physical or P/E Mix orders with
@@ -288,6 +286,7 @@ Feature: Verify Bind Piece feature
 
 
     # 7. Check item details with 'bindPieceCollection' details after pieces are bound
+    * configure headers = headersAdmin
     Given path 'inventory/tenant-items'
     And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(newItemId)" } ] }
     When method POST
@@ -303,6 +302,7 @@ Feature: Verify Bind Piece feature
 
 
     # 8. Verify Title 'bindItemIds' field
+    * configure headers = headersUser
     Given path 'orders/titles', titleId
     When method GET
     Then status 200
@@ -342,7 +342,6 @@ Feature: Verify Bind Piece feature
 
     # 1.2 Creating Second Piece with Item to bind in Title with 'titleId'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -365,6 +364,7 @@ Feature: Verify Bind Piece feature
 
 
     # 2. Check previous item details of piece before bound
+    * configure headers = headersAdmin
     Given path 'inventory/tenant-items'
     And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(prevItemId1)" }, { tenantId: "#(tenantId2)", itemId: "#(prevItemId2)" } ] }
     When method POST
@@ -374,6 +374,7 @@ Feature: Verify Bind Piece feature
 
 
     # 3. Receive both pieceId1 and pieceId2
+    * configure headers = headersUser
     * table receivePieceDetails
       | pieceId          | poLineId  | holdingId  | tenantId  |
       | pieceWithItemId1 | poLineId1 | holdingId1 | tenantId1 |
@@ -415,6 +416,7 @@ Feature: Verify Bind Piece feature
 
     # 6. Check previous item1, item2 status of piece after bound
     # Status of item1 and item2 should changed from "On order" to "Unavailable"
+    * configure headers = headersAdmin
     Given path 'inventory/tenant-items'
     And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(prevItemId1)" }, { tenantId: "#(tenantId2)", itemId: "#(prevItemId2)" } ] }
     When method POST
@@ -426,8 +428,8 @@ Feature: Verify Bind Piece feature
 
     # 7. Update bounded piece
     # New item fields should not be affected
-    Given path 'orders/pieces', pieceWithItemId2
     * configure headers = headersUser
+    Given path 'orders/pieces', pieceWithItemId2
     And request
       """
       {
@@ -447,6 +449,7 @@ Feature: Verify Bind Piece feature
     When method PUT
     Then status 204
 
+    * configure headers = headersAdmin
     Given path 'inventory/tenant-items'
     And request { tenantItemPairs: [ { tenantId: "#(tenantId2)", itemId: "#(newItemId)" } ] }
     When method POST
@@ -462,7 +465,6 @@ Feature: Verify Bind Piece feature
 
     # 1.1 Creating piece with item to bind in Title with 'titleId'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -484,7 +486,6 @@ Feature: Verify Bind Piece feature
 
     # 1.2 Creating second piece with item to bind in Title with 'titleId' with different holding 'holdingId3'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -530,10 +531,9 @@ Feature: Verify Bind Piece feature
     Then status 200
     And match $.itemId == prevItemId2
 
-    * configure headers = headersUser
-
 
     # 3. Receive both pieceId1 and pieceId2
+    * configure headers = headersUser
     * table receivePieceDetails
       | pieceId          | poLineId  | holdingId  |
       | pieceWithItemId1 | poLineId1 | holdingId1 |
@@ -581,7 +581,6 @@ Feature: Verify Bind Piece feature
     When method GET
     Then status 200
     And match response.status == 'Closed - Cancelled'
-    * configure headers = headersUser
 
   @Positive
   Scenario: When pieces have items with open circulation requests, these requests should not be moved
@@ -612,7 +611,6 @@ Feature: Verify Bind Piece feature
 
     # 1.2 Creating second piece with item to bind in Title with 'titleId' with different holding 'holdingId3'
     Given path 'orders/pieces'
-    * configure headers = headersUser
     And request
       """
       {
@@ -658,10 +656,8 @@ Feature: Verify Bind Piece feature
     Then status 200
     And match $.itemId == prevItemId2
 
-    * configure headers = headersUser
-
-
     # 3. Receive both pieceId1 and pieceId2
+    * configure headers = headersUser
     * table receivePieceDetails
       | pieceId          | poLineId  | holdingId  |
       | pieceWithItemId1 | poLineId1 | holdingId1 |
@@ -767,6 +763,7 @@ Feature: Verify Bind Piece feature
 
 
     # 6. Check item details with 'bindPieceCollection' details after pieces are bound
+    * configure headers = headersAdmin
     Given path 'inventory/tenant-items'
     And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(newItemId)" } ] }
     When method POST
@@ -778,6 +775,7 @@ Feature: Verify Bind Piece feature
 
 
     # 7. Verify Title 'bindItemIds' field
+    * configure headers = headersUser
     Given path 'orders/titles', titleId2
     When method GET
     Then status 200

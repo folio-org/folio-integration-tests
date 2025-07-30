@@ -2,7 +2,7 @@ Feature: Query with basic operators
   Background:
     * url baseUrl
     * callonce login testUser
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
 
   Scenario: Run query with $eq operator and check results
@@ -10,7 +10,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -24,7 +24,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -37,7 +37,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -50,7 +50,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -63,7 +63,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -76,7 +76,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -89,7 +89,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -103,7 +103,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -117,7 +117,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
@@ -130,7 +130,7 @@ Feature: Query with basic operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-    Given path 'query/' + queryId
+    Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200

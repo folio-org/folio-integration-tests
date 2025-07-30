@@ -9,7 +9,7 @@ Feature: init data for mod-inventory-storage
     * callonce login user
     * def okapitokenAdmin = okapitoken
 
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-token': '#(okapitokenAdmin)' }
     * configure retry = { interval: 3000, count: 10 }
 
   Scenario: create locations

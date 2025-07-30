@@ -3,24 +3,19 @@ Feature: Piece status transitions
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
-#    * callonce dev {tenant: 'testorders1'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
@@ -109,6 +104,7 @@ Feature: Piece status transitions
     And match $.totalRecords == 1
     * def pieceId = $.pieces[0].id
 
+    * configure headers = headersAdmin
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200
@@ -228,6 +224,7 @@ Feature: Piece status transitions
     And match $.totalRecords == 1
     * def pieceId = $.pieces[0].id
 
+    * configure headers = headersAdmin
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
     When method GET
     Then status 200

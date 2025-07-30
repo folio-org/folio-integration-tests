@@ -3,15 +3,10 @@
 
     Background:
       * print karate.info.scenarioName
-
       * url baseUrl
-      * callonce login testAdmin
-      * def okapitokenAdmin = okapitoken
-      * callonce login testUser
-      * def okapitokenUser = okapitoken
 
-      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
+      * callonce login testUser
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
       * configure headers = headersUser
 
       * callonce variables
@@ -44,14 +39,12 @@
       * def invoiceLineId2 = call uuid
 
       * print "Create finances with a current and a past fiscal year"
-      * configure headers = headersAdmin
       * def v = call createFiscalYear { id: '#(currentFiscalYearId)', code: '#(currentFiscalCode)', periodStart: '#(currentPeriodStart)', periodEnd: '#(currentPeriodEnd)', series: '#(codePrefix)' }
       * def v = call createFiscalYear { id: '#(pastFiscalYearId)', code: '#(pastFiscalCode)', periodStart: '#(pastPeriodStart)', periodEnd: '#(pastPeriodEnd)', series: '#(codePrefix)' }
       * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(pastFiscalYearId)', restrictEncumbrance: false, restrictExpenditures: false }
       * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
       * def v = call createBudget { id: '#(currentBudgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active', fiscalYearId: '#(currentFiscalYearId)' }
       * def v = call createBudget { id: '#(pastBudgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active', fiscalYearId: '#(pastFiscalYearId)' }
-      * configure headers = headersUser
 
       * print "Create an order and 2 lines"
       * def v = call createOrder { id: '#(orderId)' }
@@ -62,10 +55,8 @@
       * def v = call openOrder { orderId: '#(orderId)' }
 
       * print "Create encumbrances in the past fiscal year"
-      * configure headers = headersAdmin
       * def v = call createTransaction { id: '#(pastEncumbranceId1)', transactionType: 'Encumbrance', fiscalYearId: '#(pastFiscalYearId)', fundId: '#(fundId)', amount: 10.0, orderId: '#(orderId)', poLineId: '#(poLineId1)' }
       * def v = call createTransaction { id: '#(pastEncumbranceId2)', transactionType: 'Encumbrance', fiscalYearId: '#(pastFiscalYearId)', fundId: '#(fundId)', amount: 10.0, orderId: '#(orderId)', poLineId: '#(poLineId2)' }
-      * configure headers = headersUser
 
       * print "Create an invoice in the past fiscal year"
       * def v = call createInvoice { id: '#(invoiceId)', fiscalYearId: '#(pastFiscalYearId)' }

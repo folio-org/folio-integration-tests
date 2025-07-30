@@ -1,3 +1,4 @@
+@ignore
 Feature: Cancel invoice
   # parameters: invoiceId, poLinePaymentStatus?
 

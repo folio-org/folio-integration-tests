@@ -10,13 +10,17 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
 
   // generate names for consortia tenants
   var randomNumbers = karate.properties['randomNumbers'] ? karate.properties['randomNumbers'] : '1234567890';
 
   var centralTenant = 'central' + randomNumbers;
+  var centralTenantId = karate.properties['centralTenantId'];
   var universityTenant = 'university' + randomNumbers;
+  var universityTenantId = karate.properties['universityTenantId'];
   var collegeTenant = 'college' + randomNumbers;
+  var collegeTenantId = karate.properties['collegeTenantId'];
 
   var consortiaAdminUserId = karate.properties['consortiaAdminUserId'];
   var centralUser1Id = karate.properties['centralUserId'];
@@ -27,19 +31,26 @@ function fn() {
   var consortiumId = karate.properties['consortiumId'];
 
   var config = {
-    baseUrl: 'http://localhost:9130',
+    baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
+
     tenantParams: {loadReferenceData : true},
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
     // define consortia users and tenants
     centralTenant: centralTenant,
+    centralTenantId: centralTenantId ? centralTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     universityTenant: universityTenant,
+    universityTenantId: universityTenantId ? universityTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     collegeTenant: collegeTenant,
+    collegeTenantId: collegeTenantId ? collegeTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     consortiumId: consortiumId,
 
     consortiaAdmin: { id: consortiaAdminUserId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenant},
@@ -78,51 +89,38 @@ function fn() {
     }
   };
 
-  if (env == 'dev') {
-    config.checkDepsDuringModInstall = 'false'
+  if (env == 'snapshot') {
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-snapshot-2-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-  } else if (env == 'snapshot') {
-    config.baseUrl = 'https://folio-snapshot-okapi.dev.folio.org:443';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-  } else if (env == 'rancher') {
-     config.baseUrl = 'https://folio-dev-folijet-okapi.ci.folio.org';
-     config.edgeUrl = 'https://folio-snapshot.dev.folio.org:8000';
-     config.prototypeTenant= 'consortium'
-     config.admin = {
-       tenant: 'consortium',
-       name: 'consortium_admin',
-       password: 'admin'
-     }
-    } else if(env == 'folio-testing-karate') {
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
       password: '${admin.password}'
     }
+    config.kcClientId = '${clientId}',
+    config.kcClientSecret = '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
+  } else if (env == 'rancher') {
+    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org'
+    config.prototypeTenant= 'consortium'
     config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
+      tenant: 'consortium',
+      name: 'consortium_admin',
       password: 'admin'
     }
+    config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org'
+  } else if (env == 'dev') {
+    config.checkDepsDuringModInstall = 'false';
+    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
+    config.kcClientId = 'supersecret';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   }
-
-//   uncomment to run on local
-//  karate.callSingle('classpath:common/add-okapi-permissions.feature', config);
   return config;
 }

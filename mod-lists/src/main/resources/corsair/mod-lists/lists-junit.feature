@@ -11,67 +11,38 @@ Feature: mod-lists integration tests
       | 'mod-fqm-manager'         |
       | 'mod-lists'               |
       | 'mod-entities-links'      |
-    # wait, where's lists? it's installed in the next scenario, keep reading...
+      | 'mod-inventory-storage'   |
 
     * table userPermissions
       | name                                                        |
-      | 'acquisitions-units.units.collection.get'                   |
-      | 'addresstypes.collection.get'                               |
-      | 'addresstypes.collection.get'                               |
-      | 'addresstypes.item.post'                                    |
-      | 'batch-groups.collection.get'                               |
       | 'circulation-storage.loan-policies.collection.get'          |
-      | 'circulation-storage.loans.item.post'                       |
       | 'circulation.loans.collection.get'                          |
-      | 'configuration.entries.collection.get'                      |
       | 'departments.collection.get'                                |
-      | 'finance.exchange-rate.item.get'                            |
-      | 'finance.expense-classes.collection.get'                    |
-      | 'finance.fiscal-years.collection.get'                       |
-      | 'finance.fund-types.collection.get'                         |
-      | 'finance.funds.collection.get'                              |
-      | 'finance.ledgers.collection.get'                            |
-      | 'finance.transactions.collection.get'                       |
-      | 'fqm.query.all'                                             |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.classification-types.collection.get'     |
       | 'inventory-storage.contributor-name-types.collection.get'   |
       | 'inventory-storage.contributor-types.collection.get'        |
-      | 'inventory-storage.holdings-sources.item.post'              |
       | 'inventory-storage.holdings.item.get'                       |
-      | 'inventory-storage.holdings.item.post'                      |
       | 'inventory-storage.instance-date-types.collection.get'      |
       | 'inventory-storage.instance-formats.collection.get'         |
-      | 'inventory-storage.instance-statuses.collection.get'        |
-      | 'inventory-storage.instance-types.collection.get'           |
-      | 'inventory-storage.instance-types.item.get'                 |
-      | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.instances.item.get'                      |
-      | 'inventory-storage.instances.item.post'                     |
       | 'inventory-storage.items.item.get'                          |
-      | 'inventory-storage.items.item.post'                         |
-      | 'inventory-storage.loan-types.collection.get'               |
-      | 'inventory-storage.loan-types.item.post'                    |
-      | 'inventory-storage.location-units.campuses.item.post'       |
-      | 'inventory-storage.location-units.institutions.item.post'   |
       | 'inventory-storage.location-units.libraries.collection.get' |
-      | 'inventory-storage.location-units.libraries.item.post'      |
       | 'inventory-storage.locations.collection.get'                |
-      | 'inventory-storage.locations.item.post'                     |
       | 'inventory-storage.material-types.collection.get'           |
-      | 'inventory-storage.material-types.item.post'                |
-      | 'inventory-storage.modes-of-issuance.collection.get'        |
       | 'inventory-storage.service-points.collection.get'           |
       | 'inventory-storage.statistical-code-types.collection.get'   |
       | 'inventory-storage.statistical-codes.collection.get'        |
-      | 'invoice.invoice-lines.collection.get'                      |
-      | 'invoice.invoices.collection.get'                           |
+      | 'inventory-storage.loan-types.collection.get'               |
+      | 'usergroups.collection.get'                                 |
+      | 'users.collection.get'                                      |
+      | 'users.item.delete'                                         |
+      | 'users.item.get'                                            |
+      | 'users.item.post'                                           |
       | 'lists.collection.get'                                      |
       | 'lists.collection.post'                                     |
-      | 'lists.configuration.get'                                   |
       | 'lists.item.contents.get'                                   |
       | 'lists.item.delete'                                         |
-      | 'lists.item.export.cancel'                                  |
       | 'lists.item.export.download.get'                            |
       | 'lists.item.export.get'                                     |
       | 'lists.item.export.post'                                    |
@@ -81,36 +52,34 @@ Feature: mod-lists integration tests
       | 'lists.item.update'                                         |
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
-      | 'orders-storage.po-lines.item.post'                         |
-      | 'orders-storage.purchase-orders.item.post'                  |
-      | 'orders.item.get'                                           |
-      | 'orders.po-lines.item.get'                                  |
-      | 'organizations-storage.categories.collection.get'           |
-      | 'organizations-storage.organization-types.collection.get'   |
-      | 'organizations-storage.organizations.item.post'             |
-      | 'organizations.organizations.collection.get'                |
-      | 'organizations.organizations.item.get'                      |
-      | 'perms.permissions.collection.get'                          |
-      | 'perms.users.assign.immutable'                              |
-      | 'perms.users.assign.mutable'                                |
-      | 'perms.users.assign.okapi'                                  |
-      | 'perms.users.get'                                           |
-      | 'perms.users.item.id.delete'                                |
-      | 'perms.users.item.post'                                     |
-      | 'perms.users.item.put'                                      |
+      | 'inventory-storage.holdings-sources.item.post'              |
+      | 'inventory-storage.holdings.item.post'                      |
+      | 'inventory-storage.instance-types.item.post'                |
+      | 'inventory-storage.instances.item.post'                     |
+      | 'inventory-storage.items.item.post'                         |
+      | 'inventory-storage.loan-types.item.post'                    |
+      | 'inventory-storage.location-units.campuses.item.post'       |
+      | 'inventory-storage.location-units.institutions.item.post'   |
+      | 'inventory-storage.location-units.libraries.item.post'      |
+      | 'inventory-storage.locations.item.post'                     |
+      | 'inventory-storage.material-types.item.post'                |
       | 'search.instances.collection.get'                           |
-      | 'user-tenants.collection.get'                               |
-      | 'usergroups.collection.get'                                 |
-      | 'users.collection.get'                                      |
-      | 'users.item.delete'                                         |
-      | 'users.item.get'                                            |
-      | 'users.item.post'                                           |
-      | 'voucher.voucher-lines.collection.get'                      |
-      | 'voucher.vouchers.collection.get'                           |
-      | 'finance.budgets.collection.get'                            |
+      | 'inventory-storage.instance-types.collection.get'           |
+      | 'inventory-storage.instance-statuses.collection.get'        |
 
-  Scenario: create tenant and users for testing; install module dependencies
-    Given call read('classpath:common/setup-users.feature')
+  Scenario: create tenant and users for testing
+    Given call read('classpath:common/eureka/setup-users.feature')
+    * eval java.lang.System.setProperty('testUser1Id', karate.get('userId'))
 
   Scenario: Add sample data for queries
     Given call read('classpath:corsair/mod-lists/features/util/add-list-data.feature')
+
+  Scenario: create second user for testing
+    * def testUserName = testUser.name
+    * def testUser = {tenant: "#(testTenant)", name: '#(testUser2.name)', password: 'test'}
+    Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
+    Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
+    * eval java.lang.System.setProperty('testUser2Id', karate.get('userId'))
+    Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
+    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
+    * def testUser = {tenant: "#(testTenant)", name: '#(testUserName)', password: 'test'}

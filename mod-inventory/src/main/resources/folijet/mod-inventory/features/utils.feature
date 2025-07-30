@@ -3,7 +3,6 @@ Feature: inventory
   Background:
     * url baseUrl
     * def util1 = call read('classpath:common/util/uuid1.feature')
-    * def vndHeaders = { 'x-okapi-token': '#(okapitoken)' }
     * def samplesPath = 'classpath:folijet/mod-inventory/samples/'
     * def snapshotPath = samplesPath + 'snapshot.json'
     * def recordPath = samplesPath + 'record.json'

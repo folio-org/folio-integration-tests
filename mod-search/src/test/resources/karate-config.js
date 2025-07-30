@@ -5,6 +5,8 @@ function fn() {
 
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
+  var testTenantId = karate.properties['testTenantId'];
+
   var env = karate.env;
   var adminPassword = karate.properties['karate.admin.password'] == null
     ? java.lang.System.getenv("ADMIN_PASSWORD") : karate.properties['karate.admin.password'];
@@ -18,7 +20,10 @@ function fn() {
     baseUrl: 'https://folio-dev-spitfire-okapi.ci.folio.org',
     admin: { tenant: 'diku', name: 'diku_admin', password: adminPassword },
     prototypeTenant: 'diku',
+    kcClientId: 'folio-backend-admin-client',
+    kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
     testTenant: testTenant ? testTenant : 'testtenant',
+    testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: { tenant: testTenant, name: 'test-admin', password: 'admin' },
     testUser: { tenant: testTenant, name: 'test-user', password: 'test' },
     tenantParams: { loadReferenceData: true },
@@ -79,22 +84,13 @@ function fn() {
     }
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl', true);
-  } else if (env == 'dev') {
-    config.baseUrl = 'https://folio-dev-spitfire-okapi.ci.folio.org';
-    config.admin = {
-      tenant: 'diku',
-      name: 'diku_admin',
-      password: 'admin'
-    }
-    karate.callSingle('classpath:spitfire/mod-search/set-up/add-okapi-permissions.feature', config);
-  } else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':9130';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
+  } else if (env == 'snapshot') {
+    config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+  } else if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
   }
 
   return config;

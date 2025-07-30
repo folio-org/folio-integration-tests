@@ -2,17 +2,11 @@
 Feature: Cancel an invoice with an Encumbrance
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-    * call login testAdmin
-    * def okapitokenAdmin = okapitoken
-
-    * call login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * callonce login testUser
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -38,10 +32,8 @@ Feature: Cancel an invoice with an Encumbrance
     * def invoiceLineId = call uuid
 
     * print "1. Create finances"
-    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     * print "2. Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }
@@ -105,10 +97,8 @@ Feature: Cancel an invoice with an Encumbrance
     * def invoiceLineId = call uuid
 
     * print "1. Create finances"
-    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     * print "2. Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }
@@ -173,10 +163,8 @@ Feature: Cancel an invoice with an Encumbrance
     * def invoiceLineId = call uuid
 
     * print "1. Create finances"
-    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     * print "2. Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }
@@ -231,10 +219,8 @@ Feature: Cancel an invoice with an Encumbrance
     * def invoiceLineId = call uuid
 
     * print "1. Create finances"
-    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     * print "2. Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }
@@ -289,10 +275,8 @@ Feature: Cancel an invoice with an Encumbrance
     * def invoiceLineId = call uuid
 
     * print "1. Create finances"
-    * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
-    * configure headers = headersUser
 
     * print "2. Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }

@@ -10,12 +10,14 @@ Feature: mod-calendar integration tests
       | 'mod-inventory-storage'             |
 
     * table userPermissions
-      | name                                          |
-      | 'calendar.view'                               |
-      | 'calendar.create'                             |
-      | 'calendar.update'                             |
-      | 'calendar.delete'                             |
-      | 'inventory-storage.service-points.item.post'  |
+      | name                                                  |
+      | 'calendar.endpoint.calendars.post'                    |
+      | 'calendar.endpoint.calendars.get'                     |
+      | 'calendar.endpoint.calendars.delete'                  |
+      | 'calendar.endpoint.calendars.calendarId.delete'       |
+      | 'calendar.endpoint.calendars.calendarId.put'          |
+      | 'calendar.endpoint.calendars.allOpenings.get'         |
+      | 'calendar.endpoint.calendars.surroundingOpenings.get' |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')

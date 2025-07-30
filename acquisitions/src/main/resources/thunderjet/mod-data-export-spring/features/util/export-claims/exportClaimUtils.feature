@@ -2,11 +2,12 @@
 Feature: Init Data for Claims Export
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
     # Replace these 2 lines to remove date and time constraints, but match with file ids
-    * def interchangeHeaderRegexTemplte = "UNB\\+UNOC:3\\+LIB-EDI-CODE:31B\\+VENDOR-EDI-CODE:31B\\+\\d{6}:\\d{4}\\+{fileId}'"
-    * def interchangeHeaderSampleTemplate = "UNB+UNOC:3+LIB-EDI-CODE:31B+VENDOR-EDI-CODE:31B+150125:1249+{fileId}'"
+    * def interchangeHeaderRegexTemplte = "UNB\\+UNOC:3\\+LIB-EDI-CODE:091\\+VENDOR-EDI-CODE:091\\+\\d{6}:\\d{4}\\+{fileId}'"
+    * def interchangeHeaderSampleTemplate = "UNB+UNOC:3+LIB-EDI-CODE:091+VENDOR-EDI-CODE:091+150125:1249+{fileId}'"
     * def orderDateRegex = "DTM\\+137:\\d{8}:102'"
     * def orderDateSample = "DTM+137:20250115:102'"
 

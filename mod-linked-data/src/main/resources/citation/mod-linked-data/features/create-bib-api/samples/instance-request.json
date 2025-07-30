@@ -186,9 +186,12 @@
           ]
         }
       ],
-      "http://bibfra.me/vocab/lite/extentV2": [
+      "http://bibfra.me/vocab/lite/extent": [
         {
           "http://bibfra.me/vocab/marc/materialsSpecified": [
+            "ref print."
+          ],
+          "http://bibfra.me/vocab/lite/label": [
             "20 pages"
           ]
         }
@@ -319,6 +322,38 @@
           ],
           "value":[
             "Instance note - with"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/adminhist"
+          ],
+          "value":[
+            "Instance note - Administrative history note"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/biogdata"
+          ],
+          "value":[
+            "Instance note - Biographical data note"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/physicalDescription"
+          ],
+          "value":[
+            "illustrations (some color)"
+          ]
+        },
+        {
+          "type":[
+            "http://bibfra.me/vocab/marc/accompanyingMaterial"
+          ],
+          "value":[
+            "reference manual"
           ]
         }
       ],

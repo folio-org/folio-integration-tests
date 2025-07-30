@@ -4,7 +4,7 @@ Feature: inventory
     * url baseUrl
     * callonce login testUser
     * configure driver = { type: 'chrome', executable: 'C:/Program Files/Google/Chrome/Application/chrome.exe'}
-    * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain' }
 
     * def utilsPath = 'classpath:folijet/mod-inventory/features/utils.feature'
     * def defaultLocation = '184aae84-a5bf-4c6a-85ba-4a7c73026cd5'
@@ -251,20 +251,20 @@ Feature: inventory
       Given def items = call read(utilsPath+'@CreateItems') { holdingsId:'#(holdingsId)', permanentLocationId:'#(permanentLocationId)' }
       Then match items.effectiveLocationId == permanentLocationId
 
-    Scenario: Soft delete instance folio type
-      Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
-      And def instanceId = instance.id
+  Scenario: Soft delete instance folio type
+    Given def instance = call read(utilsPath+'@CreateInstance') { source:'FOLIO', title:'TestInstance' }
+    And def instanceId = instance.id
 
-      Given path 'inventory/instances/' + instanceId + '/mark-deleted'
-      When method DELETE
-      Then status 204
+    Given path 'inventory/instances/' + instanceId + '/mark-deleted'
+    When method DELETE
+    Then status 204
 
-      Given path 'inventory/instances/' + instanceId
-      When method GET
-      Then status 200
-      And match response.staffSuppress == true
-      And match response.discoverySuppress == true
-      And match response.deleted == true
+    Given path 'inventory/instances/' + instanceId
+    When method GET
+    Then status 200
+    And match response.staffSuppress == true
+    And match response.discoverySuppress == true
+    And match response.deleted == true
 
   Scenario: Soft delete instance marc type
     Given def instance = call read(utilsPath+'@CreateInstance') { source:'MARC', title:'TestInstance' }

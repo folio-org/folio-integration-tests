@@ -2,13 +2,15 @@
 Feature: Open order without creating holdings
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -27,7 +29,7 @@ Feature: Open order without creating holdings
     * print 'Create a fund and a budget'
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10, 'fundId': '#(fundId)'}
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10, 'fundId': '#(fundId)' }
 
     * print 'Create a new location'
     Given path 'locations'
@@ -49,9 +51,9 @@ Feature: Open order without creating holdings
     """
     When method POST
     Then status 201
-    * configure headers = headersUser
 
     * print 'Create an order'
+    * configure headers = headersUser
     Given path 'orders/composite-orders'
     And request
     """
@@ -93,7 +95,6 @@ Feature: Open order without creating holdings
 
     * print 'Check the order line'
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     And match $.locations[0].holdingId == '#notpresent'

@@ -3,28 +3,15 @@ Feature: Check paymentStatus after reopen
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
     * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
 
 
   Scenario: Open order, approve invoice, close order, reopen order, check paymentStatus
@@ -36,10 +23,8 @@ Feature: Check paymentStatus after reopen
     * def invoiceLineId = call uuid
 
     * print "Prepare finances"
-    * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
-    * configure headers = headersUser
 
     * print "Create an order"
     * def v = call createOrder { id: '#(orderId)' }
@@ -68,7 +53,6 @@ Feature: Check paymentStatus after reopen
 
     * print "Check the po line paymentStatus"
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     And match $.paymentStatus == 'Awaiting Payment'
@@ -81,7 +65,6 @@ Feature: Check paymentStatus after reopen
 
     * print "Check the po line paymentStatus"
     Given path 'orders/order-lines', poLineId
-    * configure headers = headersUser
     When method GET
     Then status 200
     And match $.paymentStatus == 'Awaiting Payment'

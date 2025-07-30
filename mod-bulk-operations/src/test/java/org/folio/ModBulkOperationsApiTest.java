@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
@@ -9,7 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "firebird", module = "mod-bulk-operations")
-public class ModBulkOperationsApiTest extends TestBase {
+
+public class ModBulkOperationsApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/mod-bulk-operations/features/";
 
     public ModBulkOperationsApiTest() {
@@ -24,7 +25,7 @@ public class ModBulkOperationsApiTest extends TestBase {
 
     @AfterAll
     public void tearDown() {
-        runFeature("classpath:common/destroy-data.feature");
+        runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
     @Test
@@ -44,6 +45,6 @@ public class ModBulkOperationsApiTest extends TestBase {
 
     @Test
     public void testInstances() {
-    runFeatureTest("instances.feature");
-  }
+        runFeatureTest("instances.feature");
+    }
 }

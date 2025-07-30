@@ -5,13 +5,9 @@
       * print karate.info.scenarioName
       * url baseUrl
 
-      * callonce loginAdmin testAdmin
-      * def okapitokenAdmin = okapitoken
-      * callonce loginRegularUser testUser
-      * def okapitokenUser = okapitoken
-
-      * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+      * callonce login testUser
+      * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+      * configure headers = headersUser
 
       * callonce variables
       * def fundId = callonce uuid1
@@ -26,10 +22,8 @@
 
     Scenario: Check the encumbrances after issuing credit when the order is fully paid
       # 1. Create a fund and a budget
-      * configure headers = headersAdmin
-      * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
-      * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000}
-      * configure headers = headersUser
+      * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
+      * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000 }
 
       # 2. Create an order, order line and open the order
       * def v = call createOrder { id: '#(orderId)' }
@@ -54,11 +48,11 @@
 
       # 5. Approve invoice and check the encumbrance transaction amount
       * def v = call approveInvoice { invoiceId: '#(invoiceId1)' }
-      * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
+      * def v = call verifyReleasedEncumbrance { encId: '#(encumbranceId)' }
 
       # 6. Pay invoice and check the encumbrance transaction amount
       * def v = call payInvoice { invoiceId: '#(invoiceId1)' }
-      * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
+      * def v = call verifyReleasedEncumbrance { encId: '#(encumbranceId)' }
 
       # 7. Create second invoice and invoice line
       * def v = call createInvoice { id: '#(invoiceId2)' }
@@ -69,16 +63,8 @@
 
       # 8. Approve second invoice and check the encumbrance transaction amount
       * def v = call approveInvoice { invoiceId: '#(invoiceId2)' }
-      * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
+      * def v = call verifyReleasedEncumbrance { encId: '#(encumbranceId)' }
 
       # 9. Pay second invoice and check the encumbrance transaction amount
       * def v = call payInvoice { invoiceId: '#(invoiceId2)' }
-      * def v = call read('@verifyReleasedEncumbrance') { encId: '#(encumbranceId)' }
-
-    @ignore @VerifyReleasedEncumbrance
-    Scenario: verifyReleasedEncumbrance
-      Given path '/finance/transactions', encId
-      When method GET
-      Then status 200
-      And match each response.transactions[0].encumbrance.status == 'Released'
-      And match each response.transactions[0].amount == 0
+      * def v = call verifyReleasedEncumbrance { encId: '#(encumbranceId)' }

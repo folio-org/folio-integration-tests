@@ -1,28 +1,20 @@
 Feature: Get funds where filter is provided should take into account acquisition units
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testfinance'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
+    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def testUserId = res.userId
 
     * callonce variables
-
-#    * def fundAllowFundViewAcqUnitId = "19d6b6ed-54d7-4ab5-977c-0e67166c1ceb"
-#    * def restrictFundViewAcqUnitId = "19d6b6ed-54d7-4ab5-977c-0e67166c2ceb"
-#    * def externalAccountNo = "16922222222269"
-#
-#    * def fundNoAcqId = "29d6b6ed-54d7-4ab5-977c-0e67166c1ceb"
-#    * def fundAllowViewAcqId = "29d6b6ed-54d7-4ab5-977c-0e67166c2ceb"
-#    * def fundRestrictViewAcqId = "29d6b6ed-54d7-4ab5-977c-0e67166c3ceb"
-#    * def fundAllowViewAndRestrictViewAcqId = "29d6b6ed-54d7-4ab5-977c-0e67166c4ceb"
 
     * def fundAllowFundViewAcqUnitId = callonce uuid1
     * def restrictFundViewAcqUnitId = callonce uuid2
@@ -40,7 +32,7 @@ Feature: Get funds where filter is provided should take into account acquisition
     * def protectRead = <protectRead>
     * def protectUpdate = <protectUpdate>
     * def protectDelete = <protectDelete>
-    Given path 'acquisitions-units-storage/units'
+    Given path 'acquisitions-units/units'
     And headers headersAdmin
     And request
     """
@@ -66,7 +58,7 @@ Feature: Get funds where filter is provided should take into account acquisition
     * def code = <code>
     * def acqUnitIds = <acqUnitIds>
     Given path 'finance-storage/funds'
-    And headers headersAdmin
+    And headers headersUser
     And request
     """
     {
@@ -100,12 +92,12 @@ Feature: Get funds where filter is provided should take into account acquisition
     And match funds[*].id contains ["#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign restrict view acquisitions units memberships to user
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And headers headersAdmin
     And request
     """
     {
-      "userId": "00000000-1111-5555-9999-999999999992",
+      "userId": "#(testUserId)",
       "acquisitionsUnitId": "#(restrictFundViewAcqUnitId)"
     }
     """
@@ -123,15 +115,15 @@ Feature: Get funds where filter is provided should take into account acquisition
     And match funds[*].id contains ["#(fundRestrictViewAcqId)","#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Assign allow view acquisitions units memberships to user
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And headers headersAdmin
-    And param query = 'acquisitionsUnitId==' + restrictFundViewAcqUnitId + ' and userId==00000000-1111-5555-9999-999999999992'
+    And param query = 'acquisitionsUnitId==' + restrictFundViewAcqUnitId + ' and userId==' + testUserId
     When method GET
     Then status 200
     * def acqMember = $.acquisitionsUnitMemberships[0]
     * def acqMemberId = acqMember.id
 
-    Given path 'acquisitions-units-storage/memberships', acqMemberId
+    Given path 'acquisitions-units/memberships', acqMemberId
     * set acqMember.acquisitionsUnitId = fundAllowFundViewAcqUnitId
     * remove acqMember.metadata
     And headers headersAdmin
@@ -151,12 +143,12 @@ Feature: Get funds where filter is provided should take into account acquisition
     And match funds[*].id contains ["#(fundAllowViewAndRestrictViewAcqId)"]
 
   Scenario: Again assign restrict view acquisitions units memberships to user
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And headers headersAdmin
     And request
     """
     {
-      "userId": "00000000-1111-5555-9999-999999999992",
+      "userId": "#(testUserId)",
       "acquisitionsUnitId": "#(restrictFundViewAcqUnitId)"
     }
     """
@@ -175,21 +167,21 @@ Feature: Get funds where filter is provided should take into account acquisition
 
   Scenario Outline: DELETE acquisitions units and memberships <acqUnitId>
     * def acqUnitId = <acqUnitId>
-    Given path 'acquisitions-units-storage/memberships'
+    Given path 'acquisitions-units/memberships'
     And headers headersAdmin
-    And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==00000000-1111-5555-9999-999999999992'
+    And param query = 'acquisitionsUnitId==' + acqUnitId + ' and userId==' + testUserId
     When method GET
     Then status 200
     * def acqMember = $.acquisitionsUnitMemberships[0]
     * def acqMemberId = acqMember.id
 
-    Given path 'acquisitions-units-storage/memberships', acqMemberId
+    Given path 'acquisitions-units/memberships', acqMemberId
     And headers headersAdmin
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204
 
-    Given path 'acquisitions-units-storage/units', acqUnitId
+    Given path 'acquisitions-units/units', acqUnitId
     And headers headersAdmin
     And header Accept = 'text/plain'
     When method DELETE
@@ -202,7 +194,7 @@ Feature: Get funds where filter is provided should take into account acquisition
   Scenario Outline: DELETE funds <fundId>
     * def fundId = <fundId>
     Given path 'finance-storage/funds', fundId
-    And headers headersAdmin
+    And headers headersUser
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204

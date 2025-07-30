@@ -3,16 +3,11 @@
 Feature: Check approve and pay invoice with more than 15 invoice lines, several of which reference to same POL
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
@@ -59,13 +54,10 @@ Feature: Check approve and pay invoice with more than 15 invoice lines, several 
 
 
   Scenario: Create finances
-    * print "Create finances"
-    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
   Scenario: Create an order
-    * print "Create an order"
     Given path 'orders/composite-orders'
     And request
     """
@@ -79,7 +71,6 @@ Feature: Check approve and pay invoice with more than 15 invoice lines, several 
     Then status 201
 
   Scenario: Create an order line
-    * print "Create an order line"
     * copy poLine = orderLineTemplate
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -92,7 +83,6 @@ Feature: Check approve and pay invoice with more than 15 invoice lines, several 
     Then status 201
 
   Scenario: Open the order
-    * print "Open the order"
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -104,7 +94,6 @@ Feature: Check approve and pay invoice with more than 15 invoice lines, several 
     Then status 204
 
   Scenario: Create an invoice
-    * print "Create an invoice"
     * copy invoice = invoiceTemplate
     * set invoice.id = invoiceId
     Given path 'invoice/invoices'
@@ -172,7 +161,6 @@ Feature: Check approve and pay invoice with more than 15 invoice lines, several 
 
 
   Scenario: Approve the invoice
-    * print "Approve the invoice"
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -184,7 +172,6 @@ Feature: Check approve and pay invoice with more than 15 invoice lines, several 
     Then status 204
 
   Scenario: Pay the invoice
-    * print "Pay the invoice"
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200

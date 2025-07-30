@@ -1,20 +1,18 @@
+@parallel=false
 Feature: Should populate vendor address when retrieve voucher by id
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testinvoices2222'}
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
-
-    # load global variables
     * callonce variables
 
     # prepare sample data
@@ -42,9 +40,9 @@ Feature: Should populate vendor address when retrieve voucher by id
     * def addresses = []
     * def void = (address1 == null ? null : karate.appendTo(addresses, address1))
     * def void = (address2 == null ? null : karate.appendTo(addresses, address2))
-    
-    Given path '/organizations-storage/organizations'
-    And headers headersAdmin
+
+    * configure headers = headersAdmin
+    Given path '/organizations/organizations'
     And request
     """
     {
@@ -72,7 +70,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= create invoice ===================
     Given path 'invoice/invoices'
-    And headers headersUser
     And request
     """
     {
@@ -92,7 +89,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= create invoice lines ===================
     Given path 'invoice/invoice-lines'
-    And headers headersUser
     And request
     """
     {
@@ -116,7 +112,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= get invoice to approve ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     When method GET
     Then status 200
     * def invoiceBody = $
@@ -124,7 +119,6 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= put approved invoice ===================
     Given path 'invoice/invoices', invoiceId
-    And headers headersUser
     And request invoiceBody
     When method PUT
     Then status 204
@@ -143,24 +137,23 @@ Feature: Should populate vendor address when retrieve voucher by id
 
     # ============= Verify vouchers ===================
     Given path '/voucher/vouchers'
-    And headers headersUser
     And param query = 'invoiceId==' + invoiceId
     When method GET
     Then status 200
     * def voucherId = $.vouchers[0].id
 
     Given path '/voucher/vouchers', voucherId
-    And headers headersUser
     When method GET
     Then status 200
     And match $.vendorId == vendorId
-    And if (response.vendorAddress == null && address == null) karate.abort()
-    And match $.vendorAddress.addressLine1 == address.addressLine1
-    * match $.vendorAddress.addressLine2 == address.addressLine2
-    * match $.vendorAddress.city == address.city
-    * match $.vendorAddress.stateRegion == address.stateRegion
-    * match $.vendorAddress.zipCode == address.zipCode
-    * match $.vendorAddress.country == address.country
+    # Conditional assertions for address
+    * eval if (address == null) karate.match("$.vendorAddress", null)
+    * eval if (address != null) karate.match("$.vendorAddress.addressLine1", address.addressLine1)
+    * eval if (address != null) karate.match("$.vendorAddress.addressLine2", address.addressLine2)
+    * eval if (address != null) karate.match("$.vendorAddress.city", address.city)
+    * eval if (address != null) karate.match("$.vendorAddress.stateRegion", address.stateRegion)
+    * eval if (address != null) karate.match("$.vendorAddress.zipCode", address.zipCode)
+    * eval if (address != null) karate.match("$.vendorAddress.country", address.country)
 
     Examples:
       | invoiceId             | address        | vendorId             |

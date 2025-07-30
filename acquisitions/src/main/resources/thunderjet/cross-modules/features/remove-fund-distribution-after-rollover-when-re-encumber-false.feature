@@ -4,27 +4,13 @@ Feature: Remove fund distribution after rollover from open order with re-encumbe
 
   Background:
     * print karate.info.scenarioName
-
     * url baseUrl
 
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
     * callonce login testUser
-    * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json' }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
     * callonce variables
-
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createLedger = read('classpath:thunderjet/mod-finance/reusable/createLedger.feature')
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def getOrderLine = read('classpath:thunderjet/mod-orders/reusable/get-order-line.feature')
 
     * def fromFiscalYearId = callonce uuid1
     * def toFiscalYearId = callonce uuid2
@@ -41,8 +27,8 @@ Feature: Remove fund distribution after rollover from open order with re-encumbe
 
     * configure retry = { count: 10, interval: 5000 }
 
+
   Scenario Outline: Prepare fiscal year with <fiscalYearId> for rollover
-    * configure headers = headersAdmin
     * def fiscalYearId = <fiscalYearId>
     * def code = <code>
     * def periodStart = code + '-01-01T00:00:00Z'
@@ -57,7 +43,6 @@ Feature: Remove fund distribution after rollover from open order with re-encumbe
 
 
   Scenario: Prepare finances
-    * configure headers = headersAdmin
     * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(fromFiscalYearId) }
     * def v = call createFund { id: #(fundId),  ledgerId: #(ledgerId) }
     * def v = call createBudget { id: #(budgetId), fundId: #(fundId), fiscalYearId: #(fromFiscalYearId), allocated: 100 }
@@ -76,8 +61,6 @@ Feature: Remove fund distribution after rollover from open order with re-encumbe
 
 
   Scenario: Start rollover <rolloverId> for ledger <ledgerId>
-    * configure headers = headersUser
-
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -157,9 +140,7 @@ Feature: Remove fund distribution after rollover from open order with re-encumbe
 
 
   Scenario: Check encumbrance after rollover
-    * configure headers = headersAdmin
-
-    Given path 'finance-storage/transactions'
+    Given path 'finance/transactions'
     And param query = 'fromFundId==' + fundId + ' AND fiscalYearId==' + toFiscalYearId + ' AND encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     Then status 200

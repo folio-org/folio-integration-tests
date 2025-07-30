@@ -1,19 +1,15 @@
+@parallel=false
 Feature: Budget can not be deleted if have to and from fund in allocation transactions
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-   # * callonce dev {tenant: 'testfinance'}
-    * callonce loginAdmin testAdmin
-    * def okapitokenAdmin = okapitoken
 
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+
     * callonce variables
 
     * def ledgerId = callonce uuid1
@@ -33,7 +29,6 @@ Feature: Budget can not be deleted if have to and from fund in allocation transa
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def budgetId = <budgetId>
-    * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)'}
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
   Examples:

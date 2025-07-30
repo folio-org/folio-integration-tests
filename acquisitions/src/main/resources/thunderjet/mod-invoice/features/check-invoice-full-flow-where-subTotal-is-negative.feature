@@ -1,20 +1,18 @@
+@parallel=false
 Feature: Check invoice full flow where sub total is negative
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-    #* callonce dev {tenant: 'testinvoices1'}
+
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    # load global variables
     * callonce variables
 
     # prepare sample data
@@ -143,6 +141,7 @@ Feature: Check invoice full flow where sub total is negative
     And match $.status == 'Paid'
 
   Scenario: Check that payments transactions were created only for positive amounts
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'sourceInvoiceId==' + invoiceId + ' and transactionType==Payment'
     When method GET
@@ -150,6 +149,7 @@ Feature: Check invoice full flow where sub total is negative
     And match $.transactions == '#[2]'
 
   Scenario: Check that credit transactions were created only for negative amounts
+    * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'sourceInvoiceId==' + invoiceId + ' and transactionType==Payment'
     When method GET

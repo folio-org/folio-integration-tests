@@ -1,11 +1,18 @@
+@parallel=false
 Feature: Update PoLine locations with tenantIds the user do not have affiliations with
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    * call login centralUser1
-    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
-    * call login consortiaAdmin
-    * def headersAdmin = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
+
+    * def resultAdmin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+    * def okapitoken = resultAdmin.okapitoken
+    * def resultUser = call eurekaLogin { username: '#(centralUser.username)', password: '#(centralUser.password)', tenant: '#(centralTenantName)' }
+    * def okapitokenUser = resultUser.okapitoken
+    * def headersUser = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
+    * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+    * configure headers = headersCentral
 
     * callonce variables
     * callonce variablesCentral
@@ -15,13 +22,12 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * def orderId = callonce uuid
     * def poLineId = callonce uuid
 
-    * configure headers = headersAdmin
     * table poLineLocations
-      | locationId             | quantity | quantityPhysical | tenantId         |
-      | centralLocationsId     | 1        | 1                | centralTenant    |
-      | centralLocationsId2    | 1        | 1                | centralTenant    |
-      | universityLocationsId  | 1        | 1                | universityTenant |
-      | universityLocationsId2 | 1        | 1                | universityTenant |
+      | locationId             | quantity | quantityPhysical | tenantId             |
+      | centralLocationsId     | 1        | 1                | centralTenantName    |
+      | centralLocationsId2    | 1        | 1                | centralTenantName    |
+      | universityLocationsId  | 1        | 1                | universityTenantName |
+      | universityLocationsId2 | 1        | 1                | universityTenantName |
     * callonce createOrder { id: '#(orderId)' }
     * callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', quantity: 4, locations: '#(poLineLocations)', isPackage: True }
 
@@ -29,7 +35,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }
     * def poLine = orderLineResponse.response
 
-
+  @Negative
   Scenario: Modify unaffiliated locations
     # Update PoLine locations with centralLocationsId2 and universityLocationsId
     * set poLine.locations[1].quantityPhysical = 2
@@ -41,7 +47,7 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     Then status 422
     And match response.errors[0].code == "locationUpdateWithoutAffiliation"
 
-
+  @Negative
   Scenario: Remove unaffiliated location
     # Update PoLine locations with universityLocationsId2 removed
     * set poLine.locations = karate.filter(poLine.locations, (loc) => loc.locationId != universityLocationsId)

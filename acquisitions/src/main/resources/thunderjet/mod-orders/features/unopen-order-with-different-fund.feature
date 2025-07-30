@@ -5,12 +5,13 @@ Feature: Unopen order and change fund distribution
     * print karate.info.scenarioName
     * url baseUrl
 
-    * callonce loginAdmin testAdmin
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -24,9 +25,9 @@ Feature: Unopen order and change fund distribution
       * configure headers = headersAdmin
       * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerId)' }
       * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: '#(statusExpenseClasses)' }
-      * configure headers = headersUser
 
       # 2. Create order and order line
+      * configure headers = headersUser
       * def orderId = call uuid
       * def poLineId = call uuid
 
@@ -73,9 +74,9 @@ Feature: Unopen order and change fund distribution
       * configure headers = headersAdmin
       * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerId)' }
       * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: '#(statusExpenseClasses)' }
-      * configure headers = headersUser
 
       # 2. Create order and order line
+      * configure headers = headersUser
       * def orderId = call uuid
       * def poLineId = call uuid
       * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
@@ -131,9 +132,8 @@ Feature: Unopen order and change fund distribution
       | budgetId3 | fundId3 | 1000      | statusExpenseClasses |
     * def v = call createBudget budgetTable
 
-    * configure headers = headersUser
-
     # 2. Create order and 15 order line with 3 fund distributions
+    * configure headers = headersUser
     * def orderId = call uuid
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
@@ -164,16 +164,21 @@ Feature: Unopen order and change fund distribution
     # 3. Open and unopen the order and check encumbrance transactions status
     * def v = call openOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Unreleased', _orderStatus: 'Open' }
+    * configure headers = headersAdmin
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
     # 4. Unopen the order and check encumbrance transactions status
+    * configure headers = headersUser
     * def v = call unopenOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Pending', _orderStatus: 'Pending' }
+    * configure headers = headersAdmin
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
     # 5. Reopen the order and check encumbrance transactions status
+    * configure headers = headersUser
     * def v = call openOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Unreleased', _orderStatus: 'Open' }
+    * configure headers = headersAdmin
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
 
@@ -217,9 +222,9 @@ Feature: Unopen order and change fund distribution
       """
     * eval createBudgetsTable()
     * def v = call createBudget budgetsTable
-    * configure headers = headersUser
 
     # 2. Create order and one order line with 25 fund distributions
+    * configure headers = headersUser
     * def orderId = call uuid
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
@@ -245,14 +250,19 @@ Feature: Unopen order and change fund distribution
     # 3. Open and unopen the order and check encumbrance transactions status
     * def v = call openOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Unreleased', _orderStatus: 'Open' }
+    * configure headers = headersAdmin
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
     # 4. Unopen the order and check encumbrance transactions status
+    * configure headers = headersUser
     * def v = call unopenOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Pending', _orderStatus: 'Pending' }
+    * configure headers = headersAdmin
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus
 
     # 5. Reopen the order and check encumbrance transactions status
+    * configure headers = headersUser
     * def v = call openOrder { orderId: '#(orderId)' }
     * def expectedEncumbranceStatus = { _orderId: '#(orderId)', _encumbranceStatus: 'Unreleased', _orderStatus: 'Open' }
+    * configure headers = headersAdmin
     * def v = call verifyEncumbranceStatus expectedEncumbranceStatus

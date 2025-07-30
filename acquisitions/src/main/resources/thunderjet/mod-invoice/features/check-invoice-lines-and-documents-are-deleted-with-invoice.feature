@@ -1,20 +1,14 @@
 Feature: Check invoice lines and documents are deleted with invoice
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
-    # uncomment below line for development
-#    * callonce dev {tenant: 'testinvoices'}
-    * callonce login testAdmin
-    * def okapitokenAdmin = okapitoken
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
-
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
-
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    # load global variables
     * callonce variables
 
     # prepare sample data
@@ -47,12 +41,11 @@ Feature: Check invoice lines and documents are deleted with invoice
     # ============= create the invoice document ================
     * set documentPayload.documentMetadata.id = documentId
     * set documentPayload.documentMetadata.invoiceId = invoiceId
-    * configure headers = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * configure headers = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
     Given path 'invoice/invoices', invoiceId, 'documents'
     And request documentPayload
     When method POST
     Then status 201
-    * configure headers = headersUser
 
     # ============= get the invoice line ===================
     Given path 'invoice/invoice-lines', invoiceLineId

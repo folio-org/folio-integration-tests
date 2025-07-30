@@ -16,26 +16,41 @@ Feature: mod-quick-marc integration tests
       | 'mod-record-specifications' |
 
     * table userPermissions
-      | name                                                           |
-      | 'configuration.all'                                            |
-      | 'inventory-storage.all'                                        |
-      | 'inventory-storage.authorities.all'                            |
-      | 'source-storage.all'                                           |
-      | 'marc-records-editor.all'                                      |
-      | 'metadata-provider.jobLogEntries.collection.get'               |
-      | 'metadata-provider.jobLogEntries.records.item.get'             |
-      | 'metadata-provider.journalRecords.collection.get'              |
-      | 'metadata-provider.jobSummary.item.get'                        |
-      | 'change-manager.jobExecutions.item.get'                        |
-      | 'change-manager.jobExecutions.children.collection.get'         |
-      | 'converter-storage.field-protection-settings.item.get'         |
-      | 'converter-storage.field-protection-settings.collection.get'   |
-      | 'instance-authority-links.instances.collection.put'            |
-      | 'instance-authority-links.instances.collection.get'            |
-      | 'instance-authority-links.authorities.bulk.post'               |
-      | 'inventory-storage.authority-source-files.item.post'           |
-      | 'specification-storage.specification.item.sync.execute'        |
-      | 'specification-storage.all'                                    |
+      | name                                                        |
+      | 'instance-authority-links.authorities.bulk.post'            |
+      | 'instance-authority-links.instances.collection.get'         |
+      | 'inventory-storage.authorities.item.delete'                 |
+      | 'inventory-storage.authorities.item.get'                    |
+      | 'inventory-storage.authorities.item.post'                   |
+      | 'inventory-storage.authority-source-files.item.post'        |
+      | 'inventory-storage.holdings.item.get'                       |
+      | 'inventory-storage.holdings.item.post'                      |
+      | 'inventory-storage.holdings-sources.item.post'              |
+      | 'inventory-storage.holdings-types.item.post'                |
+      | 'inventory-storage.instance-types.item.post'                |
+      | 'inventory-storage.instances.item.get'                      |
+      | 'inventory-storage.instances.item.post'                     |
+      | 'inventory-storage.location-units.campuses.item.post'       |
+      | 'inventory-storage.location-units.institutions.item.post'   |
+      | 'inventory-storage.location-units.libraries.item.post'      |
+      | 'inventory-storage.locations.item.post'                     |
+      | 'marc-records-editor.item.get'                              |
+      | 'marc-records-editor.item.post'                             |
+      | 'marc-records-editor.item.put'                              |
+      | 'marc-records-editor.status.item.get'                       |
+      | 'marc-records-editor.validate.post'                         |
+      | 'source-storage.records.collection.get'                     |
+      | 'source-storage.records.post'                               |
+      | 'source-storage.records.formatted.item.get'                 |
+      | 'source-storage.snapshots.post'                             |
+      | 'source-storage.source-records.collection.get'              |
+      | 'source-storage.source-records.item.get'                    |
+      | 'specification-storage.field.indicators.item.post'          |
+      | 'specification-storage.field.subfields.item.post'           |
+      | 'specification-storage.indicator.indicator-codes.item.post' |
+      | 'specification-storage.specification.fields.item.post'      |
+      | 'specification-storage.specifications.item.get'             |
+      | 'specification-storage.subfields.item.put'                  |
 
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/setup-users.feature')
+    Given call read('classpath:common/eureka/setup-users.feature')

@@ -5,13 +5,16 @@ Feature: Create pieces for an open order in parallel
   Background:
     # This part is called once before scenarios are executed. It's important that all scenarios start at the same time,
     # so all scripts must be called with callonce.
+    * print karate.info.scenarioName
     * url baseUrl
-    * callonce loginAdmin testAdmin
+
+    * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
-    * callonce loginRegularUser testUser
+    * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json'  }
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * configure headers = headersUser
 
     * callonce variables
 
@@ -29,15 +32,12 @@ Feature: Create pieces for an open order in parallel
     * def pieceId4 = callonce uuid12
     * def pieceId5 = callonce uuid13
 
-    * def createOrder = read('../reusable/create-order.feature')
-    * def createOrderLine = read('../reusable/create-order-line.feature')
-    * def openOrder = read('../reusable/open-order.feature')
-    * def getOrderLineTitleId = read('../reusable/get-order-line-title-id.feature')
-    * def createPiece = read('../reusable/create-piece.feature')
+    * def getOrderLineTitleId = read('classpath:thunderjet/mod-orders/reusable/get-order-line-title-id.feature')
 
     * configure headers = headersAdmin
-    * callonce createFund { 'id': '#(fundId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * callonce createFund { 'id': '#(fundId)' }
+    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * configure headers = headersUser
     * callonce createOrder { id: "#(orderId)" }
     * callonce createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
     * callonce createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
@@ -56,13 +56,12 @@ Feature: Create pieces for an open order in parallel
     * callonce getOrderLineTitleId { poLineId: "#(poLineId5)" }
     * def titleId5 = titleId
 
-    * configure headers = headersUser
-
   Scenario: Create pieces and check budget
     # it would be nice to put the contents of parallel-create-piece-2 here and use karate.afterFeature() to check the budget,
     # but errors are not reported with this method, so we have to use an additional feature file
-    * call read('parallel-create-piece-2.feature')
+    * call read('classpath:thunderjet/mod-orders/features/parallel-create-piece-2.feature')
 
+    * configure headers = headersAdmin
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET

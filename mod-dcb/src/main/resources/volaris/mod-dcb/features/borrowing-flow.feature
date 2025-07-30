@@ -7,7 +7,7 @@ Feature: Borrowing Flow Scenarios
     * print 'user  is', user
     * callonce login user
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json'  }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def key = ''
     * configure headers = headersUser
     * callonce variables
@@ -216,12 +216,13 @@ Feature: Borrowing Flow Scenarios
     And match $.errors[0].message == 'Cannot set item.materialtypeid = ' + intMaterialTypeIdNonExisting + ' because it does not exist in material_type.id.'
 
     # If the material type is not given in the request, then we check for default material type as book in inventory, if it doesn't exist, we throw the error.
-    * def materialTypeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/material-type-entity-request.json')
-    * materialTypeEntityRequest.name = 'book'
     Given path 'material-types'
-    And request materialTypeEntityRequest
+    Given param query = '(name= ' + materialTypeName + ')'
     When method GET
     Then status 200
+    And match $.totalRecords == 1
+    And match $.mtypes[0].name == materialTypeName
+    And match $.mtypes[0].id == intMaterialTypeId
 
   Scenario: Validation. If the user exist but the type is DCB, error will be thrown
 
