@@ -16,37 +16,24 @@ Feature: Group expense classes
     * def fundIdWithExpenseClassesWithoutTransactions = callonce uuid2
     * def fundIdWithExpenseClassesWithPaymentsCredits = callonce uuid3
     * def fundIdWithExpenseClassesWithTransactions = callonce uuid4
-
     * def budgetIdWithoutExpenseClasses = callonce uuid5
     * def budgetIdWithExpenseClassesWithoutTransactions = callonce uuid6
     * def budgetIdWithExpenseClassesWithPaymentsCredits = callonce uuid7
     * def budgetIdWithExpenseClassesWithTransactions = callonce uuid8
-
     * def orderId = callonce uuid9
     * def invoiceId = callonce uuid10
     * def invoice1Id = callonce uuid11
-
     * def expenseClassId = callonce uuid12
-
     * def fundWithoutBudgetId = callonce uuid13
     * def groupWithoutBudgetsId = callonce uuid14
     * def groupWithoutExpenseClasses = callonce uuid15
     * def groupWithExpenseClasses = callonce uuid16
 
   Scenario Outline: prepare finance for group with <groupId>
-
     * def groupId = <groupId>
 
     Given path '/finance/groups'
-    And request
-      """
-      {
-        'id': '#(groupId)',
-        'code': '#(groupId)',
-        'name': '#(groupId)',
-        'status': 'Active'
-      }
-      """
+    And request { 'id': '#(groupId)',  'code': '#(groupId)', 'name': '#(groupId)', 'status': 'Active' }
     When method POST
     Then status 201
 
@@ -60,9 +47,8 @@ Feature: Group expense classes
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
-
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
     Examples:
       | fundId                                           | budgetId                                      |
@@ -71,22 +57,13 @@ Feature: Group expense classes
       | fundIdWithExpenseClassesWithPaymentsCredits      | budgetIdWithExpenseClassesWithPaymentsCredits |
       | fundIdWithExpenseClassesWithTransactions         | budgetIdWithExpenseClassesWithTransactions    |
 
-
     Scenario Outline: prepare finance for groupFundFiscalYear with <groupId>, <fundId>, <budgetId>
       * def groupId = <groupId>
       * def fundId = <fundId>
       * def budgetId = <budgetId>
 
       Given path '/finance/group-fund-fiscal-years'
-      And request
-      """
-      {
-        'groupId': '#(groupId)',
-        'fundId': '#(fundId)',
-        'fiscalYearId': '#(globalFiscalYearId)',
-        'budgetId': '#(budgetId)'
-      }
-      """
+      And request { 'groupId': '#(groupId)', 'fundId': '#(fundId)', 'fiscalYearId': '#(globalFiscalYearId)', 'budgetId': '#(budgetId)' }
       When method POST
       Then status 201
 
@@ -99,16 +76,8 @@ Feature: Group expense classes
         | groupWithExpenseClasses    | fundIdWithExpenseClassesWithTransactions    | budgetIdWithExpenseClassesWithTransactions    |
 
   Scenario: prepare create expense class
-
     Given path '/finance/expense-classes'
-    And request
-    """
-    {
-      "id": "#(expenseClassId)",
-      "name": "#(expenseClassId)",
-      "code": "#(expenseClassId)"
-    }
-    """
+    And request { "id": "#(expenseClassId)", "name": "#(expenseClassId)", "code": "#(expenseClassId)" }
     When method POST
     Then status 201
 
@@ -117,13 +86,7 @@ Feature: Group expense classes
       * def expenseClassId = <expenseClassId>
 
       Given path '/finance-storage/budget-expense-classes'
-      And request
-      """
-      {
-        "budgetId": "#(budgetId)",
-        "expenseClassId": "#(expenseClassId)"
-      }
-      """
+      And request { "budgetId": "#(budgetId)",  "expenseClassId": "#(expenseClassId)" }
       When method POST
       Then status 201
 
@@ -136,16 +99,14 @@ Feature: Group expense classes
         | budgetIdWithExpenseClassesWithTransactions    | globalElecExpenseClassId  |
         | budgetIdWithExpenseClassesWithTransactions    | globalPrnExpenseClassId   |
 
-
   Scenario Outline: create transaction with expenseClassId <expenseClassId>, amount <amount>, transactionType <transactionType>
-
     * def amount = <amount>
     * def transactionType = "<transactionType>"
     * def expenseClassId = <expenseClassId>
     * def invoiceId = <invoiceId>
     * def fundId = <fundId>
 
-    * def v = call createTransaction { 'fundId': '#(fundId)', 'amount': #(amount), 'expenseClassId': #(expenseClassId), 'orderId': #(orderId), 'invoiceId': #(invoiceId), 'poLineId': '#(uuid())'}
+    * def v = call createTransaction { 'fundId': '#(fundId)', 'amount': '#(amount)', 'expenseClassId': '#(expenseClassId)', 'orderId': '#(orderId)', 'invoiceId': '#(invoiceId)', 'poLineId': '#(uuid())' }
 
     Examples:
       | amount      | fundId                                      | transactionType  | expenseClassId            | invoiceId  |
@@ -172,20 +133,22 @@ Feature: Group expense classes
     And param fiscalYearId = globalFiscalYearId
     When method GET
     Then status 200
-    And match response.groupExpenseClassTotals == '#[0]'
-    And match response.totalRecords == 0
-
+    And match response.groupExpenseClassTotals == '#[1]'
+    And match response.totalRecords == 1
+    And match response.groupExpenseClassTotals contains {"id":"UNASSIGNED","expenseClassName":"Unassigned","encumbered":0.0,"awaitingPayment":0.0,"credited":0.0,"expended":0.0}
 
   Scenario: Get group expense classes totals with budgets, with expense classes
     Given path '/finance/groups/', groupWithExpenseClasses, '/expense-classes-totals'
     And param fiscalYearId = globalFiscalYearId
     When method GET
     Then status 200
-    And match response.groupExpenseClassTotals == '#[3]'
-    And match response.totalRecords == 3
-    * def expenseClass1Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == 'Print')]")
-    * def expenseClass2Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == 'Electronic')]")
-    * def expenseClass3Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == @.id)]")
-    And match expenseClass1Totals[0] contains { "encumbered": 1130, "awaitingPayment": 12, "expended": 100.0, "credited": 20.0, "percentageExpended": 45.45, "percentageCredited": 100.0 }
-    And match expenseClass2Totals[0] contains { "encumbered": 41, "awaitingPayment": 11.11, "expended": 120.0, "credited": 0.0, "percentageExpended": 54.55, "percentageCredited": 0.0 }
-    And match expenseClass3Totals[0] contains { "expended": 0.0, "credited": 0.0, "percentageExpended": 0.0, "percentageCredited": 0.0 }
+    And match response.groupExpenseClassTotals == '#[4]'
+    And match response.totalRecords == 4
+    * def expenseClass1Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.id == 'UNASSIGNED')]")
+    * def expenseClass2Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == 'Print')]")
+    * def expenseClass3Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == 'Electronic')]")
+    * def expenseClass4Totals = karate.jsonPath(response, "$.groupExpenseClassTotals[*][?(@.expenseClassName == @.id)]")
+    And match expenseClass1Totals[0] contains {"id":"UNASSIGNED","expenseClassName":"Unassigned","encumbered":999.0,"awaitingPayment":0.0,"credited":0.0,"percentageCredited":0.0,"expended":0.0,"percentageExpended":0.0}
+    And match expenseClass2Totals[0] contains {"expenseClassName":"Print","encumbered":1130.0,"awaitingPayment":12.0,"credited":20.0,"percentageCredited":100.0,"expended":100.0,"percentageExpended":45.45}
+    And match expenseClass3Totals[0] contains {"expenseClassName":"Electronic","encumbered":41.0,"awaitingPayment":11.11,"credited":0.0,"percentageCredited":0.0,"expended":120.0,"percentageExpended":54.55}
+    And match expenseClass4Totals[0] contains {"encumbered":0.0,"awaitingPayment":0.0,"credited":0.0,"percentageCredited":0.0,"expended":0.0,"percentageExpended":0.0}
