@@ -24,7 +24,7 @@ Feature: Budget expense classes
 
   Scenario Outline: prepare finances for fund with <fundId>
     * def fundId = <fundId>
-    * call createFund { 'id': '#(fundId)'}
+    * def v = call createFund { 'id': '#(fundId)'}
 
     Examples:
       | fundId                                           |
@@ -39,7 +39,7 @@ Feature: Budget expense classes
     Then status 201
 
   Scenario: Create budget without expense classes and check expense class totals, then update with expense classes
-    * call createBudget { 'id': '#(budgetIdWithoutExpenseClasses)', 'fundId': '#(fundIdWithoutExpenseClasses)', 'allocated': 100 }
+    * def v = call createBudget { 'id': '#(budgetIdWithoutExpenseClasses)', 'fundId': '#(fundIdWithoutExpenseClasses)', 'allocated': 100 }
 
     Given path '/finance/budgets/', budgetIdWithoutExpenseClasses
     When method GET
@@ -86,7 +86,7 @@ Feature: Budget expense classes
   Scenario: Create and update budget with expense classes and get expense class totals for created budget
     * def statusExpenseClassesForCreate = [{'expenseClassId': '#(globalElecExpenseClassId)', 'status': 'Inactive'}, {'expenseClassId': '#(globalPrnExpenseClassId)'}]
     * def statusExpenseClassesForUpdate = [{'expenseClassId': '#(globalElecExpenseClassId)', 'status': 'Active'}, {'expenseClassId': '#(expenseClassId)'}]
-    * call createBudget { 'id': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'fundId': '#(fundIdWithExpenseClassesWithoutTransactions)', 'allocated': 100, 'statusExpenseClasses': '#(statusExpenseClassesForCreate)'}
+    * def v = call createBudget { 'id': '#(budgetIdWithExpenseClassesWithoutTransactions)', 'fundId': '#(fundIdWithExpenseClassesWithoutTransactions)', 'allocated': 100, 'statusExpenseClasses': '#(statusExpenseClassesForCreate)'}
 
     Given path '/finance-storage/budget-expense-classes'
     And param query = 'budgetId==' + budgetIdWithExpenseClassesWithoutTransactions
