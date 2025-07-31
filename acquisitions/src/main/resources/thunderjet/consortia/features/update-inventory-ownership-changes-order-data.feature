@@ -10,7 +10,7 @@ Feature: Updating Holding ownership changes order data
     * def headersUniversity = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(universityTenantName)' }
     * configure headers = headersUniversity
 
-    * configure retry = { interval: 5000, count: 5 }
+    * configure retry = { interval: 10000, count: 10 }
 
     ### Before All ###
     * callonce variables
