@@ -148,7 +148,7 @@ Feature: Move Item and Holding to update order data
     * table pieceData
       | id      | format     | poLineId | titleId | holdingId | createItem |
       | pieceId | "Physical" | poLineId | titleId | holdingId | true       |
-    * def piece = call createPieceWithHolding pieceData
+    * def piece = call createPieceWithHoldingOrLocation pieceData
     * def itemId = piece[0].response.itemId
 
     # 2. Create new holding
