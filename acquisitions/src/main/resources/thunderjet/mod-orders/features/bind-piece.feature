@@ -714,7 +714,7 @@ Feature: Verify Bind Piece feature
       | id       | format     | poLineId  | titleId  | holdingId  | receivingTenantId |
       | pieceId1 | "Physical" | poLineId2 | titleId2 | holdingId1 | tenantId1         |
       | pieceId2 | "Physical" | poLineId2 | titleId2 | holdingId2 | tenantId2         |
-    * def v = call createPieceWithHolding pieces
+    * def v = call createPieceWithHoldingOrLocation pieces
 
 
     # 3 Receive both pieceId1 and pieceId2
