@@ -7,7 +7,7 @@ Feature: prepare data for api test
 
   @createEntitlementResponse
   Scenario: create entitlement response
-    * print "--XX-create entitlement---"
+    * print "---create entitlement response---"
     * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData

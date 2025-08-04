@@ -11,22 +11,23 @@ Feature: prepare data for api test
     Given call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(testTenantId)', tenantName: '#(testTenant)'}
 
   @createEntitlement
-  Scenario: Repeat entitlement creating until status is 'finished'
+  Scenario: Entitlement creating until status is 'finished'
+    * print "---retry entitlement creating---"
     * def maxAttempts = 5
     * def attempt = 0
     * def createWithRetry =
       """
       function(attempt, maxAttempts) {
-        karate.log('Start entitlement creating, attempt:', attempt + 1);
+        karate.log('>>>Retry: Start entitlement creating, attempt:', attempt + 1);
         var result = karate.call('classpath:common/eureka/entitlements.feature@createEntitlementResponse');
         var status = result.response.status;
-        karate.log('Entitlement creating completed with status:', status);
+        karate.log('>>>Retry: Entitlement creating attempt completed with status:', status);
         if (status == 'finished') {
-          karate.log('Entitlement creation comleted successfully');
+          karate.log('>>>Retry: Entitlement creation comleted successfully with final status: finished');
           return result;
         }
         if (attempt >= maxAttempts) {
-          karate.fail('Exceeded max attempts, status:' + status);
+          karate.fail('>>>Retry: Entitlement creation failed due to exceeded max attempts, final status:' + status);
         }
         return createWithRetry(attempt + 1, maxAttempts);
       }
