@@ -88,6 +88,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.locations.collection.get'                |
       | 'inventory-storage.locations.item.post'                     |
       | 'inventory-storage.material-types.collection.get'           |
+      | 'inventory-storage.instance-note-types.collection.get'      |
       | 'inventory-storage.material-types.item.post'                |
       | 'inventory-storage.modes-of-issuance.collection.get'        |
       | 'inventory-storage.service-points.collection.get'           |
