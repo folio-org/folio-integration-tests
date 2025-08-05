@@ -70,7 +70,8 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     * def universityTenant = 'university' + random
 
     # define users
-    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * def consortiaAdminId = '122b3d2b-4788-4f1e-9117-56daa91cb75c'
+    * def consortiaAdmin = { id: '#(consortiaAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
 
     * def universityUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
 
@@ -86,6 +87,74 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Scenario: Tenant api tests
     * call read('tenant.feature')
+
+  Scenario: Setup data for cross-tenant tests
+    # Add entries to consortia/user-tenants for consortia admin in both tenants
+    Given path 'consortium', consortiumId, 'user-tenants'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+    And request
+  """
+  {
+    id: 'cdcd9047-96c2-4eb9-9bc3-0f6973dbbfc7',
+    userId: '#(consortiaAdminId)',
+    tenantId: '#(centralTenant)',
+    consortiumId: '#(consortiumId)'
+  }
+  """
+    When method POST
+    Then status 201
+
+
+    Given path 'consortium', consortiumId, 'user-tenants'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+    And request
+  """
+  {
+    id: 'abab9047-96c2-4eb9-9bc3-0f6973dbbfc7',
+    userId: '#(consortiaAdminId)',
+    tenantId: '#(universityTenant)',
+    consortiumId: '#(consortiumId)'
+  }
+  """
+    When method POST
+    Then status 201
+
+    # Add entries to user-tenants for consortia admin in both tenants
+    Given path 'consortium', consortiumId, 'user-tenants'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+    And request
+  """
+  {
+    id: 'cdcd9047-96c2-4eb9-9bc3-0f6973dbbfc8',
+    userId: '#(consortiaAdminId)',
+    username: "consortia_admin",
+    tenantId: '#(centralTenant)',
+    consortiumId: '#(consortiumId)'
+  }
+  """
+    When method POST
+    Then status 201
+
+
+    Given path 'user-tenants'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+    And request
+  """
+  {
+    id: 'abab9047-96c2-4eb9-9bc3-0f6973dbbfc8',
+    userId: '#(consortiaAdminId)',
+    username: "consortia_admin_wxyz",
+    tenantId: '#(universityTenant)',
+    consortiumId: '#(consortiumId)'
+  }
+  """
+    When method POST
+    Then status 201
+
+  # TODO: need to make sure admin has permissions in both tenants
+#    * call read('classpath:common-consortia/eureka/initData.feature@PostConsortiumAndUserTenant') { tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)', consortiumId: '#(consortiumId)'}
+#    * call read('classpath:common-consortia/eureka/initData.feature@PostConsortiumAndUserTenant') { tenantId: '#(universityTenantId)', user: '#(universityUser1)', consortiumId: '#(consortiumId)'}
+
 
   Scenario: Cross Tenant
     * call read('cross_tenant_et.feature')
