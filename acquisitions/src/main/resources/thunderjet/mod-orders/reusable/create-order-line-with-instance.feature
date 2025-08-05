@@ -16,6 +16,7 @@ Feature: Create order line
     * def locations = karate.get('locations', poLine.locations)
     * def quantity = karate.get('quantity', poLine.cost.quantityPhysical)
     * def instanceId = karate.get('instanceId', poLine.instanceId)
+    * def productIds = karate.get('productIds', poLine.details.productIds)
 
     * set poLine.id = id
     * set poLine.purchaseOrderId = orderId
@@ -30,6 +31,7 @@ Feature: Create order line
     * set poLine.cost.quantityPhysical = quantity
     * set poLine.locations = locations
     * set poLine.instanceId = instanceId
+    * set poLine.details.productIds = productIds
 
     Given path 'orders/order-lines'
     And request poLine
