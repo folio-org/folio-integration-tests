@@ -16,8 +16,6 @@ Feature: Auto-populate fundCode in PO line fund distribution
     * call read('classpath:common/util/random_string.feature')
     * callonce variables
 
-  @Positive
-  Scenario: Create order with PO line fund distribution missing fundCode, expect it to be auto-populated
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderId = call uuid
@@ -25,6 +23,8 @@ Feature: Auto-populate fundCode in PO line fund distribution
     * def codePrefix = call random_string
     * def fundCode = 'FC-' + codePrefix
 
+  @Positive
+  Scenario: Create order with PO line fund distribution missing fundCode, expect it to be auto-populated
     # 1. Create finance data with admin headers
     * configure headers = headersAdmin
     * call createFund { id: '#(fundId)', code: '#(fundCode)' }
@@ -55,19 +55,12 @@ Feature: Auto-populate fundCode in PO line fund distribution
 
   @Positive
   Scenario: Create order with PO line fund distribution wrong fundCode, expect that fund code from Fund would be used
-    * def fundId = call uuid
-    * def budgetId = call uuid
-    * def orderId = call uuid
-    * def poLineId = call uuid
-    * def codePrefix = call random_string
     * def incorrectFundCode = 'IncorrectFC-' + codePrefix
-    * def fundCode = 'FC-' + codePrefix
 
     # 1. Create finance data with admin headers
     * configure headers = headersAdmin
     * call createFund { id: '#(fundId)', code: '#(fundCode)' }
     * call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
-
 
     # 2. Create pending order with order line where fund code is not provided
     * configure headers = headersUser
@@ -86,13 +79,6 @@ Feature: Auto-populate fundCode in PO line fund distribution
 
   @Positive
   Scenario: Create and open order in single operation, expect fundCode to be auto-populated
-    * def fundId = call uuid
-    * def budgetId = call uuid
-    * def orderId = call uuid
-    * def poLineId = call uuid
-    * def codePrefix = call random_string
-    * def fundCode = 'FC-' + codePrefix
-
     # 1. Create finance data with admin headers
     * configure headers = headersAdmin
     * call createFund { id: '#(fundId)', code: '#(fundCode)' }
