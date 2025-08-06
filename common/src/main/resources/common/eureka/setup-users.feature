@@ -38,7 +38,6 @@ Feature: prepare data for api test
         return retry(attempt + 1, maxAttempts);
       }
       """
-
     * def result = createWithRetry(0, maxAttempts)
 
   @getAuthorizationToken
