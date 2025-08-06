@@ -90,7 +90,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Scenario: Setup data for cross-tenant tests
     # Add entries to consortia/user-tenants for consortia admin in both tenants
-    Given path 'consortium', consortiumId, 'user-tenants'
+    Given path 'consortia', consortiumId, 'user-tenants'
     And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
     And request
   """
@@ -105,7 +105,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     Then status 201
 
 
-    Given path 'consortium', consortiumId, 'user-tenants'
+    Given path 'consortia', consortiumId, 'user-tenants'
     And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
     And request
   """
@@ -120,7 +120,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     Then status 201
 
     # Add entries to user-tenants for consortia admin in both tenants
-    Given path 'consortium', consortiumId, 'user-tenants'
+    Given path 'user-tenants'
     And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
     And request
   """
