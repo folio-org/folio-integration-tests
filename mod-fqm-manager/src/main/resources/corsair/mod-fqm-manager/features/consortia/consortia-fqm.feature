@@ -2,6 +2,7 @@
 Feature: mod-consortia and mod-fqm-manager integration tests
 
   Background:
+    * configure cookies = null
     * url baseUrl
     * callonce login admin
     * configure readTimeout = 600000
