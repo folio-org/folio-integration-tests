@@ -266,3 +266,6 @@ Feature: mod-orders integration tests
 
   Scenario: Create order with suppress instance from discovery
     * call read("features/create-order-with-suppress-instance-from-discovery.feature")
+
+  Scenario: Auto populate fund code if it missed
+    * call read("features/auto-populate-fund-code.feature")

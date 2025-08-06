@@ -1,4 +1,5 @@
 # For MODORDERS-616
+@parallel=false
 Feature: Change location when receiving a piece
 
   Background:
