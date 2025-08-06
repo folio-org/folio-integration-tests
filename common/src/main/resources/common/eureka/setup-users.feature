@@ -11,33 +11,28 @@ Feature: prepare data for api test
     Given call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(testTenantId)', tenantName: '#(testTenant)'}
 
   @createEntitlement
-  Scenario: create entitlement
-    * print "---create entitlement---"
-    * call read('classpath:common/eureka/application.feature@applicationSearch')
-    * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
-    * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
-    * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
-    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
-    * def keycloakMasterToken = keycloakResponse.response.access_token
-    Given url baseUrl
-    Given path 'entitlements'
-    And param tenantParameters = tenantParameters
-    And param async = true
-    And param purgeOnRollback = false
-    And request entitlementTamplate
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    And header x-okapi-token = keycloakMasterToken
-    When method POST
-    * def flowId = response.flowId
-
-    * configure retry = { count: 40, interval: 30000 }
-    Given path 'entitlement-flows', flowId
-    And param includeStages = true
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
-    When method GET
-    * def failCondition = response.status
-    * if (failCondition == "cancelled" || failCondition == "cancellation_failed" || failCondition == "failed") karate.fail('Entitlement creation failed.')
+  Scenario: Entitlement creating until status is 'finished'
+    * print "---retry entitlement creating---"
+    * def maxAttempts = 5
+    * def attempt = 0
+    * def createWithRetry =
+      """
+      function(attempt, maxAttempts) {
+        karate.log('>>>Retry: Start entitlement creating, attempt:', attempt + 1);
+        var result = karate.call('classpath:common/eureka/entitlements.feature@createEntitlementResponse');
+        var status = result.response.status;
+        karate.log('>>>Retry: Entitlement creating attempt completed with status:', status);
+        if (status == 'finished') {
+          karate.log('>>>Retry: Entitlement creation comleted successfully with final status: finished');
+          return result;
+        }
+        if (attempt >= maxAttempts) {
+          karate.fail('>>>Retry: Entitlement creation failed due to exceeded max attempts, final status:' + status);
+        }
+        return createWithRetry(attempt + 1, maxAttempts);
+      }
+      """
+    * def result = createWithRetry(0, maxAttempts)
 
   @getAuthorizationToken
   Scenario: get authorization token for new tenant
