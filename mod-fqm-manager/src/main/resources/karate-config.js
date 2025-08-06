@@ -90,9 +90,9 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org:443';
+    config.baseUrl = 'https://folio-eperf-corsair-kong.ci.folio.org:443';
     config.prototypeTenant = 'diku';
-    config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-eperf-corsair-keycloak.ci.folio.org';
   }
   return config;
 }

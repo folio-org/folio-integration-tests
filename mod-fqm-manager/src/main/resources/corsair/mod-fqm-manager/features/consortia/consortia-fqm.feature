@@ -1,3 +1,4 @@
+@smoke
 Feature: mod-consortia and mod-fqm-manager integration tests
 
   Background:
@@ -11,6 +12,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-inventory'             |
       | 'mod-permissions'           |
       | 'mod-users'                 |
+      | 'mod-consortia'             |
       | 'mod-inventory-storage'     |
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
@@ -24,6 +26,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
     * table userPermissions
       | name                                                        |
+      | 'consortia.all'                                             |
       | 'inventory.instances.item.get'                              |
       | 'fqm.entityTypes.collection.get'                            |
       | 'inventory-storage.call-number-types.collection.get'        |
@@ -76,6 +79,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     * def universityUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
 
     # define custom login
+    * def loginOriginal = login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
   Scenario: Create ['central', 'university'] tenants and set up admins
@@ -89,9 +93,12 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     * call read('tenant.feature')
 
   Scenario: Setup data for cross-tenant tests
+#    * call loginOriginal admin
+    * call login consortiaAdmin
     # Add entries to consortia/user-tenants for consortia admin in both tenants
     Given path 'consortia', consortiumId, 'user-tenants'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+#    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)' }
     And request
   """
   {
