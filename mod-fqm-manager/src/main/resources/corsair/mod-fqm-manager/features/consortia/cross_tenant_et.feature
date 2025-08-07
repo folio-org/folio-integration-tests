@@ -12,5 +12,5 @@ Feature: Verify cross-tenant ET definition in mod-fqm-manager
     When method GET
     Then status 200
     # Retry up to 5 times
-    And retry until response.entityTypes contains {crossTenantQueriesEnabled: true }
+#    And retry until response.entityTypes contains {crossTenantQueriesEnabled: true }
     And match response.entityTypes contains deep {crossTenantQueriesEnabled: true }

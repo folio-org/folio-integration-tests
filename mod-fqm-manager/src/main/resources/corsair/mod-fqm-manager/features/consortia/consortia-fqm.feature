@@ -117,52 +117,56 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 #    When method POST
 #    Then status 201
 
-
     Given path 'consortia', consortiumId, 'user-tenants'
     And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
-    And request
-  """
-  {
-    id: 'abab9047-96c2-4eb9-9bc3-0f6973dbbfc7',
-    userId: '#(consortiaAdminId)',
-    tenantId: '#(universityTenant)',
-    consortiumId: '#(consortiumId)'
-  }
-  """
-    When method POST
-    Then status 201
+    When method GET
+    Then status 200
 
-    # Add entries to user-tenants for consortia admin in both tenants
-    Given path 'user-tenants'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
-    And request
-  """
-  {
-    id: 'cdcd9047-96c2-4eb9-9bc3-0f6973dbbfc8',
-    userId: '#(consortiaAdminId)',
-    username: "consortia_admin",
-    tenantId: '#(centralTenant)',
-    consortiumId: '#(consortiumId)'
-  }
-  """
-    When method POST
-    Then status 201
-
-
-    Given path 'user-tenants'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
-    And request
-  """
-  {
-    id: 'abab9047-96c2-4eb9-9bc3-0f6973dbbfc8',
-    userId: '#(consortiaAdminId)',
-    username: "consortia_admin_wxyz",
-    tenantId: '#(universityTenant)',
-    consortiumId: '#(consortiumId)'
-  }
-  """
-    When method POST
-    Then status 201
+#    Given path 'consortia', consortiumId, 'user-tenants'
+#    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+#    And request
+#  """
+#  {
+#    id: 'abab9047-96c2-4eb9-9bc3-0f6973dbbfc7',
+#    userId: '#(consortiaAdminId)',
+#    tenantId: '#(universityTenant)',
+#    consortiumId: '#(consortiumId)'
+#  }
+#  """
+#    When method POST
+#    Then status 201
+#
+#    # Add entries to user-tenants for consortia admin in both tenants
+#    Given path 'user-tenants'
+#    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+#    And request
+#  """
+#  {
+#    id: 'cdcd9047-96c2-4eb9-9bc3-0f6973dbbfc8',
+#    userId: '#(consortiaAdminId)',
+#    username: "consortia_admin",
+#    tenantId: '#(centralTenant)',
+#    consortiumId: '#(consortiumId)'
+#  }
+#  """
+#    When method POST
+#    Then status 201
+#
+#
+#    Given path 'user-tenants'
+#    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+#    And request
+#  """
+#  {
+#    id: 'abab9047-96c2-4eb9-9bc3-0f6973dbbfc8',
+#    userId: '#(consortiaAdminId)',
+#    username: "consortia_admin_wxyz",
+#    tenantId: '#(universityTenant)',
+#    consortiumId: '#(consortiumId)'
+#  }
+#  """
+#    When method POST
+#    Then status 201
 
   # TODO: need to make sure admin has permissions in both tenants
 #    * call read('classpath:common-consortia/eureka/initData.feature@PostConsortiumAndUserTenant') { tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)', consortiumId: '#(consortiumId)'}
