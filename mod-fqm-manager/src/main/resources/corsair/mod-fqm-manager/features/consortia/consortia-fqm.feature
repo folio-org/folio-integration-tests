@@ -2,7 +2,7 @@
 Feature: mod-consortia and mod-fqm-manager integration tests
 
   Background:
-    * configure cookies = null
+    * configure cookies = false
     * url baseUrl
     * callonce login admin
     * configure readTimeout = 600000
@@ -95,11 +95,14 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Scenario: Setup data for cross-tenant tests
 #    * call loginOriginal admin
-    * call login consortiaAdmin
+    * configure cookies = null
+    * def consortiaAdmin = { id: '#(consortiaAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * call loginOriginal consortiaAdmin
+#    * call login consortiaAdmin
     # Add entries to consortia/user-tenants for consortia admin in both tenants
     Given path 'consortia', consortiumId, 'user-tenants'
-#    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
-    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)' }
+    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+#    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)' }
     And request
   """
   {
