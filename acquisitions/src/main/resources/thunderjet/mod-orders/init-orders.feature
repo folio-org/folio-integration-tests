@@ -10,6 +10,7 @@ Feature: Initialize mod-orders integration tests
       | name                        |
       | 'mod-audit'                 |
       | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-feesfines'             |
       | 'mod-finance'               |
       | 'mod-finance-storage'       |
@@ -108,9 +109,11 @@ Feature: Initialize mod-orders integration tests
       | 'circulation.requests.item.post'                              |
       | 'circulation.rules.put'                                       |
       | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.delete'                           |
       | 'configuration.entries.item.post'                             |
       | 'configuration.entries.item.put'                              |
+      | 'orders-storage.settings.collection.get'                      |
+      | 'orders-storage.settings.item.post'                           |
+      | 'orders-storage.settings.item.put'                            |
       | 'finance-storage.budget-expense-classes.item.post'            |
       | 'finance-storage.ledger-rollovers-errors.collection.get'      |
       | 'finance-storage.ledger-rollovers-errors.item.delete'         |

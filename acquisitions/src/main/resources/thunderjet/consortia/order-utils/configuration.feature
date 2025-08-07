@@ -4,17 +4,9 @@ Feature: global finances
     * url baseUrl
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': '*/*' }
 
-  Scenario: update configuration poline limit
-    Given path 'configurations/entries'
-    And request
-    """
-    {
-      "module": "ORDERS",
-      "configName": "poLines-limit",
-      "enabled": true,
-      "value": "999"
-    }
-    """
+  Scenario: Create orders-storage setting to increase the POL limit
+    Given path 'orders-storage/settings'
+    And request { "key": "poLines-limit", "value": "999" }
     When method POST
     Then status 201
 
