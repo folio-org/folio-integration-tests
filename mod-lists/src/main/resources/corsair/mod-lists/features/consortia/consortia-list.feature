@@ -141,4 +141,3 @@ Feature: mod-consortia and mod-lists integration tests
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}
-    * karate.call('classpath:common/eureka/destroy-data.feature');
