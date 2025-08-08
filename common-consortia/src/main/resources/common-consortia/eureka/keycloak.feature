@@ -1,7 +1,6 @@
 Feature:
 
   Background:
-    * configure cookies = false
     * url baseUrl
     * configure readTimeout = 3000000
     * configure headers = null
