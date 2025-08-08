@@ -14,10 +14,8 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:8000',
-//    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-//    prototypeTenant: 'diku',
-    admin: {tenant: 'fs09000000', name: 'folio', password: 'folio'},
-    prototypeTenant: 'fs09000000',
+    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    prototypeTenant: 'diku',
 
     kcClientId: 'folio-backend-admin-client',
     kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
@@ -99,6 +97,7 @@ function fn() {
     config.baseUrl = 'https://folio-eperf-corsair-kong.ci.folio.org:443';
     config.prototypeTenant = 'fs09000000';
     config.baseKeycloakUrl = 'https://folio-eperf-corsair-keycloak.ci.folio.org';
+    config.admin = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
   }
   return config;
 }
