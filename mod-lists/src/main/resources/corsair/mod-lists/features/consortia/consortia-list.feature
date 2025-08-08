@@ -3,7 +3,6 @@ Feature: mod-consortia and mod-lists integration tests
 
   Background:
     * url baseUrl
-    * def loginOriginal = login
     * callonce login admin
     * configure readTimeout = 600000
 
@@ -123,19 +122,6 @@ Feature: mod-consortia and mod-lists integration tests
     * call read('tenant.feature')
 
   Scenario: Instance Export
-    * def consortiaAdmin = { id: '#(consortiaAdminId)', name: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
-    * call loginOriginal consortiaAdmin
-
-    Given path 'consortia', consortiumId, 'user-tenants'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
-    When method GET
-    Then status 200
-
-    Given path 'user-tenants'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
-    When method GET
-    Then status 200
-
     * call read('instance-export.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
