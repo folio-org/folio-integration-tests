@@ -33,16 +33,16 @@ Feature: Check limit number of order lines which can be retrieved in scope of co
 
   Scenario: Update po line limit
     * configure headers = headersAdmin
-    Given path 'configurations/entries'
-    And param query = 'configName==poLines-limit'
+    Given path 'orders-storage/settings'
+    And param query = 'key==poLines-limit'
     When method GET
     Then status 200
-    * def config = $.configs[0]
-    * set config.value = '999'
-    * def configId = $.configs[0].id
-    
-    Given path 'configurations/entries', configId
-    And request config
+    * def setting = $.settings[0]
+    * set setting.value = '999'
+    * def settingId = $.settings[0].id
+
+    Given path 'orders-storage/settings', settingId
+    And request setting
     When method PUT
     Then status 204
 

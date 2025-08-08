@@ -25,6 +25,10 @@ Feature: Initialize mod-consortia integration tests
       | 'configuration.entries.item.get'                            |
       | 'configuration.entries.item.post'                           |
       | 'configuration.entries.item.put'                            |
+      | 'orders-storage.settings.collection.get'                    |
+      | 'orders-storage.settings.item.get'                          |
+      | 'orders-storage.settings.item.post'                         |
+      | 'orders-storage.settings.item.put'                          |
       | 'finance.budgets.collection.get'                            |
       | 'finance.budgets.item.post'                                 |
       | 'finance.expense-classes.item.post'                         |
@@ -193,9 +197,12 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-storage.request-policies.item.post'            |
       | 'configuration.entries.collection.get'                      |
       | 'configuration.entries.item.get'                            |
-      | 'configuration.entries.item.delete'                         |
       | 'configuration.entries.item.post'                           |
       | 'configuration.entries.item.put'                            |
+      | 'orders-storage.settings.collection.get'                    |
+      | 'orders-storage.settings.item.get'                          |
+      | 'orders-storage.settings.item.post'                         |
+      | 'orders-storage.settings.item.put'                          |
       | 'consortia.sharing-instances.collection.get'                |
       | 'consortia.sharing-instances.item.post'                     |
       | 'inventory.holdings.update-ownership.item.post'             |
@@ -250,17 +257,8 @@ Feature: Initialize mod-consortia integration tests
     * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
     * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
     * configure headers = headersUni
-    Given path 'configurations/entries'
-    And request
-      """
-      {
-        "id": "#(isInstanceMatchingDisabledId)",
-        "module" : "ORDERS",
-        "configName" : "disableInstanceMatching",
-        "enabled" : true,
-        "value" : "{\"isInstanceMatchingDisabled\":true}"
-      }
-      """
+    Given path 'orders-storage/settings'
+    And request { "id": "#(isInstanceMatchingDisabledId)", "key": "disableInstanceMatching", "value": "{\"isInstanceMatchingDisabled\":true}" }
     When method POST
     Then status 201
     * call pause 40000

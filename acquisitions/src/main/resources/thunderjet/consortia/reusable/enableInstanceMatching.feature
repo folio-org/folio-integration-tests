@@ -5,16 +5,16 @@ Feature: Enable Instance Matching
     * url baseUrl
 
   Scenario: enableInstanceMatching
-    Given path 'configurations/entries'
-    And param query = 'configName==disableInstanceMatching'
+    Given path 'orders-storage/settings'
+    And param query = 'key==disableInstanceMatching'
     When method GET
     Then status 200
-    * def config = $.configs[0]
-    * set config.value = "{\"isInstanceMatchingDisabled\":false}"
-    * def configId = $.configs[0].id
+    * def setting = $.settings[0]
+    * set setting.value = "{\"isInstanceMatchingDisabled\":false}"
+    * def settingId = $.settings[0].id
 
-    Given path 'configurations/entries', configId
-    And request config
+    Given path 'orders-storage/settings', settingId
+    And request setting
     When method PUT
     Then status 204
     * call pause 40000
