@@ -2,12 +2,18 @@ Feature: Verify cross-tenant ET definition in mod-fqm-manager
 
   Background:
     * url baseUrl
-    * call login consortiaAdmin
+    * def consortiaAdmin = { id: '#(consortiaAdminId)', name: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * call loginOriginal consortiaAdmin
     * configure retry = { count: 5, interval: 20000 }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
   @Positive
   Scenario: Retrieve cross-tenant ET definition and verify flag
+    Given path 'entity-types'
+    And param includeInaccessible = true
+    When method GET
+    Then status 200
+
     Given path 'entity-types'
     When method GET
     Then status 200

@@ -94,7 +94,7 @@ function fn() {
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-eperf-corsair-kong.ci.folio.org:443';
-    config.prototypeTenant = 'diku';
+    config.prototypeTenant = 'fs09000000';
     config.baseKeycloakUrl = 'https://folio-eperf-corsair-keycloak.ci.folio.org';
   }
   return config;

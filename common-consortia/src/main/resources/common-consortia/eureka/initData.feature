@@ -15,6 +15,8 @@ Feature: init data for consortia
     * print 'COOKIES CONFIG', karate.get('karate.options.cookies')
 #    * print 'HEADERS:', karate.prevRequest.headers
 #    * print 'COOKIES:', karate.prevRequest.cookies
+    * print 'TOKEN LENGTH:', keycloakMasterToken.length
+    * print 'TOKEN:', keycloakMasterToken
     Given path 'tenants'
     And request { id: '#(tenantId)', name: '#(tenant)', description: '#(description)' }
     And header Authorization = 'Bearer ' + keycloakMasterToken
