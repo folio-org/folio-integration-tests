@@ -1,4 +1,3 @@
-@smoke
 Feature: mod-consortia and mod-fqm-manager integration tests
 
   Background:

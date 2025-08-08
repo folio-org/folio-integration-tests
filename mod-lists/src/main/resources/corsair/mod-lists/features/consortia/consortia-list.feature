@@ -1,4 +1,3 @@
-@smoke
 Feature: mod-consortia and mod-lists integration tests
 
   Background:
