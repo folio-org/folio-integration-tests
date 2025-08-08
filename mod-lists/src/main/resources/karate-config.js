@@ -14,8 +14,10 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:8000',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
-    prototypeTenant: 'diku',
+//    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+//    prototypeTenant: 'diku',
+    admin: {tenant: 'fs09000000', name: 'folio', password: 'folio'},
+    prototypeTenant: 'fs09000000',
 
     kcClientId: 'folio-backend-admin-client',
     kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
@@ -94,9 +96,9 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org:443';
-    config.prototypeTenant = 'diku';
-    config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-eperf-corsair-kong.ci.folio.org:443';
+    config.prototypeTenant = 'fs09000000';
+    config.baseKeycloakUrl = 'https://folio-eperf-corsair-keycloak.ci.folio.org';
   }
   return config;
 }

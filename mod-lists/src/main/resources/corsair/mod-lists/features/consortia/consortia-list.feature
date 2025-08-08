@@ -1,13 +1,16 @@
+@smoke
 Feature: mod-consortia and mod-lists integration tests
 
   Background:
     * url baseUrl
+    * def loginOriginal = login
     * callonce login admin
     * configure readTimeout = 600000
 
     * table modules
       | name                      |
       | 'mod-login'               |
+      | 'mod-consortia'           |
       | 'mod-permissions'         |
       | 'mod-users'               |
       | 'mod-circulation-storage' |
@@ -19,8 +22,25 @@ Feature: mod-consortia and mod-lists integration tests
     * table userPermissions
       | name                                                        |
       | 'circulation-storage.loan-policies.collection.get'          |
+      | 'consortia.all'                                             |
       | 'circulation.loans.collection.get'                          |
       | 'departments.collection.get'                                |
+      | 'fqm.entityTypes.collection.get'                            |
+      | 'fqm.entityTypes.item.columnValues.get'                     |
+      | 'fqm.entityTypes.item.get'                                  |
+      | 'fqm.materializedViews.post'                                |
+      | 'fqm.migrate.post'                                          |
+      | 'fqm.query.all'                                             |
+      | 'fqm.query.async.delete'                                    |
+      | 'fqm.query.async.post'                                      |
+      | 'fqm.query.async.results.get'                               |
+      | 'fqm.query.async.results.post'                              |
+      | 'fqm.query.async.results.query.get'                         |
+      | 'fqm.query.async.results.sortedids.get'                     |
+      | 'fqm.query.privileged.async.results.post'                   |
+      | 'fqm.query.purge.post'                                      |
+      | 'fqm.query.sync.get'                                        |
+      | 'fqm.version.get'                                           |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.classification-types.collection.get'     |
       | 'inventory-storage.contributor-name-types.collection.get'   |
@@ -103,8 +123,22 @@ Feature: mod-consortia and mod-lists integration tests
     * call read('tenant.feature')
 
   Scenario: Instance Export
+    * def consortiaAdmin = { id: '#(consortiaAdminId)', name: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * call loginOriginal consortiaAdmin
+
+    Given path 'consortia', consortiumId, 'user-tenants'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+    When method GET
+    Then status 200
+
+    Given path 'user-tenants'
+    And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-token': '#(okapitoken)' }
+    When method GET
+    Then status 200
+
     * call read('instance-export.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}
+    * karate.call('classpath:common/eureka/destroy-data.feature');

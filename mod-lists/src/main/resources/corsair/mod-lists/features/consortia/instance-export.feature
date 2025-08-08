@@ -2,7 +2,9 @@ Feature: Scenarios that are primarily focused around exporting instance list dat
 
   Background:
     * url baseUrl
-    * call login consortiaAdmin
+    * def consortiaAdmin = { id: '#(consortiaAdminId)', name: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+#    * call login consortiaAdmin
+    * call loginOriginal consortiaAdmin
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
     * configure retry = { interval: 15000, count: 10 }
@@ -13,6 +15,13 @@ Feature: Scenarios that are primarily focused around exporting instance list dat
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/instance-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
+
+    Given path 'entity-types'
+    And param includeInaccessible = true
+    When method GET
+    Then status 200
+
+
 
     * call refreshList {listId: '#(listId)'}
 
@@ -33,7 +42,7 @@ Feature: Scenarios that are primarily focused around exporting instance list dat
     And match $.exportId == exportId
     And match $.listId == listId
     And match $.status == 'SUCCESS'
-    And match $.fields == ['instance.hrid', 'instance.title', 'instance.instance_type_name', 'instance.shared', 'instance.tenant_id', 'instance.id']
+    And match $.fields == ['instance.tenant_name','instance.hrid','instance.title','instance.instance_type_name','instance.shared','instance.tenant_id','instance.id']
 
     Given path 'lists', listId, 'exports', exportId, 'download'
     When method GET
