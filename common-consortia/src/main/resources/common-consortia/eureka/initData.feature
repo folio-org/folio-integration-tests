@@ -1,8 +1,6 @@
 Feature: init data for consortia
 
   Background:
-    # ADDED TEMPORARILY
-    * configure cookies = false
     * url baseUrl
     * configure readTimeout = 300000
     * configure retry = { count: 20, interval: 10000 }
@@ -12,11 +10,6 @@ Feature: init data for consortia
   Scenario: Create a new tenant
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
     * def keycloakMasterToken = keycloakResponse.response.access_token
-    * print 'COOKIES CONFIG', karate.get('karate.options.cookies')
-#    * print 'HEADERS:', karate.prevRequest.headers
-#    * print 'COOKIES:', karate.prevRequest.cookies
-    * print 'TOKEN LENGTH:', keycloakMasterToken.length
-    * print 'TOKEN:', keycloakMasterToken
     Given path 'tenants'
     And request { id: '#(tenantId)', name: '#(tenant)', description: '#(description)' }
     And header Authorization = 'Bearer ' + keycloakMasterToken
