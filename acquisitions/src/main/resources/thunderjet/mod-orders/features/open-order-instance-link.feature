@@ -10,9 +10,11 @@ Feature: Check opening an order links to the right instance based on the identif
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+
+    * configure retry = { interval: 10000, count: 10 }
 
     * callonce variables
 
@@ -141,9 +143,9 @@ Feature: Check opening an order links to the right instance based on the identif
     * print "Check the order line"
 
     Given path 'orders/order-lines', poLineId1
+    And retry until response.instanceId == instanceId2
     When method GET
     Then status 200
-    And match $.instanceId == instanceId2
 
 
   Scenario: Create setting with disabled instance matching
@@ -274,6 +276,6 @@ Feature: Check opening an order links to the right instance based on the identif
     * print "Check the order line"
 
     Given path 'orders/order-lines', poLineId3
+    And retry until response.instanceId == instanceId2
     When method GET
     Then status 200
-    And match $.instanceId == instanceId2
