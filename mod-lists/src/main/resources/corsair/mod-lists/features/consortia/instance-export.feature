@@ -2,9 +2,7 @@ Feature: Scenarios that are primarily focused around exporting instance list dat
 
   Background:
     * url baseUrl
-    * def consortiaAdmin = { id: '#(consortiaAdminId)', name: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
-#    * call login consortiaAdmin
-    * call loginOriginal consortiaAdmin
+    * call login consortiaAdmin
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
     * configure retry = { interval: 15000, count: 10 }
@@ -15,13 +13,6 @@ Feature: Scenarios that are primarily focused around exporting instance list dat
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/instance-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
-
-    Given path 'entity-types'
-    And param includeInaccessible = true
-    When method GET
-    Then status 200
-
-
 
     * call refreshList {listId: '#(listId)'}
 
