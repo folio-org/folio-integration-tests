@@ -33,7 +33,7 @@ Feature: Scenarios that are primarily focused around exporting instance list dat
     And match $.exportId == exportId
     And match $.listId == listId
     And match $.status == 'SUCCESS'
-    And match $.fields == ['instance.hrid', 'instance.title', 'instance.instance_type_name', 'instance.shared', 'instance.tenant_id', 'instance.id']
+    And match $.fields == ['instance.hrid', 'instance.title', 'instance.instance_type_name', 'instance.id']
 
     Given path 'lists', listId, 'exports', exportId, 'download'
     When method GET
@@ -65,7 +65,7 @@ Feature: Scenarios that are primarily focused around exporting instance list dat
     And match $.exportId == exportId
     And match $.listId == listId
     And match $.status == 'SUCCESS'
-    And match $.fields == ['instance.hrid', 'instance.title', 'instance.id','instance.tenant_id']
+    And match $.fields == ['instance.hrid', 'instance.title', 'instance.id']
     And match $.fields !contains 'instance.instance_type_name'
 
     Given path 'lists', listId, 'exports', exportId, 'download'
