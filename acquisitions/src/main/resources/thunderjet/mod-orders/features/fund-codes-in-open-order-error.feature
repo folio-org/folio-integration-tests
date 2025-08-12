@@ -29,7 +29,7 @@ Feature: Fund codes in open order error
   Scenario: Create funds and budgets
     * configure headers = headersAdmin
     # avoiding shared scope with def to avoid defining a fundCode variable and using it in the next call to createFund
-    * def v = call createFund { id: '#(fundId1)', ledgerId: '#(globalLedgerWithRestrictionsId)', fundCode: '#(fundCode)' }
+    * def v = call createFund { id: '#(fundId1)', ledgerId: '#(globalLedgerWithRestrictionsId)', code: '#(fundCode)' }
     * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId1)', allocated: 100 }
     * def v = call createFund { id: '#(fundId2)', ledgerId: '#(globalLedgerId)' }
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', allocated: 100 }

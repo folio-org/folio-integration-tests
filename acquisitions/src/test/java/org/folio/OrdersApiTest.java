@@ -451,4 +451,9 @@ class OrdersApiTest extends TestBaseEureka {
   void createOrderWithSuppressInstanceFromDiscovery() {
     runFeatureTest("create-order-with-suppress-instance-from-discovery");
   }
+
+  @Test
+  void autoPopulateFundCodeInPoLine() {
+    runFeatureTest("auto-populate-fund-code");
+  }
 }

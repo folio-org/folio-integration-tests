@@ -763,7 +763,7 @@ Feature: Pieces API tests for cross-tenant envs
       | pieceId1 | "Physical" | poLineId | titleId2 | centralHoldingId1    | null                  |
       | pieceId2 | "Physical" | poLineId | titleId2 | centralHoldingId1    | centralTenantName     |
       | pieceId3 | "Physical" | poLineId | titleId2 | universityHoldingId1 | universityTenantName  |
-    * def v = call createPieceWithHolding pieces
+    * def v = call createPieceWithHoldingOrLocation pieces
 
     # 3. Fetch all pieces
     * configure headers = headersUser
