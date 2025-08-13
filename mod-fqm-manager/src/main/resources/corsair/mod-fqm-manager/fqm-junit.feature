@@ -62,6 +62,11 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.query.purge.post'                                      |
       | 'fqm.query.sync.get'                                        |
       | 'fqm.version.get'                                           |
+      | 'fqm.entityTypes.custom.collection.post'                    |
+      | 'fqm.entityTypes.custom.item.get'                           |
+      | 'fqm.entityTypes.custom.item.put'                           |
+      | 'fqm.entityTypes.custom.item.delete'                        |
+      | 'fqm.entityTypes.custom.available-joins.collection.post'    |
       | 'inventory-storage.call-number-types.collection.get'        |
       | 'inventory-storage.classification-types.collection.get'     |
       | 'inventory-storage.contributor-name-types.collection.get'   |
