@@ -300,20 +300,20 @@ Feature: Change order line instance connection with holdings items
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceIdOld
+    Then retry until responseStatus == 200
     And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match response.totalRecords == 1
     And match response.holdingsRecords[*].id contains holdingId1
     And match response.holdingsRecords[*].id !contains holdingId2
 
     # 7.3 Verify the new instance holdings are created
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
+    Then retry until responseStatus == 200
     And retry until response.totalRecords == 2
     When method GET
     Then status 200
-    And match response.totalRecords == 2
     And match response.holdingsRecords[*].id contains newHoldingId1
     And match response.holdingsRecords[*].id contains newHoldingId2
     * configure headers = headersUser
