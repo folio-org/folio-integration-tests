@@ -218,3 +218,100 @@ Feature: Change order line instance connection with holdings items
     And match response.holdingsRecords[*].id contains newHoldingId1
     And match response.holdingsRecords[*].id contains newHoldingId2
     * configure headers = headersUser
+
+
+  Scenario: Change instance connection with holdings used by a different POL
+    # 1. Create instance
+    * configure headers = headersAdmin
+    * def instanceId = call uuid
+    * def v = call createInstance { id: '#(instanceId)', title: 'i3', instanceTypeId: '#(globalInstanceTypeId)' }
+    * configure headers = headersUser
+
+    # 2. Create order and order line, then open the order
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def v = call createAndOpenOrderWithPEMixPoLine { poLineId: '#(poLineId)', orderId: '#(orderId)', title: 't3', checkinItems: true }
+
+    # 3.1 Get POL holding IDs and POL number
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def holdingId1 = response.locations[0].holdingId
+    * def holdingId2 = response.locations[1].holdingId
+    * def poLineNumber = response.poLineNumber
+    * def instanceIdOld = response.instanceId
+
+    # 3.2 Get Title ID
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.titles[0].poLineId == poLineId
+    * def titleId = response.titles[0].id
+
+    # 4.1 Create pieces with holding IDs
+    * def pieceId1 = call uuid
+    * def pieceId2 = call uuid
+    * table piecesData
+      | id       | poLineId | titleId | holdingId  | format       | createItem |
+      | pieceId1 | poLineId | titleId | holdingId1 | 'Physical'   | true       |
+      | pieceId2 | poLineId | titleId | holdingId2 | 'Electronic' | true       |
+    * def v = call createPieceWithHoldingOrLocation piecesData
+
+    # 4.2 Receive pieces
+    * table receivePiecesData
+      | pieceId  | poLineId | holdingId  |
+      | pieceId1 | poLineId | holdingId1 |
+      | pieceId2 | poLineId | holdingId2 |
+    * def v = call receivePieceWithHolding receivePiecesData
+
+    # 5. Create a new order line with the same holding
+    * def newOrderId = call uuid
+    * def v = call createOrder { id: '#(newOrderId)' }
+
+    * def newPoLineId = call uuid
+    * def poLineLocations = [ { holdingId: #(holdingId1), quantity: 1, quantityPhysical: 1 } ]
+    * table orderLineData
+      | id          | orderId    | locations       | quantity | instanceId    | titleOrPackage |
+      | newPoLineId | newOrderId | poLineLocations | 1        | instanceIdOld | 't3'           |
+    * def v = call createOrderLineWithInstance orderLineData
+
+    * def v = call openOrder { orderId: '#(newOrderId)' }
+
+    # 6. Change instance connection for the original POL to the new instance and delete abandoned holdings
+    * table instanceChangeData
+      | poLineId | instanceId | holdingsOperation | deleteAbandonedHoldings |
+      | poLineId | instanceId | 'Create'          | true                    |
+    * def v = call changeOrderLineInstanceConnection instanceChangeData
+
+    # 7.1 Verify the order line instanceId and holdings
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    And match response.instanceId == instanceId
+    And match response.instanceId != instanceIdOld
+    And match response.locations[*].holdingId !contains holdingId1
+    And match response.locations[*].holdingId !contains holdingId2
+    * def newHoldingId1 = response.locations[0].holdingId
+    * def newHoldingId2 = response.locations[1].holdingId
+
+    # 7.2 Verify old instance used holdings are not deleted
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanc eIdOld
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.holdingsRecords[*].id contains holdingId1
+    And match response.holdingsRecords[*].id !contains holdingId2
+
+    # 7.3 Verify the new instance holdings are created
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 2
+    And match response.holdingsRecords[*].id contains newHoldingId1
+    And match response.holdingsRecords[*].id contains newHoldingId2
+    * configure headers = headersUser
