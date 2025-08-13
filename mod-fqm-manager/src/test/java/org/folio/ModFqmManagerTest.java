@@ -37,6 +37,7 @@ public class ModFqmManagerTest extends TestBaseEureka {
                 .of(
                         "entity-types",
                         "validate-entity-type",
+                        "custom-entity-types",
                         "migration",
                         "query/basic-usage",
                         "query/operators-basic",
