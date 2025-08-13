@@ -10,9 +10,11 @@ Feature: Check opening an order links to the right instance based on the identif
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
     * def okapitokenUser = okapitoken
-    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
-    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+
+    * configure retry = { interval: 10000, count: 10 }
 
     * callonce variables
 
@@ -27,7 +29,7 @@ Feature: Check opening an order links to the right instance based on the identif
     * def poLineId1 = callonce uuid9
     * def poLineId2 = callonce uuid10
     * def poLineId3 = callonce uuid11
-    * def configUUID = callonce uuid12
+    * def settingId = callonce uuid12
 
     * def isbn1 = "9780552142359"
     * def isbn2 = "9781580469968"
@@ -141,32 +143,17 @@ Feature: Check opening an order links to the right instance based on the identif
     * print "Check the order line"
 
     Given path 'orders/order-lines', poLineId1
+    And retry until response.instanceId == instanceId2
     When method GET
     Then status 200
-    And match $.instanceId == instanceId2
 
 
-  Scenario: Create configuration with disabled instance matching
+  Scenario: Create setting with disabled instance matching
     * configure headers = headersAdmin
-    Given path 'configurations/entries'
-    And request
-    """
-    {
-      "id": "#(configUUID)",
-      "module" : "ORDERS",
-      "configName" : "disableInstanceMatching",
-      "enabled" : true,
-      "value" : "{\"isInstanceMatchingDisabled\":true}"
-    }
-    """
+    Given path 'orders-storage/settings'
+    And request { "id": "#(settingId)", "key": "disableInstanceMatching", "value": "{\"isInstanceMatchingDisabled\":true}" }
     When method POST
     Then status 201
-
-    # [MODORDERS-850] - The cache stores records of configuration for the next 30 seconds for specific user.
-    # It means when we start a bunch of test features the first retrieved configuration value will be used for all others tests,
-    # even if we modify this record in scope of the test.
-    # But if we wait for 30+ seconds then actual configuration record with modified fields will be retrieved from database.
-    * call pause 40000
 
   Scenario: Create an order
     * print "Create an order"
@@ -224,26 +211,20 @@ Feature: Check opening an order links to the right instance based on the identif
     And match $.instanceId != instanceId2
 
 
-  Scenario: Update configuration with enabled instance matching
+  Scenario: Update setting with enabled instance matching
     * configure headers = headersAdmin
-    Given path 'configurations/entries'
-    And param query = 'configName==disableInstanceMatching'
+    Given path 'orders-storage/settings'
+    And param query = 'key==disableInstanceMatching'
     When method GET
     Then status 200
-    * def config = $.configs[0]
-    * set config.value = "{\"isInstanceMatchingDisabled\":false}"
-    * def configId = $.configs[0].id
+    * def setting = $.settings[0]
+    * set setting.value = "{\"isInstanceMatchingDisabled\":false}"
+    * def settingId = $.settings[0].id
 
-    Given path 'configurations/entries', configId
-    And request config
+    Given path 'orders-storage/settings', settingId
+    And request setting
     When method PUT
     Then status 204
-
-    # [MODORDERS-850] - The cache stores records of configuration for the next 30 seconds for specific user.
-    # It means when we start a bunch of test features the first retrieved configuration value will be used for all others tests,
-    # even if we modify this record in scope of the test.
-    # But if we wait for 30+ seconds then actual configuration record with modified fields will be retrieved from database.
-    * call pause 40000
 
   Scenario: Create an order
     * print "Create an order"
@@ -295,6 +276,6 @@ Feature: Check opening an order links to the right instance based on the identif
     * print "Check the order line"
 
     Given path 'orders/order-lines', poLineId3
+    And retry until response.instanceId == instanceId2
     When method GET
     Then status 200
-    And match $.instanceId == instanceId2
