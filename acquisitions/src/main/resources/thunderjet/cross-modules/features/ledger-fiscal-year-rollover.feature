@@ -121,16 +121,16 @@ Feature: Ledger fiscal year rollover
   Scenario: Update po line limit
     * configure headers = headersAdmin
 
-    Given path 'configurations/entries'
-    And param query = 'configName==poLines-limit'
+    Given path 'orders-storage/settings'
+    And param query = 'key==poLines-limit'
     When method GET
     Then status 200
-    * def config = $.configs[0]
-    * set config.value = '999'
-    * def configId = $.configs[0].id
+    * def setting = $.settings[0]
+    * set setting.value = '999'
+    * def settingId = $.settings[0].id
 
-    Given path 'configurations/entries', configId
-    And request config
+    Given path 'orders-storage/settings', settingId
+    And request setting
     When method PUT
     Then status 204
 
@@ -283,7 +283,7 @@ Feature: Ledger fiscal year rollover
       "fundId": "#(fundId)",
       "name": "#(id)",
       "fiscalYearId":"#(fiscalYearId)",
-      "allocated": #(allocated)
+      "allocated": '#(allocated)'
     }
     """
 
@@ -362,7 +362,7 @@ Feature: Ledger fiscal year rollover
       "workflowStatus": "Open",
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
-      "ongoing": #(ongoing),
+      "ongoing": '#(ongoing)',
       "poLines": [
         {
           "id": "#(poLineId)",
@@ -417,7 +417,7 @@ Feature: Ledger fiscal year rollover
       "workflowStatus": "Open",
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
-      "ongoing": #(ongoing),
+      "ongoing": '#(ongoing)',
       "poLines": [
         {
           "id": "#(poLineId)",
@@ -471,7 +471,7 @@ Feature: Ledger fiscal year rollover
       "vendor": '#(globalVendorId)',
       "orderType": <orderType>,
       "reEncumber": <reEncumber>,
-      "ongoing": #(ongoing),
+      "ongoing": '#(ongoing)',
     }
     """
     When method POST
