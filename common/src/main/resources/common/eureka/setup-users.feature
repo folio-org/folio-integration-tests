@@ -14,22 +14,28 @@ Feature: prepare data for api test
   Scenario: Entitlement creating until status is 'finished'
     * print "---retry entitlement creating---"
     * def maxAttempts = 5
-    * def attempt = 0
+
     * def createWithRetry =
       """
-      function(attempt, maxAttempts) {
-        karate.log('>>>Retry: Start entitlement creating, attempt:', attempt + 1);
+      function retry(attempt, maxAttempts) {
+        karate.log('>>>Retry: Start entitlement creating, attempt:', attempt);
+
         var result = karate.call('classpath:common/eureka/entitlements.feature@createEntitlementResponse');
         var status = result.response.status;
+
         karate.log('>>>Retry: Entitlement creating attempt completed with status:', status);
+
         if (status == 'finished') {
-          karate.log('>>>Retry: Entitlement creation comleted successfully with final status: finished');
+          karate.log('>>>Retry: Entitlement creation completed successfully with final status: finished');
           return result;
         }
-        if (attempt >= maxAttempts) {
-          karate.fail('>>>Retry: Entitlement creation failed due to exceeded max attempts, final status:' + status);
+
+        if (attempt >= maxAttempts - 1) {
+          karate.fail('>>>Retry: Entitlement creation failed. Exceeded max attempts. Final status: ' + status);
+          return;
         }
-        return createWithRetry(attempt + 1, maxAttempts);
+
+        return retry(attempt + 1, maxAttempts);
       }
       """
     * def result = createWithRetry(0, maxAttempts)

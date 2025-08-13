@@ -88,6 +88,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.locations.collection.get'                |
       | 'inventory-storage.locations.item.post'                     |
       | 'inventory-storage.material-types.collection.get'           |
+      | 'inventory-storage.instance-note-types.collection.get'      |
       | 'inventory-storage.material-types.item.post'                |
       | 'inventory-storage.modes-of-issuance.collection.get'        |
       | 'inventory-storage.service-points.collection.get'           |
@@ -124,6 +125,7 @@ Feature: mod-fqm-manager integration tests
       | 'voucher.voucher-lines.collection.get'                      |
       | 'voucher.vouchers.collection.get'                           |
       | 'waives.collection.get'                                     |
+      | 'inventory-storage.holdings-note-types.collection.get'      |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
