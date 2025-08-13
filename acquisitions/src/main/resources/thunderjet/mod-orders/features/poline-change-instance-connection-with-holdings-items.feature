@@ -299,7 +299,8 @@ Feature: Change order line instance connection with holdings items
     # 7.2 Verify old instance used holdings are not deleted
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
-    And param query = 'instanceId==' + instanc eIdOld
+    And param query = 'instanceId==' + instanceIdOld
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -309,6 +310,7 @@ Feature: Change order line instance connection with holdings items
     # 7.3 Verify the new instance holdings are created
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
+    And retry until response.totalRecords == 2
     When method GET
     Then status 200
     And match response.totalRecords == 2
