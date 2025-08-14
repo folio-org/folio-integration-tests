@@ -12,6 +12,21 @@ Feature: global finances
     When method POST
     Then status 201
 
+  # Bring back temporarily so that modules that haven't been migrated yet can still be using mod-configuration in the tests
+  Scenario: update configuration poline limit
+    Given path 'configurations/entries'
+    And request
+      """
+      {
+        "module": "ORDERS",
+        "configName": "poLines-limit",
+        "enabled": true,
+        "value": "999"
+      }
+      """
+    When method POST
+    Then status 201
+
   Scenario: Create configuration with UTC timezone
     Given path 'configurations/entries'
     And request

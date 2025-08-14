@@ -10,7 +10,6 @@ Feature: Initialize mod-orders integration tests
       | name                        |
       | 'mod-audit'                 |
       | 'mod-configuration'         |
-      | 'mod-settings'              |
       | 'mod-feesfines'             |
       | 'mod-finance'               |
       | 'mod-finance-storage'       |

@@ -10,7 +10,6 @@ Feature: Cross-module integration tests
       | name                        |
       | 'mod-permissions'           |
       | 'mod-configuration'         |
-      | 'mod-settings'              |
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
