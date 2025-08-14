@@ -9,6 +9,7 @@ Feature: Initialize edge-orders integration tests
       | name                        |
       | "mod-audit"                 |
       | "mod-configuration"         |
+      | 'mod-settings'              |
       | "mod-ebsconet"              |
       | "mod-finance"               |
       | "mod-finance-storage"       |
@@ -64,6 +65,7 @@ Feature: Initialize edge-orders integration tests
       | "acquisitions-units.memberships.item.post"                    |
       | "acquisitions-units.units.item.post"                          |
       | "configuration.entries.item.post"                             |
+      | 'orders-storage.settings.item.post'                           |
       | "finance.budgets.collection.get"                              |
       | "finance.budgets.item.get"                                    |
       | "finance.budgets.item.post"                                   |

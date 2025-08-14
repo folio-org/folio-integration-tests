@@ -11,6 +11,7 @@ Feature: Initialize mod-ebsconet integration tests
       | 'mod-permissions'           |
       | 'mod-users'                 |
       | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-ebsconet'              |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |
@@ -38,6 +39,7 @@ Feature: Initialize mod-ebsconet integration tests
     * table adminPermissions
       | name                                                          |
       | 'configuration.entries.item.post'                             |
+      | 'orders-storage.settings.item.post'                           |
       | 'finance.budgets.item.post'                                   |
       | 'finance.expense-classes.item.post'                           |
       | 'finance.fiscal-years.item.post'                              |
@@ -60,7 +62,6 @@ Feature: Initialize mod-ebsconet integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.instances.item.post'                               |
       | 'organizations.organizations.item.post'                       |
-
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')

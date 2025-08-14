@@ -9,6 +9,7 @@ Feature: Initialize mod-mosaic integration tests
       | name                        |
       | "mod-audit"                 |
       | "mod-configuration"         |
+      | 'mod-settings'              |
       | "mod-finance"               |
       | "mod-finance-storage"       |
       | "mod-inventory"             |
@@ -33,6 +34,7 @@ Feature: Initialize mod-mosaic integration tests
       | "acquisitions-units.memberships.item.post"                    |
       | "acquisitions-units.units.item.post"                          |
       | "configuration.entries.item.post"                             |
+      | 'orders-storage.settings.item.post'                           |
       | "finance.budgets.collection.get"                              |
       | "finance.budgets.item.get"                                    |
       | "finance.budgets.item.post"                                   |
