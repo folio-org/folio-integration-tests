@@ -9,7 +9,6 @@ Feature: Initialize mod-mosaic integration tests
       | name                        |
       | "mod-audit"                 |
       | "mod-configuration"         |
-      | 'mod-settings'              |
       | "mod-finance"               |
       | "mod-finance-storage"       |
       | "mod-inventory"             |

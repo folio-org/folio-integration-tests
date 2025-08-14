@@ -9,7 +9,6 @@ Feature: Initialize edge-orders integration tests
       | name                        |
       | "mod-audit"                 |
       | "mod-configuration"         |
-      | 'mod-settings'              |
       | "mod-ebsconet"              |
       | "mod-finance"               |
       | "mod-finance-storage"       |

@@ -11,7 +11,6 @@ Feature: Initialize mod-ebsconet integration tests
       | 'mod-permissions'           |
       | 'mod-users'                 |
       | 'mod-configuration'         |
-      | 'mod-settings'              |
       | 'mod-ebsconet'              |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |

@@ -9,7 +9,6 @@ Feature: Initialize mod-finance integration tests
       | name                        |
       | 'mod-permissions'           |
       | 'mod-configuration'         |
-      | 'mod-settings'              |
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-finance-storage'       |
