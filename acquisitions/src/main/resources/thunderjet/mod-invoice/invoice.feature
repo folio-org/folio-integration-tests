@@ -115,3 +115,6 @@ Feature: mod-invoice integration tests
 
   Scenario: Voucher with lines using same external account
     * call read('features/voucher-with-lines-using-same-external-account.feature')
+
+  Scenario: Pay Invoice With 0 Value
+    * call read('features/pay-invoice-with-0-value.feature')
