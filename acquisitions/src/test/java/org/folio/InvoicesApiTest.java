@@ -200,4 +200,8 @@ public class InvoicesApiTest extends TestBaseEureka {
     runFeatureTest("voucher-with-lines-using-same-external-account");
   }
 
+  @Test
+  void payInvoiceWith0Value() {
+    runFeatureTest("pay-invoice-with-0-value");
+  }
 }
