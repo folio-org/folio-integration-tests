@@ -109,22 +109,6 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * def iLine15 = callonce uuid78
     * def iLine16 = callonce uuid79
 
-  Scenario: Update po line limit
-    * configure headers = headersAdmin
-    Given path 'configurations/entries'
-    And param query = 'configName==poLines-limit'
-    When method GET
-    Then status 200
-    * def config = $.configs[0]
-    * set config.value = '999'
-    * def configId = $.configs[0].id
-
-    Given path 'configurations/entries', configId
-    And request config
-    When method PUT
-    Then status 204
-
-
   Scenario Outline: prepare fiscal year with <fiscalYearId> for rollover
     * def fiscalYearId = <fiscalYearId>
     * def code = <code>

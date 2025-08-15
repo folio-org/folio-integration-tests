@@ -31,21 +31,6 @@ Feature: Check limit number of order lines which can be retrieved in scope of co
     When method POST
     Then status 201
 
-  Scenario: Update po line limit
-    * configure headers = headersAdmin
-    Given path 'orders-storage/settings'
-    And param query = 'key==poLines-limit'
-    When method GET
-    Then status 200
-    * def setting = $.settings[0]
-    * set setting.value = '999'
-    * def settingId = $.settings[0].id
-
-    Given path 'orders-storage/settings', settingId
-    And request setting
-    When method PUT
-    Then status 204
-
   Scenario: Create order line
     Given path 'orders/order-lines'
 

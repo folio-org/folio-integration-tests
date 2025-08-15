@@ -12,7 +12,6 @@ Feature: Update Ebsconet Order Line
     * callonce variables
 
   Scenario Outline: Update P/E Mix line with new quantity
-
     * def ebsconetQuantity = <ebsconetQuantity>
     * def currentPQuantity = <currentPQuantity>
     * def currentEQuantity = <currentEQuantity>
@@ -36,7 +35,7 @@ Feature: Update Ebsconet Order Line
     {
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      poLines: [#(orderLine)]
+      poLines: ['#(orderLine)']
     }
     """
     When method POST
@@ -88,7 +87,6 @@ Feature: Update Ebsconet Order Line
       | 11               | 3                | 1                | 10                | 1                  |
       | 14               | 1                | 1                | 7                 | 7                  |
 
-
   Scenario Outline: Update P/E Mix line with new price
 
     * def ebsconetPrice = <ebsconetPrice>
@@ -114,7 +112,7 @@ Feature: Update Ebsconet Order Line
     {
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      poLines: [#(orderLine)]
+      poLines: ['#(orderLine)']
     }
     """
     When method POST

@@ -118,23 +118,6 @@ Feature: Ledger fiscal year rollover
     * def classicalBud1 = callonce uuid81
     * def classicalBud2 = callonce uuid82
 
-  Scenario: Update po line limit
-    * configure headers = headersAdmin
-
-    Given path 'orders-storage/settings'
-    And param query = 'key==poLines-limit'
-    When method GET
-    Then status 200
-    * def setting = $.settings[0]
-    * set setting.value = '999'
-    * def settingId = $.settings[0].id
-
-    Given path 'orders-storage/settings', settingId
-    And request setting
-    When method PUT
-    Then status 204
-
-
   Scenario Outline: prepare fiscal year with <fiscalYearId> for rollover
     * def fiscalYearId = <fiscalYearId>
     * def code = <code>
