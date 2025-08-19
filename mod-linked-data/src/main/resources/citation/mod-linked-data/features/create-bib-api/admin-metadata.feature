@@ -14,6 +14,6 @@ Feature: Admin metadata
 
     * def adminMetadataGraphCall = call getResourceGraph { resourceId:  '#(adminMetadataId)' }
     * def adminMetadataGraph = adminMetadataGraphCall.response
-    * def currentDate = new java.text.SimpleDateFormat('yyMMdd').format(new java.util.Date())
+    * def currentDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(new java.util.Date())
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/lite/createdDate'][0] == currentDate
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/marc/controlNumber'][0] == hrid
