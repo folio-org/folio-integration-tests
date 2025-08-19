@@ -1,4 +1,4 @@
-# For FAT-21190
+# For FAT-21190, https://foliotest.testrail.io/index.php?/cases/view/357044
 Feature: Pay Invoice With 0 Value
 
   Background:
@@ -13,7 +13,7 @@ Feature: Pay Invoice With 0 Value
     * def headersAdmin = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenAdmin)", "Accept": "application/json", "x-okapi-tenant": "#(testTenant)" }
     * configure headers = headersUser
 
-    * call variables
+    * callonce variables
 
   @Positive
   Scenario: Pay Invoice With 0 Value

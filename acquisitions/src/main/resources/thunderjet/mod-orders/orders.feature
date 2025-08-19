@@ -269,3 +269,6 @@ Feature: mod-orders integration tests
 
   Scenario: Auto populate fund code if it missed
     * call read("features/auto-populate-fund-code.feature")
+
+  Scenario: Create Open Order Payment Not Required Fully Receive
+    * call read('features/create-open-payment-not-required-fully-receive.feature')

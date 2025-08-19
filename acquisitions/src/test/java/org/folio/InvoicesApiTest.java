@@ -18,8 +18,7 @@ public class InvoicesApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
 
   public InvoicesApiTest() {
-    super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
@@ -198,10 +197,5 @@ public class InvoicesApiTest extends TestBaseEureka {
   @Test
   void voucherWithLinesUsingSameExternalAccount() {
     runFeatureTest("voucher-with-lines-using-same-external-account");
-  }
-
-  @Test
-  void payInvoiceWith0Value() {
-    runFeatureTest("pay-invoice-with-0-value");
   }
 }
