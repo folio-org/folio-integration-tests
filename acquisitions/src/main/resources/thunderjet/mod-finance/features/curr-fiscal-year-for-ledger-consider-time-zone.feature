@@ -78,7 +78,7 @@ Feature:  Return current fiscal year consider time zone
     Then status 200
     And match $.id == '#(fiscalYearId)'
 
-  Scenario: update configuration with UTC timezone
+  Scenario: Update configuration with UTC timezone
     * configure headers = headersAdmin
     Given path 'configurations/entries', configUUID
     And request

@@ -64,6 +64,7 @@ Feature: Initialize edge-orders integration tests
       | "acquisitions-units.memberships.item.post"                    |
       | "acquisitions-units.units.item.post"                          |
       | "configuration.entries.item.post"                             |
+      | 'orders-storage.settings.item.post'                           |
       | "finance.budgets.collection.get"                              |
       | "finance.budgets.item.get"                                    |
       | "finance.budgets.item.post"                                   |

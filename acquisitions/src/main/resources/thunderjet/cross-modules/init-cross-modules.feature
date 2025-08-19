@@ -107,6 +107,9 @@ Feature: Cross-module integration tests
       | 'configuration.entries.collection.get'                        |
       | 'configuration.entries.item.post'                             |
       | 'configuration.entries.item.put'                              |
+      | 'orders-storage.settings.collection.get'                      |
+      | 'orders-storage.settings.item.post'                           |
+      | 'orders-storage.settings.item.put'                            |
       | 'finance-storage.budgets.item.get'                            |
       | 'finance-storage.budgets.item.put'                            |
       | 'finance-storage.ledger-rollovers.item.delete'                |

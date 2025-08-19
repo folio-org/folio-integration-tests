@@ -23,15 +23,12 @@ Feature: Cancel order lines with ebsconet
     * def poLineId3 = callonce uuid6
     * def poLineId4 = callonce uuid7
 
-
   Scenario: Prepare finances
-    * def v = call createFund { id: #(fundId) }
-    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
-
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
   Scenario: Create an order
-    * def v = call createOrder { id: #(orderId) }
-
+    * def v = call createOrder { id: '#(orderId)' }
 
   Scenario Outline: Create a po line with paymentStatus=<paymentStatus> and receiptStatus=<receiptStatus>
     * copy poLine = orderLineTemplate
@@ -55,10 +52,8 @@ Feature: Cancel order lines with ebsconet
       | poLineId3 | Fully Paid           | Receipt Not Required | true         |
       | poLineId4 | Partially Paid       | Fully Received       | false        |
 
-
   Scenario: Open the order
-    * def v = call openOrder { orderId: #(orderId) }
-
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   Scenario Outline: Use ebsconet to cancel po line <id>
     Given path 'orders/order-lines', <id>
@@ -84,7 +79,6 @@ Feature: Cancel order lines with ebsconet
       | poLineId3 | 422          |
       | poLineId4 | 204          |
 
-
   Scenario: Check error when cancelling again
     Given path 'orders/order-lines', poLineId1
     When method GET
@@ -101,7 +95,6 @@ Feature: Cancel order lines with ebsconet
     And request ebsconetLine
     When method PUT
     Then status 422
-
 
   Scenario Outline: Check the po lines paymentStatus and receiptStatus
     Given path 'orders/order-lines', <id>
