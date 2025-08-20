@@ -98,9 +98,7 @@ Feature: Create Order Check Items
 
     # 12. Verify Item Status Changed To In Process After Receiving
     * configure headers = headersAdmin
-    * call pause 5000
     Given path 'inventory/items', itemId
+    And retry until response.status.name == 'In process' && response.holdingsRecordId == holdingId
     When method GET
     Then status 200
-    And match response.status.name == 'In process'
-    And match response.holdingsRecordId == holdingId
