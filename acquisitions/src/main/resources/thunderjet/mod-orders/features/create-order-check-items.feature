@@ -87,7 +87,7 @@ Feature: Create Order Check Items
     * call pause 10000
 
     # 10. Receive The Item To Change Status
-    * def v = call receivePieceWithHolding { pieceId: "#(pieceId)", poLineId: "#(poLineId)", holdingId: "#(holdingId)", createItem: false }
+    * def v = call receivePieceWithHolding { pieceId: "#(pieceId)", poLineId: "#(poLineId)", holdingId: "#(holdingId)", createItemValue: false }
 
     # 11. Verify Piece Status Is Set To Received
     Given path 'orders/pieces'
