@@ -91,7 +91,8 @@ Feature: Entity types
     # Verify the custom entity type has been deleted
     Given path 'entity-types/custom', customEntityTypeId
     When method GET
-    Then status 404
+    Then status 200
+    And match $.deleted == true
 
   Scenario: Create custom entity type and execute a query using it
     * def queryEntityTypeId = 'a1b2c3d4-e5f6-7890-abcd-ef0123456789'
