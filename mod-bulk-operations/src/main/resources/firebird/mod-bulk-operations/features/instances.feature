@@ -91,7 +91,7 @@ Feature: mod bulk operations instances features
     When method GET
     Then status 200
     And match response.rows[0].row[2] == 'false'
-    And match response.rows[0].row[4] == instanceHRID
+    And match response.rows[0].row[5] == instanceHRID
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -217,7 +217,7 @@ Feature: mod bulk operations instances features
     When method GET
     Then status 200
     And match response.rows[0].row[1] == 'false'
-    And match response.rows[0].row[4] == instanceHRID
+    And match response.rows[0].row[5] == instanceHRID
 
     * def query = 'hrid==' + instanceFeatureHoldingHRID
     Given path 'holdings-storage/holdings'
@@ -392,7 +392,7 @@ Feature: mod bulk operations instances features
     When method GET
     Then status 200
     And match response.rows[0].row[1] == 'true'
-    And match response.rows[0].row[4] == instanceHRID
+    And match response.rows[0].row[5] == instanceHRID
 
     * def query = 'hrid==' + instanceFeatureHoldingHRID
     Given path 'holdings-storage/holdings'
@@ -630,7 +630,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[46] == 'new500'
+    And match response.rows[0].row[47] == 'new500'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -699,8 +699,8 @@ Feature: mod bulk operations instances features
     And param step = 'UPLOAD'
     When method GET
     Then status 200
-    And match response.rows[0].row[4] == instanceHRID
-    And match response.rows[0].row[9] == '#null'
+    And match response.rows[0].row[5] == instanceHRID
+    And match response.rows[0].row[10] == '#null'
 
     Given path 'bulk-operations', operationId, 'content-update'
     And request
@@ -744,7 +744,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[9] == 'RECM (Record mngmnt): compfiles1 - Computer files, CDs, etc (compfiles)1'
+    And match response.rows[0].row[10] == 'RECM (Record mngmnt): compfiles1 - Computer files, CDs, etc (compfiles)1'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -768,7 +768,7 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
-    And match response.rows[0].row[9] == 'RECM (Record mngmnt): compfiles1 - Computer files, CDs, etc (compfiles)1'
+    And match response.rows[0].row[10] == 'RECM (Record mngmnt): compfiles1 - Computer files, CDs, etc (compfiles)1'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -910,8 +910,8 @@ Feature: mod bulk operations instances features
     And param limit = '10'
     And param step = 'EDIT'
     When method GET
-    And match response.rows[0].row[10] == 'new note'
-    And match response.rows[0].row[46] == 'new general note | new500'
+    And match response.rows[0].row[11] == 'new note'
+    And match response.rows[0].row[47] == 'new general note | new500'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -966,3 +966,494 @@ Feature: mod bulk operations instances features
     Then status 200
     And match response.linkToCommittedRecordsCsvFile == '#notpresent'
     And match response.linkToCommittedRecordsMarcFile == '#notpresent'
+
+  Scenario: Set FOLIO instance for deletion, staff and discovery suppress must be true
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def folioInstanceId = '04eaba65-4846-4e03-abf6-00d3ab47cb2d'
+    Given path 'inventory/instances', folioInstanceId
+    When method GET
+    Then status 200
+    * def instanceJson = response
+    * instanceJson.deleted = false
+    * instanceJson.staffSuppress = false
+    * instanceJson.discoverySuppress = false
+
+    Given path 'inventory/instances', folioInstanceId
+    And request instanceJson
+    When method PUT
+    Then status 204
+
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    Given path 'bulk-operations/upload'
+    And param entityType = 'INSTANCE'
+    And param identifierType = 'HRID'
+    And multipart file file = { read: 'classpath:samples/instances/instance-hrids.csv', contentType: 'text/csv' }
+    When method POST
+    Then status 200
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def operationId = $.id
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step": "UPLOAD"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'MATCHED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'UPLOAD'
+    When method GET
+    Then status 200
+    And match response.rows[0].row[4] == 'false'
+    # Make sure staff and discovery suppress are false
+    And match response.rows[0].row[1] == 'false'
+    And match response.rows[0].row[2] == 'false'
+
+    Given path 'bulk-operations', operationId, 'content-update'
+    And request
+      """
+      {
+        "bulkOperationRules": [
+          {
+            "bulkOperationId": "#(operationId)",
+            "rule_details": {
+              "option": "SET_RECORDS_FOR_DELETE",
+              "tenants": [],
+              "actions": [
+                {
+                  "type": "SET_TO_TRUE",
+                  "parameters": [],
+                  "tenants": [],
+                  "updated_tenants": []
+                }
+              ]
+            }
+          }
+        ],
+        "totalRecords": 1
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step":"EDIT",
+        "approach":"IN_APP"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'EDIT'
+    When method GET
+    And match response.rows[0].row[4] == 'true'
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'COMMIT'
+    When method GET
+    And match response.rows[0].row[4] == 'true'
+    # Staff suppress and discovery suppress must be 'true' as well
+    And match response.rows[0].row[1] == 'true'
+    And match response.rows[0].row[2] == 'true'
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    And param offset = '0'
+    And param errorType = ''
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'COMMITTED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    * def query = 'hrid==' + instanceHRID
+    Given path 'inventory/instances'
+    And param query = query
+    When method GET
+    Then status 200
+    And match response.instances[0].deleted == true
+    And match response.instances[0].discoverySuppress == true
+    And match response.instances[0].staffSuppress == true
+
+  Scenario: Unset FOLIO instance for deletion, staff and discovery suppress should remain true
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    Given path 'bulk-operations/upload'
+    And param entityType = 'INSTANCE'
+    And param identifierType = 'HRID'
+    And multipart file file = { read: 'classpath:samples/instances/instance-hrids.csv', contentType: 'text/csv' }
+    When method POST
+    Then status 200
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def operationId = $.id
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step": "UPLOAD"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'MATCHED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'UPLOAD'
+    When method GET
+    Then status 200
+    And match response.rows[0].row[4] == 'true'
+    # Make sure staff and discovery suppress are false
+    And match response.rows[0].row[1] == 'true'
+    And match response.rows[0].row[2] == 'true'
+
+    Given path 'bulk-operations', operationId, 'content-update'
+    And request
+      """
+      {
+        "bulkOperationRules": [
+          {
+            "bulkOperationId": "#(operationId)",
+            "rule_details": {
+              "option": "SET_RECORDS_FOR_DELETE",
+              "tenants": [],
+              "actions": [
+                {
+                  "type": "SET_TO_FALSE",
+                  "parameters": [],
+                  "tenants": [],
+                  "updated_tenants": []
+                }
+              ]
+            }
+          }
+        ],
+        "totalRecords": 1
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step":"EDIT",
+        "approach":"IN_APP"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'EDIT'
+    When method GET
+    And match response.rows[0].row[4] == 'false'
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'COMMIT'
+    When method GET
+    And match response.rows[0].row[4] == 'false'
+    # Staff suppress and discovery suppress should be unchanged
+    And match response.rows[0].row[1] == 'true'
+    And match response.rows[0].row[2] == 'true'
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    And param offset = '0'
+    And param errorType = ''
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'COMMITTED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    * def query = 'hrid==' + instanceHRID
+    Given path 'inventory/instances'
+    And param query = query
+    When method GET
+    Then status 200
+    And match response.instances[0].deleted == false
+    And match response.instances[0].discoverySuppress == true
+    And match response.instances[0].staffSuppress == true
+
+  Scenario: Set MARC instance for deletion, LDR should be set to 'd', discoverySuppress to 'true', deleted to 'true'
+    * call login testUser
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def marcInstanceId = '55529ca9-3720-4967-ac5f-9ed2d37ade9c'
+    Given path 'inventory/instances', marcInstanceId
+    When method GET
+    Then status 200
+    * def instanceJson = response
+    * instanceJson.deleted = false
+    * instanceJson.staffSuppress = false
+    * instanceJson.discoverySuppress = false
+
+    Given path 'inventory/instances', marcInstanceId
+    And request instanceJson
+    When method PUT
+    Then status 204
+
+    * call login testUser
+    * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    Given path 'bulk-operations/upload'
+    And param entityType = 'INSTANCE'
+    And param identifierType = 'ID'
+    And multipart file file = { read: 'classpath:samples/instances/marc-instance.csv', contentType: 'text/csv' }
+    When method POST
+    Then status 200
+
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def operationId = $.id
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step": "UPLOAD"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'UPLOAD'
+    When method GET
+    Then status 200
+    # Make sure 'deleted' is false
+    And match response.rows[0].row[4] == 'false'
+    # Make sure staff and discovery suppress are false
+    And match response.rows[0].row[1] == 'false'
+    And match response.rows[0].row[2] == 'false'
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'MATCHED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'content-update'
+    And request
+      """
+      {
+        "bulkOperationRules": [
+          {
+            "bulkOperationId": "#(operationId)",
+            "rule_details": {
+              "option": "SET_RECORDS_FOR_DELETE",
+              "tenants": [],
+              "actions": [
+                {
+                  "type": "SET_TO_TRUE",
+                  "parameters": [],
+                  "tenants": [],
+                  "updated_tenants": []
+                }
+              ]
+            }
+          }
+        ],
+        "totalRecords": 1
+      }
+      """
+    When method POST
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'marc-content-update'
+    And request
+      """
+      {
+        "bulkOperationMarcRules": [
+        ],
+        "totalRecords": 0
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step":"EDIT",
+        "approach":"IN_APP"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'EDIT'
+    When method GET
+    And match response.rows[0].row[4] == 'true'
+    # Make sure staff and discovery suppress are true as well
+    And match response.rows[0].row[1] == 'true'
+    And match response.rows[0].row[2] == 'true'
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_FILE'
+    When method GET
+    Then status 200
+
+    # Check .mrc file on Are u sure? form
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'PROPOSED_CHANGES_MARC_FILE'
+    When method GET
+    Then status 200
+    * def marcLine = new java.lang.String(response, 'utf-8')
+    * print 'MARC line: ', marcLine
+    * def leaderStatus = marcLine.substring(5, 6)
+    And match leaderStatus == 'd'
+
+    Given path 'bulk-operations', operationId, 'start'
+    And request
+      """
+      {
+        "step":"COMMIT",
+        "approach":"IN_APP"
+      }
+      """
+    When method POST
+    Then status 200
+
+    * pause(15000)
+
+    Given path 'bulk-operations', operationId, 'preview'
+    And param limit = '10'
+    And param step = 'COMMIT'
+    When method GET
+    And match response.rows[0].row[4] == 'true'
+    # Staff suppress and discovery suppress should be true as well
+    And match response.rows[0].row[1] == 'true'
+    And match response.rows[0].row[2] == 'true'
+
+    Given path 'bulk-operations', operationId, 'errors'
+    And param limit = '10'
+    And param offset = '0'
+    And param errorType = ''
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'COMMITTED_RECORDS_FILE'
+    When method GET
+    Then status 200
+
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'COMMITTED_RECORDS_MARC_FILE'
+    When method GET
+    Then status 200
+    * def marcLine = new java.lang.String(response, 'utf-8')
+    * print 'MARC line: ', marcLine
+    * def leaderStatus = marcLine.substring(5, 6)
+    And match leaderStatus == 'd'
+
+    * def query = 'id==' + marcInstanceId
+    Given path 'inventory/instances'
+    And param query = query
+    When method GET
+    Then status 200
+    # Also recheck an actual instance in inventory
+    And match response.instances[0].deleted == true
+    And match response.instances[0].discoverySuppress == true
+    And match response.instances[0].staffSuppress == true
+
+    # Also check updated SRS record
+    Given path '/source-storage/stream/source-records'
+    And param externalId = marcInstanceId
+    And param deleted = true
+    When method GET
+    Then status 200
+    And match response.deleted == true
+    And match response.additionalInfo.suppressDiscovery == true
+    * def leaderLine = response.parsedRecord.content.leader
+    * def leaderStatus = leaderLine.substring(5, 6)
+    And match leaderStatus == 'd'
