@@ -8,6 +8,7 @@ Feature: Receive piece with Holding ID
   Scenario: Receive piece with Holding ID
     * def holdingId = karate.get('holdingId', globalHoldingId1)
     * def tenantId = karate.get('tenantId', null)
+    * def createItem = karate.get('createItem', true)
     Given path 'orders/check-in'
     And request
     """
@@ -26,7 +27,7 @@ Feature: Receive piece with Holding ID
                 discoverySuppress: true,
                 holdingId: "#(holdingId)",
                 receivingTenantId: "#(tenantId)",
-                createItem: "true"
+                createItem: "#(createItem)"
               }
             ],
             poLineId: "#(poLineId)"
