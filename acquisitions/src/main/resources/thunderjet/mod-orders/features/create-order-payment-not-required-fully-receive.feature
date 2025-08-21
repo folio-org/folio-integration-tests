@@ -54,6 +54,10 @@ Feature: Create Order Payment Not Required Fully Receive
     # 5. Open Order
     * def v = call openOrder { orderId: "#(orderId)" }
 
+    #========================================================================================================
+    # TestRail Case Steps
+    #========================================================================================================
+
     # 6. Verify Order Is Open
     Given path 'orders/composite-orders', orderId
     When method GET

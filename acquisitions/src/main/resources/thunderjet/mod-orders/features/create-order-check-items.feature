@@ -43,6 +43,10 @@ Feature: Create Order Check Items
     # 4. Open Order
     * def v = call openOrder { orderId: "#(orderId)" }
 
+    #========================================================================================================
+    # TestRail Case Steps
+    #========================================================================================================
+
     # 5. Get The Order Line To Retrieve Instance And Holdings Information
     Given path 'orders/order-lines', poLineId
     When method GET
