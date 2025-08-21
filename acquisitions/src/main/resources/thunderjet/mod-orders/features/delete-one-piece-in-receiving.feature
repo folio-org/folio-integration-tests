@@ -1,5 +1,5 @@
 # For C422159, https://foliotest.testrail.io/index.php?/cases/view/422159
-Feature: Delete One Piece After Receiving
+Feature: Delete One Piece In Receiving
 
   Background:
     * print karate.info.scenarioName
@@ -17,7 +17,7 @@ Feature: Delete One Piece After Receiving
     * callonce variables
 
   @Positive
-  Scenario: Delete One Piece After Receiving And Verify Quantity Update
+  Scenario: Delete One Piece In Receiving And Verify Quantity Update
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderId = call uuid

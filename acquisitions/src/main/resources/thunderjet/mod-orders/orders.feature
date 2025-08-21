@@ -276,5 +276,5 @@ Feature: mod-orders integration tests
   Scenario: Create Order Check Items
     * call read('features/create-order-check-items.feature')
 
-  Scenario: Delete One Piece After Receiving
-    * call read('features/delete-one-piece-after-receiving.feature')
+  Scenario: Delete One Piece In Receiving
+    * call read('features/delete-one-piece-in-receiving.feature')
