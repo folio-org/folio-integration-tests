@@ -40,6 +40,10 @@ Feature: Pay Invoice With 0 Value
     * def v = call createInvoiceLine { invoiceLineId: "#(invoiceLineId1)", invoiceId: "#(invoiceId)", fundId: "#(fundId1)", total: 100 }
     * def v = call createInvoiceLine { invoiceLineId: "#(invoiceLineId2)", invoiceId: "#(invoiceId)", fundId: "#(fundId2)", total: -100 }
 
+    #========================================================================================================
+    # TestRail Case Steps
+    #========================================================================================================
+
     # 4. Check Invoice
     Given path 'invoice/invoices/', invoiceId
     When method GET

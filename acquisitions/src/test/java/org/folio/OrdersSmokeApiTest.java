@@ -42,4 +42,9 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
   void createOrderCheckItems() {
     runFeatureTest("create-order-check-items");
   }
+
+  @Test
+  void deleteOnePieceAfterReceiving() {
+    runFeatureTest("delete-one-piece-after-receiving");
+  }
 }
