@@ -1,5 +1,5 @@
 # For FAT-21348, https://foliotest.testrail.io/index.php?/cases/view/743
-Feature: Create Open Order Payment Not Required Fully Receive
+Feature: Create Order Payment Not Required Fully Receive
 
   Background:
     * print karate.info.scenarioName
@@ -13,10 +13,11 @@ Feature: Create Open Order Payment Not Required Fully Receive
     * def headersAdmin = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenAdmin)", "Accept": "application/json", "x-okapi-tenant": "#(testTenant)" }
     * configure headers = headersUser
     * configure retry = { count: 10, interval: 10000 }
+
     * callonce variables
 
   @Positive
-  Scenario: Create Open Order With Payment Not Required And Fully Receive
+  Scenario: Create Order With Payment Not Required And Fully Receive
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderId = call uuid
@@ -53,6 +54,10 @@ Feature: Create Open Order Payment Not Required Fully Receive
     # 5. Open Order
     * def v = call openOrder { orderId: "#(orderId)" }
 
+    #========================================================================================================
+    # TestRail Case Steps
+    #========================================================================================================
+
     # 6. Verify Order Is Open
     Given path 'orders/composite-orders', orderId
     When method GET
@@ -66,28 +71,21 @@ Feature: Create Open Order Payment Not Required Fully Receive
     When method GET
     Then status 200
     * def pieces = response.pieces
+    * def pieceId = pieces[0].id
     And match pieces == '#[1]'
     And match each pieces[*].receivingStatus == 'Expected'
 
-    # 8. Fetch Piece By PoLine Id
-    Given path 'orders/pieces'
-    And param query = 'poLineId==' + poLineId
-    When method GET
-    Then status 200
-    * def pieces = response.pieces
-    * def pieceId = pieces[0].id
-
-    # 9. Receive Piece
+    # 8. Receive Piece
     * def v = call receivePieceWithHolding { pieceId: "#(pieceId)", poLineId: "#(poLineId)" }
 
-    # 10. Verify Piece Status Is Set To Received
+    # 9. Verify Piece Status Is Set To Received
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     And retry until response.pieces != null && response.pieces.length > 0 && response.pieces[0].receivingStatus == 'Received'
     When method GET
     Then status 200
 
-    # 11. Verify Order Status After Fully Receiving - Should Close Automatically
+    # 10. Verify Order Status After Fully Receiving - Should Close Automatically
     * def isOrderFullyClosedWithComplete =
     """
     function(response) {
