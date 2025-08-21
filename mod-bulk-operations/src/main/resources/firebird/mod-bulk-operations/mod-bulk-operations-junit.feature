@@ -77,6 +77,7 @@ Feature: bulk operations integration tests
       | 'users.item.get'                                          |
       | 'users.item.post'                                         |
       | 'users.item.put'                                          |
+      | 'source-storage.stream.source-records.collection.get'     |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
