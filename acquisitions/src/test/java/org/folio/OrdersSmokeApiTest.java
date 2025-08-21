@@ -34,7 +34,12 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
   }
 
   @Test
-  void createOpenPaymentNotRequiredFullyReceive() {
-    runFeatureTest("create-open-payment-not-required-fully-receive");
+  void createOrderPaymentNotRequiredFullyReceive() {
+    runFeatureTest("create-order-payment-not-required-fully-receive");
+  }
+
+  @Test
+  void createOrderCheckItems() {
+    runFeatureTest("create-order-check-items");
   }
 }
