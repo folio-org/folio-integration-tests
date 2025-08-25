@@ -47,4 +47,9 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
   void deleteOnePieceInReceiving() {
     runFeatureTest("delete-one-piece-in-receiving");
   }
+
+  @Test
+  void changeOrderInstanceConnection() {
+    runFeatureTest("change-order-instance-connection");
+  }
 }
