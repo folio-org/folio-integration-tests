@@ -30,6 +30,7 @@ Feature: Initialize mod-orders integration tests
 
     * table userPermissions
       | name                                                          |
+      | 'inventory.instances.item.get'                                |
       | 'inventory.instances.item.delete'                             |
       | 'inventory.instances.item.post'                               |
       | 'inventory.instances.item.put'                                |
@@ -175,6 +176,7 @@ Feature: Initialize mod-orders integration tests
       | 'inventory.items-by-holdings-id.collection.get'               |
       | 'inventory.items.collection.get'                              |
       | 'inventory.items.item.get'                                    |
+      | 'inventory.items.item.post'                                   |
       | 'inventory.items.move.item.post'                              |
       | 'inventory.tenant-items.collection.get'                       |
       | 'lost-item-fees-policies.collection.get'                      |
