@@ -67,6 +67,7 @@ Feature: mod-lists integration tests
       | 'inventory-storage.instance-types.collection.get'           |
       | 'inventory-storage.instance-statuses.collection.get'        |
       | 'inventory-storage.instance-note-types.collection.get'      |
+      | 'inventory-storage.electronic-access-relationships.collection.get' |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
