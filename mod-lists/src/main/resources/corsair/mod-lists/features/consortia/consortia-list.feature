@@ -92,7 +92,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'inventory-storage.instance-note-types.collection.get'             |
       | 'inventory-storage.holdings-note-types.collection.get'             |
       | 'inventory-storage.electronic-access-relationships.collection.get' |
-      | 'inventory-storage.electronic-access-relationships.collection.get' |
+      | 'inventory-storage.item-note-types.collection.get'                |
 
 
     # define consortium
