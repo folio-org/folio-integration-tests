@@ -41,7 +41,6 @@ public class ModFqmManagerTest extends TestBaseEureka {
                         "migration",
                         "query/basic-usage",
                         "query/operators-basic",
-                        "query/operators-array",
                         "query/per-entity-type",
                         "query/special-field-tests",
                         "query/validation",

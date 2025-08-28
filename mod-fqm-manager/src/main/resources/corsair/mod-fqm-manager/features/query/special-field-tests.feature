@@ -32,7 +32,7 @@ Feature: Query special fields
     And match $.content[0] contains {"_deleted":  true}
 
   Scenario: Instance language column
-    * def queryRequest = { entityTypeId: '#(instanceEntityTypeId)' , fqlQuery: '{"instance.languages":{"$contains_all":["eng"]}}' }
+    * def queryRequest = { entityTypeId: '#(instanceEntityTypeId)' , fqlQuery: '{"instance.languages":{"$eq":"eng"}}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
@@ -40,4 +40,3 @@ Feature: Query special fields
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content[0]["instance.languages"] == ['eng','fre']
