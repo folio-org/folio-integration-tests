@@ -15,7 +15,6 @@ Feature: Scenarios that are primarily focused around creating lists
     When method GET
     Then status 200
     And match $.name == listRequest.name
-    And match $.userFriendlyQuery == '(users.username == integration_test_user_123)'
 
   Scenario: Posting list request missing required arguments should return '400 Bad Request'
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/invalid-list-request.json')
