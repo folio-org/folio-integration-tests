@@ -99,6 +99,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.service-points.collection.get'                  |
       | 'inventory-storage.statistical-code-types.collection.get'          |
       | 'inventory-storage.statistical-codes.collection.get'               |
+      | 'inventory-storage.item-note-types.collection.get'                 |
       | 'invoice.invoice-lines.collection.get'                             |
       | 'invoice.invoices.collection.get'                                  |
       | 'lost-item-fees-policies.collection.get'                           |
