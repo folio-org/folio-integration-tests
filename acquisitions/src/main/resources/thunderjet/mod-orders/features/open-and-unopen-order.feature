@@ -93,11 +93,15 @@ Feature: Open and unopen order
     And match response.paymentStatus == 'Pending'
     And match response.receiptStatus == 'Pending'
 
+  # For: https://folio-org.atlassian.net/browse/MODORDERS-1343
   Scenario: Unopen order with order line that contains instance and holding, which are used by another order line
-    # 1. Create and open order with an order line
     * def fundId = globalFundId
     * def orderId1 = call uuid
     * def poLineId1 = call uuid
+    * def orderId2 = call uuid
+    * def poLineId2 = call uuid
+
+    # 1. Create and open order with an order line
     * def v = call createOrder { id: '#(orderId1)' }
     * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', quantity: 1, titleOrPackage: 't1', checkinItems: true }
     * def v = call openOrder { orderId: '#(orderId1)' }
@@ -110,8 +114,6 @@ Feature: Open and unopen order
     * def instanceId = response.instanceId
 
     # 3. Create and open another order with an order line that has the same instance and holding of the first order line
-    * def orderId2 = call uuid
-    * def poLineId2 = call uuid
     * def poLineLocations = [ { holdingId: #(holdingId), quantity: 1, quantityPhysical: 1 } ]
     * table orderLineData
       | id        | orderId  | locations       | quantity | instanceId | titleOrPackage | checkinItems |
@@ -122,16 +124,14 @@ Feature: Open and unopen order
 
     # 4 Verify that the both order lines share the same instance and holding IDs
     Given path 'orders/order-lines', poLineId1
+    And retry until response.instanceId == instanceId && response.locations[0].holdingId == holdingId
     When method GET
     Then status 200
-    And match response.instanceId == instanceId
-    And match response.locations[0].holdingId == holdingId
 
     Given path 'orders/order-lines', poLineId2
+    And retry until response.instanceId == instanceId && response.locations[0].holdingId == holdingId
     When method GET
     Then status 200
-    And match response.instanceId == instanceId
-    And match response.locations[0].holdingId == holdingId
 
     # 5. Unopen the second order and delete holdings
     * def v = call unopenOrderDeleteHoldings { orderId: '#(orderId2)' }
@@ -140,7 +140,6 @@ Feature: Open and unopen order
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
+    And retry until response.holdingsRecords[0].id == holdingId
     When method GET
     Then status 200
-    And match response.holdingsRecords[*].id contains holdingId
-    * configure headers = headersUser
