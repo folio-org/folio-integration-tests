@@ -67,4 +67,4 @@ Feature: inventory
     When method GET
     Then status 200
     And match response.totalRecords == 2
-    And match response.locations.code == ['E', 'shadow-loc']
+    And match response.locations[*].code contains only ['E', 'shadow-loc']
