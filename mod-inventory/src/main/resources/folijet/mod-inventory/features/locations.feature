@@ -36,3 +36,35 @@ Feature: inventory
     When method POST
     Then status 201
 
+  Scenario: create and fetch shadow location and location-units
+    Given path 'location-units/institutions'
+    And request read(samplesPath + 'shadow-institution.json')
+    When method POST
+    Then status 201
+
+    Given path 'location-units/campuses'
+    And request read(samplesPath + 'shadow-campus.json')
+    When method POST
+    Then status 201
+
+    Given path 'location-units/libraries'
+    And request read(samplesPath + 'shadow-library.json')
+    When method POST
+    Then status 201
+
+    Given path 'locations'
+    And request read(samplesPath + 'shadow-location.json')
+    When method POST
+    Then status 201
+
+    Given path 'locations'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+
+    Given path 'locations'
+    And param includeShadowLocations = true
+    When method GET
+    Then status 200
+    And match response.totalRecords == 2
+    And match response.locations.code == ['E', 'shadow-loc']
