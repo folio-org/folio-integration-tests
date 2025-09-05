@@ -26,6 +26,7 @@ Feature: mod-inventory integration tests
       | 'inventory-storage.location-units.campuses.item.post'     |
       | 'inventory-storage.location-units.institutions.item.post' |
       | 'inventory-storage.location-units.libraries.item.post'    |
+      | 'inventory-storage.locations.collection.get'              |
       | 'inventory-storage.locations.item.post'                   |
       | 'inventory-storage.holdings-sources.item.post'            |
       | 'source-storage.snapshots.post'                           |
