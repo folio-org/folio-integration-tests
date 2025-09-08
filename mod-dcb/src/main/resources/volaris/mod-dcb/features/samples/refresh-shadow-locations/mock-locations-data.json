@@ -1,0 +1,229 @@
+[
+  {
+    "id": "58e47bb6-850e-4f1d-a5f5-d40f091c6879",
+    "httpRequest": {
+      "method": "GET",
+      "path": "/locations",
+      "queryStringParameters": {
+        "number": [
+          "1"
+        ],
+        "size": [
+          "5"
+        ]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "content": [
+          {
+            "id": "a910bd13-6f76-4a0b-a595-af6e2b176cc4",
+            "code": "LOC-1",
+            "name": "Location-1",
+            "agency": {
+              "id": "647a6255-7e9e-45a8-898f-cfeb20d62bba",
+              "code": "#(karate.get('agencyOneCode', 'AG-001'))",
+              "name": "#(karate.get('agencyOneName', 'Agency-One'))"
+            }
+          },
+          {
+            "id": "eb80dd05-90a3-4f78-a1ba-9eccc29d2c8c",
+            "code": "LOC-2",
+            "name": "Location-2",
+            "agency": {
+              "id": "647a6255-7e9e-45a8-898f-cfeb20d62bba",
+              "code": "AG-002",
+              "name": "Agency-Two"
+            }
+          },
+          {
+            "id": "5a07ad21-4da1-4643-af0e-2b1b342ff3a8",
+            "code": "LOC-3",
+            "name": "Location-3",
+            "agency": {
+              "id": "47809349-f45b-42e0-a77d-05e642847afd",
+              "code": "AG-003",
+              "name": "Agency-Three"
+            }
+          },
+          {
+            "id": "39803f83-2846-4b41-bfd4-91bb415555fb",
+            "code": "LOC-4",
+            "name": "Location-4",
+            "agency": {
+              "id": "7e6b4c08-7259-4f19-aadf-b838c678a543",
+              "code": "AG-004",
+              "name": "Agency-Four"
+            }
+          },
+          {
+            "id": "921f5ac1-34dd-4e7a-9bce-fea45544fac1",
+            "code": "LOC-5",
+            "name": "Location-5",
+            "agency": {
+              "id": "ec1f3ca2-4bca-4040-a740-95f85ec35af3",
+              "code": "AG-005",
+              "name": "Agency-Five"
+            }
+          }
+        ],
+        "totalSize": 8,
+        "totalPages": 2,
+        "empty": false,
+        "numberOfElements": 5
+      }
+    }
+  },
+  {
+    "id": "bceecfe6-cfda-4cc1-8221-94305bbe9076",
+    "httpRequest": {
+      "method": "GET",
+      "path": "/locations",
+      "queryStringParameters": {
+        "number": [
+          "2"
+        ],
+        "size": [
+          "5"
+        ]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "content": [
+          {
+            "id": "304ca54f-6752-4dcc-81f0-1a6891f795e9",
+            "code": "LOC-6",
+            "name": "Location-6",
+            "agency": {
+              "id": "7331e2e6-914b-4c29-a6a0-b1c6190f8826",
+              "code": "#(karate.get('agencyOneCode', 'AG-001'))",
+              "name": "#(karate.get('agencyOneName', 'Agency-One'))"
+            }
+          },
+          {
+            "id": "ef3a6791-5c68-432a-8cc3-0ab7fca732a2",
+            "code": "LOC-7",
+            "name": "Location-7",
+            "agency": {
+              "id": "647a6255-7e9e-45a8-898f-cfeb20d62bba",
+              "code": "AG-002",
+              "name": "Agency-Two"
+            }
+          },
+          {
+            "id": "45fc817e-1ff9-4326-abdd-e5581a3079c7",
+            "code": "LOC-8",
+            "name": "Location-8",
+            "agency": {
+              "id": "647a6255-7e9e-45a8-898f-cfeb20d62bba",
+              "code": "AG-003",
+              "name": "Agency-Three"
+            }
+          }
+        ],
+        "totalSize": 8,
+        "totalPages": 2,
+        "empty": false,
+        "numberOfElements": 3
+      }
+    }
+  },
+  {
+    "id": "321f3e37-f29b-45ef-8d34-87f5c78c1316",
+    "httpRequest": {
+      "method": "GET",
+      "path": "/locations",
+      "queryStringParameters": {
+        "number": [
+          "^([3-9]\\d*)$"
+        ],
+        "size": [
+          "5"
+        ]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "content": [],
+        "totalSize": 8,
+        "totalPages": 4,
+        "empty": true,
+        "numberOfElements": 0
+      }
+    }
+  },
+  {
+    "id": "dcb-hub-credentials",
+    "httpRequest": {
+      "method": "POST",
+      "path": ".*dcb-hub-credentials.*",
+      "headers": {
+        "X-Amz-Target": [
+          "AmazonSSM.GetParameter"
+        ]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "Parameter": {
+          "Name": "dcb-hub-credentials",
+          "Type": "String",
+          "Value": "#(dcbHubCredValue)",
+          "Version": 1,
+          "LastModifiedDate": 1.61803398875E9,
+          "ARN": "arn:aws:ssm:us-east-1:123456789012:dcb-hub-credentials"
+        }
+      }
+    }
+  },
+  {
+    "id": "73e294e7-b67a-4c07-92f6-8106ec79aded",
+    "httpRequest": {
+      "method": "POST",
+      "path": "/realms/master/protocol/openid-connect/token"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJmb2xpb190ZXN0IjoiZm9saW9fdGVzdCIsInN1YiI6ImZvbGlvX3Rlc3QiLCJpc3MiOiJmb2xpb190ZXN0IiwiaWF0IjoxNzU0MzA4NDQxLCJleHAiOjQ5MDk5ODIwNDF9.HCaSJ23WAf4N23zcWxpfO_xxS5bQsbQL6LyQ3T3d84Q",
+        "expires_in": 600,
+        "refresh_expires_in": 600,
+        "refresh_token": "eyJhbGciOiJIUzI1NiJ9.eyJmb2xpb190ZXN0IjoiZm9saW9fdGVzdCIsInN1YiI6ImZvbGlvX3Rlc3QiLCJpc3MiOiJmb2xpb190ZXN0IiwiaWF0IjoxNzU0MzA4NDQxLCJleHAiOjQ5MDk5ODIwNDF9.HCaSJ23WAf4N23zcWxpfO_xxS5bQsbQL6LyQ3T3d84Q",
+        "token_type": "Bearer",
+        "not-before-policy": 0,
+        "session_state": "3af1cbbc-3cbb-436c-9122-f2eb37d0dcd6",
+        "scope": "profile email"
+      }
+    }
+  }
+]
