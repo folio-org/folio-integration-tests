@@ -1,5 +1,5 @@
-# For MODINVOICE-608, https://foliotest.testrail.io/index.php?/cases/view/825437
-Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid Invoice Unreleasing Encumbrance And Canceling Another Paid Invoice
+# For MODINVOICE-608, https://foliotest.testrail.io/index.php?/cases/view/829881
+Feature: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid Invoice Unreleasing Encumbrance And Canceling Paid Invoice Release Encumbrance True
 
   Background:
     * print karate.info.scenarioName
@@ -14,66 +14,70 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
     * callonce variables
 
   @Positive
-  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Complex Invoice Operations
+  Scenario: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Complex Invoice Operations
     # Generate unique identifiers for this test scenario
     * def fundId = call uuid
     * def budgetId = call uuid
     * def orderId = call uuid
     * def orderLineId = call uuid
-    * def firstInvoiceId = call uuid
-    * def secondInvoiceId = call uuid
-    * def firstInvoiceLineId = call uuid
-    * def secondInvoiceLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
 
     # 1. Create Fund And Budget
     * def v = call createFund { id: "#(fundId)", name: "Encumbrance Test Fund" }
-    * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", fiscalYearId: "#(globalFiscalYearId)", allocated: 1000, status: "Active" }
+    * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 1000, status: "Active" }
 
-    # 2. Create $0 Ongoing Order
+    # 2. Create $0 Ongoing Order With Fund Distribution
     * def ongoingConfig = { "interval": 123, "isSubscription": false }
     * def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)" }
 
     # 3. Create Order Line With $0 Cost
-    * def v = call createOrderLine { id: "#(orderLineId)", orderId: "#(orderId)", fundId: "#(fundId)", listUnitPrice: 0, quantity: 1 }
+    * def v = call createOrderLine { id: "#(orderLineId)", orderId: "#(orderId)", fundId: "#(fundId)", listUnitPrice: 0, quantity: 1, titleOrPackage: "Test $0 Ongoing Order" }
 
     # 4. Open Order
     * def v = call openOrder { orderId: "#(orderId)" }
 
-    # 5. Verify Initial Order State - $0 Encumbered, $0 Expended
+    # 5. Verify Order Is Open With $0 Encumbrance
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0 && response.totalEncumbered == 0 && response.totalExpended == 0
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0 && response.totalEncumbered == 0
     When method GET
     Then status 200
 
-    # 6. Create First Invoice ($50) With Release Encumbrance = True
-    * def v = call createInvoice { id: "#(firstInvoiceId)", fiscalYearId: "#(globalFiscalYearId)" }
-    * def v = call createInvoiceLine { invoiceLineId: "#(firstInvoiceLineId)", invoiceId: "#(firstInvoiceId)", poLineId: "#(orderLineId)", fundId: "#(fundId)", total: 50, releaseEncumbrance: true }
+    # 6. Create Invoice With $50 Release Encumbrance = True
+    * def v = call createInvoice { id: "#(invoiceId)", fiscalYearId: "#(globalFiscalYearId)" }
+    * def v = call createInvoiceLine { invoiceLineId: "#(invoiceLineId)", invoiceId: "#(invoiceId)", poLineId: "#(orderLineId)", fundId: "#(fundId)", total: 50.00, releaseEncumbrance: true }
 
-    # 7. Approve And Pay First Invoice
-    * def v = call approveInvoice { invoiceId: "#(firstInvoiceId)" }
-    * def v = call payInvoice { invoiceId: "#(firstInvoiceId)" }
+    # 7. Approve And Pay Invoice
+    * def v = call approveInvoice { invoiceId: "#(invoiceId)" }
+    * def v = call payInvoice { invoiceId: "#(invoiceId)" }
 
-    # 8. Create Second Invoice ($200) With Release Encumbrance = True
-    * def v = call createInvoice { id: "#(secondInvoiceId)", fiscalYearId: "#(globalFiscalYearId)" }
-    * def v = call createInvoiceLine { invoiceLineId: "#(secondInvoiceLineId)", invoiceId: "#(secondInvoiceId)", poLineId: "#(orderLineId)", fundId: "#(fundId)", total: 200, releaseEncumbrance: true }
-
-    # 9. Approve, Pay And Cancel Second Invoice
-    * def v = call approveInvoice { invoiceId: "#(secondInvoiceId)" }
-    * def v = call payInvoice { invoiceId: "#(secondInvoiceId)" }
-    * def v = call cancelInvoice { invoiceId: "#(secondInvoiceId)" }
+    # 8. Close Order
+    * def v = call closeOrder { orderId: "#(orderId)" }
 
     #========================================================================================================
     # TestRail Case Steps
     #========================================================================================================
 
-    # 10. Verify Order State After Second Invoice Operations - $0 Encumbered, $50 Expended
+    # 9. Verify Order Is Closed With Proper Financial State
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0.00 && response.totalEncumbered == 0.00 && response.totalExpended == 50.00
+    And retry until response.workflowStatus == 'Closed' && response.totalEstimatedPrice == 0.00 && response.totalEncumbered == 0.00 && response.totalExpended == 50.00
     When method GET
     Then status 200
 
-    # 11. Verify Encumbrance Status Is Released With $50 Expended
-    * def validateEncumbranceReleased =
+    # 10. Reopen The Closed Order
+    * def v = call openOrder { orderId: "#(orderId)" }
+
+    # 11. Verify Order Status After Reopen - $0 Encumbered, $50 Expended
+    Given path 'orders/composite-orders', orderId
+    And retry until response.workflowStatus == 'Open'
+    When method GET
+    Then status 200
+    And match response.totalEstimatedPrice == 0.00
+    And match response.totalEncumbered == 0.00
+    And match response.totalExpended == 50.00
+
+    # 12. Verify Encumbrance Transaction Details After Reopen - Status Released, $50 Expended
+    * def validateEncumbranceAfterReopen =
     """
     function(response) {
       var transaction = response.transactions[0];
@@ -86,13 +90,13 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
     """
     Given path 'finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
-    And retry until validateEncumbranceReleased(response)
+    And retry until validateEncumbranceAfterReopen(response)
     When method GET
     Then status 200
     * def encumbranceId = response.transactions[0].id
 
-    # 12. Verify Budget State - $950 Available After $50 Expended
-    * def validateBudgetAfterExpense =
+    # 13. Verify Budget State After Reopen - $950 Available, $50 Expended
+    * def validateBudgetAfterReopen =
     """
     function(response) {
       return response.allocated == 1000.00 &&
@@ -104,16 +108,16 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
     }
     """
     Given path 'finance/budgets', budgetId
-    And retry until validateBudgetAfterExpense(response)
+    And retry until validateBudgetAfterReopen(response)
     When method GET
     Then status 200
 
-    # 13. Unrelease Encumbrance
+    # 14. Unrelease The Encumbrance
     Given path 'finance/unrelease-encumbrance', encumbranceId
     When method POST
     Then status 204
 
-    # 14. Verify Encumbrance Status Changed To Unreleased
+    # 15. Verify Encumbrance After Unrelease - Status Unreleased, Still $50 Expended
     * def validateEncumbranceUnreleased =
     """
     function(response) {
@@ -129,7 +133,7 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
     When method GET
     Then status 200
 
-    # 15. Verify Budget State Remains Same After Unrelease
+    # 16. Verify Budget State Remains Same After Unrelease - Still $950 Available
     * def validateBudgetAfterUnrelease =
     """
     function(response) {
@@ -146,20 +150,20 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
     When method GET
     Then status 200
 
-    # 16. Cancel First Invoice
-    * def v = call cancelInvoice { invoiceId: "#(firstInvoiceId)" }
+    # 17. Cancel The Paid Invoice
+    * def v = call cancelInvoice { invoiceId: "#(invoiceId)" }
 
-    # 17. Verify Final Order State - $0 Encumbered, $0 Expended
-    Given path 'orders/composite-orders', orderId
-    And retry until response.totalEncumbered == 0.00 && response.totalExpended == 0.00
+    # 18. Verify Invoice Is Cancelled
+    Given path 'invoice/invoices', invoiceId
+    And retry until response.status == 'Cancelled'
     When method GET
     Then status 200
 
-    # 18. Verify Final Encumbrance State - $0 Amount, $0 Expended, Unreleased Status
+    # 19. Verify Final Encumbrance State - $0 Amount, $0 Expended, Unreleased Status
     * def validateFinalEncumbrance =
     """
     function(response) {
-      return response.amount == 0 &&
+      return response.amount == 0.00 &&
              response.encumbrance.status == 'Unreleased' &&
              response.encumbrance.initialAmountEncumbered == 0.00 &&
              response.encumbrance.amountAwaitingPayment == 0.00 &&
@@ -171,7 +175,7 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
     When method GET
     Then status 200
 
-    # 19. Verify Final Budget State - Full $1000 Available
+    # 20. Verify Final Budget State - Full $1000 Available After Invoice Cancellation
     * def validateFinalBudget =
     """
     function(response) {
