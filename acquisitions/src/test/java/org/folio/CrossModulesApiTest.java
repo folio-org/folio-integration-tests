@@ -312,6 +312,4 @@ public class CrossModulesApiTest extends TestBaseEureka {
   void updateFundInPoLineWhenInvoiceApproved() {
     runFeatureTest("update_fund_in_poline_when_invoice_approved");
   }
-
 }
-

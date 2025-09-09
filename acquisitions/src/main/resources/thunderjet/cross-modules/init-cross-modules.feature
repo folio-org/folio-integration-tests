@@ -53,6 +53,7 @@ Feature: Cross-module integration tests
       | 'finance.ledger-rollovers-progress.item.put'       |
       | 'finance.ledgers.item.post'                        |
       | 'finance.release-encumbrance.item.post'            |
+      | 'finance.unrelease-encumbrance.item.post'          |
       | 'finance.transactions.batch.execute'               |
       | 'finance.transactions.collection.get'              |
       | 'finance.transactions.item.get'                    |
