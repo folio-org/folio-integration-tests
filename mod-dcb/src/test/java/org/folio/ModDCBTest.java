@@ -32,6 +32,11 @@ public class ModDCBTest extends TestBaseEureka {
   }
 
   @Test
+  void testRefreshShadowLocations() {
+    runFeatureTest("refresh-shadow-locations.feature");
+  }
+
+  @Test
   void testPickupFlow() { runFeatureTest("pickup-flow.feature"); }
 
   @Test

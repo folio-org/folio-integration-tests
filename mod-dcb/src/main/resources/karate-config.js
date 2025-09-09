@@ -108,6 +108,7 @@ function fn() {
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
+    config.mockServerUrl = '${mockServerUrl}';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',
