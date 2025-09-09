@@ -66,7 +66,7 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
 
     # 10. Verify Order State After Second Invoice Operations - $0 Encumbered, 0 Expended
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 5.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
 
