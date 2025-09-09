@@ -12,25 +12,25 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 @FolioTest(team = "thunderjet", module = "cross-modules")
-public class CrossModulesSmokeApiTest extends TestBaseEureka {
+public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
 
-  public CrossModulesSmokeApiTest() {
+  public CrossModulesCriticalPathApiTest() {
     super(new TestIntegrationService(
         new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
-  public void crossModulesSmokeApiTestBeforeAll() {
+  public void crossModulesCriticalPathApiTestBeforeAll() {
     System.setProperty("testTenant", "testcross" + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/cross-modules/init-cross-modules.feature");
   }
 
   @AfterAll
-  public void crossModulesSmokeApiTestAfterAll() {
+  public void crossModulesCriticalPathApiTestAfterAll() {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
