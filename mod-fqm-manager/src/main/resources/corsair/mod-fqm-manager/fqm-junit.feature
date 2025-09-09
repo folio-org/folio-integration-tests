@@ -131,6 +131,7 @@ Feature: mod-fqm-manager integration tests
       | 'voucher.vouchers.collection.get'                           |
       | 'waives.collection.get'                                     |
       | 'inventory-storage.holdings-note-types.collection.get'      |
+      | 'inventory-storage.identifier-types.collection.get'         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

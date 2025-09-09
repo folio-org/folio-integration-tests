@@ -91,6 +91,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'inventory-storage.instance-statuses.collection.get'        |
       | 'inventory-storage.instance-note-types.collection.get'      |
       | 'inventory-storage.holdings-note-types.collection.get'      |
+      | 'inventory-storage.identifier-types.collection.get'         |
 
 
     # define consortium
