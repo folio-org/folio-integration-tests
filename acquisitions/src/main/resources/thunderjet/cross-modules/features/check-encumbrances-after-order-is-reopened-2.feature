@@ -75,25 +75,25 @@ Feature: Check encumbrances after order is reopened - 2
     # Add a line
     * def invoiceLineId = call uuid
     * def invoiceLinePayload =
-"""
-{
-  "id": "#(invoiceLineId)",
-  "invoiceId": "#(invoiceId)",
-  "poLineId": "#(poLineId)",
-  "invoiceLineStatus": "Open",
-  "fundDistributions": [
+    """
     {
-      "distributionType": "amount",
-      "fundId": "#(fundId)",
-      "value": "49"
+      "id": "#(invoiceLineId)",
+      "invoiceId": "#(invoiceId)",
+      "poLineId": "#(poLineId)",
+      "invoiceLineStatus": "Open",
+      "fundDistributions": [
+        {
+          "distributionType": "amount",
+          "fundId": "#(fundId)",
+          "value": "49"
+        }
+      ],
+      "subTotal": "49",
+      "description": "test",
+      "quantity": "1",
+      "releaseEncumbrance": false
     }
-  ],
-  "subTotal": "49",
-  "description": "test",
-  "quantity": "1",
-  "releaseEncumbrance": false
-}
-"""
+    """
     Given path 'invoice/invoice-lines'
     And request invoiceLinePayload
     When method POST
@@ -161,7 +161,8 @@ Feature: Check encumbrances after order is reopened - 2
     And param query = 'fundId==' + fundId
     When method GET
     Then status 200
-    And match $.budgets[0].encumbered == 51
+    # Unrelease is not blocked if the order has a paid invoice, see MODINVOICE-608
+    And match $.budgets[0].encumbered == 0
 
 
   Scenario: Use Case 2 - Prevent encumbrance from being unreleased
@@ -226,19 +227,19 @@ Feature: Check encumbrances after order is reopened - 2
     # Add a line
     * def invoiceLineId = call uuid
     * def invoiceLinePayload =
-"""
-{
-  "id": "#(invoiceLineId)",
-  "invoiceId": "#(invoiceId)",
-  "poLineId": "#(poLineId)",
-  "invoiceLineStatus": "Open",
-  "fundDistributions": #(fd),
-  "subTotal": "75",
-  "description": "test",
-  "quantity": "2",
-  "releaseEncumbrance": true
-}
-"""
+    """
+    {
+      "id": "#(invoiceLineId)",
+      "invoiceId": "#(invoiceId)",
+      "poLineId": "#(poLineId)",
+      "invoiceLineStatus": "Open",
+      "fundDistributions": "#(fd)",
+      "subTotal": "75",
+      "description": "test",
+      "quantity": "2",
+      "releaseEncumbrance": true
+    }
+    """
     Given path 'invoice/invoice-lines'
     And request invoiceLinePayload
     When method POST
