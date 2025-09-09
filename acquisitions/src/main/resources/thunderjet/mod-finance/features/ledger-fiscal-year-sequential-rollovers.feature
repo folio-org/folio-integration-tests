@@ -1841,7 +1841,7 @@ Feature: Ledger fiscal year sequential rollovers
       | law         | 96.8      | 92.8      | 4           | 0            | 4          | 160.0                | 170.0                |
       | science     | 110       | 252.25    | 0.0         | 142.25       | 0          | 110.0                | 120.0                |
       | giftsFund   | 312.35    | 312.35    | 0.0         | 0            | 0.0        | null                 | null                 |
-      | africanHist | 89.125    | 216.625   | 0           | 127.5        | 0          | 100.0                | 100.0                |
+      | africanHist | 89.12     | 216.62    | 0           | 127.5        | 0          | 100.0                | 100.0                |
       | rollHist    | 217.8     | 217.8     | 0.0         | 0            | 0.0        | null                 | null                 |
       | euroHist    | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                |
 

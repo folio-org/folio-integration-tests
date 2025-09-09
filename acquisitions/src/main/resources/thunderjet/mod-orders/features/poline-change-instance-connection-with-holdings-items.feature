@@ -317,3 +317,51 @@ Feature: Change order line instance connection with holdings items
     And match response.holdingsRecords[*].id contains newHoldingId1
     And match response.holdingsRecords[*].id contains newHoldingId2
     * configure headers = headersUser
+
+  Scenario: Change instance connection with a large number of pieces
+    # 1. Create instance
+    * configure headers = headersAdmin
+    * def instanceId = call uuid
+    * def v = call createInstance { id: '#(instanceId)', title: 'i4', instanceTypeId: '#(globalInstanceTypeId)' }
+    * configure headers = headersUser
+
+    # 2. Create order and order line with quantity of 64, then open the order
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def poLineLocations = [ { locationId: #(globalLocationsId), quantity: 64, quantityPhysical: 64 } ]
+    * table orderLineData
+      | id       | orderId | locations       | quantity | titleOrPackage |
+      | poLineId | orderId | poLineLocations | 64       | 't4'           |
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine orderLineData
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    # 3 Get POL holding ID and POL number
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def holdingId = response.locations[0].holdingId
+    * def poLineNumber = response.poLineNumber
+    * def instanceIdOld = response.instanceId
+
+    # 4. Change instance connection with "Find or Create" holdings operation to the new instance and delete abandoned holdings
+    * table instanceChangeData
+      | poLineId | instanceId | holdingsOperation | deleteAbandonedHoldings |
+      | poLineId | instanceId | 'Find or Create'  | true                    |
+    * def v = call changeOrderLineInstanceConnection instanceChangeData
+
+    # 5. Verify the order line instanceId and holdings
+    * def isPoLineInstanceUpdated =
+    """
+    function(response) {
+      return response.instanceId == instanceId &&
+      response.instanceId != instanceIdOld &&
+      response.locations.length == 1 &&
+      response.locations[0].quantity == 64 &&
+      response.locations[0].holdingId != holdingId;
+    }
+    """
+    Given path 'orders/order-lines', poLineId
+    And retry until isPoLineInstanceUpdated(response)
+    When method GET
+    Then status 200

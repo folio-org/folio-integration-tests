@@ -278,3 +278,6 @@ Feature: mod-orders integration tests
 
   Scenario: Delete One Piece In Receiving
     * call read('features/delete-one-piece-in-receiving.feature')
+
+  Scenario: Change Order Instance Connection
+    * call read('features/change-order-instance-connection.feature')

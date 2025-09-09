@@ -1,0 +1,14 @@
+{
+  "id": "ca4f9c1b-5fbe-41b2-a7d1-5967297aedaf",
+  "name": "shadow-online",
+  "code": "shadow-loc",
+  "isActive": true,
+  "isShadow": true,
+  "institutionId": "007836d3-682b-4381-9091-2574ffface59",
+  "campusId": "4b2d53af-6b74-453f-8a25-f01ea438a54f",
+  "libraryId": "c80d3f00-08e0-44bb-81bc-36586a3ca98c",
+  "primaryServicePoint": "56881011-01bf-47aa-9547-8a17de39d1af",
+  "servicePointIds": [ "56881011-01bf-47aa-9547-8a17de39d1af" ],
+  "discoveryDisplayName" : "Online",
+  "description" : "Use for DCB Hub"
+}
