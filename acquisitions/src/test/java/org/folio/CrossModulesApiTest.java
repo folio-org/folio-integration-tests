@@ -313,5 +313,13 @@ public class CrossModulesApiTest extends TestBaseEureka {
     runFeatureTest("update_fund_in_poline_when_invoice_approved");
   }
 
-}
+  @Test
+  void encumbranceCalculatedCorrectlyForUnopenedOngoingOrderWithApprovedInvoice() {
+    runFeatureTest("encumbrance-calculated-correctly-for-unopened-ongoing-order-with-approved-invoice");
+  }
 
+  @Test
+  void encumbranceRemains0For0DollarOngoingOrderAfterCancelingPaidInvoiceUnreleasingEncumbranceAndCancelingAnotherPaidInvoice() {
+    runFeatureTest("encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-invoice-unreleasing-encumbrance-and-canceling-another-paid-invoice");
+  }
+}
