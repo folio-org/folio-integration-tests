@@ -134,6 +134,8 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.holdings-note-types.collection.get'             |
       | 'inventory-storage.electronic-access-relationships.collection.get' |
       | 'inventory-storage.identifier-types.collection.get'                |
+      | 'inventory-storage.subject-sources.collection.get'                 |
+      | 'inventory-storage.subject-types.collection.get'                   |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
