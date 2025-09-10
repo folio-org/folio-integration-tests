@@ -65,6 +65,8 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.electronic-access-relationships.collection.get' |
       | 'inventory-storage.item-note-types.collection.get'                 |
       | 'inventory-storage.identifier-types.collection.get'                |
+      | 'inventory-storage.subject-sources.collection.get'                 |
+      | 'inventory-storage.subject-types.collection.get'                   |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'
