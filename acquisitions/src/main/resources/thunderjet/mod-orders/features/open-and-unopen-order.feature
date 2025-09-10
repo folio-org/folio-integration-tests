@@ -143,3 +143,43 @@ Feature: Open and unopen order
     And retry until response.holdingsRecords[0].id == holdingId
     When method GET
     Then status 200
+
+  # For: https://issues.folio.org/browse/MODORDERS-1359
+  @Positive
+  Scenario: Open, unopen and open once again an order with encumbrance transaction
+    * def fundId = globalFundId
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    # 1. Create order with an order line
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', quantity: 1, price: 0, titleOrPackage: 't2', checkinItems: true }
+
+    # 2. Open the order and check the encumbrance status
+    * def v = call openOrder { orderId: '#(orderId)' }
+    * configure headers = headersAdmin
+    Given path 'finance/transactions'
+    And param query = 'transactionType==Encumbrance and encumbrance.sourcePoLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.transactions[0].encumbrance.status == 'Unreleased'
+    * def encumbranceTxId = response.transactions[0].id
+    * configure headers = headersUser
+
+    # 3. Unopen the order and check the encumbrance status
+    * def v = call unopenOrder { orderId: '#(orderId)' }
+    * configure headers = headersAdmin
+    Given path 'finance/transactions', encumbranceTxId
+    When method GET
+    Then status 200
+    And match response.encumbrance.status == 'Pending'
+    * configure headers = headersUser
+
+    # 4. Open the order once again and check the encumbrance status
+    * def v = call openOrder { orderId: '#(orderId)' }
+    * configure headers = headersAdmin
+    Given path 'finance/transactions', encumbranceTxId
+    When method GET
+    Then status 200
+    And match response.encumbrance.status == 'Unreleased'
