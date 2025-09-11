@@ -1,5 +1,5 @@
 # For MODINVOICE-608, https://foliotest.testrail.io/index.php?/cases/view/829881
-Feature: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid Invoice Unreleasing Encumbrance And Canceling Paid Invoice Release Encumbrance True
+Feature: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid Invoice
 
   Background:
     * print karate.info.scenarioName
@@ -14,7 +14,7 @@ Feature: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid In
     * callonce variables
 
   @Positive
-  Scenario: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Complex Invoice Operations
+  Scenario: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid Invoice
     # Generate unique identifiers for this test scenario
     * def fundId = call uuid
     * def budgetId = call uuid

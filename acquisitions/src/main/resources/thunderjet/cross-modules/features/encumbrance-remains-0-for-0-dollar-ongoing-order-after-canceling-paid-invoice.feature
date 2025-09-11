@@ -1,5 +1,5 @@
 # For MODINVOICE-608, https://foliotest.testrail.io/index.php?/cases/view/825437
-Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid Invoice Unreleasing Encumbrance And Canceling Another Paid Invoice
+Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid Invoice
 
   Background:
     * print karate.info.scenarioName
@@ -14,7 +14,7 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
     * callonce variables
 
   @Positive
-  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Complex Invoice Operations
+  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid Invoice
     # Generate unique identifiers for this test scenario
     * def fundId = call uuid
     * def budgetId = call uuid
