@@ -14,7 +14,7 @@ Feature: Tests for filter terms
     And param expandAll = true
     When method GET
     Then status 200
-    Then match response.totalRecords == <totalRecords>
+    And match response.totalRecords == <totalRecords>
     Examples:
       | field                                | value                                                                          | totalRecords |
       | languages                            | eng                                                                            | 2            |
@@ -30,10 +30,8 @@ Feature: Tests for filter terms
     And param expandAll = true
     When method GET
     Then status 200
-    And def record = response.instances[0]
-    Then match record.identifiers != undefined
-    Then match record.subjects != undefined
-    Then match record.hrid != undefined
+    And match response.instances[0].subjects != undefined
+    And match response.instances[0].metadata != undefined
 
   Scenario: Should search all records with limit
     Given path '/search/instances'
@@ -41,34 +39,34 @@ Feature: Tests for filter terms
     And param limit = 1
     When method GET
     Then status 200
-    Then assert response.instances.length == 1
+    And assert response.instances.length == 1
 
   Scenario: Should search all records with offset
     Given path '/search/instances'
     And param query = 'cql.allRecords=1'
     When method GET
     Then status 200
-    And def totalRecords = response.totalRecords
+    * def totalRecords = response.totalRecords
 
     Given path '/search/instances'
     And param query = 'cql.allRecords=1'
     And param offset = totalRecords - 1
     When method GET
     Then status 200
-    Then assert response.instances.length == 1
+    And assert response.instances.length == 1
 
-  Scenario Outline: Can search instances by createdDate/updatedDate filter,the instances were created today
+  Scenario Outline: Can search instances by createdDate/updatedDate filter, the instances were created today
     Given path '/search/instances'
     And param query = <query>
     And param expandAll = true
     When method GET
     Then status 200
-    And response.totalRecords == <totalRecords>
+    And match response.totalRecords == <totalRecords>
     Examples:
-      | field       | query                                                                          | totalRecords |
-      | createdDate | 'metadata.createdDate>=' + yesterday + ' and metadata.createdDate<' + tomorrow | 17           |
-      | createdDate | 'metadata.createdDate<' + tomorrow                                             | 17           |
-      | createdDate | 'metadata.createdDate>' + tomorrow                                             | 0            |
-      | updatedDate | 'metadata.updatedDate>=' + yesterday + ' and metadata.updatedDate<' + tomorrow | 17           |
-      | updatedDate | 'metadata.updatedDate<' + tomorrow                                             | 17           |
-      | updatedDate | 'metadata.updatedDate>' + tomorrow                                             | 0            |
+      | query                                                                          | totalRecords |
+      | 'metadata.createdDate>=' + yesterday + ' and metadata.createdDate<' + tomorrow | 17           |
+      | 'metadata.createdDate<' + tomorrow                                             | 17           |
+      | 'metadata.createdDate>' + tomorrow                                             | 0            |
+      | 'metadata.updatedDate>=' + yesterday + ' and metadata.updatedDate<' + tomorrow | 17           |
+      | 'metadata.updatedDate<' + tomorrow                                             | 17           |
+      | 'metadata.updatedDate>' + tomorrow                                             | 0            |
