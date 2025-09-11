@@ -21,6 +21,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-pubsub'                |
       | 'mod-patron-blocks'         |
       | 'mod-feesfines'             |
+      | 'mod-tags'                  |
 
     * table userPermissions
       | name                                                               |
@@ -136,6 +137,8 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.identifier-types.collection.get'                |
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
+      | 'tags.collection.get'                                              |
+
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

@@ -16,6 +16,8 @@ Feature: mod-consortia and mod-lists integration tests
       | 'mod-lists'               |
       | 'mod-entities-links'      |
       | 'mod-inventory-storage'   |
+      | 'mod-tags'                |
+
 
     * table userPermissions
       | name                                                               |
@@ -96,6 +98,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'inventory-storage.identifier-types.collection.get'                |
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
+      | 'tags.collection.get'                                              |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'
