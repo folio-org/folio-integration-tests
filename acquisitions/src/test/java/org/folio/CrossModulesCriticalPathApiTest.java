@@ -41,11 +41,11 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
 
   @Test
   void encumbranceRemains0For0DollarOngoingOrderAfterCancelingPaidInvoiceUnreleasingEncumbranceAndCancelingAnotherPaidInvoice() {
-    runFeatureTest("encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-invoice-unreleasing-encumbrance-and-canceling-another-paid-invoice");
+    runFeatureTest("encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-invoice");
   }
 
   @Test
   void encumbranceRemains0ForReOpened0DollarOngoingOrderWithPaidInvoiceUnreleasingEncumbranceAndCancelingPaidInvoiceReleaseEncumbranceTrue() {
-    runFeatureTest("encumbrance-remains-0-for-re-opened-0-dollar-ongoing-order-with-paid-invoice-unreleasing-encumbrance-and-canceling-paid-invoice-release-encumbrance-true");
+    runFeatureTest("encumbrance-remains-0-for-re-opened-0-dollar-ongoing-order-with-paid-invoice");
   }
 }
