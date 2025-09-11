@@ -103,7 +103,7 @@ Feature: Change location when receiving a piece
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
 
-    # 6. Check piece location and get piece holdingId
+    # 6.  Get piece holdingId
     Given path "orders/pieces", pieceId
     And retry until response.holdingId != null
     When method GET
