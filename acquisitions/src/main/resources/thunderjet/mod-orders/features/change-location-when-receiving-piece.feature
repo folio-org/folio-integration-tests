@@ -105,7 +105,7 @@ Feature: Change location when receiving a piece
 
     # 6. Check piece location and get piece holdingId
     Given path "orders/pieces", pieceId
-    And retry until response.locationId == globalLocationsId2
+    And retry until response.holdingId != null
     When method GET
     Then status 200
     * def pieceHoldingId = $.holdingId
