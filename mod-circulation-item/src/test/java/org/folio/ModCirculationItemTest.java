@@ -19,7 +19,7 @@ public class ModCirculationItemTest extends TestBaseEureka {
   }
 
   @Test
-  void testRefreshShadowLocations() {
+  void testCirculationItemFlow() {
     runFeatureTest("circulation-item-flow.feature");
   }
 
