@@ -2,25 +2,25 @@
   "resource":{
     "http://bibfra.me/vocab/lite/Instance":{
       "profileId": 3,
-      "http://bibfra.me/vocab/marc/title":[
+      "http://bibfra.me/vocab/library/title":[
         {
-          "http://bibfra.me/vocab/marc/Title":{
+          "http://bibfra.me/vocab/library/Title":{
             "http://bibfra.me/vocab/bflc/nonSortNum":[
               "0"
             ],
-            "http://bibfra.me/vocab/marc/mainTitle":[
+            "http://bibfra.me/vocab/library/mainTitle":[
               "Updated Test Instance"
             ]
           }
         }
       ],
-      "http://bibfra.me/vocab/marc/statementOfResponsibility":[
+      "http://bibfra.me/vocab/library/statementOfResponsibility":[
         "Updated John Doe"
       ],
-      "http://bibfra.me/vocab/marc/edition":[
+      "http://bibfra.me/vocab/library/edition":[
         "2nd Edition"
       ],
-      "http://bibfra.me/vocab/marc/publication":[
+      "http://bibfra.me/vocab/library/publication":[
         {
           "http://bibfra.me/vocab/lite/providerDate":[
             "2015"
@@ -55,7 +55,7 @@
             "http://bibfra.me/vocab/lite/name":[
               "0123456789"
             ],
-            "http://bibfra.me/vocab/marc/status":[
+            "http://bibfra.me/vocab/library/status":[
               {
                 "http://bibfra.me/vocab/lite/label":[
                   "current"

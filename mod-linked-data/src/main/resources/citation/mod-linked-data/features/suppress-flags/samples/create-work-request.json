@@ -2,27 +2,27 @@
   "resource":{
     "http://bibfra.me/vocab/lite/Work":{
       "profileId": 2,
-      "http://bibfra.me/vocab/marc/title":[
+      "http://bibfra.me/vocab/library/title":[
         {
-          "http://bibfra.me/vocab/marc/Title":{
+          "http://bibfra.me/vocab/library/Title":{
             "http://bibfra.me/vocab/bflc/nonSortNum":[
               "4"
             ],
-            "http://bibfra.me/vocab/marc/mainTitle":[
+            "http://bibfra.me/vocab/library/mainTitle":[
               "suppress_flags"
             ],
-            "http://bibfra.me/vocab/marc/partNumber":[
+            "http://bibfra.me/vocab/library/partNumber":[
               "1"
             ],
-            "http://bibfra.me/vocab/marc/partName":[
+            "http://bibfra.me/vocab/library/partName":[
               "part 1"
             ]
           }
         }
       ],
-      "http://bibfra.me/vocab/marc/content":[
+      "http://bibfra.me/vocab/library/content":[
         {
-          "http://bibfra.me/vocab/marc/term":[
+          "http://bibfra.me/vocab/library/term":[
             "cartographic image"
           ],
           "http://bibfra.me/vocab/lite/link":[

@@ -2,10 +2,10 @@
   "resource":{
     "http://bibfra.me/vocab/lite/Work":{
       "profileId": 2,
-      "http://bibfra.me/vocab/marc/title":[
+      "http://bibfra.me/vocab/library/title":[
         {
-          "http://bibfra.me/vocab/marc/Title":{
-            "http://bibfra.me/vocab/marc/mainTitle":[
+          "http://bibfra.me/vocab/library/Title":{
+            "http://bibfra.me/vocab/library/mainTitle":[
               "lccn-pattern-validation-work-title"
             ]
           }
