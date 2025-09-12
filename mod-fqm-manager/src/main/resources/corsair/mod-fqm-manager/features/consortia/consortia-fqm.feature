@@ -22,6 +22,9 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
+      | 'mod-tags'                  |
+
+
 
     * table userPermissions
       | name                                                               |
@@ -67,6 +70,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.identifier-types.collection.get'                |
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
+      | 'tags.collection.get'                                              |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'
