@@ -69,6 +69,7 @@ Feature: mod-lists integration tests
       | 'inventory-storage.instance-statuses.collection.get'        |
       | 'inventory-storage.instance-note-types.collection.get'      |
       | 'inventory-storage.item-note-types.collection.get'          |
+      | 'inventory-storage.nature-of-content-terms.collection.get   |
       | 'tags.collection.get'                                       |
 
   Scenario: create tenant and users for testing
