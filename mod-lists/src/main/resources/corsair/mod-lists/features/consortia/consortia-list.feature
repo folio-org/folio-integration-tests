@@ -41,6 +41,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'fqm.query.purge.post'                                             |
       | 'fqm.query.sync.get'                                               |
       | 'fqm.version.get'                                                  |
+      | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |

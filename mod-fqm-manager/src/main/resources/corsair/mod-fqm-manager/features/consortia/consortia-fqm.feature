@@ -31,6 +31,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'consortia.all'                                                    |
       | 'inventory.instances.item.get'                                     |
       | 'fqm.entityTypes.collection.get'                                   |
+      | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
