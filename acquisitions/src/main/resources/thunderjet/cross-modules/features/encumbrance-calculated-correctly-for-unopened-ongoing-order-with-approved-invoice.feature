@@ -9,7 +9,9 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    * configure retry = { count: 15, interval: 15000 }
+    * configure retry = { count: 5, interval: 5000 }
+    * configure readTimeout = 120000
+    * configure connectTimeout = 120000
 
     * callonce variables
 
@@ -39,11 +41,9 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
 
     # 5. Verify Order Is Open And Initial Encumbrance
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open'
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 5.00 && response.totalEncumbered == 5.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
-    And match response.totalEstimatedPrice == 5.00
-    And match response.totalEncumbered == 5.00
 
     # 6. Create Invoice Based On The Order
     * def v = call createInvoice { id: '#(invoiceId)', fiscalYearId: '#(globalFiscalYearId)' }
@@ -75,10 +75,9 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
 
     # 12. Verify Order Status And Encumbrance After Unopen
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Pending'
+    And retry until response.workflowStatus == 'Pending' && response.totalEstimatedPrice == 5.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
-    And match response.totalEncumbered == 0.00
 
     # 13. Verify Encumbrance Details After Unopen
     * def validateEncumbranceAfterUnopen =
@@ -103,10 +102,9 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
 
     # 15. Verify Order Status And Encumbrance After Reopen
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open'
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 5.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
-    And match response.totalEncumbered == 0.00
 
     # 16. Verify Encumbrance Details After Reopen
     * def validateEncumbranceAfterReopen =
@@ -114,7 +112,7 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     function(response) {
       var transaction = response.transactions[0];
       return transaction.amount == 0.00 &&
-             transaction.encumbrance.status == 'Unreleased' && // Should be Released
+             transaction.encumbrance.status == 'Released'
              transaction.encumbrance.initialAmountEncumbered == 5.00 &&
              transaction.encumbrance.amountAwaitingPayment == 50.00 &&
              transaction.encumbrance.amountExpended == 0.00;

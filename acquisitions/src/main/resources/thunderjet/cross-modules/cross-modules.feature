@@ -193,3 +193,6 @@ Feature: cross-module integration tests
 
   Scenario: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid Invoice
     * call read('features/encumbrance-remains-0-for-re-opened-0-dollar-ongoing-order-with-paid-invoice.feature')
+
+  Scenario: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invoice And Receiving
+    * call read('features/unrelease-encumbrances-when-reopen-ongoing-order-with-related-paid-invoice-and-receiving.feature')
