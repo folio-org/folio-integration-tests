@@ -68,6 +68,7 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.entityTypes.custom.item.put'                                  |
       | 'fqm.entityTypes.custom.item.delete'                               |
       | 'fqm.entityTypes.custom.available-joins.collection.post'           |
+      | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
