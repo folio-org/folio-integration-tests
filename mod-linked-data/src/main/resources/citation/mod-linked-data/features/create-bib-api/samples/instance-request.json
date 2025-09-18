@@ -175,6 +175,33 @@
               }
             ]
           }
+        },
+        {
+          "http://library.link/identifier/ISSN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "ISSN Value"
+            ]
+          }
+        },
+        {
+          "http://library.link/identifier/IAN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "IAN value"
+            ],
+            "http://bibfra.me/vocab/library/qualifier":[
+              "IAN Qualifier"
+            ]
+          }
+        },
+        {
+          "http://library.link/identifier/UNKNOWN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "Other ID value"
+            ],
+            "http://bibfra.me/vocab/library/qualifier":[
+              "Other ID qualifier"
+            ]
+          }
         }
       ],
       "http://bibfra.me/vocab/library/media":[
@@ -360,6 +387,16 @@
       ],
       "http://bibfra.me/vocab/library/adminMetadata": [
         {
+          "http://bibfra.me/vocab/library/transcribingAgency": [
+            "LoC"
+          ],
+          "http://bibfra.me/vocab/library/catalogingAgency": [
+            "DLC"
+          ],
+          "http://bibfra.me/vocab/library/modifyingAgency": [
+            "LC",
+            "AGR"
+          ],
           "http://bibfra.me/vocab/lite/catalogingLanguage": [
             {
               "http://bibfra.me/vocab/lite/link": [
