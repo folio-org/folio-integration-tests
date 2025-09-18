@@ -50,19 +50,12 @@
           "type": "LCCN"
         }
       ],
-      "contributors": [
-      ],
       "publications": [
         {
           "name": "The Macmillan Company",
           "date":"1927"
         }
-      ],
-      "editionStatements": [
-      ],
-      "notes": [
       ]
     }
-  ],
-  "notes":[]
+  ]
 }

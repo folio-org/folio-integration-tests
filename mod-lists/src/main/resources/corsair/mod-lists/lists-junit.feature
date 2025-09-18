@@ -12,6 +12,7 @@ Feature: mod-lists integration tests
       | 'mod-lists'               |
       | 'mod-entities-links'      |
       | 'mod-inventory-storage'   |
+      | 'mod-tags'                |
 
     * table userPermissions
       | name                                                        |
@@ -52,6 +53,7 @@ Feature: mod-lists integration tests
       | 'lists.item.update'                                         |
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
+      | 'inventory-storage.alternative-title-types.collection.get'  |
       | 'inventory-storage.holdings-sources.item.post'              |
       | 'inventory-storage.holdings.item.post'                      |
       | 'inventory-storage.instance-types.item.post'                |
@@ -68,6 +70,8 @@ Feature: mod-lists integration tests
       | 'inventory-storage.instance-statuses.collection.get'        |
       | 'inventory-storage.instance-note-types.collection.get'      |
       | 'inventory-storage.item-note-types.collection.get'          |
+      | 'inventory-storage.nature-of-content-terms.collection.get   |
+      | 'tags.collection.get'                                       |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

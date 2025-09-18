@@ -14,7 +14,7 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     * callonce variables
 
   @Positive
-  Scenario: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approved Invoice And After Canceling Approved Invoice
+  Scenario: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approved Invoice
     # Generate unique identifiers for this test scenario
     * def fundId = call uuid
     * def budgetId = call uuid

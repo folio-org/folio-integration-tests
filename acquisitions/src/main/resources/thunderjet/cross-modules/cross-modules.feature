@@ -185,11 +185,11 @@ Feature: cross-module integration tests
   Scenario: Update fund in poLine when invoice approved
     * call read('features/update_fund_in_poline_when_invoice_approved.feature')
 
-  Scenario: Encumbrance Calculated Correctly For Unopened Ongoing Order
+  Scenario: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approved Invoice
     * call read('features/encumbrance-calculated-correctly-for-unopened-ongoing-order-with-approved-invoice.feature')
 
-  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid Invoice Unreleasing Encumbrance And Canceling Another Paid Invoice
-    * call read('features/encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-invoice-unreleasing-encumbrance-and-canceling-another-paid-invoice.feature')
+  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid Invoice
+    * call read('features/encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-invoice.feature')
 
-  Scenario: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid Invoice Unreleasing Encumbrance And Canceling Paid Invoice Release Encumbrance True
-    * call read('features/encumbrance-remains-0-for-re-opened-0-dollar-ongoing-order-with-paid-invoice-unreleasing-encumbrance-and-canceling-paid-invoice-release-encumbrance-true.feature')
+  Scenario: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid Invoice
+    * call read('features/encumbrance-remains-0-for-re-opened-0-dollar-ongoing-order-with-paid-invoice.feature')

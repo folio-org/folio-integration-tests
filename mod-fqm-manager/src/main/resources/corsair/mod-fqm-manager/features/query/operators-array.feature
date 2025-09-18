@@ -15,7 +15,7 @@ Feature: Query array operators
     * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$in\":[\"serials\", \"non_serials\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "fund_name": null, "distributionType": "percentage", "expense_class_name": null}]'
 
     Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
@@ -29,7 +29,7 @@ Feature: Query array operators
     * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$nin\":[\"serials\", \"non_serials\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "fund_name": null, "distributionType": "percentage", "expense_class_name": null}]'
 
     Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
