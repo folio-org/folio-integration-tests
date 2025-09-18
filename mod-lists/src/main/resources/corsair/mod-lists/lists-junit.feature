@@ -53,6 +53,7 @@ Feature: mod-lists integration tests
       | 'lists.item.update'                                         |
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
+      | 'inventory-storage.alternative-title-types.collection.get'  |
       | 'inventory-storage.holdings-sources.item.post'              |
       | 'inventory-storage.holdings.item.post'                      |
       | 'inventory-storage.instance-types.item.post'                |
