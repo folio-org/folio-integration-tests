@@ -175,6 +175,33 @@
               }
             ]
           }
+        },
+        {
+          "http://library.link/identifier/ISSN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "ISSN Value"
+            ]
+          }
+        },
+        {
+          "http://library.link/identifier/IAN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "IAN value"
+            ],
+            "http://bibfra.me/vocab/marc/qualifier":[
+              "IAN Qualifier"
+            ]
+          }
+        },
+        {
+          "http://library.link/identifier/UNKNOWN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "Other ID value"
+            ],
+            "http://bibfra.me/vocab/marc/qualifier":[
+              "Other ID qualifier"
+            ]
+          }
         }
       ],
       "http://bibfra.me/vocab/marc/media":[
@@ -355,6 +382,33 @@
           ],
           "value":[
             "reference manual"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/adminMetadata": [
+        {
+          "http://bibfra.me/vocab/marc/transcribingAgency": [
+            "LoC"
+          ],
+          "http://bibfra.me/vocab/marc/catalogingAgency": [
+            "DLC"
+          ],
+          "http://bibfra.me/vocab/marc/modifyingAgency": [
+            "LC",
+            "AGR"
+          ],
+          "http://bibfra.me/vocab/lite/catalogingLanguage": [
+            {
+              "http://bibfra.me/vocab/marc/code": [
+                "eng"
+              ],
+              "http://bibfra.me/vocab/marc/term": [
+                "English"
+              ],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/languages/eng"
+              ]
+            }
           ]
         }
       ],
