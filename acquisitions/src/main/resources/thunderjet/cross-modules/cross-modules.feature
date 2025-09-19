@@ -196,3 +196,6 @@ Feature: cross-module integration tests
 
   Scenario: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invoice And Receiving
     * call read('features/unrelease-encumbrances-when-reopen-ongoing-order-with-related-paid-invoice-and-receiving.feature')
+
+  Scenario: Encumbrance Remains The Same After Cancelling Credited Invoice
+    * call read('features/encumbrance-remains-same-after-cancelling-credited-invoice.feature')

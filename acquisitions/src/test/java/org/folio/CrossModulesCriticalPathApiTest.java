@@ -53,4 +53,9 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void unreleaseEncumbrancesWhenReopenOngoingOrderWithRelatedPaidInvoiceAndReceiving() {
     runFeatureTest("unrelease-encumbrances-when-reopen-ongoing-order-with-related-paid-invoice-and-receiving");
   }
+
+  @Test
+  void encumbranceRemainsSameAfterCancellingCreditedInvoice() {
+    runFeatureTest("encumbrance-remains-same-after-cancelling-credited-invoice");
+  }
 }
