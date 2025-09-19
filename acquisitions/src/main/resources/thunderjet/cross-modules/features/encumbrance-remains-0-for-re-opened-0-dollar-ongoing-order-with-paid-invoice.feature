@@ -9,7 +9,9 @@ Feature: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid In
     * def okapitokenUser = okapitoken
     * def headersUser = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenUser)", "Accept": "application/json", "x-okapi-tenant": "#(testTenant)" }
     * configure headers = headersUser
-    * configure retry = { count: 15, interval: 15000 }
+    * configure retry = { count: 5, interval: 5000 }
+    * configure readTimeout = 120000
+    * configure connectTimeout = 120000
 
     * callonce variables
 
@@ -39,7 +41,7 @@ Feature: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid In
 
     # 5. Verify Order Is Open With $0 Encumbrance
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0 && response.totalEncumbered == 0
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
 
@@ -69,12 +71,9 @@ Feature: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid In
 
     # 11. Verify Order Status After Reopen - $0 Encumbered, $50 Expended
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open'
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0.00 && response.totalEncumbered == 0.00 && response.totalExpended == 50.00
     When method GET
     Then status 200
-    And match response.totalEstimatedPrice == 0.00
-    And match response.totalEncumbered == 0.00
-    And match response.totalExpended == 50.00
 
     # 12. Verify Encumbrance Transaction Details After Reopen - Status Released, $50 Expended
     * def validateEncumbranceAfterReopen =

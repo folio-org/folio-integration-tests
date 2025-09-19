@@ -9,7 +9,9 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
     * def okapitokenUser = okapitoken
     * def headersUser = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenUser)", "Accept": "application/json", "x-okapi-tenant": "#(testTenant)" }
     * configure headers = headersUser
-    * configure retry = { count: 15, interval: 15000 }
+    * configure retry = { count: 5, interval: 5000 }
+    * configure readTimeout = 120000
+    * configure connectTimeout = 120000
 
     * callonce variables
 
@@ -41,7 +43,7 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
 
     # 5. Verify Initial Order State - $0 Encumbered, $0 Expended
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0 && response.totalEncumbered == 0 && response.totalExpended == 0
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 0.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
 
@@ -151,7 +153,7 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
 
     # 17. Verify Final Order State - $0 Encumbered, $0 Expended
     Given path 'orders/composite-orders', orderId
-    And retry until response.totalEncumbered == 0.00 && response.totalExpended == 0.00
+    And retry until response.totalEncumbered == 0.00 && response.totalEstimatedPrice == 0.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
 
