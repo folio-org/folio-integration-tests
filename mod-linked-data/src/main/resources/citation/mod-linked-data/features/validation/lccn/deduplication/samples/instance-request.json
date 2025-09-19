@@ -2,13 +2,13 @@
   "resource":{
     "http://bibfra.me/vocab/lite/Instance":{
       "profileId": 3,
-      "http://bibfra.me/vocab/marc/title":[
+      "http://bibfra.me/vocab/library/title":[
         {
-          "http://bibfra.me/vocab/marc/Title":{
+          "http://bibfra.me/vocab/library/Title":{
             "http://bibfra.me/vocab/bflc/nonSortNum":[
               "1"
             ],
-            "http://bibfra.me/vocab/marc/mainTitle":[
+            "http://bibfra.me/vocab/library/mainTitle":[
               "deduplication_main_title"
             ]
           }
@@ -20,7 +20,7 @@
             "http://bibfra.me/vocab/lite/name":[
               "nn0987654321"
             ],
-            "http://bibfra.me/vocab/marc/status":[
+            "http://bibfra.me/vocab/library/status":[
               {
                 "http://bibfra.me/vocab/lite/label":[
                   "current"
