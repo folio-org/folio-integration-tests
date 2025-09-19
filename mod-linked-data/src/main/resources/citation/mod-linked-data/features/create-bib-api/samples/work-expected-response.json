@@ -1,10 +1,10 @@
 {
-  "id": "-3062142727144580661",
+  "id": "8184917527973833538",
   "profileId": 2,
   "http://bibfra.me/vocab/library/title": [
     {
       "http://bibfra.me/vocab/library/Title": {
-        "id": "-836492650552609061",
+        "id": "8697528079298529793",
         "http://bibfra.me/vocab/library/partName": [
           "part 1"
         ],
@@ -22,7 +22,7 @@
   ],
   "http://bibfra.me/vocab/library/targetAudience": [
     {
-      "id": "-1221333241111797035",
+      "id": "-7904353245218444665",
       "http://bibfra.me/vocab/library/code": [
         "a"
       ],
@@ -44,77 +44,77 @@
     {
       "_codes": [
         {
-          "id":"4788429409088894564",
-          "http://bibfra.me/vocab/library/term":[
-            "French"
+          "id": "-2631250160451549610",
+          "http://bibfra.me/vocab/library/code": [
+            "ger"
           ],
-          "http://bibfra.me/vocab/library/code":[
-            "fre"
+          "http://bibfra.me/vocab/library/term": [
+            "German"
           ],
-          "http://bibfra.me/vocab/lite/link":[
-            "http://id.loc.gov/vocabulary/languages/fre"
+          "http://bibfra.me/vocab/lite/link": [
+            "http://id.loc.gov/vocabulary/languages/ger"
           ]
         }
       ],
-      "_types":[
-        "http://bibfra.me/vocab/lite/originalLanguage"
+      "_types": [
+        "http://bibfra.me/vocab/lite/accompanyingTranscriptsLanguage"
       ]
     },
     {
       "_codes": [
         {
-          "id":"6136110693438399146",
-          "http://bibfra.me/vocab/library/code":[
+          "id": "-878606130574011566",
+          "http://bibfra.me/vocab/library/code": [
             "eng"
           ],
-          "http://bibfra.me/vocab/library/term":[
+          "http://bibfra.me/vocab/library/term": [
             "English"
           ],
-          "http://bibfra.me/vocab/lite/link":[
+          "http://bibfra.me/vocab/lite/link": [
             "http://id.loc.gov/vocabulary/languages/eng"
           ]
         }
       ],
-      "_types":[
+      "_types": [
         "http://bibfra.me/vocab/lite/language"
       ]
     },
     {
       "_codes": [
         {
-          "id":"4788429409088894564",
-          "http://bibfra.me/vocab/library/term":[
-            "French"
-          ],
-          "http://bibfra.me/vocab/library/code":[
+          "id": "774324697113869330",
+          "http://bibfra.me/vocab/library/code": [
             "fre"
           ],
-          "http://bibfra.me/vocab/lite/link":[
+          "http://bibfra.me/vocab/library/term": [
+            "French"
+          ],
+          "http://bibfra.me/vocab/lite/link": [
             "http://id.loc.gov/vocabulary/languages/fre"
           ]
         }
       ],
-      "_types":[
-        "http://bibfra.me/vocab/lite/summaryLanguage"
+      "_types": [
+        "http://bibfra.me/vocab/lite/originalLanguage"
       ]
     },
     {
       "_codes": [
         {
-          "id":"6811407107017877530",
-          "http://bibfra.me/vocab/library/term":[
-            "German"
+          "id": "774324697113869330",
+          "http://bibfra.me/vocab/library/code": [
+            "fre"
           ],
-          "http://bibfra.me/vocab/library/code":[
-            "ger"
+          "http://bibfra.me/vocab/library/term": [
+            "French"
           ],
-          "http://bibfra.me/vocab/lite/link":[
-            "http://id.loc.gov/vocabulary/languages/ger"
+          "http://bibfra.me/vocab/lite/link": [
+            "http://id.loc.gov/vocabulary/languages/fre"
           ]
         }
       ],
-      "_types":[
-        "http://bibfra.me/vocab/lite/accompanyingTranscriptsLanguage"
+      "_types": [
+        "http://bibfra.me/vocab/lite/summaryLanguage"
       ]
     }
   ],
@@ -129,10 +129,10 @@
     },
     {
       "value": [
-        "Language note"
+        "Award note"
       ],
       "type": [
-        "http://bibfra.me/vocab/library/languageNote"
+        "http://bibfra.me/vocab/library/awardsNote"
       ]
     },
     {
@@ -144,17 +144,40 @@
       ]
     },
     {
-      "type":[
-        "http://bibfra.me/vocab/library/awardsNote"
+      "value": [
+        "Language note"
       ],
-      "value":[
-        "Award note"
+      "type": [
+        "http://bibfra.me/vocab/library/languageNote"
       ]
     }
   ],
   "http://bibfra.me/vocab/lite/classification": [
     {
-      "id": "819326460434612409",
+      "id": "7744730679866877441",
+      "http://bibfra.me/vocab/library/code": [
+        "Lib-Congress-number"
+      ],
+      "http://bibfra.me/vocab/library/source": [
+        "lc"
+      ],
+      "http://bibfra.me/vocab/library/itemNumber": [
+        "Lib-Congress-number-item"
+      ],
+      "http://bibfra.me/vocab/library/status": [
+        {
+          "id": "8780638529249055440",
+          "http://bibfra.me/vocab/lite/link": [
+            "http://id.loc.gov/vocabulary/mstatus/uba"
+          ],
+          "http://bibfra.me/vocab/lite/label": [
+            "used by assigner"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "-4186545942867067362",
       "http://bibfra.me/vocab/library/code": [
         "Dewey-number"
       ],
@@ -170,34 +193,11 @@
       "http://bibfra.me/vocab/library/edition": [
         "Dewey-number-edition"
       ]
-    },
-    {
-      "id": "8699966402486637585",
-      "http://bibfra.me/vocab/library/code": [
-        "Lib-Congress-number"
-      ],
-      "http://bibfra.me/vocab/library/source": [
-        "lc"
-      ],
-      "http://bibfra.me/vocab/library/itemNumber": [
-        "Lib-Congress-number-item"
-      ],
-      "http://bibfra.me/vocab/library/status": [
-        {
-          "id": "-65033967102507349",
-          "http://bibfra.me/vocab/lite/link": [
-            "http://id.loc.gov/vocabulary/mstatus/uba"
-          ],
-          "http://bibfra.me/vocab/lite/label": [
-            "used by assigner"
-          ]
-        }
-      ]
     }
   ],
   "http://bibfra.me/vocab/library/content": [
     {
-      "id": "-6445640910602524428",
+      "id": "-8147146195166577135",
       "http://bibfra.me/vocab/library/code": [
         "cri"
       ],
@@ -214,7 +214,7 @@
   ],
   "http://bibfra.me/vocab/library/governmentPublication": [
     {
-      "id": "-5789337317515880972",
+      "id": "-1006275741058857561",
       "http://bibfra.me/vocab/library/code": [
         "o"
       ],
@@ -228,7 +228,7 @@
   ],
   "http://bibfra.me/vocab/library/originPlace": [
     {
-      "id": "5307084273867913075",
+      "id": "-8973575552271034572",
       "http://bibfra.me/vocab/lite/name": [
         "United States"
       ],
@@ -245,7 +245,7 @@
   ],
   "http://bibfra.me/vocab/scholar/dissertation": [
     {
-      "id": "1866822603407261876",
+      "id": "6843069100405495370",
       "http://bibfra.me/vocab/lite/label": [
         "label"
       ],
