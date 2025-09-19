@@ -138,7 +138,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.identifier-types.collection.get'                |
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
-      | 'inventory-storage.nature-of-content-terms.collection.get          |
+      | 'inventory-storage.nature-of-content-terms.collection.get'         |
       | 'tags.collection.get'                                              |
 
 
