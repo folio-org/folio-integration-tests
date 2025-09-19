@@ -1,4 +1,5 @@
-Feature: Change order line instance connection with holdings items
+# For: https://folio-org.atlassian.net/browse/MODORDERS-1356
+Feature: Piece sequence numbers
 
   Background:
     * print karate.info.scenarioName
@@ -15,6 +16,7 @@ Feature: Change order line instance connection with holdings items
     * callonce variables
     * def fundId = call uuid
 
+  @Positive
   Scenario: Open order with synchronized order line and manually add pieces without providing sequence numbers manually
     # 1. Create order and order line
     * def orderId = call uuid
