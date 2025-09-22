@@ -27,8 +27,38 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),
+    variables: karate.read('classpath:global/variables.feature'),
 
-    // define global functions
+    // consortia variables
+    variablesCentral: karate.read('classpath:variables/variablesCentral.feature'),
+    variablesUniversity: karate.read('classpath:variables/variablesUniversity.feature'),
+
+    // inventory
+    createItem: karate.read('classpath:reusable/createItem.feature'),
+    createHolding: karate.read('classpath:reusable/createHolding.feature'),
+    createHoldingSource: karate.read('classpath:reusable/createHoldingSource.feature'),
+    createInstance: karate.read('classpath:reusable/createInstance.feature'),
+    createInstanceWithHrid: karate.read('classpath:reusable/createInstanceWithHrid.feature'),
+    createInstanceStatus: karate.read('classpath:reusable/createInstanceStatus.feature'),
+    createInstanceType: karate.read('classpath:reusable/createInstanceType.feature'),
+    createInstitution: karate.read('classpath:reusable/createInstitution.feature'),
+    createLibrary: karate.read('classpath:reusable/createLibrary.feature'),
+    createCampus: karate.read('classpath:reusable/createCampus.feature'),
+    createLocation: karate.read('classpath:reusable/createLocation.feature'),
+    createLoanType: karate.read('classpath:reusable/createLoanType.feature'),
+    createMaterialType: karate.read('classpath:reusable/createMaterialType.feature'),
+    createServicePoint: karate.read('classpath:reusable/createServicePoint.feature'),
+    moveHolding: karate.read('classpath:reusable/moveHolding.feature'),
+    moveItem: karate.read('classpath:reusable/moveItem.feature'),
+    updateHoldingOwnership: karate.read('classpath:reusable/updateHoldingOwnership.feature'),
+    updateItemOwnership: karate.read('classpath:reusable/updateItemOwnership.feature'),
+    shareInstance: karate.read('classpath:reusable/shareInstance.feature'),
+    updateHridSettings: karate.read('classpath:reusable/updateHridSettings.feature'),
+
+    // Expose eurekaLogin as a function, not as a feature
+    eurekaLogin: function(args) { return karate.call('classpath:common-consortia/eureka/initData.feature@Login', args); },
+
+    // Utility functions
     random_string: function() {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -36,12 +66,22 @@ function fn() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     },
+    uuid: function () {
+      return java.util.UUID.randomUUID() + '';
+    },
     //to generate random barcode
     random_numbers: function() {
       return Math.floor(Math.random() * 1000000);
     },
-    random_uuid: function() {
-      return java.util.UUID.randomUUID() + '';
+    uuids: function (n) {
+      var list = [];
+      for (var i = 0; i < n; i++) {
+        list.push(java.util.UUID.randomUUID() + '');
+      }
+      return list;
+    },
+    randomMillis: function() {
+      return java.lang.System.currentTimeMillis() + '';
     }
   };
   if (env == 'dev') {
