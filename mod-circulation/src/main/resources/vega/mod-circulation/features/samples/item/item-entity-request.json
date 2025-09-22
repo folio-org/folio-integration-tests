@@ -9,6 +9,9 @@
   "permanentLoanType" : {
     "id": "#(permanentLoanTypeId)"
   },
+  "temporaryLocation" : {
+    "id": "#(locationId)"
+  },
   "status": {
     "name": "#(itemStatusName)"
   },
