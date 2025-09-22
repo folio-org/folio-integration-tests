@@ -195,6 +195,9 @@ Feature: mod-orders integration tests
   Scenario: Update Pieces statuses in batch
     * call read('features/pieces-batch-update-status.feature')
 
+  Scenario: Piece sequence numbers
+    * call read('features/piece-sequence-numbers.feature')
+
   Scenario: Piece status transitions
     * call read('features/piece-status-transitions.feature')
 

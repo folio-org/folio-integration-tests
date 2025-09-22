@@ -20,9 +20,9 @@ Feature: Util functions for verifying instance and work
     * def searchResult = searchCall.response.content[0]
     * match searchResult contains expectedSearchResponse
     * def getWorkCall = call getResource { id: "#(searchResult.id)" }
-    And match getWorkCall.response.resource['http://bibfra.me/vocab/lite/Work']['http://bibfra.me/vocab/marc/title'][0]['http://bibfra.me/vocab/marc/Title']['http://bibfra.me/vocab/marc/mainTitle'] == ['Silent storms,']
+    And match getWorkCall.response.resource['http://bibfra.me/vocab/lite/Work']['http://bibfra.me/vocab/library/title'][0]['http://bibfra.me/vocab/library/Title']['http://bibfra.me/vocab/library/mainTitle'] == ['Silent storms,']
     * def getInstanceCall = call getResource { id: "#(searchResult.instances[0].id)" }
-    And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/marc/title'][0]['http://bibfra.me/vocab/marc/Title']['http://bibfra.me/vocab/marc/mainTitle'] == ['Silent storms,']
+    And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/library/title'][0]['http://bibfra.me/vocab/library/Title']['http://bibfra.me/vocab/library/mainTitle'] == ['Silent storms,']
     And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata ==
       """
       {
