@@ -293,7 +293,7 @@ Feature: Print events tests
     * def extUserId = call uuid1
 
     # post a material type
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'printLogs_softcopy' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'printLogs_itemBarcode6', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
