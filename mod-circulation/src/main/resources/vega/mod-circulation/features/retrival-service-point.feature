@@ -5,20 +5,6 @@ Feature: Requests tests
     * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
-    * def servicePointId = call uuid1
-    * def groupId = call uuid1
-    * def instanceId = call uuid1
-    * def instanceTypeId = call uuid1
-    * def locationId = call uuid1
-    * def holdingId = call uuid1
-    * def holdingSourceId = call uuid1
-    * def holdingSourceName = random_string()
-    * def cancellationReasonId = call uuid1
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId), extInstanceTypeId: #(instanceTypeId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostCancellationReason')
 
   Scenario: TEST KAPIL: Normal flow with item SP and location synced correctly in request
     * print 'Normal flow with item SP and location synced correctly in request'
