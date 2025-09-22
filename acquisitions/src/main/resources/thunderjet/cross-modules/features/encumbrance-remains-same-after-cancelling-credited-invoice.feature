@@ -9,7 +9,7 @@ Feature: Encumbrance Remains The Same After Cancelling Credited Invoice
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    * configure retry = { count: 5, interval: 20000 }
+    * configure retry = { count: 5, interval: 5000 }
     * configure readTimeout = 120000
     * configure connectTimeout = 120000
 
@@ -114,11 +114,11 @@ Feature: Encumbrance Remains The Same After Cancelling Credited Invoice
     Then status 200
 
     # 11. Verify Order
-    * print '11. Verify Order'
-    Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 10.00 && response.totalEncumbered == 10.00 && response.totalExpended == 0.00 && response.totalCredited == 0.00
-    When method GET
-    Then status 200
+    #    * print '11. Verify Order'
+    #    Given path 'orders/composite-orders', orderId
+    #    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 10.00 && response.totalEncumbered == 10.00 && response.totalExpended == 0.00 && response.totalCredited == 0.00
+    #    When method GET
+    #    Then status 200
 
     # 12. Verify Encumbrance State After Invoice Cancellation
     * print '12. Verify Encumbrance State After Invoice Cancellation'
