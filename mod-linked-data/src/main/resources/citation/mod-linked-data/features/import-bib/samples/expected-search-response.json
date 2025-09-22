@@ -1,5 +1,5 @@
 {
-  "id": "-4759357466855226407",
+  "id": "4530121116320666286",
   "titles": [
     {
       "value": "Silent storms,",
@@ -37,7 +37,7 @@
   ],
   "instances": [
     {
-      "id": "1917298720693617920",
+      "id": "-4554144337332897516",
       "titles": [
         {
           "value": "Silent storms,",
@@ -50,19 +50,12 @@
           "type": "LCCN"
         }
       ],
-      "contributors": [
-      ],
       "publications": [
         {
           "name": "The Macmillan Company",
           "date":"1927"
         }
-      ],
-      "editionStatements": [
-      ],
-      "notes": [
       ]
     }
-  ],
-  "notes":[]
+  ]
 }
