@@ -6,6 +6,7 @@ Feature: Requests tests
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
 
+
   Scenario: TEST KAPIL: Normal flow with item SP and location synced correctly in request
     * print 'Normal flow with item SP and location synced correctly in request'
     * def extInstanceTypeId = call uuid1
@@ -35,7 +36,7 @@ Feature: Requests tests
 
     # post an item
     * def materialTypeIdResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
-    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
+    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItemWithTempLocation') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }
@@ -80,7 +81,7 @@ Feature: Requests tests
 
     # post an item
     * def materialTypeIdResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
-    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
+    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItemWithTempLocation') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }
@@ -138,7 +139,7 @@ Feature: Requests tests
 
     # post an item
     * def materialTypeIdResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
-    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
+    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItemWithTempLocation') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }
@@ -196,7 +197,7 @@ Feature: Requests tests
 
     # post an item
     * def materialTypeIdResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
-    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
+    * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItemWithTempLocation') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
 
     # post an user
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }

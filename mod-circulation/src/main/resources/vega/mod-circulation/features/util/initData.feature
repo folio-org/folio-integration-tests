@@ -7,6 +7,7 @@ Feature: init data for mod-circulation
 
   @PostInstance
   Scenario: create instance
+    * def instanceId = call uuid1
     * def intInstanceTypeId = call uuid1
     * def contributorNameTypeId = call uuid1
     * def instanceTypeEntityRequest = read('samples/instance/instance-type-entity-request.json')
@@ -229,7 +230,33 @@ Feature: init data for mod-circulation
     * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
     * itemEntityRequest.permanentLoanType.id = permanentLoanTypeId
-    * itemEntityRequest.temporaryLocation.id = karate.get('extLocationId', locationId)
+    Given path 'inventory', 'items'
+    And request itemEntityRequest
+    When method POST
+    Then status 201
+
+  @PostItemWithTempLocation
+  Scenario: create item with temporary(effective) location
+    * def permanentLoanTypeId = call uuid1
+    * def intMaterialTypeId = call uuid1
+    * def intItemId = call uuid1
+    * def intStatusName = 'Available'
+
+    * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
+    * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
+    Given path 'loan-types'
+    And request permanentLoanTypeEntityRequest
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest = read('samples/item/item-entity-request.json')
+    * itemEntityRequest.barcode = extItemBarcode
+    * itemEntityRequest.id = karate.get('extItemId', intItemId)
+    * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest.permanentLoanType.id = permanentLoanTypeId
+    * itemEntityRequest.temporaryLocation = { id: karate.get('extLocationId', locationId) }
     Given path 'inventory', 'items'
     And request itemEntityRequest
     When method POST
@@ -257,7 +284,7 @@ Feature: init data for mod-circulation
     * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
     * itemEntityRequest.permanentLoanType.id = permanentLoanTypeId
-    * itemEntityRequest.temporaryLocation.id = karate.get('extLocationId', locationId)
+    * itemEntityRequest.temporaryLocation = { id: karate.get('extLocationId', locationId) }
     * itemEntityRequest._version = karate.get('extVersion', '2')
     Given path 'inventory', 'items', itemEntityRequest.id
     And request itemEntityRequest
