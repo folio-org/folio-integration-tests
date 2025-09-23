@@ -7,7 +7,6 @@ Feature: init data for mod-circulation
 
   @PostInstance
   Scenario: create instance
-    * def instanceId = call uuid1
     * def intInstanceTypeId = call uuid1
     * def contributorNameTypeId = call uuid1
     * def instanceTypeEntityRequest = read('samples/instance/instance-type-entity-request.json')
@@ -38,7 +37,6 @@ Feature: init data for mod-circulation
 
   @PostServicePoint
   Scenario: create service point
-    * print "Kapil-PostServicePoint"  , karate.get('extServicePointId', servicePointId)
     * def servicePointEntityRequest = read('samples/service-point-entity-request.json')
     * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
