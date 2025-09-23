@@ -179,6 +179,36 @@
           "Hardcover"
         ]
       }
+    },
+    {
+      "http://library.link/identifier/ISSN":{
+        "id":"-1472435492379924879",
+        "http://bibfra.me/vocab/lite/name":[
+          "ISSN Value"
+        ]
+      }
+    },
+    {
+      "http://library.link/identifier/IAN":{
+        "id":"3747920205639937595",
+        "http://bibfra.me/vocab/lite/name":[
+          "IAN value"
+        ],
+        "http://bibfra.me/vocab/library/qualifier":[
+          "IAN Qualifier"
+        ]
+      }
+    },
+    {
+      "http://library.link/identifier/UNKNOWN":{
+        "id":"2340067718997583253",
+        "http://bibfra.me/vocab/lite/name":[
+          "Other ID value"
+        ],
+        "http://bibfra.me/vocab/library/qualifier":[
+          "Other ID qualifier"
+        ]
+      }
     }
   ],
   "http://bibfra.me/vocab/library/accessLocation": [
@@ -247,6 +277,16 @@
   ],
   "http://bibfra.me/vocab/library/adminMetadata": [
     {
+      "http://bibfra.me/vocab/library/transcribingAgency": [
+        "LoC"
+      ],
+      "http://bibfra.me/vocab/library/catalogingAgency": [
+        "DLC"
+      ],
+      "http://bibfra.me/vocab/library/modifyingAgency": [
+        "LC",
+        "AGR"
+      ],
       "http://bibfra.me/vocab/lite/catalogingLanguage": [
         {
           "id": "-878606130574011566",
