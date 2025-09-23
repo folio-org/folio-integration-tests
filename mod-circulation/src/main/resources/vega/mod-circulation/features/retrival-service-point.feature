@@ -1,4 +1,4 @@
-Feature: Requests tests
+Feature: test for retrival service-point for requests when item, SP and location are updated
 
   Background:
     * url baseUrl
@@ -7,7 +7,7 @@ Feature: Requests tests
     * configure headers = headersUser
 
 
-  Scenario: TEST KAPIL: Normal flow with item SP and location synced correctly in request
+  Scenario: Normal flow with item SP and location synced correctly in request
     * print 'Normal flow with item SP and location synced correctly in request'
     * def extInstanceTypeId = call uuid1
     * def extInstanceId = call uuid1
@@ -52,7 +52,7 @@ Feature: Requests tests
     * match requestResponse.response.item.retrievalServicePointName == servicePointResponse.response.name
     * print 'Kapil-requestResponse', requestResponse
 
-  Scenario: TEST KAPIL: Service point name is updated in request when service point name is updated
+  Scenario: Service point name is updated in request when service point name is updated
     * print 'Service point name is updated in request when service point name is updated'
     * def extInstanceTypeId = call uuid2
     * def extInstanceId = call uuid2
@@ -104,7 +104,7 @@ Feature: Requests tests
     * match requestResponse1.response.item.retrievalServicePointName == 'service point name ' + extServicePointName
 
 
-  Scenario: TEST KAPIL: Location name is updated in request when Location name is updated
+  Scenario: Location name is updated in request when Location name is updated
     * print 'Location name is updated in request when Location name is updated'
     * def extInstanceTypeId = call uuid2
     * def extInstanceId = call uuid2
@@ -162,7 +162,7 @@ Feature: Requests tests
     * match requestResponse1.response.item.itemEffectiveLocationName == 'location name ' + extLocationName
 
 
-  Scenario: TEST KAPIL: test item location update reflected in request
+  Scenario: Test whether item location update reflected in request
     * print 'test item location update reflected in request'
     * def extInstanceTypeId = call uuid2
     * def extInstanceId = call uuid2
