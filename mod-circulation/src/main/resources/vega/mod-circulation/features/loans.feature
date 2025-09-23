@@ -305,6 +305,7 @@ Feature: Loans tests
     And match response.item.id == itemId
     And match response.item.status.name == 'Awaiting pickup'
 
+    * call pause 10000
     # check the status of the user request whether changed to 'Open-Awaiting pickup'
     Given path 'circulation', 'requests', extRequestId
     When method GET
