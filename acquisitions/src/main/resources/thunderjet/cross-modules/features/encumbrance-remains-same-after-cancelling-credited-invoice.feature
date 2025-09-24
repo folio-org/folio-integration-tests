@@ -58,8 +58,8 @@ Feature: Encumbrance Remains The Same After Cancelling Credited Invoice
     # TestRail Case Steps
     #========================================================================================================
 
-    # 6. Verify Order, PO Line, Encumbrance, And Budget After Payment
-    * print '6. Verify Order, PO Line, Encumbrance, And Budget After Payment'
+    # 6. Verify Order
+    * print '6. Verify Order'
     Given path 'orders/composite-orders', orderId
     And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 10.00 && response.totalEncumbered == 10.00 && response.totalExpended == 0.00 && response.totalCredited == 5.00
     When method GET
@@ -113,15 +113,8 @@ Feature: Encumbrance Remains The Same After Cancelling Credited Invoice
     When method GET
     Then status 200
 
-    # 11. Verify Order
-    #    * print '11. Verify Order'
-    #    Given path 'orders/composite-orders', orderId
-    #    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 10.00 && response.totalEncumbered == 10.00 && response.totalExpended == 0.00 && response.totalCredited == 0.00
-    #    When method GET
-    #    Then status 200
-
-    # 12. Verify Encumbrance State After Invoice Cancellation
-    * print '12. Verify Encumbrance State After Invoice Cancellation'
+    # 11. Verify Encumbrance State After Invoice Cancellation
+    * print '11. Verify Encumbrance State After Invoice Cancellation'
     * def validateEncumbranceUnreleased =
     """
     function(response) {
@@ -139,8 +132,8 @@ Feature: Encumbrance Remains The Same After Cancelling Credited Invoice
     When method GET
     Then status 200
 
-    # 13. Verify Budget State After Invoice Cancellation
-    * print '13. Verify Budget State After Invoice Cancellation'
+    # 12. Verify Budget State After Invoice Cancellation
+    * print '12. Verify Budget State After Invoice Cancellation'
     * def validateBudgetAfterCancel =
     """
     function(response) {
