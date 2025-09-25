@@ -190,3 +190,22 @@ Feature: Encumbrance remains 0 for a re-opened One-time order with an approved i
     And retry until validateEncumbranceAfterInvoiceCancel(response)
     When method GET
     Then status 200
+
+    # 16. Verify Final Budget state - Encumbered should remain $10.00, Awaiting Payment should be $0.00, Available should be $990.00
+    * print '16. Verify Final Budget state - Encumbered should remain $10.00, Awaiting Payment should be $0.00, Available should be $990.00'
+    * def validateFinalBudgetState =
+    """
+    function(response) {
+      return response.allocated == 1000.00 &&
+             response.encumbered == 10.00 &&
+             response.awaitingPayment == 0.00 &&
+             response.expenditures == 0.00 &&
+             response.credits == 0.00 &&
+             response.unavailable == 10.00 &&
+             response.available == 990.00;
+    }
+    """
+    Given path 'finance/budgets', budgetId
+    And retry until validateFinalBudgetState(response)
+    When method GET
+    Then status 200

@@ -161,8 +161,7 @@ Feature: Check encumbrances after order is reopened - 2
     And param query = 'fundId==' + fundId
     When method GET
     Then status 200
-    # Unrelease is not blocked if the order has a paid invoice, see MODINVOICE-608
-    And match $.budgets[0].encumbered == 0
+    And match $.budgets[0].encumbered == 51
 
 
   Scenario: Use Case 2 - Prevent encumbrance from being unreleased
