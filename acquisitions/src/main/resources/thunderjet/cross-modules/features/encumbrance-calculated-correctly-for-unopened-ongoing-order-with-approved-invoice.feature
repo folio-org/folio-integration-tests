@@ -9,7 +9,9 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    * configure retry = { count: 15, interval: 15000 }
+    * configure retry = { count: 5, interval: 5000 }
+    * configure readTimeout = 120000
+    * configure connectTimeout = 120000
 
     * callonce variables
 
@@ -24,37 +26,44 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     * def invoiceLineId = call uuid
 
     # 1. Create Fund And Budget
+    * print "1. Create Fund And Budget"
     * def v = call createFund { id: "#(fundId)", name: "Encumbrance Test Fund" }
     * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 1000, status: "Active" }
 
     # 2. Create Ongoing Order With Fund Distribution
+    * print "2. Create Ongoing Order With Fund Distribution"
     * def ongoingConfig = { "interval": 123, "isSubscription": false }
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'Ongoing', ongoing: '#(ongoingConfig)' }
 
     # 3. Create Order Line With Fund Distribution
+    * print "3. Create Order Line With Fund Distribution"
     * def v = call createOrderLine { id: '#(orderLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 5.00, titleOrPackage: 'Test Ongoing Order' }
 
     # 4. Open Order
+    * print "4. Open Order"
     * def v = call openOrder { orderId: '#(orderId)' }
 
     # 5. Verify Order Is Open And Initial Encumbrance
+    * print "5. Verify Order Is Open And Initial Encumbrance"
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open'
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 5.00 && response.totalEncumbered == 5.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
-    And match response.totalEstimatedPrice == 5.00
-    And match response.totalEncumbered == 5.00
 
     # 6. Create Invoice Based On The Order
+    * print "6. Create Invoice Based On The Order"
     * def v = call createInvoice { id: '#(invoiceId)', fiscalYearId: '#(globalFiscalYearId)' }
 
     # 7. Create Invoice Line With Release Encumbrance
+    * print "7. Create Invoice Line With Release Encumbrance"
     * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(orderLineId)', fundId: '#(fundId)', total: 50.00, releaseEncumbrance: true }
 
     # 8. Approve The Invoice
+    * print "8. Approve The Invoice"
     * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # 9. Verify Invoice Is Approved
+    * print "9. Verify Invoice Is Approved"
     Given path 'invoice/invoices', invoiceId
     And retry until response.status == 'Approved'
     When method GET
@@ -65,22 +74,25 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     #========================================================================================================
 
     # 10. Verify Order State After Second Invoice Operations - $0 Encumbered, 0 Expended
+    * print "10. Verify Order State After Second Invoice Operations"
     Given path 'orders/composite-orders', orderId
     And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 5.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
 
     # 11. Unopen The Order
+    * print "11. Unopen The Order"
     * def v = call unopenOrder { orderId: '#(orderId)' }
 
     # 12. Verify Order Status And Encumbrance After Unopen
+    * print "12. Verify Order Status And Encumbrance After Unopen"
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Pending'
+    And retry until response.workflowStatus == 'Pending' && response.totalEstimatedPrice == 5.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
-    And match response.totalEncumbered == 0.00
 
     # 13. Verify Encumbrance Details After Unopen
+    * print "13. Verify Encumbrance Details After Unopen"
     * def validateEncumbranceAfterUnopen =
     """
     function(response) {
@@ -99,22 +111,24 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     Then status 200
 
     # 14. Reopen The Order
+    * print "14. Reopen The Order"
     * def v = call openOrder { orderId: '#(orderId)' }
 
     # 15. Verify Order Status And Encumbrance After Reopen
+    * print "15. Verify Order Status And Encumbrance After Reopen"
     Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open'
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 5.00 && response.totalEncumbered == 0.00 && response.totalExpended == 0.00
     When method GET
     Then status 200
-    And match response.totalEncumbered == 0.00
 
     # 16. Verify Encumbrance Details After Reopen
+    * print "16. Verify Encumbrance Details After Reopen"
     * def validateEncumbranceAfterReopen =
     """
     function(response) {
       var transaction = response.transactions[0];
       return transaction.amount == 0.00 &&
-             transaction.encumbrance.status == 'Unreleased' && // Should be Released
+             transaction.encumbrance.status == 'Released'
              transaction.encumbrance.initialAmountEncumbered == 5.00 &&
              transaction.encumbrance.amountAwaitingPayment == 50.00 &&
              transaction.encumbrance.amountExpended == 0.00;
@@ -127,6 +141,7 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     Then status 200
 
     # 17. Verify Budget State After Approved Invoice
+    * print "17. Verify Budget State After Approved Invoice"
     * def validateBudgetAfterApproval =
     """
     function(response) {
@@ -144,15 +159,18 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     Then status 200
 
     # 18. Cancel The Invoice
+    * print "18. Cancel The Invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
 
     # 19. Verify Invoice Is Cancelled
+    * print "19. Verify Invoice Is Cancelled"
     Given path 'invoice/invoices', invoiceId
     And retry until response.status == 'Cancelled'
     When method GET
     Then status 200
 
     # 20. Verify Encumbrance After Invoice Cancellation
+    * print "20. Verify Encumbrance After Invoice Cancellation"
     * def validateEncumbranceAfterCancel =
     """
     function(response) {
@@ -171,6 +189,7 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
     Then status 200
 
     # 21. Verify Final Budget State After Invoice Cancellation
+    * print "21. Verify Final Budget State After Invoice Cancellation"
     * def validateFinalBudgetState =
     """
     function(response) {

@@ -35,6 +35,11 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
+  void unreleaseEncumbrancesWhenReopenOngoingOrderWithRelatedPaidInvoiceAndReceiving() {
+    runFeatureTest("unrelease-encumbrances-when-reopen-ongoing-order-with-related-paid-invoice-and-receiving");
+  }
+
+  @Test
   void encumbranceCalculatedCorrectlyForUnopenedOngoingOrderWithApprovedInvoice() {
     runFeatureTest("encumbrance-calculated-correctly-for-unopened-ongoing-order-with-approved-invoice");
   }
@@ -47,5 +52,25 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @Test
   void encumbranceRemains0ForReOpened0DollarOngoingOrderWithPaidInvoice() {
     runFeatureTest("encumbrance-remains-0-for-re-opened-0-dollar-ongoing-order-with-paid-invoice");
+  }
+
+  @Test
+  void encumbranceRemainsSameAfterCancellingCreditedInvoice() {
+    runFeatureTest("encumbrance-remains-same-after-cancelling-credited-invoice");
+  }
+
+  @Test
+  void encumbranceRemains0For0DollarOngoingOrderAfterCancelingPaidAndCreditedInvoices() {
+    runFeatureTest("encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-and-credited-invoices");
+  }
+
+  @Test
+  void encumbranceRemains0For0DollarOngoingOrderAfterCancelingPaidInvoiceUnreleasingAndCancelingCreditedInvoice() {
+    runFeatureTest("encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-invoice-unreleasing-and-canceling-credited-invoice");
+  }
+
+  @Test
+  void encumbranceRemains0ForReopenedOneTimeOrderWithApprovedInvoiceUnreleasingAndCancelingInvoice() {
+    runFeatureTest("encumbrance-remains-0-for-reopened-one-time-order-with-approved-invoice-unreleasing-and-canceling-invoice");
   }
 }
