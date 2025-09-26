@@ -46,6 +46,17 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @UpdateServicePoint
+  Scenario: update service point
+    * def servicePointEntityRequest = read('samples/service-point-entity-request.json')
+    * servicePointEntityRequest.id = karate.get('extServicePointId', servicePointId)
+    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + karate.get('extServicePointName', random_string())
+    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + karate.get('extServicePointCode', random_string())
+    Given path 'service-points', servicePointEntityRequest.id
+    And request servicePointEntityRequest
+    When method PUT
+    Then status 204
+
   @PutServicePointNonPickupLocation
   Scenario: update service point
     * def id = call uuid1
@@ -140,12 +151,29 @@ Feature: init data for mod-circulation
     * locationEntityRequest.libraryId = karate.get('extLibraryId', intLibraryId)
     * locationEntityRequest.primaryServicePoint = karate.get('extServicePointId', intServicePointId)
     * locationEntityRequest.servicePointIds = [karate.get('extServicePointId', intServicePointId)]
-    * locationEntityRequest.name = locationEntityRequest.name + ' ' + random_string()
-    * locationEntityRequest.code = locationEntityRequest.code + ' ' + random_string()
+    * locationEntityRequest.name = locationEntityRequest.name + ' ' + karate.get('extLocationName', random_string())
+    * locationEntityRequest.code = locationEntityRequest.code + ' ' + karate.get('extLocationCode', random_string())
     Given path 'locations'
     And request locationEntityRequest
     When method POST
     Then status 201
+
+
+  @UpdateLocation
+  Scenario: update location
+    * def locationEntityRequest = read('samples/location/location-entity-request.json')
+    * locationEntityRequest.id = karate.get('extLocationId', locationId)
+    * locationEntityRequest.institutionId = karate.get('extInstitutionId', intInstitutionId)
+    * locationEntityRequest.campusId = karate.get('extCampusId', intCampusId)
+    * locationEntityRequest.libraryId = karate.get('extLibraryId', intLibraryId)
+    * locationEntityRequest.primaryServicePoint = karate.get('extServicePointId', intServicePointId)
+    * locationEntityRequest.servicePointIds = [karate.get('extServicePointId', intServicePointId)]
+    * locationEntityRequest.name = locationEntityRequest.name + ' ' + karate.get('extLocationName', random_string())
+    * locationEntityRequest.code = locationEntityRequest.code + ' ' + karate.get('extLocationCode', random_string())
+    Given path 'locations', locationEntityRequest.id
+    And request locationEntityRequest
+    When method PUT
+    Then status 204
 
   @PostHoldings
   Scenario: create holdings
@@ -204,6 +232,62 @@ Feature: init data for mod-circulation
     And request itemEntityRequest
     When method POST
     Then status 201
+
+  @PostItemWithTempLocation
+  Scenario: create item with temporary(effective) location
+    * def permanentLoanTypeId = call uuid1
+    * def intMaterialTypeId = call uuid1
+    * def intItemId = call uuid1
+    * def intStatusName = 'Available'
+
+    * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
+    * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
+    Given path 'loan-types'
+    And request permanentLoanTypeEntityRequest
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest = read('samples/item/item-entity-request.json')
+    * itemEntityRequest.barcode = extItemBarcode
+    * itemEntityRequest.id = karate.get('extItemId', intItemId)
+    * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest.permanentLoanType.id = permanentLoanTypeId
+    * itemEntityRequest.temporaryLocation = { id: karate.get('extLocationId', locationId) }
+    Given path 'inventory', 'items'
+    And request itemEntityRequest
+    When method POST
+    Then status 201
+
+  @UpdateItem
+  Scenario: update item
+    * def permanentLoanTypeId = call uuid1
+    * def intMaterialTypeId = call uuid1
+    * def intItemId = call uuid1
+    * def intStatusName = 'Available'
+
+    * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
+    * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
+    Given path 'loan-types'
+    And request permanentLoanTypeEntityRequest
+    When method POST
+    Then status 201
+
+    * def itemEntityRequest = read('samples/item/item-entity-request.json')
+    * itemEntityRequest.barcode = extItemBarcode
+    * itemEntityRequest.id = karate.get('extItemId', intItemId)
+    * itemEntityRequest.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest.hrid = karate.get('extHrid', hrid)
+    * itemEntityRequest.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest.status.name = karate.get('extStatusName', intStatusName)
+    * itemEntityRequest.permanentLoanType.id = permanentLoanTypeId
+    * itemEntityRequest.temporaryLocation = { id: karate.get('extLocationId', locationId) }
+    * itemEntityRequest._version = karate.get('extVersion', '2')
+    Given path 'inventory', 'items', itemEntityRequest.id
+    And request itemEntityRequest
+    When method PUT
+    Then status 204
 
   @PostLoanPolicy
   Scenario: create loan policy
@@ -409,6 +493,12 @@ Feature: init data for mod-circulation
     And match response.requesterId == requesterId
     And match response.pickupServicePointId == karate.get('extServicePointId', servicePointId)
     And match response.status == 'Open - Not yet filled'
+
+  @GetRequest
+  Scenario: Get Request
+    Given path '/circulation/requests/', requestId
+    When method GET
+    Then status 200
 
   @PostTitleLevelRequest
   Scenario: create title level request
