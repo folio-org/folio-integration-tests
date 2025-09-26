@@ -50,28 +50,46 @@ Cross-modules testing requires careful initialization order:
 Cross-modules integration tests require strict sequential execution due to complex interdependencies:
 
 #### @parallel=false Usage Rules
-- **Always Required**: Cross-modules features ALWAYS require `@parallel=false` at the feature level
-- **Complex State Management**: Multiple modules maintain shared state that cannot be safely accessed concurrently
-- **Resource Dependencies**: Tests often depend on resources created by previous scenarios
-- **Fiscal Year Operations**: Rollover and budget operations must be sequential
+- **Only When Multiple Scenarios**: `@parallel=false` is only required when a feature file contains more than one scenario
+- **Single Scenario Files**: Feature files with only one scenario should omit `@parallel=false` as it's unnecessary
+- **Complex State Management**: Multiple scenarios in the same feature maintain shared state that cannot be safely accessed concurrently
+- **Resource Dependencies**: Multiple scenarios often depend on resources created by previous scenarios
+- **Fiscal Year Operations**: Rollover and budget operations across multiple scenarios must be sequential
 
 ```
-@parallel=false
-Feature: Cross-Module Integration Test
+# Single scenario - NO @parallel=false needed
+Feature: Single Cross-Module Integration Test
   Background:
     * url baseUrl
   
+  @Positive
   Scenario: Complex Multi-Module Workflow
-    # Cross-module scenarios require sequential execution
+    # Single scenario doesn't need parallel control
+
+# Multiple scenarios - @parallel=false REQUIRED
+@parallel=false
+Feature: Multiple Cross-Module Integration Tests
+  Background:
+    * url baseUrl
+  
+  @Positive
+  Scenario: First Cross-Module Workflow
+    # First scenario creates shared state
+  
+  @Positive  
+  Scenario: Second Cross-Module Workflow
+    # Second scenario depends on first scenario's state
 ```
 
-**Why @parallel=false is Critical for Cross-Modules:**
-- **Module State Conflicts**: Multiple modules share database resources and internal state
-- **Transaction Integrity**: Financial transactions across modules must maintain consistency
-- **Rollover Operations**: Fiscal year rollovers affect multiple modules simultaneously
-- **Audit Event Ordering**: Audit events must be generated and verified in sequence
-- **Encumbrance Management**: Financial encumbrances span orders, finance, and invoice modules
+**Why @parallel=false is Critical for Multiple Scenarios in Cross-Modules:**
+- **Module State Conflicts**: Multiple scenarios sharing database resources and internal state
+- **Transaction Integrity**: Financial transactions across modules must maintain consistency between scenarios
+- **Rollover Operations**: Fiscal year rollovers affecting multiple modules across scenarios
+- **Audit Event Ordering**: Audit events must be generated and verified in sequence across scenarios
+- **Encumbrance Management**: Financial encumbrances spanning orders, finance, and invoice modules across scenarios
 - **Complex Dependencies**: Later scenarios often depend on state created by earlier scenarios
+
+**Summary**: Use `@parallel=false` only when you have multiple scenarios in a single feature file. Single scenario features should omit this annotation.
 
 ## Test Patterns & Best Practices
 
