@@ -2,44 +2,44 @@
   "resource":{
     "http://bibfra.me/vocab/lite/Instance":{
       "profileId": 3,
-      "http://bibfra.me/vocab/marc/title":[
+      "http://bibfra.me/vocab/library/title":[
         {
-          "http://bibfra.me/vocab/marc/Title":{
+          "http://bibfra.me/vocab/library/Title":{
             "http://bibfra.me/vocab/bflc/nonSortNum":[
               "2"
             ],
-            "http://bibfra.me/vocab/marc/mainTitle":[
+            "http://bibfra.me/vocab/library/mainTitle":[
               "create-bib-title"
             ],
-            "http://bibfra.me/vocab/marc/partNumber":[
+            "http://bibfra.me/vocab/library/partNumber":[
               "3"
             ],
-            "http://bibfra.me/vocab/marc/partName":[
+            "http://bibfra.me/vocab/library/partName":[
               "part 3"
             ],
-            "http://bibfra.me/vocab/marc/subTitle":[
+            "http://bibfra.me/vocab/library/subTitle":[
               "Instance Sub title"
             ]
           }
         },
         {
-          "http://bibfra.me/vocab/marc/VariantTitle":{
-            "http://bibfra.me/vocab/marc/mainTitle":[
+          "http://bibfra.me/vocab/library/VariantTitle":{
+            "http://bibfra.me/vocab/library/mainTitle":[
               "Variant title of the instance"
             ],
-            "http://bibfra.me/vocab/marc/partNumber":[
+            "http://bibfra.me/vocab/library/partNumber":[
               "2"
             ],
-            "http://bibfra.me/vocab/marc/partName":[
+            "http://bibfra.me/vocab/library/partName":[
               "part 2"
             ],
-            "http://bibfra.me/vocab/marc/subTitle":[
+            "http://bibfra.me/vocab/library/subTitle":[
               "variant sub title"
             ],
             "http://bibfra.me/vocab/lite/date":[
               "2024"
             ],
-            "http://bibfra.me/vocab/marc/variantType":[
+            "http://bibfra.me/vocab/library/variantType":[
               "1"
             ],
             "http://bibfra.me/vocab/lite/note":[
@@ -48,17 +48,17 @@
           }
         },
         {
-          "http://bibfra.me/vocab/marc/ParallelTitle":{
-            "http://bibfra.me/vocab/marc/mainTitle":[
+          "http://bibfra.me/vocab/library/ParallelTitle":{
+            "http://bibfra.me/vocab/library/mainTitle":[
               "Parallel title of the instance"
             ],
-            "http://bibfra.me/vocab/marc/subTitle":[
+            "http://bibfra.me/vocab/library/subTitle":[
               "Parallel sub title"
             ],
-            "http://bibfra.me/vocab/marc/partNumber":[
+            "http://bibfra.me/vocab/library/partNumber":[
               "4"
             ],
-            "http://bibfra.me/vocab/marc/partName":[
+            "http://bibfra.me/vocab/library/partName":[
               "part 4"
             ],
             "http://bibfra.me/vocab/lite/date":[
@@ -70,10 +70,10 @@
           }
         }
       ],
-      "http://bibfra.me/vocab/marc/edition":[
+      "http://bibfra.me/vocab/library/edition":[
         "Second edition"
       ],
-      "http://bibfra.me/vocab/marc/publication":[
+      "http://bibfra.me/vocab/library/publication":[
         {
           "http://bibfra.me/vocab/lite/providerDate":[
             "2020"
@@ -102,7 +102,7 @@
           ]
         }
       ],
-      "http://bibfra.me/vocab/marc/distribution":[
+      "http://bibfra.me/vocab/library/distribution":[
         {
           "http://bibfra.me/vocab/lite/providerDate":[
             "2021"
@@ -131,7 +131,7 @@
           ]
         }
       ],
-      "http://bibfra.me/vocab/marc/copyright":[
+      "http://bibfra.me/vocab/library/copyright":[
         {
           "http://bibfra.me/vocab/lite/date":[
             "2023"
@@ -144,7 +144,7 @@
             "http://bibfra.me/vocab/lite/name":[
               "  1234567890"
             ],
-            "http://bibfra.me/vocab/marc/status":[
+            "http://bibfra.me/vocab/library/status":[
               {
                 "http://bibfra.me/vocab/lite/label":[
                   "current"
@@ -161,10 +161,10 @@
             "http://bibfra.me/vocab/lite/name":[
               "0987654321"
             ],
-            "http://bibfra.me/vocab/marc/qualifier":[
+            "http://bibfra.me/vocab/library/qualifier":[
               "Hardcover"
             ],
-            "http://bibfra.me/vocab/marc/status":[
+            "http://bibfra.me/vocab/library/status":[
               {
                 "http://bibfra.me/vocab/lite/label":[
                   "current"
@@ -175,11 +175,38 @@
               }
             ]
           }
+        },
+        {
+          "http://library.link/identifier/ISSN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "ISSN Value"
+            ]
+          }
+        },
+        {
+          "http://library.link/identifier/IAN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "IAN value"
+            ],
+            "http://bibfra.me/vocab/library/qualifier":[
+              "IAN Qualifier"
+            ]
+          }
+        },
+        {
+          "http://library.link/identifier/UNKNOWN":{
+            "http://bibfra.me/vocab/lite/name":[
+              "Other ID value"
+            ],
+            "http://bibfra.me/vocab/library/qualifier":[
+              "Other ID qualifier"
+            ]
+          }
         }
       ],
-      "http://bibfra.me/vocab/marc/media":[
+      "http://bibfra.me/vocab/library/media":[
         {
-          "http://bibfra.me/vocab/marc/term":[
+          "http://bibfra.me/vocab/library/term":[
             "unspecified"
           ],
           "http://bibfra.me/vocab/lite/link":[
@@ -189,7 +216,7 @@
       ],
       "http://bibfra.me/vocab/lite/extent": [
         {
-          "http://bibfra.me/vocab/marc/materialsSpecified": [
+          "http://bibfra.me/vocab/library/materialsSpecified": [
             "ref print."
           ],
           "http://bibfra.me/vocab/lite/label": [
@@ -197,12 +224,12 @@
           ]
         }
       ],
-      "http://bibfra.me/vocab/marc/dimensions":[
+      "http://bibfra.me/vocab/library/dimensions":[
         "8x8"
       ],
-      "http://bibfra.me/vocab/marc/carrier":[
+      "http://bibfra.me/vocab/library/carrier":[
         {
-          "http://bibfra.me/vocab/marc/term":[
+          "http://bibfra.me/vocab/library/term":[
             "audio belt"
           ],
           "http://bibfra.me/vocab/lite/link":[
@@ -210,7 +237,7 @@
           ]
         }
       ],
-      "http://bibfra.me/vocab/marc/accessLocation":[
+      "http://bibfra.me/vocab/library/accessLocation":[
         {
           "http://bibfra.me/vocab/lite/link":[
             "http://url_of_instance"
@@ -231,7 +258,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/additionalPhysicalForm"
+            "http://bibfra.me/vocab/library/additionalPhysicalForm"
           ],
           "value":[
             "Instance note - Additional physical form"
@@ -239,7 +266,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/exhibitionsNote"
+            "http://bibfra.me/vocab/library/exhibitionsNote"
           ],
           "value":[
             "Instance note - Exhibition"
@@ -247,7 +274,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/locationOfOtherArchivalMaterial"
+            "http://bibfra.me/vocab/library/locationOfOtherArchivalMaterial"
           ],
           "value":[
             "Instance note - Finding aid"
@@ -255,7 +282,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/fundingInformation"
+            "http://bibfra.me/vocab/library/fundingInformation"
           ],
           "value":[
             "Instance note - Funding information"
@@ -263,7 +290,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/issuanceNote"
+            "http://bibfra.me/vocab/library/issuanceNote"
           ],
           "value":[
             "Instance note - Issuance information"
@@ -271,7 +298,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/issuingBody"
+            "http://bibfra.me/vocab/library/issuingBody"
           ],
           "value":[
             "Instance note - Issuing body"
@@ -279,7 +306,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/originalVersionNote"
+            "http://bibfra.me/vocab/library/originalVersionNote"
           ],
           "value":[
             "Instance note - original version"
@@ -287,7 +314,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/relatedParts"
+            "http://bibfra.me/vocab/library/relatedParts"
           ],
           "value":[
             "Instance note - related material"
@@ -295,7 +322,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/typeOfReport"
+            "http://bibfra.me/vocab/library/typeOfReport"
           ],
           "value":[
             "Instance note - report type"
@@ -303,7 +330,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/reproductionNote"
+            "http://bibfra.me/vocab/library/reproductionNote"
           ],
           "value":[
             "Instance note - reproduction version"
@@ -311,7 +338,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/computerDataNote"
+            "http://bibfra.me/vocab/library/computerDataNote"
           ],
           "value":[
             "Instance note - Type of computer data"
@@ -319,7 +346,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/withNote"
+            "http://bibfra.me/vocab/library/withNote"
           ],
           "value":[
             "Instance note - with"
@@ -327,7 +354,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/adminhist"
+            "http://bibfra.me/vocab/library/adminhist"
           ],
           "value":[
             "Instance note - Administrative history note"
@@ -335,7 +362,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/biogdata"
+            "http://bibfra.me/vocab/library/biogdata"
           ],
           "value":[
             "Instance note - Biographical data note"
@@ -343,7 +370,7 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/physicalDescription"
+            "http://bibfra.me/vocab/library/physicalDescription"
           ],
           "value":[
             "illustrations (some color)"
@@ -351,10 +378,34 @@
         },
         {
           "type":[
-            "http://bibfra.me/vocab/marc/accompanyingMaterial"
+            "http://bibfra.me/vocab/library/accompanyingMaterial"
           ],
           "value":[
             "reference manual"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/library/adminMetadata": [
+        {
+          "http://bibfra.me/vocab/library/transcribingAgency": [
+            "LoC"
+          ],
+          "http://bibfra.me/vocab/library/catalogingAgency": [
+            "DLC"
+          ],
+          "http://bibfra.me/vocab/library/modifyingAgency": [
+            "LC",
+            "AGR"
+          ],
+          "http://bibfra.me/vocab/lite/catalogingLanguage": [
+            {
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/languages/eng"
+              ],
+              "http://bibfra.me/vocab/library/term": [
+                "English"
+              ]
+            }
           ]
         }
       ],

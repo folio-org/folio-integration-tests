@@ -16,6 +16,8 @@ Feature: mod-consortia and mod-lists integration tests
       | 'mod-lists'               |
       | 'mod-entities-links'      |
       | 'mod-inventory-storage'   |
+      | 'mod-tags'                |
+
 
     * table userPermissions
       | name                                                               |
@@ -39,6 +41,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'fqm.query.purge.post'                                             |
       | 'fqm.query.sync.get'                                               |
       | 'fqm.version.get'                                                  |
+      | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
@@ -96,6 +99,8 @@ Feature: mod-consortia and mod-lists integration tests
       | 'inventory-storage.identifier-types.collection.get'                |
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
+      | 'inventory-storage.nature-of-content-terms.collection.get'         |
+      | 'tags.collection.get'                                              |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'

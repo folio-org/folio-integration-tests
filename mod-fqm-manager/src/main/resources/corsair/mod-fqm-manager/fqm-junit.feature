@@ -21,6 +21,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-pubsub'                |
       | 'mod-patron-blocks'         |
       | 'mod-feesfines'             |
+      | 'mod-tags'                  |
 
     * table userPermissions
       | name                                                               |
@@ -67,6 +68,7 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.entityTypes.custom.item.put'                                  |
       | 'fqm.entityTypes.custom.item.delete'                               |
       | 'fqm.entityTypes.custom.available-joins.collection.post'           |
+      | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
@@ -109,6 +111,7 @@ Feature: mod-fqm-manager integration tests
       | 'orders-storage.purchase-orders.item.post'                         |
       | 'orders.item.get'                                                  |
       | 'orders.po-lines.item.get'                                         |
+      | 'orders-storage.acquisition-methods.collection.get                 |
       | 'organizations-storage.categories.collection.get'                  |
       | 'organizations-storage.organization-types.collection.get'          |
       | 'organizations-storage.organizations.item.post'                    |
@@ -136,6 +139,9 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.identifier-types.collection.get'                |
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
+      | 'inventory-storage.nature-of-content-terms.collection.get'         |
+      | 'tags.collection.get'                                              |
+
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

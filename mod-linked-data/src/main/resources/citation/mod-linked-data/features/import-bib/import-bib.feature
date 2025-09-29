@@ -27,7 +27,7 @@ Feature: Integration with SRS for import flow
 
     # Step 5: Preview resource
     * def getPreviewCall = call getResourcePreview { inventoryId: "#(inventoryInstanceIdFromSearchResponse)" }
-    And match getPreviewCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/marc/title'][0]['http://bibfra.me/vocab/marc/Title']['http://bibfra.me/vocab/marc/mainTitle'] == ["Silent storms,"]
+    And match getPreviewCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/library/title'][0]['http://bibfra.me/vocab/library/Title']['http://bibfra.me/vocab/library/mainTitle'] == ["Silent storms,"]
     And match getPreviewCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata ==
       """
       {

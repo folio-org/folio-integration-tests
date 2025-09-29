@@ -22,12 +22,16 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
+      | 'mod-tags'                  |
+
+
 
     * table userPermissions
       | name                                                               |
       | 'consortia.all'                                                    |
       | 'inventory.instances.item.get'                                     |
       | 'fqm.entityTypes.collection.get'                                   |
+      | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
@@ -67,6 +71,8 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.identifier-types.collection.get'                |
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
+      | 'inventory-storage.nature-of-content-terms.collection.get'         |
+      | 'tags.collection.get'                                              |
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'
