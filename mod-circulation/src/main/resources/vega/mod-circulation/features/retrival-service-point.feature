@@ -9,16 +9,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     * def servicePointId = call uuid1
     * def groupId = call uuid1
 
-    # Create Instance, Location, Holding
-    * def instanceId = call uuid1
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
-    * def locationId = call uuid1
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * def holdingSourceId = call uuid1
-    * def holdingSourceName = random_string()
-    * def holdingId = call uuid1
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { sourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extLocationId: #(locationId), extHoldingsRecordId: #(holdingId)  }
-
     * def extMaterialTypeId = call uuid1
     * def materialTypeIdResponse = callonce read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
 
