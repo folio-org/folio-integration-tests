@@ -83,7 +83,12 @@ Feature: test for retrival service-point for requests when item, SP and location
   Scenario: Location name is updated in request when Location name is updated
     * print 'Location name is updated in request when Location name is updated'
     * def extServicePointId = call uuid2
+
     * def extLocationId = call uuid2
+    * def extInstitutionId = call uuid2
+    * def extCampusId = call uuid2
+    * def extLibraryId = call uuid2
+
     * def extItemId = call uuid2
     * def extItemBarcode = random_string()
 
@@ -111,7 +116,12 @@ Feature: test for retrival service-point for requests when item, SP and location
   Scenario: Test whether item location update reflected in request
     * print 'test item location update reflected in request'
     * def extServicePointId = call uuid2
+
     * def extLocationId = call uuid2
+    * def extInstitutionId = call uuid2
+    * def extCampusId = call uuid2
+    * def extLibraryId = call uuid2
+
     * def extItemId = call uuid2
     * def extItemBarcode = random_string()
 
