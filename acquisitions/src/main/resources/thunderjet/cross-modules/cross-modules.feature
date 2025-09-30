@@ -200,6 +200,9 @@ Feature: cross-module integration tests
   Scenario: Encumbrance Remains The Same After Cancelling Credited Invoice
     * call read('features/encumbrance-remains-same-after-cancelling-credited-invoice.feature')
 
+  Scenario: Encumbrance Remains Same After Cancelling Credit Invoice With Another Paid Invoice
+    * call read('features/encumbrance-remains-same-after-cancelling-credit-invoice-with-another-paid-invoice.feature')
+
   Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid And Credited Invoices
     * call read('features/encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-and-credited-invoices.feature')
 
@@ -208,3 +211,6 @@ Feature: cross-module integration tests
 
   Scenario: Encumbrance Remains 0 For Reopened One Time Order With Approved Invoice Unreleasing And Canceling Invoice
     * call read('features/encumbrance-remains-0-for-reopened-one-time-order-with-approved-invoice-unreleasing-and-canceling-invoice.feature')
+
+  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Credit And Paid Invoices Release True
+    * call read('features/encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-credit-and-paid-invoices-release-true.feature')
