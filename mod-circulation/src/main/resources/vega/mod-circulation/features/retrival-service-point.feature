@@ -6,6 +6,13 @@ Feature: test for retrival service-point for requests when item, SP and location
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
 
+    # create user and group for all scenarios
+    * def extUserId = call uuid1
+    * def extUserGroupId = call uuid1
+    * def extUserBarcode = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(extUserGroupId), , firstName: 'USER-1' }
+
   Scenario: Normal flow with item SP and location synced correctly in request
     * print 'Normal flow with item SP and location synced correctly in request'
     * def extInstanceTypeId = call uuid1
@@ -19,10 +26,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     * def extItemId = call uuid1
     * def extItemBarcode = random_string()
 
-    * def extUserId = call uuid1
-    * def extUserGroupId = call uuid1
-    * def extUserBarcode = call uuid1
-
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId), extInstanceId: #(extInstanceId) }
     * def servicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
     * def locationResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId) }
@@ -31,10 +34,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     # post an item
     * def materialTypeIdResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
     * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItemWithTempLocation') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
-
-    # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(extUserGroupId), , firstName: 'USER-1' }
 
     # post a request
     * def extRequestId = call uuid1
@@ -58,10 +57,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     * def extItemId = call uuid2
     * def extItemBarcode = random_string()
 
-    * def extUserId = call uuid2
-    * def extUserGroupId = call uuid2
-    * def extUserBarcode = call uuid2
-
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId), extInstanceId: #(extInstanceId) }
     * def servicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
     * def locationResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId) }
@@ -70,10 +65,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     # post an item
     * def materialTypeIdResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
     * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItemWithTempLocation') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
-
-    # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(extUserGroupId), firstName: 'USER-2' }
 
     # post a request
     * def extRequestId = call uuid2
@@ -109,10 +100,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     * def extItemId = call uuid2
     * def extItemBarcode = random_string()
 
-    * def extUserId = call uuid2
-    * def extUserGroupId = call uuid2
-    * def extUserBarcode = call uuid2
-
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId), extInstanceId: #(extInstanceId) }
     * def servicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
     * def locationResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId), extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
@@ -121,10 +108,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     # post an item
     * def materialTypeIdResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
     * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItemWithTempLocation') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
-
-    # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(extUserGroupId), firstName: 'USER-2' }
 
     # post a request
     * def extRequestId = call uuid2
@@ -160,10 +143,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     * def extItemId = call uuid2
     * def extItemBarcode = random_string()
 
-    * def extUserId = call uuid2
-    * def extUserGroupId = call uuid2
-    * def extUserBarcode = call uuid2
-
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceTypeId: #(extInstanceTypeId), extInstanceId: #(extInstanceId) }
     * def servicePointResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
     * def locationResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId), extInstitutionId: #(extInstitutionId), extCampusId: #(extCampusId), extLibraryId: #(extLibraryId) }
@@ -172,10 +151,6 @@ Feature: test for retrival service-point for requests when item, SP and location
     # post an item
     * def materialTypeIdResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
     * def itemRequestResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItemWithTempLocation') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extLocationId: #(extLocationId), extMaterialTypeId: #(extMaterialTypeId) }
-
-    # post an user
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: '#(extUserGroupId)' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(extUserGroupId), firstName: 'USER-2' }
 
     # post a request
     * def extRequestId = call uuid2
