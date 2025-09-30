@@ -24,6 +24,7 @@ Feature: Set for deletion
 
       * eval createdInstance['deleted'] = true
       * eval createdInstance['discoverySuppress'] = true
+      * eval createdInstance['staffSuppress'] = true
 
       * call read(utilsPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
 
@@ -32,6 +33,7 @@ Feature: Set for deletion
       Then status 200
       And match response.discoverySuppress == true
       And match response.deleted == true
+      And match response.staffSuppress == true
 
       Given path 'source-storage/records/' + recordId
       When method GET
@@ -53,6 +55,7 @@ Feature: Set for deletion
       Then status 200
       And match response.discoverySuppress == false
       And match response.deleted == false
+      And match response.staffSuppress == true
 
       Given path 'source-storage/records/' + recordId
       When method GET

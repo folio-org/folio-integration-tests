@@ -14,7 +14,7 @@ Feature: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invo
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    * configure retry = { count: 15, interval: 20000 }
+    * configure retry = { count: 10, interval: 5000 }
     * configure readTimeout = 120000
     * configure connectTimeout = 120000
 
