@@ -1,11 +1,15 @@
 @ignore
 Feature: Create piece
-  # parameters: pieceId, poLineId, titleId
+  # parameters: pieceId, poLineId, titleId, displaySummary?, sequenceNumber?
 
   Background:
     * url baseUrl
 
-  Scenario: Create piece
+  Scenario: createPiece
+    * def pieceId = karate.get('pieceId', null)
+    * def displaySummary = karate.get('displaySummary', null)
+    * def sequenceNumber = karate.get('sequenceNumber', null)
+
     Given path 'orders/pieces'
     And request
     """
@@ -14,7 +18,9 @@ Feature: Create piece
       format: "Physical",
       locationId: "#(globalLocationsId)",
       poLineId: "#(poLineId)",
-      titleId: "#(titleId)"
+      titleId: "#(titleId)",
+      displaySummary: "#(displaySummary)",
+      sequenceNumber: #(sequenceNumber)
     }
     """
     When method POST
