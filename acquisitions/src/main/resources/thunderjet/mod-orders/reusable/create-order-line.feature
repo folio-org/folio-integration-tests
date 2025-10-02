@@ -1,6 +1,6 @@
 @ignore
 Feature: Create order line
-  # parameters: id, orderId, fundId, listUnitPrice, isPackage, titleOrPackage, paymentStatus, receiptStatus, locations
+  # parameters: id, orderId, fundId, listUnitPrice, isPackage, titleOrPackage, paymentStatus, receiptStatus, locations, orderFormat
   # quantity, checkinItems, createInventory, fundDistribution, claimingActive, claimingInterval, suppressInstanceFromDiscovery
 
   Background:
@@ -15,6 +15,7 @@ Feature: Create order line
     * def titleOrPackage = karate.get("titleOrPackage", "test")
     * def paymentStatus = karate.get("paymentStatus", null)
     * def receiptStatus = karate.get("receiptStatus", null)
+    * def orderFormat = karate.get("orderFormat", poLine.orderFormat)
     * def locations = karate.get("locations", poLine.locations)
     * def quantity = karate.get("quantity", poLine.cost.quantityPhysical)
     * def checkinItems = karate.get("checkinItems", poLine.checkinItems)
@@ -36,6 +37,7 @@ Feature: Create order line
     * set poLine.paymentStatus = paymentStatus
     * set poLine.receiptStatus = receiptStatus
     * set poLine.cost.quantityPhysical = quantity
+    * set poLine.orderFormat = orderFormat
     * set poLine.locations = locations
     * set poLine.checkinItems = checkinItems
     * set poLine.physical.createInventory = createInventory
