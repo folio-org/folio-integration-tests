@@ -49,6 +49,11 @@ Feature: mod-fqm-manager integration tests
       | 'finance.ledgers.collection.get'                                   |
       | 'finance.transactions.collection.get'                              |
       | 'fqm.entityTypes.collection.get'                                   |
+      | 'fqm.entityTypes.custom.available-joins.collection.post'           |
+      | 'fqm.entityTypes.custom.collection.post'                           |
+      | 'fqm.entityTypes.custom.item.delete'                               |
+      | 'fqm.entityTypes.custom.item.get'                                  |
+      | 'fqm.entityTypes.custom.item.put'                                  |
       | 'fqm.entityTypes.item.columnValues.get'                            |
       | 'fqm.entityTypes.item.get'                                         |
       | 'fqm.materializedViews.post'                                       |
@@ -64,27 +69,27 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.query.purge.post'                                             |
       | 'fqm.query.sync.get'                                               |
       | 'fqm.version.get'                                                  |
-      | 'fqm.entityTypes.custom.collection.post'                           |
-      | 'fqm.entityTypes.custom.item.get'                                  |
-      | 'fqm.entityTypes.custom.item.put'                                  |
-      | 'fqm.entityTypes.custom.item.delete'                               |
-      | 'fqm.entityTypes.custom.available-joins.collection.post'           |
       | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
       | 'inventory-storage.contributor-types.collection.get'               |
+      | 'inventory-storage.electronic-access-relationships.collection.get' |
+      | 'inventory-storage.holdings-note-types.collection.get'             |
       | 'inventory-storage.holdings-sources.item.post'                     |
       | 'inventory-storage.holdings.item.get'                              |
       | 'inventory-storage.holdings.item.post'                             |
+      | 'inventory-storage.identifier-types.collection.get'                |
       | 'inventory-storage.instance-date-types.collection.get'             |
       | 'inventory-storage.instance-formats.collection.get'                |
+      | 'inventory-storage.instance-note-types.collection.get'             |
       | 'inventory-storage.instance-statuses.collection.get'               |
       | 'inventory-storage.instance-types.collection.get'                  |
       | 'inventory-storage.instance-types.item.get'                        |
       | 'inventory-storage.instance-types.item.post'                       |
       | 'inventory-storage.instances.item.get'                             |
       | 'inventory-storage.instances.item.post'                            |
+      | 'inventory-storage.item-note-types.collection.get'                 |
       | 'inventory-storage.items.item.get'                                 |
       | 'inventory-storage.items.item.post'                                |
       | 'inventory-storage.loan-types.collection.get'                      |
@@ -96,24 +101,27 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.locations.collection.get'                       |
       | 'inventory-storage.locations.item.post'                            |
       | 'inventory-storage.material-types.collection.get'                  |
-      | 'inventory-storage.instance-note-types.collection.get'             |
       | 'inventory-storage.material-types.item.post'                       |
       | 'inventory-storage.modes-of-issuance.collection.get'               |
+      | 'inventory-storage.nature-of-content-terms.collection.get'         |
       | 'inventory-storage.service-points.collection.get'                  |
       | 'inventory-storage.statistical-code-types.collection.get'          |
       | 'inventory-storage.statistical-codes.collection.get'               |
-      | 'inventory-storage.item-note-types.collection.get'                 |
+      | 'inventory-storage.subject-sources.collection.get'                 |
+      | 'inventory-storage.subject-types.collection.get'                   |
       | 'invoice.invoice-lines.collection.get'                             |
       | 'invoice.invoices.collection.get'                                  |
       | 'linked-data.resources.rdf.get'                                    |
       | 'lost-item-fees-policies.collection.get'                           |
       | 'manual-block-templates.collection.get'                            |
       | 'manualblocks.collection.get'                                      |
+      | 'orders-storage.acquisition-methods.collection.get'                |
+      | 'orders-storage.pieces.collection.get'                             |
       | 'orders-storage.po-lines.item.post'                                |
       | 'orders-storage.purchase-orders.item.post'                         |
+      | 'orders-storage.titles.collection.get'                             |
       | 'orders.item.get'                                                  |
       | 'orders.po-lines.item.get'                                         |
-      | 'orders-storage.acquisition-methods.collection.get'                |
       | 'organizations-storage.categories.collection.get'                  |
       | 'organizations-storage.organization-types.collection.get'          |
       | 'organizations-storage.organizations.item.post'                    |
@@ -126,6 +134,7 @@ Feature: mod-fqm-manager integration tests
       | 'refunds.collection.get'                                           |
       | 'search.instances.collection.get'                                  |
       | 'source-storage.records.collection.get'                            |
+      | 'tags.collection.get'                                              |
       | 'transfers.collection.get'                                         |
       | 'user-tenants.collection.get'                                      |
       | 'usergroups.collection.get'                                        |
@@ -136,14 +145,6 @@ Feature: mod-fqm-manager integration tests
       | 'voucher.voucher-lines.collection.get'                             |
       | 'voucher.vouchers.collection.get'                                  |
       | 'waives.collection.get'                                            |
-      | 'inventory-storage.holdings-note-types.collection.get'             |
-      | 'inventory-storage.electronic-access-relationships.collection.get' |
-      | 'inventory-storage.identifier-types.collection.get'                |
-      | 'inventory-storage.subject-sources.collection.get'                 |
-      | 'inventory-storage.subject-types.collection.get'                   |
-      | 'inventory-storage.nature-of-content-terms.collection.get'         |
-      | 'tags.collection.get'                                              |
-
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
