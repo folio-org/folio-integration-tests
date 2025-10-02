@@ -41,3 +41,6 @@ Feature: consortia orders integration tests
 
   Scenario: Open orders in member tenant, share instance in one case
     * call read('features/open-orders-in-member-tenant.feature')
+
+  Scenario: Open order with the same member tenant locations
+    * call read('features/open-order-with-locations-from-same-member-tenant.feature')
