@@ -30,10 +30,13 @@ Feature: Open order with the same member tenant locations
     * def v = call createOrder { id: '#(orderId)' }
 
     # 2. Create order line with the same member tenant locations
-    * def poLineLocations = [ { locationId: #(universityLocationsId), quantity: 1, quantityPhysical: 1 }, { locationId: #(universityLocationsId2), quantity: 1, quantityPhysical: 1 } ]
+    * table poLineLocations
+      | locationId             | quantity | quantityPhysical | tenantId             |
+      | universityLocationsId  | 1        | 1                | universityTenantName |
+      | universityLocationsId2 | 1        | 1                | universityTenantName |
     * table orderLineData
-      | id       | orderId | locations       | quantity | titleOrPackage | format              |
-      | poLineId | orderId | poLineLocations | 2        | 't1'           | 'Physical Resource' |
+      | id       | orderId | locations       | quantity | quantityElectronic | titleOrPackage | orderFormat         |
+      | poLineId | orderId | poLineLocations | 2        | 0                  | 't1'           | 'Physical Resource' |
     * def v = call createOrderLine orderLineData
 
     # 3. Open order
@@ -45,10 +48,13 @@ Feature: Open order with the same member tenant locations
     * def v = call createOrder { id: '#(orderId)' }
 
     # 2. Create order line with the same member tenant locations
-    * def poLineLocations = [ { locationId: #(universityLocationsId), quantity: 1, quantityElectronic: 1 }, { locationId: #(universityLocationsId2), quantity: 1, quantityElectronic: 1 } ]
+    * table poLineLocations
+      | locationId             | quantity | quantityElectronic | tenantId             |
+      | universityLocationsId  | 1        | 1                  | universityTenantName |
+      | universityLocationsId2 | 1        | 1                  | universityTenantName |
     * table orderLineData
-      | id       | orderId | locations       | quantity | titleOrPackage | format                |
-      | poLineId | orderId | poLineLocations | 2        | 't2'           | 'Electronic Resource' |
+      | id       | orderId | locations       | quantity | quantityElectronic | listUnitPrice | listUnitPriceElectronic | titleOrPackage | orderFormat           |
+      | poLineId | orderId | poLineLocations | 0        | 2                  | 0          | 1                       | 't2'           | 'Electronic Resource' |
     * def v = call createOrderLine orderLineData
 
     # 3. Open order
@@ -60,10 +66,13 @@ Feature: Open order with the same member tenant locations
     * def v = call createOrder { id: '#(orderId)' }
 
     # 2. Create order line with the same member tenant locations
-    * def poLineLocations = [ { locationId: #(universityLocationsId), quantity: 1, quantityPhysical: 1 }, { locationId: #(universityLocationsId2), quantity: 1, quantityElectronic: 1 } ]
+    * table poLineLocations
+      | locationId             | quantity | quantityPhysical | quantityElectronic | tenantId             |
+      | universityLocationsId  | 1        | 1                | 0                  | universityTenantName |
+      | universityLocationsId2 | 1        | 0                | 1                  | universityTenantName |
     * table orderLineData
-      | id       | orderId | locations       | quantity | titleOrPackage | format    |
-      | poLineId | orderId | poLineLocations | 2        | 't3'           | 'P/E Mix' |
+      | id       | orderId | locations       | quantity | quantityElectronic | listUnitPrice | listUnitPriceElectronic | titleOrPackage | orderFormat |
+      | poLineId | orderId | poLineLocations | 1        | 1                  | 1             | 1                       | 't3'           | 'P/E Mix'   |
     * def v = call createOrderLine orderLineData
 
     # 3. Open order
