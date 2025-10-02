@@ -111,7 +111,7 @@ Feature: mod-fqm-manager integration tests
       | 'orders-storage.purchase-orders.item.post'                         |
       | 'orders.item.get'                                                  |
       | 'orders.po-lines.item.get'                                         |
-      | 'orders-storage.acquisition-methods.collection.get                 |
+      | 'orders-storage.acquisition-methods.collection.get'                |
       | 'organizations-storage.categories.collection.get'                  |
       | 'organizations-storage.organization-types.collection.get'          |
       | 'organizations-storage.organizations.item.post'                    |
