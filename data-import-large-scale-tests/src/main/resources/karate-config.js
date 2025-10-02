@@ -72,7 +72,8 @@ function fn() {
 
   if (env === null || env === 'etesting-lsdi') {
     config.baseUrl = 'https://folio-etesting-lsdi-kong.ci.folio.org';
-    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
+    //config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
+    config.testUser = {tenant: 'consortium', name: 'consortium_admin', password: 'admin'};
   } else if (env === 'etesting-sprint') {
     config.baseUrl = 'https://folio-etesting-sprint-kong.ci.folio.org';
     config.testUser = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
