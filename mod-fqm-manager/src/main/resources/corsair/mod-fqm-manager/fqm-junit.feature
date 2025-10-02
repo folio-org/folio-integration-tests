@@ -13,6 +13,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-fqm-manager'           |
       | 'mod-finance'               |
       | 'mod-finance-storage'       |
+      | 'mod-linked-data'           |
       | 'mod-orders'                |
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
@@ -104,6 +105,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.item-note-types.collection.get'                 |
       | 'invoice.invoice-lines.collection.get'                             |
       | 'invoice.invoices.collection.get'                                  |
+      | 'linked-data.resources.rdf.get'                                    |
       | 'lost-item-fees-policies.collection.get'                           |
       | 'manual-block-templates.collection.get'                            |
       | 'manualblocks.collection.get'                                      |
