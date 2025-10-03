@@ -26,10 +26,11 @@ Feature: Share Instance
     And def sharingInstanceId = response.id
 
     # Verify status is 'COMPLETE'
+    * configure retry = { count: 40, interval: 10000 }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = sourceTenantId
-    And retry until response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR'
+    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
     When method GET
     Then status 200
     And def sharingInstance = response.sharingInstances[0]

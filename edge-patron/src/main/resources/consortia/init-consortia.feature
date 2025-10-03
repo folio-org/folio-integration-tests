@@ -46,8 +46,9 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory.instances.item.post'                             |
       | 'inventory.items-by-holdings-id.collection.get'             |
       | 'inventory.items.collection.get'                            |
-      | 'inventory.items.item.delete'                               |
       | 'inventory.items.item.get'                                  |
+      | 'inventory.items.item.post'                                 |
+      | 'inventory.items.item.delete'                               |
       | 'inventory.items.move.item.post'                            |
       | 'inventory.tenant-items.collection.get'                     |
       | 'lost-item-fees-policies.collection.get'                    |
@@ -61,6 +62,9 @@ Feature: Initialize mod-consortia integration tests
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
       | 'users.item.put'                                            |
+      | 'patron.account.item-allowed-service-points.item.get'       |
+      | 'tlr.settings.get'                                          |
+      | 'tlr.settings.put'                                          |
 
     # load global variables
     * callonce variables
@@ -120,6 +124,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-tlr'                   |
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
+      | 'mod-consortia'             |
 
     * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenant.id)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
@@ -159,6 +164,8 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory.instances.item.post'                             |
       | 'inventory.items-by-holdings-id.collection.get'             |
       | 'inventory.items.collection.get'                            |
+      | 'inventory.items.item.get'                                  |
+      | 'inventory.items.item.post'                                 |
       | 'inventory.items.item.delete'                               |
       | 'inventory-storage.holdings.collection.get'                 |
       | 'inventory-storage.holdings.item.get'                       |
@@ -180,6 +187,9 @@ Feature: Initialize mod-consortia integration tests
       | 'lost-item-fees-policies.item.post'                         |
       | 'overdue-fines-policies.collection.get'                     |
       | 'overdue-fines-policies.item.post'                          |
+      | 'patron.account.item-allowed-service-points.item.get'       |
+      | 'tlr.settings.get'                                          |
+      | 'tlr.settings.put'                                          |
 
     * call getAuthorizationToken { tenant: '#(universityTenantName)' }
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }

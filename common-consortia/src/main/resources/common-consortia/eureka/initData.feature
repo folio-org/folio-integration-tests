@@ -73,12 +73,19 @@ Feature: init data for consortia
     * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
     * if(applicationIds.length < 1) karate.abort()
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+
+    # Increase socket timeout for this specific DELETE request
+    * configure readTimeout = 600000
+
     Given path 'entitlements'
     And param purge = true
     And request entitlementTamplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method DELETE
     Then status 200
+
+    # Reset timeout to default after the operation
+    * configure readTimeout = 30000
 
   @PostAdmin
   Scenario: Create an admin with credentials, and add all existing permissions of enabled modules

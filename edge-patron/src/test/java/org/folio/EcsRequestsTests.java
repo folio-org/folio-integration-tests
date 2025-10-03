@@ -15,6 +15,11 @@ class EcsRequestsTests extends TestBaseEureka {
     super(new TestIntegrationService(new TestModuleConfiguration("classpath:consortia/features/")));
   }
 
+  @AfterAll
+  public void tearDown() {
+    runFeature("classpath:consortia/destroy-consortia.feature");
+  }
+
   @Test
   void ecsRequestsTest() {
     runFeatureTest("ecs-requests.feature");
