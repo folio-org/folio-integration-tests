@@ -65,6 +65,10 @@ Feature: Initialize mod-consortia integration tests
       | 'patron.account.item-allowed-service-points.item.get'       |
       | 'tlr.settings.get'                                          |
       | 'tlr.settings.put'                                          |
+      | 'consortia.user-tenants.collection.get'                     |
+      | 'consortia.user-tenants.item.post'                          |
+      | 'consortia.user-tenants.item.delete'                        |
+      | 'consortia.user-tenants.item.get'                           |
 
     # load global variables
     * callonce variables
@@ -125,6 +129,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
       | 'mod-consortia'             |
+      | 'mod-search'                |
 
     * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenant.id)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
@@ -190,6 +195,10 @@ Feature: Initialize mod-consortia integration tests
       | 'patron.account.item-allowed-service-points.item.get'       |
       | 'tlr.settings.get'                                          |
       | 'tlr.settings.put'                                          |
+      | 'consortia.user-tenants.collection.get'                     |
+      | 'consortia.user-tenants.item.post'                          |
+      | 'consortia.user-tenants.item.delete'                        |
+      | 'consortia.user-tenants.item.get'                           |
 
     * call getAuthorizationToken { tenant: '#(universityTenantName)' }
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }

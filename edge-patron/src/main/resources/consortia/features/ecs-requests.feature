@@ -8,8 +8,8 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     # Create tenants and users, initialize data
     * callonce read('classpath:consortia/init-consortia.feature')
 
-#    # Wipe data afterwards
-#    * configure afterFeature = function() { karate.call('classpath:consortia/destroy-data.feature'); }
+    # Wipe data afterwards
+    * configure afterFeature = function() { karate.call('classpath:consortia/destroy-data.feature'); }
 
     * table modules
       | name                        |
@@ -35,7 +35,7 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
     * def headersCentral = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)' }
     * def headersUniversity = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(universityTenantName)' }
-    * def headersCentralConsortium = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)' }
+    * def headersCentralConsortium = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     * configure headers = headersCentral
 
     # Verify consortium is properly configured
@@ -111,11 +111,48 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
       | instanceId | instanceId | universityInstanceTypeId | instanceHrid |
     * callonce createInstanceWithHrid instanceData
 
-    # Share instance to central tenant
-    * table shareInstanceData
-      | instanceId | sourceTenantId       | targetTenantId     | consortiumId |
-      | instanceId | universityTenantName | centralTenantName  | consortiumId |
-    * callonce shareInstance shareInstanceData
+    # Share instance to central tenant (using improved sharing)
+    * def sharingId = callonce uuid
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And request
+    """
+    {
+      id: '#(sharingId)',
+      instanceIdentifier: '#(instanceId)',
+      sourceTenantId:  '#(universityTenantName)',
+      targetTenantId:  '#(centralTenantName)'
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.instanceIdentifier == instanceId
+    And match response.sourceTenantId == universityTenantName
+    And match response.targetTenantId == centralTenantName
+    And def sharingInstanceId = response.id
+
+    # Verify status is 'COMPLETE'
+    * configure retry = { count: 60, interval: 15000 }
+    * print 'Polling for sharing status completion...'
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And param instanceIdentifier = instanceId
+    And param sourceTenantId = universityTenantName
+    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
+    When method GET
+    Then status 200
+    And def sharingInstance = response.sharingInstances[0]
+    And match sharingInstance.id == sharingInstanceId
+    And match sharingInstance.instanceIdentifier == instanceId
+    And match sharingInstance.sourceTenantId == universityTenantName
+    And match sharingInstance.targetTenantId == centralTenantName
+    And match sharingInstance.status == 'COMPLETE'
+
+    # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
+    * java.lang.Thread.sleep(5000)
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+    And match response.source == 'CONSORTIUM-FOLIO'
 
     # Create holding in university tenant
     * def holdingId = call uuid
@@ -155,12 +192,27 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * def ilrUser = call createUser ilrUserData
     * def ilrUserId = ilrUser[0].response.id
 
+
+    * print "Using centralTenantName for consortium search:", centralTenantName
+    * print "Using centralAdminId for x-okapi-user-id:", centralAdminId
+
+    # Set up consortium context for the search
+    Given path 'user-tenants'
+    And headers headersCentral
+    When method GET
+    Then status 200
+    * print "User-tenants response:", response
+
     # Get allowed service points for the item (ILR)
+    * configure headers = headersCentral
     Given path 'patron/account', ilrUserId, 'item', itemId, 'allowed-service-points'
     When method GET
     Then status 200
     * def allowedServicePoints = response.allowedServicePoints
     * def ilrServicePointId = karate.filter(allowedServicePoints, function(x){ return x.requestTypes && x.requestTypes.indexOf('Page') > -1 })[0].id
+
+    # Reset to standard central tenant headers
+    * configure headers = headersCentral
 
     # Create ILR ECS request
     Given path 'patron/account', ilrUserId, 'item', itemId, 'hold'
