@@ -36,8 +36,8 @@ Feature: Create Order From Default Template
     # 3. Create Mosaic Order Configuration (default Order Template)
     Given path "/mosaic/configuration"
     And request { "id": "#(mosaicConfigurationId)", "defaultTemplateId": "#(orderTemplateId)" }
-    When method POST
-    Then status 201
+    When method PUT
+    Then status 204
 
     Given path "/mosaic/configuration"
     When method GET
@@ -89,14 +89,17 @@ Feature: Create Order From Default Template
     When method POST
     Then status 201
 
-    # 3. Create Mosaic Order Configuration (default Order Template)
+    # 3. Set Mosaic Order Configuration to non-existent template (simulate missing configuration)
+    * def nonExistentTemplateId = call uuid
     Given path "/mosaic/configuration"
-    When method DELETE
+    And request { "id": "#(mosaicConfigurationId)", "defaultTemplateId": "#(nonExistentTemplateId)" }
+    When method PUT
     Then status 204
 
     Given path "/mosaic/configuration"
     When method GET
-    Then status 404
+    Then status 200
+    And match $.defaultTemplateId == nonExistentTemplateId
 
     # 4. Create Mosaic Order
     * configure headers = headersUser
@@ -113,4 +116,4 @@ Feature: Create Order From Default Template
     Then status 404
     And match $.errors == "#[1]"
     And match each $.errors[*].code == "notFoundError"
-    And match each $.errors[*].message == "Resource of type 'MosaicConfigurationEntity' is not found"
+    And match each $.errors[*].message == "Resource of type 'OrderTemplate' is not found"
