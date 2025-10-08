@@ -13,3 +13,4 @@ Feature: Create User
     * print 'Created user response:', response
     * match response.type == user.type
     * if (user.id) karate.match(response.id, user.id)
+    * def result = response

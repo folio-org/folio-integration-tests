@@ -98,7 +98,7 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * callonce variablesUniversity
 
 
-  Scenario: Create shared instance, holding and item in university tenant
+  Scenario: Create shared instance, holding and item in university tenant, then create ILR ECS request
     # Switch to university tenant for instance creation
     * configure headers = headersUniversity
 
@@ -192,24 +192,45 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * def ilrUser = call createUser ilrUserData
     * def ilrUserId = ilrUser[0].response.id
 
+    # Based on working example from update-ownership.feature
+    # 1. Re-login as central tenant admin to get a fresh token
+    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)' }
+    * configure headers = freshHeadersCentral
 
-    * print "Using centralTenantName for consortium search:", centralTenantName
-    * print "Using centralAdminId for x-okapi-user-id:", centralAdminId
+    # 2. Make sure consortium is configured - similar to update-ownership.feature
+    Given path 'consortia', consortiumId, 'tenants'
+    And request { id: '#(centralTenantName)', code: 'AUTO', name: 'Central tenant', isCentral: true }
+    When method POST
+    * print 'Re-register central tenant response status:', responseStatus
 
-    # Set up consortium context for the search
+    # Assert and print centralTenantName vs centralTenantId
+    * print 'ASSERT: centralTenantName:', centralTenantName, 'centralTenantId:', centralTenantId
+    * match centralTenantName == centralTenantId
+    # Print debug info before allowed-service-points call
+    * print 'DEBUG: x-okapi-tenant header:', freshHeadersCentral["x-okapi-tenant"]
+    * match freshHeadersCentral["x-okapi-tenant"] == centralTenantId
+    * print 'DEBUG: okapitoken:', okapitoken
+    * print 'DEBUG: ilrUserId:', ilrUserId
+    * print 'DEBUG: itemId:', itemId
+    # Print user-tenants for this token and tenant
+    * configure headers = freshHeadersCentral
     Given path 'user-tenants'
-    And headers headersCentral
     When method GET
     Then status 200
-    * print "User-tenants response:", response
+    * print 'DEBUG: user-tenants response:', response
+    * def foundUser = karate.filter(response.userTenants, function(x){ return x.userId == ilrUserId && x.tenantId == centralTenantId })
+    * print 'ASSERT: user found in user-tenants for central tenant:', foundUser
 
-    # Get allowed service points for the item (ILR)
-    * configure headers = headersCentral
+    # Now make the allowed-service-points call with debug output
     Given path 'patron/account', ilrUserId, 'item', itemId, 'allowed-service-points'
     When method GET
+    * print 'DEBUG: allowed-service-points response status:', responseStatus
+    * print 'DEBUG: allowed-service-points response:', response
     Then status 200
     * def allowedServicePoints = response.allowedServicePoints
     * def ilrServicePointId = karate.filter(allowedServicePoints, function(x){ return x.requestTypes && x.requestTypes.indexOf('Page') > -1 })[0].id
+
 
     # Reset to standard central tenant headers
     * configure headers = headersCentral
@@ -231,49 +252,87 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
 #    * configure headers = headersUniversity
 #
 #    # Create instance in university tenant
-#    * def instanceId = call uuid
-#    * def randomNum = call randomMillis
+#    * def instanceId = callonce uuid
+#    * def randomNum = callonce randomMillis
 #    * def instanceHrid = "in" + randomNum
 #    * table instanceData
-#      | id         | title                       | instanceTypeId           | hrid         |
-#      | instanceId | 'Test TLR Request Instance' | universityInstanceTypeId | instanceHrid |
-#    * def instance = call createInstanceWithHrid instanceData
+#      | id         | title      | instanceTypeId           | hrid         |
+#      | instanceId | instanceId | universityInstanceTypeId | instanceHrid |
+#    * callonce createInstanceWithHrid instanceData
 #
-#    # Share instance to central tenant
-#    * table shareInstanceData
-#      | instanceId | sourceTenantId       | targetTenantId     | consortiumId |
-#      | instanceId | universityTenantName | centralTenantName  | consortiumId |
-#    * call shareInstance shareInstanceData
+#    # Share instance to central tenant (using improved sharing)
+#    * def sharingId = callonce uuid
+#    Given path 'consortia', consortiumId, 'sharing/instances'
+#    And request
+#    """
+#    {
+#      id: '#(sharingId)',
+#      instanceIdentifier: '#(instanceId)',
+#      sourceTenantId:  '#(universityTenantName)',
+#      targetTenantId:  '#(centralTenantName)'
+#    }
+#    """
+#    When method POST
+#    Then status 201
+#    And match response.instanceIdentifier == instanceId
+#    And match response.sourceTenantId == universityTenantName
+#    And match response.targetTenantId == centralTenantName
+#    And def sharingInstanceId = response.id
 #
 #    # Verify status is 'COMPLETE'
-#    * configure retry = { count: 20, interval: 5000 }
+#    * configure retry = { count: 60, interval: 15000 }
+#    * print 'Polling for TLR sharing status completion...'
 #    Given path 'consortia', consortiumId, 'sharing/instances'
 #    And param instanceIdentifier = instanceId
 #    And param sourceTenantId = universityTenantName
-#    And retry until response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR'
+#    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
 #    When method GET
 #    Then status 200
 #    And def sharingInstance = response.sharingInstances[0]
+#    And match sharingInstance.id == sharingInstanceId
 #    And match sharingInstance.instanceIdentifier == instanceId
 #    And match sharingInstance.sourceTenantId == universityTenantName
 #    And match sharingInstance.targetTenantId == centralTenantName
 #    And match sharingInstance.status == 'COMPLETE'
+#
+#    # Verify shared instance is updated in source tenant with source = 'CONSORTIUM-FOLIO'
+#    * java.lang.Thread.sleep(5000)
+#    Given path 'inventory/instances', instanceId
+#    When method GET
+#    Then status 200
+#    And match response.id == instanceId
+#    And match response.source == 'CONSORTIUM-FOLIO'
 #
 #    # Create holding in university tenant
 #    * def holdingId = call uuid
 #    * table holdingData
 #      | id        | instanceId | locationId            | sourceId                   |
 #      | holdingId | instanceId | universityLocationsId | universityHoldingsSourceId |
-#    * call createHolding holdingData
+#    * def v = call createHolding holdingData
 #
 #    # Create item in the holding in university tenant
 #    * def itemId = call uuid
 #    * table itemData
 #      | id     | holdingsRecordId | barcode    | materialTypeId               | permanentLoanTypeId  | permanentLocationId      |
 #      | itemId | holdingId        | randomNum  | universityMaterialTypeIdPhys | universityLoanTypeId | universityLocationsId    |
-#    * call createItem itemData
+#    * def v = call createItem itemData
 #
-#    # Create user in central tenant
+#    # Verify instance exists in university tenant
+#    Given path 'inventory/instances', instanceId
+#    When method GET
+#    Then status 200
+#
+#    # Verify holding exists in university tenant
+#    Given path 'holdings-storage/holdings', holdingId
+#    When method GET
+#    Then status 200
+#
+#    # Verify item exists in university tenant
+#    Given path 'inventory/items', itemId
+#    When method GET
+#    Then status 200
+#
+#    # Create user in central tenant for TLR request
 #    * configure headers = headersCentral
 #    * def tlrUserBarcode = 'TLR-ECS-UBC-' + randomNum
 #    * table tlrUserData
@@ -282,14 +341,49 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
 #    * def tlrUser = call createUser tlrUserData
 #    * def tlrUserId = tlrUser[0].response.id
 #
-#    # Get allowed service points for the instance (TLR)
+#    # Based on working example from update-ownership.feature
+#    # 1. Re-login as central tenant admin to get a fresh token
+#    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+#    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)' }
+#    * configure headers = freshHeadersCentral
+#
+#    # 2. Make sure consortium is configured - similar to update-ownership.feature
+#    Given path 'consortia', consortiumId, 'tenants'
+#    And request { id: '#(centralTenantName)', code: 'AUTO', name: 'Central tenant', isCentral: true }
+#    When method POST
+#    * print 'Re-register central tenant response status for TLR:', responseStatus
+#
+#    # Assert and print centralTenantName vs centralTenantId for TLR
+#    * print 'TLR ASSERT: centralTenantName:', centralTenantName, 'centralTenantId:', centralTenantId
+#    * match centralTenantName == centralTenantId
+#    # Print debug info before TLR allowed-service-points call
+#    * print 'TLR DEBUG: x-okapi-tenant header:', freshHeadersCentral["x-okapi-tenant"]
+#    * match freshHeadersCentral["x-okapi-tenant"] == centralTenantId
+#    * print 'TLR DEBUG: okapitoken:', okapitoken
+#    * print 'TLR DEBUG: tlrUserId:', tlrUserId
+#    * print 'TLR DEBUG: instanceId:', instanceId
+#    # Print user-tenants for this token and tenant
+#    * configure headers = freshHeadersCentral
+#    Given path 'user-tenants'
+#    When method GET
+#    Then status 200
+#    * print 'TLR DEBUG: user-tenants response:', response
+#    * def foundUser = karate.filter(response.userTenants, function(x){ return x.userId == tlrUserId && x.tenantId == centralTenantId })
+#    * print 'TLR ASSERT: user found in user-tenants for central tenant:', foundUser
+#
+#    # Now make the TLR allowed-service-points call with debug output (instance-level endpoint)
 #    Given path 'patron/account', tlrUserId, 'instance', instanceId, 'allowed-service-points'
 #    When method GET
+#    * print 'TLR DEBUG: allowed-service-points response status:', responseStatus
+#    * print 'TLR DEBUG: allowed-service-points response:', response
 #    Then status 200
 #    * def allowedServicePoints = response.allowedServicePoints
 #    * def tlrServicePointId = karate.filter(allowedServicePoints, function(x){ return x.requestTypes && x.requestTypes.indexOf('Page') > -1 })[0].id
 #
-#    # Create TLR ECS request
+#    # Reset to standard central tenant headers
+#    * configure headers = headersCentral
+#
+#    # Create TLR ECS request (instance-level endpoint)
 #    Given path 'patron/account', tlrUserId, 'instance', instanceId, 'hold'
 #    And request { servicePointId: '#(tlrServicePointId)' }
 #    When method POST
@@ -300,78 +394,3 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
 #    And match response.servicePointId == tlrServicePointId
 #    And match response.requestType == 'Page'
 #    And match response.requestLevel == 'Title'
-
-#  Scenario: Verify TLR ECS request is available in university tenant
-#    # Create instance, share it and create TLR request
-#    * configure headers = headersUniversity
-#    * def instanceId = call uuid
-#    * def randomNum = call randomMillis
-#    * def instanceHrid = "in" + randomNum
-#    * table instanceData
-#      | id         | title                           | instanceTypeId           | hrid         |
-#      | instanceId | 'Verify TLR Request Instance'   | universityInstanceTypeId | instanceHrid |
-#    * def instance = call createInstanceWithHrid instanceData
-#
-#    # Share instance to central tenant
-#    * table shareInstanceData
-#      | instanceId | sourceTenantId       | targetTenantId     | consortiumId |
-#      | instanceId | universityTenantName | centralTenantName  | consortiumId |
-#    * call shareInstance shareInstanceData
-#
-#    # Wait for sharing to complete
-#    * configure retry = { count: 20, interval: 5000 }
-#    Given path 'consortia', consortiumId, 'sharing/instances'
-#    And param instanceIdentifier = instanceId
-#    And param sourceTenantId = universityTenantName
-#    And retry until response.sharingInstances[0].status == 'COMPLETE'
-#    When method GET
-#    Then status 200
-#
-#    # Create holding and item
-#    * def holdingId = call uuid
-#    * table holdingData
-#      | id        | instanceId | locationId            | sourceId                   |
-#      | holdingId | instanceId | universityLocationsId | universityHoldingsSourceId |
-#    * call createHolding holdingData
-#
-#    * def itemId = call uuid
-#    * table itemData
-#      | id     | holdingsRecordId | barcode    | materialTypeId               | permanentLoanTypeId  | permanentLocationId      |
-#      | itemId | holdingId        | randomNum  | universityMaterialTypeIdPhys | universityLoanTypeId | universityLocationsId    |
-#    * call createItem itemData
-#
-#    # Create user in central tenant and create TLR request
-#    * configure headers = headersCentral
-#    * def verifyUserBarcode = 'VERIFY-TLR-UBC-' + randomNum
-#    * table verifyUserData
-#      | barcode          | username         | type     |
-#      | verifyUserBarcode | verifyUserBarcode | "patron" |
-#    * def verifyUser = call createUser verifyUserData
-#    * def verifyUserId = verifyUser[0].response.id
-#
-#    # Create TLR request from central tenant
-#    Given path 'patron/account', verifyUserId, 'instance', instanceId, 'hold'
-#    And request { servicePointId: '#(centralServicePointId)' }
-#    When method POST
-#    Then status 201
-#    * def verifyTlrRequestId = response.id
-#
-#    # Verify TLR request is available via consortium search in university tenant
-#    * configure headers = headersCentralConsortium
-#    Given path 'search/consortium/requests'
-#    And param query = '(requesterId=="' + verifyUserId + '" and instanceId=="' + instanceId + '")'
-#    When method GET
-#    Then status 200
-#    And match response.totalRecords >= 1
-#    And match response.requests[0].requestType == 'Page'
-#    And match response.requests[0].requestLevel == 'Title'
-#
-#    # Verify TLR request can be found via edge-patron
-#    Given url edgeUrl
-#    And path 'patron', 'account', verifyUserId, 'instance', instanceId, 'hold'
-#    And header x-okapi-tenant = centralTenantName
-#    And header x-okapi-token = okapitoken
-#    When method GET
-#    Then status 200
-#    And match response.totalRecords >= 1
-#    And match response.requests[0].requestLevel == 'Title'

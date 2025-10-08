@@ -82,12 +82,14 @@ Feature: Initialize mod-consortia integration tests
     # generate names for tenants
     * def random = callonce randomMillis
     * def uuids = callonce uuids 4
-    * def centralTenantId = uuids[0]
+    * def centralTenantUuid = uuids[0]
     * def centralTenantName = 'central' + random
-    * def centralTenant = { id : '#(centralTenantId)', name: '#(centralTenantName)' }
-    * def universityTenantId = uuids[1]
+    * def centralTenantId = centralTenantName
+    * def centralTenant = { id : '#(centralTenantUuid)', name: '#(centralTenantName)' }
+    * def universityTenantUuid = uuids[1]
     * def universityTenantName = 'university' + random
-    * def universityTenant = { id : '#(universityTenantId)', name: '#(universityTenantName)' }
+    * def universityTenantId = universityTenantName
+    * def universityTenant = { id : '#(universityTenantUuid)', name: '#(universityTenantName)' }
 
     * def universityUserId = uuids[2]
 
@@ -131,8 +133,8 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-consortia'             |
       | 'mod-search'                |
 
-    * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
-    * call setupTenant { tenantId: '#(universityTenant.id)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
+    * call setupTenant { tenantId: '#(centralTenantUuid)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
+    * call setupTenant { tenantId: '#(universityTenantUuid)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
 
     * call postUser { tenant: '#(centralTenantName)', user: '#(centralUser)' }
     * call putCaps { tenant: '#(centralTenantName)', user: '#(centralUser)' }
