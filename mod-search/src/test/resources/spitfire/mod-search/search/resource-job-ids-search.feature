@@ -117,9 +117,9 @@ Feature: Tests for streaming resource ids by cql query
     * def jobId = response.id
 
     Given path '/search/resources/jobs', jobId
+    And retry until response.status == 'ERROR'
     When method GET
     Then status 200
-    Then match response.status == 'ERROR'
 
   @Negative
   Scenario: Job should failed with ERROR if query is blank
@@ -132,7 +132,7 @@ Feature: Tests for streaming resource ids by cql query
     * def jobId = response.id
 
     Given path '/search/resources/jobs', jobId
+    And retry until response.status == 'ERROR'
     When method GET
     Then status 200
-    Then match response.status == 'ERROR'
 

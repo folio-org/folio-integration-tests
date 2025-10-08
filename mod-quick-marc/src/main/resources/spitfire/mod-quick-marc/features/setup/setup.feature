@@ -2,7 +2,7 @@ Feature: Setup quickMARC
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
@@ -179,7 +179,6 @@ Feature: Setup quickMARC
     * record.fields = record.fields.filter(field => field.tag != "100")
     * record.fields.push(tag100)
     * record.fields.push(tag600)
-    * set record.relatedRecordVersion = 1
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
