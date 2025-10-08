@@ -284,3 +284,6 @@ Feature: mod-orders integration tests
 
   Scenario: Change Order Instance Connection
     * call read('features/change-order-instance-connection.feature')
+
+  Scenario: Receive piece in new holding
+    * call read('features/receive-piece-new-holding-edit.feature')
