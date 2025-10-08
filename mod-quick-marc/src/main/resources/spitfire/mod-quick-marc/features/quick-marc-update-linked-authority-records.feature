@@ -2,7 +2,7 @@ Feature: update of two authorities records linked to one instance tests
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * configure readTimeout = 65000
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
@@ -37,7 +37,6 @@ Feature: update of two authorities records linked to one instance tests
     * remove record.fields[?(@.tag=='100')]
     * record.fields.push(field)
     * set record._actionType = 'edit'
-    * set record.relatedRecordVersion = 1
 
     # update authority record
     Given path '/records-editor/records', record.parsedRecordId
@@ -67,14 +66,15 @@ Feature: update of two authorities records linked to one instance tests
     And param externalId = authorityId1
     When method GET
     Then status 200
+    * def updatedRecord = response
 
     # rollback link deletion
+    * remove updatedRecord.fields[?(@.tag=='100')] 
     * set field.content = '$a Johnson'
-    * remove record.fields[?(@.tag=='100')]
-    * record.fields.push(field)
-    * set record.relatedRecordVersion = 2
-    Given path '/records-editor/records', record.parsedRecordId
-    And request record
+    * updatedRecord.fields.push(field)
+    * set updatedRecord._actionType = 'edit'
+    Given path '/records-editor/records', updatedRecord.parsedRecordId
+    And request updatedRecord
     When method PUT
     Then status 202
 
@@ -87,7 +87,6 @@ Feature: update of two authorities records linked to one instance tests
     * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(authorityId1),"authorityNaturalId": #(authorityNaturalId1), "linkingRuleId": 1} }
     * bibRecord.fields = bibRecord.fields.filter(field => field.tag != "100")
     * bibRecord.fields.push(tag100)
-    * set bibRecord.relatedRecordVersion = 7
     * set bibRecord._actionType = 'edit'
     Given path 'records-editor/records', bibRecord.parsedRecordId
     And request bibRecord
@@ -119,7 +118,6 @@ Feature: update of two authorities records linked to one instance tests
     * remove record.fields[?(@.tag=='100')]
     * record.fields.push(field)
     * set record._actionType = 'edit'
-    * set record.relatedRecordVersion = 1
 
     # update authority record
     Given path '/records-editor/records', record.parsedRecordId
