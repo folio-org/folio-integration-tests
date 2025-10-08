@@ -17,6 +17,9 @@ Feature: mod-orders integration tests
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
+  Scenario: Auto populate fund code if it missed
+    * call read("features/auto-populate-fund-code.feature")
+
   Scenario: Verify Bind Piece feature
     * call read('features/bind-piece.feature')
 
@@ -31,6 +34,9 @@ Feature: mod-orders integration tests
 
   Scenario: Change location when receiving a piece
     * call read('features/change-location-when-receiving-piece.feature')
+
+  Scenario: Change Order Instance Connection
+    * call read('features/change-order-instance-connection.feature')
 
   Scenario: Change pending distribution with inactive budget
     * call read('features/change-pending-distribution-with-inactive-budget.feature')
@@ -63,14 +69,26 @@ Feature: mod-orders integration tests
   Scenario: Create fives pieces for an open order
     * call read('features/create-five-pieces.feature')
 
+  Scenario: Create Order Check Items
+    * call read('features/create-order-check-items.feature')
+
   Scenario: Create open composite order
     * call read('features/create-open-composite-order.feature')
 
   Scenario: Create order that has not enough money
     * call read('features/create-order-that-has-not-enough-money.feature')
 
+  Scenario: Create Order Payment Not Required Fully Receive
+    * call read('features/create-order-payment-not-required-fully-receive.feature')
+
+  Scenario: Create order with suppress instance from discovery
+    * call read("features/create-order-with-suppress-instance-from-discovery.feature")
+
   Scenario: Delete fund distribution
     * call read('features/delete-fund-distribution.feature')
+
+  Scenario: Delete One Piece In Receiving
+    * call read('features/delete-one-piece-in-receiving.feature')
 
   Scenario: Delete opened order and order lines
     * call read('features/delete-opened-order-and-lines.feature')
@@ -225,6 +243,9 @@ Feature: mod-orders integration tests
   Scenario: Reopen an order creates encumbrances
     * call read('features/reopen-order-creates-encumbrances.feature')
 
+  Scenario: Receive piece in new holding
+    * call read('features/receive-piece-new-holding-edit.feature')
+
   Scenario: Reopen order with 50 lines
     * call read('features/reopen-order-with-50-lines.feature')
 
@@ -266,21 +287,3 @@ Feature: mod-orders integration tests
 
   Scenario: Validate fund distribution for zero price
     * call read('features/validate-fund-distribution-for-zero-price.feature')
-
-  Scenario: Create order with suppress instance from discovery
-    * call read("features/create-order-with-suppress-instance-from-discovery.feature")
-
-  Scenario: Auto populate fund code if it missed
-    * call read("features/auto-populate-fund-code.feature")
-
-  Scenario: Create Order Payment Not Required Fully Receive
-    * call read('features/create-order-payment-not-required-fully-receive.feature')
-
-  Scenario: Create Order Check Items
-    * call read('features/create-order-check-items.feature')
-
-  Scenario: Delete One Piece In Receiving
-    * call read('features/delete-one-piece-in-receiving.feature')
-
-  Scenario: Change Order Instance Connection
-    * call read('features/change-order-instance-connection.feature')
