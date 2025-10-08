@@ -453,7 +453,7 @@ function(response) {
 ### Reusable Features
 - Always use reusable features for common operations
 - Add scenarios to cross-modules.feature
-- Add corresponding methods to CrossModulesCriticalPathApiTest Java file
+- Add corresponding methods to CrossModulesApiTest or CrossModulesCriticalPathApiTest Java files
 
 ### Standard Operations
 - Use global variants of organizationId and fiscalYearId when possible
