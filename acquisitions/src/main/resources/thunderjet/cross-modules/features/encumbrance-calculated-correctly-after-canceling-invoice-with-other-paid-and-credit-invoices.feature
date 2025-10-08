@@ -107,7 +107,7 @@ Feature: Encumbrance Calculated Correctly After Canceling Invoice With Other Pai
              response.encumbered == 80.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 30.00 &&
-             response.credited == 10.00 &&
+             response.credits == 10.00 &&
              response.available == 900.00;
     }
     """
@@ -148,7 +148,7 @@ Feature: Encumbrance Calculated Correctly After Canceling Invoice With Other Pai
              response.encumbered == 70.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 30.00 &&
-             response.credited == 0.00 &&
+             response.credits == 0.00 &&
              response.available == 900.00;
     }
     """
@@ -189,7 +189,7 @@ Feature: Encumbrance Calculated Correctly After Canceling Invoice With Other Pai
              response.encumbered == 100.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 0.00 &&
-             response.credited == 0.00 &&
+             response.credits == 0.00 &&
              response.available == 900.00;
     }
     """

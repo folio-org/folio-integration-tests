@@ -98,7 +98,7 @@ Feature: Encumbrance Updates Correctly After Canceling First Of Two Paid Invoice
              response.encumbered == 90.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 10.00 &&
-             response.credited == 0.00 &&
+             response.credits == 0.00 &&
              response.available == 900.00;
     }
     """
@@ -139,7 +139,7 @@ Feature: Encumbrance Updates Correctly After Canceling First Of Two Paid Invoice
              response.encumbered == 100.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 0.00 &&
-             response.credited == 0.00 &&
+             response.credits == 0.00 &&
              response.available == 900.00;
     }
     """

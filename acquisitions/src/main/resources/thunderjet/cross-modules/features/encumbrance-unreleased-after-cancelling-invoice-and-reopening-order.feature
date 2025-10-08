@@ -107,7 +107,7 @@ Feature: Encumbrance Unreleased After Cancelling Invoice And Reopening Order
              response.encumbered == 8.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 3.00 &&
-             response.credited == 1.00 &&
+             response.credits == 1.00 &&
              response.available == 990.00;
     }
     """
@@ -155,7 +155,7 @@ Feature: Encumbrance Unreleased After Cancelling Invoice And Reopening Order
              response.encumbered == 0.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 3.00 &&
-             response.credited == 1.00 &&
+             response.credits == 1.00 &&
              response.available == 998.00;
     }
     """
@@ -203,7 +203,7 @@ Feature: Encumbrance Unreleased After Cancelling Invoice And Reopening Order
              response.encumbered == 8.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 3.00 &&
-             response.credited == 1.00 &&
+             response.credits == 1.00 &&
              response.available == 990.00;
     }
     """
