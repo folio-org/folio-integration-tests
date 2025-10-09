@@ -407,3 +407,55 @@ And match encumbranceResponse.sourcePurchaseOrderId == orderId
 - **Resource Cleanup**: Proper cleanup across all modules after tests
 
 When creating or analyzing FOLIO cross-module integration tests, always consider these complex interdependencies, proper module initialization sequences, and comprehensive validation patterns across multiple modules. Ensure proper cross-module state synchronization, financial consistency, and audit trail verification in test scenarios.
+
+# Cross-Modules System Prompt
+
+## CRITICAL: Budget API Field Names - NEVER MAKE THIS MISTAKE AGAIN
+
+### ⚠️ BUDGET VALIDATION FIELD NAMES ⚠️
+
+**WRONG:** `credited` ❌ (This field does NOT exist)
+**CORRECT:** `credits` ✅ (Always use this)
+
+When writing budget validation functions in Karate tests, ALWAYS use these exact field names:
+
+```javascript
+function(response) {
+  return response.allocated == expectedValue &&
+         response.encumbered == expectedValue &&
+         response.awaitingPayment == expectedValue &&
+         response.expenditures == expectedValue &&
+         response.credits == expectedValue &&        // ✅ CORRECT: "credits" with 's'
+         response.available == expectedValue;
+}
+```
+
+**This mistake has caused multiple test failures and wasted significant development time. The `credited` field does not exist in budget API responses - it's always `credits`.**
+
+## Test Creation Guidelines
+
+### Comment and Print Format
+- Use format: "N. comment text" (where N is the step number)
+- No "Step" word in comments or prints
+- Continue numbering from prerequisites through test steps
+
+### Headers Required
+- Add Jira ticket number and TestRail link at the top
+- Use "TestRail Case Steps" header to separate prerequisites from actual test steps
+- Do NOT add "Prerequisites" header
+
+### Financial Validation
+- Use JS functions for transaction and budget validation, not simple "And match"
+- Focus on financial integrity - encumbrances, expenditures, credits
+- Never assert on order-lines fund distributions (they don't hold amounts)
+- Avoid checking secondary fields like IDs or nulls unless specifically required
+
+### Reusable Features
+- Always use reusable features for common operations
+- Add scenarios to cross-modules.feature
+- Add corresponding methods to CrossModulesApiTest or CrossModulesCriticalPathApiTest Java files
+
+### Standard Operations
+- Use global variants of organizationId and fiscalYearId when possible
+- Merge simple UUID generations into "Generate unique identifiers for this test scenario"
+- Use proper financial assertions that an accountant would care about
