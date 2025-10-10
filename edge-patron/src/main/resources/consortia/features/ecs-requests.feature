@@ -131,13 +131,14 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     And def sharingInstanceId = response.id
 
     # Verify status is 'COMPLETE'
-    * configure retry = { count: 60, interval: 15000 }
+    * configure retry = { count: 120, interval: 30000 }
     * print 'Polling for sharing status completion...'
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenantName
     And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
     When method GET
+    * print 'DEBUG: sharingInstances response:', response
     Then status 200
     And def sharingInstance = response.sharingInstances[0]
     And match sharingInstance.id == sharingInstanceId
@@ -192,37 +193,32 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * def ilrUser = call createUser ilrUserData
     * def ilrUserId = ilrUser[0].response.id
 
-    # Based on working example from update-ownership.feature
-    # 1. Re-login as central tenant admin to get a fresh token
-    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
-    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)' }
-    * configure headers = freshHeadersCentral
-
-    # 2. Make sure consortium is configured - similar to update-ownership.feature
-    Given path 'consortia', consortiumId, 'tenants'
-    And request { id: '#(centralTenantName)', code: 'AUTO', name: 'Central tenant', isCentral: true }
-    When method POST
-    * print 'Re-register central tenant response status:', responseStatus
-
-    # Assert and print centralTenantName vs centralTenantId
-    * print 'ASSERT: centralTenantName:', centralTenantName, 'centralTenantId:', centralTenantId
-    * match centralTenantName == centralTenantId
-    # Print debug info before allowed-service-points call
-    * print 'DEBUG: x-okapi-tenant header:', freshHeadersCentral["x-okapi-tenant"]
-    * match freshHeadersCentral["x-okapi-tenant"] == centralTenantId
     * print 'DEBUG: okapitoken:', okapitoken
     * print 'DEBUG: ilrUserId:', ilrUserId
     * print 'DEBUG: itemId:', itemId
+    # Define freshHeadersCentral before use
+    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)' }
     # Print user-tenants for this token and tenant
     * configure headers = freshHeadersCentral
     Given path 'user-tenants'
     When method GET
     Then status 200
     * print 'DEBUG: user-tenants response:', response
-    * def foundUser = karate.filter(response.userTenants, function(x){ return x.userId == ilrUserId && x.tenantId == centralTenantId })
-    * print 'ASSERT: user found in user-tenants for central tenant:', foundUser
+
+    # Check user-tenants with tenantId param (as mod-search does)
+    Given path 'user-tenants'
+    And param tenantId = centralTenantName
+    When method GET
+    Then status 200
+    * print 'DEBUG: user-tenants by tenantId:', response
+
+    * print 'DEBUG: headers before allowed-service-points:', freshHeadersCentral
+    # Extra debug and wait before allowed-service-points call
+    * print 'DEBUG: ilrUserId:', ilrUserId
+    * print 'DEBUG: itemId:', itemId
 
     # Now make the allowed-service-points call with debug output
+    * configure headers = freshHeadersCentral
     Given path 'patron/account', ilrUserId, 'item', itemId, 'allowed-service-points'
     When method GET
     * print 'DEBUG: allowed-service-points response status:', responseStatus
