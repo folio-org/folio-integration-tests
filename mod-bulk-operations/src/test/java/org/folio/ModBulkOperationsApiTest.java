@@ -47,4 +47,9 @@ public class ModBulkOperationsApiTest extends TestBaseEureka {
     public void testInstances() {
         runFeatureTest("instances.feature");
     }
+
+    @Test
+    public void testInstancesLinkedDataErrorsWithUUID() {
+        runFeatureTest("instances-linked-data-errors.feature");
+    }
 }
