@@ -184,20 +184,29 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     When method GET
     Then status 200
 
-    # Create user in central tenant
+    # Create user group in central tenant using user-init-data.feature
     * configure headers = headersCentral
+    * def ilrGroupId = java.util.UUID.randomUUID().toString()
+    * print 'DEBUG: ilrGroupId value:', ilrGroupId
+    * def ilrGroup = 'lib'
+    * def ilrTenantId = centralTenantName
+    * call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(ilrGroupId)', group: '#(ilrGroup)', tenantId: '#(ilrTenantId)' }
+
+    # Create user in central tenant using user-init-data.feature
+    * def ilrUserId = java.util.UUID.randomUUID().toString()
     * def ilrUserBarcode = 'ILR-ECS-UBC-' + randomNum
-    * table ilrUserData
-      | barcode        | username       | type     |
-      | ilrUserBarcode | ilrUserBarcode | "patron" |
-    * def ilrUser = call createUser ilrUserData
-    * def ilrUserId = ilrUser[0].response.id
+    * def ilrUserName = ilrUserBarcode
+    * def ilrFirstName = 'TestFirstName'
+    * def ilrLastName = 'TestLastName'
+    * def ilrExternalId = java.util.UUID.randomUUID().toString()
+    * def ilrPatronId = ilrGroupId
+    * call read('classpath:reusable/user-init-data.feature@CreateUser') { userId: '#(ilrUserId)', firstName: '#(ilrFirstName)', lastName: '#(ilrLastName)', userBarcode: '#(ilrUserBarcode)', userName: '#(ilrUserName)', externalId: '#(ilrExternalId)', patronId: '#(ilrPatronId)' }
 
     * print 'DEBUG: okapitoken:', okapitoken
     * print 'DEBUG: ilrUserId:', ilrUserId
     * print 'DEBUG: itemId:', itemId
-    # Define freshHeadersCentral before use
-    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)' }
+    # Define freshHeadersCentral with consortium headers for consortium-level requests
+    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     # Print user-tenants for this token and tenant
     * configure headers = freshHeadersCentral
     Given path 'user-tenants'
@@ -217,7 +226,7 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * print 'DEBUG: ilrUserId:', ilrUserId
     * print 'DEBUG: itemId:', itemId
 
-    # Now make the allowed-service-points call with debug output
+    # Now make the allowed-service-points call with debug output using consortium headers
     * configure headers = freshHeadersCentral
     Given path 'patron/account', ilrUserId, 'item', itemId, 'allowed-service-points'
     When method GET
