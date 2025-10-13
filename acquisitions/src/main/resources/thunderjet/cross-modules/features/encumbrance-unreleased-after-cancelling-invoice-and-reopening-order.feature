@@ -166,7 +166,7 @@ Feature: Encumbrance Unreleased After Cancelling Invoice And Reopening Order
 
     # 15. Reopen The Order
     * print '15. Reopen The Order'
-    * def v = call reopenOrder { orderId: "#(orderId)" }
+    * def v = call openOrder { orderId: "#(orderId)" }
 
     # 16. Verify Order State After Reopening
     * print '16. Verify Order State After Reopening'
