@@ -38,6 +38,22 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * def headersCentralConsortium = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     * configure headers = headersCentral
 
+    # Create test user early to ensure mod-search cache is populated with real users before consortium calls
+    * def testGroupId = java.util.UUID.randomUUID().toString()
+    * def testGroup = 'lib'
+    * def testTenantId = centralTenantName
+    * call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(testGroupId)', group: '#(testGroup)', tenantId: '#(testTenantId)' }
+
+    * def testUserId = java.util.UUID.randomUUID().toString()
+    * def randomMillisValue = callonce randomMillis
+    * def testUserBarcode = 'BG-USER-' + randomMillisValue
+    * def testUserName = testUserBarcode
+    * def testFirstName = 'BackgroundFirst'
+    * def testLastName = 'BackgroundLast'
+    * def testExternalId = java.util.UUID.randomUUID().toString()
+    * def testPatronId = testGroupId
+    * call read('classpath:reusable/user-init-data.feature@CreateUser') { userId: '#(testUserId)', firstName: '#(testFirstName)', lastName: '#(testLastName)', userBarcode: '#(testUserBarcode)', userName: '#(testUserName)', externalId: '#(testExternalId)', patronId: '#(testPatronId)' }
+
     # Verify consortium is properly configured
     * configure headers = headersCentralConsortium
     Given path 'consortia'
@@ -97,8 +113,25 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * callonce variablesCentral
     * callonce variablesUniversity
 
-
   Scenario: Create shared instance, holding and item in university tenant, then create ILR ECS request
+    # Create user group and user in central tenant for this specific scenario
+    * configure headers = headersCentral
+    * def ilrGroupId = java.util.UUID.randomUUID().toString()
+    * print 'DEBUG: ilrGroupId value:', ilrGroupId
+    * def ilrGroup = 'lib'
+    * def ilrTenantId = centralTenantName
+    * call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(ilrGroupId)', group: '#(ilrGroup)', tenantId: '#(ilrTenantId)' }
+    * def ilrPatronId = createdGroupId
+
+    * def ilrUserId = java.util.UUID.randomUUID().toString()
+    * def randomNum = callonce randomMillis
+    * def ilrUserBarcode = 'ILR-ECS-UBC-' + randomNum
+    * def ilrUserName = ilrUserBarcode
+    * def ilrFirstName = 'TestFirstName'
+    * def ilrLastName = 'TestLastName'
+    * def ilrExternalId = java.util.UUID.randomUUID().toString()
+    * call read('classpath:reusable/user-init-data.feature@CreateUser') { userId: '#(ilrUserId)', firstName: '#(ilrFirstName)', lastName: '#(ilrLastName)', userBarcode: '#(ilrUserBarcode)', userName: '#(ilrUserName)', externalId: '#(ilrExternalId)', patronId: '#(ilrPatronId)' }
+
     # Switch to university tenant for instance creation
     * configure headers = headersUniversity
 
@@ -183,24 +216,6 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     Given path 'inventory/items', itemId
     When method GET
     Then status 200
-
-    # Create user group in central tenant using user-init-data.feature
-    * configure headers = headersCentral
-    * def ilrGroupId = java.util.UUID.randomUUID().toString()
-    * print 'DEBUG: ilrGroupId value:', ilrGroupId
-    * def ilrGroup = 'lib'
-    * def ilrTenantId = centralTenantName
-    * call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(ilrGroupId)', group: '#(ilrGroup)', tenantId: '#(ilrTenantId)' }
-
-    # Create user in central tenant using user-init-data.feature
-    * def ilrUserId = java.util.UUID.randomUUID().toString()
-    * def ilrUserBarcode = 'ILR-ECS-UBC-' + randomNum
-    * def ilrUserName = ilrUserBarcode
-    * def ilrFirstName = 'TestFirstName'
-    * def ilrLastName = 'TestLastName'
-    * def ilrExternalId = java.util.UUID.randomUUID().toString()
-    * def ilrPatronId = ilrGroupId
-    * call read('classpath:reusable/user-init-data.feature@CreateUser') { userId: '#(ilrUserId)', firstName: '#(ilrFirstName)', lastName: '#(ilrLastName)', userBarcode: '#(ilrUserBarcode)', userName: '#(ilrUserName)', externalId: '#(ilrExternalId)', patronId: '#(ilrPatronId)' }
 
     * print 'DEBUG: okapitoken:', okapitoken
     * print 'DEBUG: ilrUserId:', ilrUserId

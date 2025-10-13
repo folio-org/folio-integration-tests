@@ -6,6 +6,9 @@ Feature: Create User
   Scenario: createUser
     * def user = karate.get('user', {})
     * if (!user.type) user.type = 'patron'
+    # Add personal object if firstName or lastName is present
+    * if (user.firstName) user.personal = karate.merge(user.personal || {}, { firstName: user.firstName })
+    * if (user.lastName) user.personal = karate.merge(user.personal || {}, { lastName: user.lastName })
     Given path 'users'
     And request user
     When method POST

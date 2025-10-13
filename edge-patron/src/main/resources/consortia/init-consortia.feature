@@ -69,6 +69,7 @@ Feature: Initialize mod-consortia integration tests
       | 'consortia.user-tenants.item.post'                          |
       | 'consortia.user-tenants.item.delete'                        |
       | 'consortia.user-tenants.item.get'                           |
+      | 'consortium-search.items.item.get'                          |
 
     # load global variables
     * callonce variables
@@ -201,6 +202,7 @@ Feature: Initialize mod-consortia integration tests
       | 'consortia.user-tenants.item.post'                          |
       | 'consortia.user-tenants.item.delete'                        |
       | 'consortia.user-tenants.item.get'                           |
+      | 'consortium-search.items.item.get'                          |
 
     * call getAuthorizationToken { tenant: '#(universityTenantName)' }
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }
