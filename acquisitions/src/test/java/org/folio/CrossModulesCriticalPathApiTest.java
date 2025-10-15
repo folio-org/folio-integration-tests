@@ -98,4 +98,9 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void encumbranceCalculatedCorrectlyAfterCancelingInvoiceWithOtherPaidAndCreditInvoices() {
     runFeatureTest("encumbrance-calculated-correctly-after-canceling-invoice-with-other-paid-and-credit-invoices");
   }
+
+  @Test
+  void encumbranceCalculatedCorrectlyAfterCancelingInvoiceExceedingInitialEncumbrance() {
+    runFeatureTest("encumbrance-calculated-correctly-after-canceling-invoice-exceeding-initial-encumbrance");
+  }
 }

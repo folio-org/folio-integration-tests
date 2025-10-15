@@ -223,3 +223,6 @@ Feature: cross-module integration tests
 
   Scenario: Encumbrance Calculated Correctly After Canceling Invoice With Other Paid And Credit Invoices
     * call read('features/encumbrance-calculated-correctly-after-canceling-invoice-with-other-paid-and-credit-invoices.feature')
+
+  Scenario: Encumbrance Calculated Correctly After Canceling Invoice Exceeding Initial Encumbrance
+    * call read('features/encumbrance-calculated-correctly-after-canceling-invoice-exceeding-initial-encumbrance.feature')
