@@ -241,8 +241,7 @@ Feature: Initialize mod-consortia integration tests
     # 4. Enable central ordering
     * def result = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
     * call enableCentralOrdering { token: '#(result.token)', tenant: '#(centralTenant)' }
-
-    * call configureAccessTokenTime { 'AccessTokenLifespance' : 3600, testTenant: '#(centralTenantName)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance' : 7200, testTenant: '#(centralTenantName)' }
 
   Scenario: Prepare data
     * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }

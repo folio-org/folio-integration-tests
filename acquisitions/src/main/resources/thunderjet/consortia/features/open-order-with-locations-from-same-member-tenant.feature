@@ -1,4 +1,5 @@
 # For MODORDERS-1365
+@parallel=false
 Feature: Open order with the same member tenant locations
 
   Background:
