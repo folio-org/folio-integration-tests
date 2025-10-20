@@ -31,14 +31,14 @@ Feature: Edge Orders COMMON
       | "/finance/expense-classes"          | "with offset only"      | 0      | ""    | "expenseClasses"       |
       | "/finance/expense-classes"          | "with limit only"       | ""     | 10    | "expenseClasses"       |
       | "/finance/expense-classes"          | "with offset and limit" | 0      | 10    | "expenseClasses"       |
-      | "/acquisitions-units"               | "no offset & limit"     | ""     | ""    | "acquisitionsUnits"    |
-      | "/acquisitions-units"               | "with offset only"      | 0      | ""    | "acquisitionsUnits"    |
-      | "/acquisitions-units"               | "with limit only"       | ""     | 10    | "acquisitionsUnits"    |
-      | "/acquisitions-units"               | "with offset and limit" | 0      | 10    | "acquisitionsUnits"    |
-      | "/acquisition-methods"              | "no offset & limit"     | ""     | ""    | "acquisitionMethods"   |
-      | "/acquisition-methods"              | "with offset only"      | 0      | ""    | "acquisitionMethods"   |
-      | "/acquisition-methods"              | "with limit only"       | ""     | 10    | "acquisitionMethods"   |
-      | "/acquisition-methods"              | "with offset and limit" | 0      | 10    | "acquisitionMethods"   |
+      | "/orders/acquisitions-units"        | "no offset & limit"     | ""     | ""    | "acquisitionsUnits"    |
+      | "/orders/acquisitions-units"        | "with offset only"      | 0      | ""    | "acquisitionsUnits"    |
+      | "/orders/acquisitions-units"        | "with limit only"       | ""     | 10    | "acquisitionsUnits"    |
+      | "/orders/acquisitions-units"        | "with offset and limit" | 0      | 10    | "acquisitionsUnits"    |
+      | "/orders/acquisition-methods"       | "no offset & limit"     | ""     | ""    | "acquisitionMethods"   |
+      | "/orders/acquisition-methods"       | "with offset only"      | 0      | ""    | "acquisitionMethods"   |
+      | "/orders/acquisition-methods"       | "with limit only"       | ""     | 10    | "acquisitionMethods"   |
+      | "/orders/acquisition-methods"       | "with offset and limit" | 0      | 10    | "acquisitionMethods"   |
       | "/organizations"                    | "no offset & limit"     | ""     | ""    | "organizations"        |
       | "/organizations"                    | "with offset only"      | 0      | ""    | "organizations"        |
       | "/organizations"                    | "with limit only"       | ""     | 10    | "organizations"        |
