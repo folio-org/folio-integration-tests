@@ -63,6 +63,7 @@ Feature: Initialize mod-consortia integration tests
       | 'users.item.post'                                           |
       | 'users.item.put'                                            |
       | 'patron.account.item-allowed-service-points.item.get'       |
+      | 'patron.account.instance-allowed-service-points.item.get'   |
       | 'tlr.settings.get'                                          |
       | 'tlr.settings.put'                                          |
       | 'consortia.user-tenants.collection.get'                     |
@@ -70,6 +71,8 @@ Feature: Initialize mod-consortia integration tests
       | 'consortia.user-tenants.item.delete'                        |
       | 'consortia.user-tenants.item.get'                           |
       | 'consortium-search.items.item.get'                          |
+      | 'patron.account.item-hold.item.post'                        |
+      | 'patron.account.instance-hold.item.post'                    |
 
     # load global variables
     * callonce variables
@@ -196,6 +199,7 @@ Feature: Initialize mod-consortia integration tests
       | 'overdue-fines-policies.collection.get'                     |
       | 'overdue-fines-policies.item.post'                          |
       | 'patron.account.item-allowed-service-points.item.get'       |
+      | 'patron.account.instance-allowed-service-points.item.get'   |
       | 'tlr.settings.get'                                          |
       | 'tlr.settings.put'                                          |
       | 'consortia.user-tenants.collection.get'                     |
@@ -203,6 +207,8 @@ Feature: Initialize mod-consortia integration tests
       | 'consortia.user-tenants.item.delete'                        |
       | 'consortia.user-tenants.item.get'                           |
       | 'consortium-search.items.item.get'                          |
+      | 'patron.account.item-hold.item.post'                        |
+      | 'patron.account.instance-hold.item.post'                    |
 
     * call getAuthorizationToken { tenant: '#(universityTenantName)' }
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }
@@ -214,6 +220,22 @@ Feature: Initialize mod-consortia integration tests
     * call read('classpath:utils/inventory.feature')
     * call read('classpath:utils/inventory-university.feature')
     * call read('classpath:utils/configuration.feature')
+
+    # Create test user early to ensure mod-search cache is populated with real users before consortium calls
+    * def testGroupId = java.util.UUID.randomUUID().toString()
+    * def testGroup = 'lib'
+    * def testTenantId = centralTenantName
+    * call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(testGroupId)', group: '#(testGroup)', tenantId: '#(testTenantId)' }
+
+    * def testUserId = java.util.UUID.randomUUID().toString()
+    * def randomMillisValue = callonce randomMillis
+    * def testUserBarcode = 'BG-USER-' + randomMillisValue
+    * def testUserName = testUserBarcode
+    * def testFirstName = 'BackgroundFirst'
+    * def testLastName = 'BackgroundLast'
+    * def testExternalId = java.util.UUID.randomUUID().toString()
+    * def testPatronId = testGroupId
+    * call read('classpath:reusable/user-init-data.feature@CreateUser') { userId: '#(testUserId)', firstName: '#(testFirstName)', lastName: '#(testLastName)', userBarcode: '#(testUserBarcode)', userName: '#(testUserName)', externalId: '#(testExternalId)', patronId: '#(testPatronId)' }
 
     # 5. Disable instance matching in university tenant
     * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
