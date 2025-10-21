@@ -98,7 +98,7 @@ Feature: Check opening an order links to the right instance based on the identif
     When method GET
     Then status 200
     * def setting = $.settings[0]
-    * set setting.value = "{\" isInstanceMatchingDisabled\ ":false}"
+    * set setting.value = "{\"isInstanceMatchingDisabled\":false}"
     * def settingIdFound = $.settings[0].id
 
     Given path 'orders-storage/settings', settingIdFound
