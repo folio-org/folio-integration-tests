@@ -1,7 +1,7 @@
 @ignore
 Feature: Create order line
   # parameters: id, orderId, fundId, listUnitPrice, listUnitPriceElectronic, isPackage, titleOrPackage, paymentStatus, receiptStatus, locations, orderFormat
-  # quantity, quantityElectronic, checkinItems, createInventory, fundDistribution, claimingActive, claimingInterval, suppressInstanceFromDiscovery
+  # quantity, quantityElectronic, checkinItems, createInventory, fundDistribution, claimingActive, claimingInterval, suppressInstanceFromDiscovery, productIds
 
   Background:
     * url baseUrl
@@ -27,6 +27,7 @@ Feature: Create order line
     * def claimingActive = karate.get("claimingActive", poLine.claimingActive)
     * def claimingInterval = karate.get("claimingInterval", poLine.claimingInterval)
     * def suppressInstanceFromDiscovery = karate.get("suppressInstanceFromDiscovery", null)
+    * def productIds = karate.get("productIds", poLine.details.productIds)
 
     * set poLine.id = id
     * set poLine.purchaseOrderId = orderId
@@ -49,6 +50,7 @@ Feature: Create order line
     * set poLine.claimingActive = claimingActive
     * set poLine.claimingInterval = claimingInterval
     * set poLine.suppressInstanceFromDiscovery = suppressInstanceFromDiscovery
+    * set poLine.details.productIds = productIds
 
     Given path "orders/order-lines"
     And request poLine
