@@ -223,3 +223,19 @@ Feature: cross-module integration tests
 
   Scenario: Encumbrance Calculated Correctly After Canceling Invoice With Other Paid And Credit Invoices
     * call read('features/encumbrance-calculated-correctly-after-canceling-invoice-with-other-paid-and-credit-invoices.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice When Other Approved And Credit Invoices Exist Release False
+    * call read('features/encumbrance-calculated-correctly-after-canceling-approved-invoice-with-other-invoices-release-false.feature')
+
+  Scenario: Encumbrance Is Unreleased After Cancelling Related Approved Invoice And Re-Opening Order Release False
+    * call read('features/encumbrance-unreleased-after-cancelling-approved-invoice-and-re-opening-order-release-false.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice With Amount Exceeding Initial Encumbrance Release False
+    * call read('features/encumbrance-calculated-correctly-after-canceling-approved-invoice-exceeding-initial-encumbrance-release-false.feature')
+
+  Scenario: Encumbrance Remains The Same After Cancelling A Credited Approved Invoice Release False
+    * call read('features/encumbrance-remains-same-after-cancelling-credited-approved-invoice-release-false.feature')
+
+  Scenario: Encumbrance After Removing Fund Distribution From POL
+    * call read('features/encumbrance-after-removing-fund-distribution-from-pol.feature')
+
