@@ -5,6 +5,7 @@ import java.util.Comparator;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcStreamReader;
 import org.marc4j.marc.DataField;
+import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
@@ -21,6 +22,12 @@ public class MarcFileInstanceFieldsExistenceChecker {
     public MarcFileInstanceFieldsExistenceChecker(byte[] marcFile) {
         this.record = convertByteArrayToRecordSortedByTag(marcFile);
         this.marcFactory = new MarcFactoryImpl();
+    }
+
+    public boolean checkLeaderStatus(char status) {
+        var leader = marcFactory.newLeader();
+        leader.setRecordStatus(status);
+        return checkForLeaderStatus(leader);
     }
 
     public boolean checkLccn() {
@@ -528,5 +535,9 @@ public class MarcFileInstanceFieldsExistenceChecker {
 
     private boolean checkForFieldExistence(DataField expectedField) {
         return record.getDataFields().stream().anyMatch(actualField -> actualField.compareTo(expectedField) == 0);
+    }
+
+    private boolean checkForLeaderStatus(Leader expectedLeader) {
+        return record.getLeader().getRecordStatus() == expectedLeader.getRecordStatus();
     }
 }
