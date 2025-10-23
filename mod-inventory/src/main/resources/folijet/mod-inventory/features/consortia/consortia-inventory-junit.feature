@@ -81,8 +81,8 @@ Feature: mod-inventory ECS tests
 
   Scenario: Create locations
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(consortiaAdmin)' }
-    Given call read('classpath:folijet/mod-inventory/features/locations-member-tenant.feature') { testUser : '#(universityUser1)' }
-    Given call read('classpath:folijet/mod-inventory/features/locations-member-tenant.feature') { testUser : '#(collegeUser1)' }
+    Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(universityUser1)' }
+    Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(collegeUser1)' }
 
   Scenario: Create college custom location
     * call login collegeUser1

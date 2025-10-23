@@ -63,9 +63,9 @@ Feature: Updating ownership of holdings and item api tests
           """
           function() {
             if (responseStatus == 401) {
-              karate.log('Unauthorized, re-logging in as consortiaAdmin');
+              karate.log('Unauthorized, re-logging in as universityUser');
               karate.call('classpath:common-consortia/eureka/initData.feature@Login', { user: universityUser1 });
-              var newHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': okapitoken, 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' };
+              var newHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': okapitoken, 'x-okapi-tenant': universityTenant, 'Accept': 'application/json' };
               karate.configure('headers', newHeaders);
               return false;
             }
@@ -77,7 +77,7 @@ Feature: Updating ownership of holdings and item api tests
           }
           """
     * configure retry = { count: 40, interval: 10000 }
-    * configure headers = headersConsortia
+    * configure headers = headersUniversity
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenant
