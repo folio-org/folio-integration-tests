@@ -120,6 +120,8 @@ Feature: Tests mapping instance to marc file and presence of necessary fields
     And checker.checkElectronicAccessRelatedResourceRelationship() == true
     And checker.checkElectronicAccessOtherRelationship() == true
     And checker.checkId() == true
+    #instance has staffSuppress=false, discoverySuppress=false, but deleted=true, so leader status should be 'd'
+    And checker.checkLeaderStatus('d') == true
 
     Examples:
       | fileName                                                         | uploadFormat |

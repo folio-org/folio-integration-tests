@@ -218,6 +218,8 @@
     }
   ],
   "discoverySuppress": false,
+  "staffSuppress": false,
+  "deleted": true,
   "statisticalCodeIds": [],
   "metadata": {
     "createdDate": "2020-06-15T11:07:48.097+0000",
