@@ -7,6 +7,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
@@ -135,5 +136,12 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @DisplayName("(Thunderjet) (C889713) Encumbrance Remains The Same After Cancelling A Credited Approved Invoice Release Encumbrance False")
   void encumbranceRemainsSameAfterCancellingCreditedApprovedInvoiceReleaseFalse() {
     runFeatureTest("encumbrance-remains-same-after-cancelling-credited-approved-invoice-release-false");
+  }
+
+  @Test
+  @Disabled
+  @DisplayName("(Thunderjet) Scenario 5 - mod-orders becomes unavailable after removing Fund distribution from POL")
+  void encumbranceAfterRemovingFundDistributionFromPol() {
+    runFeatureTest("encumbrance-after-removing-fund-distribution-from-pol");
   }
 }

@@ -235,3 +235,7 @@ Feature: cross-module integration tests
 
   Scenario: Encumbrance Remains The Same After Cancelling A Credited Approved Invoice Release False
     * call read('features/encumbrance-remains-same-after-cancelling-credited-approved-invoice-release-false.feature')
+
+  Scenario: Encumbrance After Removing Fund Distribution From POL
+    * call read('features/encumbrance-after-removing-fund-distribution-from-pol.feature')
+
