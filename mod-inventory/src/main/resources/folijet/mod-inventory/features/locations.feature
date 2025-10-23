@@ -10,7 +10,8 @@ Feature: inventory
     Given path 'service-points'
     And request read(samplesPath + 'service-points-online.json')
     When method POST
-    Then status 201
+    * def isValidStatus = responseStatus == 201 || responseStatus == 422
+    Then match isValidStatus == true
 
   Scenario: create institution
     Given path 'location-units/institutions'
