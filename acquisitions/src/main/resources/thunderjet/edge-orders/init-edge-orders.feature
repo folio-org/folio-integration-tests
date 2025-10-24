@@ -90,9 +90,7 @@ Feature: Initialize edge-orders integration tests
       | "inventory-storage.material-types.item.post"                  |
       | "inventory-storage.service-points.item.post"                  |
       | "inventory.instances.item.post"                               |
-      | "mosaic.configuration.item.delete"                            |
       | "mosaic.configuration.item.get"                               |
-      | "mosaic.configuration.item.post"                              |
       | "mosaic.configuration.item.put"                               |
       | "orders.collection.get"                                       |
       | "orders.order-templates.item.get"                             |
