@@ -95,7 +95,7 @@ Feature: mod bulk operations user features negative scenarios
                     "option": "EXPIRATION_DATE",
                     "actions": [{
                             "type": "REPLACE_WITH",
-                            "initial": "2020-01-11T00:00:00.000+00:00",
+                            "initial": "2020-01-11",
                             "updated": "#(expirationDate)"
                         }
                     ]
@@ -130,7 +130,7 @@ Feature: mod bulk operations user features negative scenarios
     And match response.rows[0].row[4] == 'false'
     And match response.rows[0].row[6] == 'Changed'
     And match response.rows[0].row[13] == 'test@email.org'
-    And match response.rows[0].row[21] == '2000-01-11 00:00:00.000Z'
+    And match response.rows[0].row[21] == '2000-01-11'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -157,7 +157,7 @@ Feature: mod bulk operations user features negative scenarios
     And match response.rows[0].row[4] == 'false'
     And match response.rows[0].row[6] == 'Changed'
     And match response.rows[0].row[13] == 'test@email.org'
-    And match response.rows[0].row[21] == '2000-01-11 00:00:00.000Z'
+    And match response.rows[0].row[21] == '2000-01-11'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -296,6 +296,6 @@ Feature: mod bulk operations user features negative scenarios
     When method GET
     Then status 200
     And match response.users[0].personal.email == 'test@email.com'
-    And response.users[0].expirationDate == '1900-01-11T00:00:00.000+00:00'
+    And response.users[0].expirationDate == '1900-01-11'
     And match response.users[0].active == false
     And match response.users[0].patronGroup == '03f7690c-09e8-419f-97ec-2e753d0fa672'

@@ -77,7 +77,7 @@ Feature: mod bulk operations user positive scenarios
                     "option": "EXPIRATION_DATE",
                     "actions": [{
                             "type": "REPLACE_WITH",
-                            "initial": "2020-01-11T00:00:00.000+00:00",
+                            "initial": "2020-01-11",
                             "updated": "#(expirationDate)"
                         }
                     ]
@@ -111,7 +111,7 @@ Feature: mod bulk operations user positive scenarios
     When method GET
     And match response.rows[0].row[6] == 'Changed'
     And match response.rows[0].row[13] == 'test@email.org'
-    And match response.rows[0].row[21] == '2100-01-11 00:00:00.000Z'
+    And match response.rows[0].row[21] == '2100-01-11'
 
     Given path 'bulk-operations', operationId, 'download'
     And param fileContentType = 'PROPOSED_CHANGES_FILE'
@@ -137,7 +137,7 @@ Feature: mod bulk operations user positive scenarios
     When method GET
     And match response.rows[0].row[6] == 'Changed'
     And match response.rows[0].row[13] == 'test@email.org'
-    And match response.rows[0].row[21] == '2100-01-11 00:00:00.000Z'
+    And match response.rows[0].row[21] == '2100-01-11'
 
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
@@ -238,7 +238,7 @@ Feature: mod bulk operations user positive scenarios
     When method GET
     And match response.rows[0].row[6] == 'Original'
     And match response.rows[0].row[13] == 'test@email.com'
-    And match response.rows[0].row[21] == '2200-01-11 00:00:00.000Z'
+    And match response.rows[0].row[21] == '2200-01-11'
     And match response.rows[0].row[17] == ';US;04307 Wilburn Courts;;Long Beach;DC;65853-6624;true;Order'
 
     Given path 'bulk-operations', operationId, 'errors'

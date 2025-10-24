@@ -1,4 +1,4 @@
-# MODORDERS-1310
+# For MODORDERS-1310
 @parallel=false
 Feature: Open orders in member tenant, share instance in one case
 

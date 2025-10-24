@@ -28,6 +28,7 @@ Feature: mod-inventory ECS tests
       | 'inventory-storage.location-units.campuses.item.post'     |
       | 'inventory-storage.location-units.libraries.item.post'    |
       | 'inventory-storage.locations.item.post'                   |
+      | 'inventory-storage.locations.collection.get'              |
       | 'inventory-storage.holdings-sources.item.post'            |
       | 'inventory-storage.holdings.item.post'                    |
       | 'inventory.items.item.post'                               |
@@ -78,14 +79,13 @@ Feature: mod-inventory ECS tests
     * call login collegeUser1
     * call read('classpath:folijet/mod-inventory/features/consortia/util/hrid-util.feature@UpdateHrId') { tenant: '#(collegeTenant)', prefix: 'o' }
 
-  Scenario: Сreate locations
+  Scenario: Create locations
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(consortiaAdmin)' }
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(universityUser1)' }
     Given call read('classpath:folijet/mod-inventory/features/locations.feature') { testUser : '#(collegeUser1)' }
 
   Scenario: Create college custom location
     * call login collegeUser1
-
     * configure headers = { 'x-okapi-tenant':'#(collegeTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     Given path 'locations'
     And request read(samplesPath + 'locations-consortiaonline.json')

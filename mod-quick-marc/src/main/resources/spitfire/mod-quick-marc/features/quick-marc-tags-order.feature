@@ -1,7 +1,7 @@
 Feature: Test MARC records tags order
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
@@ -91,7 +91,6 @@ Feature: Test MARC records tags order
     # Sort the fields array in descending order based on the tag value
     * def sortedFields = createdFields.sort((a, b) => b.tag.localeCompare(a.tag))
     * set record.fields = sortedFields
-    * set record.relatedRecordVersion = 1
     * set record._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(record.parsedRecordId)', record: '#(record)' }
 
@@ -145,7 +144,6 @@ Feature: Test MARC records tags order
     # remove '035' tags
     * def updatedFields = newFields.filter(x => x.tag != '035')
     * set quickMarcJson.fields = updatedFields
-    * set quickMarcJson.relatedRecordVersion = 2
     * set quickMarcJson._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(quickMarcJson.parsedRecordId)', record: '#(quickMarcJson)' }
 
@@ -227,7 +225,6 @@ Feature: Test MARC records tags order
     # Sort the fields array in descending order based on the tag value
     * def sortedFields = createdFields.sort((a, b) => b.tag.localeCompare(a.tag))
     * set record.fields = sortedFields
-    * set record.relatedRecordVersion = 1
     * set record._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(record.parsedRecordId)', record: '#(record)' }
 
@@ -256,7 +253,6 @@ Feature: Test MARC records tags order
     # remove '014' tags
     * def updatedFields = newFields.filter(x => x.tag != '014')
     * set quickMarcJson.fields = updatedFields
-    * set quickMarcJson.relatedRecordVersion = 1
     * set quickMarcJson._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(quickMarcJson.parsedRecordId)', record: '#(quickMarcJson)' }
 
@@ -313,7 +309,6 @@ Feature: Test MARC records tags order
     # Sort the fields array in descending order based on the tag value
     * def sortedFields = createdFields.sort((a, b) => b.tag.localeCompare(a.tag))
     * set record.fields = sortedFields
-    * set record.relatedRecordVersion = 1
     * set record._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(record.parsedRecordId)', record: '#(record)' }
 
@@ -342,7 +337,6 @@ Feature: Test MARC records tags order
     # remove '003' tags
     * def updatedFields = newFields.filter(x => x.tag != '003')
     * set quickMarcJson.fields = updatedFields
-    * set quickMarcJson.relatedRecordVersion = 1
     * set quickMarcJson._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(quickMarcJson.parsedRecordId)', record: '#(quickMarcJson)' }
 

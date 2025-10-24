@@ -1,6 +1,6 @@
 @ignore
 Feature: Create piece with holding id or location id
-  # Parameters: id, poLineId, titleId, holdingId?, locationId?, useLocationId?, receivingTenantId?, format?, createItem?
+  # Parameters: id, poLineId, titleId, holdingId?, locationId?, useLocationId?, receivingTenantId?, format?, sequenceNumber?, createItem?
 
   Background:
     * url baseUrl
@@ -14,6 +14,7 @@ Feature: Create piece with holding id or location id
     * def useLocationId = karate.get('useLocationId', false)
     * def receivingTenantId = karate.get('receivingTenantId', null)
     * def format = karate.get('format', "Physical")
+    * def sequenceNumber = karate.get('sequenceNumber', null)
     * def createItem = karate.get('createItem', false)
 
     * def piecePayload =
@@ -23,7 +24,8 @@ Feature: Create piece with holding id or location id
       poLineId: "#(poLineId)",
       titleId: "#(titleId)",
       receivingTenantId: "#(receivingTenantId)",
-      format: "#(format)"
+      format: "#(format)",
+      sequenceNumber: #(sequenceNumber)
     }
     """
 
