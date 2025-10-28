@@ -27,6 +27,7 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.bib.marc.get'                           |
       | 'linked-data.resources.reindex.post'                           |
       | 'linked-data.resources.graph.get'                              |
+      | 'linked-data.resources.rdf.get'                                |
       | 'linked-data.resources.bib.id.get'                             |
       | 'linked-data.resources.support-check.get'                      |
       | 'linked-data.resources.preview.get'                            |
