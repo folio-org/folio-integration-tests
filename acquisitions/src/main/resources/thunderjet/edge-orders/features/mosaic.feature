@@ -20,7 +20,7 @@ Feature: Edge Orders MOSAIC
   Scenario: Validate Order apiKey
     * url edgeUrl
     * configure headers = { "Accept": "application/json" }
-    And path "mosaic/validate"
+    And path "orders/validate"
     And param type = "MOSAIC"
     And param apiKey = apiKey
     When method GET
@@ -31,7 +31,7 @@ Feature: Edge Orders MOSAIC
   Scenario: Validate Order apiKey (missing type)
     * url edgeUrl
     * configure headers = { "Accept": "application/xml" }
-    And path "mosaic/validate"
+    And path "orders/validate"
     When method GET
     Then retry until responseStatus == 400
     And match /Response/Error/Code == "BAD_REQUEST"
@@ -41,7 +41,7 @@ Feature: Edge Orders MOSAIC
   Scenario: Validate Order apiKey (missing apikey)
     * url edgeUrl
     * configure headers = { "Accept": "application/xml" }
-    And path "mosaic/validate"
+    And path "orders/validate"
     And param type = "MOSAIC"
     When method GET
     Then retry until responseStatus == 401
@@ -52,7 +52,7 @@ Feature: Edge Orders MOSAIC
   Scenario: Validate Order apiKey (bad apikey)
     * url edgeUrl
     * configure headers = { "Accept": "application/xml" }
-    And path "mosaic/validate"
+    And path "orders/validate"
     And param type = "MOSAIC"
     And param apiKey = badApiKey
     When method GET
@@ -88,7 +88,7 @@ Feature: Edge Orders MOSAIC
     # 3. Create Mosaic Order
     * url edgeUrl
     * configure headers = { "Content-Type": "application/json", "Accept": "application/json" }
-    Given path "/mosaic/orders"
+    Given path "/orders"
     And param type = "MOSAIC"
     And param apiKey = apiKey
     And request
@@ -160,7 +160,7 @@ Feature: Edge Orders MOSAIC
     # 2. Create Mosaic Order
     * url edgeUrl
     * configure headers = { "Content-Type": "application/json", "Accept": "application/json" }
-    Given path "/mosaic/orders"
+    Given path "/orders"
     And param type = "MOSAIC"
     And param apiKey = apiKey
     And request
@@ -211,7 +211,7 @@ Feature: Edge Orders MOSAIC
   Scenario: Get orders (missing endpoint)
     * url edgeUrl
     * configure headers = { "Accept": "application/json" }
-    And path "mosaic/orders"
+    And path "orders"
     And param type = "MOSAIC"
     And param apiKey = apiKey
     Then retry until responseStatus == 404
