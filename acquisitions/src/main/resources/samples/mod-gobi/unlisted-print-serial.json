@@ -1,5 +1,6 @@
 {
   "orderType": "UnlistedPrintSerial",
+  "_version": 1,
   "mappings": [
     {
       "field": "ACQUISITION_METHOD",
