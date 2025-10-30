@@ -32,6 +32,7 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.support-check.get'                      |
       | 'linked-data.resources.preview.get'                            |
       | 'linked-data.resources.import.post'                            |
+      | 'linked-data.import.file.post'                                 |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
