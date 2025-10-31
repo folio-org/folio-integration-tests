@@ -27,10 +27,13 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.bib.marc.get'                           |
       | 'linked-data.resources.reindex.post'                           |
       | 'linked-data.resources.graph.get'                              |
+      | 'linked-data.resources.rdf.get'                                |
       | 'linked-data.resources.bib.id.get'                             |
       | 'linked-data.resources.support-check.get'                      |
       | 'linked-data.resources.preview.get'                            |
       | 'linked-data.resources.import.post'                            |
+      | 'linked-data.import.file.post'                                 |
+      | 'search.authorities.collection.get'                            |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
