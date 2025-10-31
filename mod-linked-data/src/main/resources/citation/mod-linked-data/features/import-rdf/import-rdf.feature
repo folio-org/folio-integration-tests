@@ -41,7 +41,8 @@ Feature: Import Bibframe2 RDF
     * match response.identifiers[*].value contains '2015047302'
     * match response.identifiers[*].value contains '9781452152448 board bk'
     * match response.subjects[*].value contains 'Readers (Primary)'
-    * match response.contributors contains { name: 'Wang, Jack 1972-', primary: true }
+    * def matchingPrimaryContributors = karate.filter(response.contributors, function(x){ return x.name == 'Wang, Jack 1972-' && x.primary == true })
+    * match matchingPrimaryContributors == '#[1]'
     * match response.publication contains { publisher: 'Chronicle Books LLC', place: 'San Francisco, CA', dateOfPublication: '[2016]', role: 'Publication' }
     * def ldIdentifier = karate.filter(response.identifiers, function(x){ return x.value && x.value.startsWith('(ld)'); })[0].value
     * def resourceId = ldIdentifier.replace('(ld)', '').trim()
@@ -59,7 +60,7 @@ Feature: Import Bibframe2 RDF
     * def work = karate.filter(rdfResponse, function(x){ return x['@id'] == workId; })[0]
     * match work['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Work'
     * match work['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Monograph'
-    * match work['http://id.loc.gov/ontologies/bibframe/subject'][0]['@id'] == 'http://id.loc.gov/authorities/sh8511165'
+    * match work['http://id.loc.gov/ontologies/bibframe/subject'][0]['@id'] == 'http://id.loc.gov/authorities/sh85111655'
 
     * def creatorId = work['http://id.loc.gov/ontologies/bibframe/contribution'][0]['@id']
     * def creator = karate.filter(rdfResponse, function(x){ return x['@id'] == creatorId; })[0]
