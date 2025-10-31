@@ -62,11 +62,13 @@ Feature: Updating ownership of holdings and item api tests
     * def retryLogic =
           """
           function() {
+          karate.log('FORCE: simulating 401 for test');
+          responseStatus = 401;
             if (responseStatus == 401) {
               karate.log('Unauthorized, re-logging in as universityUser');
-              var loginResult = karate.call('classpath:common-consortia/eureka/initData.feature@Login', { user: universityUser1 });
+              var loginResult = karate.call('classpath:common-consortia/eureka/initData.feature@Login', universityUser1);
               var newToken = loginResult.okapitoken;
-              var newHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': newToken, 'x-okapi-tenant': universityTenant, 'Accept': 'application/json' };
+              var newHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': newToken, 'x-okapi-tenant': universityUser1.tenant, 'Accept': 'application/json' };
               karate.configure('headers', newHeaders);
               karate.configure('cookies', { folioAccessToken: newToken });
               return false;
@@ -78,7 +80,7 @@ Feature: Updating ownership of holdings and item api tests
             return false;
           }
           """
-    * configure retry = { count: 40, interval: 10000 }
+    * configure retry = { count: 2, interval: 10000 }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenant
@@ -93,7 +95,7 @@ Feature: Updating ownership of holdings and item api tests
     And match sharingInstance.status == 'COMPLETE'
 
     # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
-    * configure headers = headersUniversity
+    #* configure headers = headersUniversity
 
     Given path 'inventory/instances', instanceId
     When method GET
