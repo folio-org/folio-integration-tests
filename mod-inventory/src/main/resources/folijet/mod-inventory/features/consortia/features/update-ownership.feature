@@ -62,8 +62,6 @@ Feature: Updating ownership of holdings and item api tests
     * def retryLogic =
           """
           function() {
-          karate.log('FORCE: simulating 401 for test');
-          responseStatus = 401;
             if (responseStatus == 401) {
               karate.log('Unauthorized, re-logging in as universityUser');
               var loginResult = karate.call('classpath:common-consortia/eureka/initData.feature@Login', universityUser1);
@@ -80,7 +78,7 @@ Feature: Updating ownership of holdings and item api tests
             return false;
           }
           """
-    * configure retry = { count: 2, interval: 10000 }
+    * configure retry = { count: 40, interval: 10000 }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenant
