@@ -5,7 +5,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class ModOaiPmhTests extends TestBaseEureka {
         runFeature("classpath:firebird/mod-oai-pmh-junit.feature");
     }
 
-    @AfterEach
+    @AfterAll
     public void tearDown() {
         runFeature("classpath:common/eureka/destroy-data.feature");
     }
