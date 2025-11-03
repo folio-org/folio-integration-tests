@@ -144,4 +144,22 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void encumbranceAfterRemovingFundDistributionFromPol() {
     runFeatureTest("encumbrance-after-removing-fund-distribution-from-pol");
   }
+
+  @Test
+  @DisplayName("(Thunderjet) (C877086) Encumbrance Is Created As Released After Releasing It Manually And Changing The Fund Distribution")
+  void encumbranceReleasedAfterManualReleaseAndFundChangeOngoing() {
+    runFeatureTest("encumbrance-released-after-manual-release-and-fund-change-ongoing");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C877085) Encumbrance Is Created As Released After Changing The Fund Distribution With Paid Invoice Release Encumbrance True")
+  void encumbranceReleasedAfterFundChangeWithPaidInvoiceReleaseTrue() {
+    runFeatureTest("encumbrance-released-after-fund-change-with-paid-invoice-release-true");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C877084) Encumbrance Is Created As Released After Manual Release And Fund Change With Paid Invoice Release Encumbrance False")
+  void encumbranceReleasedAfterManualReleaseAndFundChangeWithPaidInvoiceReleaseFalse() {
+    runFeatureTest("encumbrance-released-after-manual-release-and-fund-change-with-paid-invoice-release-false");
+  }
 }
