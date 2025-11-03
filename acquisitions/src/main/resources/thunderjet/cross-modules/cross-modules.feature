@@ -239,3 +239,12 @@ Feature: cross-module integration tests
   Scenario: Encumbrance After Removing Fund Distribution From POL
     * call read('features/encumbrance-after-removing-fund-distribution-from-pol.feature')
 
+  Scenario: Encumbrance Is Created As Released After Releasing It Manually And Changing The Fund Distribution
+    * call read('features/encumbrance-released-after-manual-release-and-fund-change-ongoing.feature')
+
+  Scenario: Encumbrance Is Created As Released After Changing The Fund Distribution With Paid Invoice Release True
+    * call read('features/encumbrance-released-after-fund-change-with-paid-invoice-release-true.feature')
+
+  Scenario: Encumbrance Is Created As Released After Manual Release And Fund Change With Paid Invoice Release False
+    * call read('features/encumbrance-released-after-manual-release-and-fund-change-with-paid-invoice-release-false.feature')
+
