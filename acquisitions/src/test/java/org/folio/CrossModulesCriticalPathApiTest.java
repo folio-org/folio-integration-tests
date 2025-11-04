@@ -162,4 +162,10 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void encumbranceReleasedAfterManualReleaseAndFundChangeWithPaidInvoiceReleaseFalse() {
     runFeatureTest("encumbrance-released-after-manual-release-and-fund-change-with-paid-invoice-release-false");
   }
+
+  @Test
+  @DisplayName("(Thunderjet) (C895660) Cancel A Paid Invoice After Changing Fund Distribution In The PO Line")
+  void cancelPaidInvoiceAfterChangingFundDistribution() {
+    runFeatureTest("cancel-paid-invoice-after-changing-fund-distribution");
+  }
 }
