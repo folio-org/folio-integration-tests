@@ -657,15 +657,8 @@ Feature: Entity types
     And assert response.availableTargetIds.length > 0
 
     # 3. Add a customEntityType property to the request body JSON object (with a users source)
-    * def customEntityTypeForJoins =
+    * def sourcesForJoins =
       """{
-        "id": 'test-joins-entity-type-id',
-        "name": 'custom_joins_user_details',
-        "description": 'Entity type for available joins test',
-        "crossTenantQueriesEnabled": false,
-        "defaultSort": [
-          { "columnName": '"users.user".id', "direction": 'ASC' }
-        ],
         "sources": [
           {
             "type": "entity-type",
@@ -675,13 +668,10 @@ Feature: Entity types
             "useIdColumns": true,
             "inheritCustomFields": true
           }
-        ],
-        "shared": true,
-        "isCustom": true,
-        "private": false
+        ]
       }
       """
-    * set availableJoinsBody.customEntityType = customEntityTypeForJoins
+    * set availableJoinsBody.sources = sourcesForJoins.sources
 
     # 4. Do another POST with this updated body
     Given path 'entity-types/custom/available-joins'
@@ -720,28 +710,16 @@ Feature: Entity types
     # 1. Start with a custom entity type containing users
     * def availableJoinsBody =
       """{
-        customEntityType: {
-          id: 'test-joins-entity-type-id-2',
-          name: 'custom_joins_user_details_2',
-          description: 'Entity type for available joins test 2',
-          crossTenantQueriesEnabled: false,
-          defaultSort: [
-            { columnName: '"users.user".id', direction: 'ASC' }
-          ],
-          sources: [
-            {
-              type: "entity-type",
-              alias: "users",
-              name: "Users",
-              targetId: "bb058933-cd06-4539-bd3a-6f248ff98ee2",
-              useIdColumns: true,
-              inheritCustomFields: true
-            }
-          ],
-          shared: true,
-          isCustom: true,
-          private: false
-        }
+        sources: [
+          {
+            type: "entity-type",
+            alias: "users",
+            name: "Users",
+            targetId: "bb058933-cd06-4539-bd3a-6f248ff98ee2",
+            useIdColumns: true,
+            inheritCustomFields: true
+          }
+        ]
       }
       """
 
