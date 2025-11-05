@@ -23,9 +23,8 @@ Feature: Test quickMARC bib update
     * def recordId = quickMarcJson.parsedRecordId
     * def fields = quickMarcJson.fields
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
-    * fields.push(newField);
+    * fields.push(newField)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 1
     * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser

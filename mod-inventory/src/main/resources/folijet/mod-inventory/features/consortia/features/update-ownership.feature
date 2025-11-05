@@ -59,11 +59,30 @@ Feature: Updating ownership of holdings and item api tests
     And def sharingInstanceId = response.id
 
     # Verify status is 'COMPLETE'
+    * def retryLogic =
+          """
+          function() {
+            if (responseStatus == 401) {
+              karate.log('Unauthorized, re-logging in as universityUser');
+              var loginResult = karate.call('classpath:common-consortia/eureka/initData.feature@Login', universityUser1);
+              var newToken = loginResult.okapitoken;
+              var newHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': newToken, 'x-okapi-tenant': universityUser1.tenant, 'Accept': 'application/json' };
+              karate.configure('headers', newHeaders);
+              karate.configure('cookies', { folioAccessToken: newToken });
+              return false;
+            }
+            if (responseStatus == 200 && response.sharingInstances && response.sharingInstances.length > 0) {
+              var status = response.sharingInstances[0].status;
+              return status == 'COMPLETE' || status == 'ERROR';
+            }
+            return false;
+          }
+          """
     * configure retry = { count: 40, interval: 10000 }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenant
-    And retry until response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR'
+    And retry until retryLogic()
     When method GET
     Then status 200
     And def sharingInstance = response.sharingInstances[0]
@@ -74,7 +93,7 @@ Feature: Updating ownership of holdings and item api tests
     And match sharingInstance.status == 'COMPLETE'
 
     # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
-    * configure headers = headersUniversity
+    #* configure headers = headersUniversity
 
     Given path 'inventory/instances', instanceId
     When method GET

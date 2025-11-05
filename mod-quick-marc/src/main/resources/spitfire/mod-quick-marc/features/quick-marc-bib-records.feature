@@ -43,7 +43,6 @@ Feature: Test quickMARC
     * fields.push(newField1)
     * fields.push(newField2)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 2
     * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser
@@ -74,7 +73,6 @@ Feature: Test quickMARC
     * def newField = { "tag": "240", "indicators": [ "\\", "\\" ], "content":'#("$a Test note" + linkContent)', "isProtected":false, "linkDetails":{ "authorityId":#(linkedAuthorityId2), "authorityNaturalId":#(authorityNaturalId2), "linkingRuleId": 5, "status":"ERROR", "errorCause":"test"  } }
     * fields.push(newField)
     * set quickMarcJson.fields = fields
-    * set quickMarcJson.relatedRecordVersion = 3
     * set quickMarcJson._actionType = 'edit'
     Given path 'records-editor/records', recordId
     And headers headersUser
@@ -104,7 +102,6 @@ Feature: Test quickMARC
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -126,7 +123,6 @@ Feature: Test quickMARC
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -150,7 +146,6 @@ Feature: Test quickMARC
         "externalId": "00000000-0000-0000-0000-000000000000",
         "leader": "00000naa\\a2200000uu\\4500",
         "parsedRecordDtoId": "00000000-0000-0000-0000-000000000000",
-        "relatedRecordVersion": 1,
         "marcFormat": "BIBLIOGRAPHIC",
         "suppressDiscovery": false,
         "updateInfo": {
@@ -212,7 +207,6 @@ Feature: Test quickMARC
     * def quickMarcJson = $
 
     * set quickMarcJson.fields[?(@.tag=='008')].content.Date1 = '123'
-    * set quickMarcJson.relatedRecordVersion = 1
     * def recordId = quickMarcJson.parsedRecordId
     * set quickMarcJson._actionType = 'edit'
 
@@ -232,7 +226,6 @@ Feature: Test quickMARC
     * def quickMarcJson = $
 
     * def wrongRecordId = 'c56b70ce-4ef6-47ef-8bc3-c470bafa0b8c'
-    * set quickMarcJson.relatedRecordVersion = 1
     * set quickMarcJson._actionType = 'edit'
 
     Given path 'records-editor/records', wrongRecordId
@@ -264,7 +257,6 @@ Feature: Test quickMARC
         "externalId": "00000000-0000-0000-0000-000000000000",
         "leader": "00000naa\\a2200000uu\\4500",
         "parsedRecordDtoId": "00000000-0000-0000-0000-000000000000",
-        "relatedRecordVersion": 1,
         "marcFormat": "BIBLIOGRAPHIC",
         "suppressDiscovery": false,
         "updateInfo": {

@@ -14,9 +14,9 @@ Feature: Authority update
 
     # Step 2: search for the created authority
     * def query = 'headingRef < "PAVELTEST" or headingRef >= "PAVELTEST"'
-    * def searchAuthorityCall = call searchAuthority
-    And match searchAuthorityCall.response.items[0].authority.id == '#notnull'
-    * def inventoryId = searchAuthorityCall.response.items[0].authority.id
+    * def browseAuthorityCall = call browseAuthority
+    And match browseAuthorityCall.response.items[0].authority.id == '#notnull'
+    * def inventoryId = browseAuthorityCall.response.items[0].authority.id
 
     # Step 3: get SRS id of found authority
     * def idType = 'AUTHORITY'

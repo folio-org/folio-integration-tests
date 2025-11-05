@@ -180,7 +180,7 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request valid_mapping
     When method POST
-    Then status 422
+    Then status 409
 
     # Verify the newly added mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'

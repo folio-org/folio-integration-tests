@@ -142,6 +142,7 @@ Feature: Cross-module integration tests
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
+    * call read("classpath:common/eureka/keycloak.feature@configureAccessTokenTime") { "AccessTokenLifespance" : 7200 }
 
   Scenario: Create admin user
     * def v = call createAdditionalUser { testUser: '#(testAdmin)', userPermissions: '#(adminPermissions)' }

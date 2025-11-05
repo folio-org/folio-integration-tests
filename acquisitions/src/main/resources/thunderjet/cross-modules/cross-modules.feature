@@ -193,3 +193,61 @@ Feature: cross-module integration tests
 
   Scenario: Encumbrance Remains 0 For Re Opened 0 Dollar Ongoing Order With Paid Invoice
     * call read('features/encumbrance-remains-0-for-re-opened-0-dollar-ongoing-order-with-paid-invoice.feature')
+
+  Scenario: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invoice And Receiving
+    * call read('features/unrelease-encumbrances-when-reopen-ongoing-order-with-related-paid-invoice-and-receiving.feature')
+
+  Scenario: Encumbrance Remains The Same After Cancelling Credited Invoice
+    * call read('features/encumbrance-remains-same-after-cancelling-credited-invoice.feature')
+
+  Scenario: Encumbrance Remains Same After Cancelling Credit Invoice With Another Paid Invoice
+    * call read('features/encumbrance-remains-same-after-cancelling-credit-invoice-with-another-paid-invoice.feature')
+
+  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid And Credited Invoices
+    * call read('features/encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-and-credited-invoices.feature')
+
+  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid Invoice Unreleasing And Canceling Credited Invoice
+    * call read('features/encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-paid-invoice-unreleasing-and-canceling-credited-invoice.feature')
+
+  Scenario: Encumbrance Remains 0 For Reopened One Time Order With Approved Invoice Unreleasing And Canceling Invoice
+    * call read('features/encumbrance-remains-0-for-reopened-one-time-order-with-approved-invoice-unreleasing-and-canceling-invoice.feature')
+
+  Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Credit And Paid Invoices Release True
+    * call read('features/encumbrance-remains-0-for-0-dollar-ongoing-order-after-canceling-credit-and-paid-invoices-release-true.feature')
+
+  Scenario: Encumbrance Updates Correctly After Canceling First Of Two Paid Invoices
+    * call read('features/encumbrance-updates-correctly-after-canceling-first-of-two-paid-invoices.feature')
+
+  Scenario: Encumbrance Unreleased After Cancelling Invoice And Reopening Order
+    * call read('features/encumbrance-unreleased-after-cancelling-invoice-and-reopening-order.feature')
+
+  Scenario: Encumbrance Calculated Correctly After Canceling Invoice With Other Paid And Credit Invoices
+    * call read('features/encumbrance-calculated-correctly-after-canceling-invoice-with-other-paid-and-credit-invoices.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice When Other Approved And Credit Invoices Exist Release False
+    * call read('features/encumbrance-calculated-correctly-after-canceling-approved-invoice-with-other-invoices-release-false.feature')
+
+  Scenario: Encumbrance Is Unreleased After Cancelling Related Approved Invoice And Re-Opening Order Release False
+    * call read('features/encumbrance-unreleased-after-cancelling-approved-invoice-and-re-opening-order-release-false.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice With Amount Exceeding Initial Encumbrance Release False
+    * call read('features/encumbrance-calculated-correctly-after-canceling-approved-invoice-exceeding-initial-encumbrance-release-false.feature')
+
+  Scenario: Encumbrance Remains The Same After Cancelling A Credited Approved Invoice Release False
+    * call read('features/encumbrance-remains-same-after-cancelling-credited-approved-invoice-release-false.feature')
+
+  Scenario: Encumbrance After Removing Fund Distribution From POL
+    * call read('features/encumbrance-after-removing-fund-distribution-from-pol.feature')
+
+  Scenario: Encumbrance Is Created As Released After Releasing It Manually And Changing The Fund Distribution
+    * call read('features/encumbrance-released-after-manual-release-and-fund-change-ongoing.feature')
+
+  Scenario: Encumbrance Is Created As Released After Changing The Fund Distribution With Paid Invoice Release True
+    * call read('features/encumbrance-released-after-fund-change-with-paid-invoice-release-true.feature')
+
+  Scenario: Encumbrance Is Created As Released After Manual Release And Fund Change With Paid Invoice Release False
+    * call read('features/encumbrance-released-after-manual-release-and-fund-change-with-paid-invoice-release-false.feature')
+
+  Scenario: Budget Summary And Encumbrances Updated Correctly When Editing POL With Related Invoice After Rollover Of Fiscal Year
+    * call read('features/budget-and-encumbrance-updated-correctly-after-editing-pol-with-invoice-after-rollover.feature')
+

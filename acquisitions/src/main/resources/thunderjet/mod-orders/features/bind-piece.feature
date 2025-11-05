@@ -415,7 +415,7 @@ Feature: Verify Bind Piece feature
 
 
     # 6. Check previous item1, item2 status of piece after bound
-    # Status of item1 and item2 should changed from "On order" to "Unavailable"
+    # Status of item1 and item2 should be changed from "On order" to "Unavailable"
     * configure headers = headersAdmin
     Given path 'inventory/tenant-items'
     And request { tenantItemPairs: [ { tenantId: "#(tenantId1)", itemId: "#(prevItemId1)" }, { tenantId: "#(tenantId2)", itemId: "#(prevItemId2)" } ] }
@@ -443,7 +443,8 @@ Feature: Verify Bind Piece feature
         enumeration: "420",
         chronology: "420",
         supplement: true,
-        barcode: "123123123"
+        barcode: "123123123",
+        sequenceNumber: 1
       }
       """
     When method PUT

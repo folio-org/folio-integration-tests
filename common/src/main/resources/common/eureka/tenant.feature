@@ -26,5 +26,6 @@ Feature: Tenants
     And header Content-Type = 'application/json'
     And header Accept = 'application/json'
     And header Authorization = 'Bearer ' + keycloakMasterToken
+    And header X-Okapi-Token = keycloakMasterToken
     When method DELETE
     Then status 204

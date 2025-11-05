@@ -36,6 +36,8 @@ Feature: Test export authority deleted
     * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
 
+    * pause(5000)
+
     # delete authority
     * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
@@ -43,6 +45,8 @@ Feature: Test export authority deleted
     When method DELETE
     Then status 204
     And def authorityDeletedId = response.id
+
+    * pause(5000)
 
     # get total number of job executions before export
     Given path 'data-export/job-executions'

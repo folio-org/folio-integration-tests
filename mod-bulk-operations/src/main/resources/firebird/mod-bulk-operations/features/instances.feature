@@ -7,12 +7,10 @@ Feature: mod bulk operations instances features
     * callonce variables
     * configure retry = { count: 5, interval: 10000 }
 
-
-  Scenario: Prevent bulk edit of instances with LINKED_DATA source
-
-    # This scenario verifies the error generation when attempting a bulk operation for
-    # an instance with the source LINKED_DATA. To achieve this, an attempt is made to initiate
-    # the bulk operation process for a pre-created instance with the source LINKED_DATA.
+  Scenario: Verify LINKED_DATA instances show error when uploading by UUID
+    # This scenario verifies that when uploading a CSV file with instance UUIDs that have
+    # LINKED_DATA source, they are properly displayed in the "Errors & warnings" accordion
+    # and cannot be processed in bulk operations.
 
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path 'bulk-operations/upload'
@@ -37,7 +35,7 @@ Feature: mod bulk operations instances features
 
     * pause(30000)
 
-    # Verify that the preview does not contain information about an instance with the source LINKED_DATA.
+    # Verify that the preview does not contain information about the LINKED_DATA instance
     Given path 'bulk-operations', operationId, 'preview'
     And param limit = '10'
     And param step = 'UPLOAD'
@@ -45,7 +43,8 @@ Feature: mod bulk operations instances features
     Then status 200
     And match response.rows == []
 
-    # Verify that the errors preview contains the required error about an instance with the source LINKED_DATA.
+    # Verify that the errors preview contains the required error about the LINKED_DATA instance
+    # This confirms the instance appears in the "Errors & warnings" accordion
     Given path 'bulk-operations', operationId, 'errors'
     And param limit = '10'
     And param offset = '0'
@@ -55,6 +54,21 @@ Feature: mod bulk operations instances features
     And match response.totalRecords == 1
     And match response.errors[0].message == 'Bulk edit of instances with source set to LINKED_DATA is not supported.'
     And match response.errors[0].type == 'ERROR'
+
+    # Verify the bulk operation status reflects the error condition
+    # Download and validate the CSV error file content
+    Given path 'bulk-operations', operationId, 'download'
+    And param fileContentType = 'RECORD_MATCHING_ERROR_FILE'
+    When method GET
+    Then status 200
+    * def cd = responseHeaders['Content-Disposition'][0]
+    * def filename = cd.replaceAll('.*filename="([^"]+)".*', '$1')
+    * def csvContent = response
+    * def csvString = new java.lang.String(csvContent, 'UTF-8')
+    * def csvLines = csvString.split('\n')
+    * print 'Extracted filename:', filename
+    And match csvLines[0] contains 'ERROR,in00000000237,Bulk edit of instances with source set to LINKED_DATA is not supported.'
+    And match filename contains 'Matching-Records-Errors-linked-data-instance-hrids'
 
   Scenario: Edit staff suppress for instances
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }

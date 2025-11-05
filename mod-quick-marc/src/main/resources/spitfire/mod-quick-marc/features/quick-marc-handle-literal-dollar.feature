@@ -20,7 +20,6 @@ Feature: Test MARC records literal dollar in subfield
 
     * print "Update subfields for 905 field"
     * marcBibRecord.fields[30].content = "$a Daniela Andrade - {dollar}{dollar}{dollar} $b song lyrics"
-    * set marcBibRecord.relatedRecordVersion = 1
     * set marcBibRecord._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(marcBibRecord.parsedRecordId)', record: '#(marcBibRecord)' }
 
@@ -52,7 +51,6 @@ Feature: Test MARC records literal dollar in subfield
 
     * print "Update subfield for 551 field"
     * authorityRecord.fields[5].content = "$a Test Ke{dollar}ha {dollar}100"
-    * set authorityRecord.relatedRecordVersion = 1
     * set authorityRecord._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(authorityRecord.parsedRecordId)', record: '#(authorityRecord)' }
 
@@ -84,7 +82,6 @@ Feature: Test MARC records literal dollar in subfield
 
     * print "Update subfield for 852 field"
     * marcHoldingRecord.fields[5].content = "$a{dollar}1 {dollar}{dollar}2"
-    * set marcHoldingRecord.relatedRecordVersion = 1
     * set marcHoldingRecord._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(marcHoldingRecord.parsedRecordId)', record: '#(marcHoldingRecord)' }
 
