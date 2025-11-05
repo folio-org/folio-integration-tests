@@ -93,9 +93,28 @@ Feature: Updating ownership of holdings and item api tests
     And match sharingInstance.status == 'COMPLETE'
 
     # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
-    #* configure headers = headersUniversity
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+    And match response.source == 'CONSORTIUM-FOLIO'
+
+    # Verify is shared instance is accessible on the central tenant
+    * configure headers = headersConsortia
+    * configure retry = { count: 10, interval: 10000 }
 
     Given path 'inventory/instances', instanceId
+    And retry until responseStatus == 200
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+
+    # Verify is shared instance is accessible from the college tenant
+    * configure headers = headersCollege
+    * configure retry = { count: 10, interval: 10000 }
+
+    Given path 'inventory/instances', instanceId
+    And retry until responseStatus == 200
     When method GET
     Then status 200
     And match response.id == instanceId
