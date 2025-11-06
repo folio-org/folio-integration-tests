@@ -20,11 +20,6 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.collection.get'       |
       | 'circulation-storage.request-policies.item.post'            |
-      | 'configuration.entries.collection.get'                      |
-      | 'configuration.entries.item.delete'                         |
-      | 'configuration.entries.item.get'                            |
-      | 'configuration.entries.item.post'                           |
-      | 'configuration.entries.item.put'                            |
       | 'orders-storage.settings.collection.get'                    |
       | 'orders-storage.settings.item.get'                          |
       | 'orders-storage.settings.item.post'                         |
@@ -141,7 +136,7 @@ Feature: Initialize mod-consortia integration tests
       | name                        |
       | 'mod-permissions'           |
       | 'okapi'                     |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-login-keycloak'        |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
@@ -195,10 +190,6 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.collection.get'       |
       | 'circulation-storage.request-policies.item.post'            |
-      | 'configuration.entries.collection.get'                      |
-      | 'configuration.entries.item.get'                            |
-      | 'configuration.entries.item.post'                           |
-      | 'configuration.entries.item.put'                            |
       | 'orders-storage.settings.collection.get'                    |
       | 'orders-storage.settings.item.get'                          |
       | 'orders-storage.settings.item.post'                         |

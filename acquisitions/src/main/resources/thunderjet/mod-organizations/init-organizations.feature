@@ -7,7 +7,7 @@ Feature: Initialize mod-organizations integration tests
 
     * table modules
       | name                        |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-permissions'           |
