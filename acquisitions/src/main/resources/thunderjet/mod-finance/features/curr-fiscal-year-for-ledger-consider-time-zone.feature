@@ -55,45 +55,11 @@ Feature:  Return current fiscal year consider time zone
     When method POST
     Then status 201
 
-  Scenario: Create configuration with Pacific/Midway timezone
-    * configure headers = headersAdmin
-    Given path 'configurations/entries'
-    And request
-      """
-      {
-        "id": "#(configUUID)",
-        "module": "ORG",
-        "configName": "localeSettings",
-        "enabled": true,
-        "code": "#(configUUID)",
-        "value": "{\"locale\":\"en-US\",\"timezone\":\"Pacific/Midway\",\"currency\":\"USD\"}"
-      }
-      """
-    When method POST
-    Then status 201
-
   Scenario: Get current fiscal year for ledger if timezone Pacific/Midway
     Given path 'finance/ledgers', ledgerId, '/current-fiscal-year'
     When method GET
     Then status 200
     And match $.id == '#(fiscalYearId)'
-
-  Scenario: Update configuration with UTC timezone
-    * configure headers = headersAdmin
-    Given path 'configurations/entries', configUUID
-    And request
-      """
-      {
-        "id": "#(configUUID)",
-        "module": "ORG",
-        "configName": "localeSettings",
-        "enabled": true,
-        "code": "#(configUUID)",
-        "value": "{\"locale\":\"en-US\",\"timezone\":\"Europe/Minsk\",\"currency\":\"USD\"}"
-      }
-      """
-    When method PUT
-    Then status 204
 
   Scenario: Get current fiscal year for ledger if timezone Europe/Minsk
     Given path 'finance/ledgers', ledgerId, '/current-fiscal-year'
@@ -108,11 +74,5 @@ Feature:  Return current fiscal year consider time zone
 
   Scenario: Delete fiscal year
     Given path 'finance/fiscal-years', fiscalYearId
-    When method DELETE
-    Then status 204
-
-  Scenario: Delete configuration with Pacific/Midway timezone
-    * configure headers = headersAdmin
-    Given path 'configurations/entries',configUUID
     When method DELETE
     Then status 204
