@@ -102,38 +102,38 @@ Feature: instance audit data
 
     * print "update title 11 times"
     * eval createdInstance['title'] = "TestInstanceTitleUpdated1"
-    * eval createdInstance['_version'] = "1"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 1
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated2"
-    * eval createdInstance['_version'] = "2"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 2
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated3"
-    * eval createdInstance['_version'] = "3"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 3
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated4"
-    * eval createdInstance['_version'] = "4"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 4
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated5"
-    * eval createdInstance['_version'] = "5"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 5
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated6"
-    * eval createdInstance['_version'] = "6"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 6
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated7"
-    * eval createdInstance['_version'] = "7"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 7
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated8"
-    * eval createdInstance['_version'] = "8"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 8
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated9"
-    * eval createdInstance['_version'] = "9"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 9
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated10"
-    * eval createdInstance['_version'] = "10"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 10
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
     * eval createdInstance['title'] = "TestInstanceTitleUpdated11"
-    * eval createdInstance['_version'] = "11"
-    * call read(modifyDataPath + '@UpdateInstance') { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
+    * eval createdInstance['_version'] = 11
+    * def v = call updateInstance { instanceId: '#(instanceId)', instance: '#(createdInstance)' }
 
     * def updatedSetting =
       """
