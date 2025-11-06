@@ -45,11 +45,10 @@ Feature: Authority update
     * def createdAuthorityGraphResponse = getCreatedAuthorityGraphCall.response
     And match createdAuthorityGraphResponse.label == 'PAVELTEST'
     And match createdAuthorityGraphResponse.doc['http://library.link/vocab/resourcePreferred'][0] == 'false'
-    And match createdAuthorityGraphResponse.outgoingEdges.edges['https://bibfra.me/vocab/lite/replacedBy'][0] == '#notnull'
-    * def updatedAuthorityId = createdAuthorityGraphResponse.outgoingEdges.edges['https://bibfra.me/vocab/lite/replacedBy'][0]
+    And match createdAuthorityGraphResponse.outgoingEdges[?(@.predicate == 'REPLACED_BY')] == '#notnull'
+    * def updatedAuthorityId = createdAuthorityGraphResponse.outgoingEdges[?(@.predicate == 'REPLACED_BY')].target.id
 
     # Step 7: get and check the updated authority graph
-    * def resourceId = updatedAuthorityId
     * def getUpdatedAuthorityGraphCall = call getResourceGraph
     * def updatedAuthorityGraphResponse = getUpdatedAuthorityGraphCall.response
     And match updatedAuthorityGraphResponse.label == 'PAVELTEST, 1986'
