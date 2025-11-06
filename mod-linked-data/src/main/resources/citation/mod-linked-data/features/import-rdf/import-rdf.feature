@@ -76,7 +76,7 @@ Feature: Import Bibframe2 RDF
     * def instanceGraphCall = call getResourceGraph
     * def instanceGraph = instanceGraphCall.response
 
-    * def adminMetadataId = instanceGraph.outgoingEdges.edges['http://bibfra.me/vocab/library/adminMetadata'][0]
+    * def adminMetadataId = instanceGraph.outgoingEdges[?(@.predicate == 'ADMIN_METADATA')].target.id
     * def adminMetadataGraphCall = call getResourceGraph { resourceId:  '#(adminMetadataId)' }
     * def adminMetadataGraph = adminMetadataGraphCall.response
     * retry until karate.exists(adminMetadataGraph.doc['http://bibfra.me/vocab/library/controlNumber']) == true
