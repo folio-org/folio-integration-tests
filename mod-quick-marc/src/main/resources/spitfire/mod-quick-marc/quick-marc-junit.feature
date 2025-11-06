@@ -51,6 +51,7 @@ Feature: mod-quick-marc integration tests
       | 'specification-storage.specification.fields.item.post'      |
       | 'specification-storage.specifications.item.get'             |
       | 'specification-storage.subfields.item.put'                  |
+      | 'specification-storage.specification.rules.item.patch'      |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
