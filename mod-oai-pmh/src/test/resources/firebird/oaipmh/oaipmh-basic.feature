@@ -24,7 +24,6 @@ Feature: oai-pmh basic tests
     #=========================SETUP================================================
     Given call read('classpath:common/setup-users.feature')
     * callonce read('classpath:common/login.feature') testUser
-    * callonce read('classpath:global/setup-data.feature')
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'text/xml', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
     #=========================SETUP=================================================
 

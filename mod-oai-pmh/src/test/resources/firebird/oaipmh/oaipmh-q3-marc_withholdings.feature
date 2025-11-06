@@ -5,8 +5,6 @@ Feature: Test enhancements to oai-pmh
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-    * callonce read('classpath:global/init_data/mod_configuration_init_data.feature')
-    * callonce read('classpath:global/init_data/mod_inventory_init_data.feature')
     * callonce resetConfiguration
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 

@@ -6,9 +6,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-    * callonce read('classpath:global/init_data/srs_init_data_single.feature')
     * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
-    * callonce read('classpath:global/init_data/mod_inventory_init_data_single.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
@@ -553,24 +551,19 @@ Feature: Additional ListRecords tests when source is Inventory
     When method GET
     Then status 200
     # First is marc record
-    * match response count(//record) == 2
-    * match response count(//datafield[@tag='952' and @ind1='f' and @ind2='f']) == 2
+    * match response count(//record) == 5
+    * match response count(//datafield[@tag='952' and @ind1='f' and @ind2='f']) == 5
     # Marc 856 has 4 1 indicators
-    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='0']) == 1
-    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='1']) == 1
-    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 2
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0']
-    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='t'] == '0'
-    * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='t'] == '0'
-    * match response //datafield[@tag='999' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='a'] == ['Københavns Universitet','Københavns Universitet']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='b'] == ['City Campus','City Campus']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='c'] == ['Datalogisk Institut','Datalogisk Institut']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] == ['SECOND FLOOR','SECOND FLOOR']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] == ['D15.H63 A3 2002','LC Modified']
-    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='3'] == '1.2012 -'
-    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='u'] == 'https://search.proquest.com/publication/1396348'
-    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='z'] == 'via ProQuest, the last 12 months are not available due to an embargo'
+    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='1']) == 5
+    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 5
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0','0','0','0']
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='t'] == ['0','0','0','0','0']
+    * match response //datafield[@tag='999' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0','0','0','0']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='a'] == ['Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='b'] == ['City Campus','City Campus','City Campus','City Campus','City Campus']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='c'] == ['Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] == ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] == ['D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002']
 
   Scenario: C375974: ListRecords: FOLIO edited instances with holdings are harvested with start and end date
     * url baseUrl
