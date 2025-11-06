@@ -126,7 +126,7 @@ Feature: Overdue fine policies tests
     And match $.errors[0].message == expectedErrMsg
 
   Scenario: Should return 401 when overdue fine policy is posted with incorrect x-okapi-tenant header
-    * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
+    * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ', 'x-okapi-tenant': 'invalidTenant' }
     * def requestEntity = read('samples/policies/overdue-fine-policy-entity-request.json')
     * requestEntity.name = "name 7"
 

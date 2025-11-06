@@ -124,7 +124,7 @@ Feature: Lost item fee policies tests
     And match $.errors[0].message == expectedErrMsg
 
   Scenario: Should return 401 when lost item fee policy is posted with incorrect x-okapi-tenant header
-    * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ' }
+    * configure headers = { 'x-okapi-token': 'eyJhbGciO.bnQ3MjEwOTc1NTk3OT.nKA7fCCabh3lPcVEQ', 'x-okapi-tenant': 'invalidTenant' }
     * def requestEntity = read('samples/policies/lost-item-fee-policy-entity-request.json')
 
     Given path 'lost-item-fees-policies'

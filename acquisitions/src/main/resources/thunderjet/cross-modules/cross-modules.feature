@@ -247,6 +247,9 @@ Feature: cross-module integration tests
 
   Scenario: Encumbrance Is Created As Released After Manual Release And Fund Change With Paid Invoice Release False
     * call read('features/encumbrance-released-after-manual-release-and-fund-change-with-paid-invoice-release-false.feature')
+    
+  Scenario: Budget Summary And Encumbrances Updated Correctly When Editing POL With Related Invoice After Rollover Of Fiscal Year
+    * call read('features/budget-and-encumbrance-updated-correctly-after-editing-pol-with-invoice-after-rollover.feature')
 
   Scenario: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
     * call read('features/cancel-paid-invoice-after-changing-fund-distribution.feature')
