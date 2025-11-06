@@ -97,13 +97,6 @@ Feature: Init data for mod-data-export-spring
     When method PUT
     Then status 204
 
-  @GetLocaleSettings
-  Scenario: Get locale settings
-    Given path 'configurations/entries'
-    And param query = '(configName==localeSettings)'
-    When method GET
-    Then status 200
-
   @AddIntegrationToOrganization
   Scenario: Add integration to specified organization
     * def exportConfigRequest = read('this:../samples/export-config.json')
