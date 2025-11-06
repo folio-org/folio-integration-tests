@@ -11,7 +11,7 @@ Feature: Initialize mod-invoice integration tests
       | 'mod-permissions'           |
       | 'mod-users'                 |
       | 'mod-permissions'           |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-invoice'               |
       | 'mod-invoice-storage'       |
       | 'mod-finance'               |
