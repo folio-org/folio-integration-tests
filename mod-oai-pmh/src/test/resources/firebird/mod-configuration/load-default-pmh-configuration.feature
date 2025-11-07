@@ -3,7 +3,6 @@ Feature: Test integration with mod-configuration during Posting the mod-oai-pmh 
   Background:
     * url baseUrl
     * callonce login testUser
-    * callonce read('classpath:global/setup-data.feature')
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
     #=========================SETUP=================================================
 

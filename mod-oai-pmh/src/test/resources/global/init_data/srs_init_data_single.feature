@@ -2,6 +2,7 @@ Feature: init datas for srs
 
   Background:
     * url baseUrl
+    * callonce login testUser
 
   Scenario: create snapshot and post records
     Given path 'source-storage/snapshots'
