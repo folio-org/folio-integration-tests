@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Test enhancements to oai-pmh
 
   Background:
