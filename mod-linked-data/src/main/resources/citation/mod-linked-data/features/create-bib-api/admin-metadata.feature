@@ -10,7 +10,7 @@ Feature: Admin metadata
     * def instanceGraphCall = call getResourceGraph { resourceId:  '#(instanceId)' }
     * def instanceGraph = instanceGraphCall.response
 
-    * def adminMetadataId = instanceGraph.outgoingEdges.edges['http://bibfra.me/vocab/library/adminMetadata'][0]
+    * def adminMetadataId = instanceGraph.outgoingEdges.filter(x => x.predicate == 'ADMIN_METADATA')[0].target.id
     * def adminMetadataGraphCall = call getResourceGraph { resourceId:  '#(adminMetadataId)' }
     * def adminMetadataGraph = adminMetadataGraphCall.response
     * retry until karate.exists(adminMetadataGraph.doc['http://bibfra.me/vocab/library/controlNumber']) == true
@@ -21,7 +21,7 @@ Feature: Admin metadata
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/library/catalogingAgency'][0] == 'DLC'
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/library/transcribingAgency'][0] == 'LoC'
 
-    * def catalogingLanguageId = adminMetadataGraph.outgoingEdges.edges['http://bibfra.me/vocab/lite/catalogingLanguage'][0]
+    * def catalogingLanguageId = adminMetadataGraph.outgoingEdges.filter(x => x.predicate == 'CATALOGING_LANGUAGE')[0].target.id
     * def catalogingLanguageGraphCall = call getResourceGraph { resourceId:  '#(catalogingLanguageId)' }
     * def catalogingLanguageGraph = catalogingLanguageGraphCall.response
     * match catalogingLanguageGraph.doc['http://bibfra.me/vocab/lite/link'][0] == 'http://id.loc.gov/vocabulary/languages/eng'

@@ -63,3 +63,4 @@ Feature: bulk operations integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
+    Given call read('classpath:global/setup-data.feature')
