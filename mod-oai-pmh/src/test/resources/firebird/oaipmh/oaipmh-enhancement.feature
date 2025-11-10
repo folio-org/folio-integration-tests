@@ -57,7 +57,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
+    * match response count(//record) == 9
 
   Scenario: get ListIdentifiers for marc21_withholdings
     And param verb = 'ListIdentifiers'
@@ -173,7 +173,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#notnull'
-    And match response //resumptionToken/@cursor == '4'
+    And match response //resumptionToken/@cursor == '3'
     And def resumptionToken = get response //resumptionToken
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
@@ -185,10 +185,10 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#present'
-    And match response //resumptionToken/@cursor == '8'
+    And match response //resumptionToken/@cursor == '7'
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
-    And match totalRecords == 10
+    And match totalRecords == 9
 
     Examples:
       | prefix                |
@@ -219,7 +219,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
+    * match response count(//record) == 9
 
     # set deleted record support to no
     * def deletedRecordsSupportConfig = 'no'
@@ -268,7 +268,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 9
+    * match response count(//record) == 8
 
     #return record to original state
     Given url baseUrl
@@ -302,7 +302,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
+    * match response count(//record) == 9
     * match response //header[@status='deleted'] == '#notnull'
 
     #return record to original state
@@ -337,7 +337,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     * match response count(//record) == 10
-    * match response count(//header[@status='deleted']) == 1
+    * match response count(//header[@status='deleted']) == 2
 
   Scenario: Verify that resumption Token contains tenantId and all the other required parameters
     * def maxRecordsPerResponseConfig = '5'

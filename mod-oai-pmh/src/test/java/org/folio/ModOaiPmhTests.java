@@ -65,4 +65,24 @@ public class ModOaiPmhTests extends TestBaseEureka {
     void loadDefaultConfigurationTests() {
         runFeature("classpath:firebird/mod-configuration/load-default-pmh-configuration.feature");
     }
+
+    @Test
+    void oaiPmhGetRecordMarcDeletedSrsTests() {
+        runFeatureTest("oaipmh-getrecord-deleted-C729189");
+    }
+
+    @Test
+    void oaiPmhGetRecordMarcDeletedSrsInvTests() {
+        runFeatureTest("oaipmh-getrecord-deleted-C729193");
+    }
+
+    @Test
+    void oaiPmhGetRecordFolioDeletedInvTests() {
+        runFeatureTest("oaipmh-getrecord-deleted-C729198");
+    }
+
+    @Test
+    void oaiPmhGetRecordFolioDeletedSrsInvTests() {
+        runFeatureTest("oaipmh-getrecord-deleted-C729199");
+    }
 }
