@@ -552,19 +552,19 @@ Feature: Additional ListRecords tests when source is Inventory
     When method GET
     Then status 200
     # First is marc record
-    * match response count(//record) == 5
-    * match response count(//datafield[@tag='952' and @ind1='f' and @ind2='f']) == 5
+    * match response count(//record) == 4
+    * match response count(//datafield[@tag='952' and @ind1='f' and @ind2='f']) == 4
     # Marc 856 has 4 1 indicators
-    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='1']) == 5
-    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 5
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0','0','0','0']
-    * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='t'] == ['0','0','0','0','0']
-    * match response //datafield[@tag='999' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0','0','0','0']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='a'] == ['Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='b'] == ['City Campus','City Campus','City Campus','City Campus','City Campus']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='c'] == ['Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] == ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] == ['D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002']
+    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='1']) == 4
+    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 4
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0','0','0']
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='t'] == ['0','0','0','0']
+    * match response //datafield[@tag='999' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0','0','0']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='a'] == ['Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='b'] == ['City Campus','City Campus','City Campus','City Campus']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='c'] == ['Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] == ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] == ['D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002']
 
   Scenario: C375974: ListRecords: FOLIO edited instances with holdings are harvested with start and end date
     * url baseUrl
