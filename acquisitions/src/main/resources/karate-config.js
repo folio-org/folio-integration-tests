@@ -11,7 +11,7 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:8000',
-    edgeUrl: 'http://localhost:9000',
+    edgeUrl: 'http://localhost:19000',
     ftpUrl: 'ftp://ftp.ci.folio.org',
     ftpPort:  21,
     ftpUser: 'folio',
