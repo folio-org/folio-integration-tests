@@ -65,6 +65,7 @@ Feature: mod-consortia and mod-data-export integration tests
     * call read('consortia/sharing-instance.feature')
 
   Scenario: Data export in consortia
+    * pause(5000)
     * call read('consortia/export.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
