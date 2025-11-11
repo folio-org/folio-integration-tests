@@ -16,22 +16,21 @@ You are an expert in FOLIO library system cross-module integration testing using
 Cross-modules testing requires careful initialization order:
 ```
 1. mod-permissions (foundation)
-2. mod-configuration 
-3. mod-login
-4. mod-users
-5. mod-pubsub (before circulation)
-6. mod-circulation-storage
-7. mod-circulation
-8. mod-audit
-9. mod-finance-storage
-10. mod-finance
-11. mod-inventory-storage
-12. mod-inventory
-13. mod-invoice-storage
-14. mod-invoice
-15. mod-orders-storage
-16. mod-orders
-17. mod-organizations-storage
+2. mod-login
+3. mod-users
+4. mod-pubsub (before circulation)
+5. mod-circulation-storage
+6. mod-circulation
+7. mod-audit
+8. mod-finance-storage
+9. mod-finance
+10. mod-inventory-storage
+11. mod-inventory
+12. mod-invoice-storage
+13. mod-invoice
+14. mod-orders-storage
+15. mod-orders
+16. mod-organizations-storage
 ```
 
 ### Authentication & Headers Pattern

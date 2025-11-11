@@ -67,6 +67,21 @@ Feature: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
     * def v = call payInvoice { invoiceId: "#(invoiceId)" }
 
     #========================================================================================================
+    # DEBUG: All Transactions Before Fund Distribution Change
+    #========================================================================================================
+
+    * print 'All Transactions Before Fund Distribution Change'
+    Given path 'finance/transactions'
+    And param query = 'encumbrance.sourcePoLineId==' + poLineId
+    When method GET
+    Then status 200
+
+    Given path 'finance/transactions'
+    And param query = 'sourceInvoiceLineId==' + invoiceLineId
+    When method GET
+    Then status 200
+
+    #========================================================================================================
     # TestRail Case Steps
     #========================================================================================================
 
@@ -90,6 +105,23 @@ Feature: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
     And request poLine
     When method PUT
     Then status 204
+
+    #========================================================================================================
+    # DEBUG: All Transactions After Fund Distribution Change
+    #========================================================================================================
+
+    * print 'All Transactions After Fund Distribution Change'
+    Given path 'finance/transactions'
+    And param query = 'encumbrance.sourcePoLineId==' + poLineId
+    When method GET
+    Then status 200
+
+    Given path 'finance/transactions'
+    And param query = 'sourceInvoiceLineId==' + invoiceLineId
+    When method GET
+    Then status 200
+
+    #========================================================================================================
 
     # 11. Verify PO Line Shows Fund B With Current Encumbrance $0
     * print '11. Verify PO Line Shows Fund B With Current Encumbrance $0'
@@ -141,7 +173,7 @@ Feature: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
              response.encumbered == 0.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 0.00 &&
-             response.credited == 0.00 &&
+             response.credits == 0.00 &&
              response.unavailable == 0.00 &&
              response.overEncumbrance == 0.00 &&
              response.overExpended == 0.00 &&

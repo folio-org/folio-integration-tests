@@ -162,7 +162,8 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void encumbranceReleasedAfterManualReleaseAndFundChangeWithPaidInvoiceReleaseFalse() {
     runFeatureTest("encumbrance-released-after-manual-release-and-fund-change-with-paid-invoice-release-false");
   }
-    
+
+  @Test
   @DisplayName("(Thunderjet) (C357580) Budget Summary And Encumbrances Updated Correctly When Editing POL With Related Invoice After Rollover Of Fiscal Year")
   void budgetAndEncumbranceUpdatedCorrectlyAfterEditingPolWithInvoiceAfterRollover() {
     runFeatureTest("budget-and-encumbrance-updated-correctly-after-editing-pol-with-invoice-after-rollover");
