@@ -53,7 +53,7 @@ Feature: mod-consortia and mod-data-export integration tests
   Scenario: Create ['central', 'university'] tenants and set up admins
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
-    * pause(5000)
+    * pause(20000)
 
   Scenario: Consortium api tests
     * call read('consortia/consortium.feature')
@@ -65,7 +65,6 @@ Feature: mod-consortia and mod-data-export integration tests
     * call read('consortia/sharing-instance.feature')
 
   Scenario: Data export in consortia
-    * pause(5000)
     * call read('consortia/export.feature')
 
   Scenario: Destroy created ['university', 'central'] tenants
