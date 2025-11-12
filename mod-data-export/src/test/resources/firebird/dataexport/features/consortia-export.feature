@@ -8,12 +8,14 @@ Feature: mod-consortia and mod-data-export integration tests
     * callonce login admin
     * configure readTimeout = 600000
 
+    # Ensure mod-data-export is entitled for tenants
     * table modules
-      | name                        |
-      | 'mod-login'                 |
-      | 'mod-inventory'             |
-      | 'mod-permissions'           |
-      | 'okapi'                     |
+      | name              |
+      | 'mod-login'       |
+      | 'mod-inventory'   |
+      | 'mod-permissions' |
+      | 'okapi'           |
+      | 'mod-data-export' |
 
     * table userPermissions
       | name                                            |
