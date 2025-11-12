@@ -646,7 +646,7 @@ Feature: Entity types
 
 
 
-  Scenario: Test available joins API for custom entity types (nothing -> custom ET -> targetId -> targetField)
+  Scenario: Test available joins API for custom entity types (nothing -> custom ET -> targetId)
     # 1. Set the body to {} and make the request
     * def availableJoinsBody = {}
     Given path 'entity-types/custom/available-joins'
@@ -656,7 +656,7 @@ Feature: Entity types
     # 2. Verify that the response has a non-empty availableTargetIds property (array of objects)
     And assert response.availableTargetIds.length > 0
 
-    # 3. Add a customEntityType property to the request body JSON object (with a users source)
+    # 3. Add a sources property to the request body JSON object (with a users source)
     * def sourcesForJoins =
       """{
         "sources": [
@@ -678,9 +678,9 @@ Feature: Entity types
     And request availableJoinsBody
     When method POST
     Then status 200
-    # 5. Verify non-empty availableTargetIds and availableSourceFields
+    # 5. Verify non-empty target ID and null availableJoinConditions
     And assert response.availableTargetIds.length > 0
-    And assert response.availableSourceFields == null
+    And assert response.availableJoinConditions == null
 
     # 6. Add a targetId property to the request body (groups targetId from above)
     * set availableJoinsBody.targetId = 'e7717b38-4ff3-4fb9-ae09-b3d0c8400710'
@@ -690,19 +690,11 @@ Feature: Entity types
     And request availableJoinsBody
     When method POST
     Then status 200
-    # 8. Verify availableSourceFields and availableTargetFields are non-empty
-    And assert response.availableSourceFields.length > 0
-    And assert response.availableTargetFields.length > 0
+    # 8. Verify availableJoinConditions is non-empty
+    And assert response.availableTargetIds == null
+    And assert response.availableJoinConditions.length > 0
 
-    # 9. Add a targetField property to the request body with value "id"
-    * set availableJoinsBody.targetField = 'id'
-
-    # 10. Do another POST with this updated body
-    Given path 'entity-types/custom/available-joins'
-    And request availableJoinsBody
-    When method POST
-    Then status 200
-    # 11. Verify availableSourceFields is an array with a single element for 'users.group_id' (it's a value+label, but we only care about the label)
-    And match $.availableSourceFields == '#[1]'
-    And match $.availableSourceFields[0].value == 'users.group_id'
+    # 9. Verify availableJoinConditions is an array with a single element for 'users.group_id' (it's a value+label, but we only care about the label)
+    And match $.availableJoinConditions == '#[1]'
+    And match $.availableJoinConditions[0].sourceField.value == 'users.group_id'
     

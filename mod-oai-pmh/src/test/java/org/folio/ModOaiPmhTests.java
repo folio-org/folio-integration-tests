@@ -85,4 +85,16 @@ public class ModOaiPmhTests extends TestBaseEureka {
     void oaiPmhGetRecordFolioDeletedSrsInvTests() {
         runFeatureTest("oaipmh-getrecord-deleted-C729199");
     }
+
+    @Test
+    void oaiPmhListIdentifiersDeletedC729195() {
+        runFeatureTest("oaipmh-listidentifiers-deleted-C729195");
+    }
+
+    @Test
+    void oaiPmhListIdentifiersDeletedC729201() {
+        runFeatureTest("oaipmh-listidentifiers-deleted-C729201");
+    }
+
+
 }

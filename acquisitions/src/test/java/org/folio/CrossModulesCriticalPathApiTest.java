@@ -168,4 +168,10 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void budgetAndEncumbranceUpdatedCorrectlyAfterEditingPolWithInvoiceAfterRollover() {
     runFeatureTest("budget-and-encumbrance-updated-correctly-after-editing-pol-with-invoice-after-rollover");
   }
+  
+  @Test
+  @DisplayName("(Thunderjet) (C895660) Cancel A Paid Invoice After Changing Fund Distribution In The PO Line")
+  void cancelPaidInvoiceAfterChangingFundDistribution() {
+    runFeatureTest("cancel-paid-invoice-after-changing-fund-distribution");
+  }
 }
