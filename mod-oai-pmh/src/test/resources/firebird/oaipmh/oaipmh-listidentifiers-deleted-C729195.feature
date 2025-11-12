@@ -86,7 +86,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     * call sleep 3000
 
 
-  @Positive @ListIdentifiersDeleted
+  @Positive @C729195
   Scenario: Verify deleted MARC instances are harvested via ListIdentifiers with date range
 
     # Save original instance states before modification
@@ -254,7 +254,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
 
     * call sleep 5000
 
-  @Negative @ListIdentifiersDeletedSuppressed
+  @Negative @C729195
   Scenario: Verify deleted MARC instances are NOT harvested when suppressed records processing is set to skip
 
     # Save original instance states before modification
