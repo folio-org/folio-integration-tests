@@ -314,14 +314,12 @@ Feature: Test Data-Import holdings records
 
   @SetDefaultPoLinesLimit
   Scenario: set default poLinesLimit in config
-    Given path 'configurations/entries'
+    Given path '/orders-storage/settings'
     And headers headersUser
     And request
     """
     {
-      "module": "ORDERS",
-      "configName": "poLines-limit",
-      "enabled": true,
+      "key": "poLines-limit",
       "value": "#(defaultPoLineLimit)"
     }
     """
