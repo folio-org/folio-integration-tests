@@ -6,6 +6,7 @@ Feature: mod-consortia and mod-data-export integration tests
   Background:
     * url baseUrl
     * callonce login admin
+    * configure readTimeout = 600000
 
     * table modules
       | name                        |
@@ -53,7 +54,6 @@ Feature: mod-consortia and mod-data-export integration tests
   Scenario: Create ['central', 'university'] tenants and set up admins
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
-    * pause(20000)
 
   Scenario: Consortium api tests
     * call read('consortia/consortium.feature')
