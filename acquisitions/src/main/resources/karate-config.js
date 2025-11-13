@@ -8,6 +8,7 @@ function fn() {
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
+  var testEdgeUser = karate.properties['testEdgeUser'];
 
   var config = {
     baseUrl: 'http://localhost:8000',
@@ -25,6 +26,7 @@ function fn() {
 
     testTenant: testTenant,
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    testEdgeUser: testEdgeUser,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 

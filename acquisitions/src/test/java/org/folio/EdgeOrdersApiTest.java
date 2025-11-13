@@ -32,6 +32,7 @@ class EdgeOrdersApiTest extends TestBaseEureka {
   @BeforeAll
   void edgeOrdersApiTestBeforeAll() {
     System.setProperty("testTenant", "testedgeorders");
+    System.setProperty("testEdgeUser", "test-user");
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/edge-orders/init-edge-orders.feature");
   }

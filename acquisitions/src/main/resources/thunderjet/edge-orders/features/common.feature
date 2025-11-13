@@ -29,7 +29,7 @@ Feature: Edge Orders COMMON
         return encoded;
       }
       """
-    * def apiKey = generateApiKey('testedgeorders', 'test-user')
+    * def apiKey = generateApiKey(testTenant, testEdgeUser)
     * configure retry = { count: 10, interval: 5000 }
 
   @Positive
