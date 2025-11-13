@@ -1,3 +1,4 @@
+@parallel=false
 Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harvested
 
   # TestRail Case ID: C729189

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Additional ListRecords tests
 
   Background:

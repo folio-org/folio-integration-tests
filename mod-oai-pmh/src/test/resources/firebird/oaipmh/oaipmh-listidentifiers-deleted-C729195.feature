@@ -1,3 +1,4 @@
+@parallel=false
 Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are harvested with date range
 
   # Based on C729195 but modified for ListIdentifiers with date range and multiple records
