@@ -24,6 +24,8 @@ Feature: Initialize edge-orders integration tests
       | "mod-organizations-storage" |
       | "mod-permissions"           |
       | "mod-users"                 |
+      | "folio_stripes-core"        |
+      | "folio_tenant-settings"     |
 
     * table userPermissions
       | name                                                      |
@@ -57,6 +59,8 @@ Feature: Initialize edge-orders integration tests
       | "organizations.organizations.item.post"                   |
       | "orders-storage.custom-fields.collection.get"             |
       | "users.collection.get"                                    |
+      | "mod-settings.entries.collection.get"                     |
+      | "ui-tenant-settings.settings.addresses"                   |
 
     * table adminPermissions
       | name                                                          |
