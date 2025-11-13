@@ -1,3 +1,4 @@
+@parallel=false
 Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO Instances are harvested
 
   # TestRail Case ID: C729201

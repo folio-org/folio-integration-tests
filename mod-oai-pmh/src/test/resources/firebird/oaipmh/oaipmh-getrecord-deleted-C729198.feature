@@ -1,3 +1,4 @@
+@parallel=false
 Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are harvested
 
   # TestRail Case ID: C729198
