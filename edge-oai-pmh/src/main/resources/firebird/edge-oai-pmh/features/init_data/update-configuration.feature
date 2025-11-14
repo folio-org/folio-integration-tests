@@ -7,8 +7,8 @@ Feature: update configuration
 
   @TechnicalConfig
   Scenario: set technical config
-    Given path 'configurations/entries'
-      And param query = 'module==OAIPMH and configName==technical'
+    Given path 'oai-pmh/configuration-settings'
+      And param query = 'name=technical'
       And header Accept = 'application/json'
       And header Content-Type = 'application/json'
       And header x-okapi-token = okapiTokenAdmin
@@ -16,16 +16,19 @@ Feature: update configuration
       When method GET
       Then status 200
 
-    * def configId = response.configs[0].id
+    * def configId = response.configurationSettings[0].id
 
-    Given path 'configurations/entries', configId
+    Given path 'oai-pmh/configuration-settings', configId
     And request
     """
     {
-      "module" : "OAIPMH",
+      "id" : configId,
       "configName" : "technical",
-      "enabled" : true,
-      "value" : "{\"maxRecordsPerResponse\":\"1\",\"enableValidation\":\"false\",\"formattedOutput\":\"false\"}"
+      "configValue" : {
+        "maxRecordsPerResponse" : "1",
+        "enableValidation" : "false",
+        "formattedOutput" : "false"
+      }
     }
     """
     And header Accept = 'application/json'
@@ -37,8 +40,8 @@ Feature: update configuration
 
   @BehaviorConfig
   Scenario: set behavior config
-    Given path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path 'oai-pmh/configuration-settings'
+    And param query = 'name=behavior'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
@@ -48,14 +51,18 @@ Feature: update configuration
 
     * def configId = response.configs[0].id
 
-    Given path 'configurations/entries', configId
+    Given path 'oai-pmh/configuration-settings', configId
     And request
     """
     {
-      "module" : "OAIPMH",
+      "id" : configId,
       "configName" : "behavior",
-      "enabled" : true,
-      "value" : "{\"suppressedRecordsProcessing\":\"true\",\"recordsSource\":\"Source record storage\",\"deletedRecordsSupport\":\"persistent\",\"errorsProcessing\":\"200\"}"
+      "configValue" : {
+        "deletedRecordsSupport" : "persistent",
+        "suppressedRecordsProcessing" : "true",
+        "recordsSource" : "Source record storage",
+        "errorsProcessing": "200"
+      }
     }
     """
     And header Accept = 'application/json'
