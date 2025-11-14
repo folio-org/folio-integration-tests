@@ -49,7 +49,7 @@ Feature: update configuration
     When method GET
     Then status 200
 
-    * def configId = response.configs[0].id
+    * def configId = response.configurationSettings[0].id
 
     Given path 'oai-pmh/configuration-settings', configId
     And request
