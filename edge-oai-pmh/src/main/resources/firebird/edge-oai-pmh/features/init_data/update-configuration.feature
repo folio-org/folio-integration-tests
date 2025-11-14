@@ -8,7 +8,7 @@ Feature: update configuration
   @TechnicalConfig
   Scenario: set technical config
     Given path 'oai-pmh/configuration-settings'
-      And param name='technical'
+      And param name = 'technical'
       And header Accept = 'application/json'
       And header Content-Type = 'application/json'
       And header x-okapi-token = okapiTokenAdmin
@@ -61,7 +61,7 @@ Feature: update configuration
         "deletedRecordsSupport" : "persistent",
         "suppressedRecordsProcessing" : "true",
         "recordsSource" : "Source record storage",
-        "errorsProcessing": "200"
+        "errorsProcessing" : "200"
       }
     }
     """
