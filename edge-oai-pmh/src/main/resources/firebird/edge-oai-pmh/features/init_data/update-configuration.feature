@@ -8,7 +8,7 @@ Feature: update configuration
   @TechnicalConfig
   Scenario: set technical config
     Given path 'oai-pmh/configuration-settings'
-      And param query = 'name=technical'
+      And param name='technical'
       And header Accept = 'application/json'
       And header Content-Type = 'application/json'
       And header x-okapi-token = okapiTokenAdmin
@@ -41,7 +41,7 @@ Feature: update configuration
   @BehaviorConfig
   Scenario: set behavior config
     Given path 'oai-pmh/configuration-settings'
-    And param query = 'name=behavior'
+    And param name = 'behavior'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
