@@ -43,10 +43,8 @@ Feature: mod-audit integration tests
       | 'inventory-storage.call-number-types.item.post'                               |
       | 'inventory-storage.loan-types.item.post'                                      |
       | 'inventory-storage.material-types.item.post'                                  |
-      | 'configuration.entries.item.post'                                             |
-      | 'configuration.entries.collection.get'                                        |
-      | 'configuration.entries.item.get'                                              |
-      | 'configuration.entries.item.put'                                              |
+      | 'oai-pmh.configuration-settings.item.put'                                     |
+      | 'oai-pmh.configuration-settings.collection.get'                               |
       | 'inventory-storage.holdings.item.get'                                         |
       | 'inventory-storage.items.collection.get'                                      |
       | 'inventory-storage.items.item.get'                                            |
