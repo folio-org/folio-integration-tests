@@ -11,7 +11,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-    * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
+    * callonce read('classpath:global/init_data/configuration_set_source_SRS_and_inventory.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
@@ -283,27 +283,24 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
 
     # Step 5: Change "Suppressed records processing" setting to "Skip suppressed from discovery records"
     Given url baseUrl
-    And path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path 'oai-pmh/configuration-settings'
+    And param name = 'behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET
     Then status 200
-    * def behaviorConfig = response.configs[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.value)
-    * def originalSuppressedRecordsProcessing = behaviorValue.suppressedRecordsProcessing
+    * def behaviorConfig = response.configurationSettings[0]
+    * def originalSuppressedRecordsProcessing = behaviorValue.configValue.suppressedRecordsProcessing
 
     # Update configuration to skip suppressed from discovery records
-    * set behaviorValue.suppressedRecordsProcessing = 'Skip suppressed from discovery records'
-    * string updatedBehaviorValue = behaviorValue
-    * set behaviorConfig.value = updatedBehaviorValue
+    * set behaviorConfig.configValue.suppressedRecordsProcessing = 'Skip suppressed from discovery records'
 
-    Given path '/configurations/entries', behaviorConfig.id
+    Given path 'oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 2000
 
@@ -343,12 +340,9 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     * match response //identifier[text()=identifier2] == '#notpresent'
 
     # Cleanup: Restore "Suppressed records processing" setting to original value
-    * set behaviorValue.suppressedRecordsProcessing = originalSuppressedRecordsProcessing
-    * string restoredBehaviorValue = behaviorValue
-    * set behaviorConfig.value = restoredBehaviorValue
+    * set behaviorConfig.configValue.suppressedRecordsProcessing = originalSuppressedRecordsProcessing
 
-    Given url baseUrl
-    And path '/configurations/entries', behaviorConfig.id
+    Given path 'oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig

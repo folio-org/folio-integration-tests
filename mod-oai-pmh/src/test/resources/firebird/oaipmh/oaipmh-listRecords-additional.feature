@@ -6,7 +6,7 @@ Feature: Additional ListRecords tests
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-    * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
+    * callonce read('classpath:global/init_data/configuration_set_source_SRS_and_inventory.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 

@@ -7,7 +7,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-    * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
+    * callonce read('classpath:global/init_data/configuration_set_source_SRS_and_inventory.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
@@ -15,26 +15,23 @@ Feature: Additional ListRecords tests when source is Inventory
     * url baseUrl
 
     # Update configuration: recordsSource = 'Inventory', suppressedRecordsProcessing = 'true', support deleted = 'No'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path 'oai-pmh/configuration-settings'
+    And param name = 'behavior'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
-    * set value.recordsSource = 'Inventory'
-    * set value.suppressedRecordsProcessing = 'true'
-    * set value.deletedRecordsSupport = 'No'
-    * string updatedValue = value;
-    * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    * set config.configValue.recordsSource = 'Inventory'
+    * set config.configValue.suppressedRecordsProcessing = 'true'
+    * set config.configValue.deletedRecordsSupport = 'No'
+    Given path 'oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Add instance
     Given path 'instance-storage/instances'
@@ -520,27 +517,24 @@ Feature: Additional ListRecords tests when source is Inventory
     * url baseUrl
 
     # Update configuration: recordsSource = 'SRS+Inventory'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path 'oai-pmh/configuration-settings'
+    And param name = 'behavior'
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
-    * set value.recordsSource = 'Source record storage and Inventory'
-    * string updatedValue = value;
-    * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    * set config.configValue.recordsSource = 'Source record storage and Inventory'
+    Given path 'oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Change item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
     * def itemUpdated = read('classpath:samples/c375/item-updated-C375940.json')
     And request itemUpdated
     When method PUT
-    Then status 204
+    Then status 200
 
     # Harvest
     Given url pmhUrl
@@ -570,20 +564,17 @@ Feature: Additional ListRecords tests when source is Inventory
     * url baseUrl
 
     # Update configuration: recordsSource = 'Inventory'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path 'oai-pmh/configuration-settings'
+    And param name = 'behavior'
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
-    * set value.recordsSource = 'Inventory'
-    * string updatedValue = value;
-    * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    * set config.configValue.recordsSource = 'Inventory'
+    Given path 'oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Remove item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'

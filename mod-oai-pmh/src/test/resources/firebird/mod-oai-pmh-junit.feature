@@ -18,10 +18,8 @@ Feature: bulk operations integration tests
       | 'oai-pmh.records.collection.get'                              |
       | 'source-storage.records.item.get'                             |
       | 'source-storage.snapshots.post'                               |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.put'                              |
-      | 'configuration.entries.item.get'                              |
-      | 'configuration.entries.item.post'                             |
+      | 'oai-pmh.configuration-settings.collection.get'               |
+      | 'oai-pmh.configuration-settings.item.put'                     |
       | 'inventory-storage.instance-types.item.post'                  |
       | 'inventory-storage.location-units.institutions.item.post'     |
       | 'inventory-storage.location-units.campuses.item.post'         |
@@ -40,7 +38,6 @@ Feature: bulk operations integration tests
       | 'source-storage.records.collection.get'                       |
       | 'source-storage.records.put'                                  |
       | 'source-storage.records.delete'                               |
-      | 'configuration.entries.item.delete'                           |
       | 'inventory-storage.holdings.item.put'                         |
       | 'inventory-storage.instances.collection.get'                  |
       | 'inventory-storage.instances.item.get'                        |

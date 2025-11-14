@@ -36,7 +36,7 @@ Feature: update configuration
     And header x-okapi-token = okapiTokenAdmin
     And header x-okapi-tenant = testTenant
     When method PUT
-    Then status 204
+    Then status 200
 
   @BehaviorConfig
   Scenario: set behavior config
@@ -70,4 +70,4 @@ Feature: update configuration
     And header x-okapi-token = okapiTokenAdmin
     And header x-okapi-tenant = testTenant
     When method PUT
-    Then status 204
+    Then status 200

@@ -11,7 +11,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-    * callonce read('classpath:global/init_data/mod_configuration_set_source_Inventory_only.feature')
+    * callonce read('classpath:global/init_data/configuration_set_source_Inventory_only.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
@@ -137,29 +137,25 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     * call sleep 2000
 
     # Step 5: Change "Deleted records support" setting to "No"
-    Given url baseUrl
-    And path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path 'oai-pmh/configuration-settings'
+    And param name = 'behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET
     Then status 200
-    * def behaviorConfig = response.configs[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.value)
-    * def originalDeletedRecordsSupport = behaviorValue.deletedRecordsSupport
+    * def behaviorConfig = response.configurationSettings[0]
+    * def originalDeletedRecordsSupport = behaviorConfig.configValue.deletedRecordsSupport
 
     # Update configuration to disable deleted records support
-    * set behaviorValue.deletedRecordsSupport = 'No'
-    * set behaviorValue.enabledDeletedRecordsSupport = false
-    * string updatedBehaviorValue = behaviorValue
-    * set behaviorConfig.value = updatedBehaviorValue
+    * set behaviorConfig.configValue.deletedRecordsSupport = 'No'
+    * set behaviorConfig.configValue.enabledDeletedRecordsSupport = false
 
-    Given path '/configurations/entries', behaviorConfig.id
+    Given path 'oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 2000
 
@@ -194,18 +190,15 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     And match response //error[@code='idDoesNotExist'] == '#present'
 
     # Cleanup: Restore "Deleted records support" setting to original value
-    * set behaviorValue.deletedRecordsSupport = originalDeletedRecordsSupport
-    * set behaviorValue.enabledDeletedRecordsSupport = true
-    * string restoredBehaviorValue = behaviorValue
-    * set behaviorConfig.value = restoredBehaviorValue
+    * set behaviorConfig.configValue.deletedRecordsSupport = originalDeletedRecordsSupport
+    * set behaviorConfig.configValue.enabledDeletedRecordsSupport = true
 
-    Given url baseUrl
-    And path '/configurations/entries', behaviorConfig.id
+    Given path 'oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     # Cleanup: Physically delete the created FOLIO instance to avoid affecting other tests
     Given url baseUrl

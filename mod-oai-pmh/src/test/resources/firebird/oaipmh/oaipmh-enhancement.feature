@@ -13,11 +13,8 @@ Feature: Test enhancements to oai-pmh
   Scenario Outline: set errors to 200 and 500 and check Http status in responses <errorCode>
     * def errorsProcessingConfig = <errorCode>
     * def recordsSourceConfig = "Source record storage"
-    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
-    * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * print 'valueTemplate=', valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+    * call read('classpath:firebird/configuration/reusable/config-templates.feature')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(behaviorValue)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -34,11 +31,8 @@ Feature: Test enhancements to oai-pmh
 
   Scenario Outline: check enable and disable OAI service <enableOAIService>
     * def enableOaiServiceConfig = <enableOAIService>
-    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
-    * copy valueTemplate = generalValue
-    * string valueTemplateString = valueTemplate
-    * print 'valueTemplate=', valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig') {id: '#(generalId)', data: '#(valueTemplateString)'}
+    * call read('classpath:firebird/configuration/reusable/config-templates.feature')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@GeneralConfig') {id: '#(generalId)', data: '#(generalValue)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -78,7 +72,7 @@ Feature: Test enhancements to oai-pmh
     # Unhappy path cases
 
   Scenario: check noRecordsMatch in ListRecords request for marc21_withholdings
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
     And param until = '1969-01-01T00:00:00Z'
@@ -87,7 +81,7 @@ Feature: Test enhancements to oai-pmh
     Then status 404
 
   Scenario: check idDoesNotExist error in GetRecord request for marc21_withholdings
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'GetRecord'
     * def idnfr = 'oai:folio.org:' + testTenant + '/777be1ac-5073-44cc-9925-a6b8955f4a75'
     And param identifier = idnfr
@@ -97,14 +91,14 @@ Feature: Test enhancements to oai-pmh
     Then status 404
 
   Scenario: check badArgument in GetRecord request without identifier for marc21_withholdings
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'GetRecord'
     And param metadataPrefix = 'marc21_withholdings'
     When method GET
     Then status 400
 
   Scenario: check badArgument in GetRecord request with invalid identifier for marc21_withholdings
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'GetRecord'
     And param identifier = 'invalid'
     And param metadataPrefix = 'marc21_withholdings'
@@ -112,7 +106,7 @@ Feature: Test enhancements to oai-pmh
     Then status 400
 
   Scenario: check badArgument in ListRecords with invalid from for marc21_withholdings
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
     And param from = 'junk'
@@ -120,7 +114,7 @@ Feature: Test enhancements to oai-pmh
     Then status 400
 
   Scenario: check badArgument in ListRecords with invalid resumptionToken for marc21_withholdings
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param resumptionToken = 'junk'
     And param metadataPrefix = 'marc21_withholdings'
@@ -128,7 +122,7 @@ Feature: Test enhancements to oai-pmh
     Then status 400
 
   Scenario: check badArgument in ListRecords with invalid until for marc21_withholdings
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
     And param until = 'junk'
@@ -138,7 +132,7 @@ Feature: Test enhancements to oai-pmh
     #Checking for version 2.0 specific exceptions
 
   Scenario: check badArgument in ListRecords with invalid format date for marc21_withholdings
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@SetErrorProcessing500')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@SetErrorProcessing500')
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21_withholdings'
     And param from = '2002-02-05'
@@ -149,10 +143,8 @@ Feature: Test enhancements to oai-pmh
   Scenario Outline: get resumptionToken for ListRecords and make responses until resumptionToken is present for <prefix>
     # first set maxRecordsPerResponse config to 4
     * def maxRecordsPerResponseConfig = '4'
-    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
-    * copy valueTemplate = technicalValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateString)'}
+    * call read('classpath:firebird/configuration/reusable/config-templates.feature')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(technicalValue)'}
     * def totalRecords = 0
 
     Given url pmhUrl
@@ -224,10 +216,8 @@ Feature: Test enhancements to oai-pmh
 
     # set deleted record support to no
     * def deletedRecordsSupportConfig = 'no'
-    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
-    * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+    * call read('classpath:firebird/configuration/reusable/config-templates.feature')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(behaviorValue)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -317,10 +307,8 @@ Feature: Test enhancements to oai-pmh
 
   Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
     * def suppressedRecordsProcessingConfig = 'true'
-    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
-    * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+    * call read('classpath:firebird/configuration/reusable/config-templates.feature')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(behaviorValue)'}
 
     * def srsId = '4c0ff739-3f4d-4670-a693-84dd48e31c53'
      #delete record
@@ -342,10 +330,8 @@ Feature: Test enhancements to oai-pmh
 
   Scenario: Verify that resumption Token contains tenantId and all the other required parameters
     * def maxRecordsPerResponseConfig = '5'
-    * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
-    * copy valueTemplateTechnical = technicalValue
-    * string valueTemplateStringTechnical = valueTemplateTechnical
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateStringTechnical)'}
+    * call read('classpath:firebird/configuration/reusable/config-templates.feature')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(technicalValue)'}
 
     Given url pmhUrl
     And param verb = 'ListIdentifiers'
