@@ -63,7 +63,7 @@ public class ModOaiPmhTests extends TestBaseEureka {
 
     @Test
     void loadDefaultConfigurationTests() {
-        runFeature("classpath:firebird/mod-configuration/load-default-pmh-configuration.feature");
+        runFeature("classpath:firebird/configuration/load-default-pmh-configuration.feature");
     }
 
     @Test

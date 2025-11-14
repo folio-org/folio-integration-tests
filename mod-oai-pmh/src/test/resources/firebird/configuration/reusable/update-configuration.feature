@@ -48,7 +48,7 @@ Feature: Reset default OAIPMH configs
   @SetErrorProcessing500
   Scenario: Set error processing setting to 500
     * def errorsProcessingConfig = '500'
-    * call read('classpath:firebird/mod-configuration/reusable/config-templates.feature')
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(behaviorValue)'}
+    * call read('classpath:firebird/configuration/reusable/config-templates.feature')
+    * call read('classpath:firebird/configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(behaviorValue)'}
 
 
