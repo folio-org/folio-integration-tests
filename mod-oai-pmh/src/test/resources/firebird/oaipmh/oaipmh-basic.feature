@@ -1,3 +1,4 @@
+@parallel=false
 Feature: oai-pmh basic tests
   #
   # Tests according to http://www.openarchives.org/Register/ValidateSite

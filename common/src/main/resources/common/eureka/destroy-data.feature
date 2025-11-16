@@ -26,10 +26,10 @@ Feature: destroy data for tenant
     When method GET
 
     * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
-    * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+    * def entitlementTemplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     Given path 'entitlements'
     And param purge = true
-    And request entitlementTamplate
+    And request entitlementTemplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method DELETE
     Then status 200
