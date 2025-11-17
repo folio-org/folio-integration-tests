@@ -138,7 +138,6 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
-  // @Disabled
   @DisplayName("(Thunderjet) Scenario 5 - mod-orders becomes unavailable after removing Fund distribution from POL")
   void encumbranceAfterRemovingFundDistributionFromPol() {
     runFeatureTest("encumbrance-after-removing-fund-distribution-from-pol");
