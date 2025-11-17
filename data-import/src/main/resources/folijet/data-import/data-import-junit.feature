@@ -61,7 +61,7 @@ Feature: mod-data-import integration tests
       | 'inventory-storage.identifier-types.collection.get'           |
       | 'inventory.items.collection.get'                              |
       | 'inventory.items.item.get'                                    |
-      | 'configuration.entries.item.post'                             |
+      | 'orders-storage.settings.item.post'                           |
       | 'organizations-storage.organizations.item.post'               |
       | 'source-storage.source-records.collection.get'                |
       | 'source-storage.source-records.item.get'                      |
