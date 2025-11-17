@@ -51,3 +51,9 @@ Feature: Integration with SRS for import flow
     * def searchCall = call searchInventoryInstance
     * match searchCall.response.totalRecords == 1
 
+
+    # Step 10: Verify subgraph of the imported instance
+    * callonce read('util/verify-graph.feature')
+
+    # Step 11: Verify exported RDF
+    * callonce read('util/verify-rdf.feature')
