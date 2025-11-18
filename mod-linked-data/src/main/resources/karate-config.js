@@ -32,6 +32,7 @@ function fn() {
     getResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResource'),
     getInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getInventoryInstance'),
     putInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putInventoryInstance'),
+    getResourceIdFromInventoryId: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceIdFromInventoryId'),
     postResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postResource'),
     putResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putResource'),
     postSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
@@ -79,6 +80,13 @@ function fn() {
 
     sleep: function(seconds) {
       java.lang.Thread.sleep(seconds * 1000)
+    },
+
+    resolveSubgraphIfId: function(idOrSubgraph) {
+        if (typeof idOrSubgraph === 'number') {
+          return karate.call('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph', { resourceId: idOrSubgraph }).response;
+        }
+        return idOrSubgraph;
     }
   };
 
