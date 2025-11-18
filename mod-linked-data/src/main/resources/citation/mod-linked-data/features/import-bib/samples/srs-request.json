@@ -70,7 +70,7 @@
     },
     {
       "tag":"100",
-      "content":"$a Poole, Ernest, $d 1880-1950",
+      "content":"$a Edgell, David L., $c Sr. $q (David Lee), $d 1938- $e author.",
       "indicators":[
         "1",
         "\\"
@@ -150,9 +150,33 @@
     },
     {
       "tag":"700",
-      "content":"$a Kaffanke, Jakobus.",
+      "content":"$a Edward $b VI, $c King of England, $d 1537-1553.",
       "indicators":[
-        "\\",
+        "0",
+        "\\"
+      ]
+    },
+    {
+      "tag":"700",
+      "content":"$a Rinehart family $c Rinehart $q Family Rinehart",
+      "indicators":[
+        "3",
+        "\\"
+      ]
+    },
+    {
+      "tag":"710",
+      "content":"$a Horror Writers Association. $b Ann Radcliffe Academic  $n (1st : $d 2017 : $c Long Beach, Calif.)",
+      "indicators":[
+        "2",
+        "\\"
+      ]
+    },
+    {
+      "tag":"711",
+      "content":"$a International Business Engineering Conference $n (2nd :  $d 2018 : $c Legian, Bali, Indonesia)",
+      "indicators":[
+        "2",
         "\\"
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "id": "4530121116320666286",
+  "id": "#notnull",
   "titles": [
     {
       "value": "Silent storms,",
@@ -8,13 +8,28 @@
   ],
   "contributors": [
     {
-      "name": "Poole, Ernest",
+      "name": "Edgell, David L.",
       "type": "Person",
       "isCreator": true
     },
     {
-      "name": "Kaffanke, Jakobus",
+      "name": "Edward",
       "type": "Person",
+      "isCreator": false
+    },
+    {
+      "name": "Rinehart family",
+      "type": "Family",
+      "isCreator": false
+    },
+    {
+      "name": "Horror Writers Association",
+      "type": "Organization",
+      "isCreator": false
+    },
+    {
+      "name": "International Business Engineering Conference",
+      "type": "Meeting",
       "isCreator": false
     }
   ],
