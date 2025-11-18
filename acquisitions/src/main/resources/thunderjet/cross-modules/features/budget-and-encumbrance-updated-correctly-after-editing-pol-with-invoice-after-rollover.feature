@@ -202,27 +202,7 @@ Feature: Budget Summary And Encumbrances Updated Correctly When Editing POL With
 
     # 16. Update FY1 Period End To Yesterday And FY2 Period Begin To Today To Make FY2 Current
     * print '16. Update FY1 Period End To Yesterday And FY2 Period Begin To Today To Make FY2 Current'
-    * def currentDate = call getCurrentDate
-    * def yesterday = call getYesterday
-    Given path 'finance/fiscal-years', fromFiscalYearId
-    When method GET
-    Then status 200
-    * def fy1 = response
-    * set fy1.periodEnd = yesterday + 'T23:59:59Z'
-    Given path 'finance/fiscal-years', fromFiscalYearId
-    And request fy1
-    When method PUT
-    Then status 204
-
-    Given path 'finance/fiscal-years', toFiscalYearId
-    When method GET
-    Then status 200
-    * def fy2 = response
-    * set fy2.periodStart = currentDate + 'T00:00:00Z'
-    Given path 'finance/fiscal-years', toFiscalYearId
-    And request fy2
-    When method PUT
-    Then status 204
+    * def v = call shiftFiscalYearPeriods { fromFiscalYearId: "#(fromFiscalYearId)", toFiscalYearId: "#(toFiscalYearId)" }
 
     # 17. Verify Order #1 Encumbrance In FY2 Is Unreleased With $100 Initial Amount From Fund A
     * print '17. Verify Order #1 Encumbrance In FY2 Is Unreleased With $100 Initial Amount From Fund A'

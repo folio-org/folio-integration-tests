@@ -71,6 +71,7 @@ function fn() {
     createBudgetExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createBudgetExpenseClass.feature'),
     rollover: karate.read('classpath:thunderjet/mod-finance/reusable/rollover.feature'),
     verifyReleasedEncumbrance: karate.read('classpath:thunderjet/mod-finance/reusable/verify-released-encumbrance.feature'),
+    shiftFiscalYearPeriods: karate.read('classpath:thunderjet/cross-modules/reusable/shiftFiscalYearPeriods.feature'),
 
     // inventory
     createItem: karate.read('classpath:thunderjet/consortia/reusable/createItem.feature'),

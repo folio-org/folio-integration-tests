@@ -8,6 +8,7 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.UUID;
 
@@ -34,21 +35,25 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
   }
 
   @Test
+  @DisplayName("(Thunderjet) (C743) Create Order Payment Not Required Fully Receive")
   void createOrderPaymentNotRequiredFullyReceive() {
     runFeatureTest("create-order-payment-not-required-fully-receive");
   }
 
   @Test
+  @DisplayName("(Thunderjet) (C358972) Create Order Check Items")
   void createOrderCheckItems() {
     runFeatureTest("create-order-check-items");
   }
 
   @Test
+  @DisplayName("(Thunderjet) (C422159) Delete One Piece In Receiving")
   void deleteOnePieceInReceiving() {
     runFeatureTest("delete-one-piece-in-receiving");
   }
 
   @Test
+  @DisplayName("(Thunderjet) (C354277) Change Order Instance Connection")
   void changeOrderInstanceConnection() {
     runFeatureTest("change-order-instance-connection");
   }
