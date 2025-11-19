@@ -257,8 +257,8 @@ Feature: Subscription Info, Tags, And Comments Can Be Edited In A Paid Invoice W
     When method GET
     Then status 200
     And match response.subscriptionInfo == 'Updated Subscription Info'
-    And match response.subscriptionStart == '2025-01-01'
-    And match response.subscriptionEnd == '2025-12-31'
+    And match response.subscriptionStart == '2025-01-01T00:00:00.000+00:00'
+    And match response.subscriptionEnd == '2025-12-31T00:00:00.000+00:00'
     And match response.comment == 'Updated comment for C919908'
     And match response.invoiceLineStatus == 'Paid'
 

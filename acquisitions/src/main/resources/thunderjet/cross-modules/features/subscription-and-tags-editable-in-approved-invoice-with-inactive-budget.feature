@@ -98,8 +98,8 @@ Feature: Subscription Info, Tags, And Comments Can Be Edited In An Approved Invo
     When method GET
     Then status 200
     And match response.subscriptionInfo == 'Updated Subscription Info'
-    And match response.subscriptionStart == '2025-01-01'
-    And match response.subscriptionEnd == '2025-12-31'
+    And match response.subscriptionStart == '2025-01-01T00:00:00.000+00:00'
+    And match response.subscriptionEnd == '2025-12-31T00:00:00.000+00:00'
     And match response.comment == 'Updated comment for C919907'
     And match response.invoiceLineStatus == 'Approved'
 
@@ -122,6 +122,6 @@ Feature: Subscription Info, Tags, And Comments Can Be Edited In An Approved Invo
     Then status 200
     And match response.tags.tagList contains 'TestTag919907'
     And match response.tags.tagList contains 'SecondTag919907'
-    And match response.tags.tagList.length == 2
+    And match response.tags.tagList == '#[2]'
     And match response.invoiceLineStatus == 'Approved'
 
