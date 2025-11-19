@@ -254,3 +254,9 @@ Feature: cross-module integration tests
   Scenario: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
     * call read('features/cancel-paid-invoice-after-changing-fund-distribution.feature')
 
+  Scenario: Subscription Info, Tags, And Comments Can Be Edited In A Paid Invoice When The Fund's Budget From Prior FY Is Closed
+    * call read('features/subscription-and-tags-editable-in-paid-invoice-after-rollover-with-closed-budget.feature')
+
+  Scenario: Subscription Info, Tags, And Comments Can Be Edited In An Approved Invoice When The Fund's Budget Is Set To Inactive
+    * call read('features/subscription-and-tags-editable-in-approved-invoice-with-inactive-budget.feature')
+

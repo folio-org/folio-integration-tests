@@ -1,6 +1,6 @@
 @ignore
 Feature: Create invoice line
-  # parameters: invoiceLineId, invoiceId, poLineId?, fundId, encumbranceId?, total, expenseClassId?, releaseEncumbrance?, adjustments?
+  # parameters: invoiceLineId, invoiceId, poLineId?, fundId, encumbranceId?, total, expenseClassId?, releaseEncumbrance?, adjustments?, tags?
 
   Background:
     * url baseUrl
@@ -11,6 +11,7 @@ Feature: Create invoice line
     * def expenseClassId = karate.get('expenseClassId', null)
     * def releaseEncumbrance = karate.get('releaseEncumbrance', true)
     * def adjustments = karate.get('adjustments', [])
+    * def tags = karate.get('tags', null)
     * def invoiceLine = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
     * def fundCode = karate.get('fundCode', invoiceLine.fundDistributions[0].code)
 
@@ -25,6 +26,7 @@ Feature: Create invoice line
     * set invoiceLine.fundDistributions[0].expenseClassId = expenseClassId
     * set invoiceLine.releaseEncumbrance = releaseEncumbrance
     * set invoiceLine.adjustments = adjustments
+    * set invoiceLine.tags = tags
     Given path 'invoice/invoice-lines'
     And request invoiceLine
     When method POST

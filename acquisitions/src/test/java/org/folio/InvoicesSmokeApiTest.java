@@ -8,6 +8,7 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.UUID;
 
@@ -34,6 +35,7 @@ public class InvoicesSmokeApiTest extends TestBaseEureka {
   }
 
   @Test
+  @DisplayName("(Thunderjet) (C357044) Pay Invoice With 0 Value")
   void payInvoiceWith0Value() {
     runFeatureTest("pay-invoice-with-0-value");
   }

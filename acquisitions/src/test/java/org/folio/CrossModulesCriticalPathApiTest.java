@@ -172,4 +172,16 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void cancelPaidInvoiceAfterChangingFundDistribution() {
     runFeatureTest("cancel-paid-invoice-after-changing-fund-distribution");
   }
+
+  @Test
+  @DisplayName("(Thunderjet) (C919908) Subscription Info, Tags, And Comments Can Be Edited In A Paid Invoice When The Fund's Budget From Prior FY Is Closed")
+  void subscriptionAndTagsEditableInPaidInvoiceAfterRolloverWithClosedBudget() {
+    runFeatureTest("subscription-and-tags-editable-in-paid-invoice-after-rollover-with-closed-budget");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C919907) Subscription Info, Tags, And Comments Can Be Edited In An Approved Invoice When The Fund's Budget Is Set To Inactive")
+  void subscriptionAndTagsEditableInApprovedInvoiceWithInactiveBudget() {
+    runFeatureTest("subscription-and-tags-editable-in-approved-invoice-with-inactive-budget");
+  }
 }
