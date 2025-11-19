@@ -36,7 +36,7 @@
     <karate.version>1.5.1</karate.version>
     <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>6.1.14</spring.version>
+    <spring.version>6.1.21</spring.version>
     <jenkins.buildNumber>${env.BUILD_NUMBER}</jenkins.buildNumber>
   </properties>
 
@@ -87,6 +87,7 @@
     <module>mod-consortia</module>
     <module>mod-batch-print</module>
     <module>mod-dcb</module>
+    <module>mod-circulation-item</module>
     <module>edge-dcb</module>
     <module>mod-fqm-manager</module>
     <module>mod-lists</module>
@@ -152,7 +153,7 @@
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-bom</artifactId>
-        <version>4.1.119.Final</version>
+        <version>4.1.127.Final</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -197,7 +198,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.4.14</version>
+      <version>1.5.18</version>
     </dependency>
     <dependency>
       <groupId>com.epam.reportportal</groupId>

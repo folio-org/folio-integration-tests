@@ -1,5 +1,5 @@
 {
-  "id": "-4467719418380474314",
+  "id": "#notnull",
   "titles": [
     {
       "value": "Silent storms,",
@@ -8,13 +8,28 @@
   ],
   "contributors": [
     {
-      "name": "Poole, Ernest",
+      "name": "Edgell, David L.",
       "type": "Person",
       "isCreator": true
     },
     {
-      "name": "Kaffanke, Jakobus",
+      "name": "Edward",
       "type": "Person",
+      "isCreator": false
+    },
+    {
+      "name": "Rinehart family",
+      "type": "Family",
+      "isCreator": false
+    },
+    {
+      "name": "Horror Writers Association",
+      "type": "Organization",
+      "isCreator": false
+    },
+    {
+      "name": "International Business Engineering Conference",
+      "type": "Meeting",
       "isCreator": false
     }
   ],
@@ -37,7 +52,7 @@
   ],
   "instances": [
     {
-      "id": "1917298720693617920",
+      "id": "-4554144337332897516",
       "titles": [
         {
           "value": "Silent storms,",
@@ -50,19 +65,12 @@
           "type": "LCCN"
         }
       ],
-      "contributors": [
-      ],
       "publications": [
         {
           "name": "The Macmillan Company",
           "date":"1927"
         }
-      ],
-      "editionStatements": [
-      ],
-      "notes": [
       ]
     }
-  ],
-  "notes":[]
+  ]
 }

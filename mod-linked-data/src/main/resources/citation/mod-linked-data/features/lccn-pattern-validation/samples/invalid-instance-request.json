@@ -1,10 +1,11 @@
 {
   "resource":{
     "http://bibfra.me/vocab/lite/Instance":{
-      "http://bibfra.me/vocab/marc/title":[
+      "profileId": 3,
+      "http://bibfra.me/vocab/library/title":[
         {
-          "http://bibfra.me/vocab/marc/Title":{
-            "http://bibfra.me/vocab/marc/mainTitle":[
+          "http://bibfra.me/vocab/library/Title":{
+            "http://bibfra.me/vocab/library/mainTitle":[
               "lccn-pattern-validation-title-of-instance-with-invalid-lccn"
             ]
           }
@@ -16,7 +17,7 @@
             "http://bibfra.me/vocab/lite/name":[
               "n!1234567891"
             ],
-            "http://bibfra.me/vocab/marc/status":[
+            "http://bibfra.me/vocab/library/status":[
               {
                 "http://bibfra.me/vocab/lite/label":[
                   "current"

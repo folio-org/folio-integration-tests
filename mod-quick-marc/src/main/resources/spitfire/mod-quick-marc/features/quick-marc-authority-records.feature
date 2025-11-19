@@ -25,7 +25,6 @@ Feature: Test quickMARC authority records
     * set tag.content = newTagContent
     * remove record.fields[?(@.tag=='551')]
     * record.fields.push(tag)
-    * set record.relatedRecordVersion = 1
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -63,7 +62,6 @@ Feature: Test quickMARC authority records
     And def record = response
 
     * remove record.fields[?(@.tag=='551')]
-    * set record.relatedRecordVersion = 2
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -104,7 +102,6 @@ Feature: Test quickMARC authority records
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 3
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -145,7 +142,6 @@ Feature: Test quickMARC authority records
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -167,7 +163,6 @@ Feature: Test quickMARC authority records
     * def newField = { "tag": "550", "content": "$z Test tag", "indicators": [ "\\", "\\" ], "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 5
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -198,7 +193,6 @@ Feature: Test quickMARC authority records
     * def newField = { "tag": "100", "content": "$a Johnson, W. Brad", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -221,7 +215,6 @@ Feature: Test quickMARC authority records
     And def record = response
 
     * remove record.fields[?(@.tag=='100')]
-    * set record.relatedRecordVersion = 7
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId

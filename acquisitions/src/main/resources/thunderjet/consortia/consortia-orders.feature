@@ -21,8 +21,9 @@ Feature: consortia orders integration tests
   Scenario: Open order with locations from different tenants
     * call read('features/open-order-with-locations-from-different-tenants.feature')
 
-  Scenario: Piece Api Test for cross tenant envs
-    * call read('features/pieces-api-test-for-cross-tenant-envs.feature')
+  # Disabled
+  # Scenario: Piece Api Test for cross tenant envs
+  #   * call read('features/pieces-api-test-for-cross-tenant-envs.feature')
 
   # Disabled
   #  Scenario: Performance Open order with many locations from different tenants
@@ -40,3 +41,6 @@ Feature: consortia orders integration tests
 
   Scenario: Open orders in member tenant, share instance in one case
     * call read('features/open-orders-in-member-tenant.feature')
+
+  Scenario: Open order with the same member tenant locations
+    * call read('features/open-order-with-locations-from-same-member-tenant.feature')

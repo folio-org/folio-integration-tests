@@ -23,7 +23,7 @@
         "Main use": "a",
         "Date Ent": "000107",
         "Undef_30": "\\",
-        "Mod Rec Est": "\\",
+        "Mod Rec": "\\",
         "Kind rec": "a",
         "Roman": "|",
         "Lang": "\\",
@@ -114,6 +114,5 @@
     }
   ],
   "externalHrid": "n  00001263 ",
-  "parsedRecordDtoId": "4caeba6e-8dd0-4eef-852a-cd3ab45d19d8",
-  "relatedRecordVersion": "1"
+  "parsedRecordDtoId": "4caeba6e-8dd0-4eef-852a-cd3ab45d19d8"
 }

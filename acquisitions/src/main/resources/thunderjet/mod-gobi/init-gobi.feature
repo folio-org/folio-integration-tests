@@ -10,7 +10,7 @@ Feature: Initialize mod-gobi integration tests
       | 'mod-audit'                 |
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-entities-links'        |
       | 'mod-finance'               |
       | 'mod-finance-storage'       |

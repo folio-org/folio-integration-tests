@@ -11,11 +11,11 @@ Feature: Query array operators
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
-  Scenario: Run query with $contains_any operator and check results
-    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$contains_any\":[\"serials\", \"non_serials\"]}}]}' }
+  Scenario: Run query with $in operator and check results
+    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$in\":[\"serials\", \"non_serials\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "fund_name": null, "distributionType": "percentage", "expense_class_name": null}]'
 
     Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}
@@ -25,11 +25,11 @@ Feature: Query array operators
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
-  Scenario: Run query with $not_contains_any operator and check results
-    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$not_contains_any\":[\"serials\", \"non_serials\"]}}]}' }
+  Scenario: Run query with $nin operator and check results
+    * def queryRequest = { entityTypeId: '#(purchaseOrderLinesEntityTypeId)' , fqlQuery: '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$nin\":[\"serials\", \"non_serials\"]}}]}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
-    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "distributionType": "percentage"}]'
+    * def fundDistribution = '[{"code": "serials", "value": 100.0, "fundId": "692bc717-e37a-4525-95e3-fa25f58ecbef", "fund_name": null, "distributionType": "percentage", "expense_class_name": null}]'
 
     Given path 'query', queryId
     And params {includeResults: true, limit: 100, offset:0}

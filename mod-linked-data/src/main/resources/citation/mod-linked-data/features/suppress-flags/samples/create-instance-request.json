@@ -1,13 +1,14 @@
 {
   "resource":{
     "http://bibfra.me/vocab/lite/Instance":{
-      "http://bibfra.me/vocab/marc/title":[
+      "profileId": 3,
+      "http://bibfra.me/vocab/library/title":[
         {
-          "http://bibfra.me/vocab/marc/Title":{
+          "http://bibfra.me/vocab/library/Title":{
             "http://bibfra.me/vocab/bflc/nonSortNum":[
               "0"
             ],
-            "http://bibfra.me/vocab/marc/mainTitle":[
+            "http://bibfra.me/vocab/library/mainTitle":[
               "suppress_flags"
             ]
           }

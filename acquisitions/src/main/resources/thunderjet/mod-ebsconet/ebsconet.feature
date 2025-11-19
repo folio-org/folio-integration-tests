@@ -20,6 +20,9 @@ Feature: mod-ebsconet integration tests
   Scenario: Cancel order lines with ebsconet
     * call read('features/cancel-order-lines-with-ebsconet.feature')
 
+  Scenario: Close Order With Order Line
+    * call read('features/close-order-with-order-line')
+
   Scenario: Get Ebsconet Order Line
     * call read('features/get-ebsconet-order-line.feature')
 

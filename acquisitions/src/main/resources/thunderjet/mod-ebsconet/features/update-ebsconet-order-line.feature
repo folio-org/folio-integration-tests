@@ -71,7 +71,7 @@ Feature: Update Ebsconet Order Line
       id: '#(orderId)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      poLines: [#(orderLine)]
+      poLines: ['#(orderLine)']
     }
     """
     When method POST
@@ -98,7 +98,6 @@ Feature: Update Ebsconet Order Line
     * set ebsconetLine.workflowStatus = "Open"
     * set ebsconetLine.vendor = "shouldn't update"
     * set ebsconetLine.internalNote = "Renewal Note1"
-
 
     Given path 'ebsconet/orders/order-lines/' + poLineNumber
     And request ebsconetLine
@@ -133,5 +132,3 @@ Feature: Update Ebsconet Order Line
       internalNote: "Renewal Note1"
     }
     """
-
-

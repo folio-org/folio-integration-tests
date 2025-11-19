@@ -1,10 +1,11 @@
 {
   "resource": {
     "http://bibfra.me/vocab/lite/Work": {
-      "http://bibfra.me/vocab/marc/title": [
+      "profileId": 2,
+      "http://bibfra.me/vocab/library/title": [
         {
-          "http://bibfra.me/vocab/marc/Title": {
-            "http://bibfra.me/vocab/marc/mainTitle": [
+          "http://bibfra.me/vocab/library/Title": {
+            "http://bibfra.me/vocab/library/mainTitle": [
               "PAVELTESTWORK"
             ]
           }

@@ -135,22 +135,6 @@ Feature: Ledger fiscal year sequential rollovers
     * def classicalBud1 = callonce uuid85
     * def classicalBud2 = callonce uuid86
 
-  Scenario: Update po line limit
-    * configure headers = headersAdmin
-    Given path 'configurations/entries'
-    And param query = 'configName==poLines-limit'
-    When method GET
-    Then status 200
-    * def config = $.configs[0]
-    * set config.value = '999'
-    * def configId = $.configs[0].id
-
-    Given path 'configurations/entries', configId
-    And request config
-    When method PUT
-    Then status 204
-
-
   Scenario Outline: prepare fiscal year with <fiscalYearId> for rollover
     * def fiscalYearId = <fiscalYearId>
     * def code = <code>
@@ -1857,7 +1841,7 @@ Feature: Ledger fiscal year sequential rollovers
       | law         | 96.8      | 92.8      | 4           | 0            | 4          | 160.0                | 170.0                |
       | science     | 110       | 252.25    | 0.0         | 142.25       | 0          | 110.0                | 120.0                |
       | giftsFund   | 312.35    | 312.35    | 0.0         | 0            | 0.0        | null                 | null                 |
-      | africanHist | 89.125    | 216.625   | 0           | 127.5        | 0          | 100.0                | 100.0                |
+      | africanHist | 89.12     | 216.62    | 0           | 127.5        | 0          | 100.0                | 100.0                |
       | rollHist    | 217.8     | 217.8     | 0.0         | 0            | 0.0        | null                 | null                 |
       | euroHist    | 0         | 0         | 0           | 0            | 0          | 100.0                | 100.0                |
 

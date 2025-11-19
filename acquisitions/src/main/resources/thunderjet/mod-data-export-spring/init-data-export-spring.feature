@@ -10,7 +10,7 @@ Feature: Initialize mod-data-export-spring integration tests
     * table modules
       | name                        |
       | 'mod-permissions'           |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-orders-storage'        |
@@ -26,7 +26,7 @@ Feature: Initialize mod-data-export-spring integration tests
 
     * table userPermissions
       | name                                                          |
-      | 'configuration.entries.item.post'                             |
+      | 'orders-storage.settings.item.post'                           |
       | 'finance.budgets.item.post'                                   |
       | 'finance.funds.item.post'                                     |
       | 'data-export.config.collection.get'                           |
@@ -59,7 +59,7 @@ Feature: Initialize mod-data-export-spring integration tests
     # testAdmin is only used to initialize global data
     * table adminPermissions
       | name                                                          |
-      | 'configuration.entries.item.post'                             |
+      | 'orders-storage.settings.item.post'                           |
       | 'finance.budgets.item.post'                                   |
       | 'finance.expense-classes.item.post'                           |
       | 'finance.fiscal-years.item.post'                              |

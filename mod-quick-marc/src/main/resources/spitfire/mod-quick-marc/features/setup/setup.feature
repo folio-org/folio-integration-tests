@@ -2,7 +2,7 @@ Feature: Setup quickMARC
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
@@ -27,6 +27,9 @@ Feature: Setup quickMARC
     Then status 200
     And def bibSpecification = response
     # * setSystemProperty('bibSpecification', bibSpecification)
+    * def undefinedFieldRule = bibSpecification.rules.find(rule => rule.code == "undefinedField")
+    * def undefinedIndicatorCodeRule = bibSpecification.rules.find(rule => rule.code == "undefinedIndicatorCode")
+    * def undefinedSubfieldRule = bibSpecification.rules.find(rule => rule.code == "undefinedSubfield")
     * def field245 = bibSpecification.fields.find(field => field.tag == "245")
     * def field100 = bibSpecification.fields.find(field => field.tag == "100")
     * def field245subfieldA = field245.subfields.find(subfield => subfield.code == "a")
@@ -47,6 +50,10 @@ Feature: Setup quickMARC
     When method PUT
     Then status 202
 
+    # enable undefined rules
+    * call read('setup.feature@ToggleSpecificationRule') {ruleId: #(undefinedFieldRule.id), enabled: true}
+    * call read('setup.feature@ToggleSpecificationRule') {ruleId: #(undefinedIndicatorCodeRule.id), enabled: true}
+    * call read('setup.feature@ToggleSpecificationRule') {ruleId: #(undefinedSubfieldRule.id), enabled: true}
     # local required 249 field
     * def field249 = karate.call('setup.feature@CreateSpecificationField', {tag: "249", required: true}).response;
     # local a subfield for 249 field
@@ -179,7 +186,6 @@ Feature: Setup quickMARC
     * record.fields = record.fields.filter(field => field.tag != "100")
     * record.fields.push(tag100)
     * record.fields.push(tag600)
-    * set record.relatedRecordVersion = 1
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -190,6 +196,20 @@ Feature: Setup quickMARC
 
     * setSystemProperty('authorityNaturalId1', authorityNaturalId1)
     * setSystemProperty('authorityNaturalId2', authorityNaturalId2)
+
+    @Ignore #Util scenario, accept 'ruleId', 'enabled' parameters
+    @ToggleSpecificationRule
+    Scenario: Toggle Specification Rule
+      Given path 'specification-storage/specifications', bibSpecificationId, 'rules', ruleId
+      And headers headersUser
+      And request
+      """
+        {
+        "enabled": #(enabled)
+        }
+      """
+      When method PATCH
+      Then status 204
 
   @Ignore #Util scenario, accept 'tag', 'required' parameters
   @CreateSpecificationField

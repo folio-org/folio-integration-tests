@@ -34,10 +34,14 @@ public class EbsconetApiTest extends TestBaseEureka {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
-
   @Test
   void cancelOrderLinesWithEbsconet() {
     runFeatureTest("cancel-order-lines-with-ebsconet");
+  }
+
+  @Test
+  void closeOrderWithOrderLine() {
+    runFeatureTest("close-order-with-order-line");
   }
 
   @Test
@@ -59,5 +63,4 @@ public class EbsconetApiTest extends TestBaseEureka {
   void updateEbsconetOrderLineMixedFormat() {
     runFeatureTest("update-mixed-order-line");
   }
-
 }

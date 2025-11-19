@@ -27,7 +27,7 @@ Feature: Integration with SRS for import flow
 
     # Step 5: Preview resource
     * def getPreviewCall = call getResourcePreview { inventoryId: "#(inventoryInstanceIdFromSearchResponse)" }
-    And match getPreviewCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/marc/title'][0]['http://bibfra.me/vocab/marc/Title']['http://bibfra.me/vocab/marc/mainTitle'] == ["Silent storms,"]
+    And match getPreviewCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/library/title'][0]['http://bibfra.me/vocab/library/Title']['http://bibfra.me/vocab/library/mainTitle'] == ["Silent storms,"]
     And match getPreviewCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata ==
       """
       {
@@ -51,3 +51,9 @@ Feature: Integration with SRS for import flow
     * def searchCall = call searchInventoryInstance
     * match searchCall.response.totalRecords == 1
 
+
+    # Step 10: Verify subgraph of the imported instance
+    * callonce read('util/verify-graph.feature')
+
+    # Step 11: Verify exported RDF
+    * callonce read('util/verify-rdf.feature')

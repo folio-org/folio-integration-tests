@@ -9,7 +9,7 @@ Feature: Initialize mod-orders integration tests
     * table modules
       | name                        |
       | 'mod-audit'                 |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-feesfines'             |
       | 'mod-finance'               |
       | 'mod-finance-storage'       |
@@ -29,57 +29,58 @@ Feature: Initialize mod-orders integration tests
       | 'mod-users'                 |
 
     * table userPermissions
-      | name                                                          |
-      | 'inventory.instances.item.delete'                             |
-      | 'inventory.instances.item.post'                               |
-      | 'inventory.instances.item.put'                                |
-      | 'orders-storage.claiming.process.execute'                     |
-      | 'orders-storage.pieces.collection.get'                        |
-      | 'orders-storage.po-lines.item.get'                            |
-      | 'orders-storage.po-lines.item.post'                           |
-      | 'orders-storage.po-lines.item.put'                            |
-      | 'orders-storage.purchase-orders.item.post'                    |
-      | 'orders-storage.routing-lists.item.post'                      |
-      | 'orders-storage.settings.item.post'                           |
-      | 'orders.acquisition-method.item.post'                         |
-      | 'orders.acquisitions-units-assignments.assign'                |
-      | 'orders.acquisitions-units-assignments.manage'                |
-      | 'orders.bind-pieces.collection.post'                          |
-      | 'orders.bind-pieces.item.delete'                              |
-      | 'orders.check-in.collection.post'                             |
-      | 'orders.collection.get'                                       |
-      | 'orders.item.approve'                                         |
-      | 'orders.item.delete'                                          |
-      | 'orders.item.get'                                             |
-      | 'orders.item.post'                                            |
-      | 'orders.item.put'                                             |
-      | 'orders.item.reopen'                                          |
-      | 'orders.item.unopen'                                          |
-      | 'orders.pieces.collection.get'                                |
-      | 'orders.pieces.collection.post'                               |
-      | 'orders.pieces.collection.put'                                |
-      | 'orders.pieces.item.delete'                                   |
-      | 'orders.pieces.item.get'                                      |
-      | 'orders.pieces.item.post'                                     |
-      | 'orders.pieces.item.put'                                      |
-      | 'orders.po-lines.collection.get'                              |
-      | 'orders.po-lines.item.delete'                                 |
-      | 'orders.po-lines.item.get'                                    |
-      | 'orders.po-lines.item.post'                                   |
-      | 'orders.po-lines.item.put'                                    |
-      | 'orders.receiving.collection.post'                            |
-      | 'orders.re-encumber.item.post'                                |
-      | 'orders.routing-lists.collection.get'                         |
-      | 'orders.routing-lists.item.delete'                            |
-      | 'orders.routing-lists.item.get'                               |
-      | 'orders.routing-lists.item.post'                              |
-      | 'orders.routing-lists.item.put'                               |
-      | 'orders.routing-lists-template.item.get'                      |
-      | 'orders.titles.collection.get'                                |
-      | 'orders.titles.item.delete'                                   |
-      | 'orders.titles.item.get'                                      |
-      | 'orders.titles.item.post'                                     |
-      | 'orders.titles.item.put'                                      |
+      | name                                           |
+      | 'inventory.instances.item.get'                 |
+      | 'inventory.instances.item.delete'              |
+      | 'inventory.instances.item.post'                |
+      | 'inventory.instances.item.put'                 |
+      | 'orders-storage.claiming.process.execute'      |
+      | 'orders-storage.pieces.collection.get'         |
+      | 'orders-storage.po-lines.item.get'             |
+      | 'orders-storage.po-lines.item.post'            |
+      | 'orders-storage.po-lines.item.put'             |
+      | 'orders-storage.purchase-orders.item.post'     |
+      | 'orders-storage.routing-lists.item.post'       |
+      | 'orders-storage.settings.item.post'            |
+      | 'orders.acquisition-method.item.post'          |
+      | 'orders.acquisitions-units-assignments.assign' |
+      | 'orders.acquisitions-units-assignments.manage' |
+      | 'orders.bind-pieces.collection.post'           |
+      | 'orders.bind-pieces.item.delete'               |
+      | 'orders.check-in.collection.post'              |
+      | 'orders.collection.get'                        |
+      | 'orders.item.approve'                          |
+      | 'orders.item.delete'                           |
+      | 'orders.item.get'                              |
+      | 'orders.item.post'                             |
+      | 'orders.item.put'                              |
+      | 'orders.item.reopen'                           |
+      | 'orders.item.unopen'                           |
+      | 'orders.pieces.collection.get'                 |
+      | 'orders.pieces.collection.post'                |
+      | 'orders.pieces.collection.put'                 |
+      | 'orders.pieces.item.delete'                    |
+      | 'orders.pieces.item.get'                       |
+      | 'orders.pieces.item.post'                      |
+      | 'orders.pieces.item.put'                       |
+      | 'orders.po-lines.collection.get'               |
+      | 'orders.po-lines.item.delete'                  |
+      | 'orders.po-lines.item.get'                     |
+      | 'orders.po-lines.item.post'                    |
+      | 'orders.po-lines.item.put'                     |
+      | 'orders.receiving.collection.post'             |
+      | 'orders.re-encumber.item.post'                 |
+      | 'orders.routing-lists.collection.get'          |
+      | 'orders.routing-lists.item.delete'             |
+      | 'orders.routing-lists.item.get'                |
+      | 'orders.routing-lists.item.post'               |
+      | 'orders.routing-lists.item.put'                |
+      | 'orders.routing-lists-template.item.get'       |
+      | 'orders.titles.collection.get'                 |
+      | 'orders.titles.item.delete'                    |
+      | 'orders.titles.item.get'                       |
+      | 'orders.titles.item.post'                      |
+      | 'orders.titles.item.put'                       |
 
     * table adminPermissions
       | name                                                          |
@@ -107,10 +108,9 @@ Feature: Initialize mod-orders integration tests
       | 'circulation.requests.item.move.post'                         |
       | 'circulation.requests.item.post'                              |
       | 'circulation.rules.put'                                       |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.delete'                           |
-      | 'configuration.entries.item.post'                             |
-      | 'configuration.entries.item.put'                              |
+      | 'orders-storage.settings.collection.get'                      |
+      | 'orders-storage.settings.item.post'                           |
+      | 'orders-storage.settings.item.put'                            |
       | 'finance-storage.budget-expense-classes.item.post'            |
       | 'finance-storage.ledger-rollovers-errors.collection.get'      |
       | 'finance-storage.ledger-rollovers-errors.item.delete'         |
@@ -167,12 +167,14 @@ Feature: Initialize mod-orders integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory.holdings.move.item.post'                           |
       | 'inventory.instances.collection.get'                          |
+      | 'inventory.instances.item.get'                                |
       | 'inventory.instances.item.delete'                             |
       | 'inventory.instances.item.post'                               |
       | 'inventory.instances.item.put'                                |
       | 'inventory.items-by-holdings-id.collection.get'               |
       | 'inventory.items.collection.get'                              |
       | 'inventory.items.item.get'                                    |
+      | 'inventory.items.item.post'                                   |
       | 'inventory.items.move.item.post'                              |
       | 'inventory.tenant-items.collection.get'                       |
       | 'lost-item-fees-policies.collection.get'                      |
@@ -193,7 +195,7 @@ Feature: Initialize mod-orders integration tests
     * call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: Create admin user
-    * def v = call createAdditionalUser { testUser: '#(testAdmin)',  userPermissions: '#(adminPermissions)' }
+    * def v = call createAdditionalUser { testUser: '#(testAdmin)', userPermissions: '#(adminPermissions)' }
 
   Scenario: Init global data
     * call login testAdmin

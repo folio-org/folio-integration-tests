@@ -8,7 +8,7 @@ Feature: Initialize mod-mosaic integration tests
     * table modules
       | name                        |
       | "mod-audit"                 |
-      | "mod-configuration"         |
+      | "mod-settings"              |
       | "mod-finance"               |
       | "mod-finance-storage"       |
       | "mod-inventory"             |
@@ -32,7 +32,7 @@ Feature: Initialize mod-mosaic integration tests
       | name                                                          |
       | "acquisitions-units.memberships.item.post"                    |
       | "acquisitions-units.units.item.post"                          |
-      | "configuration.entries.item.post"                             |
+      | 'orders-storage.settings.item.post'                           |
       | "finance.budgets.collection.get"                              |
       | "finance.budgets.item.get"                                    |
       | "finance.budgets.item.post"                                   |
@@ -58,9 +58,7 @@ Feature: Initialize mod-mosaic integration tests
       | "inventory-storage.material-types.item.post"                  |
       | "inventory-storage.service-points.item.post"                  |
       | "inventory.instances.item.post"                               |
-      | "mosaic.configuration.item.delete"                            |
       | "mosaic.configuration.item.get"                               |
-      | "mosaic.configuration.item.post"                              |
       | "mosaic.configuration.item.put"                               |
       | "orders.collection.get"                                       |
       | "orders.order-templates.item.get"                             |

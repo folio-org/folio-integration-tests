@@ -72,7 +72,7 @@ Feature: Update Ebsconet Order Line with empty locations
       id: '#(orderId)',
       vendor: '#(globalVendorId)',
       orderType: 'One-Time',
-      poLines: [#(orderLine)]
+      poLines: ['#(orderLine)']
     }
     """
     When method POST
@@ -99,7 +99,6 @@ Feature: Update Ebsconet Order Line with empty locations
     * set ebsconetLine.workflowStatus = "Open"
     * set ebsconetLine.vendor = "shouldn't update"
     * set ebsconetLine.internalNote = "Renewal Note1"
-
 
     Given path 'ebsconet/orders/order-lines/' + poLineNumber
     And request ebsconetLine
@@ -134,5 +133,3 @@ Feature: Update Ebsconet Order Line with empty locations
       internalNote: "Renewal Note1"
     }
     """
-
-

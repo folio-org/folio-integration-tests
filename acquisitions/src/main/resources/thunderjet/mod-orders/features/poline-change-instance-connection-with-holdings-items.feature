@@ -12,7 +12,7 @@ Feature: Change order line instance connection with holdings items
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    * def createPEMixPoLine = read('classpath:thunderjet/mod-orders/helpers/helper-poline-change-instance-connection-with-holdings-items.feature')
+    * def createAndOpenOrderWithPEMixPoLine = read('classpath:thunderjet/mod-orders/helpers/helper-poline-change-instance-connection-with-holdings-items.feature@CreateAndOpenOrderWithPEMixPoLine')
 
     * callonce variables
     * def fundId = globalFundId
@@ -27,9 +27,7 @@ Feature: Change order line instance connection with holdings items
     # 2. Create order and order line, then open the order
     * def orderId = call uuid
     * def poLineId = call uuid
-    * def v = call createOrder { id: '#(orderId)' }
-    * def v = call createPEMixPoLine { poLineId: '#(poLineId)', orderId: '#(orderId)', title: 't1', checkinItems: true }
-    * def v = call openOrder { orderId: '#(orderId)' }
+    * def v = call createAndOpenOrderWithPEMixPoLine { poLineId: '#(poLineId)', orderId: '#(orderId)', title: 't1', checkinItems: true }
 
     # 3.1 Get POL holding IDs and POL number
     Given path 'orders/order-lines', poLineId
@@ -56,7 +54,7 @@ Feature: Change order line instance connection with holdings items
       | id       | poLineId | titleId | holdingId  | format       | createItem |
       | pieceId1 | poLineId | titleId | holdingId1 | 'Physical'   | true       |
       | pieceId2 | poLineId | titleId | holdingId2 | 'Electronic' | true       |
-    * def v = call createPieceWithHolding piecesData
+    * def v = call createPieceWithHoldingOrLocation piecesData
 
     # 4.2 Receive pieces
     * table receivePiecesData
@@ -136,3 +134,234 @@ Feature: Change order line instance connection with holdings items
     And match response.holdingsRecords[*].id contains holdingId1
     And match response.holdingsRecords[*].id contains holdingId2
     * configure headers = headersUser
+
+  Scenario: Change instance connection with different holdings for Pieces and POL Locations
+    # 1. Create instance
+    * configure headers = headersAdmin
+    * def instanceId = call uuid
+    * def v = call createInstance { id: '#(instanceId)', title: 'i2', instanceTypeId: '#(globalInstanceTypeId)' }
+    * configure headers = headersUser
+
+    # 2. Create order and order line, then open the order
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def v = call createAndOpenOrderWithPEMixPoLine { poLineId: '#(poLineId)', orderId: '#(orderId)', title: 't2', checkinItems: true }
+
+    # 3.1 Get POL holding IDs and POL number
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def holdingId1 = response.locations[0].holdingId
+    * def holdingId2 = response.locations[1].holdingId
+    * def poLineNumber = response.poLineNumber
+    * def instanceIdOld = response.instanceId
+
+    # 3.2 Get Title ID
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.titles[0].poLineId == poLineId
+    * def titleId = response.titles[0].id
+
+    # 4.1 Create piece with a different location
+    * def pieceId = call uuid
+    * table piecesData
+      | id      | poLineId | titleId | locationId         | useLocationId | format     | createItem |
+      | pieceId | poLineId | titleId | globalLocationsId3 | true          | 'Physical' | true       |
+    * def v = call createPieceWithHoldingOrLocation piecesData
+
+    # 4.2 Get holding ID from the created piece
+    Given path 'orders/pieces', pieceId
+    When method GET
+    Then status 200
+    * def holdingIdPiece = response.holdingId
+
+    # 4.3 Receive pieces
+    * table receivePiecesData
+      | pieceId | poLineId | holdingId      |
+      | pieceId | poLineId | holdingIdPiece |
+    * def v = call receivePieceWithHolding receivePiecesData
+
+    # 5. Change instance connection with "Create" holdings operation to the new instance and delete abandoned holdings
+    * table instanceChangeData
+      | poLineId | instanceId | holdingsOperation | deleteAbandonedHoldings |
+      | poLineId | instanceId | 'Create'          | true                    |
+    * def v = call changeOrderLineInstanceConnection instanceChangeData
+
+    # 6.1 Verify the order line instanceId and holdings
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    And match response.instanceId == instanceId
+    And match response.instanceId != instanceIdOld
+    And match response.locations[*].holdingId !contains holdingId1
+    And match response.locations[*].holdingId !contains holdingId2
+    * def newHoldingId1 = response.locations[0].holdingId
+    * def newHoldingId2 = response.locations[1].holdingId
+
+    # 6.2 Verify old instance holdings are deleted
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceIdOld
+    When method GET
+    Then status 200
+    And match response.totalRecords == 0
+
+    # 6.3 Verify the new instance holdings are created
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 3
+    And match response.holdingsRecords[*].id contains newHoldingId1
+    And match response.holdingsRecords[*].id contains newHoldingId2
+    * configure headers = headersUser
+
+
+  Scenario: Change instance connection with holdings used by a different POL
+    # 1. Create instance
+    * configure headers = headersAdmin
+    * def instanceId = call uuid
+    * def v = call createInstance { id: '#(instanceId)', title: 'i3', instanceTypeId: '#(globalInstanceTypeId)' }
+    * configure headers = headersUser
+
+    # 2. Create order and order line, then open the order
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def v = call createAndOpenOrderWithPEMixPoLine { poLineId: '#(poLineId)', orderId: '#(orderId)', title: 't3', checkinItems: true }
+
+    # 3.1 Get POL holding IDs and POL number
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def holdingId1 = response.locations[0].holdingId
+    * def holdingId2 = response.locations[1].holdingId
+    * def poLineNumber = response.poLineNumber
+    * def instanceIdOld = response.instanceId
+
+    # 3.2 Get Title ID
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.titles[0].poLineId == poLineId
+    * def titleId = response.titles[0].id
+
+    # 4.1 Create pieces with holding IDs
+    * def pieceId1 = call uuid
+    * def pieceId2 = call uuid
+    * table piecesData
+      | id       | poLineId | titleId | holdingId  | format       | createItem |
+      | pieceId1 | poLineId | titleId | holdingId1 | 'Physical'   | true       |
+      | pieceId2 | poLineId | titleId | holdingId2 | 'Electronic' | true       |
+    * def v = call createPieceWithHoldingOrLocation piecesData
+
+    # 4.2 Receive pieces
+    * table receivePiecesData
+      | pieceId  | poLineId | holdingId  |
+      | pieceId1 | poLineId | holdingId1 |
+      | pieceId2 | poLineId | holdingId2 |
+    * def v = call receivePieceWithHolding receivePiecesData
+
+    # 5. Create a new order line with the same holding
+    * def newOrderId = call uuid
+    * def v = call createOrder { id: '#(newOrderId)' }
+
+    * def newPoLineId = call uuid
+    * def poLineLocations = [ { holdingId: #(holdingId1), quantity: 1, quantityPhysical: 1 } ]
+    * table orderLineData
+      | id          | orderId    | locations       | quantity | instanceId    | titleOrPackage |
+      | newPoLineId | newOrderId | poLineLocations | 1        | instanceIdOld | 't3'           |
+    * def v = call createOrderLineWithInstance orderLineData
+
+    * def v = call openOrder { orderId: '#(newOrderId)' }
+
+    # 6. Change instance connection for the original POL to the new instance and delete abandoned holdings
+    * table instanceChangeData
+      | poLineId | instanceId | holdingsOperation | deleteAbandonedHoldings |
+      | poLineId | instanceId | 'Create'          | true                    |
+    * def v = call changeOrderLineInstanceConnection instanceChangeData
+
+    # 7.1 Verify the order line instanceId and holdings
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    And match response.instanceId == instanceId
+    And match response.instanceId != instanceIdOld
+    And match response.locations[*].holdingId !contains holdingId1
+    And match response.locations[*].holdingId !contains holdingId2
+    * def newHoldingId1 = response.locations[0].holdingId
+    * def newHoldingId2 = response.locations[1].holdingId
+
+    # 7.2 Verify old instance used holdings are not deleted
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceIdOld
+    Then retry until responseStatus == 200
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    And match response.holdingsRecords[*].id contains holdingId1
+    And match response.holdingsRecords[*].id !contains holdingId2
+
+    # 7.3 Verify the new instance holdings are created
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    Then retry until responseStatus == 200
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
+    And match response.holdingsRecords[*].id contains newHoldingId1
+    And match response.holdingsRecords[*].id contains newHoldingId2
+    * configure headers = headersUser
+
+  Scenario: Change instance connection with a large number of pieces
+    # 1. Create instance
+    * configure headers = headersAdmin
+    * def instanceId = call uuid
+    * def v = call createInstance { id: '#(instanceId)', title: 'i4', instanceTypeId: '#(globalInstanceTypeId)' }
+    * configure headers = headersUser
+
+    # 2. Create order and order line with quantity of 64, then open the order
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def poLineLocations = [ { locationId: #(globalLocationsId), quantity: 64, quantityPhysical: 64 } ]
+    * table orderLineData
+      | id       | orderId | locations       | quantity | titleOrPackage |
+      | poLineId | orderId | poLineLocations | 64       | 't4'           |
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine orderLineData
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    # 3 Get POL holding ID and POL number
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def holdingId = response.locations[0].holdingId
+    * def poLineNumber = response.poLineNumber
+    * def instanceIdOld = response.instanceId
+
+    # 4. Change instance connection with "Find or Create" holdings operation to the new instance and delete abandoned holdings
+    * table instanceChangeData
+      | poLineId | instanceId | holdingsOperation | deleteAbandonedHoldings |
+      | poLineId | instanceId | 'Find or Create'  | true                    |
+    * def v = call changeOrderLineInstanceConnection instanceChangeData
+
+    # 5. Verify the order line instanceId and holdings
+    * def isPoLineInstanceUpdated =
+    """
+    function(response) {
+      return response.instanceId == instanceId &&
+      response.instanceId != instanceIdOld &&
+      response.locations.length == 1 &&
+      response.locations[0].quantity == 64 &&
+      response.locations[0].holdingId != holdingId;
+    }
+    """
+    Given path 'orders/order-lines', poLineId
+    And retry until isPoLineInstanceUpdated(response)
+    When method GET
+    Then status 200

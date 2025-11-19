@@ -9,7 +9,7 @@ Feature: Cross-module integration tests
     * table modules
       | name                        |
       | 'mod-permissions'           |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
@@ -53,6 +53,7 @@ Feature: Cross-module integration tests
       | 'finance.ledger-rollovers-progress.item.put'       |
       | 'finance.ledgers.item.post'                        |
       | 'finance.release-encumbrance.item.post'            |
+      | 'finance.unrelease-encumbrance.item.post'          |
       | 'finance.transactions.batch.execute'               |
       | 'finance.transactions.collection.get'              |
       | 'finance.transactions.item.get'                    |
@@ -104,9 +105,9 @@ Feature: Cross-module integration tests
       | 'acquisitions-units.memberships.item.delete'                  |
       | 'acquisitions-units.memberships.item.post'                    |
       | 'acquisitions-units.units.item.post'                          |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.post'                             |
-      | 'configuration.entries.item.put'                              |
+      | 'orders-storage.settings.collection.get'                      |
+      | 'orders-storage.settings.item.post'                           |
+      | 'orders-storage.settings.item.put'                            |
       | 'finance-storage.budgets.item.get'                            |
       | 'finance-storage.budgets.item.put'                            |
       | 'finance-storage.ledger-rollovers.item.delete'                |
@@ -138,6 +139,7 @@ Feature: Cross-module integration tests
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
+    * call read("classpath:common/eureka/keycloak.feature@configureAccessTokenTime") { "AccessTokenLifespance" : 3600 }
 
   Scenario: Create admin user
     * def v = call createAdditionalUser { testUser: '#(testAdmin)', userPermissions: '#(adminPermissions)' }

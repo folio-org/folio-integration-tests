@@ -136,7 +136,6 @@ Feature: Test quickMARC holdings records
     * set tag.content = newTagContent
     * remove record.fields[?(@.tag=='867')]
     * record.fields.push(tag)
-    * set record.relatedRecordVersion = 1
     * set record._actionType = 'edit'
     * set record.externalHrid = externalHrid
 
@@ -168,7 +167,6 @@ Feature: Test quickMARC holdings records
     And def record = response
 
     * remove record.fields[?(@.tag=='867')]
-    * set record.relatedRecordVersion = 2
     * set record._actionType = 'edit'
     * set record.externalHrid = externalHrid
 
@@ -211,7 +209,6 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "035", "content": "$a Test tag", "isProtected":false, "indicators": [ "\\", "\\" ] }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 3
     * set record._actionType = 'edit'
     * set record.externalHrid = externalHrid
 
@@ -254,7 +251,6 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "500", "indicators": [ "\\", "\\" ], "content": "$a Test note", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
     * set record.externalHrid = externalHrid
 
@@ -278,7 +274,6 @@ Feature: Test quickMARC holdings records
     * fields.push(newField)
     * set record.fields = fields
     #version unchanged because 500 tag is absent in mapping rules so inventory record is not updated on previous PUT
-    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -330,7 +325,6 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "004", "content": "in00000000002", "isProtected":false }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -352,7 +346,6 @@ Feature: Test quickMARC holdings records
     * def newField = { "tag": "852", "content": "$b Test", "isProtected": false, "indicators": [ "0", "1" ] }
     * fields.push(newField)
     * set record.fields = fields
-    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId
@@ -371,7 +364,6 @@ Feature: Test quickMARC holdings records
     And def record = response
 
     * remove record.fields[?(@.tag=='852')]
-    * set record.relatedRecordVersion = 4
     * set record._actionType = 'edit'
 
     Given path 'records-editor/records', record.parsedRecordId

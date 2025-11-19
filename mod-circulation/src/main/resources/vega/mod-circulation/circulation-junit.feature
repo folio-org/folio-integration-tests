@@ -77,6 +77,7 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.location-units.institutions.item.post'      |
       | 'inventory-storage.location-units.libraries.item.post'         |
       | 'inventory-storage.locations.item.post'                        |
+      | 'inventory-storage.locations.item.put'                        |
       | 'inventory-storage.material-types.item.post'                   |
       | 'inventory-storage.preceding-succeeding-titles.collection.get' |
       | 'inventory-storage.preceding-succeeding-titles.item.delete'    |
@@ -90,6 +91,7 @@ Feature: mod-circulation integration tests
       | 'inventory.items.item.mark-restricted.post'                    |
       | 'inventory.items.item.get'                                     |
       | 'inventory.items.item.post'                                    |
+      | 'inventory.items.item.put'                                     |
       | 'lost-item-fees-policies.item.post'                            |
       | 'lost-item-fees-policies.item.get'                             |
       | 'manualblocks.collection.get'                                  |

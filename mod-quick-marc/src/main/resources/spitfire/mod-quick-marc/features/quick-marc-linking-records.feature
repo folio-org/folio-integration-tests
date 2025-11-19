@@ -2,7 +2,7 @@ Feature: linking-records tests
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * configure readTimeout = 65000
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
@@ -19,7 +19,6 @@ Feature: linking-records tests
 
     # replace new field
     * def record = response
-    * set record.relatedRecordVersion = 3
 
     * def field = karate.jsonPath(record, "$.fields[?(@.tag=='100')]")[0]
     * set field.content = '$a Updated'
@@ -58,7 +57,6 @@ Feature: linking-records tests
 
     # replace new field
     * def record = response
-    * set record.relatedRecordVersion = 4
 
     * def field = karate.jsonPath(record, "$.fields[?(@.tag=='010')]")[0]
     * set field.content = '$a n 00001265'

@@ -19,8 +19,8 @@ Feature: ledger
       "ledgerStatus": "Active",
       "netTransfers": 0.0,
       "acqUnitIds": [],
-      "restrictEncumbrance": #(restrictEncumbrance),
-      "restrictExpenditures": #(restrictExpenditures)
+      "restrictEncumbrance": "#(restrictEncumbrance)",
+      "restrictExpenditures": "#(restrictExpenditures)"
     }
     """
     When method POST

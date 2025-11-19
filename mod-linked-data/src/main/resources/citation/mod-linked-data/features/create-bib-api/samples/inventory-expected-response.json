@@ -25,7 +25,10 @@
   "identifiers": [
     { "value": "1234567890", "identifierTypeId": "#notnull" },
     { "value": "0987654321 Hardcover", "identifierTypeId": "#notnull" },
-    { "value": "(ld) -7796008423458859781", "identifierTypeId": "#notnull" }
+    { "value": "ISSN Value", "identifierTypeId": "#notnull" },
+    { "value": "IAN value IAN Qualifier", "identifierTypeId": "#notnull" },
+    { "value": "Other ID value Other ID qualifier", "identifierTypeId": "#notnull" },
+    { "value": "(ld) -136473835849927448", "identifierTypeId": "#notnull" }
   ],
   "classifications": [
     { "classificationNumber": "Lib-Congress-number Lib-Congress-number-item", "classificationTypeId": "#notnull" },

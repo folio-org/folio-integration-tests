@@ -8,7 +8,7 @@ Feature: Initialize mod-finance integration tests
     * table modules
       | name                        |
       | 'mod-permissions'           |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-finance-storage'       |
@@ -84,10 +84,9 @@ Feature: Initialize mod-finance integration tests
       | 'acquisitions-units.memberships.item.put'                     |
       | 'acquisitions-units.units.item.delete'                        |
       | 'acquisitions-units.units.item.post'                          |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.delete'                           |
-      | 'configuration.entries.item.post'                             |
-      | 'configuration.entries.item.put'                              |
+      | 'orders-storage.settings.collection.get'                      |
+      | 'orders-storage.settings.item.post'                           |
+      | 'orders-storage.settings.item.put'                            |
       | 'inventory-storage.contributor-name-types.item.post'          |
       | 'inventory-storage.electronic-access-relationships.item.post' |
       | 'inventory-storage.holdings-sources.item.post'                |

@@ -64,4 +64,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void lccnDeduplication() {
     runFeatureTest("validation/lccn/deduplication/lccn-deduplication.feature");
   }
+
+  @Test
+  void rdfImport() {
+      runFeatureTest("import-rdf/import-rdf.feature");
+  }
 }

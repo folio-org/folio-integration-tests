@@ -8,10 +8,11 @@ function fn() {
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
+  var testEdgeUser = karate.properties['testEdgeUser'];
 
   var config = {
     baseUrl: 'http://localhost:8000',
-    edgeUrl: 'http://localhost:9000',
+    edgeUrl: 'http://localhost:19000',
     ftpUrl: 'ftp://ftp.ci.folio.org',
     ftpPort:  21,
     ftpUser: 'folio',
@@ -25,6 +26,7 @@ function fn() {
 
     testTenant: testTenant,
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    testEdgeUser: testEdgeUser,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -114,7 +116,7 @@ function fn() {
     createTitleForInstance: karate.read('classpath:thunderjet/mod-orders/reusable/create-title.feature@instance'),
     createPiece: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece.feature'),
     createPiecesBatch: karate.read('classpath:thunderjet/mod-orders/reusable/create-pieces-batch.feature'),
-    createPieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding.feature'),
+    createPieceWithHoldingOrLocation: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding-or-location.feature'),
     updatePiecesBatchStatus: karate.read('classpath:thunderjet/mod-orders/reusable/update-pieces-batch-status.feature'),
     claimPieces: karate.read('classpath:thunderjet/mod-orders/reusable/claim-pieces.feature'),
     receivePieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/receive-piece-with-holding.feature'),

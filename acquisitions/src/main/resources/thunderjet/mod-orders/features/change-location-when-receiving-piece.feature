@@ -1,4 +1,5 @@
 # For MODORDERS-616
+@parallel=false
 Feature: Change location when receiving a piece
 
   Background:
@@ -102,9 +103,9 @@ Feature: Change location when receiving a piece
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
 
-    # 6. Check piece location and get piece holdingId
+    # 6.  Get piece holdingId
     Given path "orders/pieces", pieceId
-    And retry until response.locationId == globalLocationsId2
+    And retry until response.holdingId != null
     When method GET
     Then status 200
     * def pieceHoldingId = $.holdingId

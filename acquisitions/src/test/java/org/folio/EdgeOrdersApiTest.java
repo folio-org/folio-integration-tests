@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 /**
- * For this test suite to work, edge-orders has to be started on port 9000 using an ephemeral.properties
+ * For this test suite to work, edge-orders has to be started on port 19000 using an ephemeral.properties
  * file including test_edge_orders in the list of tenants and with the following lines:
  *   secureStore.type=Ephemeral
  *   tenants=testedgeorders
  *   testedgeorders=test-user,test
  * Example of a command to start edge-orders locally:
- *   java -Dport=9000 -Dokapi_url=http://localhost:8000 -Dsecure_store_props=path/to/ephemeral.properties -jar target/edge-orders-fat.jar
+ *   java -Dport=19000 -Dokapi_url=http://localhost:8000 -Dsecure_store_props=path/to/ephemeral.properties -jar target/edge-orders-fat.jar
  * The port number to use for edge modules is specified in karate-config.js.
  */
 @FolioTest(team = "thunderjet", module = "edge-orders")
@@ -32,6 +32,7 @@ class EdgeOrdersApiTest extends TestBaseEureka {
   @BeforeAll
   void edgeOrdersApiTestBeforeAll() {
     System.setProperty("testTenant", "testedgeorders");
+    System.setProperty("testEdgeUser", "test-user");
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/edge-orders/init-edge-orders.feature");
   }

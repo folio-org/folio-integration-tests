@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Move Item and Holding to update order data
 
   Background:
@@ -11,7 +12,7 @@ Feature: Move Item and Holding to update order data
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 
-    * configure retry = { interval: 1000, count: 5 }
+    * configure retry = { interval: 10000, count: 10 }
 
     * callonce variables
 
@@ -148,7 +149,7 @@ Feature: Move Item and Holding to update order data
     * table pieceData
       | id      | format     | poLineId | titleId | holdingId | createItem |
       | pieceId | "Physical" | poLineId | titleId | holdingId | true       |
-    * def piece = call createPieceWithHolding pieceData
+    * def piece = call createPieceWithHoldingOrLocation pieceData
     * def itemId = piece[0].response.itemId
 
     # 2. Create new holding

@@ -1,0 +1,16 @@
+{
+  "id": "#(circulationItemId)",
+  "holdingsRecordId": "5bb19ab0-f8e0-4e9b-8cb1-923e4cda5161",
+  "status": {
+    "name": "Aged to lost",
+    "date": "2019-08-24T14:15:22Z"
+  },
+  "dcbItem": true,
+  "materialTypeId": "string",
+  "permanentLoanTypeId": "string",
+  "instanceTitle": "string",
+  "barcode": "#(barcode)",
+  "pickupLocation": "string",
+  "effectiveLocationId": "#(effectiveLocationId)",
+  "lendingLibraryCode": "string"
+}

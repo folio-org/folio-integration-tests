@@ -414,6 +414,22 @@ Feature: edge-oai-pmh features
     When method GET
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 1
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='u'] contains only ['uri6','uri3','uri4','uri5','uri7','uri8','uri9','uri13','uri1','uri2','uri3','uri3','uri4']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] == ['empty value','No information provided','No information provided updated','No information provided4']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='a'] == ['Københavns Universitet','Københavns Universitet','Københavns Universitet']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='b'] == ['City Campus','City Campus','City Campus']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='c'] == ['Datalogisk Institut','Datalogisk Institut','Datalogisk Institut']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='d'] == ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='e'] == ['D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='f'] == ['call number prefix','call number prefix','call number prefix']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='g'] == ['call number suffix','call number suffix','call number suffix']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='h'] == ['UDC','UDC','UDC']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='n'] == ['Copy 2','Copy 2','1']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='s'] == ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='8']/*[local-name()='subfield'][@code='y'] == ['No display constant generated','No display constant generated3']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] contains only ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification9','materialsSpecification3','materialsSpecification1','materialsSpecification2 UPDATED','materialsSpecification3','materialsSpecification3','materialsSpecification4']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7 UPDATED', 'publicNote8','publicNote9','publicNote3','publicNote1','publicNote2','publicNote3','publicNote3','publicNote4']
+
 
   Scenario: List records with marc21_withholdings prefix and with from param when records exist
     Given path 'oai'
@@ -476,6 +492,12 @@ Feature: edge-oai-pmh features
     When method GET
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 1
+    And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='001'] == 'inst000000000145'
+    And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='005'] contains '2025'
+    And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='008'] contains '210107'
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == '67dfac11-1caf-4470-9ad1-d533f6360bc8'
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
+
 
   Scenario: List records with marc21 prefix and with from param when records exist
     Given path 'oai'
