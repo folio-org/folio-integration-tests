@@ -2,7 +2,7 @@
 Feature: Reset default OAIPMH configs
 
   Background:
-    * url baseUrl+ '/configurations/entries'
+    * url baseUrl+ '/oai-pmh/configuration-settings'
     #Init variables for templates
     * callonce variables
 
@@ -34,5 +34,6 @@ Feature: Reset default OAIPMH configs
     * copy valueTemplate = behaviorValue
     * string valueTemplateString = valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+
 
 

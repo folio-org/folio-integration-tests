@@ -15,8 +15,8 @@ Feature: Additional ListRecords tests when source is Inventory
     * url baseUrl
 
     # Update configuration: recordsSource = 'Inventory', suppressedRecordsProcessing = 'true', support deleted = 'No'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path '/oai-pmh/configuration-settings'
+    And param query = 'configName==behavior'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant
@@ -31,7 +31,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * set value.deletedRecordsSupport = 'No'
     * string updatedValue = value;
     * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
     Then status 204
@@ -520,8 +520,8 @@ Feature: Additional ListRecords tests when source is Inventory
     * url baseUrl
 
     # Update configuration: recordsSource = 'SRS+Inventory'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path '/oai-pmh/configuration-settings'
+    And param query = 'configName==behavior'
     When method GET
     Then status 200
     * def config = get $.configs[0]
@@ -530,7 +530,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * set value.recordsSource = 'Source record storage and Inventory'
     * string updatedValue = value;
     * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
     Then status 204
@@ -570,8 +570,8 @@ Feature: Additional ListRecords tests when source is Inventory
     * url baseUrl
 
     # Update configuration: recordsSource = 'Inventory'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path '/oai-pmh/configuration-settings'
+    And param query = 'configName==behavior'
     When method GET
     Then status 200
     * def config = get $.configs[0]
@@ -580,7 +580,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * set value.recordsSource = 'Inventory'
     * string updatedValue = value;
     * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
     Then status 204

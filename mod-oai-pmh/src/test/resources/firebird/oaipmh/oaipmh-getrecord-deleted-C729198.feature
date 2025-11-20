@@ -138,8 +138,8 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
 
     # Step 5: Change "Deleted records support" setting to "No"
     Given url baseUrl
-    And path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    And path '/oai-pmh/configuration-settings'
+    And param query = 'configName==behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET
@@ -154,7 +154,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     * string updatedBehaviorValue = behaviorValue
     * set behaviorConfig.value = updatedBehaviorValue
 
-    Given path '/configurations/entries', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
@@ -200,7 +200,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     * set behaviorConfig.value = restoredBehaviorValue
 
     Given url baseUrl
-    And path '/configurations/entries', behaviorConfig.id
+    And path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
@@ -214,4 +214,3 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204
-

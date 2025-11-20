@@ -164,8 +164,8 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
 
     # Step 5: Change "Deleted records support" setting to "No"
     Given url baseUrl
-    And path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    And path '/oai-pmh/configuration-settings'
+    And param query = 'configName==behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET
@@ -180,7 +180,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     * string updatedBehaviorValue = behaviorValue
     * set behaviorConfig.value = updatedBehaviorValue
 
-    Given path '/configurations/entries', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
@@ -226,7 +226,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     * set behaviorConfig.value = restoredBehaviorValue
 
     Given url baseUrl
-    And path '/configurations/entries', behaviorConfig.id
+    And path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig

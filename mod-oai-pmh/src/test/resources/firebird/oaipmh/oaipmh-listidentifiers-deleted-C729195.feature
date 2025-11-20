@@ -355,8 +355,8 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
 
     # Step 5: Change "Suppressed records processing" setting to "Skip suppressed from discovery records"
     Given url baseUrl
-    And path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    And path '/oai-pmh/configuration-settings'
+    And param query = 'configName==behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET
@@ -370,7 +370,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     * string updatedBehaviorValue = behaviorValue
     * set behaviorConfig.value = updatedBehaviorValue
 
-    Given path '/configurations/entries', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
@@ -434,7 +434,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     * set behaviorConfig.value = restoredBehaviorValue
 
     Given url baseUrl
-    And path '/configurations/entries', behaviorConfig.id
+    And path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig

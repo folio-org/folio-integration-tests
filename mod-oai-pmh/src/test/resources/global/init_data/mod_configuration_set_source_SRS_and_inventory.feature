@@ -5,7 +5,7 @@ Feature: init data for mod-configuration
 
   Scenario: set errors to 500 Http status
     Given path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    And param query = 'configName==behavior'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
