@@ -139,7 +139,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     # Step 5: Change "Deleted records support" setting to "No"
     Given url baseUrl
     And path '/oai-pmh/configuration-settings'
-    And param query = 'configName==behavior'
+    And param query = 'name==behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET

@@ -16,7 +16,7 @@ Feature: Additional ListRecords tests when source is Inventory
 
     # Update configuration: recordsSource = 'Inventory', suppressedRecordsProcessing = 'true', support deleted = 'No'
     Given path '/oai-pmh/configuration-settings'
-    And param query = 'configName==behavior'
+    And param query = 'name==behavior'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant

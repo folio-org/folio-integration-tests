@@ -4,8 +4,8 @@ Feature: init data for mod-configuration - Inventory only
     * url baseUrl
 
   Scenario: Configure OAI-PMH for Inventory only
-    Given path 'configurations/entries'
-    And param query = 'configName==behavior'
+    Given path 'oai-pmh/configuration-settings'
+    And param query = 'name==behavior'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
@@ -15,7 +15,7 @@ Feature: init data for mod-configuration - Inventory only
 
     * def configId = get response.configs[0].id
 
-    Given path 'configurations/entries', configId
+    Given path 'oai-pmh/configuration-settings', configId
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
