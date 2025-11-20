@@ -66,6 +66,13 @@ Feature: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
     * print '8. Pay The Invoice'
     * def v = call payInvoice { invoiceId: "#(invoiceId)" }
 
+    # 9. Verify Order Totals - Total Encumbered $0.00, Total Expended $10.00
+    * print '9. Verify Order Totals - Total Encumbered $0.00, Total Expended $10.00'
+    Given path 'orders/composite-orders', orderId
+    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 10.00 && response.totalEncumbered == 0.00 && response.totalExpended == 10.00
+    When method GET
+    Then status 200
+
     #========================================================================================================
     # DEBUG: All Transactions Before Fund Distribution Change
     #========================================================================================================
@@ -84,13 +91,6 @@ Feature: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
     #========================================================================================================
     # TestRail Case Steps
     #========================================================================================================
-
-    # 9. Verify Order Totals - Total Encumbered $0.00, Total Expended $10.00
-    * print '9. Verify Order Totals - Total Encumbered $0.00, Total Expended $10.00'
-    Given path 'orders/composite-orders', orderId
-    And retry until response.workflowStatus == 'Open' && response.totalEstimatedPrice == 10.00 && response.totalEncumbered == 0.00 && response.totalExpended == 10.00
-    When method GET
-    Then status 200
 
     # 10. Change Fund Distribution From Fund A To Fund B
     * print '10. Change Fund Distribution From Fund A To Fund B'
