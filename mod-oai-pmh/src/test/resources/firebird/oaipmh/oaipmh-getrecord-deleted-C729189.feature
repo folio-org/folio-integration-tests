@@ -219,7 +219,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     * set behaviorConfig.configValue.deletedRecordsSupport = originalDeletedRecordsSupport
     * set behaviorConfig.configValue.enabledDeletedRecordsSupport = true
 
-    Given path 'oai-pmh/configuration-settings', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig

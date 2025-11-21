@@ -428,7 +428,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     # Cleanup: Restore "Suppressed records processing" setting to original value
     * set behaviorConfig.configValue.suppressedRecordsProcessing = originalSuppressedRecordsProcessing
 
-    Given path 'oai-pmh/configuration-settings', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig

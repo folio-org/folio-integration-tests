@@ -290,7 +290,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     When method GET
     Then status 200
     * def behaviorConfig = response.configurationSettings[0]
-    * def originalSuppressedRecordsProcessing = behaviorValue.configValue.suppressedRecordsProcessing
+    * def originalSuppressedRecordsProcessing = behaviorConfig.configValue.suppressedRecordsProcessing
 
     # Update configuration to skip suppressed from discovery records
     * set behaviorConfig.configValue.suppressedRecordsProcessing = 'Skip suppressed from discovery records'
@@ -342,7 +342,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     # Cleanup: Restore "Suppressed records processing" setting to original value
     * set behaviorConfig.configValue.suppressedRecordsProcessing = originalSuppressedRecordsProcessing
 
-    Given path 'oai-pmh/configuration-settings', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig

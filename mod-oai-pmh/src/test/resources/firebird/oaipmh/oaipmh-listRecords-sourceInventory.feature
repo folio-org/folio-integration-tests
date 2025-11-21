@@ -534,7 +534,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * def itemUpdated = read('classpath:samples/c375/item-updated-C375940.json')
     And request itemUpdated
     When method PUT
-    Then status 200
+    Then status 204
 
     # Harvest
     Given url pmhUrl

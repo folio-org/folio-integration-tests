@@ -231,7 +231,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
     # Cleanup: Restore "Suppressed records processing" setting to original value
     * set behaviorConfig.configValue.suppressedRecordsProcessing = originalSuppressedRecordsProcessing
 
-    Given path 'oai-pmh/configuration-settings', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
