@@ -367,7 +367,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
 
     # Update configuration to skip suppressed records
     * set behaviorValue.suppressedRecordsProcessing = 'Skip suppressed from discovery records'
-    * string updatedBehaviorValue = behaviorValue
+    * def updatedBehaviorValue = behaviorValue
     * set behaviorConfig.configValue = updatedBehaviorValue
 
     Given path '/oai-pmh/configuration-settings', behaviorConfig.id
@@ -430,7 +430,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
 
     # Cleanup: Restore "Suppressed records processing" setting to original value
     * set behaviorValue.suppressedRecordsProcessing = originalSuppressedRecordsProcessing
-    * string restoredBehaviorValue = behaviorValue
+    * def restoredBehaviorValue = behaviorValue
     * set behaviorConfig.configValue = restoredBehaviorValue
 
     Given url baseUrl

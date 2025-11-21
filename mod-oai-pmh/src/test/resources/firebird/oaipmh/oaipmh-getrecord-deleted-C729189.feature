@@ -177,7 +177,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     # Update configuration to disable deleted records support
     * set behaviorValue.deletedRecordsSupport = 'No'
     * set behaviorValue.enabledDeletedRecordsSupport = false
-    * string updatedBehaviorValue = behaviorValue
+    * def updatedBehaviorValue = behaviorValue
     * set behaviorConfig.configValue = updatedBehaviorValue
 
     Given path '/oai-pmh/configuration-settings', behaviorConfig.id
@@ -222,7 +222,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     # Cleanup: Restore "Deleted records support" setting to original value
     * set behaviorValue.deletedRecordsSupport = originalDeletedRecordsSupport
     * set behaviorValue.enabledDeletedRecordsSupport = true
-    * string restoredBehaviorValue = behaviorValue
+    * def restoredBehaviorValue = behaviorValue
     * set behaviorConfig.configValue = restoredBehaviorValue
 
     Given url baseUrl

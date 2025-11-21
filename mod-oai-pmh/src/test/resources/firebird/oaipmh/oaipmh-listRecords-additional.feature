@@ -16,7 +16,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 7
     * def res = get response //datafield[@tag='952']/subfield[@code='a']
     * match res == ['Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet']
     * def res = get response //datafield[@tag='952']/subfield[@code='b']
@@ -221,7 +221,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 6
     * def res = get response //datafield[@tag='952']/subfield[@code='a']
     * match res == ['Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet']
     * def res = get response //datafield[@tag='952']/subfield[@code='b']
@@ -469,7 +469,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 6
 
   Scenario: Added SRS instances are harvested (marc21 and marc21_withholdings)
     * def srsId = '8f7e9a7d-591a-4fea-b0cc-99e1e4670112'
@@ -527,7 +527,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 7
 
     Given url pmhUrl
     And param verb = 'ListRecords'

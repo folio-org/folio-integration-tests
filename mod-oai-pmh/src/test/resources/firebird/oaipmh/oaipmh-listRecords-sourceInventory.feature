@@ -29,12 +29,12 @@ Feature: Additional ListRecords tests when source is Inventory
     * set value.recordsSource = 'Inventory'
     * set value.suppressedRecordsProcessing = 'true'
     * set value.deletedRecordsSupport = 'No'
-    * string updatedValue = value;
+    * def updatedValue = value;
     * set config.configValue = updatedValue
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Add instance
     Given path 'instance-storage/instances'
@@ -524,16 +524,16 @@ Feature: Additional ListRecords tests when source is Inventory
     And param query = 'configName==behavior'
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
     * def value = config.configValue
     * set value.recordsSource = 'Source record storage and Inventory'
-    * string updatedValue = value;
+    * def updatedValue = value;
     * set config.configValue = updatedValue
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Change item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
@@ -578,12 +578,12 @@ Feature: Additional ListRecords tests when source is Inventory
     And match config.configName == 'behavior'
     * def value = config.configValue
     * set value.recordsSource = 'Inventory'
-    * string updatedValue = value;
+    * def updatedValue = value;
     * set config.configValue = updatedValue
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Remove item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'

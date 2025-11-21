@@ -11,7 +11,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-    * callonce read('classpath:global/init_data/mod_configuration_set_source_Inventory_only.feature')
+    * callonce read('classpath:global/init_data/mod_configuration_set_source_SRS_and_inventory.feature')
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
@@ -151,7 +151,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     # Update configuration to disable deleted records support
     * set behaviorValue.deletedRecordsSupport = 'No'
     * set behaviorValue.enabledDeletedRecordsSupport = false
-    * string updatedBehaviorValue = behaviorValue
+    * def updatedBehaviorValue = behaviorValue
     * set behaviorConfig.configValue = updatedBehaviorValue
 
     Given path '/oai-pmh/configuration-settings', behaviorConfig.id
@@ -196,7 +196,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     # Cleanup: Restore "Deleted records support" setting to original value
     * set behaviorValue.deletedRecordsSupport = originalDeletedRecordsSupport
     * set behaviorValue.enabledDeletedRecordsSupport = true
-    * string restoredBehaviorValue = behaviorValue
+    * def restoredBehaviorValue = behaviorValue
     * set behaviorConfig.configValue = restoredBehaviorValue
 
     Given url baseUrl
