@@ -65,7 +65,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
     And header x-okapi-token = okapitoken
     And request instanceData
     When method PUT
-    Then status 204
+    Then status 200
 
     # Allow time for changes to propagate
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
@@ -159,7 +159,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
     And header x-okapi-token = okapitoken
     And request instanceData
     When method PUT
-    Then status 204
+    Then status 200
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 2000
@@ -186,7 +186,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 2000
 
@@ -231,7 +231,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     # Cleanup: Physically delete the created FOLIO instance to avoid affecting other tests
     Given url baseUrl

@@ -96,7 +96,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header x-okapi-token = okapitoken
     And request instanceData
     When method PUT
-    Then status 204
+    Then status 200
 
     # Instance 2
     Given url baseUrl
@@ -118,7 +118,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header x-okapi-token = okapitoken
     And request instanceData2
     When method PUT
-    Then status 204
+    Then status 200
 
     # Step 4: Allow time for changes to propagate
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
@@ -269,14 +269,14 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header x-okapi-token = okapitoken
     And request instanceData
     When method PUT
-    Then status 204
+    Then status 200
 
     Given path 'instance-storage/instances', testInstanceId2
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request instanceData2
     When method PUT
-    Then status 204
+    Then status 200
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 2000
@@ -303,7 +303,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 2000
 
@@ -353,7 +353,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     # Cleanup: Physically delete the created FOLIO instance to avoid affecting other tests
     Given url baseUrl

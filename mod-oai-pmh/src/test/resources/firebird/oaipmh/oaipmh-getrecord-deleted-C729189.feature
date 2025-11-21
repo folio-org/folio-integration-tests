@@ -37,7 +37,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     And header x-okapi-token = okapitoken
     And request bgCleanupInstance
     When method PUT
-    Then status 204
+    Then status 200
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 3000
 
@@ -118,7 +118,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     And header x-okapi-token = okapitoken
     And request originalInstance
     When method PUT
-    Then status 204
+    Then status 200
 
     # Wait longer for restoration to fully propagate through the system
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
@@ -157,7 +157,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     And header x-okapi-token = okapitoken
     And request instanceData
     When method PUT
-    Then status 204
+    Then status 200
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 2000
@@ -185,7 +185,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 2000
 
@@ -231,7 +231,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     # Cleanup: Restore instance to original state to avoid affecting other tests
     # Get current instance version
@@ -255,7 +255,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     And header x-okapi-token = okapitoken
     And request originalInstanceState
     When method PUT
-    Then status 204
+    Then status 200
 
     # Wait longer for restoration to fully propagate through the system
     * call sleep 5000

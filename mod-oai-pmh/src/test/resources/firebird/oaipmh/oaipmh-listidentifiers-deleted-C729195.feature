@@ -375,7 +375,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 3000
 
@@ -439,7 +439,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     # Cleanup: Restore all instances to original state
     # Get current versions
@@ -464,7 +464,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     And header x-okapi-token = okapitoken
     And request originalInstanceState1
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 5000
 
@@ -490,7 +490,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     And header x-okapi-token = okapitoken
     And request originalInstanceState2
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 5000
     Given url baseUrl

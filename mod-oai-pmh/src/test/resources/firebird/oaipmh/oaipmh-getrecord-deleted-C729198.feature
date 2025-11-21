@@ -159,7 +159,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 2000
 
@@ -205,7 +205,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     # Cleanup: Physically delete the created FOLIO instance to avoid affecting other tests
     Given url baseUrl
