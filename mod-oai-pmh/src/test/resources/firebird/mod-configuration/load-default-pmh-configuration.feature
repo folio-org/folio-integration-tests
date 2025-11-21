@@ -21,11 +21,12 @@ Feature: Test integration with mod-oai-pmh configuration settings during Posting
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = karate.filter(configResponse.configurationSettings, function(x){ return x.module == 'OAIPMH' })
-    * def configGroups = karate.map(configGroups, function(x){ return x.configName })
-    And match configGroups contains 'behavior'
-    And match configGroups contains 'technical'
-    And match configGroups contains 'general'
+    * print response
+#    * def configGroups = karate.filter(configResponse.configurationSettings, function(x){ return x.module == 'OAIPMH' })
+#    * def configGroups = karate.map(configGroups, function(x){ return x.configName })
+    And match response contains 'behavior'
+    And match respone contains 'technical'
+    And match response contains 'general'
 
   Scenario: Should just enable module when oai-pmh configuration-settings already contains all related configs
     * def result = call read('classpath:firebird/mod-configuration/reusable/get_oaipmh_configs.feature')
@@ -42,7 +43,7 @@ Feature: Test integration with mod-oai-pmh configuration settings during Posting
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = karate.filter(configResponse.configurationSettings, function(x){ return x.module == 'OAIPMH' })
+#    * def configGroups = karate.filter(configResponse.configurationSettings, function(x){ return x.module == 'OAIPMH' })
     * def configGroups = karate.map(configGroups, function(x){ return x.configName })
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'

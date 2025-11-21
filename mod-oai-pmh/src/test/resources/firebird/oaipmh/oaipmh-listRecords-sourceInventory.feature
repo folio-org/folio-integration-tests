@@ -25,7 +25,7 @@ Feature: Additional ListRecords tests when source is Inventory
     Then status 200
     * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.configValue)
+    * def value = config.configValue
     * set value.recordsSource = 'Inventory'
     * set value.suppressedRecordsProcessing = 'true'
     * set value.deletedRecordsSupport = 'No'
@@ -526,7 +526,7 @@ Feature: Additional ListRecords tests when source is Inventory
     Then status 200
     * def config = get $.configs[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.configValue)
+    * def value = config.configValue
     * set value.recordsSource = 'Source record storage and Inventory'
     * string updatedValue = value;
     * set config.configValue = updatedValue
@@ -576,7 +576,7 @@ Feature: Additional ListRecords tests when source is Inventory
     Then status 200
     * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.configValue)
+    * def value = config.configValue
     * set value.recordsSource = 'Inventory'
     * string updatedValue = value;
     * set config.configValue = updatedValue

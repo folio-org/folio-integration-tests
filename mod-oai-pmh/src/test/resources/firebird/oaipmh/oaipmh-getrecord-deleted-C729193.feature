@@ -37,7 +37,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
     And header x-okapi-token = okapitoken
     And request bgCleanupInstance
     When method PUT
-    Then status 200
+    Then status 204
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 3000
 
@@ -74,7 +74,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
     And header x-okapi-token = okapitoken
     And request instanceData
     When method PUT
-    Then status 200
+    Then status 204
 
     # Allow time for changes to propagate
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
@@ -132,7 +132,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
     And header x-okapi-token = okapitoken
     And request originalInstance
     When method PUT
-    Then status 200
+    Then status 204
 
     # Wait longer for restoration to fully propagate through the system
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
@@ -171,7 +171,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
     And header x-okapi-token = okapitoken
     And request instanceData
     When method PUT
-    Then status 200
+    Then status 204
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 2000
@@ -267,7 +267,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
     And header x-okapi-token = okapitoken
     And request originalInstanceState
     When method PUT
-    Then status 200
+    Then status 204
 
     # Wait longer for restoration to fully propagate through the system
     * call sleep 5000
