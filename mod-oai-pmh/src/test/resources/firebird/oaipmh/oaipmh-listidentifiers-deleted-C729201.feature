@@ -289,7 +289,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header Accept = 'application/json'
     When method GET
     Then status 200
-    * def behaviorConfig = response.configs[0]
+    * def behaviorConfig = response.configurationSettings[0]
     * def behaviorValue = karate.fromString(behaviorConfig.value)
     * def originalSuppressedRecordsProcessing = behaviorValue.suppressedRecordsProcessing
 

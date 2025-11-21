@@ -21,7 +21,7 @@ Feature: Test integration with mod-oai-pmh configuration settings during Posting
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = karate.filter(configResponse.configs, function(x){ return x.module == 'OAIPMH' })
+    * def configGroups = karate.filter(configResponse.configurationSettings, function(x){ return x.module == 'OAIPMH' })
     * def configGroups = karate.map(configGroups, function(x){ return x.configName })
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'
@@ -42,7 +42,7 @@ Feature: Test integration with mod-oai-pmh configuration settings during Posting
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def configGroups = karate.filter(configResponse.configs, function(x){ return x.module == 'OAIPMH' })
+    * def configGroups = karate.filter(configResponse.configurationSettings, function(x){ return x.module == 'OAIPMH' })
     * def configGroups = karate.map(configGroups, function(x){ return x.configName })
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'

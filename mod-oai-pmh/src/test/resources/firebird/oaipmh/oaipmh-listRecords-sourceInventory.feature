@@ -23,7 +23,7 @@ Feature: Additional ListRecords tests when source is Inventory
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
     * def value = karate.fromString(config.value)
     * set value.recordsSource = 'Inventory'
@@ -574,7 +574,7 @@ Feature: Additional ListRecords tests when source is Inventory
     And param query = 'configName==behavior'
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
     * def value = karate.fromString(config.value)
     * set value.recordsSource = 'Inventory'

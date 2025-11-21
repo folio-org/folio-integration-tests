@@ -12,11 +12,11 @@ Feature: Reset default OAIPMH configs
 
     * def result =  callonce read('classpath:firebird/mod-configuration/reusable/get_oaipmh_configs.feature')
     * def configResponse = result.response
-    * def technical = $configResponse.configs[?(@.configName=='technical')].id
+    * def technical = $configResponse.configurationSettings[?(@.configName=='technical')].id
     * def technicalId = '' + technical
-    * def general = $configResponse.configs[?(@.configName=='general')].id
+    * def general = $configResponse.configurationSettings[?(@.configName=='general')].id
     * def generalId = '' + general
-    * def behavior = $configResponse.configs[?(@.configName=='behavior')].id
+    * def behavior = $configResponse.configurationSettings[?(@.configName=='behavior')].id
     * def behaviorId = '' + behavior
 
     # if you need to redefine default values, do it like this before loading templates: * def enableOaiServiceConfig = 'UPDATED'
