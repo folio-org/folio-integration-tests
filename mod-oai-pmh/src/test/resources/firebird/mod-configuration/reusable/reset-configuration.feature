@@ -23,17 +23,17 @@ Feature: Reset default OAIPMH configs
     # fill placeholders with variables
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
 
-    * copy valueTemplate = technicalValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateString)'}
+    # Technical config
+    * def valueTemplate = technicalValue
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig'){ id: '#(technicalId)', data: valueTemplate }
 
-    * copy valueTemplate = generalValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig') {id: '#(generalId)', data: '#(valueTemplateString)'}
+    # General config
+    * def valueTemplate = generalValue
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig'){ id: '#(generalId)', data: valueTemplate }
 
-    * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+    # Behavior config
+    * def valueTemplate = behaviorValue
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig'){ id: '#(behaviorId)', data: valueTemplate }
 
 
 

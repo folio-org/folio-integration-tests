@@ -145,14 +145,14 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     When method GET
     Then status 200
     * def behaviorConfig = response.configurationSettings[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.value)
+    * def behaviorValue = karate.fromString(behaviorConfig.configValue)
     * def originalDeletedRecordsSupport = behaviorValue.deletedRecordsSupport
 
     # Update configuration to disable deleted records support
     * set behaviorValue.deletedRecordsSupport = 'No'
     * set behaviorValue.enabledDeletedRecordsSupport = false
     * string updatedBehaviorValue = behaviorValue
-    * set behaviorConfig.value = updatedBehaviorValue
+    * set behaviorConfig.configValue = updatedBehaviorValue
 
     Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
@@ -197,7 +197,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     * set behaviorValue.deletedRecordsSupport = originalDeletedRecordsSupport
     * set behaviorValue.enabledDeletedRecordsSupport = true
     * string restoredBehaviorValue = behaviorValue
-    * set behaviorConfig.value = restoredBehaviorValue
+    * set behaviorConfig.configValue = restoredBehaviorValue
 
     Given url baseUrl
     And path '/oai-pmh/configuration-settings', behaviorConfig.id

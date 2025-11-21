@@ -30,7 +30,7 @@ Feature: Test integration with mod-oai-pmh configuration settings during Posting
   Scenario: Should just enable module when oai-pmh configuration-settings already contains all related configs
     * def result = call read('classpath:firebird/mod-configuration/reusable/get_oaipmh_configs.feature')
     * def configResponse = result.response
-    * def configGroups = get configResponse.configs[*].configName
+    * def configGroups = get configResponse.configurationSettings[*].configName
     And match configGroups contains 'behavior'
     And match configGroups contains 'technical'
     And match configGroups contains 'general'

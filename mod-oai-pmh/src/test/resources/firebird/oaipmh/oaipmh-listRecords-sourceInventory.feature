@@ -25,12 +25,12 @@ Feature: Additional ListRecords tests when source is Inventory
     Then status 200
     * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
+    * def value = karate.fromString(config.configValue)
     * set value.recordsSource = 'Inventory'
     * set value.suppressedRecordsProcessing = 'true'
     * set value.deletedRecordsSupport = 'No'
     * string updatedValue = value;
-    * set config.value = updatedValue
+    * set config.configValue = updatedValue
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
@@ -526,10 +526,10 @@ Feature: Additional ListRecords tests when source is Inventory
     Then status 200
     * def config = get $.configs[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
+    * def value = karate.fromString(config.configValue)
     * set value.recordsSource = 'Source record storage and Inventory'
     * string updatedValue = value;
-    * set config.value = updatedValue
+    * set config.configValue = updatedValue
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
@@ -576,10 +576,10 @@ Feature: Additional ListRecords tests when source is Inventory
     Then status 200
     * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
+    * def value = karate.fromString(config.configValue)
     * set value.recordsSource = 'Inventory'
     * string updatedValue = value;
-    * set config.value = updatedValue
+    * set config.configValue = updatedValue
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
