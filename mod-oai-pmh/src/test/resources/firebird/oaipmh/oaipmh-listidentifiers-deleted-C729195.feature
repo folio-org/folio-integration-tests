@@ -362,7 +362,7 @@ Feature: ListIdentifiers: SRS - Verify that set for deletion MARC Instances are 
     When method GET
     Then status 200
     * def behaviorConfig = response.configurationSettings[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.configValue)
+    * def behaviorValue = behaviorConfig.configValue
     * def originalSuppressedRecordsProcessing = behaviorValue.suppressedRecordsProcessing
 
     # Update configuration to skip suppressed records

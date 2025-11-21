@@ -13,7 +13,7 @@ Feature: update oai-pmh configuration settings
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     When method PUT
-    Then status 204
+    Then status 200
 
   @TechnicalConfig
   Scenario: set technical config
@@ -26,7 +26,7 @@ Feature: update oai-pmh configuration settings
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     When method PUT
-    Then status 204
+    Then status 200
 
   @GeneralConfig
   Scenario: set general config
@@ -39,7 +39,7 @@ Feature: update oai-pmh configuration settings
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     When method PUT
-    Then status 204
+    Then status 200
 
   @SetErrorProcessing500
   Scenario: Set error processing setting to 500
@@ -47,4 +47,4 @@ Feature: update oai-pmh configuration settings
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
     * def valueTemplateJson = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig'){ id: '#(behaviorId)', data: valueTemplateJson }
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig'){ id: '#(behaviorId)', data: '#(valueTemplateJson)' }

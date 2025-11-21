@@ -145,7 +145,7 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     When method GET
     Then status 200
     * def behaviorConfig = response.configurationSettings[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.configValue)
+    * def behaviorValue = behaviorConfig.configValue
     * def originalDeletedRecordsSupport = behaviorValue.deletedRecordsSupport
 
     # Update configuration to disable deleted records support

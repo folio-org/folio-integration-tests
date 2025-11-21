@@ -15,9 +15,8 @@ Feature: Test enhancements to oai-pmh
     * def recordsSourceConfig = "Source record storage"
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * print 'valueTemplate=', valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+    * def valueTemplateJson = valueTemplate
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateJson)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -36,9 +35,8 @@ Feature: Test enhancements to oai-pmh
     * def enableOaiServiceConfig = <enableOAIService>
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = generalValue
-    * string valueTemplateString = valueTemplate
-    * print 'valueTemplate=', valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig') {id: '#(generalId)', data: '#(valueTemplateString)'}
+    * def valueTemplateJson = valueTemplate
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig') {id: '#(generalId)', data: '#(valueTemplateJson)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -151,8 +149,8 @@ Feature: Test enhancements to oai-pmh
     * def maxRecordsPerResponseConfig = '4'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = technicalValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateString)'}
+    * def valueTemplateJson = valueTemplate
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateJson)'}
     * def totalRecords = 0
 
     Given url pmhUrl
@@ -174,7 +172,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#notnull'
-    And match response //resumptionToken/@cursor == '3'
+    And match response //resumptionToken/@cursor == '4'
     And def resumptionToken = get response //resumptionToken
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
@@ -226,8 +224,8 @@ Feature: Test enhancements to oai-pmh
     * def deletedRecordsSupportConfig = 'no'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+    * def valueTemplateJson = valueTemplate
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateJson)'}
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -303,7 +301,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 8
+    * match response count(//record) == 7
     * match response //header[@status='deleted'] == '#notnull'
 
     #return record to original state
@@ -319,8 +317,8 @@ Feature: Test enhancements to oai-pmh
     * def suppressedRecordsProcessingConfig = 'true'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
+    * def valueTemplateJson = valueTemplate
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateJson)'}
 
     * def srsId = '4c0ff739-3f4d-4670-a693-84dd48e31c53'
      #delete record
@@ -338,14 +336,14 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     * match response count(//record) == 10
-    * match response count(//header[@status='deleted']) == 4
+    * match response count(//header[@status='deleted']) == 5
 
   Scenario: Verify that resumption Token contains tenantId and all the other required parameters
     * def maxRecordsPerResponseConfig = '5'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplateTechnical = technicalValue
-    * string valueTemplateStringTechnical = valueTemplateTechnical
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateStringTechnical)'}
+    * def valueTemplateJson = valueTemplate
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateJson)'}
 
     Given url pmhUrl
     And param verb = 'ListIdentifiers'

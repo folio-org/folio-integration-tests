@@ -290,7 +290,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     When method GET
     Then status 200
     * def behaviorConfig = response.configurationSettings[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.value)
+    * def behaviorValue = behaviorConfig.value
     * def originalSuppressedRecordsProcessing = behaviorValue.suppressedRecordsProcessing
 
     # Update configuration to skip suppressed from discovery records

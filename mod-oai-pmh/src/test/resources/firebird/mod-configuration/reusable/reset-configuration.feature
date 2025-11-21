@@ -25,15 +25,15 @@ Feature: Reset default OAIPMH configs
 
     # Technical config
     * def valueTemplate = technicalValue
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig'){ id: '#(technicalId)', data: valueTemplate }
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig'){ id: '#(technicalId)', data: '#(valueTemplate)' }
 
     # General config
     * def valueTemplate = generalValue
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig'){ id: '#(generalId)', data: valueTemplate }
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig'){ id: '#(generalId)', data: '#(valueTemplate)' }
 
     # Behavior config
     * def valueTemplate = behaviorValue
-    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig'){ id: '#(behaviorId)', data: valueTemplate }
+    * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig'){ id: '#(behaviorId)', data: '#(valueTemplate)' }
 
 
 
