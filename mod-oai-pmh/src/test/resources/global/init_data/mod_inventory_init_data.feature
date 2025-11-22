@@ -9,14 +9,14 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-     {
-            "id": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
-            "name": "text",
-            "code": "txt",
-            "source": "rdacontent"
-     }
-    """
+      """
+      {
+        "id": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+        "name": "text",
+        "code": "txt",
+        "source": "rdacontent"
+      }
+      """
     When method POST
     Then status 201
 
@@ -25,13 +25,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-            "id": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
-            "name": "Københavns Universitet",
-            "code": "KU"
-    }
-    """
+      """
+      {
+        "id": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
+        "name": "Københavns Universitet",
+        "code": "KU"
+      }
+      """
     When method POST
     Then status 201
 
@@ -40,14 +40,14 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-            "id": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
-            "name": "City Campus",
-            "code": "CC",
-            "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57"
-    }
-    """
+      """
+      {
+        "id": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
+        "name": "City Campus",
+        "code": "CC",
+        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57"
+      }
+      """
     When method POST
     Then status 201
 
@@ -56,14 +56,14 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-            "id": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
-            "name": "Datalogisk Institut",
-            "code": "DI",
-            "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848"
-    }
-    """
+      """
+      {
+        "id": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
+        "name": "Datalogisk Institut",
+        "code": "DI",
+        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848"
+      }
+      """
     When method POST
     Then status 201
 
@@ -72,22 +72,22 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-     {
-            "id": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
-            "name": "SECOND FLOOR",
-            "code": "KU/CC/DI/2",
-            "isActive": true,
-            "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
-            "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
-            "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
-            "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
-            "servicePointIds": [
-                "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
-            ],
-            "servicePoints": []
-        }
-    """
+      """
+      {
+        "id": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+        "name": "SECOND FLOOR",
+        "code": "KU/CC/DI/2",
+        "isActive": true,
+        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
+        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
+        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
+        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+        "servicePointIds": [
+          "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
+        ],
+        "servicePoints": []
+      }
+      """
     When method POST
     Then status 201
 
@@ -120,12 +120,12 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-            "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
-            "name": "Can circulate"
-    }
-    """
+      """
+      {
+        "id": "2b94c631-fca9-4892-a730-03ee529ffe27",
+        "name": "Can circulate"
+      }
+      """
     When method POST
     Then status 201
 
@@ -134,13 +134,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-            "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
-            "name": "book",
-            "source": "folio"
-    }
-    """
+      """
+      {
+        "id": "1a54b431-2e4f-452d-9cae-9cee66c9a892",
+        "name": "book",
+        "source": "folio"
+      }
+      """
     When method POST
     Then status 201
 
@@ -149,13 +149,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-      "id": "ef03d582-219c-4221-8635-bc92f1107021",
-      "name": "No display constant generated",
-      "source": "folio"
-    }
-    """
+      """
+      {
+        "id": "ef03d582-219c-4221-8635-bc92f1107021",
+        "name": "No display constant generated",
+        "source": "folio"
+      }
+      """
     When method POST
     Then status 201
 
@@ -164,13 +164,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-      "id": "f50c90c9-bae0-4add-9cd0-db9092dbc9dd",
-      "name": "No information provided",
-      "source": "folio"
-    }
-    """
+      """
+      {
+        "id": "f50c90c9-bae0-4add-9cd0-db9092dbc9dd",
+        "name": "No information provided",
+        "source": "folio"
+      }
+      """
     When method POST
     Then status 201
 
@@ -179,13 +179,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-      "id": "5bfe1b7b-f151-4501-8cfa-23b321d5cd1e",
-      "name": "Related resource",
-      "source": "folio"
-    }
-    """
+      """
+      {
+        "id": "5bfe1b7b-f151-4501-8cfa-23b321d5cd1e",
+        "name": "Related resource",
+        "source": "folio"
+      }
+      """
     When method POST
     Then status 201
 
@@ -194,13 +194,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-      "id": "f5d0068e-6272-458e-8a81-b85e7b9a14aa",
-      "name": "Resource",
-      "source": "folio"
-    }
-    """
+      """
+      {
+        "id": "f5d0068e-6272-458e-8a81-b85e7b9a14aa",
+        "name": "Resource",
+        "source": "folio"
+      }
+      """
     When method POST
     Then status 201
 
@@ -209,13 +209,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-      "id": "3b430592-2e09-4b48-9a0c-0636d66b9fb3",
-      "name": "Version of resource",
-      "source": "folio"
-    }
-    """
+      """
+      {
+        "id": "3b430592-2e09-4b48-9a0c-0636d66b9fb3",
+        "name": "Version of resource",
+        "source": "folio"
+      }
+      """
     When method POST
     Then status 201
 
@@ -224,13 +224,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-      "id": "512173a7-bd09-490e-b773-17d83f2b63fe",
-      "name": "LC Modified",
-      "source": "folio"
-    }
-    """
+      """
+      {
+        "id": "512173a7-bd09-490e-b773-17d83f2b63fe",
+        "name": "LC Modified",
+        "source": "folio"
+      }
+      """
     When method POST
     Then status 201
 
@@ -239,13 +239,13 @@ Feature: init data for mod-configuration
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     And request
-    """
-    {
-      "id": "f32d531e-df79-46b3-8932-cdd35f7a2264",
-      "name": "FOLIO",
-      "source": "folio"
-    }
-    """
+      """
+      {
+        "id": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+        "name": "FOLIO",
+        "source": "folio"
+      }
+      """
     When method POST
     Then status 201
 

@@ -164,28 +164,28 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
 
     # Step 5: Change "Deleted records support" setting to "No"
     Given url baseUrl
-    And path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    And path '/oai-pmh/configuration-settings'
+    And param query = 'name==behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET
     Then status 200
-    * def behaviorConfig = response.configs[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.value)
+    * def behaviorConfig = response.configurationSettings[0]
+    * def behaviorValue = behaviorConfig.configValue
     * def originalDeletedRecordsSupport = behaviorValue.deletedRecordsSupport
 
     # Update configuration to disable deleted records support
     * set behaviorValue.deletedRecordsSupport = 'No'
     * set behaviorValue.enabledDeletedRecordsSupport = false
-    * string updatedBehaviorValue = behaviorValue
-    * set behaviorConfig.value = updatedBehaviorValue
+    * def updatedBehaviorValue = behaviorValue
+    * set behaviorConfig.configValue = updatedBehaviorValue
 
-    Given path '/configurations/entries', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     * call sleep 2000
 
@@ -222,16 +222,16 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     # Cleanup: Restore "Deleted records support" setting to original value
     * set behaviorValue.deletedRecordsSupport = originalDeletedRecordsSupport
     * set behaviorValue.enabledDeletedRecordsSupport = true
-    * string restoredBehaviorValue = behaviorValue
-    * set behaviorConfig.value = restoredBehaviorValue
+    * def restoredBehaviorValue = behaviorValue
+    * set behaviorConfig.configValue = restoredBehaviorValue
 
     Given url baseUrl
-    And path '/configurations/entries', behaviorConfig.id
+    And path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     # Cleanup: Restore instance to original state to avoid affecting other tests
     # Get current instance version

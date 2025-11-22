@@ -4,18 +4,20 @@ Feature: init data for mod-configuration
     * url baseUrl
 
   Scenario: set errors to 500 Http status
-    Given path 'configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path 'oai-pmh/configuration-settings'
+    And param query = 'name==behavior'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     When method GET
+    * print response
     Then status 200
 
-    * def configId = get response.configs[0].id
+    * def configId = get response.configurationSettings[0].id
+    * print 'Config ID: ' + configId
 
-    Given path 'configurations/entries', configId
+    Given path 'oai-pmh/configuration-settings', configId
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapitoken
@@ -23,11 +25,14 @@ Feature: init data for mod-configuration
     And request
     """
     {
-       "module" : "OAIPMH",
-       "configName" : "behavior",
-       "enabled" : true,
-       "value" : "{\"deletedRecordsSupport\":\"no\",\"suppressedRecordsProcessing\":\"false\",\"errorsProcessing\":\"500\"}"
+      "configName": "behavior",
+      "configValue": {
+        "suppressedRecordsProcessing": "false",
+        "errorsProcessing": "500",
+        "deletedRecordsSupport": "no"
+      }
     }
+
     """
     When method PUT
-    Then status 204
+    Then status 200

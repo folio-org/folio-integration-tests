@@ -15,26 +15,26 @@ Feature: Additional ListRecords tests when source is Inventory
     * url baseUrl
 
     # Update configuration: recordsSource = 'Inventory', suppressedRecordsProcessing = 'true', support deleted = 'No'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path '/oai-pmh/configuration-settings'
+    And param query = 'name==behavior'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant
     And header x-okapi-token = okapitoken
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
+    * def value = config.configValue
     * set value.recordsSource = 'Inventory'
     * set value.suppressedRecordsProcessing = 'true'
     * set value.deletedRecordsSupport = 'No'
-    * string updatedValue = value;
-    * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    * def updatedValue = value;
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Add instance
     Given path 'instance-storage/instances'
@@ -520,20 +520,20 @@ Feature: Additional ListRecords tests when source is Inventory
     * url baseUrl
 
     # Update configuration: recordsSource = 'SRS+Inventory'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path '/oai-pmh/configuration-settings'
+    And param query = 'configName==behavior'
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
+    * def value = config.configValue
     * set value.recordsSource = 'Source record storage and Inventory'
-    * string updatedValue = value;
-    * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    * def updatedValue = value;
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Change item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
@@ -552,38 +552,37 @@ Feature: Additional ListRecords tests when source is Inventory
     When method GET
     Then status 200
     # First is marc record
-    * match response count(//record) == 4
-    * match response count(//datafield[@tag='952' and @ind1='f' and @ind2='f']) == 4
-    # Marc 856 has 4 1 indicators
-    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='1']) == 4
-    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 4
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0','0','0']
-    * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='t'] == ['0','0','0','0']
-    * match response //datafield[@tag='999' and @ind1='f' and @ind2='f']/subfield[@code='t'] == ['0','0','0','0']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='a'] == ['Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='b'] == ['City Campus','City Campus','City Campus','City Campus']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='c'] == ['Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] == ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
-    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] == ['D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002']
+    * match response count(//record) == 10
+    * match response count(//datafield[@tag='952' and @ind1='f' and @ind2='f']) == 10
+    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='1']) == 9
+    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 10
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='t'] ==['0','0','0','0','0','0','0','0','0','0']
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='t'] ==['0','0','0','0','0','0','0','0','0']
+    * match response //datafield[@tag='999' and @ind1='f' and @ind2='f']/subfield[@code='t'] ==['0','0','0','0','0','0','0','0','0','0']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='a'] ==['Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet','Københavns Universitet']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='b'] ==['City Campus','City Campus','City Campus','City Campus','City Campus','City Campus','City Campus','City Campus','City Campus','City Campus']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='c'] ==['Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut','Datalogisk Institut']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] ==['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] ==['D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','LC Modified','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002']
 
   Scenario: C375974: ListRecords: FOLIO edited instances with holdings are harvested with start and end date
     * url baseUrl
 
     # Update configuration: recordsSource = 'Inventory'
-    Given path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    Given path '/oai-pmh/configuration-settings'
+    And param query = 'configName==behavior'
     When method GET
     Then status 200
-    * def config = get $.configs[0]
+    * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
-    * def value = karate.fromString(config.value)
+    * def value = config.configValue
     * set value.recordsSource = 'Inventory'
-    * string updatedValue = value;
-    * set config.value = updatedValue
-    Given path '/configurations/entries', config.id
+    * def updatedValue = value;
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 204
+    Then status 200
 
     # Remove item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
