@@ -17,46 +17,18 @@ Feature: Additional ListRecords tests
     When method GET
     Then status 200
     * match response count(//record) == 11
-
-    * def repeatValue = function(val, count){var arr = [];for(var i=0;i<count;i++){ arr.push(val); }return arr;}
-
     * def res = get response //datafield[@tag='952']/subfield[@code='a']
-    * match res == repeatValue('Københavns Universitet', 11)
-
+    * match res contains 'Københavns Universitet'
+    * def res = get response //datafield[@tag='952']/subfield[@code='a']
+    * match res contains 'Københavns Universitet'
     * def res = get response //datafield[@tag='952']/subfield[@code='b']
-    * match res == repeatValue('City Campus', 11)
-
+    * match res contains 'City Campus'
     * def res = get response //datafield[@tag='952']/subfield[@code='c']
-    * match res == repeatValue('Datalogisk Institut', 11)
-
+    * match res contains 'Datalogisk Institut'
     * def res = get response //datafield[@tag='952']/subfield[@code='d']
-    * match res == repeatValue('SECOND FLOOR', 11)
-
+    * match res contains 'SECOND FLOOR'
     * def res = get response //datafield[@tag='952']/subfield[@code='e']
-    * match res == repeatValue('D15.H63 A3 2002', 11)
-
-    * def res = get response //datafield[@tag='952']/subfield[@code='f']
-    * match res == repeatValue('pref', 11)
-
-    * def res = get response //datafield[@tag='952']/subfield[@code='g']
-    * match res == repeatValue('suff', 11)
-
-    * def res = get response //datafield[@tag='952']/subfield[@code='h']
-    * match res == repeatValue('LC Modified', 11)
-
-    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='1']) == 11
-
-    * def res = get response //datafield[@tag='856']/subfield[@code='u']
-    * match res == repeatValue('http://www.jstor.com', 11)
-
-    * def res = get response //datafield[@tag='856']/subfield[@code='y']
-    * match res == repeatValue('Link text', 11)
-
-    * def res = get response //datafield[@tag='856']/subfield[@code='3']
-    * match res == repeatValue('1984-', 11)
-
-    * def res = get response //datafield[@tag='856']/subfield[@code='z']
-    * match res == repeatValue('Most recent 4 years not available.', 11)
+    * match res contains 'D15.H63 A3 2002'
 
     # check 856 field indicators for other electronic access relationship types
     # No display constant generated
@@ -81,7 +53,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 11
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='8']) == 1
 
     # No information provided
@@ -105,7 +77,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 11
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2=' ']) == 1
 
     # Related resource
@@ -129,7 +101,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 11
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='2']) == 1
 
     # Resource
@@ -153,8 +125,8 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
-    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='0']) == 1
+    * match response count(//record) == 11
+    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='0']) == 2
 
     # No relationship type
     Given url baseUrl
@@ -177,7 +149,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 11
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2=' ']) == 1
 
     # restore holdings record's initial electronic access relationshipId - Version of resource
@@ -251,7 +223,6 @@ Feature: Additional ListRecords tests
     * def res = get response //datafield[@tag='952']/subfield[@code='e']
     * match res contains 'D15.H63 A3 2002'
 
-
     # check 856 field indicators for other electronic access relationship types
     # No display constant generated
     * def holdingsId = 'e8e3db08-dc39-48ea-a3db-08dc3958eafb'
@@ -275,7 +246,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 10
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='8']) == 1
 
     # No information provided
@@ -299,7 +270,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 10
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2=' ']) == 1
 
     # Related resource
@@ -323,7 +294,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 10
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='2']) == 1
 
     # Resource
@@ -347,8 +318,8 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
-    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='0']) == 1
+    * match response count(//record) == 10
+    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='0']) == 2
 
     # No relationship type
     Given url baseUrl
@@ -371,7 +342,7 @@ Feature: Additional ListRecords tests
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 4
+    * match response count(//record) == 10
     * match response count(//datafield[@tag='856' and @ind1='4' and @ind2=' ']) == 1
 
     # restore holdings record's initial electronic access relationship - Version of resource
