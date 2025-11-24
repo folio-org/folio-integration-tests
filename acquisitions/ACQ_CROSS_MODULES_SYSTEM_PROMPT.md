@@ -314,6 +314,52 @@ Then status 200
 - `payInvoice`: Payment processing with budget impact
 - `cancelInvoice`: Invoice cancellation with encumbrance release
 
+### Order Types and Configuration
+
+#### One-Time Orders
+One-time orders are straightforward and require only basic parameters:
+```karate
+* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "One-Time", reEncumber: true }
+```
+
+#### Ongoing Orders (CRITICAL REQUIREMENT)
+**Ongoing orders MUST include an `ongoing` configuration object**, otherwise the order creation will fail:
+
+```karate
+# CORRECT - With ongoing configuration
+* def ongoingConfig = { "interval": 123, "isSubscription": false }
+* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)", reEncumber: true }
+
+# INCORRECT - Missing ongoing configuration (WILL FAIL)
+* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", reEncumber: true }
+```
+
+**Ongoing Configuration Parameters:**
+- `interval`: Renewal interval (e.g., 123 days)
+- `isSubscription`: Boolean flag indicating if this is a subscription (true/false)
+- Additional optional parameters may include: `renewalDate`, `reviewPeriod`, `manualRenewal`, etc.
+
+**Common Pattern for Ongoing Orders:**
+```karate
+# 1. Define ongoing configuration before order creation
+* def ongoingConfig = { "interval": 123, "isSubscription": false }
+
+# 2. Create ongoing order with configuration
+* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)", reEncumber: true }
+
+# 3. Create order line (same as one-time orders)
+* def v = call createOrderLine { id: "#(orderLineId)", orderId: "#(orderId)", fundId: "#(fundId)", listUnitPrice: 5.00, titleOrPackage: "Test Ongoing Order" }
+
+# 4. Open the order
+* def v = call openOrder { orderId: "#(orderId)" }
+```
+
+**Why This Is Required:**
+- FOLIO's data model requires ongoing-specific metadata for ongoing orders
+- The `ongoing` field validates subscription and renewal information
+- Without this configuration, the order creation API will return validation errors
+- This is a common source of test failures when converting one-time orders to ongoing orders
+
 ### Validation Patterns
 ```
 # Financial consistency validation

@@ -35,8 +35,8 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
 
     # 2. Create Two Expense Classes (Electronic And Print)
     * print '2. Create Two Expense Classes (Electronic And Print)'
-    * def v = call createExpenseClass { id: "#(expenseClassElectronicId)", name: "Electronic" }
-    * def v = call createExpenseClass { id: "#(expenseClassPrintId)", name: "Print" }
+    * def v = call createExpenseClass { id: "#(expenseClassElectronicId)", code: "e1", name: "Electronic1" }
+    * def v = call createExpenseClass { id: "#(expenseClassPrintId)", code: "p1", name: "Print1" }
 
     # 3. Assign Both Expense Classes To Budget
     * print '3. Assign Both Expense Classes To Budget'
@@ -52,7 +52,8 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
 
     # 4. Create Ongoing Order With Re-Encumber Option Enabled
     * print '4. Create Ongoing Order With Re-Encumber Option Enabled'
-    * def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", reEncumber: true }
+    * def ongoingConfig = { "interval": 123, "isSubscription": false }
+    * def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)", reEncumber: true }
 
     # 5. Create Order Line With Fund A, Electronic Expense Class, And $5 Total Cost
     * print '5. Create Order Line With Fund A, Electronic Expense Class, And $5 Total Cost'
@@ -155,8 +156,8 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
 
     # 2. Create Two Expense Classes (Electronic And Print)
     * print '2. Create Two Expense Classes (Electronic And Print)'
-    * def v = call createExpenseClass { id: "#(expenseClassElectronicId)", name: "Electronic" }
-    * def v = call createExpenseClass { id: "#(expenseClassPrintId)", name: "Print" }
+    * def v = call createExpenseClass { id: "#(expenseClassElectronicId)", code: "e2", name: "Electronic2" }
+    * def v = call createExpenseClass { id: "#(expenseClassPrintId)", code: "p2", name: "Print2" }
 
     # 3. Assign Both Expense Classes To Budget
     * print '3. Assign Both Expense Classes To Budget'
@@ -172,7 +173,8 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
 
     # 4. Create Ongoing Order With Re-Encumber Option Enabled
     * print '4. Create Ongoing Order With Re-Encumber Option Enabled'
-    * def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", reEncumber: true }
+    * def ongoingConfig = { "interval": 123, "isSubscription": false }
+    * def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)", reEncumber: true }
 
     # 5. Create Order Line With Fund A, Electronic Expense Class, And $5 Total Cost
     * print '5. Create Order Line With Fund A, Electronic Expense Class, And $5 Total Cost'
