@@ -178,9 +178,6 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     When method DELETE
     Then status 204
 
-    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 5000
-
   @Negative @C729201
   Scenario: C729201 - Verify deleted FOLIO instances are NOT harvested when suppressed records are skipped
 
@@ -372,7 +369,3 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204
-
-    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 5000
-

@@ -1,4 +1,4 @@
-@paarallel=false
+@parallel=false
 Feature: Additional ListRecords tests when source is Inventory
 
   Background:

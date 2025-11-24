@@ -96,8 +96,6 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     When method DELETE
     Then status 204
 
-    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 5000
 
   @Negative @C729198
   Scenario: C729198 - Verify deleted FOLIO instances are NOT harvested when deleted records support is No
@@ -217,7 +215,4 @@ Feature: GetRecord: Inventory - Verify that set for deletion FOLIO Instances are
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204
-
-    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 5000
 
