@@ -516,6 +516,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='u'] == 'https://search.proquest.com/publication/1396348'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='z'] == 'via ProQuest, the last 12 months are not available due to an embargo'
 
+
   Scenario: C375944: ListRecords: FOLIO instances with changed Items are harvested with start and end date (SRS+Inventory)
     * url baseUrl
 
@@ -530,6 +531,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * set value.recordsSource = 'Source record storage and Inventory'
     * def updatedValue = value;
     * set config.configValue = updatedValue
+    * print config
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
@@ -541,6 +543,9 @@ Feature: Additional ListRecords tests when source is Inventory
     And request itemUpdated
     When method PUT
     Then status 204
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 5000
 
     # Harvest
     Given url pmhUrl
