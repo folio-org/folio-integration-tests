@@ -191,16 +191,16 @@ Feature: Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not
     And match response.cost.listUnitPrice == 60.00
     And match response.fundDistribution[0].fundId == fundBId
 
-    # 19. Verify New Encumbrance Transaction For Fund B With Unreleased Status
-    * print '19. Verify New Encumbrance Transaction For Fund B With Unreleased Status'
+    # 19. Verify New Encumbrance Transaction For Fund B (Since Trillium: Amount=$0, Status=Released)
+    * print '19. Verify New Encumbrance Transaction For Fund B (Since Trillium: Amount=$0, Status=Released)'
     * def validateEncumbranceFundB =
     """
     function(response) {
       var encumbrance = response.transactions.find(t => t.transactionType == 'Encumbrance' && t.fromFundId == fundBId && t.encumbrance.sourcePurchaseOrderId == orderId);
       if (!encumbrance) return false;
-      return encumbrance.amount == 60.00 &&
+      return encumbrance.amount == 0.00 &&
              encumbrance.fromFundId == fundBId &&
-             encumbrance.encumbrance.status == 'Unreleased' &&
+             encumbrance.encumbrance.status == 'Released' &&
              encumbrance.encumbrance.initialAmountEncumbered == 60.00;
     }
     """

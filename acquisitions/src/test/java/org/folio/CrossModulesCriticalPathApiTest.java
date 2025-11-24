@@ -193,14 +193,12 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
-  @Disabled
   @DisplayName("(Thunderjet) (C375290) Encumbrance And Budget Updated Correctly After Editing Fund Distribution And Increasing Cost With Paid Invoice")
   void encumbranceAndBudgetUpdatedCorrectlyAfterEditingFundDistributionAndIncreasingCostWithPaidInvoice() {
     runFeatureTest("encumbrance-and-budget-updated-correctly-after-editing-fund-distribution-and-increasing-cost-with-paid-invoice");
   }
 
   @Test
-  @Disabled
   @DisplayName("(Thunderjet) (C451636) Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active")
   void fundDistributionCanBeChangedAfterRolloverWhenReEncumberNotActive() {
     runFeatureTest("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active");

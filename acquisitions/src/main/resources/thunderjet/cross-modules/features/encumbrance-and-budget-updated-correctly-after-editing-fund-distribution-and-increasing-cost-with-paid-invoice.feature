@@ -99,16 +99,16 @@ Feature: Encumbrance And Budget Updated Correctly After Editing Fund Distributio
     And match response.fundDistribution[0].fundId == fundBId
     And match response.cost.listUnitPrice == 70.00
 
-    # 12. Verify Encumbrance Transaction For Fund B With $20 Amount
-    * print '12. Verify Encumbrance Transaction For Fund B With $20 Amount'
+    # 12. Verify Encumbrance Transaction For Fund B (Since Trillium: Amount=$0, Status=Released)
+    * print '12. Verify Encumbrance Transaction For Fund B (Since Trillium: Amount=$0, Status=Released)'
     * def validateEncumbrance =
     """
     function(response) {
       var encumbrance = response.transactions.find(t => t.transactionType == 'Encumbrance' && t.fromFundId == fundBId && t.encumbrance.sourcePurchaseOrderId == orderId);
       if (!encumbrance) return false;
-      return encumbrance.amount == 20.00 &&
+      return encumbrance.amount == 0.00 &&
              encumbrance.fromFundId == fundBId &&
-             encumbrance.encumbrance.status == 'Unreleased' &&
+             encumbrance.encumbrance.status == 'Released' &&
              encumbrance.encumbrance.initialAmountEncumbered == 70.00 &&
              encumbrance.encumbrance.amountAwaitingPayment == 0.00 &&
              encumbrance.encumbrance.amountExpended == 50.00;
@@ -160,14 +160,14 @@ Feature: Encumbrance And Budget Updated Correctly After Editing Fund Distributio
     When method GET
     Then status 200
 
-    # 16. Verify Budget B Has $20 Encumbered And $50 Expended
-    * print '16. Verify Budget B Has $20 Encumbered And $50 Expended'
+    # 16. Verify Budget B Has $0 Encumbered And $50 Expended (Since Trillium)
+    * print '16. Verify Budget B Has $0 Encumbered And $50 Expended (Since Trillium)'
     * def validateBudgetB =
     """
     function(response) {
-      return response.unavailable == 70.00 &&
+      return response.unavailable == 50.00 &&
              response.expenditures == 50.00 &&
-             response.encumbered == 20.00;
+             response.encumbered == 0.00;
     }
     """
     Given path 'finance/budgets', budgetBId
