@@ -7,6 +7,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
@@ -183,5 +184,25 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @DisplayName("(Thunderjet) (C919907) Subscription Info, Tags, And Comments Can Be Edited In An Approved Invoice When The Fund's Budget Is Set To Inactive")
   void subscriptionAndTagsEditableInApprovedInvoiceWithInactiveBudget() {
     runFeatureTest("subscription-and-tags-editable-in-approved-invoice-with-inactive-budget");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C700837, C710243) Encumbrance Remains Unreleased After Changing Expense Class In PO Line With Paid Invoice")
+  void encumbranceRemainsUnreleasedAfterExpenseClassChangeWithPaidInvoice() {
+    runFeatureTest("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice");
+  }
+
+  @Test
+  @Disabled
+  @DisplayName("(Thunderjet) (C375290) Encumbrance And Budget Updated Correctly After Editing Fund Distribution And Increasing Cost With Paid Invoice")
+  void encumbranceAndBudgetUpdatedCorrectlyAfterEditingFundDistributionAndIncreasingCostWithPaidInvoice() {
+    runFeatureTest("encumbrance-and-budget-updated-correctly-after-editing-fund-distribution-and-increasing-cost-with-paid-invoice");
+  }
+
+  @Test
+  @Disabled
+  @DisplayName("(Thunderjet) (C451636) Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active")
+  void fundDistributionCanBeChangedAfterRolloverWhenReEncumberNotActive() {
+    runFeatureTest("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active");
   }
 }
