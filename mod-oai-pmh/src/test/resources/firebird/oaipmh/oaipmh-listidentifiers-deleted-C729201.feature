@@ -122,7 +122,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
 
     # Step 4: Allow time for changes to propagate
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 3000
+    * call sleep 2000
 
     # Step 5: Verify ListIdentifiers with metadataPrefix=marc21 returns deleted records
     Given url pmhUrl
@@ -279,7 +279,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     Then status 204
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 3000
+    * call sleep 2000
 
     # Step 5: Change "Suppressed records processing" setting to "Skip suppressed from discovery records"
     Given url baseUrl

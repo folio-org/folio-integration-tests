@@ -544,9 +544,6 @@ Feature: Additional ListRecords tests when source is Inventory
     When method PUT
     Then status 204
 
-    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 5000
-
     # Harvest
     Given url pmhUrl
     And param verb = 'ListRecords'

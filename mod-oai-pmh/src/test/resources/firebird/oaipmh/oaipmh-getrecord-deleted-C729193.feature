@@ -78,7 +78,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
 
     # Allow time for changes to propagate
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 3000
+    * call sleep 2000
 
     # Step 2: Verify GetRecord with metadataPrefix=marc21 returns deleted record
     Given url pmhUrl
@@ -174,7 +174,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
     Then status 204
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 3000
+    * call sleep 2000
 
     # Step 5: Change "Suppressed records processing" setting to "Skip suppressed from discovery records"
     Given url baseUrl
