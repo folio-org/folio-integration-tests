@@ -19,6 +19,7 @@ Feature: Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not
   Scenario: Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active
     # Generate unique identifiers for this test scenario
     * def ledgerId = call uuid
+    * def ledgerBId = call uuid
     * def fiscalYearId1 = call uuid
     * def fiscalYearId2 = call uuid
     * def fundAId = call uuid
@@ -58,7 +59,8 @@ Feature: Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not
 
     # 5. Create Fund B With Budget In FY2 (Different Ledger)
     * print '5. Create Fund B With Budget In FY2 (Different Ledger)'
-    * def v = call createFund { id: "#(fundBId)", name: "Fund B" }
+    * def v = call createLedger { id: "#(ledgerBId)", fiscalYearId: "#(fiscalYearId2)" }
+    * def v = call createFund { id: "#(fundBId)", name: "Fund B", ledgerId: "#(ledgerBId)" }
     * def v = call createBudget { id: "#(budgetBId)", fundId: "#(fundBId)", fiscalYearId: "#(fiscalYearId2)", allocated: 1000, status: "Active" }
 
     # 6. Create One-Time Order Without Re-Encumber Option
@@ -197,11 +199,10 @@ Feature: Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not
     """
     function(response) {
       var encumbrance = response.transactions.find(t => t.transactionType == 'Encumbrance' && t.fromFundId == fundBId && t.encumbrance.sourcePurchaseOrderId == orderId);
-      if (!encumbrance) return false;
       return encumbrance.amount == 0.00 &&
              encumbrance.fromFundId == fundBId &&
              encumbrance.encumbrance.status == 'Released' &&
-             encumbrance.encumbrance.initialAmountEncumbered == 60.00;
+             encumbrance.encumbrance.initialAmountEncumbered == 10.00;
     }
     """
     Given path 'finance/transactions'
