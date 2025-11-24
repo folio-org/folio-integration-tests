@@ -34,5 +34,5 @@ Feature: init data for mod-configuration - Source record storage only
 
     """
     When method PUT
-    Then status 200
+    Then status 204
 

@@ -303,7 +303,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 200
+    Then status 204
 
     * call sleep 3000
 
@@ -353,7 +353,7 @@ Feature: ListIdentifiers: SRS & Inventory - Verify that set for deletion FOLIO I
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 200
+    Then status 204
 
     # Cleanup: Physically delete the created FOLIO instance to avoid affecting other tests
     Given url baseUrl

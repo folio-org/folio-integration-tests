@@ -14,7 +14,7 @@ Feature: Reset default OAIPMH configs
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     When method PUT
-    Then status 200
+    Then status 204
 
   @TechnicalConfig
   Scenario: set technical config
@@ -27,7 +27,7 @@ Feature: Reset default OAIPMH configs
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     When method PUT
-    Then status 200
+    Then status 204
 
   @GeneralConfig
   Scenario: set general config
@@ -40,7 +40,7 @@ Feature: Reset default OAIPMH configs
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testUser.tenant
     When method PUT
-    Then status 200
+    Then status 204
 
   @SetErrorProcessing500
   Scenario: Set error processing setting to 500

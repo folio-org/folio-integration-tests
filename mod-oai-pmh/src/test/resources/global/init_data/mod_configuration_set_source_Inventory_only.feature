@@ -33,5 +33,5 @@ Feature: init data for mod-configuration - Inventory only
     }
     """
     When method PUT
-    Then status 200
+    Then status 204
 

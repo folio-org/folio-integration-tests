@@ -34,7 +34,7 @@ Feature: Additional ListRecords tests when source is Inventory
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 200
+    Then status 204
 
     # Add instance
     Given path 'instance-storage/instances'
@@ -528,6 +528,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * def config = get $.configurationSettings[0]
     And match config.configName == 'behavior'
     * def value = config.configValue
+    * set value.suppressedRecordsProcessing = 'true'
     * set value.recordsSource = 'Source record storage and Inventory'
     * def updatedValue = value;
     * set config.configValue = updatedValue
@@ -535,7 +536,7 @@ Feature: Additional ListRecords tests when source is Inventory
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 200
+    Then status 204
 
     # Change item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
@@ -585,7 +586,7 @@ Feature: Additional ListRecords tests when source is Inventory
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
     When method PUT
-    Then status 200
+    Then status 204
 
     # Remove item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'

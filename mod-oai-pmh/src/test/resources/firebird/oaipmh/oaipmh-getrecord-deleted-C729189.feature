@@ -185,7 +185,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 200
+    Then status 204
 
     * call sleep 2000
 
@@ -231,7 +231,7 @@ Feature: GetRecord: SRS - Verify that set for deletion MARC Instances are harves
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 200
+    Then status 204
 
     # Cleanup: Restore instance to original state to avoid affecting other tests
     # Get current instance version

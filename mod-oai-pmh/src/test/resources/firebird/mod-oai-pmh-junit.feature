@@ -9,7 +9,6 @@ Feature: bulk operations integration tests
       | 'mod-permissions'           |
       | 'mod-oai-pmh'               |
       | 'mod-login'                 |
-      | 'mod-configuration'         |
       | 'mod-source-record-storage' |
       | 'mod-inventory-storage'     |
 
@@ -18,10 +17,6 @@ Feature: bulk operations integration tests
       | 'oai-pmh.records.collection.get'                              |
       | 'source-storage.records.item.get'                             |
       | 'source-storage.snapshots.post'                               |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.put'                              |
-      | 'configuration.entries.item.get'                              |
-      | 'configuration.entries.item.post'                             |
       | 'inventory-storage.instance-types.item.post'                  |
       | 'inventory-storage.location-units.institutions.item.post'     |
       | 'inventory-storage.location-units.campuses.item.post'         |
