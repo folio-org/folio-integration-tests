@@ -60,6 +60,11 @@ Feature: bulk operations integration tests
       | 'okapi.proxy.tenants.modules.enabled.get'                     |
       | 'okapi.proxy.tenants.modules.enabled.post'                    |
       | 'okapi.proxy.tenants.modules.list'                            |
+      | 'oai-pmh.configuration-settings.collection.get'               |
+      | 'oai-pmh.configuration-settings.item.get'                     |
+      | 'oai-pmh.configuration-settings.item.post'                    |
+      | 'oai-pmh.configuration-settings.item.put'                     |
+      | 'oai-pmh.configuration-settings.item.delete'                  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

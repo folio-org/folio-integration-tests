@@ -1,6 +1,11 @@
 {
-  "module" : "OAIPMH",
-  "configName" : "general",
-  "enabled" : true,
-  "value" : "{\"enableOaiService\":\"true\",\"repositoryName\":\"FOLIO_OAI_Repository\",\"baseUrl\":\"http://folio.org/oai\",\"administratorEmail\":\"oai-pmh@folio.org\",\"timeGranularity\":\"YYYY-MM-DDThh:mm:ssZ\"}"
+  "configName": "general",
+  "configValue": {
+    "enableOaiService": "true",
+    "repositoryName": "FOLIO_OAI_Repository",
+    "baseUrl": "http://folio.org/oai",
+    "administratorEmail": "oai-pmh@folio.org",
+    "timeGranularity": "YYYY-MM-DDThh:mm:ssZ"
+  }
 }
+

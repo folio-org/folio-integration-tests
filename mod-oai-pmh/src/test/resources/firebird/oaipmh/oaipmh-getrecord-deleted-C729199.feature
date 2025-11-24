@@ -69,7 +69,7 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
 
     # Allow time for changes to propagate
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 2000
+    * call sleep 3000
 
     # Step 2: Verify GetRecord with metadataPrefix=marc21 returns deleted record
     Given url pmhUrl
@@ -108,6 +108,9 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
     And header Accept = 'text/plain'
     When method DELETE
     Then status 204
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 5000
 
   @Negative @C729199
   Scenario: C729199 - Verify deleted FOLIO instances are NOT harvested when suppressed records are skipped
@@ -162,33 +165,33 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
     Then status 204
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * call sleep 2000
+    * call sleep 3000
 
     # Step 5: Change "Suppressed records processing" setting to "Skip suppressed from discovery records"
     Given url baseUrl
-    And path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    And path '/oai-pmh/configuration-settings'
+    And param query = 'name==behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET
     Then status 200
-    * def behaviorConfig = response.configs[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.value)
+    * def behaviorConfig = response.configurationSettings[0]
+    * def behaviorValue = behaviorConfig.configValue
     * def originalSuppressedRecordsProcessing = behaviorValue.suppressedRecordsProcessing
 
     # Update configuration to skip suppressed from discovery records
     * set behaviorValue.suppressedRecordsProcessing = 'Skip suppressed from discovery records'
-    * string updatedBehaviorValue = behaviorValue
-    * set behaviorConfig.value = updatedBehaviorValue
+    * def updatedBehaviorValue = behaviorValue
+    * set behaviorConfig.configValue = updatedBehaviorValue
 
-    Given path '/configurations/entries', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
-    * call sleep 2000
+    * call sleep 3000
 
     # Step 6: Verify GetRecord with metadataPrefix=marc21 does NOT return deleted record
     Given url pmhUrl
@@ -222,16 +225,16 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
 
     # Cleanup: Restore "Suppressed records processing" setting to original value
     * set behaviorValue.suppressedRecordsProcessing = originalSuppressedRecordsProcessing
-    * string restoredBehaviorValue = behaviorValue
-    * set behaviorConfig.value = restoredBehaviorValue
+    * def restoredBehaviorValue = behaviorValue
+    * set behaviorConfig.configValue = restoredBehaviorValue
 
     Given url baseUrl
-    And path '/configurations/entries', behaviorConfig.id
+    And path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
-    Then status 204
+    Then status 200
 
     # Cleanup: Physically delete the created FOLIO instance to avoid affecting other tests
     Given url baseUrl
@@ -241,3 +244,5 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion FOLIO Instanc
     When method DELETE
     Then status 204
 
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 5000

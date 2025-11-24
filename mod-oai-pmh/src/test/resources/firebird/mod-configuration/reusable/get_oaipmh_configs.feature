@@ -4,8 +4,7 @@ Feature: get OAIPMH configs
     * url baseUrl
 
   Scenario: get oai-pmh configuration
-    Given path 'configurations/entries'
-    And param query = 'module==OAIPMH'
+    Given path '/oai-pmh/configuration-settings'
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-tenant = testUser.tenant
