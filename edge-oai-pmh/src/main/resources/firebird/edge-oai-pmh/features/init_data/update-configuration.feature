@@ -42,6 +42,7 @@ Feature: update configuration
   @TechnicalConfig
   Scenario: set technical config
     Given path '/oai-pmh/configuration-settings'
+
       And param query = 'name==technical'
       And header Accept = 'application/json'
       And header Content-Type = 'application/json'
