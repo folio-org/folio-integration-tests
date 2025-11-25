@@ -72,14 +72,15 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     # TestRail Case Steps
     #========================================================================================================
 
-    # 8. Verify PO Line Fund Distribution Has Electronic Expense Class
-    * print '8. Verify PO Line Fund Distribution Has Electronic Expense Class'
+    # 8. Verify PO Line Fund Distribution Has Electronic Expense Class And Capture Encumbrance ID
+    * print '8. Verify PO Line Fund Distribution Has Electronic Expense Class And Capture Encumbrance ID'
     Given path 'orders/order-lines', orderLineId
     When method GET
     Then status 200
     And match response.fundDistribution[0].fundId == fundId
     And match response.fundDistribution[0].expenseClassId == expenseClassElectronicId
     And match response.cost.listUnitPrice == 5.00
+    * def originalEncumbranceId = response.fundDistribution[0].encumbrance
 
     # 9. Change Expense Class From Electronic To Print In PO Line
     * print '9. Change Expense Class From Electronic To Print In PO Line'
@@ -103,8 +104,8 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     * def v = call approveInvoice { invoiceId: "#(invoiceId)" }
     * def v = call payInvoice { invoiceId: "#(invoiceId)" }
 
-    # 12. Verify Invoice Line Has Electronic Expense Class (Original)
-    * print '12. Verify Invoice Line Has Electronic Expense Class (Original)'
+    # 12. Verify Invoice Line Has Electronic Expense Class (Original) And Encumbrance ID Remains Unchanged
+    * print '12. Verify Invoice Line Has Electronic Expense Class (Original) And Encumbrance ID Remains Unchanged'
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -114,6 +115,7 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     Then status 200
     And match response.fundDistributions[0].expenseClassId == expenseClassElectronicId
     And match response.fundDistributions[0].fundId == fundId
+    And match response.fundDistributions[0].encumbrance == originalEncumbranceId
 
     # 13. Verify Encumbrance Transaction Has Print Expense Class And Unreleased Status
     * print '13. Verify Encumbrance Transaction Has Print Expense Class And Unreleased Status'
@@ -193,14 +195,15 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     # TestRail Case Steps
     #========================================================================================================
 
-    # 8. Verify PO Line Fund Distribution Has Electronic Expense Class
-    * print '8. Verify PO Line Fund Distribution Has Electronic Expense Class'
+    # 8. Verify PO Line Fund Distribution Has Electronic Expense Class And Capture Encumbrance ID
+    * print '8. Verify PO Line Fund Distribution Has Electronic Expense Class And Capture Encumbrance ID'
     Given path 'orders/order-lines', orderLineId
     When method GET
     Then status 200
     And match response.fundDistribution[0].fundId == fundId
     And match response.fundDistribution[0].expenseClassId == expenseClassElectronicId
     And match response.cost.listUnitPrice == 5.00
+    * def originalEncumbranceId = response.fundDistribution[0].encumbrance
 
     # 9. Change Expense Class From Electronic To Print In PO Line
     * print '9. Change Expense Class From Electronic To Print In PO Line'
@@ -224,8 +227,8 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     * def v = call approveInvoice { invoiceId: "#(invoiceId)" }
     * def v = call payInvoice { invoiceId: "#(invoiceId)" }
 
-    # 12. Verify Invoice Line Has Electronic Expense Class (Original)
-    * print '12. Verify Invoice Line Has Electronic Expense Class (Original)'
+    # 12. Verify Invoice Line Has Electronic Expense Class (Original) And Encumbrance ID Remains Unchanged
+    * print '12. Verify Invoice Line Has Electronic Expense Class (Original) And Encumbrance ID Remains Unchanged'
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -235,6 +238,7 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     Then status 200
     And match response.fundDistributions[0].expenseClassId == expenseClassElectronicId
     And match response.fundDistributions[0].fundId == fundId
+    And match response.fundDistributions[0].encumbrance == originalEncumbranceId
 
     # 13. Verify Encumbrance Transaction Has Print Expense Class And Unreleased Status
     * print '13. Verify Encumbrance Transaction Has Print Expense Class And Unreleased Status'
