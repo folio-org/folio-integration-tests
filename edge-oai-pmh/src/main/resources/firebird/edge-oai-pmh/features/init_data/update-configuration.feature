@@ -17,21 +17,20 @@ Feature: update configuration
     Then status 200
 
     * def configId = response.configurationSettings[0].id
+    * print 'Using configId:', configId
+    * def existingConfig = response.configurationSettings[0]
+    * print 'Existing config:', existingConfig
+
+    # Create the update payload preserving the existing structure
+    * def updatePayload = existingConfig
+    * set updatePayload.configValue.suppressedRecordsProcessing = 'true'
+    * set updatePayload.configValue.recordsSource = 'Source record storage'
+    * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
+    * set updatePayload.errorsProcessing = '200'
+
 
     Given path '/oai-pmh/configuration-settings', configId
-    And request
-      """
-      {
-        "configName": "behavior",
-        "configValue": {
-          "suppressedRecordsProcessing": "true",
-          "recordsSource": "Source record storage",
-          "deletedRecordsSupport": "persistent",
-          "errorsProcessing": "200"
-        }
-      }
-
-      """
+    And request updatePayload
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
@@ -42,30 +41,27 @@ Feature: update configuration
   @TechnicalConfig
   Scenario: set technical config
     Given path '/oai-pmh/configuration-settings'
-
-      And param query = 'name==technical'
-      And header Accept = 'application/json'
-      And header Content-Type = 'application/json'
-      And header x-okapi-token = okapiTokenAdmin
-      And header x-okapi-tenant = testTenant
-      When method GET
-      Then status 200
+    And param query = 'name==technical'
+    And header Accept = 'application/json'
+    And header Content-Type = 'application/json'
+    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
+    When method GET
+    Then status 200
 
     * def configId = response.configurationSettings[0].id
+    * print 'Using configId:', configId
+    * def existingConfig = response.configurationSettings[0]
+    * print 'Existing config:', existingConfig
+    
+    # Create the update payload preserving the existing structure
+    * def updatePayload = existingConfig
+    * set updatePayload.configValue.maxRecordsPerResponse = '1'
+    * set updatePayload.configValue.enableValidation = 'false'
+    * set updatePayload.configValue.formattedOutput = 'false'
 
     Given path '/oai-pmh/configuration-settings', configId
-    And request
-    """
-    {
-      "configName": "technical",
-      "configValue": {
-        "maxRecordsPerResponse": "1",
-        "enableValidation": "false",
-        "formattedOutput": "false"
-      }
-    }
-
-    """
+    And request updatePayload
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
