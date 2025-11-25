@@ -13,8 +13,8 @@ Feature: update configuration
     And header Content-Type = 'application/json'
     And header x-okapi-token = okapiTokenAdmin
     And header x-okapi-tenant = testTenant
-    * print response
     When method GET
+    * print response
     Then status 200
 
     * def configId = response.configurationSettings[0].id
