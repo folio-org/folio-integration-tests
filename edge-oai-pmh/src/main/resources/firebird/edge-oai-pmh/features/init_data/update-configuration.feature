@@ -18,10 +18,8 @@ Feature: update configuration
     Then status 200
 
     * def configId = response.configurationSettings[0].id
-    * print 'Using configId:', configId
     * def existingConfig = response.configurationSettings[0]
-    * print 'Existing config:', existingConfig
-    
+
     # Create the update payload preserving the existing structure
     * def updatePayload = existingConfig
     * set updatePayload.configValue.maxRecordsPerResponse = '1'
@@ -50,17 +48,14 @@ Feature: update configuration
     Then status 200
 
     * def configId = response.configurationSettings[0].id
-    * print 'Using configId:', configId
     * def existingConfig = response.configurationSettings[0]
-    * print 'Existing config:', existingConfig
 
     # Create the update payload preserving the existing structure
     * def updatePayload = existingConfig
     * set updatePayload.configValue.suppressedRecordsProcessing = 'true'
     * set updatePayload.configValue.recordsSource = 'Source record storage'
     * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
-    * set updatePayload.errorsProcessing = '200'
-
+    * set updatePayload.configValue.errorsProcessing = '200'
 
     Given path '/oai-pmh/configuration-settings', configId
     And request updatePayload
