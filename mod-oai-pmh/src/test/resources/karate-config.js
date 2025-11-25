@@ -55,9 +55,9 @@ function fn() {
     config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-corsair-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
