@@ -19,7 +19,7 @@ Feature: update configuration
     * def configId = response.configurationSettings[0].id
     * def existingConfig = response.configurationSettings[0]
 
-    * def updatePayload = existingConfig
+    * copy updatePayload = existingConfig
     * set updatePayload.configValue.maxRecordsPerResponse = '1'
     * set updatePayload.configValue.enableValidation = 'false'
     * set updatePayload.configValue.formattedOutput = 'false'
@@ -47,11 +47,12 @@ Feature: update configuration
     * def configId = response.configurationSettings[0].id
     * def existingConfig = response.configurationSettings[0]
 
-    * def updatePayload = existingConfig
+    * copy updatePayload = existingConfig
     * set updatePayload.configValue.suppressedRecordsProcessing = 'true'
     * set updatePayload.configValue.recordsSource = 'Source record storage'
     * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
     * set updatePayload.configValue.errorsProcessing = '200'
+    * print updatePayload
 
     Given path '/oai-pmh/configuration-settings', configId
     And request updatePayload
