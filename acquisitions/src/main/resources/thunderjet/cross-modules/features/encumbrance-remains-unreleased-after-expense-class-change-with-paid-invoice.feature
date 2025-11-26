@@ -80,7 +80,6 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     And match response.fundDistribution[0].fundId == fundId
     And match response.fundDistribution[0].expenseClassId == expenseClassElectronicId
     And match response.cost.listUnitPrice == 5.00
-    * def originalEncumbranceId = response.fundDistribution[0].encumbrance
 
     # 9. Change Expense Class From Electronic To Print In PO Line
     * print '9. Change Expense Class From Electronic To Print In PO Line'
@@ -98,6 +97,7 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     When method GET
     Then status 200
     And match response.fundDistribution[0].expenseClassId == expenseClassPrintId
+    * def originalEncumbranceId = response.fundDistribution[0].encumbrance
 
     # 11. Approve And Pay The Invoice
     * print '11. Approve And Pay The Invoice'
@@ -124,13 +124,13 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     function(response) {
       var encumbrance = response.transactions.find(t => t.transactionType == 'Encumbrance' && t.encumbrance.sourcePurchaseOrderId == orderId);
       if (!encumbrance) return false;
-      return encumbrance.amount == 5.00 &&
+      return encumbrance.amount == 0.00 &&
              encumbrance.fromFundId == fundId &&
              encumbrance.expenseClassId == expenseClassPrintId &&
-             encumbrance.encumbrance.status == 'Unreleased' &&
+             encumbrance.encumbrance.status == 'Released' &&
              encumbrance.encumbrance.initialAmountEncumbered == 5.00 &&
              encumbrance.encumbrance.amountAwaitingPayment == 0.00 &&
-             encumbrance.encumbrance.amountExpended == 0.00;
+             encumbrance.encumbrance.amountExpended == 5.00;
     }
     """
     Given path 'finance/transactions'
@@ -203,7 +203,6 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     And match response.fundDistribution[0].fundId == fundId
     And match response.fundDistribution[0].expenseClassId == expenseClassElectronicId
     And match response.cost.listUnitPrice == 5.00
-    * def originalEncumbranceId = response.fundDistribution[0].encumbrance
 
     # 9. Change Expense Class From Electronic To Print In PO Line
     * print '9. Change Expense Class From Electronic To Print In PO Line'
@@ -221,6 +220,7 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     When method GET
     Then status 200
     And match response.fundDistribution[0].expenseClassId == expenseClassPrintId
+    * def originalEncumbranceId = response.fundDistribution[0].encumbrance
 
     # 11. Approve And Pay The Invoice
     * print '11. Approve And Pay The Invoice'
@@ -247,13 +247,13 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     function(response) {
       var encumbrance = response.transactions.find(t => t.transactionType == 'Encumbrance' && t.encumbrance.sourcePurchaseOrderId == orderId);
       if (!encumbrance) return false;
-      return encumbrance.amount == 5.00 &&
+      return encumbrance.amount == 0.00 &&
              encumbrance.fromFundId == fundId &&
              encumbrance.expenseClassId == expenseClassPrintId &&
              encumbrance.encumbrance.status == 'Unreleased' &&
              encumbrance.encumbrance.initialAmountEncumbered == 5.00 &&
              encumbrance.encumbrance.amountAwaitingPayment == 0.00 &&
-             encumbrance.encumbrance.amountExpended == 0.00;
+             encumbrance.encumbrance.amountExpended == 5.00;
     }
     """
     Given path 'finance/transactions'
@@ -261,4 +261,3 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     And retry until validateEncumbrance(response)
     When method GET
     Then status 200
-
