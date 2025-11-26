@@ -15,20 +15,15 @@ Feature: update configuration
     And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
-    * print response
 
     * def configResponse = response
     * def technicalId = get[0] configResponse.configurationSettings[?(@.configName=='technical')].id
-    * print technicalId
-    * def existingConfig = get[0] configResponse.configurationSettings[?(@.configName=='technical')].configValue
-    * print existingConfig
 
     * def updatePayload = read('classpath:samples/technical.json')
 
     * set updatePayload.configValue.maxRecordsPerResponse = '1'
     * set updatePayload.configValue.enableValidation = 'false'
     * set updatePayload.configValue.formattedOutput = 'false'
-    * print updatePayload
 
     Given path '/oai-pmh/configuration-settings', technicalId
     And request updatePayload
@@ -52,7 +47,6 @@ Feature: update configuration
 
     * def configResponse = response
     * def behaviorId = get[0] configResponse.configurationSettings[?(@.configName=='behavior')].id
-    * def existingConfig = get[0] configResponse.configurationSettings[?(@.configName=='behavior')].configValue
 
     * def updatePayload = read('classpath:samples/behavior.json')
     * set updatePayload.configValue.suppressedRecordsProcessing = 'true'
