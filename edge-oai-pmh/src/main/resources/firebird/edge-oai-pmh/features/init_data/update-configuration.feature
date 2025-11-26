@@ -23,7 +23,7 @@ Feature: update configuration
     * def existingConfig = get[0] configResponse.configurationSettings[?(@.configName=='technical')].configValue
     * print existingConfig
 
-    * def updatePayload = call read('classpath:edge-oai-pmh/src/main/resources/samples/technical.json')
+    * def updatePayload = read('classpath:samples/technical.json')
 
     * set updatePayload.configValue.maxRecordsPerResponse = '1'
     * set updatePayload.configValue.enableValidation = 'false'
@@ -54,7 +54,7 @@ Feature: update configuration
     * def behaviorId = get[0] configResponse.configurationSettings[?(@.configName=='behavior')].id
     * def existingConfig = get[0] configResponse.configurationSettings[?(@.configName=='behavior')].configValue
 
-    * def updatePayload = call read('classpath:edge-oai-pmh/src/main/resources/samples/behavior.json')
+    * def updatePayload = read('classpath:samples/behavior.json')
     * set updatePayload.configValue.suppressedRecordsProcessing = 'true'
     * set updatePayload.configValue.recordsSource = 'Source record storage'
     * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
