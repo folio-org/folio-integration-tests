@@ -178,29 +178,29 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
 
     # Step 5: Change "Suppressed records processing" setting to "Skip suppressed from discovery records"
     Given url baseUrl
-    And path '/configurations/entries'
-    And param query = 'module==OAIPMH and configName==behavior'
+    And path '/oai-pmh/configuration-settings'
+    And param query = 'name==behavior'
     And header x-okapi-token = okapitoken
     And header Accept = 'application/json'
     When method GET
     Then status 200
-    * def behaviorConfig = response.configs[0]
-    * def behaviorValue = karate.fromString(behaviorConfig.value)
+    * def behaviorConfig = response.configurationSettings[0]
+    * def behaviorValue = behaviorConfig.configValue
     * def originalSuppressedRecordsProcessing = behaviorValue.suppressedRecordsProcessing
 
     # Update configuration to skip suppressed from discovery records
     * set behaviorValue.suppressedRecordsProcessing = 'Skip suppressed from discovery records'
-    * string updatedBehaviorValue = behaviorValue
-    * set behaviorConfig.value = updatedBehaviorValue
+    * def updatedBehaviorValue = behaviorValue
+    * set behaviorConfig.configValue = updatedBehaviorValue
 
-    Given path '/configurations/entries', behaviorConfig.id
+    Given path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
     When method PUT
     Then status 204
 
-    * call sleep 2000
+    * call sleep 3000
 
     # Step 6: Verify GetRecord with metadataPrefix=marc21 does NOT return deleted record
     Given url pmhUrl
@@ -234,11 +234,11 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
 
     # Cleanup: Restore "Suppressed records processing" setting to original value
     * set behaviorValue.suppressedRecordsProcessing = originalSuppressedRecordsProcessing
-    * string restoredBehaviorValue = behaviorValue
-    * set behaviorConfig.value = restoredBehaviorValue
+    * def restoredBehaviorValue = behaviorValue
+    * set behaviorConfig.configValue = restoredBehaviorValue
 
     Given url baseUrl
-    And path '/configurations/entries', behaviorConfig.id
+    And path '/oai-pmh/configuration-settings', behaviorConfig.id
     And header Accept = 'text/plain'
     And header x-okapi-token = okapitoken
     And request behaviorConfig
@@ -270,5 +270,6 @@ Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instance
     Then status 204
 
     # Wait longer for restoration to fully propagate through the system
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 5000
 

@@ -1,1 +1,6 @@
-{"deletedRecordsSupport":"#(deletedRecordsSupportConfig)","suppressedRecordsProcessing":"#(suppressedRecordsProcessingConfig)","errorsProcessing":"#(errorsProcessingConfig)","recordsSource": "#(recordsSourceConfig)"}
+{
+  "deletedRecordsSupport": "#(deletedRecordsSupportConfig)",
+  "suppressedRecordsProcessing": "#(suppressedRecordsProcessingConfig)",
+  "errorsProcessing": "#(errorsProcessingConfig)",
+  "recordsSource": "#(recordsSourceConfig)"
+}

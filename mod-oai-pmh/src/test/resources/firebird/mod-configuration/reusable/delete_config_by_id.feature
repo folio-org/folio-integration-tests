@@ -4,7 +4,7 @@ Feature: delete config
     * url baseUrl
 
   Scenario: deletes oai-pmh config by id
-    Given path 'configurations/entries', id
+    Given path '/oai-pmh/configuration-settings', id
     And header Accept = '*/*'
     And header Content-Type = 'application/json'
     And header x-okapi-tenant = testTenant
