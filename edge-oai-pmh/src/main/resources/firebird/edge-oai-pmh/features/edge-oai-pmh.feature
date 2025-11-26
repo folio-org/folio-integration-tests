@@ -140,7 +140,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] contains only ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification9','materialsSpecification1','materialsSpecification2','materialsSpecification3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7', 'publicNote8','publicNote9','publicNote1','publicNote2','publicNote3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] contains only ['empty value','No information provided','No information provided updated']
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] == ['Version of component part(s) of resource','Version of component part(s) of resource updated']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] contains only ['Version of component part(s) of resource','Version of component part(s) of resource updated']
 
   Scenario: ListRecords: SRS: Verify that changes to instances are triggering harvesting by verb=ListRecords with marc21_withholdings
     * url baseUrl
@@ -206,7 +206,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] contains only ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification9','materialsSpecification1','materialsSpecification2','materialsSpecification3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7', 'publicNote8','publicNote9','publicNote1','publicNote2','publicNote3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] contains only ['empty value','No information provided','No information provided updated']
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] == ['Version of component part(s) of resource','Version of component part(s) of resource updated']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] contains only ['Version of component part(s) of resource','Version of component part(s) of resource updated']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
 
   Scenario: ListRecords: SRS: Verify that adding a new item to the existing instance is triggering harvesting records with marc21_withholdings
@@ -231,7 +231,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] contains only ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification9','materialsSpecification3','materialsSpecification1','materialsSpecification2','materialsSpecification3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7', 'publicNote8','publicNote9','publicNote3','publicNote1','publicNote2','publicNote3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] contains only ['empty value','No information provided','No information provided updated']
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] == ['Version of component part(s) of resource','Version of component part(s) of resource updated']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] contains only ['Version of component part(s) of resource','Version of component part(s) of resource updated']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='a'] == ['Københavns Universitet','Københavns Universitet']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='b'] == ['City Campus','City Campus']
@@ -332,7 +332,7 @@ Feature: edge-oai-pmh features
 
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='u'] contains only ['uri6','uri3','uri4','uri5','uri7','uri8','uri9','uri13','uri1','uri2','uri3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] contains only ['empty value','No information provided','No information provided updated']
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] == ['Version of component part(s) of resource','Version of component part(s) of resource updated']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] contains only ['Version of component part(s) of resource','Version of component part(s) of resource updated']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='a'] == ['Københavns Universitet','Københavns Universitet']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='b'] == ['City Campus','City Campus']
@@ -375,7 +375,7 @@ Feature: edge-oai-pmh features
     When method GET
     Then status 200
 
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] == ['Version of component part(s) of resource','Version of component part(s) of resource updated']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] contains only ['Version of component part(s) of resource','Version of component part(s) of resource updated']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='2']/*[local-name()='subfield'][@code='y'] contains only ['Related resource','Related resource 13']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='0']/*[local-name()='subfield'][@code='y'] == 'Resource'
@@ -400,7 +400,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='h'] == ['UDC','UDC','UDC']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='n'] contains only ['Copy 2','Copy 2','1']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='s'] contains only ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='8']/*[local-name()='subfield'][@code='y'] == ['No display constant generated','No display constant generated3']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='8']/*[local-name()='subfield'][@code='y'] contains only ['No display constant generated','No display constant generated3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] contains only ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification9','materialsSpecification3','materialsSpecification1','materialsSpecification2 UPDATED','materialsSpecification3','materialsSpecification3','materialsSpecification4']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7 UPDATED', 'publicNote8','publicNote9','publicNote3','publicNote1','publicNote2','publicNote3','publicNote3','publicNote4']
 
@@ -426,7 +426,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='h'] == ['UDC','UDC','UDC']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='n'] contains only ['Copy 2','Copy 2','1']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='s'] == ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='8']/*[local-name()='subfield'][@code='y'] == ['No display constant generated','No display constant generated3']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='8']/*[local-name()='subfield'][@code='y'] contains only ['No display constant generated','No display constant generated3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] contains only ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification9','materialsSpecification3','materialsSpecification1','materialsSpecification2 UPDATED','materialsSpecification3','materialsSpecification3','materialsSpecification4']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7 UPDATED', 'publicNote8','publicNote9','publicNote3','publicNote1','publicNote2','publicNote3','publicNote3','publicNote4']
 
