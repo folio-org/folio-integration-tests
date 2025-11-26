@@ -53,7 +53,6 @@ Feature: update configuration
     * set updatePayload.configValue.recordsSource = 'Source record storage'
     * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
     * set updatePayload.configValue.errorsProcessing = '200'
-    * print updatePayload
 
     Given path '/oai-pmh/configuration-settings', behaviorId
     And request updatePayload
