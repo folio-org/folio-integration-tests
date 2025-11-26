@@ -16,15 +16,16 @@ Feature: update configuration
     When method GET
     Then status 200
 
-    * def configId = response.configurationSettings[0].id
-    * def existingConfig = response.configurationSettings[0]
+    * def configResponse = response
+    * def technicalId = get[0] configResponse.configurationSettings[?(@.configName=='technical')].id
 
-    * def updatePayload = existingConfig
+    * def updatePayload = read('classpath:samples/technical.json')
+
     * set updatePayload.configValue.maxRecordsPerResponse = '1'
     * set updatePayload.configValue.enableValidation = 'false'
     * set updatePayload.configValue.formattedOutput = 'false'
 
-    Given path '/oai-pmh/configuration-settings', configId
+    Given path '/oai-pmh/configuration-settings', technicalId
     And request updatePayload
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
@@ -44,16 +45,17 @@ Feature: update configuration
     When method GET
     Then status 200
 
-    * def configId = response.configurationSettings[0].id
-    * def existingConfig = response.configurationSettings[0]
+    * def configResponse = response
+    * def behaviorId = get[0] configResponse.configurationSettings[?(@.configName=='behavior')].id
 
-    * def updatePayload = existingConfig
+    * def updatePayload = read('classpath:samples/behavior.json')
     * set updatePayload.configValue.suppressedRecordsProcessing = 'true'
     * set updatePayload.configValue.recordsSource = 'Source record storage'
     * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
     * set updatePayload.configValue.errorsProcessing = '200'
+    * print updatePayload
 
-    Given path '/oai-pmh/configuration-settings', configId
+    Given path '/oai-pmh/configuration-settings', behaviorId
     And request updatePayload
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'

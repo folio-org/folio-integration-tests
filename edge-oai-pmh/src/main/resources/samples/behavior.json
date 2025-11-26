@@ -1,0 +1,9 @@
+{
+  "configName": "behavior",
+  "configValue": {
+    "deletedRecordsSupport": "persistent",
+    "suppressedRecordsProcessing": "false",
+    "errorsProcessing": "200",
+    "recordsSource": "Source record storage"
+  }
+}
