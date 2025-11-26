@@ -15,16 +15,22 @@ Feature: update configuration
     And header x-okapi-tenant = testTenant
     When method GET
     Then status 200
+    * print response
 
-    * def configId = response.configurationSettings[0].id
-    * def existingConfig = response.configurationSettings[0]
+    * def configResponse = response
+    * def technicalId = get[0] configResponse.configurationSettings[?(@.configName=='technical')].id
+    * print technicalId
+    * def existingConfig = get[0] configResponse.configurationSettings[?(@.configName=='technical')].configValue
+    * print existingConfig
 
-    * copy updatePayload = existingConfig
+    * def updatePayload = call read('classpath:edge-oai-pmh/src/main/resources/samples/technical.json')
+
     * set updatePayload.configValue.maxRecordsPerResponse = '1'
     * set updatePayload.configValue.enableValidation = 'false'
     * set updatePayload.configValue.formattedOutput = 'false'
+    * print updatePayload
 
-    Given path '/oai-pmh/configuration-settings', configId
+    Given path '/oai-pmh/configuration-settings', technicalId
     And request updatePayload
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
@@ -44,16 +50,18 @@ Feature: update configuration
     When method GET
     Then status 200
 
-    * def configId = response.configurationSettings[0].id
-    * def existingConfig = response.configurationSettings[0]
+    * def configResponse = response
+    * def behaviorId = get[0] configResponse.configurationSettings[?(@.configName=='behavior')].id
+    * def existingConfig = get[0] configResponse.configurationSettings[?(@.configName=='behavior')].configValue
 
-    * copy updatePayload = existingConfig
+    * def updatePayload = call read('classpath:edge-oai-pmh/src/main/resources/samples/behavior.json')
     * set updatePayload.configValue.suppressedRecordsProcessing = 'true'
     * set updatePayload.configValue.recordsSource = 'Source record storage'
     * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
     * set updatePayload.configValue.errorsProcessing = '200'
+    * print updatePayload
 
-    Given path '/oai-pmh/configuration-settings', configId
+    Given path '/oai-pmh/configuration-settings', behaviorId
     And request updatePayload
     And header Accept = 'application/json'
     And header Content-Type = 'application/json'
