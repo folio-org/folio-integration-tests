@@ -184,4 +184,28 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void subscriptionAndTagsEditableInApprovedInvoiceWithInactiveBudget() {
     runFeatureTest("subscription-and-tags-editable-in-approved-invoice-with-inactive-budget");
   }
+
+  @Test
+  @DisplayName("(Thunderjet) (C700837, C710243) Encumbrance Remains Unreleased After Changing Expense Class In PO Line With Paid Invoice")
+  void encumbranceRemainsUnreleasedAfterExpenseClassChangeWithPaidInvoice() {
+    runFeatureTest("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C375290) Encumbrance And Budget Updated Correctly After Editing Fund Distribution And Increasing Cost With Paid Invoice")
+  void encumbranceAndBudgetUpdatedCorrectlyAfterEditingFundDistributionAndIncreasingCostWithPaidInvoice() {
+    runFeatureTest("encumbrance-and-budget-updated-correctly-after-editing-fund-distribution-and-increasing-cost-with-paid-invoice");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C451636) Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active")
+  void fundDistributionCanBeChangedAfterRolloverWhenReEncumberNotActive() {
+    runFeatureTest("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (T5840056) Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice")
+  void encumbranceReleasedAfterExpenseClassChangeInPolAndInvoiceWithPaidInvoice() {
+    runFeatureTest("encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice");
+  }
 }
