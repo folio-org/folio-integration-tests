@@ -269,3 +269,6 @@ Feature: cross-module integration tests
   Scenario: Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active
     * call read('features/fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active.feature')
 
+  Scenario: Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice
+    * call read('features/encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice.feature')
+

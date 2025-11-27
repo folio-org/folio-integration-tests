@@ -7,7 +7,6 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
@@ -202,5 +201,11 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @DisplayName("(Thunderjet) (C451636) Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active")
   void fundDistributionCanBeChangedAfterRolloverWhenReEncumberNotActive() {
     runFeatureTest("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (T5840056) Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice")
+  void encumbranceReleasedAfterExpenseClassChangeInPolAndInvoiceWithPaidInvoice() {
+    runFeatureTest("encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice");
   }
 }
