@@ -92,7 +92,7 @@ Feature: Test job profiles
     When method GET
     Then status 200
     #7 not used job profiles in total
-    And match  response.totalRecords == 7
+    And match  response.totalRecords == 8
 
   Scenario Outline: Test used job profiles
 
@@ -145,7 +145,7 @@ Feature: Test job profiles
     And param used = true
     When method GET
     Then status 200
-    #verify that among 5 job profiles 1 is used
+    #verify that among 6 job profiles 1 is used
     And match  response.totalRecords == 1
 
     Examples:
