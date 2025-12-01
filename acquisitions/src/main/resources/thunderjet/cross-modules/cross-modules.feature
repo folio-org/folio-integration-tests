@@ -260,3 +260,15 @@ Feature: cross-module integration tests
   Scenario: Subscription Info, Tags, And Comments Can Be Edited In An Approved Invoice When The Fund's Budget Is Set To Inactive
     * call read('features/subscription-and-tags-editable-in-approved-invoice-with-inactive-budget.feature')
 
+  Scenario: Encumbrance Remains Unreleased After Changing Expense Class In PO Line With Paid Invoice
+    * call read('features/encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice.feature')
+
+  Scenario: Encumbrance And Budget Updated Correctly After Editing Fund Distribution And Increasing Cost With Paid Invoice
+    * call read('features/encumbrance-and-budget-updated-correctly-after-editing-fund-distribution-and-increasing-cost-with-paid-invoice.feature')
+
+  Scenario: Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active
+    * call read('features/fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active.feature')
+
+  Scenario: Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice
+    * call read('features/encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice.feature')
+

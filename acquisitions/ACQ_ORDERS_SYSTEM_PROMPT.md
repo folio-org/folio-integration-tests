@@ -82,7 +82,14 @@ Feature: Order Lifecycle Management
 
 ### 1. TestRail Integration
 - **Bugfest-Only Requirement**: TestRail case references are only required when Java methods are stored in `*Smoke*.java`, `*Extended*.java`, or `*CriticalPath*.java` files
-- **TestRail Format**: Include both Jira ticket and TestRail case references in comments: `# For FAT-21333, https://foliotest.testrail.io/index.php?/cases/view/354277`
+- **TestRail Case Format**: Include Jira ticket and TestRail case references in comments: `# For FAT-21333, https://foliotest.testrail.io/index.php?/cases/view/354277`
+- **TestRail Run & Test Format**: When a test is part of a TestRail run, include both run and test references: `# For FAT-21333, https://foliotest.testrail.io/index.php?/runs/view/3260 (R3260, T5840056)`
+  - **R prefix**: Test Run ID (e.g., R3260)
+  - **T prefix**: Test ID within a run (e.g., T5840056)
+  - **C prefix**: Independent Test Case ID (e.g., C354277) - used when not part of a specific run
+- **Java Method Annotation**: Update the `@DisplayName` annotation with the appropriate test ID:
+  - For independent cases: `(Thunderjet) (C354277) Test Name`
+  - For tests in a run: `(Thunderjet) (T5840056) Test Name`
 - **Non-TestRail Format**: For regular integration tests, only include Jira ticket at the top: `# For FAT-21333`
 - **Test Step Mapping**: Map test steps to TestRail case steps with clear comments (TestRail cases only)
 - **Tag Usage**: Use `@Positive` and `@Negative` tags for test categorization
