@@ -22,6 +22,11 @@ public class ModDCBTest extends TestBaseEureka {
   void testLendingFlow() {  runFeatureTest("lending-flow.feature"); }
 
   @Test
+  void testLenderPatronsWithLocalNames() {
+    runFeatureTest("lender-patrons-with-local-names.feature");
+  }
+
+  @Test
   void testBorrowingPickupFlow() {
     runFeatureTest("borrowing-pickup.feature");
   }
@@ -38,6 +43,11 @@ public class ModDCBTest extends TestBaseEureka {
 
   @Test
   void testPickupFlow() { runFeatureTest("pickup-flow.feature"); }
+
+  @Test
+  void testPickupPatronsWithLocalNames() {
+    runFeatureTest("pickup-patrons-with-local-names.feature");
+  }
 
   @Test
   void testCancelCirculationRequest() {
