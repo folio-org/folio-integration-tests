@@ -15,6 +15,7 @@ Feature: Encumbrance Is Created As Released After Manual Release And Fund Change
 
     * callonce variables
 
+  @C877084
   @Positive
   Scenario: Encumbrance Is Created As Released After Manual Release And Fund Change With Paid Invoice Release False
     # Generate unique identifiers for this test scenario

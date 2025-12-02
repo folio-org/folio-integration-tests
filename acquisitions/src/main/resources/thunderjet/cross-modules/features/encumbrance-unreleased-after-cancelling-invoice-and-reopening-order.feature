@@ -15,6 +15,7 @@ Feature: Encumbrance Unreleased After Cancelling Invoice And Reopening Order
 
     * callonce variables
 
+  @C877072
   @Positive
   Scenario: Encumbrance Unreleased After Cancelling Invoice And Reopening Order
     # Generate unique identifiers for this test scenario
