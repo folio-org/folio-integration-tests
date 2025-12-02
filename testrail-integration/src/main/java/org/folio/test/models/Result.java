@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Result {
   private @JsonProperty("case_id") Integer caseId;
   private @JsonProperty("status_id") Integer statusId;
-  private String comment;
+  private @JsonProperty("comment") String comment;
 
   public void setCaseId(Integer caseId) {
     this.caseId = caseId;

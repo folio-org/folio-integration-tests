@@ -1,7 +1,6 @@
 package org.folio.test.utils;
 
 import org.folio.test.config.TestRailEnv;
-
 import java.util.Optional;
 
 public class EnvUtils {

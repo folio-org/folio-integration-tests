@@ -57,6 +57,7 @@ public abstract class TestBaseEureka {
   public void beforeAll() {
     if (isTestRailEnabled()) {
       testRailService.cacheCaseIds(runId);
+      logger.info("beforeAll:: Test Rail integration is enabled");
     } else {
       logger.info("beforeAll:: Test Rail integration is disabled");
     }
@@ -147,6 +148,9 @@ public abstract class TestBaseEureka {
       .outputJunitXml(true)
       .hook(hook)
       .tags("~@Ignore", "~@NoTestRail");
+    // This is critically important for the Test Rail integration, because the scenario results
+    // only hold a pointer to the json report that we just generated after the feature run, and if
+    // we truncate the folder, the pointer when used will point to nowhere, and will throw an exception
     if (isTestRailEnabled()) {
       builder.reportDir(timestampedReportDir());
     }

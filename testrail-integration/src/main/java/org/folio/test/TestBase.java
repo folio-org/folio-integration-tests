@@ -34,7 +34,6 @@ public abstract class TestBase {
 
   private final TestIntegrationService testIntegrationService;
   private final Map<Class<?>, AtomicInteger> testCounts = new HashMap<>();
-  private boolean shouldCreateTenant = false;
 
   public TestBase(TestIntegrationService testIntegrationService) {
     this.testIntegrationService = testIntegrationService;
@@ -52,9 +51,6 @@ public abstract class TestBase {
     String testTenant = System.getProperty(TEST_TENANT.getValue());
     if (StringUtils.isBlank(testTenant)) {
       System.setProperty(TEST_TENANT.getValue(), DEFAULT_TENANT_TEMPLATE + RandomUtils.nextLong());
-      shouldCreateTenant = true;
-    } else {
-      shouldCreateTenant = false;
     }
   }
 
