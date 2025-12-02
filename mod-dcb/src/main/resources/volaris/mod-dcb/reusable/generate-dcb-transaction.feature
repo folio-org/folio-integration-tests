@@ -2,7 +2,7 @@ Feature: Transaction Body Generator
   Background:
     * callonce variables
 
-  @createLenderPayloadWithLocalNames
+  @CreateLenderPayloadWithLocalNames
   Scenario: generate-payload-for-pickup-role
     * def dcbTransaction = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
     * def randomTransactionId = call uuid1
@@ -17,7 +17,7 @@ Feature: Transaction Body Generator
     * dcbTransaction.pickup.libraryCode = '6uclv'
     * dcbTransaction.role = 'LENDER'
 
-  @createPickupPayloadWithLocalNames
+  @CreatePickupPayloadWithLocalNames
   Scenario: generate-payload-for-pickup-role
     * def dcbTransaction = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
     * def randomTransactionId = call uuid1

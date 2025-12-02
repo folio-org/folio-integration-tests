@@ -11,8 +11,9 @@ Feature: Pickup role with virtual patron information
     * def key = ''
     * configure headers = headersUser
     * callonce read('classpath:volaris/mod-dcb/global/variables.feature')
-    * def payloadGeneratorFeatureName = 'classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@createPickupPayloadWithLocalNames'
+    * def payloadGeneratorFeatureName = 'classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@CreatePickupPayloadWithLocalNames'
 
+  @CreateTransactionWithSingleValueInLocalNames
   Scenario: Create DCB Transaction with patron.localNames: Last Name
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
@@ -42,6 +43,7 @@ Feature: Pickup role with virtual patron information
     And match $.personal.middleName == "#notpresent"
     And match $.personal.lastName == 'TestLastName'
 
+  @CreateTransactionWithTwoValueInLocalNames
   Scenario: Create DCB Transaction with patron.localNames: First Name + Last Name
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
@@ -71,6 +73,7 @@ Feature: Pickup role with virtual patron information
     And match $.personal.middleName == "#notpresent"
     And match $.personal.lastName == 'TestLastName'
 
+  @CreateTransactionWithThreeValuesInLocalNames
   Scenario: Create DCB Transaction with patron.localNames: First Name + Middle Name + Last Name
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew

@@ -11,8 +11,9 @@ Feature: Lender role with virtual patron information
     * def key = ''
     * configure headers = headersUser
     * callonce read('classpath:volaris/mod-dcb/global/variables.feature')
-    * def payloadGeneratorFeatureName = 'classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@createLenderPayloadWithLocalNames'
+    * def payloadGeneratorFeatureName = 'classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@CreateLenderPayloadWithLocalNames'
 
+  @createTransactionWithSingleValueInLocalNames
   Scenario: Create DCB Transaction with patron.localNames: Last Name
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
@@ -42,6 +43,7 @@ Feature: Lender role with virtual patron information
     And match $.personal.middleName == "#notpresent"
     And match $.personal.lastName == 'TestLastName'
 
+  @createTransactionWithTwoValueInLocalNames
   Scenario: Create DCB Transaction with patron.localNames: First Name + Last Name
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
@@ -71,6 +73,7 @@ Feature: Lender role with virtual patron information
     And match $.personal.middleName == "#notpresent"
     And match $.personal.lastName == 'TestLastName'
 
+  @createTransactionWithThreeValuesInLocalNames
   Scenario: Create DCB Transaction with patron.localNames: First Name + Middle Name + Last Name
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
