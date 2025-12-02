@@ -95,7 +95,7 @@ Feature: Scenarios that are primarily focused around exporting list data
     And match $.exportId == exportId
     And match $.listId == listId
     And match $.status == 'SUCCESS'
-    And match $.fields == ['instance.hrid', 'instance.title', 'instance.instance_type_name', 'instance.id']
+    And match $.fields == ['instance.hrid', 'instance.title', 'instance.instance_type_name']
 
     Given path 'lists', listId, 'exports', exportId, 'download'
     When method GET
