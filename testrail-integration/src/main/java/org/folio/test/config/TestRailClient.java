@@ -1,8 +1,8 @@
 package org.folio.test.config;
 
-import static org.folio.test.config.TestRailEnv.TESTRAIL_PWD;
+import static org.folio.test.config.TestRailEnv.TESTRAIL_PASSWORD;
 import static org.folio.test.config.TestRailEnv.TESTRAIL_HOST;
-import static org.folio.test.config.TestRailEnv.TESTRAIL_USER_ID;
+import static org.folio.test.config.TestRailEnv.TESTRAIL_USERNAME;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.Collections;
@@ -29,8 +29,8 @@ public class TestRailClient {
     this.baseUrl = Optional.ofNullable(System.getenv().get(TESTRAIL_HOST.name()))
       .map(TestRailClient::getBaseUrl)
       .orElse(null);
-    this.username = EnvUtils.getString(TESTRAIL_USER_ID);
-    this.password = EnvUtils.getString(TESTRAIL_PWD);
+    this.username = EnvUtils.getString(TESTRAIL_USERNAME);
+    this.password = EnvUtils.getString(TESTRAIL_PASSWORD);
     this.objectMapper =  new ObjectMapper();
     this.restTemplate = new RestTemplate();
   }
