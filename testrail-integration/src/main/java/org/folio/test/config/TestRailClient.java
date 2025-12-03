@@ -3,6 +3,8 @@ package org.folio.test.config;
 import static org.folio.test.config.TestRailEnv.TESTRAIL_PASSWORD;
 import static org.folio.test.config.TestRailEnv.TESTRAIL_HOST;
 import static org.folio.test.config.TestRailEnv.TESTRAIL_USERNAME;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.Collections;
@@ -18,6 +20,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
 public class TestRailClient {
+
+  private static final String API_V2 = "index.php?/api/v2/";
 
   private final String baseUrl;
   private final String username;
@@ -41,11 +45,11 @@ public class TestRailClient {
       systemBaseUrl += "/";
     }
 
-    return systemBaseUrl + "index.php?/api/v2/";
+    return systemBaseUrl + API_V2;
   }
 
   public <T> T get(String uri, ParameterizedTypeReference<T> typeReference) {
-    return sendRequest(uri, HttpMethod.GET, null, typeReference);
+    return sendRequest(uri, GET, null, typeReference);
   }
 
   public <T> T post(String uri, Object payload, ParameterizedTypeReference<T> typeReference) {
@@ -55,7 +59,8 @@ public class TestRailClient {
     } catch (JsonProcessingException e) {
       throw new TestRailException("Failed to serialize payload into entity", e);
     }
-    return sendRequest(uri, HttpMethod.POST, entity, typeReference);
+
+    return sendRequest(uri, POST, entity, typeReference);
   }
 
   public <T> T sendRequest(String uri, HttpMethod httpMethod, String entity, ParameterizedTypeReference<T> typeReference) {
@@ -64,15 +69,17 @@ public class TestRailClient {
     if (!response.getStatusCode().is2xxSuccessful()) {
       throw new TestRailException(response.getStatusCode().toString());
     }
+
     return response.getBody();
   }
 
   private HttpEntity<String> getRequestEntity(HttpMethod httpMethod, String entity) {
     var headers = getHeaders();
-    if (HttpMethod.POST.equals(httpMethod)) {
+    if (POST.equals(httpMethod)) {
       headers.setAccept(Collections.singletonList(APPLICATION_JSON));
       return new HttpEntity<>(entity, headers);
     }
+
     return new HttpEntity<>(headers);
   }
 
@@ -80,6 +87,7 @@ public class TestRailClient {
     var headers = new HttpHeaders();
     headers.setContentType(APPLICATION_JSON);
     headers.setBasicAuth(username, password);
+
     return headers;
   }
 }
