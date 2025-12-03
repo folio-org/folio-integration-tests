@@ -87,6 +87,19 @@ Feature: Order Lifecycle Management
   - **R prefix**: Test Run ID (e.g., R3260)
   - **T prefix**: Test ID within a run (e.g., T5840056)
   - **C prefix**: Independent Test Case ID (e.g., C354277) - used when not part of a specific run
+- **TestRail Case ID Tag**: **ALWAYS add a @C tag** for scenarios created from a TestRail case. Extract the case ID from the URL and prefix with "@C":
+  - Example URL: `https://foliotest.testrail.io/index.php?/cases/view/356782`
+  - Extracted tag: `@C356782`
+  - **IMPORTANT**: Place the tag on a **new line preceding any other tags**
+  - **For TestRail Tests (T prefix)**: If working with a test from a run (T...), find the underlying case ID and use that for the @C tag instead. DO NOT create a @T tag.
+    - Example: If you have Test T5840056, find its case ID (e.g., C354277) and use `@C354277`
+    - The T prefix is only used in the Java method's `@DisplayName` annotation, never as a tag
+  - Example:
+    ```
+    @C356782
+    @Positive
+    Scenario: Test Name
+    ```
 - **Java Method Annotation**: Update the `@DisplayName` annotation with the appropriate test ID:
   - For independent cases: `(Thunderjet) (C354277) Test Name`
   - For tests in a run: `(Thunderjet) (T5840056) Test Name`
