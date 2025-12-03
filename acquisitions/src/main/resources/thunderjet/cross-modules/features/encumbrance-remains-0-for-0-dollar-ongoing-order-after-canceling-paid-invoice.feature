@@ -15,6 +15,7 @@ Feature: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid I
 
     * callonce variables
 
+  @C825437
   @Positive
   Scenario: Encumbrance Remains 0 For 0 Dollar Ongoing Order After Canceling Paid Invoice
     # Generate unique identifiers for this test scenario

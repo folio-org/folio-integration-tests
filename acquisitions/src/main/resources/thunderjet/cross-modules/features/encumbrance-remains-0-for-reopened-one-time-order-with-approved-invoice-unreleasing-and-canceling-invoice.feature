@@ -15,6 +15,7 @@ Feature: Encumbrance remains 0 for a re-opened One-time order with an approved i
 
     * callonce variables
 
+  @C844262
   @Positive
   Scenario: Encumbrance remains 0 for a re-opened One-time order with an approved invoice, unreleasing encumbrance, and canceling an invoice
     # Generate unique identifiers for this test scenario

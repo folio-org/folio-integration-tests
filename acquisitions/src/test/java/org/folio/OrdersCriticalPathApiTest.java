@@ -8,18 +8,18 @@ import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 @FolioTest(team = "thunderjet", module = "mod-orders")
-public class OrdersSmokeApiTest extends TestBaseEureka {
+public class OrdersCriticalPathApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
 
-  public OrdersSmokeApiTest() {
+  public OrdersCriticalPathApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
@@ -36,26 +36,8 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
   }
 
   @Test
-  @DisplayName("(Thunderjet) (C743) Create Order Payment Not Required Fully Receive")
+  @DisplayName("(Thunderjet) (C844840) Piece received via receiving full-screen in a new holding can be edited")
   void createOrderPaymentNotRequiredFullyReceive() {
-    runFeatureTest("create-order-payment-not-required-fully-receive");
-  }
-
-  @Test
-  @DisplayName("(Thunderjet) (C358972) Create Order Check Items")
-  void createOrderCheckItems() {
-    runFeatureTest("create-order-check-items");
-  }
-
-  @Test
-  @DisplayName("(Thunderjet) (C422159) Delete One Piece In Receiving")
-  void deleteOnePieceInReceiving() {
-    runFeatureTest("delete-one-piece-in-receiving");
-  }
-
-  @Test
-  @DisplayName("(Thunderjet) (C354277) Change Order Instance Connection")
-  void changeOrderInstanceConnection() {
-    runFeatureTest("change-order-instance-connection");
+    runFeatureTest("receive-piece-new-holding-edit");
   }
 }

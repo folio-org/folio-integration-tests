@@ -16,6 +16,7 @@ Feature: Create Order Check Items
 
     * callonce variables
 
+  @C358972
   @Positive
   Scenario: Create Order And Check Item Statuses
     * def fundId = call uuid

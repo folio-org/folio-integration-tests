@@ -8,9 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface FolioTest {
+  String team();
 
-    String team();
-
-    String module();
-
+  String module();
 }

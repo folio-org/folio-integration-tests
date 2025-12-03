@@ -1,5 +1,5 @@
-# For Scenario 5 - mod-orders becomes unavailable after removing Fund distribution from POL
-Feature: Encumbrance After Removing Fund Distribution From POL
+# For MODORDERS-1370, https://foliotest.testrail.io/index.php?/cases/view/926164
+Feature: Fund Distribution Can Be Removed From POL After Cancelling All Related Invoices And Reopening Order
 
   Background:
     * print karate.info.scenarioName
@@ -15,8 +15,9 @@ Feature: Encumbrance After Removing Fund Distribution From POL
 
     * callonce variables
 
+  @C926164
   @Positive
-  Scenario: Encumbrance After Removing Fund Distribution From POL
+  Scenario: Fund Distribution Can Be Removed From POL After Cancelling All Related Invoices And Reopening Order
     # Generate unique identifiers for this test scenario
     * def fundId = call uuid
     * def budgetId = call uuid

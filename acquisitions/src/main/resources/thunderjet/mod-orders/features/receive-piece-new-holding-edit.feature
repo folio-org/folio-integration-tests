@@ -16,6 +16,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
 
     * callonce variables
 
+  @C844840
   @Positive
   Scenario: Piece received via receiving full-screen in a new holding can be edited
     * def fundId = call uuid
@@ -25,16 +26,16 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     * def newLocationId = globalLocationsId2
     * def originalLocationId = globalLocationsId
 
-    # Step 1: Create fund and budget
+    # 1: Create fund and budget
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
     * configure headers = headersUser
 
-    # Step 2: Create order
+    # 2: Create order
     * def v = call createOrder { 'id': '#(orderId)' }
 
-    # Step 3: Create order line with quantity 1 and create inventory instance, holding, item
+    # 3: Create order line with quantity 1 and create inventory instance, holding, item
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -48,10 +49,10 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     When method POST
     Then status 201
 
-    # Step 4: Open order
+    # 4: Open order
     * def v = call openOrder { 'orderId': '#(orderId)' }
 
-    # Step 5: Get title ID from order line
+    # 5: Get title ID from order line
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -59,13 +60,13 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.totalRecords == 1
     * def titleId = $.titles[0].id
 
-    # Step 6: Get instance ID from order line
+    # 6: Get instance ID from order line
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * def instanceId = $.instanceId
 
-    # Step 7: Get holdings created for original location
+    # 7: Get holdings created for original location
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
@@ -75,7 +76,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     * def originalHoldingId = $.holdingsRecords[0].id
     * configure headers = headersUser
 
-    # Step 8: Get expected piece and verify it is in expected status with original holding ID
+    # 8: Get expected piece and verify it is in expected status with original holding ID
     Given path 'orders/pieces'
     And param query = 'titleId==' + titleId + ' AND receivingStatus==Expected'
     When method GET
@@ -86,7 +87,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.pieces[0].locationId == '#notpresent'
     * def pieceId = $.pieces[0].id
 
-    # Step 9: Receive piece with new location ID
+    # 9: Receive piece with new location ID
     Given path 'orders/check-in'
     And request
     """
@@ -113,7 +114,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
 
-    # Step 10: Verify piece is now received with new holding ID
+    # 10: Verify piece is now received with new holding ID
     Given path 'orders/pieces', pieceId
     And retry until response.receivingStatus == 'Received'
     When method GET
@@ -123,7 +124,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.locationId == '#notpresent'
     * def newHoldingId = $.holdingId
 
-    # Step 11: Edit received piece - add display summary and barcode
+    # 11: Edit received piece - add display summary and barcode
     * def receivedPiece = $
     * def testDisplaySummary = 'Test Display Summary For C844840'
     * def testBarcode = 'TEST-BARCODE-' + pieceId
@@ -134,7 +135,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     When method PUT
     Then status 204
 
-    # Step 12: Verify piece was successfully updated
+    # 12: Verify piece was successfully updated
     Given path 'orders/pieces', pieceId
     When method GET
     Then status 200
@@ -144,7 +145,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.holdingId == newHoldingId
     And match $.locationId == '#notpresent'
 
-    # Step 13: Verify new holding was created in different location
+    # 13: Verify new holding was created in different location
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings', newHoldingId
     When method GET
@@ -152,14 +153,14 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.permanentLocationId == newLocationId
     And match $.instanceId == instanceId
 
-    # Step 14: Verify instance has two holdings now
+    # 14: Verify instance has two holdings now
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
     When method GET
     Then status 200
     And match $.totalRecords == 2
 
-    # Step 15: Verify item was created in new holding with correct barcode
+    # 15: Verify item was created in new holding with correct barcode
     Given path 'inventory/items'
     And param query = 'holdingsRecordId==' + newHoldingId
     When method GET

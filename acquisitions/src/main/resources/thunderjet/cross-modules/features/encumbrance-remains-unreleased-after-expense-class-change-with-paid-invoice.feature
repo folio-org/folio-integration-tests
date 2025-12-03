@@ -16,7 +16,9 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
 
     * callonce variables
 
+  @C700837
   @Positive
+  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/700837
   Scenario: Encumbrance Remains Unreleased After Changing Expense Class In PO Line With Paid Invoice Release True
     # Generate unique identifiers for this test scenario
     * def fundId = call uuid
@@ -139,7 +141,9 @@ Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line 
     When method GET
     Then status 200
 
+  @C710243
   @Positive
+  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/710243
   Scenario: Encumbrance Remains Unreleased After Changing Expense Class In PO Line With Paid Invoice Release False
     # Generate unique identifiers for this test scenario
     * def fundId = call uuid

@@ -15,6 +15,7 @@ Feature: Encumbrance Is Unreleased After Cancelling Related Approved Invoice And
 
     * callonce variables
 
+  @C889716
   @Positive
   Scenario: Encumbrance Is Unreleased After Cancelling Related Approved Invoice And Re-Opening Order Release False
     # Generate unique identifiers for this test scenario

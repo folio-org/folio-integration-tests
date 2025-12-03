@@ -15,6 +15,7 @@ Feature: Budget Summary And Encumbrances Updated Correctly When Editing POL With
 
     * callonce variables
 
+  @C357580
   @Positive
   Scenario: Budget Summary And Encumbrances Updated Correctly When Editing POL With Related Invoice After Rollover Of Fiscal Year
     # Generate unique identifiers for this test scenario

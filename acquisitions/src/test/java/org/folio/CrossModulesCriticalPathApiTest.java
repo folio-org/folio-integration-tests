@@ -5,6 +5,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,7 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
 
   public CrossModulesCriticalPathApiTest() {
-    super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
   @BeforeAll
@@ -138,9 +138,9 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
-  @DisplayName("(Thunderjet) Scenario 5 - mod-orders becomes unavailable after removing Fund distribution from POL")
-  void encumbranceAfterRemovingFundDistributionFromPol() {
-    runFeatureTest("encumbrance-after-removing-fund-distribution-from-pol");
+  @DisplayName("(Thunderjet) (C926164) Fund Distribution Can Be Removed From POL After Cancelling All Related Invoices And Reopening Order")
+  void fundDistributionCanBeRemovedFromPolAfterCancellingAllRelatedInvoicesAndReopeningOrder() {
+    runFeature("classpath:thunderjet/cross-modules/features/encumbrance-after-removing-fund-distribution-from-pol.feature");
   }
 
   @Test
@@ -204,7 +204,7 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
-  @DisplayName("(Thunderjet) (T5840056) Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice")
+  @DisplayName("(Thunderjet) (C722381) Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice")
   void encumbranceReleasedAfterExpenseClassChangeInPolAndInvoiceWithPaidInvoice() {
     runFeatureTest("encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice");
   }

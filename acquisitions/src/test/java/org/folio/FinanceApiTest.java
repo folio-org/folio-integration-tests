@@ -19,8 +19,7 @@ public class FinanceApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-finance/features/";
 
   public FinanceApiTest() {
-    super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
@@ -216,5 +215,4 @@ public class FinanceApiTest extends TestBaseEureka {
   void whenCreatingBudgetAddExpenseClassesProvidedByUser() {
     runFeatureTest("when-creating-budget-add-expense-classes-if-them-provided-by-user");
   }
-
 }
