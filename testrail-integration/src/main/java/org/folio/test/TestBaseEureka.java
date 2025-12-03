@@ -56,8 +56,8 @@ public abstract class TestBaseEureka {
   @BeforeAll
   public void beforeAll() {
     if (isTestRailEnabled()) {
-      testRailService.cacheCaseIds(runId);
       logger.info("beforeAll:: Test Rail integration is enabled");
+      testRailService.cacheCaseIds(runId);
     } else {
       logger.info("beforeAll:: Test Rail integration is disabled");
     }
