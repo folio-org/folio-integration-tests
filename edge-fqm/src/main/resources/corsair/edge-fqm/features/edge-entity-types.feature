@@ -42,6 +42,17 @@ Feature: Entity types
     And match $.columns == '#present'
     And match $.defaultSort == '#present'
 
+  Scenario: Get entity type for a valid id using an "fqm/" prefix on the path
+    Given url edgeUrl
+    And path 'fqm/entity-types/' + holdingsEntityTypeId
+    And param apikey = apikey
+    When method GET
+    Then status 200
+    And match $.id == holdingsEntityTypeId
+    And match $.name == 'composite_holdings_record'
+    And match $.columns == '#present'
+    And match $.defaultSort == '#present'
+
   Scenario: Get entity type for an invalid id should return '404 Not Found'
     * def invalidId = '0cb79a4c-f7eb-4941-a104-745224ae0297'
     Given url edgeUrl
