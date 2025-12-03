@@ -68,6 +68,7 @@ Feature: edge-fqm integration tests
       | 'inventory-storage.location-units.campuses.item.post'       |
       | 'inventory-storage.location-units.institutions.item.post'   |
       | 'inventory-storage.nature-of-content-terms.collection.get'  |
+      | 'inventory-storage.holdings-types.collection.get'           |
 
   Scenario: create tenant and data for testing
     * call read('classpath:common/eureka/setup-users.feature')
