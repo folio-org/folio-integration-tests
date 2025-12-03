@@ -35,7 +35,7 @@ public class TestRailClient {
       .orElse(null);
     this.username = EnvUtils.getString(TESTRAIL_USERNAME);
     this.password = EnvUtils.getString(TESTRAIL_PASSWORD);
-    this.objectMapper =  new ObjectMapper();
+    this.objectMapper = new ObjectMapper();
     this.restTemplate = new RestTemplate();
   }
 
