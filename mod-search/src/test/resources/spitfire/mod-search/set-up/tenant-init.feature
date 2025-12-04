@@ -41,7 +41,6 @@ Feature: Tenant initialization for tests
       | 'browse.subjects.instances.collection.get'                |
       | 'browse.call-numbers.instances.collection.get'            |
       | 'browse.contributors.instances.collection.get'            |
-      | 'instance-authority-links.authorities.bulk.post'          |
       | 'instance-authority-links.instances.collection.put'       |
 
   Scenario: create tenant and users for testing
