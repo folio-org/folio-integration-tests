@@ -26,6 +26,9 @@ Feature: init data for mod-inventory-storage
 
   Scenario: create base instance
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'b73eccf0-57a6-495e-898d-32b9b2210f2f'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'54cfd483-95d5-433a-940a-f3a80a0cd80c'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'baba4ffb-af1b-4ab9-930b-5141e955dc0b'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'da50346c-15d7-42b7-a60e-fae13046bc7e'}
 
   Scenario: setup instance with marc record and holding
     * def instanceId = '1762b035-f87b-4b6f-80d8-c02976e03575'
@@ -34,7 +37,13 @@ Feature: init data for mod-inventory-storage
     * def holdingId = 'ace30183-e8a0-41a3-88a2-569b38764db6'
     * def MFHDHoldingRecordId = '3b1437a4-a9b5-4abe-a1ee-db54a7ccf89e'
     * def holdingIdWithoutSrsRecord = '35540ed1-b1d3-4222-ab26-981a20d8f851'
+    * def holdingIdWithoutSrsRecord2 = 'd72f3bb1-ca88-454b-aad7-d0c8ea36f467'
+    * def holdingIdWithoutSrsRecord3 = '378c97da-4ab8-4df4-beae-849eebfe5140'
+    * def holdingIdWithoutSrsRecord4 = '13190781-967d-4a5e-a0dd-0bf10a4c35db'
     * def authorityId = 'c32a3b93-b459-4bd4-a09b-ac1f24c7b999'
+    * def authorityId2 = '261b8e33-cf1f-48b3-85e2-b55b1dc360e6'
+    * def authorityId3 = '7964b834-9766-45e6-b6e0-cb2b86f0a19f'
+    * def authorityId4 = '8bcbc604-604b-4ffa-ab08-bf787dbb11e1'
     * def authorityRecordId = '432d6568-159a-4b20-962c-63fd59ddc07c'
     * def recordId = uuid()
     * def holdingRecordId = uuid()
@@ -60,6 +69,9 @@ Feature: init data for mod-inventory-storage
 
     #create authority
     * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId2)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId3)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId4)'}
 
     #create 100 items for above holding
     * def fun = function(i){ return { barcode: 1234560 + i, holdingId: holdingId};}
@@ -68,6 +80,11 @@ Feature: init data for mod-inventory-storage
 
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceIdForHoldingWithRecord)', holdingId:'#(MFHDHoldingRecordId)'}
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord2)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord3)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord4)'}
+
+
 
     #create record
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceIdForHoldingWithRecord)'}
