@@ -58,7 +58,6 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     When method GET
     Then status 200
 
-    #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
     And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultAuthorityJobProfileId)','idType':'authority'}
@@ -72,7 +71,7 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:4, failed:0, duplicatedSrs:0, total:4, readIds:1}
+    And match response.jobExecutions[0].progress == {exported:4, failed:0, duplicatedSrs:0, total:4, readIds:4}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -83,11 +82,41 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     And match response.link == '#notnull'
     * def downloadLink = response.link
 
-    #download link content should not be empty
     Given url downloadLink
     When method GET
     Then status 200
+    * print response
     And match response == '#notnull'
+
+    * def ByteArrayInputStream = Java.type('java.io.ByteArrayInputStream')
+    * def ZipInputStream = Java.type('java.util.zip.ZipInputStream')
+    * def IOUtils = Java.type('org.apache.commons.io.IOUtils')
+    * def ByteArrayOutputStream = Java.type('java.io.ByteArrayOutputStream')
+
+    * def bais = new ByteArrayInputStream(responseBytes)
+    * def zis = new ZipInputStream(bais)
+
+    # Extract files
+    * def fileNames = []
+    * def marcFiles = []
+
+    * eval
+      """
+      var entry = zis.getNextEntry();
+      while (entry != null) {
+        var name = entry.getName();
+        if (name.includes('.')) {
+          fileNames.push(name);
+          var baos = new ByteArrayOutputStream();
+          IOUtils.copy(zis, baos);
+          marcFiles.push(baos.toByteArray());
+        }
+        entry = zis.getNextEntry();
+      }
+      """
+
+    * print 'File names in ZIP:', fileNames
+    * print 'Number of MARC files in ZIP:', marcFiles.length
 
     Examples:
       | fileName                                    | uploadFormat |
@@ -152,7 +181,9 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:4, failed:0, duplicatedSrs:0, total:4, readIds:1}
+    * def files = response.jobExecutions[0].exportedFiles
+    * match each files[*].fileName contains 'mrc'
+    And match response.jobExecutions[0].progress == {exported:4, failed:0, duplicatedSrs:0, total:4, readIds:4}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -243,11 +274,40 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     And match response.link == '#notnull'
     * def downloadLink = response.link
 
-    #download link content should not be empty
     Given url downloadLink
     When method GET
     Then status 200
+    * print response
     And match response == '#notnull'
+    * def ByteArrayInputStream = Java.type('java.io.ByteArrayInputStream')
+    * def ZipInputStream = Java.type('java.util.zip.ZipInputStream')
+    * def IOUtils = Java.type('org.apache.commons.io.IOUtils')
+    * def ByteArrayOutputStream = Java.type('java.io.ByteArrayOutputStream')
+
+    * def bais = new ByteArrayInputStream(responseBytes)
+    * def zis = new ZipInputStream(bais)
+
+    # Extract files
+    * def fileNames = []
+    * def marcFiles = []
+
+    * eval
+      """
+      var entry = zis.getNextEntry();
+      while (entry != null) {
+        var name = entry.getName();
+        if (name.includes('.')) {
+          fileNames.push(name);
+          var baos = new ByteArrayOutputStream();
+          IOUtils.copy(zis, baos);
+          marcFiles.push(baos.toByteArray());
+        }
+        entry = zis.getNextEntry();
+      }
+      """
+
+    * print 'File names in ZIP:', fileNames
+    * print 'Number of MARC files in ZIP:', marcFiles.length
 
     Examples:
       | fileName                                    | uploadFormat |
