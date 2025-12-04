@@ -14,10 +14,11 @@ Feature: mod-quick-marc integration tests
       | 'mod-inventory-storage'     |
       | 'mod-entities-links'        |
       | 'mod-record-specifications' |
+      | 'mod-search'                |
 
     * table userPermissions
       | name                                                        |
-      | 'instance-authority-links.authorities.bulk.post'            |
+      | 'search.authorities.collection.get'            |
       | 'instance-authority-links.instances.collection.get'         |
       | 'inventory-storage.authorities.item.delete'                 |
       | 'inventory-storage.authorities.item.get'                    |

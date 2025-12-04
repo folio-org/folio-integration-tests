@@ -45,12 +45,12 @@ Feature: update of two authorities records linked to one instance tests
     Then status 202
 
     # count links
-    Given path '/links/authorities/bulk/count'
-    And request {"ids": [#(authorityId1)]}
-    And retry until response.links[0].totalLinks == 0
-    When method POST
+    Given path '/search/authorities'
+    And param query = '(id==#(authorityId1) and authRefType==("Authorized"))'
+    And retry until response.authorities[0].numberOfTitles == 0
+    When method GET
     Then status 200
-    Then match response.links[0].totalLinks == 0
+    Then match response.authorities[0].numberOfTitles == 0
 
     # retrieve marc bib record
     Given path '/source-storage/records', instanceId, 'formatted'
@@ -126,12 +126,12 @@ Feature: update of two authorities records linked to one instance tests
     Then status 202
 
     # count links
-    Given path '/links/authorities/bulk/count'
-    And request {"ids": [#(authorityId2)]}
-    And retry until response.links[0].totalLinks == 0
-    When method POST
+    Given path '/search/authorities'
+    And param query = '(id==#(authorityId2) and authRefType==("Authorized"))'
+    And retry until response.authorities[0].numberOfTitles == 0
+    When method GET
     Then status 200
-    Then match response.links[0].totalLinks == 0
+    Then match response.authorities[0].numberOfTitles == 0
 
     # retrieve marc bib record
     Given path '/source-storage/records', instanceId, 'formatted'
