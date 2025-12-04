@@ -22,8 +22,8 @@ public class ModDCBTest extends TestBaseEureka {
   void testLendingFlow() {  runFeatureTest("lending-flow.feature"); }
 
   @Test
-  void testLenderPatronsWithLocalNames() {
-    runFeatureTest("lender-patrons-with-local-names.feature");
+  void testLendingPatronsWithLocalNames() {
+    runFeatureTest("lending-patrons-with-local-names.feature");
   }
 
   @Test
@@ -39,6 +39,16 @@ public class ModDCBTest extends TestBaseEureka {
   @Test
   void testRefreshShadowLocations() {
     runFeatureTest("refresh-shadow-locations.feature");
+  }
+
+  @Test
+  void testBorrowingFlexibleLocations() {
+    runFeatureTest("borrowing-flexible-locations.feature");
+  }
+
+  @Test
+  void testPickupFlexibleLocations() {
+    runFeatureTest("pickup-flexible-locations.feature");
   }
 
   @Test
