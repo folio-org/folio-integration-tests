@@ -145,4 +145,10 @@ public class ModDataExportApiTest extends TestBaseEureka {
     void ExportAuthorityConfigC432314Test() {
         runFeatureTest("export-authority-config-C432314");
     }
+
+    @Test
+    @Order(18)
+    void NegativeConfigExportC432315Test() {
+        runFeatureTest("negative-config-export-C432315");
+    }
 }

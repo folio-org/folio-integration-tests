@@ -45,6 +45,9 @@ Feature: init data for mod-inventory-storage
     * def authorityId3 = '7964b834-9766-45e6-b6e0-cb2b86f0a19f'
     * def authorityId4 = '8bcbc604-604b-4ffa-ab08-bf787dbb11e1'
     * def authorityRecordId = '432d6568-159a-4b20-962c-63fd59ddc07c'
+    * def authorityRecordId2 = 'da365a57-2751-4ad9-ad9e-55f770f0a8f2'
+    * def authorityRecordId3 = '845f26ba-f171-4af2-8361-74bab1b22c92'
+    * def authorityRecordId4 = '61a73463-3d74-4ebf-bc74-d1e168df4186'
     * def recordId = uuid()
     * def holdingRecordId = uuid()
     * def snapshotId = uuid()
@@ -90,8 +93,12 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceIdForHoldingWithRecord)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId2)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId2)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId3)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId3)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId4)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId4)'}
 
-    Scenario: reindex data
+
+  Scenario: reindex data
       Given path '/instance-storage/reindex'
       When method POST
       Then status 200

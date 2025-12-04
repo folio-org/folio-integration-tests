@@ -102,7 +102,7 @@ Feature: Verify configured limit of exported file size - Holdings (UUID)
     * def unzippedResponse = IOUtils.toString(zis, 'UTF-8')
     * print unzippedResponse
     And def Checker = Java.type("org.folio.utils.MarcFileHoldingFieldsExistenceChecker")
-    And def checker = new Checker(response)
+    And def checker = new Checker(unzippedResponse.getBytes('UTF-8'))
     And checker.checkForHrId() == true
     And checker.checkForInstanceId() == true
     And checker.checkForHoldingStatementField() == true
@@ -271,7 +271,6 @@ Feature: Verify configured limit of exported file size - Holdings (UUID)
     * print response
     * def downloadLink = response.link
 
-    #when follows download link marc file with necessary fields should be returned
     Given url downloadLink
     When method GET
     Then status 200
@@ -280,14 +279,42 @@ Feature: Verify configured limit of exported file size - Holdings (UUID)
     * def ByteArrayInputStream = Java.type('java.io.ByteArrayInputStream')
     * def ZipInputStream = Java.type('java.util.zip.ZipInputStream')
     * def IOUtils = Java.type('org.apache.commons.io.IOUtils')
+    * def ByteArrayOutputStream = Java.type('java.io.ByteArrayOutputStream')
+
     * def bais = new ByteArrayInputStream(responseBytes)
     * def zis = new ZipInputStream(bais)
-    # read first entry in the zip
-    * def entry = zis.getNextEntry()
-    * def unzippedResponse = IOUtils.toString(zis, 'UTF-8')
-    * print unzippedResponse
-    And def Checker = Java.type("org.folio.utils.MarcFileHoldingFieldsExistenceChecker")
-    And def checker = new Checker(response)
+
+    # Extract files
+    * def fileNames = []
+    * def marcFiles = []
+
+    * eval
+      """
+      var entry = zis.getNextEntry();
+      while (entry != null) {
+        var name = entry.getName();
+        if (name.includes('.')) {
+          fileNames.push(name);
+          var baos = new ByteArrayOutputStream();
+          IOUtils.copy(zis, baos);
+          marcFiles.push(baos.toByteArray());
+        }
+        entry = zis.getNextEntry();
+      }
+      """
+
+    * print 'File names in ZIP:', fileNames
+    * print 'Number of MARC files in ZIP:', marcFiles.length
+
+    * def Checker = Java.type("org.folio.utils.MarcFileHoldingFieldsExistenceChecker")
+    * eval
+      """
+      for (var i = 0; i < marcFiles.length; i++) {
+        var checker = new Checker(marcFiles[i]);
+        karate.set('checker', checker);
+      }
+      """
+    * def checker = new Checker(marcFiles[0])
     And checker.checkForHrId() == true
     And checker.checkForInstanceId() == true
     And checker.checkForHoldingStatementField() == true
