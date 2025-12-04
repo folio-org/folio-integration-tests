@@ -46,7 +46,7 @@ Feature: update of two authorities records linked to one instance tests
 
     # count links
     Given path '/search/authorities'
-    And param query = '(id==#(authorityId1) and authRefType==("Authorized"))'
+    And param query = '(id==' + authorityId1 + ' and authRefType==("Authorized"))'
     And retry until response.authorities[0].numberOfTitles == 0
     When method GET
     Then status 200
@@ -127,7 +127,7 @@ Feature: update of two authorities records linked to one instance tests
 
     # count links
     Given path '/search/authorities'
-    And param query = '(id==#(authorityId2) and authRefType==("Authorized"))'
+    And param query = '(id==' + authorityId2 + ' and authRefType==("Authorized"))'
     And retry until response.authorities[0].numberOfTitles == 0
     When method GET
     Then status 200
