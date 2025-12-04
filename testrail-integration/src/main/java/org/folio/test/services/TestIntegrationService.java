@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.intuit.karate.Results;
-import com.intuit.karate.Runner;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
 import net.masterthought.cucumber.json.support.Status;
-import org.apache.commons.lang3.StringUtils;
 import org.folio.test.config.TestModuleConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,53 +33,15 @@ public class TestIntegrationService {
   private static final Logger logger = LoggerFactory.getLogger(TestIntegrationService.class);
   private static final String PROJECT_NAME = "ThunderJet";
 
-  private final Map<String, Results> resultsMap;
+  private final Map<String, Results> results;
   private final TestModuleConfiguration testModuleConfiguration;
-
-  private final ObjectMapper mapper;
-
+  private final ObjectMapper objectMapper;
 
   public TestIntegrationService(TestModuleConfiguration testModuleConfiguration) {
     this.testModuleConfiguration = testModuleConfiguration;
-    this.resultsMap = new ConcurrentHashMap<>();
-
-    mapper = new ObjectMapper();
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-  }
-
-  private void internalRun(String path, String featureName) {
-    Results results = Runner.path(path)
-        .tags("~@Ignore", "~@NoTestRail")
-        .parallel(1);
-
-    try {
-      generateReport(results.getReportDir());
-    } catch (IOException ioe) {
-      logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
-    }
-    resultsMap.put(featureName, results);
-
-    assert results.getFailCount() == 0;
-    logger.debug("feature {} run result {} ", path, results.getErrorMessages());
-  }
-
-  public void runFeatureTest(String testFeatureName) {
-    if (StringUtils.isBlank(testFeatureName)) {
-      logger.warn("No test feature name specified");
-      return;
-    }
-    if (!testFeatureName.endsWith("feature")) {
-      testFeatureName = testFeatureName.concat(".feature");
-    }
-    internalRun(testModuleConfiguration.getBasePath().concat(testFeatureName), testFeatureName);
-  }
-
-  public Collection<File> listFiles(Path start) throws IOException {
-    return Files.walk(start, Integer.MAX_VALUE)
-        .map(Path::toFile)
-        .filter(s -> s.getAbsolutePath().endsWith(".json"))
-        .collect(Collectors.toList());
+    this.results = new ConcurrentHashMap<>();
+    this.objectMapper = new ObjectMapper();
+    this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   public void generateReport(String karateOutputPath) throws IOException {
@@ -91,22 +52,18 @@ public class TestIntegrationService {
     config.setNotFailingStatuses(Collections.singleton(Status.UNDEFINED));
     ReportBuilder reportBuilder = new ReportBuilder(jsonPaths, config);
 
-
-    jsonPaths.forEach(path->{
+    jsonPaths.forEach(path -> {
       try {
-        JsonNode jsonNode = mapper.readTree(new File(path));
+        JsonNode jsonNode = objectMapper.readTree(new File(path));
         jsonNode.findParents("tags").stream()
-            .filter(parent -> parent.get("steps") != null && parent.get("tags") != null
-              && parent.get("tags").findValue("name") != null
-              && parent.get("tags").findValue("name").textValue().equals("@Undefined"))
-            .forEach(parent -> {
-              Optional.ofNullable((ObjectNode) parent.findPath("result"))
-                  .ifPresent(result -> result.put("status", "undefined"));
-            });
+          .filter(parent -> parent.get("steps") != null && parent.get("tags") != null
+            && parent.get("tags").findValue("name") != null
+            && parent.get("tags").findValue("name").textValue().equals("@Undefined"))
+          .forEach(parent -> Optional.ofNullable((ObjectNode) parent.findPath("result"))
+            .ifPresent(result -> result.put("status", "undefined")));
 
-        JsonGenerator generator = mapper.getFactory().createGenerator(new File(path), JsonEncoding.UTF8);
-        mapper.writeTree(generator, jsonNode);
-
+        JsonGenerator generator = objectMapper.getFactory().createGenerator(new File(path), JsonEncoding.UTF8);
+        objectMapper.writeTree(generator, jsonNode);
       } catch (IOException e) {
         logger.error("Exception in updating statuses for undefined tests", e);
       }
@@ -115,11 +72,23 @@ public class TestIntegrationService {
     reportBuilder.generateReports();
   }
 
+  public Collection<File> listFiles(Path start) throws IOException {
+    try (var walk = Files.walk(start, Integer.MAX_VALUE)) {
+      return walk.map(Path::toFile)
+        .filter(s -> s.getAbsolutePath().endsWith(".json"))
+        .collect(Collectors.toList());
+    }
+  }
+
   public TestModuleConfiguration getTestConfiguration() {
     return testModuleConfiguration;
   }
 
-  public void addResult(String testName, Results results) {
-    resultsMap.put(testName, results);
+  public void addResult(String feature, Results results) {
+    this.results.put(feature, results);
+  }
+
+  public Map<String, Results> getResults() {
+    return this.results;
   }
 }

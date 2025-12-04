@@ -15,6 +15,7 @@ Feature: Encumbrance Is Created As Released After Releasing It Manually And Chan
 
     * callonce variables
 
+  @C877086
   @Positive
   Scenario: Encumbrance Is Created As Released After Releasing It Manually And Changing The Fund Distribution
     # Generate unique identifiers for this test scenario

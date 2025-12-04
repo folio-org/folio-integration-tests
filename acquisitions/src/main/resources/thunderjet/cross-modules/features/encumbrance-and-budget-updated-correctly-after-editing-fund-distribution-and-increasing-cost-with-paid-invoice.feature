@@ -15,6 +15,7 @@ Feature: Encumbrance And Budget Updated Correctly After Editing Fund Distributio
 
     * callonce variables
 
+  @C375290
   @Positive
   Scenario: Encumbrance And Budget Updated Correctly After Editing Fund Distribution And Increasing Cost With Paid Invoice
     # Generate unique identifiers for this test scenario

@@ -14,29 +14,27 @@ import java.util.UUID;
 @FolioTest(team = "thunderjet", module = "mod-organizations")
 public class OrganizationsApiTest extends TestBaseEureka {
 
-    // Default module settings :
-    private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-organizations/features/";
+  // Default module settings :
+  private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-organizations/features/";
 
-    public OrganizationsApiTest() {
-        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
-    }
+  public OrganizationsApiTest() {
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+  }
 
-    @BeforeAll
-    public void organizationsApiTestBeforeAll() {
-        System.setProperty("testTenant", "testorg" + RandomUtils.nextLong());
-        System.setProperty("testTenantId", UUID.randomUUID().toString());
-        runFeature("classpath:thunderjet/mod-organizations/init-organizations.feature");
-    }
+  @BeforeAll
+  public void organizationsApiTestBeforeAll() {
+    System.setProperty("testTenant", "testorg" + RandomUtils.nextLong());
+    System.setProperty("testTenantId", UUID.randomUUID().toString());
+    runFeature("classpath:thunderjet/mod-organizations/init-organizations.feature");
+  }
 
-    @AfterAll
-    public void organizationsApiTestAfterAll() {
-        runFeature("classpath:common/eureka/destroy-data.feature");
-    }
+  @AfterAll
+  public void organizationsApiTestAfterAll() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
 
-
-    @Test
-    void acquisitionsApiTests() {
-        runFeatureTest("acquisitions-api-tests");
-    }
-
+  @Test
+  void acquisitionsApiTests() {
+    runFeatureTest("acquisitions-api-tests");
+  }
 }

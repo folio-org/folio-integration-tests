@@ -12,6 +12,7 @@ Feature: Subscription Info, Tags, And Comments Can Be Edited In An Approved Invo
 
     * callonce variables
 
+  @C919907
   @Positive
   Scenario: Subscription Info, Tags, And Comments Can Be Edited In An Approved Invoice When The Fund's Budget Is Set To Inactive
     # Generate unique identifiers for this test scenario

@@ -15,6 +15,7 @@ Feature: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice
 
     * callonce variables
 
+  @C889714
   @Positive
   Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice With Amount Exceeding Initial Encumbrance Release False
     # Generate unique identifiers for this test scenario
