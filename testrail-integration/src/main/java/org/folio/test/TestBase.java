@@ -28,7 +28,7 @@ import static org.folio.test.config.TestParam.TEST_TENANT;
 @ExtendWith(ReportPortalExtension.class)
 public abstract class TestBase {
 
-  protected static final Logger logger = LoggerFactory.getLogger(TestBase.class);
+  private static final Logger logger = LoggerFactory.getLogger(TestBase.class);
   private static final int DEFAULT_THREAD_COUNT = 1;
   private static final String DEFAULT_TENANT_TEMPLATE = "testtenant";
 

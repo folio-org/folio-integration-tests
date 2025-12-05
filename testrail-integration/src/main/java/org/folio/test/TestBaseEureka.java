@@ -9,6 +9,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.folio.test.hooks.FolioRuntimeHook;
 import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
+import org.folio.test.shared.SharedCacheInstanceExtension;
 import org.folio.test.utils.EnvUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -31,9 +32,10 @@ import static org.folio.test.config.TestRailEnv.TESTRAIL_RUN_ID;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(ReportPortalExtension.class)
+@ExtendWith(SharedCacheInstanceExtension.class)
 public abstract class TestBaseEureka {
 
-  protected static final Logger logger = LoggerFactory.getLogger(TestBaseEureka.class);
+  private static final Logger logger = LoggerFactory.getLogger(TestBaseEureka.class);
   private static final int DEFAULT_THREAD_COUNT = 1;
   private static final String DEFAULT_TENANT_TEMPLATE = "testtenant";
 
@@ -55,12 +57,6 @@ public abstract class TestBaseEureka {
 
   @BeforeAll
   public void beforeAll() {
-    if (isTestRailEnabled()) {
-      logger.info("beforeAll:: Test Rail integration is enabled");
-      testRailService.cacheCaseIds(runId);
-    } else {
-      logger.info("beforeAll:: Test Rail integration is disabled");
-    }
     runHook();
   }
 
