@@ -17,6 +17,8 @@ Feature: mod-orders integration tests
       | 'mod-entities-links'        |
       | 'mod-quick-marc'            |
       | 'mod-users'                 |
+      | 'mod-linked-data'           |
+      | 'mod-fqm-manager'           |
 
     * table userPermissions
       | name                                                           |
@@ -78,6 +80,7 @@ Feature: mod-orders integration tests
       | 'data-export.export-authority-deleted.post'                    |
       | 'data-export.job.collection.get'                               |
       | 'data-export.job-executions.item.delete'                       |
+      | 'linked-data.resources.import.post'                            |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
