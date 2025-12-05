@@ -13,9 +13,9 @@ import java.util.Set;
 
 import static org.folio.test.config.TestRailEnv.TESTRAIL_RUN_ID;
 
-public class SharedInstance {
+public class SharedCacheInstance {
 
-  private static final Logger logger = LoggerFactory.getLogger(SharedInstance.class);
+  private static final Logger logger = LoggerFactory.getLogger(SharedCacheInstance.class);
   private final TestRailDao testRailDao;
   private final TestRailClient testRailClient;
   private final Integer runId;
@@ -23,7 +23,7 @@ public class SharedInstance {
 
   private Thread instanceThread;
 
-  public SharedInstance() {
+  public SharedCacheInstance() {
     this.testRailDao = new TestRailDao();
     this.testRailClient = new TestRailClient();
     this.runId = EnvUtils.getInt(TESTRAIL_RUN_ID);
@@ -33,7 +33,7 @@ public class SharedInstance {
   public void start() {
     instanceThread = new Thread(() -> {
       try {
-        logger.info("start:: Shared instance is running");
+        logger.info("start:: Shared cache instance is running");
         if (isTestRailEnabled()) {
           logger.info("start:: Test Rail integration is enabled");
           setCaseIds(runId);
@@ -45,7 +45,7 @@ public class SharedInstance {
       } catch (InterruptedException ignored) {
       }
     });
-    instanceThread.setName("Custom Instance");
+    instanceThread.setName("Shared Cache Instance");
     instanceThread.setDaemon(true);
     instanceThread.start();
     try {
@@ -57,7 +57,7 @@ public class SharedInstance {
   public void stop() {
     if (instanceThread != null) {
       instanceThread.interrupt();
-      logger.info("start:: Shared instance stopped successfully");
+      logger.info("start:: Shared cache instance stopped successfully");
     }
   }
 

@@ -2,7 +2,7 @@ package org.folio.test.services;
 
 import com.intuit.karate.Results;
 import com.intuit.karate.core.ScenarioResult;
-import org.folio.test.shared.SharedInstanceInitializer;
+import org.folio.test.shared.SharedCacheInstanceInitializer;
 import org.folio.test.config.TestRailClient;
 import org.folio.test.dao.TestRailDao;
 
@@ -33,7 +33,7 @@ public class TestRailService {
   }
 
   public void createResults(Integer runId, Map<String, Results> results) {
-    var caseIds = SharedInstanceInitializer.getSharedInstance().getCaseIds();
+    var caseIds = SharedCacheInstanceInitializer.getSharedCacheInstance().getCaseIds();
     if (CollectionUtils.isEmpty(caseIds)) {
       logger.warn("createResults: Cannot create results, no case ids were found for the {} run", runId);
       return;
