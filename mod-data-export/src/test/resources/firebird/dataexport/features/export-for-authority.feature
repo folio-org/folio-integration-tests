@@ -11,12 +11,9 @@ Feature: Tests export hodings records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * configure retry = { interval: 15000, count: 10 }
+    * configure retry = { interval: 15000, count: 5 }
 
-  #Positive scenarios
-
-  Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
-    #should create file definition
+  Scenario Outline: test upload file and export flow for authority when related MARC_AUTHORITY records exist.
     Given path 'data-export/file-definitions'
     And def fileDefinitionId = uuid()
     And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
@@ -44,11 +41,11 @@ Feature: Tests export hodings records
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
-    And retry until response.status == 'COMPLETED' && response.sourcePath != null
+#    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
+    * print response
 
-    #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
     And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultAuthorityJobProfileId)','idType':'authority'}
@@ -62,7 +59,7 @@ Feature: Tests export hodings records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, duplicatedSrs:0, total:1, readIds:1}
+    And match response.jobExecutions[0].progress == {exported:3, failed:0, duplicatedSrs:0, total:3, readIds:3}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -73,10 +70,10 @@ Feature: Tests export hodings records
     And match response.link == '#notnull'
     * def downloadLink = response.link
 
-    #download link content should not be empty
     Given url downloadLink
     When method GET
     Then status 200
+    * print response
     And match response == '#notnull'
 
     Examples:

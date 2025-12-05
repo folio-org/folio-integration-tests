@@ -44,21 +44,21 @@ Feature: init srs data feature
     Then status 201
 
   @PostMarcAuthorityRecord2
-  Scenario: create srs record
+  Scenario: create srs record number 2
     Given path 'source-storage/records'
     And request read('classpath:samples/marc_authority_record2.json')
     When method POST
     Then status 201
 
   @PostMarcAuthorityRecord3
-  Scenario: create srs record
+  Scenario: create srs record number 3
     Given path 'source-storage/records'
     And request read('classpath:samples/marc_authority_record3.json')
     When method POST
     Then status 201
 
   @PostMarcAuthorityRecord4
-  Scenario: create srs record
+  Scenario: create srs record number 4
     Given path 'source-storage/records'
     And request read('classpath:samples/marc_authority_record4.json')
     When method POST
