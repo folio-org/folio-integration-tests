@@ -15,6 +15,7 @@ Feature: Initial encumbrance amount remains the same as it was before payment af
 
     * callonce variables
 
+  @C400618
   @Positive
   Scenario: Initial encumbrance amount remains the same as it was before payment after cancelling related paid credit invoice (another related paid invoice exists)
     # Generate unique identifiers for this test scenario

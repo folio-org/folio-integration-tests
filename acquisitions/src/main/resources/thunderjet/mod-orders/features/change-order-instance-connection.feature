@@ -16,6 +16,7 @@ Feature: Change Order Instance Connection
 
     * callonce variables
 
+  @C354277
   @Positive
   Scenario: Change Instance Connection Of POL With Create Inventory Set To None
     * def fundId = call uuid

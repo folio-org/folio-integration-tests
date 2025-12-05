@@ -76,6 +76,7 @@ function fn() {
     config.edgeHost = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.edgeApiKey = 'eyJzIjoiNXNlNGdnbXk1TiIsInQiOiJkaWt1IiwidSI6ImRpa3UifQ==';
     config.getModuleByIdPath = '_/proxy/modules';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeHost = '${edgeUrl}';

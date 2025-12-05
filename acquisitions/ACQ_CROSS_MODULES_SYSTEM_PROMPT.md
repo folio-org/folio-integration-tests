@@ -16,22 +16,21 @@ You are an expert in FOLIO library system cross-module integration testing using
 Cross-modules testing requires careful initialization order:
 ```
 1. mod-permissions (foundation)
-2. mod-configuration 
-3. mod-login
-4. mod-users
-5. mod-pubsub (before circulation)
-6. mod-circulation-storage
-7. mod-circulation
-8. mod-audit
-9. mod-finance-storage
-10. mod-finance
-11. mod-inventory-storage
-12. mod-inventory
-13. mod-invoice-storage
-14. mod-invoice
-15. mod-orders-storage
-16. mod-orders
-17. mod-organizations-storage
+2. mod-login
+3. mod-users
+4. mod-pubsub (before circulation)
+5. mod-circulation-storage
+6. mod-circulation
+7. mod-audit
+8. mod-finance-storage
+9. mod-finance
+10. mod-inventory-storage
+11. mod-inventory
+12. mod-invoice-storage
+13. mod-invoice
+14. mod-orders-storage
+15. mod-orders
+16. mod-organizations-storage
 ```
 
 ### Authentication & Headers Pattern
@@ -95,7 +94,27 @@ Feature: Multiple Cross-Module Integration Tests
 
 ### 1. TestRail Integration
 - **Bugfest-Only Requirement**: TestRail case references are only required when Java methods are stored in `*Smoke*.java`, `*Extended*.java`, or `*CriticalPath*.java` files
-- **TestRail Format**: Include both Jira ticket and TestRail case references in comments: `# For FAT-21333, https://foliotest.testrail.io/index.php?/cases/view/354277`
+- **TestRail Case Format**: Include Jira ticket and TestRail case references in comments: `# For FAT-21333, https://foliotest.testrail.io/index.php?/cases/view/354277`
+- **TestRail Run & Test Format**: When a test is part of a TestRail run, include both run and test references: `# For FAT-21333, https://foliotest.testrail.io/index.php?/runs/view/3260 (R3260, T5840056)`
+  - **R prefix**: Test Run ID (e.g., R3260)
+  - **T prefix**: Test ID within a run (e.g., T5840056)
+  - **C prefix**: Independent Test Case ID (e.g., C354277) - used when not part of a specific run
+- **TestRail Case ID Tag**: **ALWAYS add a @C tag** for scenarios created from a TestRail case. Extract the case ID from the URL and prefix with "@C":
+  - Example URL: `https://foliotest.testrail.io/index.php?/cases/view/356782`
+  - Extracted tag: `@C356782`
+  - **IMPORTANT**: Place the tag on a **new line preceding any other tags**
+  - **For TestRail Tests (T prefix)**: If working with a test from a run (T...), find the underlying case ID and use that for the @C tag instead. DO NOT create a @T tag.
+    - Example: If you have Test T5840056, find its case ID (e.g., C354277) and use `@C354277`
+    - The T prefix is only used in the Java method's `@DisplayName` annotation, never as a tag
+  - Example:
+    ```
+    @C356782
+    @Positive
+    Scenario: Test Name
+    ```
+- **Java Method Annotation**: Update the `@DisplayName` annotation with the appropriate test ID:
+  - For independent cases: `(Thunderjet) (C354277) Test Name`
+  - For tests in a run: `(Thunderjet) (T5840056) Test Name`
 - **Non-TestRail Format**: For regular integration tests, only include Jira ticket at the top: `# For FAT-21333`
 - **Test Step Mapping**: Map test steps to TestRail case steps with clear comments (TestRail cases only)
 - **Tag Usage**: Use `@Positive` and `@Negative` tags for test categorization
@@ -314,6 +333,52 @@ Then status 200
 - `approveInvoice`: Invoice approval with encumbrance updates
 - `payInvoice`: Payment processing with budget impact
 - `cancelInvoice`: Invoice cancellation with encumbrance release
+
+### Order Types and Configuration
+
+#### One-Time Orders
+One-time orders are straightforward and require only basic parameters:
+```karate
+* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "One-Time", reEncumber: true }
+```
+
+#### Ongoing Orders (CRITICAL REQUIREMENT)
+**Ongoing orders MUST include an `ongoing` configuration object**, otherwise the order creation will fail:
+
+```karate
+# CORRECT - With ongoing configuration
+* def ongoingConfig = { "interval": 123, "isSubscription": false }
+* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)", reEncumber: true }
+
+# INCORRECT - Missing ongoing configuration (WILL FAIL)
+* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", reEncumber: true }
+```
+
+**Ongoing Configuration Parameters:**
+- `interval`: Renewal interval (e.g., 123 days)
+- `isSubscription`: Boolean flag indicating if this is a subscription (true/false)
+- Additional optional parameters may include: `renewalDate`, `reviewPeriod`, `manualRenewal`, etc.
+
+**Common Pattern for Ongoing Orders:**
+```karate
+# 1. Define ongoing configuration before order creation
+* def ongoingConfig = { "interval": 123, "isSubscription": false }
+
+# 2. Create ongoing order with configuration
+* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)", reEncumber: true }
+
+# 3. Create order line (same as one-time orders)
+* def v = call createOrderLine { id: "#(orderLineId)", orderId: "#(orderId)", fundId: "#(fundId)", listUnitPrice: 5.00, titleOrPackage: "Test Ongoing Order" }
+
+# 4. Open the order
+* def v = call openOrder { orderId: "#(orderId)" }
+```
+
+**Why This Is Required:**
+- FOLIO's data model requires ongoing-specific metadata for ongoing orders
+- The `ongoing` field validates subscription and renewal information
+- Without this configuration, the order creation API will return validation errors
+- This is a common source of test failures when converting one-time orders to ongoing orders
 
 ### Validation Patterns
 ```

@@ -103,3 +103,10 @@ Feature: CRUD operations on a resource
     When method Get
     Then status 200
     * def response = $
+
+  @getResourceIdFromInventoryId
+  Scenario: Get Instance Resource ID from Inveentory Instance Id
+    Given path '/linked-data/resource/metadata/' + inventoryId + '/id'
+    When method Get
+    Then status 200
+    * def response = $

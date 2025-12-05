@@ -1,1 +1,5 @@
-{"maxRecordsPerResponse":"#(maxRecordsPerResponseConfig)","enableValidation":"false","formattedOutput":"false"}
+{
+  "maxRecordsPerResponse": "#(maxRecordsPerResponseConfig)",
+  "enableValidation": "false",
+  "formattedOutput": "false"
+}

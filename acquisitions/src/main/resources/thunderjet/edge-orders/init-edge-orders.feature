@@ -8,7 +8,7 @@ Feature: Initialize edge-orders integration tests
     * table modules
       | name                        |
       | "mod-audit"                 |
-      | "mod-configuration"         |
+      | "mod-settings"              |
       | "mod-ebsconet"              |
       | "mod-finance"               |
       | "mod-finance-storage"       |
@@ -24,11 +24,12 @@ Feature: Initialize edge-orders integration tests
       | "mod-organizations-storage" |
       | "mod-permissions"           |
       | "mod-users"                 |
+      | "folio_stripes-core"        |
+      | "folio_tenant-settings"     |
 
     * table userPermissions
       | name                                                      |
       | "acquisitions-units.units.collection.get"                 |
-      | "configuration.entries.collection.get"                    |
       | "ebsconet.order-lines.item.get"                           |
       | "ebsconet.order-lines.item.put"                           |
       | "ebsconet.orders.validate.get"                            |
@@ -58,12 +59,13 @@ Feature: Initialize edge-orders integration tests
       | "organizations.organizations.item.post"                   |
       | "orders-storage.custom-fields.collection.get"             |
       | "users.collection.get"                                    |
+      | "mod-settings.entries.collection.get"                     |
+      | "ui-tenant-settings.settings.addresses"                   |
 
     * table adminPermissions
       | name                                                          |
       | "acquisitions-units.memberships.item.post"                    |
       | "acquisitions-units.units.item.post"                          |
-      | "configuration.entries.item.post"                             |
       | 'orders-storage.settings.item.post'                           |
       | "finance.budgets.collection.get"                              |
       | "finance.budgets.item.get"                                    |

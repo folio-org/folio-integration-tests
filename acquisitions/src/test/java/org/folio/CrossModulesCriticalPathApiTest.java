@@ -5,9 +5,9 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
@@ -20,8 +20,7 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
 
   public CrossModulesCriticalPathApiTest() {
-    super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
   @BeforeAll
@@ -139,10 +138,9 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
-  @Disabled
-  @DisplayName("(Thunderjet) Scenario 5 - mod-orders becomes unavailable after removing Fund distribution from POL")
-  void encumbranceAfterRemovingFundDistributionFromPol() {
-    runFeatureTest("encumbrance-after-removing-fund-distribution-from-pol");
+  @DisplayName("(Thunderjet) (C926164) Fund Distribution Can Be Removed From POL After Cancelling All Related Invoices And Reopening Order")
+  void fundDistributionCanBeRemovedFromPolAfterCancellingAllRelatedInvoicesAndReopeningOrder() {
+    runFeature("classpath:thunderjet/cross-modules/features/encumbrance-after-removing-fund-distribution-from-pol.feature");
   }
 
   @Test
@@ -161,5 +159,53 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @DisplayName("(Thunderjet) (C877084) Encumbrance Is Created As Released After Manual Release And Fund Change With Paid Invoice Release Encumbrance False")
   void encumbranceReleasedAfterManualReleaseAndFundChangeWithPaidInvoiceReleaseFalse() {
     runFeatureTest("encumbrance-released-after-manual-release-and-fund-change-with-paid-invoice-release-false");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C357580) Budget Summary And Encumbrances Updated Correctly When Editing POL With Related Invoice After Rollover Of Fiscal Year")
+  void budgetAndEncumbranceUpdatedCorrectlyAfterEditingPolWithInvoiceAfterRollover() {
+    runFeatureTest("budget-and-encumbrance-updated-correctly-after-editing-pol-with-invoice-after-rollover");
+  }
+  
+  @Test
+  @DisplayName("(Thunderjet) (C895660) Cancel A Paid Invoice After Changing Fund Distribution In The PO Line")
+  void cancelPaidInvoiceAfterChangingFundDistribution() {
+    runFeatureTest("cancel-paid-invoice-after-changing-fund-distribution");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C919908) Subscription Info, Tags, And Comments Can Be Edited In A Paid Invoice When The Fund's Budget From Prior FY Is Closed")
+  void subscriptionAndTagsEditableInPaidInvoiceAfterRolloverWithClosedBudget() {
+    runFeatureTest("subscription-and-tags-editable-in-paid-invoice-after-rollover-with-closed-budget");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C919907) Subscription Info, Tags, And Comments Can Be Edited In An Approved Invoice When The Fund's Budget Is Set To Inactive")
+  void subscriptionAndTagsEditableInApprovedInvoiceWithInactiveBudget() {
+    runFeatureTest("subscription-and-tags-editable-in-approved-invoice-with-inactive-budget");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C700837, C710243) Encumbrance Remains Unreleased After Changing Expense Class In PO Line With Paid Invoice")
+  void encumbranceRemainsUnreleasedAfterExpenseClassChangeWithPaidInvoice() {
+    runFeatureTest("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C375290) Encumbrance And Budget Updated Correctly After Editing Fund Distribution And Increasing Cost With Paid Invoice")
+  void encumbranceAndBudgetUpdatedCorrectlyAfterEditingFundDistributionAndIncreasingCostWithPaidInvoice() {
+    runFeatureTest("encumbrance-and-budget-updated-correctly-after-editing-fund-distribution-and-increasing-cost-with-paid-invoice");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C451636) Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active")
+  void fundDistributionCanBeChangedAfterRolloverWhenReEncumberNotActive() {
+    runFeatureTest("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active");
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C722381) Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice")
+  void encumbranceReleasedAfterExpenseClassChangeInPolAndInvoiceWithPaidInvoice() {
+    runFeatureTest("encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice");
   }
 }

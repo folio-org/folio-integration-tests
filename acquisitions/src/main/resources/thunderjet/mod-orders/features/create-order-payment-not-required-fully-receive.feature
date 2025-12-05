@@ -16,6 +16,7 @@ Feature: Create Order Payment Not Required Fully Receive
 
     * callonce variables
 
+  @C743
   @Positive
   Scenario: Create Order With Payment Not Required And Fully Receive
     * def fundId = call uuid

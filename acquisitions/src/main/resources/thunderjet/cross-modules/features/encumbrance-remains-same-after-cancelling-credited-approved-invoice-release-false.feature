@@ -15,6 +15,7 @@ Feature: Encumbrance Remains The Same After Cancelling A Credited Approved Invoi
 
     * callonce variables
 
+  @C889713
   @Positive
   Scenario: Encumbrance Remains The Same After Cancelling A Credited Approved Invoice Release False
     # Generate unique identifiers for this test scenario

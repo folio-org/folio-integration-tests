@@ -18,8 +18,7 @@ public class CrossModulesApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
 
   public CrossModulesApiTest() {
-    super(new TestIntegrationService(
-        new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll
