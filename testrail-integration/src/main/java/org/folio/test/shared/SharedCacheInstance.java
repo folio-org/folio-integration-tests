@@ -21,8 +21,6 @@ public class SharedCacheInstance {
   private final Integer runId;
   private final HashSet<Integer> caseIds;
 
-  private Thread instanceThread;
-
   public SharedCacheInstance() {
     this.testRailDao = new TestRailDao();
     this.testRailClient = new TestRailClient();
@@ -31,33 +29,12 @@ public class SharedCacheInstance {
   }
 
   public void start() {
-    instanceThread = new Thread(() -> {
-      try {
-        logger.info("start:: Shared cache instance is running");
-        if (isTestRailEnabled()) {
-          logger.info("start:: Test Rail integration is enabled");
-          setCaseIds(runId);
-        } else {
-          logger.info("start:: Test Rail integration is disabled");
-        }
-
-        Thread.sleep(Long.MAX_VALUE);
-      } catch (InterruptedException ignored) {
-      }
-    });
-    instanceThread.setName("Shared Cache Instance");
-    instanceThread.setDaemon(true);
-    instanceThread.start();
-    try {
-      Thread.sleep(500);
-    } catch (InterruptedException ignored) {
-    }
-  }
-
-  public void stop() {
-    if (instanceThread != null) {
-      instanceThread.interrupt();
-      logger.info("start:: Shared cache instance stopped successfully");
+    logger.info("start:: Shared cache instance is running");
+    if (isTestRailEnabled()) {
+      logger.info("start:: Test Rail integration is enabled");
+      setCaseIds(runId);
+    } else {
+      logger.info("start:: Test Rail integration is disabled");
     }
   }
 

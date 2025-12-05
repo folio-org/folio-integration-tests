@@ -19,8 +19,6 @@ public final class SharedCacheInstanceInitializer {
             // Can later be transformed into a mock server on Jetty if needed
             sharedCacheInstance = new SharedCacheInstance();
             sharedCacheInstance.start();
-
-            Runtime.getRuntime().addShutdownHook(new Thread(sharedCacheInstance::stop));
             logger.info("start:: Shared cache instance started successfully");
           } catch (Exception e) {
             logger.error("Failed to start a shared cache instance: {}", e.getMessage());
