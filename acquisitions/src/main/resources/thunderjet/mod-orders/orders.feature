@@ -165,6 +165,9 @@ Feature: mod-orders integration tests
   Scenario: Open order with manual exchange rate
     * call read('features/open-order-with-manual-exchange-rate.feature')
 
+  Scenario: Open order with many Product IDs
+    * call read('features/open-order-with-many-product-ids.feature')
+
   Scenario: Open order without holdings
     * call read('features/open-order-without-holdings.feature')
 
