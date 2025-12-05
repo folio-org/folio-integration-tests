@@ -37,17 +37,4 @@ public final class SharedCacheInstanceInitializer {
 
     return sharedCacheInstance;
   }
-
-  public static void main(String[] args) throws Exception {
-    logger.info("main:: Started testing single shared cache instance startup");
-
-    // Start 5 threads simultaneously calling the startup logic
-    var startupTask = (Runnable) SharedCacheInstanceInitializer::start;
-    for (int i = 0; i < 5; i++) {
-      new Thread(startupTask, "TestRunner-" + i).start();
-    }
-    Thread.sleep(15000);
-
-    logger.info("main:: Stopped testing single shared cache instance startup");
-  }
 }
