@@ -4,7 +4,7 @@
   "fields":[
     {
       "tag":"001",
-      "content":"no2012142443"
+      "content":"sh2008001841"
     },
     {
       "tag":"008",
@@ -35,33 +35,17 @@
     },
     {
       "tag":"010",
-      "content":"$a no2012142443",
+      "content":"$a sh2008001841",
       "indicators":[
         "\\",
         "\\"
       ]
     },
     {
-      "tag":"100",
-      "content":"$a Wang, Jack, $d 1972-",
+      "tag":"150",
+      "content":"$a Private flying $x Accidents $z United States $v Periodicals",
       "indicators":[
-        "1",
-        "\\"
-      ]
-    },
-    {
-      "tag":"400",
-      "content":"$a Jack Wang, $d 1972-",
-      "indicators":[
-        "1",
-        "\\"
-      ]
-    },
-    {
-      "tag":"500",
-      "content":"$a Jack Wang, $d 1972-",
-      "indicators":[
-        "1",
+        "\\",
         "\\"
       ]
     }
@@ -74,5 +58,5 @@
     "recordState":"NEW"
   },
   "_actionType":"create",
-  "parsedRecordId":"398f0ffd-958c-4218-a37c-64146dbbe9ae"
+  "parsedRecordId":"6aaf39be-beef-42c0-8372-b2f9d33815e4"
 }
