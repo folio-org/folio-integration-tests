@@ -252,6 +252,11 @@ class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
+  void openOrderWithManyProductIds() {
+    runFeatureTest("open-order-with-many-product-ids");
+  }
+
+  @Test
   void openOrderWithoutHoldings() {
     runFeatureTest("open-order-without-holdings");
   }
