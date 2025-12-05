@@ -72,9 +72,9 @@ Feature: init data for mod-inventory-storage
 
     #create authority
     * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId2)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId3)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId4)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority2') {authorityId:'#(authorityId2)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority3') {authorityId:'#(authorityId3)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority4') {authorityId:'#(authorityId4)'}
 
     #create 100 items for above holding
     * def fun = function(i){ return { barcode: 1234560 + i, holdingId: holdingId};}
@@ -87,15 +87,13 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord3)'}
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord4)'}
 
-
-
     #create record
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceIdForHoldingWithRecord)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId2)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId2)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId3)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId3)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId4)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId4)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord2') {recordId:'#(authorityRecordId2)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId2)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord3') {recordId:'#(authorityRecordId3)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId3)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord4') {recordId:'#(authorityRecordId4)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId4)'}
 
 
   Scenario: reindex data

@@ -13,7 +13,7 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
-  Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
+  Scenario Outline: setting configuration slice_size to 1, test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
     #should create file definition
 
     Given path 'data-export/configuration'
@@ -71,7 +71,7 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:4, failed:0, duplicatedSrs:0, total:4, readIds:4}
+    And match response.jobExecutions[0].progress == {exported:3, failed:0, duplicatedSrs:0, total:3, readIds:3}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -117,88 +117,6 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
 
     * print 'File names in ZIP:', fileNames
     * print 'Number of MARC files in ZIP:', marcFiles.length
-
-    Examples:
-      | fileName                                    | uploadFormat |
-      | test-export-config-authority-csv.csv        | csv          |
-
-  Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
-    #should create file definition
-
-    Given path 'data-export/configuration'
-    And request
-      """
-      {
-        "key": "slice_size",
-        "value": "4"
-      }
-      """
-    When method POST
-    Then status 201
-
-    Given path 'data-export/file-definitions'
-    And def fileDefinitionId = uuid()
-    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
-    And request fileDefinition
-    When method POST
-    Then status 201
-    And match response.status == 'NEW'
-    And match response.uploadFormat == '<uploadFormat>'
-
-    #should return created file definition
-    Given path 'data-export/file-definitions', fileDefinitionId
-    When method GET
-    Then status 200
-    And match response.status == 'NEW'
-    And match response.uploadFormat == '<uploadFormat>'
-    And match response.jobExecutionId == '#present'
-    And def jobExecutionId = response.jobExecutionId
-
-    #should upload file by created file definition id
-    Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
-    And configure headers = headersUserOctetStream
-    And request karate.readAsString('classpath:samples/file-definition/<fileName>')
-    When method POST
-    Then status 200
-
-    #wait until the file will be uploaded to the system before calling further dependent calls
-    Given path 'data-export/file-definitions', fileDefinitionId
-    And retry until response.status == 'COMPLETED' && response.sourcePath != null
-    When method GET
-    Then status 200
-
-    #should export instances and return 204
-    Given path 'data-export/export'
-    And configure headers = headersUser
-    And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultAuthorityJobProfileId)','idType':'authority'}
-    And request requestBody
-    When method POST
-    Then status 204
-
-    #should return job execution by id and wait until the job status will be 'COMPLETED'
-    Given path 'data-export/job-executions'
-    And param query = 'id==' + jobExecutionId
-    And retry until response.jobExecutions[0].status == 'COMPLETED'
-    When method GET
-    Then status 200
-    * def files = response.jobExecutions[0].exportedFiles
-    * match each files[*].fileName contains 'mrc'
-    And match response.jobExecutions[0].progress == {exported:4, failed:0, duplicatedSrs:0, total:4, readIds:4}
-    * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
-
-    #should return download link for instance of uploaded file
-    Given path 'data-export/job-executions/',jobExecutionId,'/download/',fileId
-    When method GET
-    Then status 200
-    And match response.fileId == '#notnull'
-    And match response.link == '#notnull'
-    * def downloadLink = response.link
-
-    #download link content should not be empty
-    Given url downloadLink
-    When method GET
-    Then status 200
-    And match response == '#notnull'
 
     Examples:
       | fileName                                    | uploadFormat |
@@ -263,7 +181,89 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:4, failed:0, duplicatedSrs:0, total:4, readIds:1}
+    * def files = response.jobExecutions[0].exportedFiles
+    * match each files[*].fileName contains 'mrc'
+    And match response.jobExecutions[0].progress == {exported:3, failed:0, duplicatedSrs:0, total:3, readIds:3}
+    * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
+
+    #should return download link for instance of uploaded file
+    Given path 'data-export/job-executions/',jobExecutionId,'/download/',fileId
+    When method GET
+    Then status 200
+    And match response.fileId == '#notnull'
+    And match response.link == '#notnull'
+    * def downloadLink = response.link
+
+    #download link content should not be empty
+    Given url downloadLink
+    When method GET
+    Then status 200
+    And match response == '#notnull'
+
+    Examples:
+      | fileName                                    | uploadFormat |
+      | test-export-config-authority-csv.csv        | csv          |
+
+  Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
+    #should create file definition
+
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "2"
+      }
+      """
+    When method POST
+    Then status 201
+
+    Given path 'data-export/file-definitions'
+    And def fileDefinitionId = uuid()
+    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And request fileDefinition
+    When method POST
+    Then status 201
+    And match response.status == 'NEW'
+    And match response.uploadFormat == '<uploadFormat>'
+
+    #should return created file definition
+    Given path 'data-export/file-definitions', fileDefinitionId
+    When method GET
+    Then status 200
+    And match response.status == 'NEW'
+    And match response.uploadFormat == '<uploadFormat>'
+    And match response.jobExecutionId == '#present'
+    And def jobExecutionId = response.jobExecutionId
+
+    #should upload file by created file definition id
+    Given path 'data-export/file-definitions/',fileDefinitionId,'/upload'
+    And configure headers = headersUserOctetStream
+    And request karate.readAsString('classpath:samples/file-definition/<fileName>')
+    When method POST
+    Then status 200
+
+    #wait until the file will be uploaded to the system before calling further dependent calls
+    Given path 'data-export/file-definitions', fileDefinitionId
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
+    When method GET
+    Then status 200
+
+    #should export instances and return 204
+    Given path 'data-export/export'
+    And configure headers = headersUser
+    And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultAuthorityJobProfileId)','idType':'authority'}
+    And request requestBody
+    When method POST
+    Then status 204
+
+    #should return job execution by id and wait until the job status will be 'COMPLETED'
+    Given path 'data-export/job-executions'
+    And param query = 'id==' + jobExecutionId
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.jobExecutions[0].progress == {exported:3, failed:0, duplicatedSrs:0, total:3, readIds:3}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file

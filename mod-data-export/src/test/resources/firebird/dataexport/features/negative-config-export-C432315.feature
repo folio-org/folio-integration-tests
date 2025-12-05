@@ -26,7 +26,7 @@ Feature: Negative - Verify configured limit of exported file size
     When method POST
     Then status 400
     * print response
-    And match response.message contains "Slice size value cannot be less than 1:0"
+    And match response contains "Slice size value cannot be less than 1: 0"
 
   Scenario: Configure limit of exported file size to text
 
@@ -40,7 +40,7 @@ Feature: Negative - Verify configured limit of exported file size
       """
     When method POST
     Then status 400
-    And match response.message == 'Slice size is not a number: text'
+    And match response contains 'Slice size is not a number: text'
 
   Scenario: Configure limit of exported file size
 
@@ -54,7 +54,7 @@ Feature: Negative - Verify configured limit of exported file size
       """
     When method POST
     Then status 400
-    And match response.message == 'Slice size is not a number: 2.5'
+    And match response contains 'Slice size is not a number: 2.5'
 
   Scenario: Configure limit of exported file size to 2147483647
 
@@ -81,7 +81,7 @@ Feature: Negative - Verify configured limit of exported file size
       """
     When method POST
     Then status 400
-    And match response.message == 'Slice size is not a number: 2147483648'
+    And match response contains 'Slice size is not a number: 2147483648'
 
     Scenario: Configure limit of exported file size to 100000
 

@@ -80,11 +80,11 @@ public class ModDataExportApiTest extends TestBaseEureka {
         runFeatureTest("export-for-instances-default-mapping");
     }
 
-//    @Test
-//    @Order(14)
-//    void fileExportForDefaultHoldingRecordExportTest() {
-//        runFeatureTest("export-for-holdings-default-mapping");
-//    }
+    @Test
+    @Order(14)
+    void fileExportForDefaultHoldingRecordExportTest() {
+        runFeatureTest("export-for-holdings-default-mapping");
+    }
 
     @Test
     @Order(8)
@@ -116,38 +116,38 @@ public class ModDataExportApiTest extends TestBaseEureka {
         runFeatureTest("export-deleted-marc-ids");
     }
 
-//    @Test
-//    @Order(15)
-//    void dataExportDeletedAuthoritiesTest() {
-//        runFeatureTest("export-deleted-authorities");
-//    }
+    @Test
+    @Order(15)
+    void dataExportDeletedAuthoritiesTest() {
+        runFeatureTest("export-deleted-authorities");
+    }
 
     @Test
-    @Order(14)
+    @Order(16)
     void ExportInstanceConfigC431148Test() {
         runFeatureTest("export-for-instance-config-C431148");
     }
 
     @Test
-    @Order(15)
+    @Order(17)
     void ExportInstanceConfigCqlC432309Test() {
         runFeatureTest("export-for-instance-config-cql-C432309");
     }
 
     @Test
-    @Order(16)
-    void ExportHondingConfigC432311Test() {
+    @Order(18)
+    void ExportHoldingConfigC432311Test() {
         runFeatureTest("export-for-holding-config-C432311");
     }
 
     @Test
-    @Order(17)
+    @Order(19)
     void ExportAuthorityConfigC432314Test() {
         runFeatureTest("export-authority-config-C432314");
     }
 
     @Test
-    @Order(18)
+    @Order(20)
     void NegativeConfigExportC432315Test() {
         runFeatureTest("negative-config-export-C432315");
     }
