@@ -9,6 +9,7 @@ Feature: calls for inventory storage related data setup
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def prepareHolding = function(holding, instanceId) {return holding.replaceAll("replace_instanceId", instanceId);}
     * def prepareItem = function(item, holdingId) {return item.replaceAll("replace_holdingId", holdingId);}
+    * def prepareAuthority = function(authority, authorityId) {return authority.replaceAll("replace_authorityId", authorityId);}
 
   @PostInstanceType
   Scenario: create instance type if not exists
@@ -93,8 +94,10 @@ Feature: calls for inventory storage related data setup
 
   @PostAuthority
   Scenario: create authority
+    * string authorityTemplate = read('classpath:samples/authority.json')
+    * json authority = prepareAuthority(authorityTemplate, authorityId)
     Given path 'authority-storage/authorities'
-    And request read('classpath:samples/authority.json')
+    And request authority
     When method POST
     Then status 201
 

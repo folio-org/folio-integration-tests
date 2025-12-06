@@ -74,6 +74,25 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
 
+    # Example: To add additional authority records with different data
+    # 1. Define new IDs
+    # * def authorityId2 = uuid()
+    # * def authorityRecordId2 = uuid()
+    # 2. Create authority record from different sample file
+    # * string authorityTemplate2 = read('classpath:samples/authority2.json')
+    # * json authority2 = prepareAuthority(authorityTemplate2, authorityId2)
+    # * Given path 'authority-storage/authorities'
+    # * And request authority2
+    # * When method POST
+    # * Then status 201
+    # 3. Create MARC authority record
+    # * string marcTemplate2 = read('classpath:samples/marc_authority_record2.json')
+    # * def marcRecord2 = prepareMarcAuthorityRecord(marcTemplate2, authorityRecordId2, snapshotId, authorityId2)
+    # * Given path 'source-storage/records'
+    # * And request marcRecord2
+    # * When method POST
+    # * Then status 201
+
     Scenario: reindex data
       Given path '/instance-storage/reindex'
       When method POST
