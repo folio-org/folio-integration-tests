@@ -1,0 +1,188 @@
+{
+  "id": "replace_recordId",
+  "snapshotId": "replace_snapshotId",
+  "matchedId": "replace_recordId",
+  "recordType": "MARC_AUTHORITY",
+  "rawRecord": {
+    "id": "replace_recordId",
+    "content": "00534nz  a2200193n  4500001001300000003000400013005001700017008004100034010001700075035002300092040003000115046001500145100002400160372000700184374000900191375001100200400002400211670003500235n  78095332 DLC20210520093456.0780621n| azannaabn          |a aaa |||||  f1564g16161 aShakespeare, William  aeng  adramst  amale1 wnnaaShakespere, William  aHis First folio, 1623:$btitle page"
+  },
+  "parsedRecord": {
+    "id": "replace_recordId",
+    "content": {
+      "fields": [
+        {
+          "001": "n  78095332 "
+        },
+        {
+          "003": "DLC"
+        },
+        {
+          "008": "780621n| azannaabn          |a aaa ||||| "
+        },
+        {
+          "005": "20210520093456.0"
+        },
+        {
+          "010": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "n  78095332 "
+              }
+            ]
+          }
+        },
+        {
+          "035": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "(OCoLC)oca00266608"
+              }
+            ]
+          }
+        },
+        {
+          "040": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "DLC"
+              },
+              {
+                "b": "eng"
+              },
+              {
+                "c": "DLC"
+              },
+              {
+                "d": "OCoLC"
+              },
+              {
+                "d": "DLC"
+              }
+            ]
+          }
+        },
+        {
+          "046": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "f": "1564"
+              },
+              {
+                "g": "1616"
+              }
+            ]
+          }
+        },
+        {
+          "100": {
+            "ind1": "1",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Shakespeare, William"
+              }
+            ]
+          }
+        },
+        {
+          "372": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "eng"
+              }
+            ]
+          }
+        },
+        {
+          "374": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "dramst"
+              }
+            ]
+          }
+        },
+        {
+          "375": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "male"
+              }
+            ]
+          }
+        },
+        {
+          "400": {
+            "ind1": "1",
+            "ind2": " ",
+            "subfields": [
+              {
+                "w": "nnnaa"
+              },
+              {
+                "a": "Shakespere, William"
+              }
+            ]
+          }
+        },
+        {
+          "670": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "His First folio, 1623:"
+              },
+              {
+                "b": "title page"
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind1": "f",
+            "ind2": "f",
+            "subfields": [
+              {
+                "s": "replace_recordId"
+              },
+              {
+                "i": "replace_authorityId"
+              }
+            ]
+          }
+        }
+      ],
+      "leader": "00634nz  a2200217n  4500"
+    }
+  },
+  "deleted": false,
+  "order": 0,
+  "externalIdsHolder": {
+    "authorityId": "replace_authorityId",
+    "authorityHrid": "n  78095332 "
+  },
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "metadata": {
+    "createdDate": "2022-07-10T14:22:45.123+0000",
+    "updatedDate": "2022-07-10T14:22:50.456+0000"
+  }
+}
