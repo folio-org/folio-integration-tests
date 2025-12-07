@@ -1,27 +1,27 @@
 {
-  "id": "#(authorityRecordId2)",
-  "snapshotId": "#(snapshotId)",
-  "matchedId": "#(authorityRecordId2)",
+  "id": "replace_recordId",
+  "snapshotId": "replace_snapshotId",
+  "matchedId": "replace_recordId",
   "recordType": "MARC_AUTHORITY",
   "rawRecord": {
-    "id": "#(authorityRecordId2)",
-    "content": "00464nz  a2200157n  4500001001300000003000400013005001700017008004100034010001700075035002300092040003000115046001500145100002100160667009500181670003000276n  50012752 DLC20120810092621.0150617n| aaannaabn          |n aaa |||    an  50012752   a(OCoLC)oca00048239  aDLCbengcDLCdOCoLCdDLC  f1829g19191 aJohnson, W. Brad  aTHIS 1XX FIELD CANNOT BE USED UNDER RDA UNTIL THIS RECORD HAS BEEN REVIEWED AND/OR UPDATED  aHis A. W. Kinglake, 1902."
+    "id": "replace_recordId",
+    "content": "00512nz  a2200181n  4500001001300000003000400013005001700017008004100034010001700075035002300092040003000115043001200145110002500157410001800182670004400200670003300244n  79018774 DLC20200423104752.0740627n| azannaabn          |a aaa      n-us---1 aLibrary of Congress1 aCongress Library  aIts Library of Congress catalog, 1953.  aIts Annual report, 1st, 1899."
   },
   "parsedRecord": {
-    "id": "#(authorityRecordId2)",
+    "id": "replace_recordId",
     "content": {
       "fields": [
         {
-          "001": "n  50012752 "
+          "001": "n  79018774 "
         },
         {
           "003": "DLC"
         },
         {
-          "008": "150617n| aaannaabn          |n aaa |||  "
+          "008": "740627n| azannaabn          |a aaa    "
         },
         {
-          "005": "20220411064419.8"
+          "005": "20200423104752.0"
         },
         {
           "010": {
@@ -29,7 +29,7 @@
             "ind2": " ",
             "subfields": [
               {
-                "a": "n  50012752 "
+                "a": "n  79018774 "
               }
             ]
           }
@@ -40,7 +40,7 @@
             "ind2": " ",
             "subfields": [
               {
-                "a": "(OCoLC)oca00048239"
+                "a": "(OCoLC)oca00509913"
               }
             ]
           }
@@ -69,37 +69,34 @@
           }
         },
         {
-          "046": {
+          "043": {
             "ind1": " ",
             "ind2": " ",
             "subfields": [
               {
-                "f": "1829"
-              },
-              {
-                "g": "1919"
+                "a": "n-us---"
               }
             ]
           }
         },
         {
-          "100": {
+          "110": {
             "ind1": "1",
             "ind2": " ",
             "subfields": [
               {
-                "a": "Johnson, W. Brad"
+                "a": "Library of Congress"
               }
             ]
           }
         },
         {
-          "667": {
-            "ind1": " ",
+          "410": {
+            "ind1": "1",
             "ind2": " ",
             "subfields": [
               {
-                "a": "THIS 1XX FIELD CANNOT BE USED UNDER RDA UNTIL THIS RECORD HAS BEEN REVIEWED AND/OR UPDATED"
+                "a": "Congress Library"
               }
             ]
           }
@@ -110,7 +107,18 @@
             "ind2": " ",
             "subfields": [
               {
-                "a": "His A. W. Kinglake, 1902."
+                "a": "Its Library of Congress catalog, 1953."
+              }
+            ]
+          }
+        },
+        {
+          "670": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "a": "Its Annual report, 1st, 1899."
               }
             ]
           }
@@ -121,29 +129,29 @@
             "ind2": "f",
             "subfields": [
               {
-                "s": "#(authorityRecordId2)"
+                "s": "replace_recordId"
               },
               {
-                "i": "#(authorityId2)"
+                "i": "replace_authorityId"
               }
             ]
           }
         }
       ],
-      "leader": "00555nz  a2200169n  4500"
+      "leader": "00612nz  a2200193n  4500"
     }
   },
   "deleted": false,
   "order": 0,
   "externalIdsHolder": {
-    "authorityId": "#(authorityId2)",
-    "authorityHrid": "n  50012752 "
+    "authorityId": "replace_authorityId",
+    "authorityHrid": "n  79018774 "
   },
   "additionalInfo": {
     "suppressDiscovery": false
   },
   "metadata": {
-    "createdDate": "2022-04-11T06:43:49.896+0000",
-    "updatedDate": "2022-04-11T06:44:19.878+0000"
+    "createdDate": "2022-06-20T10:15:30.456+0000",
+    "updatedDate": "2022-06-20T10:15:35.789+0000"
   }
 }

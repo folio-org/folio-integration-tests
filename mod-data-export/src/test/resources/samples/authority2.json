@@ -1,12 +1,12 @@
 {
-  "id": "#(authorityId2)",
+  "id": "replace_authorityId",
   "_version": 1,
   "source": "MARC",
-  "personalName": "Johnson, W. Brad",
+  "personalName": "Smith, John Robert",
   "sftPersonalName": [],
   "saftPersonalName": [],
-  "personalNameTitle": "Johnson, W. Brad",
-  "naturalId": "no2017157670UPD",
+  "personalNameTitle": "Smith, John Robert",
+  "naturalId": "no2017157671UPD",
   "sftPersonalNameTitle": [],
   "saftPersonalNameTitle": [],
   "sftCorporateName": [],
@@ -28,15 +28,15 @@
   "saftGenreTerm": [],
   "identifiers": [
     {
-      "value": "n  50012752 ",
+      "value": "n  85123456 ",
       "identifierTypeId": "5d164f4b-0b15-4e42-ae75-cfcf85318ad9"
     },
     {
-      "value": "n  50012752",
+      "value": "n  85123456",
       "identifierTypeId": "c858e4f2-2b6b-4385-842b-60732ee14abb"
     },
     {
-      "value": "(OCoLC)oca00048239",
+      "value": "(OCoLC)oca00087654",
       "identifierTypeId": "fe19bae4-da28-472b-be90-d442e2428ead"
     }
   ],
@@ -48,9 +48,9 @@
     }
   ],
   "metadata": {
-    "createdDate": "2022-04-11T06:43:54.529+00:00",
+    "createdDate": "2022-05-15T08:45:20.123+00:00",
     "createdByUserId": "5c39fe1a-db1f-5cfe-a225-992f9c32add7",
-    "updatedDate": "2022-04-11T06:43:54.529+00:00",
+    "updatedDate": "2022-05-15T08:45:23.567+00:00",
     "updatedByUserId": "5c39fe1a-db1f-5cfe-a225-992f9c32add7"
   }
 }

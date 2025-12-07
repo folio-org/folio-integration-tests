@@ -9,6 +9,7 @@ Feature: init srs data feature
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def prepareMarcBibRecord = function(record, recordId, snapshotId, instanceId) {return record.replaceAll("replace_recordId", recordId).replaceAll("replace_snapshotId", snapshotId).replaceAll("replace_instanceId", instanceId);}
     * def prepareMarcHoldingRecord = function(record, recordId, snapshotId, instanceId) {return record.replaceAll("replace_recordId", recordId).replaceAll("replace_snapshotId", snapshotId).replaceAll("replace_holdingId", holdingId);}
+    * def prepareMarcAuthorityRecord = function(record, recordId, snapshotId, authorityId) {return record.replaceAll("replace_recordId", recordId).replaceAll("replace_snapshotId", snapshotId).replaceAll("replace_authorityId", authorityId);}
 
   @PostSnapshot
   Scenario: create snapshot
@@ -37,29 +38,10 @@ Feature: init srs data feature
     Then status 201
 
   @PostMarcAuthorityRecord
-  Scenario: create srs record
+  Scenario: create srs authority record
+    * string recordTemplate = read('classpath:samples/marc_authority_record.json')
+    * def record = prepareMarcAuthorityRecord(recordTemplate, recordId, snapshotId, authorityId)
     Given path 'source-storage/records'
-    And request read('classpath:samples/marc_authority_record.json')
-    When method POST
-    Then status 201
-
-  @PostMarcAuthorityRecord2
-  Scenario: create srs record number 2
-    Given path 'source-storage/records'
-    And request read('classpath:samples/marc_authority_record2.json')
-    When method POST
-    Then status 201
-
-  @PostMarcAuthorityRecord3
-  Scenario: create srs record number 3
-    Given path 'source-storage/records'
-    And request read('classpath:samples/marc_authority_record3.json')
-    When method POST
-    Then status 201
-
-  @PostMarcAuthorityRecord4
-  Scenario: create srs record number 4
-    Given path 'source-storage/records'
-    And request read('classpath:samples/marc_authority_record4.json')
+    And request record
     When method POST
     Then status 201

@@ -1,14 +1,14 @@
 {
-  "id": "#(authorityRecordId)",
-  "snapshotId": "#(snapshotId)",
-  "matchedId": "#(authorityRecordId)",
+  "id": "replace_recordId",
+  "snapshotId": "replace_snapshotId",
+  "matchedId": "replace_recordId",
   "recordType": "MARC_AUTHORITY",
   "rawRecord": {
-    "id": "#(authorityRecordId)",
+    "id": "replace_recordId",
     "content": "00464nz  a2200157n  4500001001300000003000400013005001700017008004100034010001700075035002300092040003000115046001500145100002100160667009500181670003000276n  50012752 DLC20120810092621.0150617n| aaannaabn          |n aaa |||    an  50012752   a(OCoLC)oca00048239  aDLCbengcDLCdOCoLCdDLC  f1829g19191 aJohnson, W. Brad  aTHIS 1XX FIELD CANNOT BE USED UNDER RDA UNTIL THIS RECORD HAS BEEN REVIEWED AND/OR UPDATED  aHis A. W. Kinglake, 1902."
   },
   "parsedRecord": {
-    "id": "#(authorityRecordId)",
+    "id": "replace_recordId",
     "content": {
       "fields": [
         {
@@ -121,10 +121,10 @@
             "ind2": "f",
             "subfields": [
               {
-                "s": "#(authorityRecordId)"
+                "s": "replace_recordId"
               },
               {
-                "i": "#(authorityId)"
+                "i": "replace_authorityId"
               }
             ]
           }
@@ -136,7 +136,7 @@
   "deleted": false,
   "order": 0,
   "externalIdsHolder": {
-    "authorityId": "#(authorityId)",
+    "authorityId": "replace_authorityId",
     "authorityHrid": "n  50012752 "
   },
   "additionalInfo": {
