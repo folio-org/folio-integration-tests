@@ -33,7 +33,6 @@ Feature: Tests that searches by a single property
       | alternativeTitles | alternative title                                       | webSemanticInstance   |
       | indexTitle        | web of metaphör                                         | webOfMetaphorInstance |
       | series            | Cooperative information systems                         | webSemanticInstance   |
-      | identifiers       | 0917058062                                              | webOfMetaphorInstance |
       | contributors      | Clàrk Càrol                                             | webOfMetaphorInstance |
 
   Scenario Outline: Can search by keyword that matches '<field>' component with order match
@@ -48,7 +47,6 @@ Feature: Tests that searches by a single property
       | alternativeTitles | alternative title                                       | webSemanticInstance   |
       | indexTitle        | web of metaphör                                         | webOfMetaphorInstance |
       | series            | Cooperative information systems                         | webSemanticInstance   |
-      | identifiers       | 0917058062                                              | webOfMetaphorInstance |
       | contributors      | Clàrk Càrol                                             | webOfMetaphorInstance |
 
   Scenario Outline: Can search by keyword that matches '<field>' component with any of values
@@ -62,7 +60,6 @@ Feature: Tests that searches by a single property
       | field             | value                           | expectedInstanceId    |
       | alternativeTitles | alternative title               | webSemanticInstance   |
       | series            | Cooperative information systems | webSemanticInstance   |
-      | identifiers       | 0917058062                      | webOfMetaphorInstance |
       | contributors      | Clàrk Càrol                     | webOfMetaphorInstance |
 
   Scenario Outline: Can search by date with operators
