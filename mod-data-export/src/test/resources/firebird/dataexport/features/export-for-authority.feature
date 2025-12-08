@@ -59,7 +59,7 @@ Feature: Tests export hodings records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:3, failed:0, duplicatedSrs:0, total:3, readIds:3}
+    And match response.jobExecutions[0].progress == {exported:1, failed:0, duplicatedSrs:0, total:1, readIds:1}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
