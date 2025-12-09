@@ -37,7 +37,7 @@ Feature: init srs data feature
     When method POST
     Then status 201
 
-  @PostMarcAuthorityRecord
+  @PostMarcAuthorityRecord1
   Scenario: create srs authority record
     * string recordTemplate = read('classpath:samples/marc_authority_record.json')
     * def record = prepareMarcAuthorityRecord(recordTemplate, recordId, snapshotId, authorityId)

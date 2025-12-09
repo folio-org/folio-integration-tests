@@ -124,7 +124,7 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
-  @PostAuthority
+  @PostAuthority1
   Scenario: create authority
     * string authorityTemplate = read('classpath:samples/authority.json')
     * json authority = prepareAuthority(authorityTemplate, authorityId)
@@ -132,6 +132,7 @@ Feature: calls for inventory storage related data setup
     And request authority
     When method POST
     Then status 201
+    And match response.id == '#notnull'
 
   @PostAuthority2
   Scenario: create authority 2
@@ -141,6 +142,7 @@ Feature: calls for inventory storage related data setup
     And request authority
     When method POST
     Then status 201
+    And match response.id == '#notnull'
 
   @PostAuthority3
   Scenario: create authority 3
@@ -150,6 +152,7 @@ Feature: calls for inventory storage related data setup
     And request authority
     When method POST
     Then status 201
+    And match response.id == '#notnull'
 
   @PostAuthority4
   Scenario: create authority 4
@@ -159,6 +162,7 @@ Feature: calls for inventory storage related data setup
     And request authority
     When method POST
     Then status 201
+    And match response.id == '#notnull'
 
   @PostItem
   Scenario: create item

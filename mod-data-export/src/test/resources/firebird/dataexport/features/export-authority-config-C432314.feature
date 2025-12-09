@@ -321,7 +321,7 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
       """
       {
         "key": "slice_size",
-        "value": "100000"
+        "value": "1000"
       }
       """
     When method POST

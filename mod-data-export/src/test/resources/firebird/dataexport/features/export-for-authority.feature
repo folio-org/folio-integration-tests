@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Tests export hodings records
 
   Background:
@@ -11,9 +12,21 @@ Feature: Tests export hodings records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
-    * configure retry = { interval: 15000, count: 5 }
+    * configure retry = { interval: 15000, count: 10 }
+
 
   Scenario Outline: test upload file and export flow for authority when related MARC_AUTHORITY records exist.
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "100000"
+      }
+      """
+    When method POST
+    Then status 201
+
     Given path 'data-export/file-definitions'
     And def fileDefinitionId = uuid()
     And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
