@@ -124,39 +124,10 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
-  @PostAuthority1
+  @PostAuthority
   Scenario: create authority
-    * string authorityTemplate = read('classpath:samples/authority.json')
-    * json authority = prepareAuthority(authorityTemplate, authorityId)
-    Given path 'authority-storage/authorities'
-    And request authority
-    When method POST
-    Then status 201
-    And match response.id == '#notnull'
-
-  @PostAuthority2
-  Scenario: create authority 2
-    * string authorityTemplate = read('classpath:samples/authority2.json')
-    * json authority = prepareAuthority(authorityTemplate, authorityId)
-    Given path 'authority-storage/authorities'
-    And request authority
-    When method POST
-    Then status 201
-    And match response.id == '#notnull'
-
-  @PostAuthority3
-  Scenario: create authority 3
-    * string authorityTemplate = read('classpath:samples/authority3.json')
-    * json authority = prepareAuthority(authorityTemplate, authorityId)
-    Given path 'authority-storage/authorities'
-    And request authority
-    When method POST
-    Then status 201
-    And match response.id == '#notnull'
-
-  @PostAuthority4
-  Scenario: create authority 4
-    * string authorityTemplate = read('classpath:samples/authority4.json')
+    * def templateFile = karate.get('templateFile', 'classpath:samples/authority.json')
+    * string authorityTemplate = read(templateFile)
     * json authority = prepareAuthority(authorityTemplate, authorityId)
     Given path 'authority-storage/authorities'
     And request authority

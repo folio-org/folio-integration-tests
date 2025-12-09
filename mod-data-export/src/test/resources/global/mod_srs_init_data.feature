@@ -37,36 +37,10 @@ Feature: init srs data feature
     When method POST
     Then status 201
 
-  @PostMarcAuthorityRecord1
+  @PostMarcAuthorityRecord
   Scenario: create srs authority record
-    * string recordTemplate = read('classpath:samples/marc_authority_record.json')
-    * def record = prepareMarcAuthorityRecord(recordTemplate, recordId, snapshotId, authorityId)
-    Given path 'source-storage/records'
-    And request record
-    When method POST
-    Then status 201
-
-  @PostMarcAuthorityRecord2
-  Scenario: create srs authority record 2
-    * string recordTemplate = read('classpath:samples/marc_authority_record2.json')
-    * def record = prepareMarcAuthorityRecord(recordTemplate, recordId, snapshotId, authorityId)
-    Given path 'source-storage/records'
-    And request record
-    When method POST
-    Then status 201
-
-  @PostMarcAuthorityRecord3
-  Scenario: create srs authority record 3
-    * string recordTemplate = read('classpath:samples/marc_authority_record3.json')
-    * def record = prepareMarcAuthorityRecord(recordTemplate, recordId, snapshotId, authorityId)
-    Given path 'source-storage/records'
-    And request record
-    When method POST
-    Then status 201
-
-  @PostMarcAuthorityRecord4
-  Scenario: create srs authority record 4
-    * string recordTemplate = read('classpath:samples/marc_authority_record4.json')
+    * def templateFile = karate.get('templateFile', 'classpath:samples/marc_authority_record.json')
+    * string recordTemplate = read(templateFile)
     * def record = prepareMarcAuthorityRecord(recordTemplate, recordId, snapshotId, authorityId)
     Given path 'source-storage/records'
     And request record

@@ -71,10 +71,10 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/inventory_data_setup_util.feature@PostDefaultHolding') {instanceId:'#(instanceId)', defaultHoldingId:'#(defaultHoldingId)'}
 
     #create authority records using different templates to avoid conflicts
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority1') {authorityId:'#(authorityId1)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority2') {authorityId:'#(authorityId2)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority3') {authorityId:'#(authorityId3)'}
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority4') {authorityId:'#(authorityId4)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId1)', templateFile:'classpath:samples/authority.json'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId2)', templateFile:'classpath:samples/authority2.json'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId3)', templateFile:'classpath:samples/authority3.json'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId4)', templateFile:'classpath:samples/authority4.json'}
 
     #create 100 items for above holding
     * def fun = function(i){ return { barcode: 1234560 + i, holdingId: holdingId};}
@@ -92,10 +92,10 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
 
     #create MARC authority records using different templates to avoid conflicts
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord1') {recordId:'#(authorityRecordId1)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId1)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord2') {recordId:'#(authorityRecordId2)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId2)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord3') {recordId:'#(authorityRecordId3)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId3)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord4') {recordId:'#(authorityRecordId4)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId4)'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId1)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId1)', templateFile:'classpath:samples/marc_authority_record.json'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId2)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId2)', templateFile:'classpath:samples/marc_authority_record2.json'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId3)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId3)', templateFile:'classpath:samples/marc_authority_record3.json'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId4)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId4)', templateFile:'classpath:samples/marc_authority_record4.json'}
 
     #wait for authority records to be indexed and available
     * def sleep = function(millis){ java.lang.Thread.sleep(millis) }
