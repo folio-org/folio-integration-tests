@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Test export authority deleted
 
   Background:
@@ -25,16 +26,16 @@ Feature: Test export authority deleted
     * def authorityDeletedRecordId = '926e148b-7f5b-4d77-9425-655b7e980098'
     * def authorityRecordId = authorityDeletedRecordId
     * def authorityId = authorityDeletedId
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)', templateFile:'classpath:samples/authority.json'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)', templateFile:'classpath:samples/marc_authority_record.json'}
 
     # create authority that will not be deleted
     * def authorityNotDeletedId = '8a7b8c92-10c0-4dd9-83cd-754fab0c2ff2'
     * def authorityNotDeletedRecordId = 'de164016-d7fc-420e-a960-f0fc8e4c3592'
     * def authorityRecordId = authorityNotDeletedRecordId
     * def authorityId = authorityNotDeletedId
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)', templateFile:'classpath:samples/authority.json'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)', templateFile:'classpath:samples/marc_authority_record.json'}
 
     * pause(5000)
 

@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Test Data Export Spring API
 
   Background:
