@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Tests for uploading "uuids file" and exporting the records
 
   Background:
