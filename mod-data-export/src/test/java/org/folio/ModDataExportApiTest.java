@@ -121,4 +121,10 @@ public class ModDataExportApiTest extends TestBaseEureka {
     void dataExportDeletedAuthoritiesTest() {
         runFeatureTest("export-deleted-authorities");
     }
+
+    @Test
+    @Order(16)
+    void dataExportDeletedAuthoritiesDeletedProfileTest() {
+        runFeatureTest("export-deleted-authorities-deleted-profile");
+    }
 }
