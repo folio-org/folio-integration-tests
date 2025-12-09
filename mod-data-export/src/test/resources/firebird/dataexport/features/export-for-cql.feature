@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Tests for cql and exporting the records
 
   Background:
