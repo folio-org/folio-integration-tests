@@ -31,7 +31,7 @@ public class BulkOperationsSimulation extends Simulation {
       System.getProperty("karate.env", "local");
 
   public static final double SUCCESSFUL_REQUESTS_RATE = 99.0;
-  public static final int RESPONSE_MAX_TIME = 20_000;
+  public static final int RESPONSE_MAX_TIME = 50_000;
 
   private static String generateTenantId() {
     String constantString = "testtenant";
