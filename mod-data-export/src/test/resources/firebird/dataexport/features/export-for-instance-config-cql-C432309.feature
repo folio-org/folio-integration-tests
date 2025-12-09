@@ -396,6 +396,19 @@ Feature: Verify configured limit of exported file size - Instances (CQL query)
       | fileName                                                         | uploadFormat |
       | test-export-config-instance-cql.cql                              | cql          |
 
+  Scenario: reset configuration to default
+    #reset slice_size back to default value to avoid affecting other tests
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "100000"
+      }
+      """
+    When method POST
+    Then status 201
+
   Scenario: clear storage folder
     Given path 'data-export/clean-up-files'
     When method POST

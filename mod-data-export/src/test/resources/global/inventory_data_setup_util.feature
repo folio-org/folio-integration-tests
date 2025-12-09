@@ -72,6 +72,38 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
+  @PostInstance2
+  Scenario: create instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:samples/instance2.json')
+    * set instance.id = instanceId
+    * set instance.hrid = 'inst' + random(100000) + randomString(7)
+    And request instance
+    When method POST
+    Then status 201
+
+  @PostInstance3
+  Scenario: create instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:samples/instance3.json')
+    * set instance.id = instanceId
+    * set instance.hrid = 'inst' + random(100000) + randomString(7)
+    And request instance
+    When method POST
+    Then status 201
+
+  @PostInstance4
+  Scenario: create instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:samples/instance4.json')
+    * set instance.id = instanceId
+    * set instance.hrid = 'inst' + random(100000) + randomString(7)
+    And request instance
+    When method POST
+    Then status 201
+
+
+
   @PostHolding
   Scenario: create holding
     * string holdingTemplate = read('classpath:samples/holding.json')
@@ -95,6 +127,33 @@ Feature: calls for inventory storage related data setup
   @PostAuthority
   Scenario: create authority
     * string authorityTemplate = read('classpath:samples/authority.json')
+    * json authority = prepareAuthority(authorityTemplate, authorityId)
+    Given path 'authority-storage/authorities'
+    And request authority
+    When method POST
+    Then status 201
+
+  @PostAuthority2
+  Scenario: create authority 2
+    * string authorityTemplate = read('classpath:samples/authority2.json')
+    * json authority = prepareAuthority(authorityTemplate, authorityId)
+    Given path 'authority-storage/authorities'
+    And request authority
+    When method POST
+    Then status 201
+
+  @PostAuthority3
+  Scenario: create authority 3
+    * string authorityTemplate = read('classpath:samples/authority3.json')
+    * json authority = prepareAuthority(authorityTemplate, authorityId)
+    Given path 'authority-storage/authorities'
+    And request authority
+    When method POST
+    Then status 201
+
+  @PostAuthority4
+  Scenario: create authority 4
+    * string authorityTemplate = read('classpath:samples/authority4.json')
     * json authority = prepareAuthority(authorityTemplate, authorityId)
     Given path 'authority-storage/authorities'
     And request authority

@@ -1,3 +1,4 @@
+@parallel=false
 @C432315
 Feature: Negative - Verify configured limit of exported file size
 

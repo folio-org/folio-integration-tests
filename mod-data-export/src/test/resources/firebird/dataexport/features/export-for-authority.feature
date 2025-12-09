@@ -16,7 +16,7 @@ Feature: Tests export hodings records
   Scenario Outline: test upload file and export flow for authority when related MARC_AUTHORITY records exist.
     Given path 'data-export/file-definitions'
     And def fileDefinitionId = uuid()
-    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -41,10 +41,10 @@ Feature: Tests export hodings records
 
     #wait until the file will be uploaded to the system before calling further dependent calls
     Given path 'data-export/file-definitions', fileDefinitionId
-#    And retry until response.status == 'COMPLETED' && response.sourcePath != null
+    And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
-    * print response
+    * print 'File definition response:', response
 
     Given path 'data-export/export'
     And configure headers = headersUser
@@ -84,7 +84,7 @@ Feature: Tests export hodings records
     #should create file definition
     Given path 'data-export/file-definitions'
     And def fileDefinitionId = uuid()
-    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201

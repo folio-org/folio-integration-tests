@@ -1,4 +1,3 @@
-@C432311
 Feature: Verify configured limit of exported file size - Holdings (UUID)
 
   Background:
@@ -333,6 +332,19 @@ Feature: Verify configured limit of exported file size - Holdings (UUID)
     Examples:
       | fileName                                        | uploadFormat |
       | test-export-config-holding-csv.csv              | csv          |
+
+  Scenario: reset configuration to default
+    #reset slice_size back to default value to avoid affecting other tests
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "100000"
+      }
+      """
+    When method POST
+    Then status 201
 
   Scenario: clear storage folder
     Given path 'data-export/clean-up-files'

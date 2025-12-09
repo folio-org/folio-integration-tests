@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Test export authority deleted
 
   Background:
