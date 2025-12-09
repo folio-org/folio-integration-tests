@@ -245,7 +245,6 @@ function fn() {
     // UI: http://localhost:3000/
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
-    config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   } else if (env == 'snapshot-2') {
     // UI: https://folio-etesting-snapshot2-diku.ci.folio.org/

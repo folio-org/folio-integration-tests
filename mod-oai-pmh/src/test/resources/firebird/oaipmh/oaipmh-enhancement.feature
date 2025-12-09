@@ -15,7 +15,7 @@ Feature: Test enhancements to oai-pmh
     * def recordsSourceConfig = "Source record storage"
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * print 'valueTemplate=', valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
@@ -36,7 +36,7 @@ Feature: Test enhancements to oai-pmh
     * def enableOaiServiceConfig = <enableOAIService>
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = generalValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * print 'valueTemplate=', valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig') {id: '#(generalId)', data: '#(valueTemplateString)'}
 
@@ -151,7 +151,7 @@ Feature: Test enhancements to oai-pmh
     * def maxRecordsPerResponseConfig = '4'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = technicalValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateString)'}
     * def totalRecords = 0
 
@@ -226,7 +226,7 @@ Feature: Test enhancements to oai-pmh
     * def deletedRecordsSupportConfig = 'no'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
     Given url pmhUrl
@@ -319,7 +319,7 @@ Feature: Test enhancements to oai-pmh
     * def suppressedRecordsProcessingConfig = 'true'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
     * def srsId = '4c0ff739-3f4d-4670-a693-84dd48e31c53'
@@ -344,7 +344,7 @@ Feature: Test enhancements to oai-pmh
     * def maxRecordsPerResponseConfig = '5'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplateTechnical = technicalValue
-    * string valueTemplateStringTechnical = valueTemplateTechnical
+    * def valueTemplateStringTechnical = valueTemplateTechnical
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateStringTechnical)'}
 
     Given url pmhUrl

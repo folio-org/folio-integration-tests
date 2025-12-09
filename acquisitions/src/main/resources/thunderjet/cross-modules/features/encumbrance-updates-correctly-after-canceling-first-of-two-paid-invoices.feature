@@ -15,6 +15,7 @@ Feature: Encumbrance Updates Correctly After Canceling First Of Two Paid Invoice
 
     * callonce variables
 
+  @C870004
   @Positive
   Scenario: Encumbrance Updates Correctly After Canceling First Of Two Paid Invoices
     # Generate unique identifiers for this test scenario

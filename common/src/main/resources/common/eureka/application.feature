@@ -26,8 +26,8 @@ Feature: Applications
     * def appDescriptions = response.applicationDescriptors
 
     # search applications that contain modules and uimodules, extract application's id, remove id duplicates
-    * karate.forEach(modules, moduleName =>  appIds = appIds.concat(appDescriptions.filter(descriptor => descriptor.modules.some(m => m.name == moduleName)).map(descriptor => descriptor.id)))
-    * karate.forEach(modules, moduleName =>  appIds = appIds.concat(appDescriptions.filter(descriptor => descriptor.uiModules.some(m => m.name == moduleName)).map(descriptor => descriptor.id)))
+    * karate.forEach(modules, moduleName =>  appIds = appIds.concat(appDescriptions.filter(descriptor => descriptor.modules && descriptor.modules.some(m => m.name == moduleName)).map(descriptor => descriptor.id)))
+    * karate.forEach(modules, moduleName =>  appIds = appIds.concat(appDescriptions.filter(descriptor => descriptor.uiModules && descriptor.uiModules.some(m => m.name == moduleName)).map(descriptor => descriptor.id)))
     * def uniqueAppIds = karate.distinct(appIds)
 
     # search dependencies among found applications, extract dependencies names, remove dependencies name duplicates

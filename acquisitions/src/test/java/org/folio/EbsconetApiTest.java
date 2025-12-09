@@ -18,8 +18,7 @@ public class EbsconetApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-ebsconet/features/";
 
   public EbsconetApiTest() {
-    super(new TestIntegrationService(
-      new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
   }
 
   @BeforeAll

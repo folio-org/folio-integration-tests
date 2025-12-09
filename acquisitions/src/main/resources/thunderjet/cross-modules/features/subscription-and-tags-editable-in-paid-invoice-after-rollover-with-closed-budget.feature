@@ -12,6 +12,7 @@ Feature: Subscription Info, Tags, And Comments Can Be Edited In A Paid Invoice W
 
     * callonce variables
 
+  @C919908
   @Positive
   Scenario: Subscription Info, Tags, And Comments Can Be Edited In A Paid Invoice When The Fund's Budget From Prior FY Is Closed
     # Generate unique identifiers for this test scenario

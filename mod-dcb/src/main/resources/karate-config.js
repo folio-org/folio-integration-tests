@@ -104,7 +104,8 @@ function fn() {
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-volaris-edge.ci.folio.org';
+    config.mockServerUrl = 'https://folio-edev-volaris-mockserver.ci.folio.org';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';

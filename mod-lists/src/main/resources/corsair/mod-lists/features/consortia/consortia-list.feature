@@ -46,6 +46,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
       | 'inventory-storage.contributor-types.collection.get'               |
+      | 'inventory-storage.holdings-types.collection.get'                  |
       | 'inventory-storage.holdings.item.get'                              |
       | 'inventory-storage.instance-date-types.collection.get'             |
       | 'inventory-storage.instance-formats.collection.get'                |

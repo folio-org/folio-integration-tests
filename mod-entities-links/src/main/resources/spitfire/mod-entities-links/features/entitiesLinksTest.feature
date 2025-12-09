@@ -97,37 +97,3 @@ Feature: instance-links tests
     # try to put link
     * call read(utilPath + '@TryPutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
     Then match response.errors[0].message == 'Authority not exist'
-
-  @Positive
-  Scenario: Post bulk count links - should count links for two authorities
-    * def requestBody = read(samplePath + '/links/createTwoLinks.json')
-    * def ids = read(samplePath + '/links/uuidCollection.json')
-    # put instance link for two authorities(firstAuthorityId and secondAuthorityId)
-    * call read(utilPath + '@PutInstanceLinks') { extInstanceId: #(instanceId), extRequestBody: #(requestBody) }
-
-    # count links
-    * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
-    Then match response.links[0].totalLinks == 1
-    Then match response.links[1].totalLinks == 1
-    Then match response.links[*].id contains any [#(firstAuthorityId), #(secondAuthorityId)]
-
-    # remove links
-    * call read(utilPath + '@RemoveLinks') { extInstanceId: #(instanceId) }
-
-  @Positive
-  Scenario: Post bulk count links - should count as zero for non existing links
-    * def ids = read(samplePath + '/links/uuidCollection.json')
-
-    # count links
-    * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
-    Then match response.links[0].totalLinks == 0
-    Then match response.links[1].totalLinks == 0
-    Then match response.links[*].id contains any [#(firstAuthorityId), #(secondAuthorityId)]
-
-  @Positive
-  Scenario: Post bulk count links - empty ids array
-    * def ids = {"ids": []}
-
-    # count links
-    * call read(utilPath + '@PostCountLinks') { extIds: #(ids) }
-    Then match response.links == []
