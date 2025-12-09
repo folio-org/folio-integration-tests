@@ -36,6 +36,8 @@ Feature: init data for mod-inventory-storage
     * def holdingIdWithoutSrsRecord = '35540ed1-b1d3-4222-ab26-981a20d8f851'
     * def authorityId = 'c32a3b93-b459-4bd4-a09b-ac1f24c7b999'
     * def authorityRecordId = '432d6568-159a-4b20-962c-63fd59ddc07c'
+    * def linkedDataInstanceId = '02368983-7a01-4a58-ae52-e03542ba2a38'
+    * def linkedDataRecordId = uuid()
     * def recordId = uuid()
     * def holdingRecordId = uuid()
     * def snapshotId = uuid()
@@ -73,6 +75,9 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceIdForHoldingWithRecord)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
+
+    # create Linked Data record
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcLinkedDataRecord') {recordId:'#(linkedDataRecordId)', snapshotId:'#(snapshotId)', instanceId:'#(linkedDataInstanceId)'}
 
     Scenario: reindex data
       Given path '/instance-storage/reindex'

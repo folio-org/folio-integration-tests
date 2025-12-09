@@ -18,7 +18,8 @@ Feature: Tests export Linked Data records
   Scenario Outline: test upload file and export flow for instance UUIDs available as Linked Data.
     #import inventory instance into Linked Data module
     * configure headers = { 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
-    Given path 'linked-data/inventory-instance/5b1eb450-ff9f-412d-a9e7-887f6eaeb5b4/import'
+    * def inventoryUuid = '02368983-7a01-4a58-ae52-e03542ba2a38'
+    Given path 'linked-data/inventory-instance/',inventoryUuid,'/import'
     When method POST
     Then status 201
 
@@ -77,18 +78,22 @@ Feature: Tests export Linked Data records
     Then status 200
     And match response.fileId == '#notnull'
     And match response.link == '#notnull'
-    And match response.link.endWith('.json') == true
+    And match response.link.split('?')[0].endsWith('.json') == true
     * def downloadLink = response.link
 
-    #download link content should not be empty
+    #download link content should not be empty and should match expected graph structure
     Given url downloadLink
     When method GET
     Then status 200
     And match response == '#notnull'
-    * def downloadContents = response
-    * def firstLine = karate.split(downloadContents, '\\n')[0]
-    #* def resourceSubgraph = karate.read('') @@@ TODO: generate appropriate json to compare against
-    #And match JSON.parse(firstLine) == JSON.parse(resourceSubgraph)
+    * string downloadContents = response
+    * def firstLine = downloadContents.split('\\n')[0]
+    * def rdf = JSON.parse(firstLine)
+    * def notes = rdf.filter(x => x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Note'))
+    * def inventoryUuidNoteId = notes.filter(x => x['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'FOLIO Inventory UUID')[0]['@id']
+    * def localIds = rdf.filter(x => x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Local'))
+    * def inventoryUuidLocal = localIds.filter(x => x['http://id.loc.gov/ontologies/bibframe/note'][0]['@id'] == inventoryUuidNoteId)[0]
+    And match inventoryUuidLocal['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['@value'] == inventoryUuid
 
     Examples:
       | fileName                        | uploadFormat |

@@ -81,6 +81,7 @@ Feature: mod-orders integration tests
       | 'data-export.job.collection.get'                               |
       | 'data-export.job-executions.item.delete'                       |
       | 'linked-data.resources.import.post'                            |
+      | 'linked-data.resources.rdf.get'                                |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
