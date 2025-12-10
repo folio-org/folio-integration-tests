@@ -571,6 +571,18 @@
       },
       {
         "@id":"_:b99iddOtlocdOtgovresourcesinstances18878400"
+      },
+      {
+        "@id":"_:b57iddOtlocdOtgovresourcesworks12731775"
+      },
+      {
+        "@id":"_:b313iddOtlocdOtgovresourcesworks21113380"
+      },
+      {
+        "@id":"_:b313iddOtlocdOtgovresourcesworks21113400"
+      },
+      {
+        "@id":"_:b313iddOtlocdOtgovresourcesworks21113500"
       }
     ],
     "http://id.loc.gov/ontologies/bibframe/classification":[
@@ -600,11 +612,186 @@
       },
       {
         "@id":"http://id.loc.gov/authorities/childrensSubjects/sj2021050125"
+      },
+      {
+        "@id":"_:b57iddOtlocdOtgovresourcesworks12731800"
+      },
+      {
+        "@id":"_:b22iddOtlocdOtgovresourcesworks21123978"
+      },
+      {
+        "@id":"http://id.loc.gov/rwo/agents/no2012142443"
+      },
+      {
+        "@id": "_:b57iddOtlocdOtgovresourcesworks12731900"
+      },
+      {
+        "@id":"http://id.loc.gov/authorities/subjects/sh2008001841"
       }
     ],
     "http://id.loc.gov/ontologies/bibframe/hasInstance":[
       {
         "@id":"http://id.loc.gov/resources/instances/18878400"
+      }
+    ]
+  },
+  {
+    "@id":"_:b57iddOtlocdOtgovresourcesworks12731800",
+    "@type":[
+      "http://id.loc.gov/ontologies/bibframe/Place"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label":[
+      {
+        "@language":"en",
+        "@value":"Middle East"
+      }
+    ]
+  },
+  {
+    "@id":"_:b57iddOtlocdOtgovresourcesworks12731900",
+    "@type":[
+      "http://id.loc.gov/ontologies/bibframe/Place"
+    ],
+    "http://www.loc.gov/mads/rdf/v1#authoritativeLabel":[
+      {
+        "@language":"en",
+        "@value":"Austria"
+      }
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label":[
+      {
+        "@value":"Austria (AT)"
+      }
+    ]
+  },
+  {
+    "@id":"_:b22iddOtlocdOtgovresourcesworks21123978",
+    "@type":[
+      "http://id.loc.gov/ontologies/bibframe/Agent",
+      "http://id.loc.gov/ontologies/bibframe/Jurisdiction"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label":[
+      {
+        "@value":"Delaware. General Assembly."
+      }
+    ],
+    "http://www.loc.gov/mads/rdf/v1#authoritativeLabel":[
+      {
+        "@value":"Delaware. General Assembly. House of representatives."
+      }
+    ]
+  },
+  {
+    "@id":"_:b57iddOtlocdOtgovresourcesworks12731775",
+    "@type":[
+      "http://id.loc.gov/ontologies/bibframe/Contribution"
+    ],
+    "http://id.loc.gov/ontologies/bibframe/agent":[
+      {
+        "@id":"http://id.loc.gov/rwo/agents/n82255726"
+      }
+    ],
+    "http://id.loc.gov/ontologies/bibframe/role":[
+      {
+        "@id":"http://id.loc.gov/vocabulary/relators/ctb"
+      }
+    ]
+  },
+  {
+    "@id":"_:b313iddOtlocdOtgovresourcesworks21113500",
+    "@type":[
+      "http://id.loc.gov/ontologies/bibframe/Contribution"
+    ],
+    "http://id.loc.gov/ontologies/bibframe/agent":[
+      {
+        "@id":"_:b313iddOtlocdOtgovresourcesworks21113501"
+      }
+    ],
+    "http://id.loc.gov/ontologies/bibframe/role":[
+      {
+        "@id":"http://id.loc.gov/vocabulary/relators/ctb"
+      }
+    ]
+  },
+  {
+    "@id":"_:b313iddOtlocdOtgovresourcesworks21113501",
+    "@type":[
+      "http://id.loc.gov/ontologies/bibframe/Agent",
+      "http://id.loc.gov/ontologies/bibframe/Meeting"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label":[
+      {
+        "@value":"International Congress on Philosophy, 2023, Vienna"
+      }
+    ]
+  },
+  {
+    "@id":"http://id.loc.gov/rwo/agents/n82255726",
+    "@type":[
+      "http://id.loc.gov/ontologies/bibframe/Agent",
+      "http://id.loc.gov/ontologies/bibframe/Person"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label":[
+      {
+        "@value":"Smith, John, Professor of Philosophy, 1958"
+      }
+    ],
+    "http://www.loc.gov/mads/rdf/v1#authoritativeLabel":[
+      {
+        "@value":"Smith, John"
+      }
+    ]
+  },
+  {
+    "@id":"_:b313iddOtlocdOtgovresourcesworks21113380",
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":[
+      "http://id.loc.gov/ontologies/bibframe/Contribution"
+    ],
+    "http://id.loc.gov/ontologies/bibframe/agent":[
+      {
+        "@id":"http://id.loc.gov/rwo/agents/n84158057"
+      }
+    ],
+    "http://id.loc.gov/ontologies/bibframe/role":[
+      {
+        "@id":"http://id.loc.gov/vocabulary/relators/isb"
+      },
+      {
+        "@id":"http://id.loc.gov/vocabulary/relators/his"
+      }
+    ]
+  },
+  {
+    "@id":"_:b313iddOtlocdOtgovresourcesworks21113400",
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":[
+      "http://id.loc.gov/ontologies/bibframe/Contribution"
+    ],
+    "http://id.loc.gov/ontologies/bibframe/agent":[
+      {
+        "@id":"_:b22iddOtlocdOtgovresourcesworks21123978"
+      }
+    ],
+    "http://id.loc.gov/ontologies/bibframe/role":[
+      {
+        "@id":"http://id.loc.gov/vocabulary/relators/fnd"
+      },
+      {
+        "@id":"http://id.loc.gov/vocabulary/relators/fpy"
+      }
+    ]
+  },
+  {
+    "@context":{
+      "mads":"http://www.loc.gov/mads/rdf/v1#"
+    },
+    "@id":"http://id.loc.gov/rwo/agents/n84158057",
+    "@type":[
+      "http://id.loc.gov/ontologies/bibframe/Agent",
+      "http://id.loc.gov/ontologies/bibframe/Organization"
+    ],
+    "mads:authoritativeLabel":[
+      {
+        "@value":"Art Gallery of Hamilton (Ont.)"
       }
     ]
   },
@@ -799,7 +986,7 @@
     ],
     "http://id.loc.gov/ontologies/bibframe/agent":[
       {
-        "@id":"b98iddOtlocdOtgovresourcesinstances18878400"
+        "@id":"_:b98iddOtlocdOtgovresourcesinstances18878400"
       }
     ],
     "http://id.loc.gov/ontologies/bibframe/role":[
@@ -809,7 +996,7 @@
     ]
   },
   {
-    "@id":"b98iddOtlocdOtgovresourcesinstances18878400",
+    "@id":"_:b98iddOtlocdOtgovresourcesinstances18878400",
     "@type":[
       "http://id.loc.gov/ontologies/bibframe/Agent",
       "http://id.loc.gov/ontologies/bibframe/Person"
@@ -817,11 +1004,6 @@
     "http://www.w3.org/2000/01/rdf-schema#label":[
       {
         "@value":"Wang, Holman"
-      }
-    ],
-    "http://id.loc.gov/ontologies/bflc/marcKey":[
-      {
-        "@value":"1001 $aWang, Holman"
       }
     ]
   },
