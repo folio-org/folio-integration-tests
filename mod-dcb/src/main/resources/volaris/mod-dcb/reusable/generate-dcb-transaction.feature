@@ -11,7 +11,7 @@ Feature: Transaction Body Generator
     * dcbTransaction.item.barcode = itemBarcode120
     * dcbTransaction.patron.id = uuid1()
     * dcbTransaction.patron.barcode = 'dcb_patron_' + random_string()
-    * dcbTransaction.patron.localNames = args.localNames
+    * dcbTransaction.patron.localNames = localNames
     * dcbTransaction.patron.group = patronGroupName
     * dcbTransaction.pickup.servicePointName = 'lending_sp1'
     * dcbTransaction.pickup.libraryCode = '6uclv'
@@ -26,7 +26,7 @@ Feature: Transaction Body Generator
     * dcbTransaction.item.barcode = 'dcb_item_' + random_string()
     * dcbTransaction.patron.id = uuid1()
     * dcbTransaction.patron.barcode = 'dcb_patron_' + random_string()
-    * dcbTransaction.patron.localNames = args.localNames
+    * dcbTransaction.patron.localNames = localNames
     * dcbTransaction.patron.group = patronGroupName
     * dcbTransaction.pickup.servicePointId = servicePointId21
     * dcbTransaction.pickup.servicePointName = servicePointName21
