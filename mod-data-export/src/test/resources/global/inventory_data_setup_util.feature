@@ -3,8 +3,8 @@ Feature: calls for inventory storage related data setup
   Background:
     * url baseUrl
 
-    * callonce login testUser
-    * def okapitokenAdmin = okapitoken
+#    * callonce login testUser
+#    * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def prepareHolding = function(holding, instanceId) {return holding.replaceAll("replace_instanceId", instanceId);}
