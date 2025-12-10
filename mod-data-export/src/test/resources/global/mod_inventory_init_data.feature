@@ -48,6 +48,8 @@ Feature: init data for mod-inventory-storage
     * def authorityRecordId2 = 'da365a57-2751-4ad9-ad9e-55f770f0a8f2'
     * def authorityRecordId3 = '845f26ba-f171-4af2-8361-74bab1b22c92'
     * def authorityRecordId4 = '61a73463-3d74-4ebf-bc74-d1e168df4186'
+    * def linkedDataInstanceId = '02368983-7a01-4a58-ae52-e03542ba2a38'
+    * def linkedDataRecordId = uuid()
     * def recordId = uuid()
     * def holdingRecordId = uuid()
     * def snapshotId = uuid()
@@ -90,6 +92,9 @@ Feature: init data for mod-inventory-storage
     #create bib and holding records
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceIdForHoldingWithRecord)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
+
+    # create bib record for later import to Linked Data
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcLinkedDataRecord') {recordId:'#(linkedDataRecordId)', snapshotId:'#(snapshotId)', instanceId:'#(linkedDataInstanceId)'}
 
     #create MARC authority records using different templates to avoid conflicts
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId1)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId1)', templateFile:'classpath:samples/marc_authority_record.json'}

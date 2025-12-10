@@ -1,0 +1,285 @@
+{
+  "id" : "replace_recordId",
+  "snapshotId" : "replace_snapshotId",
+  "matchedId" : "replace_recordId",
+  "generation" : 1,
+  "recordType" : "MARC_BIB",
+  "rawRecord" : {
+    "content" : "01345cam a2200349Ma 4500001000800000003000400008005001700012008004100029020001500070020001800085029002100103035002000124040002500144049000900169100002600178245010100204260003500305300002900340650002200369650002900391650004000420650003100460650003400491650007200525650007800597650006900675650006700744655007100811700002500882903000900907999007900916\u001E4130476\u001EICU\u001E20070424094700.0\u001E990407s1998    gw a          000 0 eng d\u001E  \u001Fa3930826488\u001E  \u001Fa9783930826483\u001E1 \u001FaNLGGC\u001Fb175729956\u001E  \u001Fa(OCoLC)51380843\u001E  \u001FaHUA\u001FcHUA\u001FdOCLCQ\u001FdCGU\u001E  \u001FaCGUA\u001E1 \u001FaJoulain, D.\u001Fq(Daniel)\u001E14\u001FaThe atlas of spectral data of sesquiterpene hydrocarbons /\u001FcDaniel Joulain, Wilfried A. König.\u001E  \u001FaHamburg :\u001FbE.B.-Verlag,\u001Fc1998.\u001E  \u001Fa658 p. :\u001Fbill. ;\u001Fc30 cm.\u001E 0\u001FaTerpene\u001FvAtlases.\u001E 0\u001FaSesquiterpenes\u001FvAtlases.\u001E 0\u001FaPlant bioactive compounds\u001FvAtlases.\u001E 0\u001FaPlant physiology\u001FvAtlases.\u001E 0\u001FaBotanical chemistry\u001FvAtlases.\u001E 7\u001FaBotanical chemistry.\u001F2fast\u001F0http://id.worldcat.org/fast/fst00836819\u001E 7\u001FaPlant bioactive compounds.\u001F2fast\u001F0http://id.worldcat.org/fast/fst01065271\u001E 7\u001FaPlant physiology.\u001F2fast\u001F0http://id.worldcat.org/fast/fst01065616\u001E 7\u001FaSesquiterpenes.\u001F2fast\u001F0http://id.worldcat.org/fast/fst01113568\u001E 7\u001FaScientific atlases.\u001F2fast\u001F0http://id.worldcat.org/fast/fst01941304\u001E1 \u001FaKönig, Wilfried A.\u001E  \u001FaMARS\u001Eff\u001Fiebd7f153-ef90-4211-bd22-f15931ebdf1b\u001Fsebd7f153-ef90-4211-bd22-f15931ebdf1b\u001E\u001D"
+  },
+  "parsedRecord" : {
+    "id" : "replace_recordId",
+    "content" : {
+      "fields" : [ {
+        "001" : "in4130476"
+      }, {
+        "008" : "990407s1998    gw a          000 0 eng d"
+      }, {
+        "005" : "20251201110212.8"
+      }, {
+        "020" : {
+          "ind1" : " ",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "3930826488"
+          } ]
+        }
+      }, {
+        "020" : {
+          "ind1" : " ",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "9783930826483"
+          } ]
+        }
+      }, {
+        "029" : {
+          "ind1" : "1",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "NLGGC"
+          }, {
+            "b" : "175729956"
+          } ]
+        }
+      }, {
+        "035" : {
+          "ind1" : " ",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "(OCoLC)51380843"
+          } ]
+        }
+      }, {
+        "040" : {
+          "ind1" : " ",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "HUA"
+          }, {
+            "c" : "HUA"
+          }, {
+            "d" : "OCLCQ"
+          }, {
+            "d" : "CGU"
+          } ]
+        }
+      }, {
+        "049" : {
+          "ind1" : " ",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "CGUA"
+          } ]
+        }
+      }, {
+        "100" : {
+          "ind1" : "1",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "Joulain, D."
+          }, {
+            "q" : "(Daniel)"
+          } ]
+        }
+      }, {
+        "245" : {
+          "ind1" : "1",
+          "ind2" : "4",
+          "subfields" : [ {
+            "a" : "The atlas of spectral data of sesquiterpene hydrocarbons /"
+          }, {
+            "c" : "Daniel Joulain, Wilfried A. König."
+          } ]
+        }
+      }, {
+        "260" : {
+          "ind1" : " ",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "Hamburg :"
+          }, {
+            "b" : "E.B.-Verlag,"
+          }, {
+            "c" : "1998."
+          } ]
+        }
+      }, {
+        "300" : {
+          "ind1" : " ",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "658 p. :"
+          }, {
+            "b" : "ill. ;"
+          }, {
+            "c" : "30 cm."
+          } ]
+        }
+      }, {
+        "555" : {
+          "ind1" : "8",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "Finding aid available in the Manuscript Reading Room and on Internet."
+          }, {
+            "u" : "http://hdl.loc.gov/loc.mss/eadmss.ms996001"
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "0",
+          "subfields" : [ {
+            "a" : "Botanical chemistry"
+          }, {
+            "v" : "Atlases."
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "0",
+          "subfields" : [ {
+            "a" : "Plant bioactive compounds"
+          }, {
+            "v" : "Atlases."
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "0",
+          "subfields" : [ {
+            "a" : "Plant physiology"
+          }, {
+            "v" : "Atlases."
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "0",
+          "subfields" : [ {
+            "a" : "Sesquiterpenes"
+          }, {
+            "v" : "Atlases."
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "0",
+          "subfields" : [ {
+            "a" : "Terpene"
+          }, {
+            "v" : "Atlases."
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "7",
+          "subfields" : [ {
+            "a" : "Botanical chemistry."
+          }, {
+            "2" : "fast"
+          }, {
+            "0" : "http://id.worldcat.org/fast/fst00836819"
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "7",
+          "subfields" : [ {
+            "a" : "Plant bioactive compounds."
+          }, {
+            "2" : "fast"
+          }, {
+            "0" : "http://id.worldcat.org/fast/fst01065271"
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "7",
+          "subfields" : [ {
+            "a" : "Plant physiology."
+          }, {
+            "2" : "fast"
+          }, {
+            "0" : "http://id.worldcat.org/fast/fst01065616"
+          } ]
+        }
+      }, {
+        "650" : {
+          "ind1" : " ",
+          "ind2" : "7",
+          "subfields" : [ {
+            "a" : "Sesquiterpenes."
+          }, {
+            "2" : "fast"
+          }, {
+            "0" : "http://id.worldcat.org/fast/fst01113568"
+          } ]
+        }
+      }, {
+        "655" : {
+          "ind1" : " ",
+          "ind2" : "7",
+          "subfields" : [ {
+            "a" : "Scientific atlases."
+          }, {
+            "2" : "fast"
+          }, {
+            "0" : "http://id.worldcat.org/fast/fst01941304"
+          } ]
+        }
+      }, {
+        "700" : {
+          "ind1" : "1",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "König, Wilfried A."
+          } ]
+        }
+      }, {
+        "903" : {
+          "ind1" : " ",
+          "ind2" : " ",
+          "subfields" : [ {
+            "a" : "MARS"
+          } ]
+        }
+      }, {
+        "999" : {
+          "ind1" : "f",
+          "ind2" : "f",
+          "subfields" : [ {
+            "i" : "replace_instanceId"
+          }, {
+            "s" : "replace_recordId"
+          } ]
+        }
+      } ],
+      "leader" : "01459cam a2200349Ma 4500"
+    },
+    "formattedContent" : "LEADER 01459cam a2200349Ma 4500\n001 in4130476\n008 990407s1998    gw a          000 0 eng d\n005 20251201110212.8\n020   $a3930826488\n020   $a9783930826483\n029 1 $aNLGGC$b175729956\n035   $a(OCoLC)51380843\n040   $aHUA$cHUA$dOCLCQ$dCGU\n049   $aCGUA\n100 1 $aJoulain, D.$q(Daniel)\n245 14$aThe atlas of spectral data of sesquiterpene hydrocarbons /$cDaniel Joulain, Wilfried A. König.\n260   $aHamburg :$bE.B.-Verlag,$c1998.\n300   $a658 p. :$bill. ;$c30 cm.\n555 8 $aFinding aid available in the Manuscript Reading Room and on Internet.$uhttp://hdl.loc.gov/loc.mss/eadmss.ms996001\n650  0$aBotanical chemistry$vAtlases.\n650  0$aPlant bioactive compounds$vAtlases.\n650  0$aPlant physiology$vAtlases.\n650  0$aSesquiterpenes$vAtlases.\n650  0$aTerpene$vAtlases.\n650  7$aBotanical chemistry.$2fast$0http://id.worldcat.org/fast/fst00836819\n650  7$aPlant bioactive compounds.$2fast$0http://id.worldcat.org/fast/fst01065271\n650  7$aPlant physiology.$2fast$0http://id.worldcat.org/fast/fst01065616\n650  7$aSesquiterpenes.$2fast$0http://id.worldcat.org/fast/fst01113568\n655  7$aScientific atlases.$2fast$0http://id.worldcat.org/fast/fst01941304\n700 1 $aKönig, Wilfried A.\n903   $aMARS\n999 ff$iebd7f153-ef90-4211-bd22-f15931ebdf1b$s53ebdffc-493f-49bd-abc3-8404fcbe4be9\n\n"
+  },
+  "deleted" : false,
+  "order" : 165,
+  "externalIdsHolder" : {
+    "instanceId" : "replace_instanceId",
+    "instanceHrid" : "replace_instanceHrid"
+  },
+  "additionalInfo" : {
+    "suppressDiscovery" : false
+  },
+  "state" : "ACTUAL",
+  "leaderRecordStatus" : "c",
+  "metadata" : {
+    "createdDate" : "2025-12-01T11:02:12.844+00:00",
+    "updatedDate" : "2025-12-01T11:02:12.844+00:00"
+  }
+}
