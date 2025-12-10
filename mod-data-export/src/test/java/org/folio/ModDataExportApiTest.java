@@ -86,11 +86,11 @@ public class ModDataExportApiTest extends TestBaseEureka {
         runFeatureTest("export-for-holdings-default-mapping");
     }
 
-   @Test
-   @Order(8)
-   void fileExportForMarcAuthorityRecordExportTest() {
-       runFeatureTest("export-for-authority");
-   }
+    @Test
+    @Order(8)
+    void fileExportForMarcAuthorityRecordExportTest() {
+        runFeatureTest("export-for-authority");
+    }
 
     @Test
     @Order(9)
@@ -156,5 +156,11 @@ public class ModDataExportApiTest extends TestBaseEureka {
     @Order(21)
     void dataExportDeletedAuthoritiesDeletedProfileTest() {
         runFeatureTest("export-deleted-authorities-deleted-profile");
+    }
+
+    @Test
+    @Order(22)
+    void linkedDataExportTest() {
+        runFeatureTest("export-for-linked-data");
     }
 }

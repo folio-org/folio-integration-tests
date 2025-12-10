@@ -50,3 +50,12 @@ Feature: init srs data feature
     And param idType = 'AUTHORITY'
     When method GET
     Then status 200
+
+  @PostMarcLinkedDataRecord
+  Scenario: create srs record
+    * string recordTemplate = read('classpath:samples/marc_linked_data_record.json')
+    * def record = prepareMarcBibRecord(recordTemplate, recordId, snapshotId, instanceId)
+    Given path 'source-storage/records'
+    And request record
+    When method POST
+    Then status 201
