@@ -1,5 +1,5 @@
 @parallel=false
-Feature: Tests export hodings records
+Feature: Verify configured limit of exported file size - Authorities (UUID)
 
   Background:
     * url baseUrl
@@ -14,14 +14,15 @@ Feature: Tests export hodings records
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
+  Scenario Outline: setting configuration slice_size to 1, test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
+    #should create file definition
 
-  Scenario Outline: test upload file and export flow for authority when related MARC_AUTHORITY records exist.
     Given path 'data-export/configuration'
     And request
       """
       {
         "key": "slice_size",
-        "value": "100000"
+        "value": "1"
       }
       """
     When method POST
@@ -29,7 +30,7 @@ Feature: Tests export hodings records
 
     Given path 'data-export/file-definitions'
     And def fileDefinitionId = uuid()
-    And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -57,7 +58,6 @@ Feature: Tests export hodings records
     And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
-    * print 'File definition response:', response
 
     Given path 'data-export/export'
     And configure headers = headersUser
@@ -72,7 +72,7 @@ Feature: Tests export hodings records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, duplicatedSrs:0, total:1, readIds:1}
+    And match response.jobExecutions[0].progress == {exported:3, failed:0, duplicatedSrs:0, total:3, readIds:3}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -89,15 +89,57 @@ Feature: Tests export hodings records
     * print response
     And match response == '#notnull'
 
-    Examples:
-      | fileName                      | uploadFormat |
-      | test-export-authority-csv.csv | csv          |
+    * def ByteArrayInputStream = Java.type('java.io.ByteArrayInputStream')
+    * def ZipInputStream = Java.type('java.util.zip.ZipInputStream')
+    * def IOUtils = Java.type('org.apache.commons.io.IOUtils')
+    * def ByteArrayOutputStream = Java.type('java.io.ByteArrayOutputStream')
 
-  Scenario Outline: test upload CQL file and export flow for authority uuids when related MARC_AUTHORITY records exist.
+    * def bais = new ByteArrayInputStream(responseBytes)
+    * def zis = new ZipInputStream(bais)
+
+    # Extract files
+    * def fileNames = []
+    * def marcFiles = []
+
+    * eval
+      """
+      var entry = zis.getNextEntry();
+      while (entry != null) {
+        var name = entry.getName();
+        if (name.includes('.')) {
+          fileNames.push(name);
+          var baos = new ByteArrayOutputStream();
+          IOUtils.copy(zis, baos);
+          marcFiles.push(baos.toByteArray());
+        }
+        entry = zis.getNextEntry();
+      }
+      """
+
+    * print 'File names in ZIP:', fileNames
+    * print 'Number of MARC files in ZIP:', marcFiles.length
+
+    Examples:
+      | fileName                                    | uploadFormat |
+      | test-export-config-authority-csv.csv        | csv          |
+
+  Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
     #should create file definition
+
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "3"
+      }
+      """
+    When method POST
+    Then status 201
+
     Given path 'data-export/file-definitions'
     And def fileDefinitionId = uuid()
-    And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -140,7 +182,9 @@ Feature: Tests export hodings records
     And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].progress == {exported:1, failed:0, duplicatedSrs:0, total:1, readIds:1}
+    * def files = response.jobExecutions[0].exportedFiles
+    * match each files[*].fileName contains 'mrc'
+    And match response.jobExecutions[0].progress == {exported:3, failed:0, duplicatedSrs:0, total:3, readIds:3}
     * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
     #should return download link for instance of uploaded file
@@ -158,16 +202,26 @@ Feature: Tests export hodings records
     And match response == '#notnull'
 
     Examples:
-      | fileName                      | uploadFormat |
-      | test-export-authority-cql.cql | cql          |
+      | fileName                                    | uploadFormat |
+      | test-export-config-authority-csv.csv        | csv          |
 
-  #Negative scenarios
-
-  Scenario Outline: test authority export should fail when not default authority job profiled specified.
+  Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
     #should create file definition
+
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "2"
+      }
+      """
+    When method POST
+    Then status 201
+
     Given path 'data-export/file-definitions'
-    And  def fileDefinitionId = uuid()
-    And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinitionId = uuid()
+    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -196,35 +250,82 @@ Feature: Tests export hodings records
     When method GET
     Then status 200
 
-    #should not export records and complete export with FAIL status
+    #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
-    And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultInstanceJobProfileId)','idType':'authority'}
+    And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultAuthorityJobProfileId)','idType':'authority'}
     And request requestBody
     When method POST
     Then status 204
 
-    #should return job execution by id and wait until the job status will be 'FAIL'
+    #should return job execution by id and wait until the job status will be 'COMPLETED'
     Given path 'data-export/job-executions'
     And param query = 'id==' + jobExecutionId
-    And retry until response.jobExecutions[0].status == 'FAIL'
+    And retry until response.jobExecutions[0].status == 'COMPLETED'
     When method GET
     Then status 200
-    And match response.jobExecutions[0].status == 'FAIL'
-    And match response.jobExecutions[0].progress == {exported:0, failed:0, duplicatedSrs:0, total:0, readIds:0}
+    And match response.jobExecutions[0].progress == {exported:3, failed:0, duplicatedSrs:0, total:3, readIds:3}
+    * def fileId = response.jobExecutions[0].exportedFiles[0].fileId
 
-    #error logs should be saved
-    Given path 'data-export/logs'
-    And param query = 'jobExecutionId==' + jobExecutionId
+    #should return download link for instance of uploaded file
+    Given path 'data-export/job-executions/',jobExecutionId,'/download/',fileId
     When method GET
     Then status 200
-    And def errorLog = response.errorLogs[0]
-    And match errorLog.errorMessageCode == 'error.messagePlaceholder'
-    And match errorLog.errorMessageValues[0] == 'For exporting authority records only the default authority job profile is supported'
+    And match response.fileId == '#notnull'
+    And match response.link == '#notnull'
+    * def downloadLink = response.link
+
+    Given url downloadLink
+    When method GET
+    Then status 200
+    * print response
+    And match response == '#notnull'
+    * def ByteArrayInputStream = Java.type('java.io.ByteArrayInputStream')
+    * def ZipInputStream = Java.type('java.util.zip.ZipInputStream')
+    * def IOUtils = Java.type('org.apache.commons.io.IOUtils')
+    * def ByteArrayOutputStream = Java.type('java.io.ByteArrayOutputStream')
+
+    * def bais = new ByteArrayInputStream(responseBytes)
+    * def zis = new ZipInputStream(bais)
+
+    # Extract files
+    * def fileNames = []
+    * def marcFiles = []
+
+    * eval
+      """
+      var entry = zis.getNextEntry();
+      while (entry != null) {
+        var name = entry.getName();
+        if (name.includes('.')) {
+          fileNames.push(name);
+          var baos = new ByteArrayOutputStream();
+          IOUtils.copy(zis, baos);
+          marcFiles.push(baos.toByteArray());
+        }
+        entry = zis.getNextEntry();
+      }
+      """
+
+    * print 'File names in ZIP:', fileNames
+    * print 'Number of MARC files in ZIP:', marcFiles.length
 
     Examples:
-      | fileName                      | uploadFormat |
-      | test-export-authority-csv.csv | csv          |
+      | fileName                                    | uploadFormat |
+      | test-export-config-authority-csv.csv        | csv          |
+
+  Scenario: reset configuration to default
+    #reset slice_size back to default value to avoid affecting other tests
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "1000"
+      }
+      """
+    When method POST
+    Then status 201
 
   Scenario: clear storage folder
     Given path 'data-export/clean-up-files'

@@ -9,6 +9,7 @@ Feature: init srs data feature
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def prepareMarcBibRecord = function(record, recordId, snapshotId, instanceId) {return record.replaceAll("replace_recordId", recordId).replaceAll("replace_snapshotId", snapshotId).replaceAll("replace_instanceId", instanceId);}
     * def prepareMarcHoldingRecord = function(record, recordId, snapshotId, instanceId) {return record.replaceAll("replace_recordId", recordId).replaceAll("replace_snapshotId", snapshotId).replaceAll("replace_holdingId", holdingId);}
+    * def prepareMarcAuthorityRecord = function(record, recordId, snapshotId, authorityId) {return record.replaceAll("replace_recordId", recordId).replaceAll("replace_snapshotId", snapshotId).replaceAll("replace_authorityId", authorityId);}
 
   @PostSnapshot
   Scenario: create snapshot
@@ -37,8 +38,11 @@ Feature: init srs data feature
     Then status 201
 
   @PostMarcAuthorityRecord
-  Scenario: create srs record
+  Scenario: create srs authority record
+    * def templateFile = karate.get('templateFile', 'classpath:samples/marc_authority_record.json')
+    * string recordTemplate = read(templateFile)
+    * def record = prepareMarcAuthorityRecord(recordTemplate, recordId, snapshotId, authorityId)
     Given path 'source-storage/records'
-    And request read('classpath:samples/marc_authority_record.json')
+    And request record
     When method POST
     Then status 201

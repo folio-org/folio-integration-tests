@@ -6,7 +6,7 @@ Feature: Verify Linked Data Graph
     * def instanceSubgraph = subgraphCall.response
     * def workSubgraph = instanceSubgraph.outgoingEdges.filter(x => x.predicate == 'INSTANTIATES')[0].target
 
-  Scenario: Verify Creator of Work (Rally ID: C446125)
+  Scenario: Verify Creator of Work (TestRail ID: C446125)
     * def creatorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'CREATOR')[0].target)
     * def authorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'AUTHOR')[0].target)
     * match creatorSubgraph.label == 'Edgell, David L., Sr., David Lee, 1938'
@@ -17,7 +17,7 @@ Feature: Verify Linked Data Graph
     * match authorSubgraph.doc == creatorSubgraph.doc
     * match authorSubgraph.types == creatorSubgraph.types
 
-  Scenario: Verify Contributors of Work (Rally ID: C446125, C446172, C446174)
+  Scenario: Verify Contributors of Work (TestRail ID: C446125, C446172, C446174)
     * def contributorSubgraphs = workSubgraph.outgoingEdges.filter(x => x.predicate == 'CONTRIBUTOR').map(x => resolveSubgraphIfId(x.target))
     * def actualLabels = contributorSubgraphs.map(x => x.label)
     * match actualLabels contains 'Rinehart family, Rinehart, Family Rinehart'
