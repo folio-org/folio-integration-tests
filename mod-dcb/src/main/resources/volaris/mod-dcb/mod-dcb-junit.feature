@@ -21,6 +21,7 @@ Feature: mod-dcb integration tests
 
     * table adminAdditionalPermissions
       | name                                                              |
+      | 'circulation-item.item.get'                                       |
       | 'circulation-item.collection.get'                                 |
       | 'circulation-storage.cancellation-reasons.item.post'              |
       | 'circulation-storage.loan-policies.item.post'                     |
@@ -72,10 +73,11 @@ Feature: mod-dcb integration tests
 
     * table userPermissions
       | name                                                              |
+      | 'users.item.get'                                                  |
+      | 'users.item.post'                                                 |
       | 'users.collection.get'                                            |
       | 'usergroups.collection.get'                                       |
       | 'usergroups.item.post'                                            |
-      | 'users.item.post'                                                 |
       | 'inventory-storage.service-points.item.post'                      |
       | 'inventory-storage.items.item.get'                                |
       | 'inventory.items.item.post'                                       |
@@ -105,8 +107,8 @@ Feature: mod-dcb integration tests
       | 'dcb.transactions.item.put'                                       |
       | 'circulation.check-out-by-barcode.post'                           |
       | 'circulation.check-in-by-barcode.post'                            |
-      |'circulation-storage.loan-policies.collection.get'                 |
-      |'circulation.loans.collection.get'                                 |
+      | 'circulation-storage.loan-policies.collection.get'                |
+      | 'circulation.loans.collection.get'                                |
       | 'manualblocks.collection.get'                                     |
       | 'perms.users.item.post'                                           |
       | 'login.item.post'                                                 |
@@ -121,6 +123,7 @@ Feature: mod-dcb integration tests
       | 'circulation-storage.request-policies.item.post'                  |
       | 'patron-blocks.automated-patron-blocks.collection.get'            |
       | 'dcb.shadow_locations.refresh.post'                               |
+      | 'circulation-item.item.get'                                       |
 
 
   Scenario: create tenant and users for testing for mod-dcb

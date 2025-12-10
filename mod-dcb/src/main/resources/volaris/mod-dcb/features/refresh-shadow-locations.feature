@@ -2,135 +2,100 @@ Feature: Borrowing Flow Scenarios
 
   Background:
     * url baseUrl
-    * def user = testUser
+    * def proxyCall = karate.get('proxyCall', false)
+    * def user = proxyCall == true ? testUser : testAdmin
     * print 'user  is', user
     * callonce login user
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
+    * def key = ''
     * configure headers = headersUser
-    # load global variables
     * callonce variables
 
-    # Delete all shadow locations, institutions, campuses and libraries if exist
-    # This is to ensure that we are creating shadow locations from scratch
-    # before running the refresh shadow locations API
-    * call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteShadowLocations')
-    * call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteShadowLibraries')
-    * call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteShadowCampuses')
-    * call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteShadowInstitutions')
 
-  Scenario: Validate all shadow locations are created initially and skipped if already exist
-    * print 'Validate all shadow locations are created initially and skipped if already exist'
-    # Create mock server data for shadow locations
-    * call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@CreateMockServerShadowLocationsData')
+  @CreateTwoShadowLocations
+  Scenario: Create a shadow location from location with agency for borrower transaction
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def dcbAgency = { name: 'DCB Test Agency #1', code: 'AGT1' }
+    * def dcbLocation1 = { name: 'DCB Test Location #1', code: 'LT1', agency: '#(dcbAgency)' }
+    * def dcbLocation2 = { name: 'DCB Test Location #2', code: 'LT2', agency: '#(dcbAgency)' }
+    * def orgPath = '/dcb/shadow-locations/refresh'
+    * def newPath = proxyCall == true ? proxyPath + orgPath : orgPath
 
-    # Call refresh shadow locations API to create shadow locations, institutions, campuses and libraries
-    Given path '/dcb/shadow-locations/refresh'
+    Given path newPath
+    And request { locations: [ '#(dcbLocation1)', '#(dcbLocation2)' ] }
+    And param apikey = key
     When method POST
     Then status 201
-    And match each response.locations contains { status: 'SUCCESS' }
-    And match response.locations[*].code contains ['LOC-1', 'LOC-2', 'LOC-3', 'LOC-4', 'LOC-5', 'LOC-6', 'LOC-7', 'LOC-8']
+    And match $.locations[*].code contains only ['#(dcbLocation1.code)', '#(dcbLocation2.code)' ]
+    And match $.locations[*].status contains only ['SUCCESS', 'SUCCESS']
+    And match $['location-units'].institutions[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].institutions[*].status contains only ['SUCCESS']
+    And match $['location-units'].campuses[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].campuses[*].status contains only ['SUCCESS']
+    And match $['location-units'].libraries[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].libraries[*].status contains only ['SUCCESS']
 
-    And match each response['location-units'].institutions contains { status: 'SUCCESS' }
-    And match response['location-units'].institutions[*].code contains ['AG-001', 'AG-002', 'AG-003', 'AG-004', 'AG-005']
+    * def args = { name: '#(dcbAgency.name)', code: '#(dcbAgency.code)', isShadow: true }
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetInstitutionByNameAndCode') args
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetCampusByNameAndCode') args
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetLibraryByNameAndCode') args
 
-    And match each response['location-units'].campuses contains { status: 'SUCCESS' }
-    And match response['location-units'].campuses[*].code contains ['AG-001', 'AG-002', 'AG-003', 'AG-004', 'AG-005']
+    * def args = { name: '#(dcbLocation1.name)', code: '#(dcbLocation1.code)', isShadow: true }
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetLocationByNameAndCode') args
 
-    And match each response['location-units'].libraries contains { status: 'SUCCESS' }
-    And match response['location-units'].libraries[*].code contains ['AG-001', 'AG-002', 'AG-003', 'AG-004', 'AG-005']
-    * print response
+    * def args = { name: '#(dcbLocation2.name)', code: '#(dcbLocation2.code)', isShadow: true }
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetLocationByNameAndCode') args
 
-    # Validate Skipped status when shadow locations, institutions, campuses and libraries already exist
-    Given path '/dcb/shadow-locations/refresh'
+  @RepeatCreationOfTwoShadowLocations
+  Scenario: Repeat previous shadow locations refresh
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def dcbAgency = { name: 'DCB Test Agency #1', code: 'AGT1' }
+    * def dcbLocation1 = { name: 'DCB Test Location #1', code: 'LT1', agency: '#(dcbAgency)' }
+    * def dcbLocation2 = { name: 'DCB Test Location #2', code: 'LT2', agency: '#(dcbAgency)' }
+    * def orgPath = '/dcb/shadow-locations/refresh'
+    * def newPath = proxyCall == true ? proxyPath + orgPath : orgPath
+
+    Given path newPath
+    And request { locations: [ '#(dcbLocation1)', '#(dcbLocation2)' ]}
+    And param apikey = key
     When method POST
     Then status 201
-    And match each response.locations contains { status: 'SKIPPED' }
-    And match response.locations[*].code contains ['LOC-1', 'LOC-2', 'LOC-3', 'LOC-4', 'LOC-5', 'LOC-6', 'LOC-7', 'LOC-8']
+    And match $.locations[*].code contains only ['#(dcbLocation1.code)', '#(dcbLocation2.code)' ]
+    And match $.locations[*].status contains only ['SKIPPED', 'SKIPPED']
+    And match $['location-units'].institutions[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].institutions[*].status contains only ['SKIPPED']
+    And match $['location-units'].campuses[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].campuses[*].status contains only ['SKIPPED']
+    And match $['location-units'].libraries[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].libraries[*].status contains only ['SKIPPED']
 
-    And match each response['location-units'].institutions contains { status: 'SKIPPED' }
-    And match response['location-units'].institutions[*].code contains ['AG-001', 'AG-002', 'AG-003', 'AG-004', 'AG-005']
+  @CreateShadowLocationFromAgency
+  Scenario: Create a shadow location from agency (AGB2) for borrower transaction
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def dcbAgency = { name: 'DCB Test Agency #2', code: 'AGT2' }
+    * def orgPath = '/dcb/shadow-locations/refresh'
+    * def newPath = proxyCall == true ? proxyPath + orgPath : orgPath
 
-    And match each response['location-units'].campuses contains { status: 'SKIPPED' }
-    And match response['location-units'].campuses[*].code contains ['AG-001', 'AG-002', 'AG-003', 'AG-004', 'AG-005']
-
-    And match each response['location-units'].libraries contains { status: 'SKIPPED' }
-    And match response['location-units'].libraries[*].code contains ['AG-001', 'AG-002', 'AG-003', 'AG-004', 'AG-005']
-    * print response
-
-  Scenario: Validate few shadow locations are created which were not existed before and others are skipped
-    # Call refresh shadow locations API to create shadow locations, institutions, campuses and libraries
-    * print 'alidate few shadow locations are created which were not existed before and others are skipped'
-    # Create mock server data for shadow locations
-    * call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@CreateMockServerShadowLocationsData')
-
-    Given path '/dcb/shadow-locations/refresh'
+    Given path newPath
+    And request { agencies: [ '#(dcbAgency)' ]}
+    And param apikey = key
     When method POST
     Then status 201
+    And match $.locations[*].code contains only ['#(dcbAgency.code)']
+    And match $.locations[*].status contains only ['SUCCESS']
+    And match $['location-units'].institutions[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].institutions[*].status contains only ['SUCCESS']
+    And match $['location-units'].campuses[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].campuses[*].status contains only ['SUCCESS']
+    And match $['location-units'].libraries[*].code contains only ['#(dcbAgency.code)']
+    And match $['location-units'].libraries[*].status contains only ['SUCCESS']
 
-    # Delete few shadow locations, institutions, campuses and libraries to validate that they are created again
-    * def result = karate.call('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteLocationByNameAndCode', { name: 'Location-1', code: 'LOC-1' })
-    * def result = karate.call('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteLocationByNameAndCode', { name: 'Location-6', code: 'LOC-6' })
-    * def result = karate.call('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteLibraryByNameAndCode', { name: 'Agency-One', code: 'AG-001' })
-    * def result = karate.call('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteCampusByNameAndCode', { name: 'Agency-One', code: 'AG-001' })
-    * def result = karate.call('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@DeleteInstitutionByNameAndCode', { name: 'Agency-One', code: 'AG-001'})
-
-
-    Given path '/dcb/shadow-locations/refresh'
-    When method POST
-    Then status 201
-    # Validate locations with SUCCESS and SKIPPED status
-    And match response.locations[?(@.status=='SUCCESS')].code contains ['LOC-1', 'LOC-6']
-    And match response.locations[?(@.status=='SKIPPED')].code contains ['LOC-2', 'LOC-3', 'LOC-4', 'LOC-5', 'LOC-7', 'LOC-8']
-
-    # Validate institutions with SUCCESS and SKIPPED status
-    And match response['location-units'].institutions[?(@.status=='SUCCESS')].code contains ['AG-001']
-    And match response['location-units'].institutions[?(@.status=='SKIPPED')].code contains ['AG-002', 'AG-003', 'AG-004', 'AG-005']
-
-    # Validate campuses with SUCCESS and SKIPPED status
-    And match response['location-units'].campuses[?(@.status=='SUCCESS')].code contains ['AG-001']
-    And match response['location-units'].campuses[?(@.status=='SKIPPED')].code contains ['AG-002', 'AG-003', 'AG-004', 'AG-005']
-
-    # Validate libraries with SUCCESS and SKIPPED status
-    And match response['location-units'].libraries[?(@.status=='SUCCESS')].code contains ['AG-001']
-    And match response['location-units'].libraries[?(@.status=='SKIPPED')].code contains ['AG-002', 'AG-003', 'AG-004', 'AG-005']
-
-  Scenario: Validate Error/Exception scenarios with cause/reason
-    # Call refresh shadow locations API to create shadow locations, institutions, campuses and libraries
-    * print 'Validate Error/Exception scenarios with cause/reason'
-    # Create mock server data for shadow locations and simulate error/exception scenarios
-    * karate.call('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@CreateMockServerShadowLocationsData', { agencyOneCode: '=AG-001', agencyOneName: '=Agency-One' })
-
-    Given path '/dcb/shadow-locations/refresh'
-    When method POST
-    Then status 201
-    # Validate locations with SKIPPED status and specific causes for LOC-1 and LOC-6
-    And match response.locations[?(@.code=='LOC-1')].status == ['SKIPPED']
-    And match response.locations[?(@.code=='LOC-1')].cause == ['Location agencies IDs are incomplete or null, cannot create shadow location. locationAgenciesIds are: LocationAgenciesIds[institutionId=null, campusId=null, libraryId=null]']
-    And match response.locations[?(@.code=='LOC-6')].status == ['SKIPPED']
-    And match response.locations[?(@.code=='LOC-6')].cause == ['Location agencies IDs are incomplete or null, cannot create shadow location. locationAgenciesIds are: LocationAgenciesIds[institutionId=null, campusId=null, libraryId=null]']
-
-    # Validate other locations with SKIPPED status
-    And match response.locations[?(@.code=='LOC-2' || @.code=='LOC-3' || @.code=='LOC-4' || @.code=='LOC-5' || @.code=='LOC-7' || @.code=='LOC-8')].status == ['SUCCESS', 'SUCCESS', 'SUCCESS', 'SUCCESS', 'SUCCESS', 'SUCCESS']
-
-    # Validate institution with ERROR status and cause
-    And match response['location-units'].institutions[?(@.code=='=AG-001')].status == ['ERROR']
-    And match response['location-units'].institutions[?(@.code=='=AG-001')].cause != null
-    And match response['location-units'].institutions[?(@.code=='=AG-001')].cause == '#present'
-
-    # Validate other institutions with SKIPPED status
-    And match response['location-units'].institutions[?(@.code=='AG-002' || @.code=='AG-003' || @.code=='AG-004' || @.code=='AG-005')].status == ['SUCCESS', 'SUCCESS', 'SUCCESS', 'SUCCESS']
-
-    # Validate campus with SKIPPED status and cause
-    And match response['location-units'].campuses[?(@.code=='=AG-001')].status == ['SKIPPED']
-    And match response['location-units'].campuses[?(@.code=='=AG-001')].cause == ['Institution is null and it was not created, so cannot create campus']
-
-    # Validate other campuses with SKIPPED status
-    And match response['location-units'].campuses[?(@.code=='AG-002' || @.code=='AG-003' || @.code=='AG-004' || @.code=='AG-005')].status == ['SUCCESS', 'SUCCESS', 'SUCCESS', 'SUCCESS']
-
-    # Validate library with SKIPPED status and cause
-    And match response['location-units'].libraries[?(@.code=='=AG-001')].status == ['SKIPPED']
-    And match response['location-units'].libraries[?(@.code=='=AG-001')].cause == ['Campus is null and it was not created, so cannot create library']
-
-    # Validate other libraries with SKIPPED status
-    And match response['location-units'].libraries[?(@.code=='AG-002' || @.code=='AG-003' || @.code=='AG-004' || @.code=='AG-005')].status == ['SUCCESS', 'SUCCESS', 'SUCCESS', 'SUCCESS']
+    * def args = { name: '#(dcbAgency.name)', code: '#(dcbAgency.code)', isShadow: true }
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetInstitutionByNameAndCode') args
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetCampusByNameAndCode') args
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetLibraryByNameAndCode') args
+    Given call read('classpath:volaris/mod-dcb/reusable/refresh-shadow-locations.feature@GetLocationByNameAndCode') args

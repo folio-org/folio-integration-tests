@@ -13,7 +13,7 @@ Feature: Verify exported Bibframe2 RDF
     * def workId = instanceRdf['http://id.loc.gov/ontologies/bibframe/instanceOf'][0]['@id']
     * def workRdf = rdf.filter(x => x['@id'] == workId)[0]
 
-  Scenario: Verify Creator of work (Rally ID C805759)
+  Scenario: Verify Creator of work (TestRail ID C805759)
     * def contributionIds = workRdf['http://id.loc.gov/ontologies/bibframe/contribution'].map(x => x['@id'])
     * def contributorsRdfs = contributionIds.map(id => rdf.filter(x => x['@id'] == id)[0])
     * def creator = contributorsRdfs.filter(x => x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))[0]
@@ -24,7 +24,7 @@ Feature: Verify exported Bibframe2 RDF
     * match creatorAgent['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Person'
     * match creatorAgent['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'Edgell, David L., Sr., David Lee, 1938'
 
-  Scenario: Verify Contributors of work (Rally ID C805759)
+  Scenario: Verify Contributors of work (TestRail ID C805759)
     * def contributors = contributorsRdfs.filter(x => !x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))
 
     * def familyContributor = contributors.filter(x => rdf.filter(a => a['@id'] == x['http://id.loc.gov/ontologies/bibframe/agent'][0]['@id'])[0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'Rinehart family, Rinehart, Family Rinehart')[0]
