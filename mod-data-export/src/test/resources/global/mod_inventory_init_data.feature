@@ -26,6 +26,9 @@ Feature: init data for mod-inventory-storage
 
   Scenario: create base instance
     * call read('classpath:global/inventory_data_setup_util.feature@PostInstance') {instanceId:'b73eccf0-57a6-495e-898d-32b9b2210f2f'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance2') {instanceId:'54cfd483-95d5-433a-940a-f3a80a0cd80c'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance3') {instanceId:'baba4ffb-af1b-4ab9-930b-5141e955dc0b'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostInstance4') {instanceId:'da50346c-15d7-42b7-a60e-fae13046bc7e'}
 
   Scenario: setup instance with marc record and holding
     * def instanceId = '1762b035-f87b-4b6f-80d8-c02976e03575'
@@ -36,6 +39,17 @@ Feature: init data for mod-inventory-storage
     * def holdingIdWithoutSrsRecord = '35540ed1-b1d3-4222-ab26-981a20d8f851'
     * def authorityId = 'c32a3b93-b459-4bd4-a09b-ac1f24c7b999'
     * def authorityRecordId = '432d6568-159a-4b20-962c-63fd59ddc07c'
+    * def holdingIdWithoutSrsRecord2 = 'd72f3bb1-ca88-454b-aad7-d0c8ea36f467'
+    * def holdingIdWithoutSrsRecord3 = '378c97da-4ab8-4df4-beae-849eebfe5140'
+    * def holdingIdWithoutSrsRecord4 = '13190781-967d-4a5e-a0dd-0bf10a4c35db'
+    * def authorityId1 = 'c32a3b93-b459-4bd4-a09b-ac1f24c7b999'
+    * def authorityId2 = '261b8e33-cf1f-48b3-85e2-b55b1dc360e6'
+    * def authorityId3 = '7964b834-9766-45e6-b6e0-cb2b86f0a19f'
+    * def authorityId4 = '8bcbc604-604b-4ffa-ab08-bf787dbb11e1'
+    * def authorityRecordId1 = '432d6568-159a-4b20-962c-63fd59ddc07c'
+    * def authorityRecordId2 = 'da365a57-2751-4ad9-ad9e-55f770f0a8f2'
+    * def authorityRecordId3 = '845f26ba-f171-4af2-8361-74bab1b22c92'
+    * def authorityRecordId4 = '61a73463-3d74-4ebf-bc74-d1e168df4186'
     * def linkedDataInstanceId = '02368983-7a01-4a58-ae52-e03542ba2a38'
     * def linkedDataRecordId = uuid()
     * def recordId = uuid()
@@ -60,8 +74,11 @@ Feature: init data for mod-inventory-storage
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingId)'}
     * call read('classpath:global/inventory_data_setup_util.feature@PostDefaultHolding') {instanceId:'#(instanceId)', defaultHoldingId:'#(defaultHoldingId)'}
 
-    #create authority
-    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId)'}
+    #create authority records using different templates to avoid conflicts
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId1)', templateFile:'classpath:samples/authority.json'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId2)', templateFile:'classpath:samples/authority2.json'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId3)', templateFile:'classpath:samples/authority3.json'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostAuthority') {authorityId:'#(authorityId4)', templateFile:'classpath:samples/authority4.json'}
 
     #create 100 items for above holding
     * def fun = function(i){ return { barcode: 1234560 + i, holdingId: holdingId};}
@@ -70,16 +87,28 @@ Feature: init data for mod-inventory-storage
 
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceIdForHoldingWithRecord)', holdingId:'#(MFHDHoldingRecordId)'}
     * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord2)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord3)'}
+    * call read('classpath:global/inventory_data_setup_util.feature@PostHolding') {instanceId:'#(instanceId)', holdingId:'#(holdingIdWithoutSrsRecord4)'}
 
-    #create record
+    #create bib and holding records
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcBibRecord') {recordId:'#(recordId)', snapshotId:'#(snapshotId)', instanceId:'#(instanceIdForHoldingWithRecord)'}
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcHoldingRecord') {recordId:'#(holdingRecordId)', snapshotId:'#(snapshotId)', holdingId:'#(MFHDHoldingRecordId)'}
-    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId)'}
 
-    # create Linked Data record
+    # create bib record for later import to Linked Data
     * call read('classpath:global/mod_srs_init_data.feature@PostMarcLinkedDataRecord') {recordId:'#(linkedDataRecordId)', snapshotId:'#(snapshotId)', instanceId:'#(linkedDataInstanceId)'}
 
-    Scenario: reindex data
+    #create MARC authority records using different templates to avoid conflicts
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId1)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId1)', templateFile:'classpath:samples/marc_authority_record.json'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId2)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId2)', templateFile:'classpath:samples/marc_authority_record2.json'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId3)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId3)', templateFile:'classpath:samples/marc_authority_record3.json'}
+    * call read('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord') {recordId:'#(authorityRecordId4)', snapshotId:'#(snapshotId)', authorityId:'#(authorityId4)', templateFile:'classpath:samples/marc_authority_record4.json'}
+
+    #wait for authority records to be indexed and available
+    * def sleep = function(millis){ java.lang.Thread.sleep(millis) }
+    * eval sleep(3000)
+
+  Scenario: reindex data
       Given path '/instance-storage/reindex'
       When method POST
       Then status 200

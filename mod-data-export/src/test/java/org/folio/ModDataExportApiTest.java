@@ -86,11 +86,11 @@ public class ModDataExportApiTest extends TestBaseEureka {
         runFeatureTest("export-for-holdings-default-mapping");
     }
 
-    @Test
-    @Order(8)
-    void fileExportForMarcAuthorityRecordExportTest() {
-        runFeatureTest("export-for-authority");
-    }
+   @Test
+   @Order(8)
+   void fileExportForMarcAuthorityRecordExportTest() {
+       runFeatureTest("export-for-authority");
+   }
 
     @Test
     @Order(9)
@@ -124,6 +124,36 @@ public class ModDataExportApiTest extends TestBaseEureka {
 
     @Test
     @Order(16)
+    void ExportInstanceConfigC431148Test() {
+        runFeatureTest("export-for-instance-config-C431148");
+    }
+
+    @Test
+    @Order(17)
+    void ExportInstanceConfigCqlC432309Test() {
+        runFeatureTest("export-for-instance-config-cql-C432309");
+    }
+
+    @Test
+    @Order(18)
+    void ExportHoldingConfigC432311Test() {
+        runFeatureTest("export-for-holding-config-C432311");
+    }
+
+    @Test
+    @Order(19)
+    void ExportAuthorityConfigC432314Test() {
+        runFeatureTest("export-authority-config-C432314");
+    }
+
+    @Test
+    @Order(20)
+    void NegativeConfigExportC432315Test() {
+        runFeatureTest("negative-config-export-C432315");
+    }
+
+    @Test
+    @Order(21)
     void linkedDataExportTest() {
         runFeatureTest("export-for-linked-data");
     }

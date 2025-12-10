@@ -80,6 +80,7 @@ Feature: mod-orders integration tests
       | 'data-export.export-authority-deleted.post'                    |
       | 'data-export.job.collection.get'                               |
       | 'data-export.job-executions.item.delete'                       |
+      | 'data-export.configuration.post'                               |
       | 'linked-data.resources.import.post'                            |
       | 'linked-data.resources.rdf.get'                                |
 
