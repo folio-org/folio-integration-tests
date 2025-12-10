@@ -16,27 +16,44 @@ Feature: Test export authority deleted with deleted profile
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
-    * configure retry = { interval: 15000, count: 10 }
+    * configure retry = { interval: 5000, count: 10 }
 
-  Scenario: Test export deleted authority
-    # create 100 authorities that will be deleted
-    * call login testUser
-    * def okapiUserToken = okapitoken
+  Scenario: Test export deleted authority with deleted profile
+    # check how may deleted records already exist
+    Given path 'authority-storage/authorities'
+    And param deleted = true
+    When method GET
+    Then status 200
+    And def numExistingDeletedAuthorities = response.totalRecords
+    And def numNeededToCreate = 100 - numExistingDeletedAuthorities
+    And def existingDeletedAuthorities = response.authorities
+
+    # fetch existing deleted marc authority records
+    * def funGetExistingMarcAuthorities = function(i){ return karate.call('classpath:global/mod_srs_init_data.feature@GetMarcAuthorityRecordByAuthorityId', {authorityId: existingDeletedAuthorities[i].id}) }
+    * def marcAuthorities = karate.repeat(numExistingDeletedAuthorities, funGetExistingMarcAuthorities)
+
+    # will hold all authorities (newly created and existing deleted), 100
     * def authorities = []
+
+    # create numNeededToCreate authorities that will be deleted
     * def genAuthorities = function(i){ authorities.push({authorityId: uuid(), authorityRecordId: uuid(), snapshotId: snapshotId}) }
-    * karate.repeat(100, genAuthorities)
+    * karate.repeat(numNeededToCreate, genAuthorities)
     * def funCreateAuth = function(i){ karate.call('classpath:global/inventory_data_setup_util.feature@PostAuthority', {authorityId: authorities[i].authorityId}) }
-    * def funCreateAuthRec = function(i){ karate.call('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord', {authorityId: authorities[i].authorityId, snapshotId: authorities[i].snapshotId, authorityRecordId: authorities[i].authorityRecordId}) }
-    * karate.repeat(100, funCreateAuth)
-    * karate.repeat(100, funCreateAuthRec)
+    * def funCreateAuthRec = function(i){ karate.call('classpath:global/mod_srs_init_data.feature@PostMarcAuthorityRecord', {authorityId: authorities[i].authorityId, snapshotId: authorities[i].snapshotId, recordId: authorities[i].authorityRecordId}) }
+    * karate.repeat(numNeededToCreate, funCreateAuth)
+    * karate.repeat(numNeededToCreate, funCreateAuthRec)
 
     * pause(5000)
 
     # delete authorities
     * def funDelAuth = function(i){ karate.call('classpath:global/delete_authority.feature@DeleteAuthority', {authorityId: authorities[i].authorityId}) }
-    * karate.repeat(100, funDelAuth)
+    * karate.repeat(numNeededToCreate, funDelAuth)
 
     * pause(5000)
+
+    # add existing deleted authorities to the authorities array (no need to delete them again)
+    * def funFillOutExistingDeleted = function(i){ authorities.push({authorityId: existingDeletedAuthorities[i].id, authorityRecordId: marcAuthorities[i].response.id, snapshotId: marcAuthorities[i].response.snapshotId}) }
+    * karate.repeat(numExistingDeletedAuthorities, funFillOutExistingDeleted)
 
     # get total number of job executions before export
     Given path 'data-export/job-executions'
@@ -83,5 +100,6 @@ Feature: Test export authority deleted with deleted profile
     And def checker = new Checker(response)
 
     # iterate over all authorities in the array and check whether the .mrc file contains all 100 ids of deleted authorities
-    * def authorityChecks = authorities.map(x => checker.checkAuthorityIdExists(x.authorityId, x.authorityRecordId))
+    * def authorityChecks = authorities.map(x => checker.checkDeletedAuthority(x.authorityId, x.authorityRecordId))
+    * match karate.sizeOf(authorityChecks) == 100
     * match authorityChecks == authorities.map(() => true)

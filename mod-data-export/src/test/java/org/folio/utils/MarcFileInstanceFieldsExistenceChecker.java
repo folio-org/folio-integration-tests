@@ -24,7 +24,7 @@ public class MarcFileInstanceFieldsExistenceChecker {
 
     public MarcFileInstanceFieldsExistenceChecker(byte[] marcFile) {
         this.records = convertByteArrayToRecordSortedByTag(marcFile);
-        System.out.println("Total records parsed: " + this.records.size());
+        System.out.println("Total records parsed: " + records.size());
         this.marcFactory = new MarcFactoryImpl();
     }
 
@@ -529,7 +529,11 @@ public class MarcFileInstanceFieldsExistenceChecker {
         return checkForFieldExistence(dataField);
     }
 
-    public boolean checkAuthorityIdExists(String idI, String idS) {
+    public boolean checkDeletedAuthority(String idI, String idS) {
+        return checkAuthorityIdExists(idI, idS) && checkLeaderStatus('d');
+    }
+
+    private boolean checkAuthorityIdExists(String idI, String idS) {
         DataField dataField = marcFactory.newDataField();
         dataField.setIndicator1('f');
         dataField.setIndicator2('f');
