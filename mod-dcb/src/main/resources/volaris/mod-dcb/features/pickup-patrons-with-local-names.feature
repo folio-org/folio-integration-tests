@@ -12,6 +12,8 @@ Feature: Pickup role with virtual patron information
     * configure headers = headersUser
     * callonce read('classpath:volaris/mod-dcb/global/variables.feature')
     * def payloadGeneratorFeatureName = 'classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@CreatePickupPayloadWithLocalNames'
+    * def virtualPatronId = uuid1()
+    * def virtualPatronBarcode = 'dcb_patron_' + random_string()
 
   @CreateTransactionWithSingleValueInLocalNames
   Scenario: Create DCB Transaction with patron.localNames: Last Name
@@ -82,6 +84,8 @@ Feature: Pickup role with virtual patron information
 
     * def payload = response.dcbTransaction
     * def transactionId = response.randomTransactionId
+    * payload.patron.id = virtualPatronId
+    * payload.patron.barcode = virtualPatronBarcode
 
     * def orgPath = '/transactions/' + transactionId
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
@@ -93,13 +97,46 @@ Feature: Pickup role with virtual patron information
     Then status 201
     And match $.status == 'CREATED'
     And match $.item.id == "#present"
-    And match $.patron.id == payload.patron.id
+    And match $.patron.id == virtualPatronId
 
-    Given path '/users/' + payload.patron.id
+    Given path '/users/' + virtualPatronId
     When method GET
     Then status 200
-    And match $.barcode == payload.patron.barcode
+    And match $.barcode == virtualPatronBarcode
     And match $.type == 'dcb'
     And match $.personal.firstName == 'TestFirstName'
     And match $.personal.middleName == 'TestMiddleName'
     And match $.personal.lastName == 'TestLastName'
+
+  @updatePatronPersonalDataByCreatingNewTransaction
+  Scenario: Create DCB Transaction with new patron.localNames for previous patron
+    * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
+    * url baseUrlNew
+    * def args = { localNames: '[NewFirstName, NewMiddleName, NewLastName]' }
+    * def dcbTransaction = call read(payloadGeneratorFeatureName) args
+
+    * def payload = dcbTransaction.dcbTransaction
+    * def transactionId = dcbTransaction.randomTransactionId
+    * payload.patron.id = virtualPatronId
+    * payload.patron.barcode = virtualPatronBarcode
+
+    * def orgPath = '/transactions/' + transactionId
+    * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
+
+    Given path newPath
+    And param apikey = key
+    And request payload
+    When method POST
+    Then status 201
+    And match $.status == 'CREATED'
+    And match $.patron.id == virtualPatronId
+    And match $.patron.barcode == virtualPatronBarcode
+
+    Given path '/users/' + virtualPatronId
+    When method GET
+    Then status 200
+    And match $.barcode == virtualPatronBarcode
+    And match $.type == 'dcb'
+    And match $.personal.firstName == 'NewFirstName'
+    And match $.personal.middleName == 'NewMiddleName'
+    And match $.personal.lastName == 'NewLastName'
