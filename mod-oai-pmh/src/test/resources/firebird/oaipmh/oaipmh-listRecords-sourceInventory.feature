@@ -16,7 +16,7 @@ Feature: Additional ListRecords tests when source is Inventory
 
     # Update configuration: recordsSource = 'Inventory', suppressedRecordsProcessing = 'true', support deleted = 'No'
     Given path '/oai-pmh/configuration-settings'
-    And param query = 'name==behavior'
+    And param name = 'behavior'
     And header Content-Type = 'application/json'
     And header Accept = '*/*'
     And header x-okapi-tenant = testUser.tenant
@@ -29,7 +29,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * set value.recordsSource = 'Inventory'
     * set value.suppressedRecordsProcessing = 'true'
     * set value.deletedRecordsSupport = 'No'
-    * def updatedValue = value;
+    * def updatedValue = value
     * set config.configValue = updatedValue
     Given path '/oai-pmh/configuration-settings', config.id
     And request config
@@ -522,7 +522,7 @@ Feature: Additional ListRecords tests when source is Inventory
 
     # Update configuration: recordsSource = 'SRS+Inventory'
     Given path '/oai-pmh/configuration-settings'
-    And param query = 'name==behavior'
+    And param name = 'behavior'
     When method GET
     Then status 200
     * def config = get $.configurationSettings[0]
@@ -530,7 +530,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * def value = config.configValue
     * set value.recordsSource = 'Source record storage and Inventory'
     * set value.suppressedRecordsProcessing = 'true'
-    * def updatedValue = value;
+    * def updatedValue = value
     * set config.configValue = updatedValue
     * print config
     Given path '/oai-pmh/configuration-settings', config.id
@@ -538,6 +538,22 @@ Feature: Additional ListRecords tests when source is Inventory
     When method PUT
     Then status 204
 
+    # Update configuration: maxRecordsPerResponse = 5
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'technical'
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'technical'
+    * def value = config.configValue
+    * set value.maxRecordsPerResponse = 5
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    * print config
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
 
     # Change item
     Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
