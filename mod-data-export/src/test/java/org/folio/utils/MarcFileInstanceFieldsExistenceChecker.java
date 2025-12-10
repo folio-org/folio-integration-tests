@@ -1,7 +1,10 @@
 package org.folio.utils;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+
 import org.marc4j.MarcReader;
 import org.marc4j.MarcStreamReader;
 import org.marc4j.marc.DataField;
@@ -14,13 +17,14 @@ import org.marc4j.marc.impl.SubfieldImpl;
 
 public class MarcFileInstanceFieldsExistenceChecker {
 
-    private final Record record;
+    private final List<Record> records;
     private final MarcFactory marcFactory;
     private static final char EMPTY_CHAR = ' ';
 
 
     public MarcFileInstanceFieldsExistenceChecker(byte[] marcFile) {
-        this.record = convertByteArrayToRecordSortedByTag(marcFile);
+        this.records = convertByteArrayToRecordSortedByTag(marcFile);
+        System.out.println("Total records parsed: " + records.size());
         this.marcFactory = new MarcFactoryImpl();
     }
 
@@ -47,7 +51,7 @@ public class MarcFileInstanceFieldsExistenceChecker {
         dataField.setTag("019");
         Subfield subfield = new SubfieldImpl('a', "Cancelled System Control Numbers");
         dataField.addSubfield(subfield);
-        record.addVariableField(dataField);
+        records.forEach(rec -> rec.addVariableField(dataField));
         return checkForFieldExistence(dataField);
     }
 
@@ -525,19 +529,39 @@ public class MarcFileInstanceFieldsExistenceChecker {
         return checkForFieldExistence(dataField);
     }
 
-    private Record convertByteArrayToRecordSortedByTag(byte[] marcFile) {
+    public boolean checkDeletedAuthority(String idI, String idS) {
+        return checkAuthorityIdExists(idI, idS) && checkLeaderStatus('d');
+    }
+
+    private boolean checkAuthorityIdExists(String idI, String idS) {
+        DataField dataField = marcFactory.newDataField();
+        dataField.setIndicator1('f');
+        dataField.setIndicator2('f');
+        dataField.setTag("999");
+        Subfield subfieldS = new SubfieldImpl('s', idS);
+        dataField.addSubfield(subfieldS);
+        Subfield subfieldI = new SubfieldImpl('i', idI);
+        dataField.addSubfield(subfieldI);
+        return checkForFieldExistence(dataField);
+    }
+
+    private List<Record> convertByteArrayToRecordSortedByTag(byte[] marcFile) {
+        List<Record> records = new ArrayList<>();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(marcFile);
         MarcReader reader = new MarcStreamReader(inputStream);
-        Record record = reader.next();
-        record.getDataFields().sort(Comparator.comparing(DataField::getTag));
-        return record;
+        while (reader.hasNext()) {
+            Record record = reader.next();
+            record.getDataFields().sort(Comparator.comparing(DataField::getTag));
+            records.add(record);
+        }
+        return records;
     }
 
     private boolean checkForFieldExistence(DataField expectedField) {
-        return record.getDataFields().stream().anyMatch(actualField -> actualField.compareTo(expectedField) == 0);
+        return records.stream().flatMap(rec -> rec.getDataFields().stream()).anyMatch(actualField -> actualField.compareTo(expectedField) == 0);
     }
 
     private boolean checkForLeaderStatus(Leader expectedLeader) {
-        return record.getLeader().getRecordStatus() == expectedLeader.getRecordStatus();
+        return records.stream().map(Record::getLeader).anyMatch(rec -> rec.getRecordStatus() == expectedLeader.getRecordStatus());
     }
 }
