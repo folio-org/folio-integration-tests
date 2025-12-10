@@ -37,8 +37,6 @@ Feature: init data for mod-inventory-storage
     * def holdingId = 'ace30183-e8a0-41a3-88a2-569b38764db6'
     * def MFHDHoldingRecordId = '3b1437a4-a9b5-4abe-a1ee-db54a7ccf89e'
     * def holdingIdWithoutSrsRecord = '35540ed1-b1d3-4222-ab26-981a20d8f851'
-    * def authorityId = 'c32a3b93-b459-4bd4-a09b-ac1f24c7b999'
-    * def authorityRecordId = '432d6568-159a-4b20-962c-63fd59ddc07c'
     * def holdingIdWithoutSrsRecord2 = 'd72f3bb1-ca88-454b-aad7-d0c8ea36f467'
     * def holdingIdWithoutSrsRecord3 = '378c97da-4ab8-4df4-beae-849eebfe5140'
     * def holdingIdWithoutSrsRecord4 = '13190781-967d-4a5e-a0dd-0bf10a4c35db'

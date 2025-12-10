@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Tests export holdings records
 
   Background:
