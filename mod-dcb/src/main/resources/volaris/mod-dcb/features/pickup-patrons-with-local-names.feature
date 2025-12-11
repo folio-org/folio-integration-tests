@@ -11,16 +11,16 @@ Feature: Pickup role with virtual patron information
     * def key = ''
     * configure headers = headersUser
     * callonce read('classpath:volaris/mod-dcb/global/variables.feature')
-    * def payloadGeneratorFeatureName = 'classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@CreatePickupPayloadWithLocalNames'
-    * def virtualPatronId = uuid1()
-    * def virtualPatronBarcode = 'dcb_patron_' + random_string()
+    * def virtualPatronId = callonce uuid1
+    * def generateBarcode = function() { return 'dcb_patron_' + random_string(); }
+    * def virtualPatronBarcode = callonce generateBarcode
 
   @CreateTransactionWithSingleValueInLocalNames
   Scenario: Create DCB Transaction with patron.localNames: Last Name
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def args = { localNames: '[TestLastName]' }
-    * def response = call read(payloadGeneratorFeatureName) args
+    * def response = call read('classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@CreatePickupPayloadWithLocalNames') args
     * def payload = response.dcbTransaction
     * def transactionId = response.randomTransactionId
 
@@ -50,7 +50,7 @@ Feature: Pickup role with virtual patron information
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def args = { localNames: '[TestFirstName, TestLastName]' }
-    * def response = call read(payloadGeneratorFeatureName) args
+    * def response = call read('classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@CreatePickupPayloadWithLocalNames') args
     * def payload = response.dcbTransaction
     * def transactionId = response.randomTransactionId
 
@@ -80,7 +80,7 @@ Feature: Pickup role with virtual patron information
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def args = { localNames: '[TestFirstName, TestMiddleName, TestLastName]' }
-    * def response = call read(payloadGeneratorFeatureName) args
+    * def response = call read('classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@CreatePickupPayloadWithLocalNames') args
 
     * def payload = response.dcbTransaction
     * def transactionId = response.randomTransactionId
@@ -113,7 +113,7 @@ Feature: Pickup role with virtual patron information
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def args = { localNames: '[NewFirstName, NewMiddleName, NewLastName]' }
-    * def dcbTransaction = call read(payloadGeneratorFeatureName) args
+    * def dcbTransaction = call read('classpath:volaris/mod-dcb/reusable/generate-dcb-transaction.feature@CreatePickupPayloadWithLocalNames') args
 
     * def payload = dcbTransaction.dcbTransaction
     * def transactionId = dcbTransaction.randomTransactionId
