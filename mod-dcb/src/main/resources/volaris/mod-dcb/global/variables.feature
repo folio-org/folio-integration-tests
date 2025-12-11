@@ -115,6 +115,7 @@ Feature: global variables
     * def itemId61 = '3c497cc0-77b7-11ee-b962-0242ac120005'
     * def itemId71 = '3c497cc0-77b7-11ee-b962-0242ac120006'
     * def itemId120 = 'bb434f44-cea2-11f0-8de9-0242ac120002'
+    * def itemId121 = '24e871a0-d695-11f0-8de9-0242ac120002'
 
     * def itemBarcode11 = '18'
     * def itemBarcode21 = '19'
@@ -125,6 +126,7 @@ Feature: global variables
     * def itemBarcode61 = '23'
     * def itemBarcode71 = '24'
     * def itemBarcode120 = '120'
+    * def itemBarcode121 = '121'
 
     * def itemNonExistingBarcode = 'newdcb11020'
     * def itemId71 = '1cbcdb7e-edcd-4874-af0b-2df1c5076737'
