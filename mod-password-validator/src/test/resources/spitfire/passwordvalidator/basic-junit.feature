@@ -12,7 +12,6 @@ Feature: mod-password-validator integration tests
     * table userPermissions
       | name                              |
       | 'validation.rules.item.post'      |
-      | 'validation.rules.collection.get' |
       | 'validation.rules.item.get'       |
       | 'validation.rules.item.put'       |
       | 'validation.validate.post'        |
