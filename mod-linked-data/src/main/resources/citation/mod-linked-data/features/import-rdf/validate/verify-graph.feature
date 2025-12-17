@@ -20,7 +20,6 @@ Feature: Import Bibframe2 RDF - Verify graph
 
   Scenario: Validate subjects of Work (TestRail ID: C805751)
     * def subjectGraphs = workGraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT').map(x => x.target)
-    * print subjectGraphs
 
     * def validateSubjectGraph =
     """
