@@ -10,7 +10,7 @@ Feature: Verify Linked Data Graph
     * def creatorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'CREATOR')[0].target)
     * def authorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'AUTHOR')[0].target)
     * match creatorSubgraph.label == 'Edgell, David L., Sr., David Lee, 1938'
-    * match creatorSubgraph.doc == { "http://bibfra.me/vocab/lite/date": ["1938-"], "http://bibfra.me/vocab/lite/name": ["Edgell, David L."], "http://bibfra.me/vocab/library/titles": ["Sr."], "http://bibfra.me/vocab/lite/nameAlternative": ["David Lee"] }
+    * match creatorSubgraph.doc == { "http://bibfra.me/vocab/lite/date": ["1938-"], "http://bibfra.me/vocab/lite/name": ["Edgell, David L."], "http://bibfra.me/vocab/lite/label":["Edgell, David L., Sr., David Lee, 1938"], "http://bibfra.me/vocab/library/titles": ["Sr."], "http://bibfra.me/vocab/lite/nameAlternative": ["David Lee"] }
     * match creatorSubgraph.types == [ 'PERSON' ]
     * match authorSubgraph.id == creatorSubgraph.id
     * match authorSubgraph.label == creatorSubgraph.label
@@ -26,11 +26,11 @@ Feature: Verify Linked Data Graph
     * match actualLabels contains 'International Business Engineering Conference, 2018, Legian, Bali, Indonesia'
 
     * def family = contributorSubgraphs.filter(x => x.label == 'Rinehart family, Rinehart, Family Rinehart')[0]
-    * match family.doc == { "http://bibfra.me/vocab/lite/name": ["Rinehart family"], "http://bibfra.me/vocab/library/titles": ["Rinehart"], "http://bibfra.me/vocab/lite/nameAlternative": ["Family Rinehart"] }
+    * match family.doc == { "http://bibfra.me/vocab/lite/name": ["Rinehart family"], "http://bibfra.me/vocab/lite/label":["Rinehart family, Rinehart, Family Rinehart"], "http://bibfra.me/vocab/library/titles": ["Rinehart"], "http://bibfra.me/vocab/lite/nameAlternative": ["Family Rinehart"] }
     * match family.types == [ 'FAMILY' ]
 
     * def person = contributorSubgraphs.filter(x => x.label == 'VI, Edward, King of England, 1537-1553')[0]
-    * match person.doc == { "http://bibfra.me/vocab/lite/date": ["1537-1553"], "http://bibfra.me/vocab/lite/name": ["Edward"], "http://bibfra.me/vocab/library/titles": ["King of England"], "http://bibfra.me/vocab/library/numeration": ["VI"] }
+    * match person.doc == { "http://bibfra.me/vocab/lite/date": ["1537-1553"], "http://bibfra.me/vocab/lite/name": ["Edward"],  "http://bibfra.me/vocab/lite/label": ["VI, Edward, King of England, 1537-1553"], "http://bibfra.me/vocab/library/titles": ["King of England"], "http://bibfra.me/vocab/library/numeration": ["VI"] }
     * match person.types == [ 'PERSON' ]
 
     * def organization = contributorSubgraphs.filter(x => x.label == 'Horror Writers Association, Ann Radcliffe Academic, Long Beach, Calif.), 2017 :')[0]
