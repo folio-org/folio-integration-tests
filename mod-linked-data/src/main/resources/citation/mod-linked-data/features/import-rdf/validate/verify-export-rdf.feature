@@ -19,7 +19,8 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * match work['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Work'
     * match work['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Monograph'
 
-  Scenario: Validate creator of Work (TestRail ID C788722)
+  @C788722
+  Scenario: Validate creator of Work
     * def workContributions = work['http://id.loc.gov/ontologies/bibframe/contribution']
     * def creatorId = karate.filter(workContributions, function(x){ return x['@id'].startsWith('_:CREATOR_'); })[0]['@id']
     * def creator = karate.filter(rdfResponse, function(x){ return x['@id'] == creatorId; })[0]
@@ -28,7 +29,8 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * match creator['http://id.loc.gov/ontologies/bibframe/agent'][0]['@id'] == 'http://id.loc.gov/rwo/agents/no2012142443'
     * match creator['http://id.loc.gov/ontologies/bibframe/role'][0]['@id'] == 'http://id.loc.gov/vocabulary/relators/aut'
 
-  Scenario: Validate contributors of Work (TestRail ID C957382)
+  @C957382
+  Scenario: Validate contributors of Work
     * def validateContributor =
     """
     function(rdfResponse, workContributions, label, expectedType, expectedRoleIds) {
@@ -61,7 +63,7 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * validateContributor(rdfResponse, workContributions, 'Wang, Holman', 'http://id.loc.gov/ontologies/bibframe/Person', ['http://id.loc.gov/vocabulary/relators/aut'])
     * validateContributor(rdfResponse, workContributions, 'Delaware. General Assembly. House of representatives.', 'http://id.loc.gov/ontologies/bibframe/Jurisdiction', ['http://id.loc.gov/vocabulary/relators/fnd', 'http://id.loc.gov/vocabulary/relators/fpy'])
 
-  Scenario: Validate subjects of Work (TestRail ID C957382)
+  Scenario: Validate subjects of Work
     * match work['http://id.loc.gov/ontologies/bibframe/subject'][*]['@id'] contains 'http://id.loc.gov/authorities/sh85111655'
     * match work['http://id.loc.gov/ontologies/bibframe/subject'][*]['@id'] contains 'http://id.loc.gov/rwo/agents/no2012142443'
     * match work['http://id.loc.gov/ontologies/bibframe/subject'][*]['@id'] contains 'http://id.loc.gov/authorities/sh2008001841'
@@ -87,7 +89,7 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * validateSubject(rdfResponse, work, 'Austria (AT)', 'http://id.loc.gov/ontologies/bibframe/Place')
     * validateSubject(rdfResponse, work, 'Middle East', 'http://id.loc.gov/ontologies/bibframe/Place')
 
-  Scenario: Validate HRID (TestRail ID C957380)
+  Scenario: Validate HRID
     * def hridResource = karate.filter(rdfResponse, x => x['@type'] && x['@type'].indexOf('http://id.loc.gov/ontologies/bibframe/Local') > -1 && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'] && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['@value'] == hrid)[0]
     * match hridResource != null == true
     * def hridNoteId = hridResource['http://id.loc.gov/ontologies/bibframe/note'][0]['@id']

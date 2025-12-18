@@ -14,7 +14,7 @@ Feature: Tests export Linked Data records
     * configure retry = { interval: 15000, count: 10 }
 
   #Positive scenarios
-
+  @C957380
   Scenario Outline: test upload file and export flow for instance UUIDs available as Linked Data.
     #import inventory instance into Linked Data module
     * configure headers = { 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
