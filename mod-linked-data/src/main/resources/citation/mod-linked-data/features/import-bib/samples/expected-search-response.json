@@ -70,6 +70,16 @@
           "name": "The Macmillan Company",
           "date":"1927"
         }
+      ],
+      "notes": [
+        {
+          "value": "illustrations",
+          "type": "http://bibfra.me/vocab/library/physicalDescription"
+        },
+        {
+          "value": "1 computer disc (illustrations ; 4 3/4 in.)",
+          "type": "http://bibfra.me/vocab/library/accompanyingMaterial"
+        }
       ]
     }
   ]

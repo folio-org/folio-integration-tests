@@ -18,7 +18,8 @@ Feature: Import Bibframe2 RDF - Verify graph
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/lite/createdDate'][0] == currentDate
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/library/controlNumber'][0] == hrid
 
-  Scenario: Validate subjects of Work (TestRail ID: C805751)
+  @C805751
+  Scenario: Validate subjects of Work
     * def subjectGraphs = workGraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT').map(x => x.target)
 
     * def validateSubjectGraph =
