@@ -83,10 +83,21 @@ function fn() {
     },
 
     resolveSubgraphIfId: function(idOrSubgraph) {
-        if (typeof idOrSubgraph === 'number') {
-          return karate.call('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph', { resourceId: idOrSubgraph }).response;
-        }
-        return idOrSubgraph;
+      if (typeof idOrSubgraph === 'number') {
+        return karate.call('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph', { resourceId: idOrSubgraph }).response;
+      }
+      return idOrSubgraph;
+    },
+
+    assertMatch: function (actual, expected, message) {
+      var result = karate.match(actual, expected);
+      if (!result.pass) {
+        karate.fail(message !== undefined ? message : result.message);
+      }
+    },
+
+    assertTrue: function (condition, message) {
+      assertMatch(condition, true, message);
     }
   };
 
