@@ -1,3 +1,4 @@
+@parallel=false
 Feature: edge-oai-pmh features
   Background:
     * url edgeUrl
