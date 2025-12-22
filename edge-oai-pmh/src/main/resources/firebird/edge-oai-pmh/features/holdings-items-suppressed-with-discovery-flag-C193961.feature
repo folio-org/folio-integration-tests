@@ -39,6 +39,7 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     * def jobExecutionId = 'aaaa7777-1caf-4470-9ad1-d533f6360bc7'
     * def recordId = 'aaaa7777-1caf-4470-9ad1-d533f6360bc7'
     * def matchedId = 'aaaa7777-e1d4-11e8-9f32-f2801f1b9fd7'
+    * def instanceTypeId = 'fe19bae4-da28-472b-be90-d442e2428ea4'
 
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
@@ -189,6 +190,7 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     * def holdingHrid2 = 'hold000000001009'
     * def itemId2 = 'bbbb8888-c008-4c96-8f8f-b666850ee108'
     * def itemHrid2 = 'item000000001009'
+    * def instanceTypeId2 = 'fe19bae4-da28-472b-be90-d442e2428ew4'
 
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
@@ -196,7 +198,7 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     And header x-okapi-tenant = testTenant
     * def instance2 = read('classpath:samples/instance.json')
     * set instance2.id = instanceId2
-    * set instance2.instanceTypeId = instanceTypeId
+    * set instance2.instanceTypeId = instanceTypeId2
     * set instance2.hrid = instanceHrid2
     * set instance2.source = 'MARC'
     * set instance2.discoverySuppress = false

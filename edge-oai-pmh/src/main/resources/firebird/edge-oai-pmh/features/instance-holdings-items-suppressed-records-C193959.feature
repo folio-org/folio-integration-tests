@@ -85,6 +85,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance, holdings and i
     * def item = read('classpath:samples/item.json')
     * set item.id = allSuppressedItemId
     * set item.hrid = allSuppressedItemHrid
+    * set item.barcode = '145398607547'
     * set item.holdingsRecordId = allSuppressedHoldingId
     * set item.materialTypeId = materialTypeId
     * set item.permanentLoanTypeId = permanentLoanTypeId

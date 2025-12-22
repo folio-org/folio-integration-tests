@@ -44,6 +44,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * def bothSuppressedHoldingHrid = 'hold000000001001'
     * def bothSuppressedItemId = 'bbbb2222-c008-4c96-8f8f-b666850ee101'
     * def bothSuppressedItemHrid = 'item000000001001'
+    * def bothInstanceTypeId = '6e19bae4-da28-472b-be90-d442e2428ea4'
 
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
@@ -89,6 +90,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * set item.materialTypeId = materialTypeId
     * set item.permanentLoanTypeId = permanentLoanTypeId
     * set item.effectiveLocationId = permanentLocationId
+    * set item.barcode = '645398607540'
     And request item
     When method POST
     Then status 201
@@ -103,6 +105,8 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * def holdingSuppressedHoldingHrid = 'hold000000001002'
     * def holdingSuppressedItemId = 'cccc3333-c008-4c96-8f8f-b666850ee102'
     * def holdingSuppressedItemHrid = 'item000000001002'
+    * def holdingInstanceTypeId = '6e19bae4-da28-472b-be90-d442e2428ea5'
+
 
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
@@ -148,6 +152,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * set item2.materialTypeId = materialTypeId
     * set item2.permanentLoanTypeId = permanentLoanTypeId
     * set item2.effectiveLocationId = permanentLocationId
+    * set item2.barcode = '645398607530'
     And request item2
     When method POST
     Then status 201
