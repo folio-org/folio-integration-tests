@@ -252,7 +252,7 @@ Feature: Additional ListRecords tests when source is Inventory
     And request config
     When method PUT
     Then status 204
-    
+
   @C375203
   Scenario: C375203: ListRecords: FOLIO instances are harvested – Instance Transfer suppressed
     * url baseUrl
@@ -348,7 +348,7 @@ Feature: Additional ListRecords tests when source is Inventory
     And request config
     When method PUT
     Then status 204
-    
+
   @C375207
   Scenario: C375207: ListRecords: FOLIO instances with added Holdings are harvested with start and end date
     * url baseUrl
@@ -580,13 +580,26 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response count(//datafield[@tag='856']) == 0
     # Verify that holdings data is still present (field 999)
     * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 1
+    * match response //datafield[@tag='999' and @ind1='f' and @ind2='f']/subfield[@code='i'] == '71a96bc1-6dab-4bee-8c9d-67170c7c2858'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='a'] == 'Københavns Universitet'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='b'] == 'City Campus'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='c'] == 'Datalogisk Institut'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='s'] == 'MAIN LIBRARY'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] == 'MAIN LIBRARY'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] == 'LC Modified'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='f'] == 'gf'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='g'] == 'as'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='h'] == 'LC Modified'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='3'] == '1.2012 -'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='u'] == 'https://search.proquest.com/publication/1396348'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='y'] == 'link text 1'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='z'] == 'via ProQuest, the last 12 months are not available due to an embargo'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='8']/subfield[@code='3'] == '1.2014 -'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='8']/subfield[@code='u'] == 'https://search.proquest.com/publication/55555'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='8']/subfield[@code='y'] == 'link text 2 updated'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='8']/subfield[@code='z'] == 'note 2'
 
     Given url baseUrl
-    # Cleanup - restore original item
-#    Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
-#    And request originalItem
-#    When method PUT
-#    Then status 204
 
     # Restore configuration: suppressedRecordsProcessing = 'true'
     Given path '/oai-pmh/configuration-settings'
@@ -892,3 +905,4 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='3'] == '1.2012 -'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='u'] == 'https://search.proquest.com/publication/1396348'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='z'] == 'via ProQuest, the last 12 months are not available due to an embargo'
+
