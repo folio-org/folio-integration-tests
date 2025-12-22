@@ -528,6 +528,86 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='z'] == 'note 4 updated'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='y'] == 'link text 4'
 
+  @C375210
+  Scenario: C375210: ListRecords: FOLIO instances with suppressed Items - Skip suppressed
+    * url baseUrl
+
+    # Update configuration: suppressedRecordsProcessing = 'false' (Skip suppressed)
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'behavior'
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'behavior'
+    * def value = config.configValue
+    * set value.suppressedRecordsProcessing = 'false'
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
+
+    # Get original item before making changes
+    Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
+    When method GET
+    Then status 200
+    * def originalItem = response
+
+    # Update item to be suppressed
+    Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
+    * def itemSuppressed = read('classpath:samples/c375/item-suppressed-C375210.json')
+    And request itemSuppressed
+    When method PUT
+    Then status 204
+
+    # Harvest - instance and holdings should be returned, but item data should be omitted
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param metadataPrefix = 'marc21_withholdings'
+    And param from = currentOnlyDate()
+    And param until = currentOnlyDate()
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    * match response count(//record) == 1
+    # Verify that fields 856 and 952 (item data) are NOT present
+    * match response count(//datafield[@tag='952']) == 0
+    * match response count(//datafield[@tag='856']) == 0
+    # Verify that holdings data is still present (field 999)
+    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 1
+
+    Given url baseUrl
+    # Cleanup - restore original item
+#    Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
+#    And request originalItem
+#    When method PUT
+#    Then status 204
+
+    # Restore configuration: suppressedRecordsProcessing = 'true'
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'behavior'
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'behavior'
+    * def value = config.configValue
+    * set value.suppressedRecordsProcessing = 'true'
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
+
   @C375212
   Scenario: C375212: ListRecords: FOLIO instances with changed Items are harvested with start and end date – Transfer suppressed
     * url baseUrl
