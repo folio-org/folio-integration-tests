@@ -85,6 +85,62 @@
       ]
     },
     {
+      "tag":"246",
+      "content":"$i Title facing title page : $a Yehudim, Elohim ṿe-hisṭoryah",
+      "indicators":[
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Capital y derechos de la naturaleza--y la humanidad--en México y Nuestra América en el siglo XXI : $b esencia, complejidad y dialéctica de la esclavitud y exterminio sistémico de los animales $f tomo II",
+      "indicators":[
+        "3",
+        "2"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Teenage mutant ninja turtles, $p Battle lines. $n Vol. 21",
+      "indicators":[
+        "3",
+        "4"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$i Colophon title also in pinyin: $a Zhongguo yuedu tongshi. $p Mingdai juan",
+      "indicators":[
+        "1",
+        " "
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Drama uygulamaları",
+      "indicators":[
+        "1",
+        "8"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Nrithya vidhyaa",
+      "indicators":[
+        "1",
+        "7"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Padenie Parizha : $b roman",
+      "indicators":[
+        "1",
+        "6"
+      ]
+    },
+    {
       "tag":"260",
       "content":"$a New York, $b The Macmillan Company, $c 1927.",
       "indicators":[
@@ -103,6 +159,30 @@
     {
       "tag":"336",
       "content":"$a cartographic image $b cri ",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"545",
+      "content":"$a Florence Mardirosian was American choral conductor of Armenian decent.",
+      "indicators":[
+        "0",
+        "\\"
+      ]
+    },
+    {
+      "tag":"545",
+      "content":"$a Co-published with the Australian War Memorial.",
+      "indicators":[
+        "1",
+        "\\"
+      ]
+    },
+    {
+      "tag":"545",
+      "content":"$a Abstract also in English.",
       "indicators":[
         "\\",
         "\\"

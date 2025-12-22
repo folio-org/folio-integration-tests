@@ -20,9 +20,15 @@ Feature: Util functions for verifying instance and work
     * def searchResult = searchCall.response.content[0]
     * match searchResult contains expectedSearchResponse
     * def getWorkCall = call getResource { id: "#(searchResult.id)" }
-    And match getWorkCall.response.resource['http://bibfra.me/vocab/lite/Work']['http://bibfra.me/vocab/library/title'][0]['http://bibfra.me/vocab/library/Title']['http://bibfra.me/vocab/library/mainTitle'] == ['Silent storms,']
+    * def workTitles = getWorkCall.response.resource['http://bibfra.me/vocab/lite/Work']['http://bibfra.me/vocab/library/title']
+    * def workMainTitleObj = workTitles.filter(x => x['http://bibfra.me/vocab/library/Title']).map(x => x['http://bibfra.me/vocab/library/Title'])[0]
+    * match workMainTitleObj['http://bibfra.me/vocab/library/mainTitle'][0] == 'Silent storms,'
+
     * def getInstanceCall = call getResource { id: "#(searchResult.instances[0].id)" }
-    And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/library/title'][0]['http://bibfra.me/vocab/library/Title']['http://bibfra.me/vocab/library/mainTitle'] == ['Silent storms,']
+    * def instanceTitles = getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/library/title']
+    * def instanceMainTitleObj = instanceTitles.filter(x => x['http://bibfra.me/vocab/library/Title']).map(x => x['http://bibfra.me/vocab/library/Title'])[0]
+    * match instanceMainTitleObj['http://bibfra.me/vocab/library/mainTitle'][0] == 'Silent storms,'
+
     And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata ==
       """
       {

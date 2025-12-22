@@ -4,6 +4,42 @@
     {
       "value": "Silent storms,",
       "type": "Main"
+    },
+    {
+      "value": "Yehudim, Elohim ṿe-hisṭoryah",
+      "type": "Main Parallel"
+    },
+    {
+      "value": "Capital y derechos de la naturaleza--y la humanidad--en México y Nuestra América en el siglo XXI",
+      "type": "Main Variant"
+    },
+    {
+      "value": "esencia, complejidad y dialéctica de la esclavitud y exterminio sistémico de los animales",
+      "type": "Sub Variant"
+    },
+    {
+      "value": "Teenage mutant ninja turtles",
+      "type": "Main Variant"
+    },
+    {
+      "value": "Zhongguo yuedu tongshi",
+      "type": "Main Variant"
+    },
+    {
+      "value": "Drama uygulamaları",
+      "type": "Main Variant"
+    },
+    {
+      "value": "Nrithya vidhyaa",
+      "type": "Main Variant"
+    },
+    {
+      "value": "Padenie Parizha",
+      "type": "Main Variant"
+    },
+    {
+      "value": "roman",
+      "type": "Sub Variant"
     }
   ],
   "contributors": [
@@ -38,9 +74,9 @@
   ],
   "classifications": [
     {
-      "type":"lc",
-      "number":"PZ3.P785",
-      "additionalNumber":"Si"
+      "type": "lc",
+      "number": "PZ3.P785",
+      "additionalNumber": "Si"
     }
   ],
   "subjects": [
@@ -57,6 +93,42 @@
         {
           "value": "Silent storms,",
           "type": "Main"
+        },
+        {
+          "value": "Yehudim, Elohim ṿe-hisṭoryah",
+          "type": "Main Parallel"
+        },
+        {
+          "value": "Capital y derechos de la naturaleza--y la humanidad--en México y Nuestra América en el siglo XXI",
+          "type": "Main Variant"
+        },
+        {
+          "value": "esencia, complejidad y dialéctica de la esclavitud y exterminio sistémico de los animales",
+          "type": "Sub Variant"
+        },
+        {
+          "value": "Teenage mutant ninja turtles",
+          "type": "Main Variant"
+        },
+        {
+          "value": "Zhongguo yuedu tongshi",
+          "type": "Main Variant"
+        },
+        {
+          "value": "Drama uygulamaları",
+          "type": "Main Variant"
+        },
+        {
+          "value": "Nrithya vidhyaa",
+          "type": "Main Variant"
+        },
+        {
+          "value": "Padenie Parizha",
+          "type": "Main Variant"
+        },
+        {
+          "value": "roman",
+          "type": "Sub Variant"
         }
       ],
       "identifiers": [
@@ -68,10 +140,18 @@
       "publications": [
         {
           "name": "The Macmillan Company",
-          "date":"1927"
+          "date": "1927"
         }
       ],
       "notes": [
+        {
+          "value": "Florence Mardirosian was American choral conductor of Armenian decent.",
+          "type": "http://bibfra.me/vocab/library/biogdata"
+        },
+        {
+          "value": "Abstract also in English.",
+          "type": "http://bibfra.me/vocab/lite/note"
+        },
         {
           "value": "illustrations",
           "type": "http://bibfra.me/vocab/library/physicalDescription"
@@ -79,6 +159,10 @@
         {
           "value": "1 computer disc (illustrations ; 4 3/4 in.)",
           "type": "http://bibfra.me/vocab/library/accompanyingMaterial"
+        },
+        {
+          "value": "Co-published with the Australian War Memorial.",
+          "type": "http://bibfra.me/vocab/library/adminhist"
         }
       ]
     }
