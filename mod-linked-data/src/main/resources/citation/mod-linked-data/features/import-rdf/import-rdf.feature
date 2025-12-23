@@ -2,12 +2,16 @@ Feature: Import Bibframe2 RDF
 
   Background:
     * url baseUrl
+
+    * call login testAdmin
+    * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Import RDF file to graph & update graph using API.
     # Step 1 (Setup): create authority records referenced in the RDF file & wait till the records are available in mod-search
-    * configure headers = testUserHeaders
+    * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/authority_person_wang_jack.json')
     * def postAuthorityCall = call postSourceRecordToStorage
     * match postAuthorityCall.response.qmRecordId == '#notnull'
