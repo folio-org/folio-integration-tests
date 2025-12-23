@@ -62,7 +62,7 @@ Feature: edge-oai-pmh integration tests
       | 'oai-pmh.configuration-settings.item.put'                                     |
       | 'oai-pmh.configuration-settings.item.delete'                                  |
 
-    * def testTenant = 'testoaipmh'
+    * def testTenant = 'testoaipmh17'
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
 
 

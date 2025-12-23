@@ -52,6 +52,9 @@ Feature: ListRecords: Harvest suppressed from discovery instance records - skip 
     When method POST
     Then status 201
 
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
+
     # Create SRS record for the suppressed instance
     * call read('init_data/create-srs-record.feature') { jobExecutionId: '#(suppressedJobExecutionId)', instanceId: '#(suppressedInstanceId)', recordId: '#(suppressedRecordId)', matchedId: '#(suppressedMatchedId)'}
 
@@ -72,3 +75,6 @@ Feature: ListRecords: Harvest suppressed from discovery instance records - skip 
     * def records = get response //record
     * def suppressedFound = karate.filter(records, function(r){ return r.header.identifier == suppressedInstanceId })
     And match suppressedFound == []
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000

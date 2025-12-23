@@ -3,11 +3,111 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
 
   Background:
     * url baseUrl
-    * callonce variables
     * callonce login testUser
     * def okapiTokenAdmin = okapitoken
 
   Scenario: Verify suppressed records behavior with holdings when configured to skip suppressed from discovery
+    # Create test-specific reference data
+    * def instanceTypeId = 'aaaa1111-da28-472b-be90-d442e2428001'
+    * def materialTypeId = 'aaaa1111-2e4f-452d-9cae-9cee66c9a001'
+    * def permanentLoanTypeId = 'aaaa1111-fca9-4892-a730-03ee529ffe01'
+    * def permanentLocationId = 'aaaa1111-a8eb-461b-acd6-5dea81771001'
+    * def holdingsSourceId = 'aaaa1111-df79-46b3-8932-cdd35f7a2201'
+    * def callNumberTypeId = 'aaaa1111-deb5-4c4d-8c9e-2291b7c0f401'
+    
+    # Create holdings source
+    Given path 'holdings-sources'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { "id": "#(holdingsSourceId)", "name": "FOLIO-C193958", "source": "folio" }
+    When method POST
+    Then status 201
+    
+    # Create instance type
+    Given path 'instance-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { "id": "#(instanceTypeId)", "name": "text-c193958", "code": "txtc193958", "source": "rdacontent" }
+    When method POST
+    Then status 201
+    
+    # Create material type
+    Given path 'material-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { "id": "#(materialTypeId)", "name": "book-c193958", "source": "folio" }
+    When method POST
+    Then status 201
+    
+    # Create loan type
+    Given path 'loan-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { "id": "#(permanentLoanTypeId)", "name": "Can circulate-c193958" }
+    When method POST
+    Then status 201
+    
+    # Create call number type
+    Given path 'call-number-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { "id": "aaaa1111-deb5-4c4d-8c9e-2291b7c0f401", "name": "UDC-c193958", "source": "folio" }
+    When method POST
+    Then status 201
+    
+    # Create location hierarchy (institution -> campus -> library -> location)
+    Given path 'location-units/institutions'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { "id": "aaaa1111-a518-4b49-be01-0638d0a4ac01", "name": "Test Institution C193958", "code": "TIC193958" }
+    When method POST
+    Then status 201
+    
+    Given path 'location-units/campuses'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { "id": "aaaa1111-cca5-4d33-9217-edf42ce1a801", "name": "Test Campus C193958", "code": "TCC193958", "institutionId": "aaaa1111-a518-4b49-be01-0638d0a4ac01" }
+    When method POST
+    Then status 201
+    
+    Given path 'location-units/libraries'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { "id": "aaaa1111-ca04-4b4a-aeae-2c63b9245101", "name": "Test Library C193958", "code": "TLC193958", "campusId": "aaaa1111-cca5-4d33-9217-edf42ce1a801" }
+    When method POST
+    Then status 201
+    
+    # Create location (using existing service point from tenant setup)
+    Given path 'locations'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request
+    """
+    {
+      "id": "#(permanentLocationId)",
+      "name": "Test Location C193958",
+      "code": "TI/TC/TL/C193958",
+      "isActive": true,
+      "institutionId": "aaaa1111-a518-4b49-be01-0638d0a4ac01",
+      "campusId": "aaaa1111-cca5-4d33-9217-edf42ce1a801",
+      "libraryId": "aaaa1111-ca04-4b4a-aeae-2c63b9245101",
+      "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+      "servicePointIds": ["3a40852d-49fd-4df2-a1f9-6e2641a6e91f"],
+      "servicePoints": []
+    }
+    """
+    When method POST
+    Then status 201
+
     # Configure OAI-PMH to skip suppressed records
     Given path '/oai-pmh/configuration-settings'
     And param name = 'behavior'
@@ -24,6 +124,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * set updatePayload.configValue.recordsSource = 'Source record storage'
     * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
     * set updatePayload.configValue.errorsProcessing = '200'
+
     Given path '/oai-pmh/configuration-settings', behaviorId
     And request updatePayload
     And header Accept = 'application/json'
@@ -40,11 +141,11 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * def bothSuppressedJobExecutionId = 'bbbb2222-1caf-4470-9ad1-d533f6360bc1'
     * def bothSuppressedRecordId = 'bbbb2222-1caf-4470-9ad1-d533f6360bc1'
     * def bothSuppressedMatchedId = 'bbbb2222-e1d4-11e8-9f32-f2801f1b9fd1'
+
     * def bothSuppressedHoldingId = 'bbbb2222-e4f1-4e4f-9024-adf0b0039d01'
     * def bothSuppressedHoldingHrid = 'hold000000001001'
     * def bothSuppressedItemId = 'bbbb2222-c008-4c96-8f8f-b666850ee101'
     * def bothSuppressedItemHrid = 'item000000001001'
-    * def bothInstanceTypeId = '6e19bae4-da28-472b-be90-d442e2428ea4'
 
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
@@ -60,8 +161,13 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     When method POST
     Then status 201
 
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
+
+
     # Create SRS record for the instance
     * call read('init_data/create-srs-record.feature') { jobExecutionId: '#(bothSuppressedJobExecutionId)', instanceId: '#(bothSuppressedInstanceId)', recordId: '#(bothSuppressedRecordId)', matchedId: '#(bothSuppressedMatchedId)'}
+
 
     # Create holdings with discoverySuppress set to true
     Given path 'holdings-storage/holdings'
@@ -73,10 +179,16 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * set holding.instanceId = bothSuppressedInstanceId
     * set holding.hrid = bothSuppressedHoldingHrid
     * set holding.permanentLocationId = permanentLocationId
+    * set holding.sourceId = holdingsSourceId
+    * set holding.callNumberTypeId = callNumberTypeId
     * set holding.discoverySuppress = true
     And request holding
     When method POST
     Then status 201
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
+
 
     # Create item for the holdings
     Given path 'item-storage/items'
@@ -90,10 +202,14 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * set item.materialTypeId = materialTypeId
     * set item.permanentLoanTypeId = permanentLoanTypeId
     * set item.effectiveLocationId = permanentLocationId
-    * set item.barcode = '645398607540'
+    * set item.barcode = '645398602548'
     And request item
     When method POST
     Then status 201
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
+
 
     # Scenario 2: Create instance (not suppressed) with suppressed holdings
     * def holdingSuppressedInstanceId = 'cccc3333-9f41-4837-8662-a1d99118002a'
@@ -105,8 +221,6 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * def holdingSuppressedHoldingHrid = 'hold000000001002'
     * def holdingSuppressedItemId = 'cccc3333-c008-4c96-8f8f-b666850ee102'
     * def holdingSuppressedItemHrid = 'item000000001002'
-    * def holdingInstanceTypeId = '6e19bae4-da28-472b-be90-d442e2428ea5'
-
 
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
@@ -122,6 +236,10 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     When method POST
     Then status 201
 
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
+
+
     # Create SRS record for the instance
     * call read('init_data/create-srs-record.feature') { jobExecutionId: '#(holdingSuppressedJobExecutionId)', instanceId: '#(holdingSuppressedInstanceId)', recordId: '#(holdingSuppressedRecordId)', matchedId: '#(holdingSuppressedMatchedId)'}
 
@@ -135,10 +253,16 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     * set holding2.instanceId = holdingSuppressedInstanceId
     * set holding2.hrid = holdingSuppressedHoldingHrid
     * set holding2.permanentLocationId = permanentLocationId
+    * set holding2.sourceId = holdingsSourceId
+    * set holding2.callNumberTypeId = callNumberTypeId
     * set holding2.discoverySuppress = true
     And request holding2
     When method POST
     Then status 201
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
+
 
     # Create item for the holdings
     Given path 'item-storage/items'
@@ -156,6 +280,10 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     And request item2
     When method POST
     Then status 201
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
+
 
     # Get today's date in yyyy-MM-dd format
     * def currentDate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date())
@@ -249,3 +377,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     And header x-okapi-tenant = testTenant
     When method DELETE
     Then status 204
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 5000
+

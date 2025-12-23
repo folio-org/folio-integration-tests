@@ -3,11 +3,19 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
 
   Background:
     * url baseUrl
-    * callonce variables
     * callonce login testUser
     * def okapiTokenAdmin = okapitoken
 
   Scenario: Verify suppressed records are included with discovery flag when configured to transfer suppressed records
+    # Create unique instance type for this test
+    * def instanceTypeId = '11113333-c4e5-4e4c-8e4d-1f4b45678c93'
+    Given path 'instance-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(instanceTypeId)', name: 'Test Type C193960', code: 'ttc193960', source: 'local' }
+    When method POST
+    Then status 201
     # Configure OAI-PMH to transfer suppressed records with discovery flag
     Given path '/oai-pmh/configuration-settings'
     And param name = 'behavior'
@@ -53,6 +61,9 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     And request instance
     When method POST
     Then status 201
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
 
     # Create SRS record for the suppressed instance
     * call read('init_data/create-srs-record.feature') { jobExecutionId: '#(suppressedJobExecutionId)', instanceId: '#(suppressedInstanceId)', recordId: '#(suppressedRecordId)', matchedId: '#(suppressedMatchedId)'}
@@ -124,6 +135,9 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     When method POST
     Then status 201
 
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
+
     # Create SRS record for the non-suppressed instance
     * call read('init_data/create-srs-record.feature') { jobExecutionId: '#(nonSuppressedJobExecutionId)', instanceId: '#(nonSuppressedInstanceId)', recordId: '#(nonSuppressedRecordId)', matchedId: '#(nonSuppressedMatchedId)'}
 
@@ -174,3 +188,13 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     And header x-okapi-tenant = testTenant
     When method DELETE
     Then status 204
+
+    # Delete instance type
+    Given path 'instance-types', instanceTypeId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 5000

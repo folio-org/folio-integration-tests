@@ -29,37 +29,31 @@ public class EdgeOaiPmhApiTest extends TestBaseEureka {
     }
 
     @Test
-    @Order(1)
     public void test() {
         runFeatureTest("edge-oai-pmh.feature");
     }
 
     @Test
-    @Order(2)
     public void InstanceSuppressedRecordsC163912Test() {
         runFeatureTest("instance-suppressed-records-C163912.feature");
     }
 
     @Test
-    @Order(3)
     public void InstanceHoldingsSuppressedRecordsC193958Test() {
         runFeatureTest("instance-holdings-suppressed-records-C193958.feature");
     }
 
     @Test
-    @Order(4)
     public void InstanceHoldingsItemsSuppressedRecordsC193959Test() {
         runFeatureTest("instance-holdings-items-suppressed-records-C193959.feature");
     }
 
     @Test
-    @Order(5)
     public void InstanceSuppressedWithDiscoveryFlagC193960Test() {
         runFeatureTest("instance-suppressed-with-discovery-flag-C193960.feature");
     }
 
     @Test
-    @Order(6)
     public void HoldingsItemsSuppressedWithDiscoveryFlagC193961C193961Test() {
         runFeatureTest("holdings-items-suppressed-with-discovery-flag-C193961.feature");
     }

@@ -3,11 +3,99 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
 
   Background:
     * url baseUrl
-    * callonce variables
     * callonce login testUser
     * def okapiTokenAdmin = okapitoken
 
   Scenario: Verify suppressed holdings and items are included with discovery flags when configured to transfer suppressed records
+    # Create unique reference data for this test
+    
+    # Create instance type
+    * def instanceTypeId = '7243993f-a801-4608-a49b-abb2c17feefe'
+    Given path 'instance-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(instanceTypeId)', name: 'Test Type C193961', code: 'ttc193961', source: 'local' }
+    When method POST
+    Then status 201
+
+    # Create material type
+    * def materialTypeId = '43ed07a4-52ab-4b82-b0e1-8aa6084d2a41'
+    Given path 'material-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(materialTypeId)', name: 'Test Material C193961', source: 'local' }
+    When method POST
+    Then status 201
+
+    # Create loan type
+    * def permanentLoanTypeId = 'd832b6fd-2518-4ad3-b0d4-70cd34eeb821'
+    Given path 'loan-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(permanentLoanTypeId)', name: 'Test Loan C193961' }
+    When method POST
+    Then status 201
+
+    # Create call number type
+    * def callNumberTypeId = '51945daa-5a88-43be-b041-9b42069514c2'
+    Given path 'call-number-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(callNumberTypeId)', name: 'Test Call Number C193961', source: 'local' }
+    When method POST
+    Then status 201
+
+    # Create holdings source
+    * def holdingsSourceId = '6f42c264-076b-4834-86ff-a4b7760c312e'
+    Given path 'holdings-sources'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(holdingsSourceId)', name: 'Test Source C193961', source: 'local' }
+    When method POST
+    Then status 201
+
+    # Create location hierarchy (institution -> campus -> library -> location)
+    * def institutionId = '8f42c264-076b-4834-86ff-a4b7760c312e'
+    Given path 'location-units/institutions'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(institutionId)', name: 'Test Institution C193961', code: 'TIC193961' }
+    When method POST
+    Then status 201
+
+    * def campusId = '6f42c264-076b-4834-86ef-a4b7760c312e'
+    Given path 'location-units/campuses'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(campusId)', name: 'Test Campus C193961', code: 'TCC193961', institutionId: '#(institutionId)' }
+    When method POST
+    Then status 201
+
+    * def libraryId = '484f5d79-202d-41cf-8243-6802b0697874'
+    Given path 'location-units/libraries'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(libraryId)', name: 'Test Library C193961', code: 'TLC193961', campusId: '#(campusId)' }
+    When method POST
+    Then status 201
+
+    * def permanentLocationId = '95eb9afd-e7a3-48db-ac00-3fffc96ea50e'
+    * def servicePointId = '3a40852d-49fd-4df2-a1f9-6e2641a6e91f'
+    Given path 'locations'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    And request { id: '#(permanentLocationId)', name: 'Test Location C193961', code: 'TLC193961', institutionId: '#(institutionId)', campusId: '#(campusId)', libraryId: '#(libraryId)', primaryServicePoint: '#(servicePointId)', servicePointIds: ['#(servicePointId)'] }
+    When method POST
+    Then status 201
     # Configure OAI-PMH to transfer suppressed records with discovery flag
     Given path '/oai-pmh/configuration-settings'
     And param name = 'behavior'
@@ -39,7 +127,6 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     * def jobExecutionId = 'aaaa7777-1caf-4470-9ad1-d533f6360bc7'
     * def recordId = 'aaaa7777-1caf-4470-9ad1-d533f6360bc7'
     * def matchedId = 'aaaa7777-e1d4-11e8-9f32-f2801f1b9fd7'
-    * def instanceTypeId = 'fe19bae4-da28-472b-be90-d442e2428ea4'
 
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
@@ -54,6 +141,9 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     And request instance
     When method POST
     Then status 201
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
 
     # Create SRS record for the instance
     * call read('init_data/create-srs-record.feature') { jobExecutionId: '#(jobExecutionId)', instanceId: '#(instanceId)', recordId: '#(recordId)', matchedId: '#(matchedId)'}
@@ -71,6 +161,8 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     * set holding.instanceId = instanceId
     * set holding.hrid = holdingHrid
     * set holding.permanentLocationId = permanentLocationId
+    * set holding.callNumberTypeId = callNumberTypeId
+    * set holding.sourceId = holdingsSourceId
     * set holding.discoverySuppress = true
     And request holding
     When method POST
@@ -96,6 +188,9 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     And request item
     When method POST
     Then status 201
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000
 
     # Get today's date in yyyy-MM-dd format
     * def currentDate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date())
@@ -190,7 +285,6 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     * def holdingHrid2 = 'hold000000001009'
     * def itemId2 = 'bbbb8888-c008-4c96-8f8f-b666850ee108'
     * def itemHrid2 = 'item000000001009'
-    * def instanceTypeId2 = 'fe19bae4-da28-472b-be90-d442e2428ew4'
 
     Given path 'instance-storage/instances'
     And header Accept = 'application/json'
@@ -198,7 +292,7 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     And header x-okapi-tenant = testTenant
     * def instance2 = read('classpath:samples/instance.json')
     * set instance2.id = instanceId2
-    * set instance2.instanceTypeId = instanceTypeId2
+    * set instance2.instanceTypeId = instanceTypeId
     * set instance2.hrid = instanceHrid2
     * set instance2.source = 'MARC'
     * set instance2.discoverySuppress = false
@@ -219,6 +313,8 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     * set holding2.instanceId = instanceId2
     * set holding2.hrid = holdingHrid2
     * set holding2.permanentLocationId = permanentLocationId
+    * set holding2.callNumberTypeId = callNumberTypeId
+    * set holding2.sourceId = holdingsSourceId
     * set holding2.discoverySuppress = false
     And request holding2
     When method POST
@@ -321,3 +417,61 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     And header x-okapi-tenant = testTenant
     When method DELETE
     Then status 204
+
+    # Delete reference data
+    Given path 'locations', permanentLocationId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    Given path 'location-units/libraries', libraryId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    Given path 'location-units/campuses', campusId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    Given path 'location-units/institutions', institutionId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    Given path 'holdings-sources', holdingsSourceId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    Given path 'call-number-types', callNumberTypeId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    Given path 'loan-types', permanentLoanTypeId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    Given path 'material-types', materialTypeId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    Given path 'instance-types', instanceTypeId
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * call sleep 2000

@@ -6,7 +6,7 @@ function fn() {
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant ="testoaipmh";
+  var testTenant ="testoaipmh17";
   var testTenantId = karate.properties['testTenantId'];
 
   var config = {
@@ -18,8 +18,8 @@ function fn() {
     kcClientId: 'folio-backend-admin-client',
     kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
 
-    apikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9',
-    testTenant: 'testoaipmh',
+    apikey: 'eyJzIjoiNGR5VU9VYkJZOCIsInQiOiJ0ZXN0b2FpcG1oMTciLCJ1IjoidGVzdC11c2VyIn0=',
+    testTenant: 'testoaipmh17',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
@@ -81,7 +81,7 @@ function fn() {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+    config.apikey = 'eyJzIjoiNGR5VU9VYkJZOCIsInQiOiJ0ZXN0b2FpcG1oMTciLCJ1IjoidGVzdC11c2VyIn0=';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
