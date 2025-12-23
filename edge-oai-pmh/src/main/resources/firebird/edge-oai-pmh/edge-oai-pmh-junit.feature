@@ -1,4 +1,4 @@
-Feature: mod-audit integration tests
+Feature: edge-oai-pmh integration tests
 
   Background:
     * url baseUrl
