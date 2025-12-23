@@ -2,16 +2,21 @@ Feature: Create new MARC bib record in SRS, import and update the instance throu
 
   Background:
     * url baseUrl
+
+    * call login testAdmin
+    * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = testUserHeaders
 
   Scenario: Create new MARC bib record in SRS, import and update the instance through linked-data
     # Step 1: Create a new MARC bib record in SRS
+    * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/srs-request.json')
     * call postSourceRecordToStorage
 
     # Step 2: Verify new instance in mod-inventory
+    * configure headers = testUserHeaders
     * def query = 'title all "Test Instance"'
     * callonce read('util/verify.feature@verifyInventoryInstance') { expectedSource: 'MARC' }
 

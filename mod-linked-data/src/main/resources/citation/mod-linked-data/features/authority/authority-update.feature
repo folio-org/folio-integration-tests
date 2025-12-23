@@ -2,17 +2,22 @@ Feature: Authority update
 
   Background:
     * url baseUrl
+
+    * call login testAdmin
+    * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = testUserHeaders
 
   Scenario: create authority and work, then update authority
     # Step 1: create an authority
+    * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/authority_person.json')
     * def postAuthorityCall = call postSourceRecordToStorage
     And match postAuthorityCall.response.qmRecordId == '#notnull'
 
     # Step 2: search for the created authority
+    * configure headers = testUserHeaders
     * def query = 'headingRef < "PAVELTEST" or headingRef >= "PAVELTEST"'
     * def browseAuthorityCall = call browseAuthority
     And match browseAuthorityCall.response.items[0].authority.id == '#notnull'
@@ -33,6 +38,7 @@ Feature: Authority update
     * def workId = workResponse.id
 
     # Step 5: update the authority adding a birth date
+    * configure headers = testAdminHeaders
     * def sourceRecordUpdateRequest = read('samples/authority_person_update.json')
     * def putAuthorityCall = call putSourceRecordToStorage
 
@@ -40,6 +46,7 @@ Feature: Authority update
     * sleep(5)
 
     # Step 6: get and check the initial authority graph
+    * configure headers = testUserHeaders
     * def resourceId = workResponse._creatorReference[0].id
     * def getCreatedAuthorityGraphCall = call getResourceGraph
     * def createdAuthorityGraphResponse = getCreatedAuthorityGraphCall.response
