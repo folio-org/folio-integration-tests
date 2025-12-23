@@ -11,6 +11,7 @@ Feature: Additional ListRecords tests when source is Inventory
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
+  @C375198
   Scenario: C375198: ListRecords: Added FOLIO instances with holdings are harvested
     * url baseUrl
 
@@ -68,7 +69,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='999']/subfield[@code='t'] == '0'
     * match response //datafield[@tag='856']/subfield[@code='t'] == '0'
     * match response //datafield[@tag='856']/subfield[@code='u'] == 'https://search.proquest.com/publication/1396348'
-
+  @C375199
   Scenario: C375199: ListRecords: FOLIO instances with added Holdings are harvested
     * url baseUrl
 
@@ -101,6 +102,7 @@ Feature: Additional ListRecords tests when source is Inventory
     When method DELETE
     Then status 204
 
+  @C375200
   Scenario: C375200: ListRecords: FOLIO instances with Holdings are harvested - holdings Transfer suppressed
     * url baseUrl
 
@@ -160,14 +162,100 @@ Feature: Additional ListRecords tests when source is Inventory
     When method DELETE
     Then status 204
 
-  Scenario: C375203: ListRecords: FOLIO instances are harvested – Instance Transfer suppressed
+  @C375201
+  Scenario: C375201: ListRecords: FOLIO instances with Holdings are harvested - holdings Skip suppressed
     * url baseUrl
 
-    # Remove instance
-    Given url baseUrl
+    # Update configuration: recordsSource = 'Inventory', suppressedRecordsProcessing = 'false', support deleted = 'No'
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'behavior'
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'behavior'
+    * def value = config.configValue
+    * set value.recordsSource = 'Inventory'
+    * set value.suppressedRecordsProcessing = 'false'
+    * set value.deletedRecordsSupport = 'No'
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
+
+    # Remove existing instance from C375198
     Given path 'instance-storage/instances', '71a96bc1-6dab-4bee-8c9d-67170c7c2858'
     When method DELETE
     Then status 204
+
+    # Add instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:samples/c375/instance-C375201.json')
+    And request instance
+    When method POST
+    Then status 201
+
+    # Add suppressed holding
+    Given path 'holdings-storage/holdings'
+    * def holding = read('classpath:samples/c375/holding_suppressed-C375201.json')
+    And request holding
+    When method POST
+    Then status 201
+
+    # Harvest - verify instance is returned but WITHOUT holdings data (no 856, 952 fields)
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param metadataPrefix = 'marc21_withholdings'
+    And param from = currentOnlyDate()
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    * match response count(//record) == 1
+    * match response count(//datafield[@tag='952' and @ind1='f' and @ind2='f']) == 0
+    * match response count(//datafield[@tag='856' and @ind1='4' and @ind2='0']) == 0
+    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 1
+    * match response //datafield[@tag='245']/subfield[@code='a'] == 'Test resource title for C375201'
+    * match response //datafield[@tag='999']/subfield[@code='i'] == '81a96bc1-6dab-4bee-8c9d-67170c7c2858'
+
+    # Clean up - Remove holding
+    Given url baseUrl
+    Given path 'holdings-storage/holdings', '84032151-39a5-4cef-8810-5350eb316301'
+    When method DELETE
+    Then status 204
+
+    # Clean up - Remove instance
+    Given path 'instance-storage/instances', '81a96bc1-6dab-4bee-8c9d-67170c7c2858'
+    When method DELETE
+    Then status 204
+
+    # Restore configuration: suppressedRecordsProcessing = 'true'
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'behavior'
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'behavior'
+    * def value = config.configValue
+    * set value.suppressedRecordsProcessing = 'true'
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
+
+  @C375203
+  Scenario: C375203: ListRecords: FOLIO instances are harvested – Instance Transfer suppressed
+    * url baseUrl
 
     # Add instance
     Given path 'instance-storage/instances'
@@ -192,6 +280,76 @@ Feature: Additional ListRecords tests when source is Inventory
     When method DELETE
     Then status 204
 
+  @C375204
+  Scenario: C375204: ListRecords: Suppressed FOLIO instances are NOT harvested - Skip suppressed
+    * url baseUrl
+
+    # Update configuration: recordsSource = 'Inventory', suppressedRecordsProcessing = 'false', support deleted = 'No'
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'behavior'
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'behavior'
+    * def value = config.configValue
+    * set value.recordsSource = 'Inventory'
+    * set value.suppressedRecordsProcessing = 'false'
+    * set value.deletedRecordsSupport = 'No'
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
+
+    # Add suppressed instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:samples/c375/instance-suppressed-C375204.json')
+    And request instance
+    When method POST
+    Then status 201
+
+    # Harvest - verify suppressed instance is NOT in the response
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param metadataPrefix = 'marc21'
+    And param from = currentOnlyDate()
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 404
+    * match response //error[@code='noRecordsMatch'] == '#present'
+
+    # Clean up - Remove instance
+    Given url baseUrl
+    Given path 'instance-storage/instances', '91a96bc1-6dab-4bee-8c9d-67170c7c2858'
+    When method DELETE
+    Then status 204
+
+    # Restore configuration: suppressedRecordsProcessing = 'true'
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'behavior'
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'behavior'
+    * def value = config.configValue
+    * set value.suppressedRecordsProcessing = 'true'
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
+
+  @C375207
   Scenario: C375207: ListRecords: FOLIO instances with added Holdings are harvested with start and end date
     * url baseUrl
 
@@ -252,7 +410,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='u'] == 'https://search.proquest.com/publication/33333'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='z'] == 'note 4'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='y'] == 'link text 4'
-
+  @C375208
   Scenario: C375208: ListRecords: FOLIO instances with changed Holdings are harvested with start and end date
     * url baseUrl
 
@@ -307,6 +465,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='z'] == 'note 4 updated'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='y'] == 'link text 4'
 
+  @C375209
   Scenario: C375209: ListRecords: FOLIO instances with changed Items are harvested with start and end date
     * url baseUrl
 
@@ -369,6 +528,100 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='z'] == 'note 4 updated'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='y'] == 'link text 4'
 
+  @C375210
+  Scenario: C375210: ListRecords: FOLIO instances with suppressed Items - Skip suppressed
+    * url baseUrl
+
+    # Update configuration: suppressedRecordsProcessing = 'false' (Skip suppressed)
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'behavior'
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'behavior'
+    * def value = config.configValue
+    * set value.suppressedRecordsProcessing = 'false'
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
+
+    # Get original item before making changes
+    Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
+    When method GET
+    Then status 200
+    * def originalItem = response
+
+    # Update item to be suppressed
+    Given path 'item-storage/items', 'f8b6d973-60d4-41ce-a57b-a3884471a6d6'
+    * def itemSuppressed = read('classpath:samples/c375/item-suppressed-C375210.json')
+    And request itemSuppressed
+    When method PUT
+    Then status 204
+
+    # Harvest - instance and holdings should be returned, but item data should be omitted
+    Given url pmhUrl
+    And param verb = 'ListRecords'
+    And param metadataPrefix = 'marc21_withholdings'
+    And param from = currentOnlyDate()
+    And param until = currentOnlyDate()
+    And header Accept = 'text/xml'
+    When method GET
+    Then status 200
+    * match response count(//record) == 1
+    # Verify that fields 856 and 952 (item data) are NOT present
+    * match response count(//datafield[@tag='952']) == 0
+    * match response count(//datafield[@tag='856']) == 0
+    # Verify that holdings data is still present (field 999)
+    * match response count(//datafield[@tag='999' and @ind1='f' and @ind2='f']) == 1
+    * match response //datafield[@tag='999' and @ind1='f' and @ind2='f']/subfield[@code='i'] == '71a96bc1-6dab-4bee-8c9d-67170c7c2858'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='a'] == 'Københavns Universitet'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='b'] == 'City Campus'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='c'] == 'Datalogisk Institut'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='s'] == 'MAIN LIBRARY'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] == 'MAIN LIBRARY'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] == 'LC Modified'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='f'] == 'gf'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='g'] == 'as'
+    * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='h'] == 'LC Modified'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='3'] == '1.2012 -'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='u'] == 'https://search.proquest.com/publication/1396348'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='y'] == 'link text 1'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='z'] == 'via ProQuest, the last 12 months are not available due to an embargo'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='8']/subfield[@code='3'] == '1.2014 -'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='8']/subfield[@code='u'] == 'https://search.proquest.com/publication/55555'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='8']/subfield[@code='y'] == 'link text 2 updated'
+    * match response //datafield[@tag='856' and @ind1='4' and @ind2='8']/subfield[@code='z'] == 'note 2'
+
+    Given url baseUrl
+
+    # Restore configuration: suppressedRecordsProcessing = 'true'
+    Given path '/oai-pmh/configuration-settings'
+    And param name = 'behavior'
+    And header Content-Type = 'application/json'
+    And header Accept = '*/*'
+    And header x-okapi-tenant = testUser.tenant
+    And header x-okapi-token = okapitoken
+    When method GET
+    Then status 200
+    * def config = get $.configurationSettings[0]
+    And match config.configName == 'behavior'
+    * def value = config.configValue
+    * set value.suppressedRecordsProcessing = 'true'
+    * def updatedValue = value
+    * set config.configValue = updatedValue
+    Given path '/oai-pmh/configuration-settings', config.id
+    And request config
+    When method PUT
+    Then status 204
+
+  @C375212
   Scenario: C375212: ListRecords: FOLIO instances with changed Items are harvested with start and end date – Transfer suppressed
     * url baseUrl
 
@@ -434,6 +687,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='z'] == 'note 4 updated'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='1']/subfield[@code='y'] == 'link text 4'
 
+  @C375938
   Scenario: C375938: ListRecords: FOLIO edited instances are harvested with start and end date (marc21)
     * url baseUrl
 
@@ -462,6 +716,7 @@ Feature: Additional ListRecords tests when source is Inventory
     Then status 200
     * match response //datafield[@tag='245' and @ind1='0' and @ind2='0']/subfield[@code='a'] == 'Test resource title UPDATED'
 
+  @C375940
   Scenario: C375940: ListRecords: FOLIO instances with added Items are harvested with start and end date
     * url baseUrl
 
@@ -516,7 +771,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='u'] == 'https://search.proquest.com/publication/1396348'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='z'] == 'via ProQuest, the last 12 months are not available due to an embargo'
 
-
+  @C375944
   Scenario: C375944: ListRecords: FOLIO instances with changed Items are harvested with start and end date (SRS+Inventory)
     * url baseUrl
 
@@ -586,6 +841,7 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='d'] == ['SECOND FLOOR','SECOND FLOOR','SECOND FLOOR','SECOND FLOOR']
     * match response //datafield[@tag='952' and @ind1='f' and @ind2='f']/subfield[@code='e'] == ['D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002','D15.H63 A3 2002']
 
+  @C375974
   Scenario: C375974: ListRecords: FOLIO edited instances with holdings are harvested with start and end date
     * url baseUrl
 
@@ -649,3 +905,4 @@ Feature: Additional ListRecords tests when source is Inventory
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='3'] == '1.2012 -'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='u'] == 'https://search.proquest.com/publication/1396348'
     * match response //datafield[@tag='856' and @ind1='4' and @ind2='0']/subfield[@code='z'] == 'via ProQuest, the last 12 months are not available due to an embargo'
+

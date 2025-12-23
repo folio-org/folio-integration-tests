@@ -60,6 +60,8 @@ Feature: bulk operations integration tests
       | 'oai-pmh.configuration-settings.item.post'                    |
       | 'oai-pmh.configuration-settings.item.put'                     |
       | 'oai-pmh.configuration-settings.item.delete'                  |
+      | 'inventory-storage.items.item.get'                            |
+      | 'inventory-storage.items.collection.get'                      |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
