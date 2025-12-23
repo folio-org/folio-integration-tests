@@ -7,7 +7,7 @@ Feature: Verify Linked Data Graph
     * def workSubgraph = instanceSubgraph.outgoingEdges.filter(x => x.predicate == 'INSTANTIATES')[0].target
 
   @C446125
-  Scenario: Verify Creator of Work
+  Scenario: Verify Creator of Work (MARC 100)
     * def creatorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'CREATOR')[0].target)
     * def authorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'AUTHOR')[0].target)
     * match creatorSubgraph.label == 'Edgell, David L., Sr., David Lee, 1938'
@@ -19,7 +19,7 @@ Feature: Verify Linked Data Graph
     * match authorSubgraph.types == creatorSubgraph.types
 
   @C446125
-  Scenario: Verify Contributors of Work - Person & Family
+  Scenario: Verify Contributors of Work - Person & Family (MARC 700)
     * def contributorSubgraphs = workSubgraph.outgoingEdges.filter(x => x.predicate == 'CONTRIBUTOR').map(x => resolveSubgraphIfId(x.target))
     * def actualLabels = contributorSubgraphs.map(x => x.label)
     * match actualLabels contains 'Rinehart family, Rinehart, Family Rinehart'
@@ -36,13 +36,13 @@ Feature: Verify Linked Data Graph
     * match person.types == [ 'PERSON' ]
 
   @C446172
-  Scenario: Verify Contributors of Work - Organization
+  Scenario: Verify Contributors of Work - Organization (MARC 710)
     * def organization = contributorSubgraphs.filter(x => x.label == 'Horror Writers Association, Ann Radcliffe Academic, Long Beach, Calif.), 2017 :')[0]
     * match organization.doc == { "http://bibfra.me/vocab/lite/date": ["2017 :"], "http://bibfra.me/vocab/lite/name": ["Horror Writers Association"], "http://bibfra.me/vocab/lite/label": ["Horror Writers Association, Ann Radcliffe Academic, Long Beach, Calif.), 2017 :"], "http://bibfra.me/vocab/library/place": ["Long Beach, Calif.)"], "http://bibfra.me/vocab/library/numberOfParts": ["(1st :"], "http://bibfra.me/vocab/library/subordinateUnit": ["Ann Radcliffe Academic"] }
     * match organization.types == [ 'ORGANIZATION' ]
 
   @C446172
-  Scenario: Verify Contributors of Work - Meeting
+  Scenario: Verify Contributors of Work - Meeting (MARC 711)
     * def meeting = contributorSubgraphs.filter(x => x.label == 'International Business Engineering Conference, 2018, Legian, Bali, Indonesia')[0]
     * match meeting.doc == { "http://bibfra.me/vocab/lite/date": ["2018"], "http://bibfra.me/vocab/lite/name": ["International Business Engineering Conference"], "http://bibfra.me/vocab/lite/label": ["International Business Engineering Conference, 2018, Legian, Bali, Indonesia"], "http://bibfra.me/vocab/library/place": ["Legian, Bali, Indonesia"], "http://bibfra.me/vocab/library/numberOfParts": ["2nd"] }
     * match meeting.types == [ 'MEETING' ]
@@ -54,12 +54,18 @@ Feature: Verify Linked Data Graph
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/accompanyingMaterial'] == ['1 computer disc (illustrations ; 4 3/4 in.)']
 
   @C535522
-  Scenario: Verify extent
+  Scenario: Verify extent (MARC 300)
     * def extentEdge = instanceSubgraph.outgoingEdges.filter(x => x.predicate == 'EXTENT')[0]
     * match extentEdge.target.label == '2 volumes'
     * match extentEdge.target.doc == { "http://bibfra.me/vocab/lite/label": ["2 volumes"], "http://bibfra.me/vocab/library/materialsSpecified": ["book"] }
     * match extentEdge.target.types == ['EXTENT']
 
   @C476844
-  Scenario: Verify statement of responsibility
+  Scenario: Verify statement of responsibility (MARC 245 $c)
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/statementOfResponsibility'] == ['by Ernest Poole']
+
+  @C736688
+  Scenario: Verify admin history, biog data & note (MARC 545)
+    * match instanceSubgraph.doc['http://bibfra.me/vocab/library/biogdata'] == ['Florence Mardirosian was American choral conductor of Armenian decent.']
+    * match instanceSubgraph.doc['http://bibfra.me/vocab/library/adminhist'] == ['Co-published with the Australian War Memorial.']
+    * match instanceSubgraph.doc['http://bibfra.me/vocab/lite/note'] contains 'Abstract also in English.'
