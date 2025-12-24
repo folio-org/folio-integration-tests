@@ -88,7 +88,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     
     # The response should contain the suppressed record
     * def records = get response //record
-    * def suppressedFound = karate.filter(records, function(r){ return r.header.identifier == suppressedInstanceId })
+    * def suppressedFound = karate.filter(records, function(r){ return r.header.identifier.indexOf(suppressedInstanceId) > -1 })
     And match suppressedFound != []
     * print 'Test 1 Passed: Suppressed record is present in response'
 
@@ -157,7 +157,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     
     # The response should contain the non-suppressed record
     * def records2 = get response //record
-    * def nonSuppressedFound = karate.filter(records2, function(r){ return r.header.identifier == nonSuppressedInstanceId })
+    * def nonSuppressedFound = karate.filter(records2, function(r){ return r.header.identifier.indexOf(nonSuppressedInstanceId) > -1 })
     And match nonSuppressedFound != []
     * print 'Test 4 Passed: Non-suppressed record is present in response'
 

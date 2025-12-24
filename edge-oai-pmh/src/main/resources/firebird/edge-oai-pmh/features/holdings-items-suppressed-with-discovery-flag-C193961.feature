@@ -212,7 +212,7 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     
     # The response should contain the record
     * def records = get response //record
-    * def recordFound = karate.filter(records, function(r){ return r.header.identifier == instanceId })
+    * def recordFound = karate.filter(records, function(r){ return r.header.identifier.indexOf(instanceId) > -1 })
     And match recordFound != []
     * print 'Test 1 Passed: Record with suppressed holdings and items is present in response'
 
@@ -354,7 +354,7 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     
     # The response should contain the non-suppressed record
     * def records2 = get response //record
-    * def recordFound2 = karate.filter(records2, function(r){ return r.header.identifier == instanceId2 })
+    * def recordFound2 = karate.filter(records2, function(r){ return r.header.identifier.indexOf(instanceId2) > -1 })
     And match recordFound2 != []
     * print 'Test 9 Passed: Record with non-suppressed holdings and items is present in response'
 

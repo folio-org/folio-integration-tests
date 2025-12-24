@@ -303,7 +303,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     Then status 200
     * print 'Response for both suppressed test:', response
     * def records = get response //record
-    * def bothSuppressedFound = karate.filter(records, function(r){ return r.header.identifier == bothSuppressedInstanceId })
+    * def bothSuppressedFound = karate.filter(records, function(r){ return r.header.identifier.indexOf(bothSuppressedInstanceId) > -1 })
     And match bothSuppressedFound == []
     * print 'Test 1 Passed: Record with both instance and holdings suppressed is not in response'
 
@@ -318,11 +318,11 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     Then status 200
     * print 'Response for holdings suppressed test:', response
     * def records2 = get response //record
-    * def holdingSuppressedFound = karate.filter(records2, function(r){ return r.header.identifier == holdingSuppressedInstanceId })
+    * def holdingSuppressedFound = karate.filter(records2, function(r){ return r.header.identifier.indexOf(holdingSuppressedInstanceId) > -1 })
     
     # Verify the instance record is present
     And match holdingSuppressedFound != []
-    And match holdingSuppressedFound[0].header.identifier == holdingSuppressedInstanceId
+    And match holdingSuppressedFound[0].header.identifier contains holdingSuppressedInstanceId
     * print 'Test 2 Part 1 Passed: Instance record is present when only holdings is suppressed'
 
     # Verify holdings data (tag 852, 952) is NOT present for this record

@@ -73,7 +73,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance records - skip 
     * print response
     # The response should not contain the suppressed record
     * def records = get response //record
-    * def suppressedFound = karate.filter(records, function(r){ return r.header.identifier == suppressedInstanceId })
+    * def suppressedFound = karate.filter(records, function(r){ return r.header.identifier.indexOf(suppressedInstanceId) > -1 })
     And match suppressedFound == []
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
