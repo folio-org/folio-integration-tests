@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Create Order From Default Template
 
   Background:
