@@ -1,4 +1,4 @@
-# created for https://issues.folio.org/browse/MODORDERS-833
+# For MODORDERS-833
 @parallel=false
 Feature: Unopen order, approve invoice and reopen
 

@@ -1,5 +1,5 @@
+# For MODORDERS-855
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-855
 Feature: Reopen order with 50 lines
 
   Background:

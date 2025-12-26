@@ -1,4 +1,4 @@
-# and https://issues.folio.org/browse/MODINVOICE-474
+# For MODINVOICE-474
 @parallel=false
 Feature: Update encumbrance links with fiscal year
 

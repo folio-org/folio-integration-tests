@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODFIN-299
+# For MODFIN-299
 @parallel=false
 Feature: Group and ledger transfers after rollover
 

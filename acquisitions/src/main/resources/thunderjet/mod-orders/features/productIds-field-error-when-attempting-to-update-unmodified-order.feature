@@ -1,6 +1,5 @@
+# For MODORDERS-658, MODORDERS-927
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-658
-# for https://issues.folio.org/browse/MODORDERS-927
 Feature: Get and put a composite order
 
   Background:

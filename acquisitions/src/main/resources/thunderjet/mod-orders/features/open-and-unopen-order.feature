@@ -1,4 +1,4 @@
-# Created for MODORDERS-1167
+# For MODORDERS-1167
 Feature: Open and unopen order
 
   Background:
@@ -144,7 +144,7 @@ Feature: Open and unopen order
     When method GET
     Then status 200
 
-  # For: https://issues.folio.org/browse/MODORDERS-1359
+  # For MODORDERS-1359
   @Positive
   Scenario: Open, unopen and open once again an order with encumbrance transaction
     * def fundId = globalFundId

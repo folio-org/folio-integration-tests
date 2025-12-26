@@ -1,5 +1,5 @@
+# For MODORDERS-579
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-579
 Feature: Should create and update pieces for non package mixed POL with quantity POL updates when manual is false
 
   Background:

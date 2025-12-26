@@ -1,5 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-387
-# and https://issues.folio.org/browse/MODFISTO-293
+# For MODINVOICE-387, MODFISTO-293
 @parallel=false
 Feature: Approve an invoice using different fiscal years
 

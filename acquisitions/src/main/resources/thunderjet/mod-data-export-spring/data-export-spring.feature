@@ -1,3 +1,4 @@
+@parallel=false
 Feature: mod-data-export-spring integration tests
 
   Background:

@@ -1,5 +1,5 @@
+# For MODORDERS-862
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-862
 Feature: Receive 20 pieces
 
   Background:

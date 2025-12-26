@@ -1,3 +1,4 @@
+@parallel=false
 Feature: mod-ebsconet integration tests
 
   Background:

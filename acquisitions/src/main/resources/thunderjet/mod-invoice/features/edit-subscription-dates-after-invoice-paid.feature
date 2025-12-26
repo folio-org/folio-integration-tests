@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-328
+# For MODINVOICE-328
 @parallel=false
 Feature: Edit subscription dates after invoice is paid
 

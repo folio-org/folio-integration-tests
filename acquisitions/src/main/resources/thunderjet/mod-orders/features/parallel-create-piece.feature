@@ -1,4 +1,4 @@
-# For MODFISTO-260 and MODFISTO-432
+# For MODFISTO-260, MODFISTO-432
 # This should be executed with at least 5 threads
 Feature: Create pieces for an open order in parallel
 

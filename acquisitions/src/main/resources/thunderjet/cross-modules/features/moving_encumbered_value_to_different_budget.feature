@@ -1,5 +1,5 @@
+# For MODORDERS-800
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-800
 Feature: Moving encumbered value from budget 1 to budget 2
 
   Background:

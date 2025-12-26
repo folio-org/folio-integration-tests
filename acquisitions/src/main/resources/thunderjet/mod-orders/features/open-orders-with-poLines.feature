@@ -1,4 +1,5 @@
 # For MODORDERS-1226
+@parallel=false
 Feature: Open Orders with PoLines
 
   Background:

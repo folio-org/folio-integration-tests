@@ -1,4 +1,4 @@
-# MODORDERS-1191, MODORDERS-1204, MODORDERS-1308
+# For MODORDERS-1191, MODORDERS-1204, MODORDERS-1308
 Feature: Check that order total fields are calculated correctly
 
   Background:

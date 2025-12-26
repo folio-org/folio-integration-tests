@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODORDERS-638
+# For MODORDERS-638
 @parallel=false
 Feature: Pay invoice with new expense class
 

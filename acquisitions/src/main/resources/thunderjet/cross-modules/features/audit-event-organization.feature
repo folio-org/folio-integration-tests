@@ -1,4 +1,5 @@
-# https://folio-org.atlassian.net/browse/MODORGSTOR-164
+# For MODORGSTOR-164
+@parallel=false
 Feature: Audit events for Organization
 
   Background:

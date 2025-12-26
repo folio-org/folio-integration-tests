@@ -1,5 +1,5 @@
+# For MODORDERS-943
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-943
 Feature: Check encumbrance status after moving expended value
 
   # 1) create 4 identical funds

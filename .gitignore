@@ -13,3 +13,4 @@ target/
 .metals
 .DS_Store
 .scala-build
+*.log

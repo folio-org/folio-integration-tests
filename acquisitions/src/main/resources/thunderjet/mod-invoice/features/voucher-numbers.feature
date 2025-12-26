@@ -1,4 +1,4 @@
-# created for MODINVOSTO-120
+# For MODINVOSTO-120
 Feature: Voucher numbers
 
   Background:

@@ -1,4 +1,4 @@
-# created for https://issues.folio.org/browse/MODORDERS-715
+# For MODORDERS-715
 Feature: Validate fund distribution for zero price
 
   Background:

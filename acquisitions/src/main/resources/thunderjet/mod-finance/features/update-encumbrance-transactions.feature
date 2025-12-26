@@ -3,6 +3,7 @@ Feature: Budget's totals (available, unavailable, encumbered) is updated when en
   Background:
     * print karate.info.scenarioName
     * url baseUrl
+    * configure retry = { count: 10, interval: 10000 }
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
@@ -60,10 +61,19 @@ Feature: Budget's totals (available, unavailable, encumbered) is updated when en
     When method POST
     Then status 204
 
+    * def isBudgetUpdated =
+      """
+      function(response) {
+        var expectedAvailable = budgetBefore.available - encumbranceAmountChanged;
+        var expectedUnavailable = budgetBefore.unavailable + encumbranceAmountChanged;
+        var expectedEncumbered = budgetBefore.encumbered + encumbranceAmountChanged;
+        return response.available == expectedAvailable &&
+               response.unavailable == expectedUnavailable &&
+               response.encumbered == expectedEncumbered;
+      }
+      """
     Given path '/finance/budgets', budgetId
+    And retry until responseStatus == 200 && isBudgetUpdated(response)
     When method GET
     Then status 200
 
-    And match $.available == budgetBefore.available - encumbranceAmountChanged
-    And match $.unavailable == budgetBefore.unavailable + encumbranceAmountChanged
-    And match $.encumbered == budgetBefore.encumbered + encumbranceAmountChanged

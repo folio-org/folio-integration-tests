@@ -1,3 +1,4 @@
+@parallel=false
 Feature: mod-orders integration tests
 
   Background:

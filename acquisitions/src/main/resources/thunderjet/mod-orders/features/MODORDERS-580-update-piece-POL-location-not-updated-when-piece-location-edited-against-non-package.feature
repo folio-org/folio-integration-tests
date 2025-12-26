@@ -1,5 +1,5 @@
+# For MODORDERS-580
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-580
 Feature: Should update location in the POL if change Location to a different holding on that instance for piece
 
   Background:

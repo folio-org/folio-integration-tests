@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-342
+# For MODINVOICE-342
 @parallel=false
 Feature: Change poline fund distribution and pay invoice
 

@@ -1,5 +1,5 @@
+# For MODORDERS-538
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-538
 Feature: Should create and delete pieces for non package mixed POL with quantity POL updates when manual is true
 
   Background:

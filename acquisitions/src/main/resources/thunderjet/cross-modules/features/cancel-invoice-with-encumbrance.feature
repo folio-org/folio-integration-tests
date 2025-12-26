@@ -1,4 +1,4 @@
-# For MODINVOICE-544 and MODFISTO-488
+# For MODINVOICE-544, MODFISTO-488
 Feature: Cancel an invoice with an Encumbrance
 
   Background:

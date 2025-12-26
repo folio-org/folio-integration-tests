@@ -1,5 +1,5 @@
+# For MODORDERS-699
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-699
 Feature: Cancel and delete order
 
   Background:

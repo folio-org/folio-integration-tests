@@ -1,5 +1,5 @@
+# For MODFISTO-477
 @parallel=false
-# for https://issues.folio.org/browse/MODFISTO-477
 Feature: Remove fund distribution after rollover from open order with re-encumber flag is false
 
   Background:

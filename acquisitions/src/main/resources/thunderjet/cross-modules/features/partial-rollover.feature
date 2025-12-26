@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODFISTO-298
+# For MODFISTO-298
 @parallel=false
 Feature: Partial rollover
 

@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-473
+# For MODINVOICE-473
 @parallel=false
 Feature: Set invoice fiscal year automatically
 

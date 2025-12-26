@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODFISTO-441
+# For MODFISTO-441
 @parallel=false
 Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance)
 
