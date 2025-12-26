@@ -1,4 +1,4 @@
-# created for https://issues.folio.org/browse/MODORDERS-646
+# For MODORDERS-646
 @parallel=false
 Feature: Three fund distributions
 

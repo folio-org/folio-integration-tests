@@ -24,7 +24,6 @@ Feature:  Return current fiscal year consider time zone
     * print "Yesterday date : " + yesterday
 
   Scenario: prepare fiscal year
-
     Given path 'finance/fiscal-years'
     And request
       """

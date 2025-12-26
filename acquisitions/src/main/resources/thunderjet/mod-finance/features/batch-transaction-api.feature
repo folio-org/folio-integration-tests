@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODFISTO-458
+# For MODFISTO-458
 @parallel=false
 Feature: Batch Transaction API
 

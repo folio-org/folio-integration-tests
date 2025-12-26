@@ -72,7 +72,7 @@ Feature: GOBI api tests
     # Cleanup order data
     * def v = call cleanupOrderData { orderId: "#(orderId)" }
 
-  # Created for https://issues.folio.org/browse/MODGOBI-195
+  # For MODGOBI-195
   Scenario: Try to create an order with invalid custom mapping and check error response
     # post invalid UnlistedPrintMonograph
     * def invalid_mapping = read('classpath:samples/mod-gobi/invalid-mappings/unlisted-print-monograph.json')

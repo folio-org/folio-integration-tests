@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
@@ -18,6 +20,21 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
+  private static final int THREAD_COUNT = 4;
+
+  private enum Feature implements org.folio.test.config.CommonFeature {
+    FEATURE_1("receive-piece-new-holding-edit");
+
+    private final String fileName;
+
+    Feature(String fileName) {
+      this.fileName = fileName;
+    }
+
+    public String getFileName() {
+      return fileName;
+    }
+  }
 
   public OrdersCriticalPathApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -36,8 +53,16 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
+  @DisplayName("(Thunderjet) Run features")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void runFeatures() {
+    runFeatures(Feature.values(), THREAD_COUNT, null);
+  }
+
+  @Test
   @DisplayName("(Thunderjet) (C844840) Piece received via receiving full-screen in a new holding can be edited")
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void createOrderPaymentNotRequiredFullyReceive() {
-    runFeatureTest("receive-piece-new-holding-edit");
+    runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 }

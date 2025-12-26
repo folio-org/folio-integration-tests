@@ -7,7 +7,10 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
@@ -16,6 +19,21 @@ public class OrganizationsApiTest extends TestBaseEureka {
 
   // Default module settings :
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-organizations/features/";
+  private static final int THREAD_COUNT = 4;
+
+  private enum Feature implements org.folio.test.config.CommonFeature {
+    FEATURE_1("acquisitions-api-tests");
+
+    private final String fileName;
+
+    Feature(String fileName) {
+      this.fileName = fileName;
+    }
+
+    public String getFileName() {
+      return fileName;
+    }
+  }
 
   public OrganizationsApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -34,7 +52,15 @@ public class OrganizationsApiTest extends TestBaseEureka {
   }
 
   @Test
+  @DisplayName("(Thunderjet) Run features")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void runFeatures() {
+    runFeatures(Feature.values(), THREAD_COUNT, null);
+  }
+
+  @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void acquisitionsApiTests() {
-    runFeatureTest("acquisitions-api-tests");
+    runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 }

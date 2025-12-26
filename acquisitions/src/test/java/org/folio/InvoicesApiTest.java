@@ -7,7 +7,10 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
@@ -16,6 +19,53 @@ public class InvoicesApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
+  private static final int THREAD_COUNT = 4;
+
+  private enum Feature implements org.folio.test.config.CommonFeature {
+    FEATURE_1("approve-and-pay-invoice-with-past-fiscal-year"),
+    FEATURE_2("batch-voucher-export-with-many-lines"),
+    FEATURE_3("batch-voucher-uploaded"),
+    FEATURE_4("cancel-invoice"),
+    FEATURE_5("check-approve-and-pay-invoice-with-odd-pennies-number"),
+    FEATURE_6("check-approve-and-pay-invoice-with-zero-dollar-amount"),
+    FEATURE_7("check-error-respose-with-fundcode-upon-invoice-approval"),
+    FEATURE_8("check-invoice-and-invoice-lines-deletion-restrictions"),
+    FEATURE_9("check-invoice-full-flow-where-subTotal-is-negative"),
+    FEATURE_10("check-invoice-lines-and-documents-are-deleted-with-invoice"),
+    FEATURE_11("check-invoice-lines-with-vat-adjustments"),
+    FEATURE_12("check-invoice-line-validation-with-adjustments"),
+    FEATURE_13("check-lock-totals-and-calculated-totals-in-invoice-approve-time"),
+    FEATURE_14("check-remaining-amount-upon-invoice-approval"),
+    FEATURE_15("check-that-can-not-approve-invoice-if-organization-is-not-vendor"),
+    FEATURE_16("check-that-changing-protected-fields-forbidden-for-approved-invoice"),
+    FEATURE_17("check-that-not-possible-add-invoice-line-to-approved-invoice"),
+    FEATURE_18("check-that-not-possible-pay-for-invoice-if-no-voucher"),
+    FEATURE_19("check-that-not-possible-pay-for-invoice-without-approved"),
+    FEATURE_20("check-that-voucher-exist-with-parameters"),
+    FEATURE_21("create-voucher-lines-honor-expense-classes"),
+    FEATURE_22("edit-subscription-dates-after-invoice-paid"),
+    FEATURE_23("exchange-rate-update-after-invoice-approval"),
+    FEATURE_24("expense-classes-validation"),
+    FEATURE_25("fiscal-year-balance-with-negative-available"),
+    FEATURE_26("invoice-fiscal-years"),
+    FEATURE_27("invoice-with-identical-adjustments"),
+    FEATURE_28("invoice-with-lock-totals-calculated-totals"),
+    FEATURE_29("prorated-adjustments-special-cases"),
+    FEATURE_30("set-invoice-fiscal-year-automatically"),
+    FEATURE_31("should_populate_vendor_address_on_get_voucher_by_id"),
+    FEATURE_32("voucher-numbers"),
+    FEATURE_33("voucher-with-lines-using-same-external-account");
+
+    private final String fileName;
+
+    Feature(String fileName) {
+      this.fileName = fileName;
+    }
+
+    public String getFileName() {
+      return fileName;
+    }
+  }
 
   public InvoicesApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -33,169 +83,208 @@ public class InvoicesApiTest extends TestBaseEureka {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
+  @Test
+  @DisplayName("(Thunderjet) Run features")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void runFeatures() {
+    runFeatures(Feature.values(), THREAD_COUNT, null);
+  }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void approveAndPayInvoiceWithPastFiscalYear() {
-    runFeatureTest("approve-and-pay-invoice-with-past-fiscal-year");
+    runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void batchVoucherExportWithManyLines() {
-    runFeatureTest("batch-voucher-export-with-many-lines");
+    runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 
   @Test
-  void checkVendorAddressIncludedWithBatchVoucher() {
-    runFeatureTest("batch-voucher-uploaded");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void batchVoucherUploaded() {
+    runFeatureTest(Feature.FEATURE_3.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void cancelInvoice() {
-    runFeatureTest("cancel-invoice");
+    runFeatureTest(Feature.FEATURE_4.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkApproveAndPayInvoiceWithOddPenniesNumber() {
-    runFeatureTest("check-approve-and-pay-invoice-with-odd-pennies-number");
+    runFeatureTest(Feature.FEATURE_5.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkApproveAndPayInvoiceWithZeroDollarAmount() {
-    runFeatureTest("check-approve-and-pay-invoice-with-zero-dollar-amount");
+    runFeatureTest(Feature.FEATURE_6.getFileName());
   }
 
   @Test
-  void checkErrorResponseWithFundCode() {
-    runFeatureTest("check-error-respose-with-fundcode-upon-invoice-approval");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void checkErrorResposeWithFundCodeUponInvoiceApproval() {
+    runFeatureTest(Feature.FEATURE_7.getFileName());
   }
 
   @Test
-  void checkInvoiceAndLinesDeletionRestrictions() {
-    runFeatureTest("check-invoice-and-invoice-lines-deletion-restrictions");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void checkInvoiceAndInvoiceLinesDeletionRestrictions() {
+    runFeatureTest(Feature.FEATURE_8.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkInvoiceFullFlowWhereSubTotalIsNegative() {
-    runFeatureTest("check-invoice-full-flow-where-subTotal-is-negative");
+    runFeatureTest(Feature.FEATURE_9.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkInvoiceLinesAndDocumentsAreDeletedWithInvoice() {
-    runFeatureTest("check-invoice-lines-and-documents-are-deleted-with-invoice");
+    runFeatureTest(Feature.FEATURE_10.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkInvoiceLinesWithVatAdjustments() {
-    runFeatureTest("check-invoice-lines-with-vat-adjustments");
+    runFeatureTest(Feature.FEATURE_11.getFileName());
   }
 
   @Test
-  void validateInvoiceWithAdjustment() {
-    runFeatureTest("check-invoice-line-validation-with-adjustments");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void checkInvoiceLineValidationWithAdjustments() {
+    runFeatureTest(Feature.FEATURE_12.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkLockTotalsAndCalculatedTotalsInInvoiceApproveTime() {
-    runFeatureTest("check-lock-totals-and-calculated-totals-in-invoice-approve-time");
+    runFeatureTest(Feature.FEATURE_13.getFileName());
   }
 
   @Test
-  void checkRemainingAmountInvoiceApproval() {
-    runFeatureTest("check-remaining-amount-upon-invoice-approval");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void checkRemainingAmountUponInvoiceApproval() {
+    runFeatureTest(Feature.FEATURE_14.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkThatCanNotApproveInvoiceIfOrganizationIsNotVendor() {
-    runFeatureTest("check-that-can-not-approve-invoice-if-organization-is-not-vendor");
+    runFeatureTest(Feature.FEATURE_15.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkThatChangingProtectedFieldsForbiddenForApprovedInvoice() {
-    runFeatureTest("check-that-changing-protected-fields-forbidden-for-approved-invoice");
+    runFeatureTest(Feature.FEATURE_16.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkThatNotPossibleAddInvoiceLineToApprovedInvoice() {
-    runFeatureTest("check-that-not-possible-add-invoice-line-to-approved-invoice");
+    runFeatureTest(Feature.FEATURE_17.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkThatNotPossiblePayForInvoiceIfNoVoucher() {
-    runFeatureTest("check-that-not-possible-pay-for-invoice-if-no-voucher");
+    runFeatureTest(Feature.FEATURE_18.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkThatNotPossiblePayForInvoiceWithoutApproved() {
-    runFeatureTest("check-that-not-possible-pay-for-invoice-without-approved");
+    runFeatureTest(Feature.FEATURE_19.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkThatVoucherExistWithParameters() {
-    runFeatureTest("check-that-voucher-exist-with-parameters");
+    runFeatureTest(Feature.FEATURE_20.getFileName());
   }
 
   @Test
-  void createVoucherLinesExpenseClasses() {
-    runFeatureTest("create-voucher-lines-honor-expense-classes");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void createVoucherLinesHonorExpenseClasses() {
+    runFeatureTest(Feature.FEATURE_21.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void editSubscriptionDatesAfterInvoicePaid() {
-    runFeatureTest("edit-subscription-dates-after-invoice-paid");
+    runFeatureTest(Feature.FEATURE_22.getFileName());
   }
 
   @Test
-  void exchangeRateUpdateInvoiceApproval() {
-    runFeatureTest("exchange-rate-update-after-invoice-approval");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void exchangeRateUpdateAfterInvoiceApproval() {
+    runFeatureTest(Feature.FEATURE_23.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void expenseClassesValidation() {
-    runFeatureTest("expense-classes-validation");
+    runFeatureTest(Feature.FEATURE_24.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void fiscalYearBalanceWithNegativeAvailable() {
-    runFeatureTest("fiscal-year-balance-with-negative-available");
+    runFeatureTest(Feature.FEATURE_25.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void invoiceFiscalYears() {
-    runFeatureTest("invoice-fiscal-years");
+    runFeatureTest(Feature.FEATURE_26.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void invoiceWithIdenticalAdjustments() {
-    runFeatureTest("invoice-with-identical-adjustments");
+    runFeatureTest(Feature.FEATURE_27.getFileName());
   }
 
   @Test
-  void InvoiceWithLockTotalsCalculatedTotals() {
-    runFeatureTest("invoice-with-lock-totals-calculated-totals");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void invoiceWithLockTotalsCalculatedTotals() {
+    runFeatureTest(Feature.FEATURE_28.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void proratedAdjustmentsSpecialCases() {
-    runFeatureTest("prorated-adjustments-special-cases");
+    runFeatureTest(Feature.FEATURE_29.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void setInvoiceFiscalYearAutomatically() {
-    runFeatureTest("set-invoice-fiscal-year-automatically");
+    runFeatureTest(Feature.FEATURE_30.getFileName());
   }
 
   @Test
-  void shouldPopulateVendorAddressWhenGetVoucherById() {
-    runFeatureTest("should_populate_vendor_address_on_get_voucher_by_id");
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void shouldPopulateVendorAddressOnGetVoucherById() {
+    runFeatureTest(Feature.FEATURE_31.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void voucherNumbers() {
-    runFeatureTest("voucher-numbers");
+    runFeatureTest(Feature.FEATURE_32.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void voucherWithLinesUsingSameExternalAccount() {
-    runFeatureTest("voucher-with-lines-using-same-external-account");
+    runFeatureTest(Feature.FEATURE_33.getFileName());
   }
 }

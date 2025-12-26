@@ -8,7 +8,10 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
@@ -18,6 +21,104 @@ class OrdersApiTest extends TestBaseEureka {
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final int THREAD_COUNT = 4;
+
+  private enum Feature implements org.folio.test.config.CommonFeature {
+    FEATURE_1("bind-piece"),
+    FEATURE_2("cancel-and-delete-order"),
+    FEATURE_3("cancel-item-after-canceling-poline-in-multi-line-orders"),
+    FEATURE_4("cancel-order"),
+    FEATURE_5("change-location-when-receiving-piece"),
+    FEATURE_6("change-pending-distribution-with-inactive-budget"),
+    FEATURE_7("check-estimated-price-with-composite-order"),
+    FEATURE_8("check-holding-instance-creation-with-createInventory-options"),
+    FEATURE_9("check-new-tags-in-central-tag-repository"),
+    FEATURE_10("check-order-lines-number-retrieve-limit"),
+    FEATURE_11("check-re-encumber-property"),
+    FEATURE_12("close-order-and-release-encumbrances"),
+    FEATURE_13("close-order-including-lines"),
+    FEATURE_14("close-order-when-fully-paid-and-received"),
+    FEATURE_15("create-five-pieces"),
+    FEATURE_16("create-open-composite-order"),
+    FEATURE_17("create-order-that-has-not-enough-money"),
+    FEATURE_18("delete-fund-distribution"),
+    FEATURE_19("delete-opened-order-and-lines"),
+    FEATURE_20("encumbrance-released-when-order-closes"),
+    FEATURE_21("encumbrance-tags-inheritance"),
+    FEATURE_22("encumbrance-update-after-expense-class-change"),
+    FEATURE_23("expense-class-handling-for-order-and-lines"),
+    FEATURE_24("find-holdings-by-location-and-instance-for-mixed-pol"),
+    FEATURE_25("fund-codes-in-open-order-error"),
+    FEATURE_26("increase-poline-quantity-for-open-order"),
+    FEATURE_27("independent-acquisitions-unit-for-ordering-and-receiving"),
+    FEATURE_28("item-and-holding-operations-for-order-flows"),
+    FEATURE_29("MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-false"),
+    FEATURE_30("MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-true"),
+    FEATURE_31("MODORDERS-579-update-piece-against-non-package-mixed-pol-manual-piece-creation-is-false"),
+    FEATURE_32("MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package"),
+    FEATURE_33("MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item"),
+    FEATURE_34("move-item-and-holding-to-update-order-data"),
+    FEATURE_35("open-and-unopen-order"),
+    FEATURE_36("open-ongoing-order"),
+    FEATURE_37("open-ongoing-order-if-interval-or-renewaldate-notset"),
+    FEATURE_38("open-order-failure-side-effects"),
+    FEATURE_39("open-order-instance-link"),
+    FEATURE_40("open-order-success-with-expenditure-restrictions"),
+    FEATURE_41("open-orders-with-poLines"),
+    FEATURE_42("open-order-with-different-po-line-currency"),
+    FEATURE_43("open-order-with-manual-exchange-rate"),
+    FEATURE_44("open-order-with-many-product-ids"),
+    FEATURE_45("open-order-without-holdings"),
+    FEATURE_46("open-order-with-resolution-statuses"),
+    FEATURE_47("open-order-with-restricted-locations"),
+    FEATURE_48("open-order-with-the-same-fund-distributions"),
+    FEATURE_49("order-event"),
+    FEATURE_50("order-line-event"),
+    FEATURE_51("parallel-create-piece"),
+    FEATURE_52("parallel-update-order-lines-different-orders"),
+    FEATURE_53("parallel-update-order-lines-same-order"),
+    FEATURE_54("pe-mix-update-piece"),
+    FEATURE_55("piece-audit-history"),
+    FEATURE_56("piece-batch-job"),
+    FEATURE_57("piece-deletion-restriction"),
+    FEATURE_58("piece-operations-for-order-flows-mixed-order-line"),
+    FEATURE_59("pieces-batch-update-status"),
+    FEATURE_60("piece-status-transitions"),
+    FEATURE_61("poline_change_instance_connection"),
+    FEATURE_62("poline-change-instance-connection-with-holdings-items"),
+    FEATURE_63("poline-claiming-interval-checks"),
+    FEATURE_64("productIds-field-error-when-attempting-to-update-unmodified-order"),
+    FEATURE_65("receive-20-pieces"),
+    FEATURE_66("receive-piece-against-non-package-pol"),
+    FEATURE_67("receive-piece-against-package-pol"),
+    FEATURE_68("reopen-order-creates-encumbrances"),
+    FEATURE_69("reopen-order-with-50-lines"),
+    FEATURE_70("retrieve-titles-with-honor-of-acq-units"),
+    FEATURE_71("routing-list-print-template"),
+    FEATURE_72("routing-lists-api"),
+    FEATURE_73("should-decrease-quantity-when-delete-piece-with-no-location"),
+    FEATURE_74("three-fund-distributions"),
+    FEATURE_75("title-instance-creation"),
+    FEATURE_76("unlink-title"),
+    FEATURE_77("unopen-order-with-different-fund"),
+    FEATURE_78("unreceive-piece-and-check-order-line"),
+    FEATURE_79("update_fields_in_item"),
+    FEATURE_80("update-purchase-order-with-order-lines"),
+    FEATURE_81("update-purchase-order-workflow-status"),
+    FEATURE_82("validate-fund-distribution-for-zero-price"),
+    FEATURE_83("validate-pol-receipt-not-required-with-checkin-items"),
+    FEATURE_84("create-order-with-suppress-instance-from-discovery"),
+    FEATURE_85("auto-populate-fund-code");
+
+    private final String fileName;
+
+    Feature(String fileName) {
+      this.fileName = fileName;
+    }
+
+    public String getFileName() {
+      return fileName;
+    }
+  }
 
   public OrdersApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -36,429 +137,521 @@ class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
+  @DisplayName("(Thunderjet) Run features")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  void runFeatures() {
+    runFeatures(Feature.values(), THREAD_COUNT, null);
+  }
+
+  @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void bindPiece() {
-    runFeatureTest("bind-piece");
+    runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void cancelAndDeleteOrder() {
-    runFeatureTest("cancel-and-delete-order");
+    runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void cancelItemAfterCancelingPolineInMultiLineOrders() {
-    runFeatureTest("cancel-item-after-canceling-poline-in-multi-line-orders");
+    runFeatureTest(Feature.FEATURE_3.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void cancelOrder() {
-    runFeatureTest("cancel-order", THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_4.getFileName(), THREAD_COUNT);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void changeLocationWhenReceivingPiece() {
-    runFeatureTest("change-location-when-receiving-piece");
+    runFeatureTest(Feature.FEATURE_5.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void changePendingDistributionWithInactiveBudget() {
-    runFeatureTest("change-pending-distribution-with-inactive-budget");
+    runFeatureTest(Feature.FEATURE_6.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkEstimatedPriceWithCompositeOrder() {
-    runFeatureTest("check-estimated-price-with-composite-order");
+    runFeatureTest(Feature.FEATURE_7.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkHoldingInstanceCreationWithCreateInventoryOptions() {
-    runFeatureTest("check-holding-instance-creation-with-createInventory-options");
+    runFeatureTest(Feature.FEATURE_8.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkNewTagsCreatedInCentralTagRepository() {
-    runFeatureTest("check-new-tags-in-central-tag-repository");
+    runFeatureTest(Feature.FEATURE_9.getFileName());
   }
 
   @Test
   @Disabled
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkOrderLinesNumberRetrieveLimit() {
-    runFeatureTest("check-order-lines-number-retrieve-limit");
+    runFeatureTest(Feature.FEATURE_10.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void checkOrderNeedReEncumber() {
-    runFeatureTest("check-re-encumber-property");
+    runFeatureTest(Feature.FEATURE_11.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void closeOrderAndReleaseEncumbrances() {
-    runFeatureTest("close-order-and-release-encumbrances");
+    runFeatureTest(Feature.FEATURE_12.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void closeOrderIncludingLines() {
-    runFeatureTest("close-order-including-lines");
+    runFeatureTest(Feature.FEATURE_13.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void closeOrderWhenFullyPaidAndReceived() {
-    runFeatureTest("close-order-when-fully-paid-and-received");
+    runFeatureTest(Feature.FEATURE_14.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void createFivePieces() {
-    runFeatureTest("create-five-pieces");
+    runFeatureTest(Feature.FEATURE_15.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void createOpenCompositeOrder() {
-    runFeatureTest("create-open-composite-order");
+    runFeatureTest(Feature.FEATURE_16.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void createOrderWithNotEnoughMoney() {
-    runFeatureTest("create-order-that-has-not-enough-money");
+    runFeatureTest(Feature.FEATURE_17.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void deleteFundDistribution() {
-    runFeatureTest("delete-fund-distribution");
+    runFeatureTest(Feature.FEATURE_18.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void deleteOpenedOrderAndOrderLines() {
-    runFeatureTest("delete-opened-order-and-lines");
+    runFeatureTest(Feature.FEATURE_19.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void encumbranceReleasedWhenOrderCloses() {
-    runFeatureTest("encumbrance-released-when-order-closes");
+    runFeatureTest(Feature.FEATURE_20.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void encumbranceTagsInheritance() {
-    runFeatureTest("encumbrance-tags-inheritance");
+    runFeatureTest(Feature.FEATURE_21.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void encumbranceUpdateAfterExpenseClassChange() {
-    runFeatureTest("encumbrance-update-after-expense-class-change");
+    runFeatureTest(Feature.FEATURE_22.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void expenseClassHandlingOrderWithLines() {
-    runFeatureTest("expense-class-handling-for-order-and-lines");
+    runFeatureTest(Feature.FEATURE_23.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void findHoldingForMixedPol() {
-    runFeatureTest("find-holdings-by-location-and-instance-for-mixed-pol");
+    runFeatureTest(Feature.FEATURE_24.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void fundCodesInOpenOrderError() {
-    runFeatureTest("fund-codes-in-open-order-error");
+    runFeatureTest(Feature.FEATURE_25.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void increasePolineQuantityOpenOrder() {
-    runFeatureTest("increase-poline-quantity-for-open-order");
+    runFeatureTest(Feature.FEATURE_26.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void independentAcquisitionsUnitForOrderReceiving() {
-    runFeatureTest("independent-acquisitions-unit-for-ordering-and-receiving");
+    runFeatureTest(Feature.FEATURE_27.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void itemAndHoldingsOperations() {
-    runFeatureTest("item-and-holding-operations-for-order-flows");
+    runFeatureTest(Feature.FEATURE_28.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void manualPieceFlowCreateAndDeletePiecesPieceAgainstNonPackageMixedPolManualIsFalse() {
-    runFeatureTest("MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-false");
+    runFeatureTest(Feature.FEATURE_29.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void manualPieceFlowCreateAndDeletePiecesPieceAgainstNonPackageMixedPolManualIsTrue() {
-    runFeatureTest("MODORDERS-538-piece-against-non-package-mixed-pol-manual-piece-creation-is-true");
+    runFeatureTest(Feature.FEATURE_30.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void manualPieceFlowUpdatePieceAgainstNonPackageMixedPolManualPieceCreationIsFalse() {
-    runFeatureTest("MODORDERS-579-update-piece-against-non-package-mixed-pol-manual-piece-creation-is-false");
+    runFeatureTest(Feature.FEATURE_31.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void manualPieceFlowUpdatePiecePOLLocationNotUpdatedWhenPieceLocationEditedAgainstNonPackage() {
-    runFeatureTest("MODORDERS-580-update-piece-POL-location-not-updated-when-piece-location-edited-against-non-package");
+    runFeatureTest(Feature.FEATURE_32.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void manualPieceFlowAddPieceWithoutItemThenOpenToUpdateAndSetCreateItem() {
-    runFeatureTest("MODORDERS-583-add-piece-without-item-then-open-to-update-and-set-create-item");
+    runFeatureTest(Feature.FEATURE_33.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void moveItemAndHoldingToUpdateOrderData() {
-    runFeatureTest("move-item-and-holding-to-update-order-data");
+    runFeatureTest(Feature.FEATURE_34.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openAndUnopenOrder() {
-    runFeatureTest("open-and-unopen-order", THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_35.getFileName(), THREAD_COUNT);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOngoingOrder() {
-    runFeatureTest("open-ongoing-order");
+    runFeatureTest(Feature.FEATURE_36.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOngoingOrderIfIntervalOrRenewalDateNotSet() {
-    runFeatureTest("open-ongoing-order-if-interval-or-renewaldate-notset");
+    runFeatureTest(Feature.FEATURE_37.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderFailureSideEffects() {
-    runFeatureTest("open-order-failure-side-effects");
+    runFeatureTest(Feature.FEATURE_38.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderInstanceLink() {
-    runFeatureTest("open-order-instance-link");
+    runFeatureTest(Feature.FEATURE_39.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderSuccessWithExpenditureRestrictions() {
-    runFeatureTest("open-order-success-with-expenditure-restrictions");
+    runFeatureTest(Feature.FEATURE_40.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrdersWithPoLines() {
-    runFeatureTest("open-orders-with-poLines");
+    runFeatureTest(Feature.FEATURE_41.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderWithDifferentPoLineCurrency() {
-    runFeatureTest("open-order-with-different-po-line-currency");
+    runFeatureTest(Feature.FEATURE_42.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderWithManualExchangeRate() {
-    runFeatureTest("open-order-with-manual-exchange-rate");
+    runFeatureTest(Feature.FEATURE_43.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderWithManyProductIds() {
-    runFeatureTest("open-order-with-many-product-ids");
+    runFeatureTest(Feature.FEATURE_44.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderWithoutHoldings() {
-    runFeatureTest("open-order-without-holdings");
+    runFeatureTest(Feature.FEATURE_45.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderWithResolutionPoLineStatuses() {
-    runFeatureTest("open-order-with-resolution-statuses");
+    runFeatureTest(Feature.FEATURE_46.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderWithRestrictedLocations() {
-    runFeatureTest("open-order-with-restricted-locations");
+    runFeatureTest(Feature.FEATURE_47.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void openOrderWithTheSameFundDistributions() {
-    runFeatureTest("open-order-with-the-same-fund-distributions");
+    runFeatureTest(Feature.FEATURE_48.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void orderEventTests() {
-    runFeatureTest("order-event");
+    runFeatureTest(Feature.FEATURE_49.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void orderLineEventTests() {
-    runFeatureTest("order-line-event");
+    runFeatureTest(Feature.FEATURE_50.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void parallelCreatePiece() {
-    runFeatureTest("parallel-create-piece", 5);
+    runFeatureTest(Feature.FEATURE_51.getFileName(), 5);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void parallelUpdateOrderLinesDifferentOrders() {
-    runFeatureTest("parallel-update-order-lines-different-orders", 5);
+    runFeatureTest(Feature.FEATURE_52.getFileName(), 5);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void parallelUpdateOrderLinesSameOrder() {
-    runFeatureTest("parallel-update-order-lines-same-order", 5);
+    runFeatureTest(Feature.FEATURE_53.getFileName(), 5);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void peMixUpdatePiece() {
-    runFeatureTest("pe-mix-update-piece");
+    runFeatureTest(Feature.FEATURE_54.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void pieceAuditHistory() {
-    runFeatureTest("piece-audit-history");
+    runFeatureTest(Feature.FEATURE_55.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void pieceBatchJob() {
-    runFeatureTest("piece-batch-job");
+    runFeatureTest(Feature.FEATURE_56.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void pieceDeletionRestriction() {
-    runFeatureTest("piece-deletion-restriction");
+    runFeatureTest(Feature.FEATURE_57.getFileName());
   }
 
   @Test
   @Disabled
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void pieceOperations() {
-    runFeatureTest("piece-operations-for-order-flows-mixed-order-line");
+    runFeatureTest(Feature.FEATURE_58.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void updatePiecesBatchStatus() {
-    runFeatureTest("pieces-batch-update-status");
+    runFeatureTest(Feature.FEATURE_59.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void pieceStatusTransitions() {
-    runFeatureTest("piece-status-transitions");
+    runFeatureTest(Feature.FEATURE_60.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void poLineChangeInstanceConnection() {
-    runFeatureTest("poline_change_instance_connection");
+    runFeatureTest(Feature.FEATURE_61.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void poLineChangeInstanceConnectionWithHoldingsItems() {
-    runFeatureTest("poline-change-instance-connection-with-holdings-items");
+    runFeatureTest(Feature.FEATURE_62.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void polineClaimingIntervalChecks() {
-    runFeatureTest("poline-claiming-interval-checks");
+    runFeatureTest(Feature.FEATURE_63.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void getPutCompositeOrder() {
-    runFeatureTest("productIds-field-error-when-attempting-to-update-unmodified-order");
+    runFeatureTest(Feature.FEATURE_64.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void receive20Pieces() {
-    runFeatureTest("receive-20-pieces");
+    runFeatureTest(Feature.FEATURE_65.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void receivePieceAgainstNonPackagePol() {
-    runFeatureTest("receive-piece-against-non-package-pol");
+    runFeatureTest(Feature.FEATURE_66.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void receivePieceAgainstPackagePol() {
-    runFeatureTest("receive-piece-against-package-pol");
+    runFeatureTest(Feature.FEATURE_67.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void reopenOrderCreatesEncumbrances() {
-    runFeatureTest("reopen-order-creates-encumbrances");
+    runFeatureTest(Feature.FEATURE_68.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void reopenOrderWith50Lines() {
-    runFeatureTest("reopen-order-with-50-lines");
+    runFeatureTest(Feature.FEATURE_69.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void retrieveTitlesWithHonorOfAcqUnits() {
-    runFeatureTest("retrieve-titles-with-honor-of-acq-units");
+    runFeatureTest(Feature.FEATURE_70.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void routingListPrintTemplate() {
-    runFeatureTest("routing-list-print-template");
+    runFeatureTest(Feature.FEATURE_71.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void testRoutingListApi() {
-    runFeatureTest("routing-lists-api");
+    runFeatureTest(Feature.FEATURE_72.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
-    runFeatureTest("should-decrease-quantity-when-delete-piece-with-no-location");
+    runFeatureTest(Feature.FEATURE_73.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void threeFundDistributions() {
-    runFeatureTest("three-fund-distributions");
+    runFeatureTest(Feature.FEATURE_74.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void testTitleInstanceCreation() {
-    runFeatureTest("title-instance-creation");
+    runFeatureTest(Feature.FEATURE_75.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void unlinkTitle() {
-    runFeatureTest("unlink-title");
+    runFeatureTest(Feature.FEATURE_76.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void unOpenOrderWithDifferentFund() {
-    runFeatureTest("unopen-order-with-different-fund", THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_77.getFileName(), THREAD_COUNT);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void unreceivePieceAndCheckOrderLine() {
-    runFeatureTest("unreceive-piece-and-check-order-line", THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_78.getFileName(), THREAD_COUNT);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void updateFieldsInItemAfterUpdatingInPiece() {
-    runFeatureTest("update_fields_in_item", THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_79.getFileName(), THREAD_COUNT);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void updatePurchaseOrderWithOrderLines() {
-    runFeatureTest("update-purchase-order-with-order-lines");
+    runFeatureTest(Feature.FEATURE_80.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void updatePurchaseOrderWorkflowStatus() {
-    runFeatureTest("update-purchase-order-workflow-status");
+    runFeatureTest(Feature.FEATURE_81.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void validateFundDistributionForZeroPrice() {
-    runFeatureTest("validate-fund-distribution-for-zero-price", THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_82.getFileName(), THREAD_COUNT);
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void validatePoLineReceiptNotRequiredWithCheckinItems() {
-    runFeatureTest("validate-pol-receipt-not-required-with-checkin-items");
+    runFeatureTest(Feature.FEATURE_83.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void createOrderWithSuppressInstanceFromDiscovery() {
-    runFeatureTest("create-order-with-suppress-instance-from-discovery");
+    runFeatureTest(Feature.FEATURE_84.getFileName());
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
   void autoPopulateFundCodeInPoLine() {
-    runFeatureTest("auto-populate-fund-code");
+    runFeatureTest(Feature.FEATURE_85.getFileName());
   }
 }

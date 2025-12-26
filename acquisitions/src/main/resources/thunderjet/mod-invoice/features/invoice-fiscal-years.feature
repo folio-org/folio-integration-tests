@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-465
+# For MODINVOICE-465
 @parallel=false
 Feature: Invoice fiscal years
 
