@@ -34,15 +34,10 @@
   </dependencies>
 
   <profiles>
-    <!-- CI profile: Only run the shared pool test method -->
+    <!-- No shared pool profile: Run individual test methods instead of shared pool -->
+    <!-- Activate with: mvn test -PnoSharedPool -->
     <profile>
-      <id>ci</id>
-      <activation>
-        <property>
-          <name>env.CI</name>
-          <value>true</value>
-        </property>
-      </activation>
+      <id>noSharedPool</id>
       <build>
         <plugins>
           <plugin>
@@ -50,7 +45,7 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <systemPropertyVariables>
-                <test.mode>shared-pool</test.mode>
+                <test.mode>no-shared-pool</test.mode>
               </systemPropertyVariables>
             </configuration>
           </plugin>

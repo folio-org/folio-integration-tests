@@ -17,20 +17,27 @@ import java.util.UUID;
 @FolioTest(team = "thunderjet", module = "mod-gobi")
 class GobiApiTest extends TestBaseEureka {
 
-  // Default module settings :
+  // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-gobi/features/";
+  private static final String TEST_TENANT = "testmodgobi";
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("gobi-api-tests"),
-    FEATURE_2("find-holdings-by-location-and-instance"),
-    FEATURE_3("validate-pol-receipt-not-required-with-checkin-items"),
-    FEATURE_4("validate-pol-suppress-instance-from-discovery");
+    FEATURE_1("gobi-api-tests", true),
+    FEATURE_2("find-holdings-by-location-and-instance", true),
+    FEATURE_3("validate-pol-receipt-not-required-with-checkin-items", true),
+    FEATURE_4("validate-pol-suppress-instance-from-discovery", true);
 
     private final String fileName;
+    private final boolean isEnabled;
 
-    Feature(String fileName) {
+    Feature(String fileName, boolean isEnabled) {
       this.fileName = fileName;
+      this.isEnabled = isEnabled;
+    }
+
+    public boolean isEnabled() {
+      return isEnabled;
     }
 
     public String getFileName() {
@@ -44,7 +51,7 @@ class GobiApiTest extends TestBaseEureka {
 
   @BeforeAll
   void gobiApiTestBeforeAll() {
-    System.setProperty("testTenant", "testmodgobi" + RandomUtils.nextLong());
+    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-gobi/init-gobi.feature");
   }
@@ -56,31 +63,31 @@ class GobiApiTest extends TestBaseEureka {
 
   @Test
   @DisplayName("(Thunderjet) Run features")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void gobiApiTests() {
     runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void findHoldingsByLocationAndInstance() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void validatePoLineReceiptNotRequiredWithCheckinItems() {
     runFeatureTest(Feature.FEATURE_3.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void validatePoLineSuppressInstanceFromDiscovery() {
     runFeatureTest(Feature.FEATURE_4.getFileName());
   }

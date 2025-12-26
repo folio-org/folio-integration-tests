@@ -27,18 +27,25 @@ import java.util.UUID;
 class EdgeOrdersApiTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/edge-orders/features/";
+  private static final String TEST_TENANT = "testedgeorders";
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("common"),
-    FEATURE_2("ebsconet"),
-    FEATURE_3("gobi"),
-    FEATURE_4("mosaic");
+    FEATURE_1("common", true),
+    FEATURE_2("ebsconet", true),
+    FEATURE_3("gobi", true),
+    FEATURE_4("mosaic", true);
 
     private final String fileName;
+    private final boolean isEnabled;
 
-    Feature(String fileName) {
+    Feature(String fileName, boolean isEnabled) {
       this.fileName = fileName;
+      this.isEnabled = isEnabled;
+    }
+
+    public boolean isEnabled() {
+      return isEnabled;
     }
 
     public String getFileName() {
@@ -52,7 +59,7 @@ class EdgeOrdersApiTest extends TestBaseEureka {
 
   @BeforeAll
   void edgeOrdersApiTestBeforeAll() {
-    System.setProperty("testTenant", "testedgeorders");
+    System.setProperty("testTenant", TEST_TENANT);
     System.setProperty("testEdgeUser", "test-user");
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/edge-orders/init-edge-orders.feature");
@@ -65,31 +72,31 @@ class EdgeOrdersApiTest extends TestBaseEureka {
 
   @Test
   @DisplayName("(Thunderjet) Run features")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void common() {
     runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void ebsconet() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void gobi() {
     runFeatureTest(Feature.FEATURE_3.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void mosaic() {
     runFeatureTest(Feature.FEATURE_4.getFileName());
   }

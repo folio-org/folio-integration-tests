@@ -140,7 +140,10 @@ public abstract class TestBaseEureka {
   // ============================== For a list of files with multiple features ==============================
 
   public void runFeatures(CommonFeature[] values, int threadCount, TestInfo testInfo) {
-    var featureNames = Arrays.stream(values).map(CommonFeature::getFileName).toList();
+    var featureNames = Arrays.stream(values)
+      .filter(CommonFeature::isEnabled)
+      .map(CommonFeature::getFileName)
+      .toList();
     var testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
     var hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
 

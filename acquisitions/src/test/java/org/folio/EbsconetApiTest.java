@@ -19,20 +19,27 @@ public class EbsconetApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-ebsconet/features/";
+  private static final String TEST_TENANT = "testebsconet";
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("cancel-order-lines-with-ebsconet"),
-    FEATURE_2("close-order-with-order-line"),
-    FEATURE_3("get-ebsconet-order-line"),
-    FEATURE_4("update-ebsconet-order-line"),
-    FEATURE_5("update-ebsconet-order-line-empty-locations"),
-    FEATURE_6("update-mixed-order-line");
+    FEATURE_1("cancel-order-lines-with-ebsconet", true),
+    FEATURE_2("close-order-with-order-line", true),
+    FEATURE_3("get-ebsconet-order-line", true),
+    FEATURE_4("update-ebsconet-order-line", true),
+    FEATURE_5("update-ebsconet-order-line-empty-locations", true),
+    FEATURE_6("update-mixed-order-line", true);
 
     private final String fileName;
+    private final boolean isEnabled;
 
-    Feature(String fileName) {
+    Feature(String fileName, boolean isEnabled) {
       this.fileName = fileName;
+      this.isEnabled = isEnabled;
+    }
+
+    public boolean isEnabled() {
+      return isEnabled;
     }
 
     public String getFileName() {
@@ -46,7 +53,7 @@ public class EbsconetApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void ebsconetApiTestBeforeAll() {
-    System.setProperty("testTenant", "testebsconet" + RandomUtils.nextLong());
+    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-ebsconet/init-ebsconet.feature");
   }
@@ -58,43 +65,43 @@ public class EbsconetApiTest extends TestBaseEureka {
 
   @Test
   @DisplayName("(Thunderjet) Run features")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void cancelOrderLinesWithEbsconet() {
     runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void closeOrderWithOrderLine() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void getEbsconetOrderLine() {
     runFeatureTest(Feature.FEATURE_3.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void updateEbsconetOrderLine() {
     runFeatureTest(Feature.FEATURE_4.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void updateEbsconetOrderLineEmptyLocations() {
     runFeatureTest(Feature.FEATURE_5.getFileName());
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void updateEbsconetOrderLineMixedFormat() {
     runFeatureTest(Feature.FEATURE_6.getFileName());
   }

@@ -16,12 +16,18 @@ public class DataExportSpringApiTest extends TestBaseEureka {
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("classpath:thunderjet/mod-data-export-spring/data-export-spring.feature");
+    FEATURE_1("classpath:thunderjet/mod-data-export-spring/data-export-spring.feature", true);
 
     private final String fileName;
+    private final boolean isEnabled;
 
-    Feature(String fileName) {
+    Feature(String fileName, boolean isEnabled) {
       this.fileName = fileName;
+      this.isEnabled = isEnabled;
+    }
+
+    public boolean isEnabled() {
+      return isEnabled;
     }
 
     public String getFileName() {
@@ -35,13 +41,13 @@ public class DataExportSpringApiTest extends TestBaseEureka {
 
   @Test
   @DisplayName("(Thunderjet) Run features")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
   @Test
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void rootTest() {
     runFeature(Feature.FEATURE_1.getFileName());
   }

@@ -20,15 +20,22 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
 
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
+  private static final String TEST_TENANT = "testorders";
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("receive-piece-new-holding-edit");
+    FEATURE_1("receive-piece-new-holding-edit", true);
 
     private final String fileName;
+    private final boolean isEnabled;
 
-    Feature(String fileName) {
+    Feature(String fileName, boolean isEnabled) {
       this.fileName = fileName;
+      this.isEnabled = isEnabled;
+    }
+
+    public boolean isEnabled() {
+      return isEnabled;
     }
 
     public String getFileName() {
@@ -42,7 +49,7 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void ordersSmokeApiTestBeforeAll() {
-    System.setProperty("testTenant", "testorders" + RandomUtils.nextLong());
+    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-orders/init-orders.feature");
   }
@@ -54,14 +61,14 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
 
   @Test
   @DisplayName("(Thunderjet) Run features")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
   @Test
   @DisplayName("(Thunderjet) (C844840) Piece received via receiving full-screen in a new holding can be edited")
-  @DisabledIfSystemProperty(named = "test.mode", matches = "shared-pool")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void createOrderPaymentNotRequiredFullyReceive() {
     runFeatureTest(Feature.FEATURE_1.getFileName());
   }
