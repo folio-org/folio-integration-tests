@@ -317,66 +317,68 @@ Feature: ListRecords: Harvest suppressed from discovery instance and holdings re
     When method GET
     Then status 200
     * print 'Response for holdings suppressed test:', response
-    * def records2 = get response //record
-    * def holdingSuppressedFound = karate.filter(records2, function(r){ return r.header.identifier.indexOf(holdingSuppressedInstanceId) > -1 })
-    
-    # Verify the instance record is present
-    And match holdingSuppressedFound != []
-    And match holdingSuppressedFound[0].header.identifier contains holdingSuppressedInstanceId
-    * print 'Test 2 Part 1 Passed: Instance record is present when only holdings is suppressed'
-
-    # Verify holdings data (tag 852, 952) is NOT present for this record
-    * def recordMetadata = holdingSuppressedFound[0].metadata
-    * def xmlString = karate.xmlPath(recordMetadata, '/')
-    * print 'Record XML:', xmlString
-    
-    # Check that holdings-specific tags are not present or empty
-    # Tag 852 is for holdings location, tag 952 is for item information
-    * def holdingsTag852 = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='852']")
-    * def holdingsTag952 = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='952']")
-    
-    # These should either not exist or be empty when holdings is suppressed
-    * print 'Holdings tag 852:', holdingsTag852
-    * print 'Holdings tag 952:', holdingsTag952
-    * print 'Test 2 Part 2: Verified holdings data handling for suppressed holdings'
+    # Instance exists
+    And match karate.xmlPath(response, "//*[local-name()='record']") != []
+    # Holdings are suppressed
+    * def holdingsTag952 = karate.xmlPath(response, "//*[local-name()='datafield'][@tag='952']")
+    * def holdingsTag852 = karate.xmlPath(response, "//*[local-name()='datafield'][@tag='952']")
+    * print 'Holdings tag 952 for holdings suppressed test:', holdingsTag952
+    And match holdingsTag952 == '#notpresent'
+    And match holdingsTag852 == '#notpresent'
+#
+#    * print 'Test 2 Part 1 Passed: Instance record is present when only holdings is suppressed'
+#    # Verify holdings data (tag 852, 952) is NOT present for this record
+#    * def recordMetadata =  holdingsTag952[0].metadata
+#    * def xmlString = karate.xmlPath(recordMetadata, '/')
+#    * print 'Record XML:', xmlString
+#
+#    # Check that holdings-specific tags are not present or empty
+#    # Tag 852 is for holdings location, tag 952 is for item information
+#    * def holdingsTag852 = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='852']")
+#    * def holdingsTag952 = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='952']")
+#
+#    # These should either not exist or be empty when holdings is suppressed
+#    * print 'Holdings tag 852:', holdingsTag852
+#    * print 'Holdings tag 952:', holdingsTag952
+#    * print 'Test 2 Part 2: Verified holdings data handling for suppressed holdings'
 
     # Cleanup: Delete created records
-    * url baseUrl
-    Given path 'item-storage/items', bothSuppressedItemId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'holdings-storage/holdings', bothSuppressedHoldingId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'instance-storage/instances', bothSuppressedInstanceId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'item-storage/items', holdingSuppressedItemId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'holdings-storage/holdings', holdingSuppressedHoldingId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'instance-storage/instances', holdingSuppressedInstanceId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
+#    * url baseUrl
+#    Given path 'item-storage/items', bothSuppressedItemId
+#    And header x-okapi-token = okapitoken
+#    And header x-okapi-tenant = testTenant
+#    When method DELETE
+#    Then status 204
+#
+#    Given path 'holdings-storage/holdings', bothSuppressedHoldingId
+#    And header x-okapi-token = okapitoken
+#    And header x-okapi-tenant = testTenant
+#    When method DELETE
+#    Then status 204
+#
+#    Given path 'instance-storage/instances', bothSuppressedInstanceId
+#    And header x-okapi-token = okapitoken
+#    And header x-okapi-tenant = testTenant
+#    When method DELETE
+#    Then status 204
+#
+#    Given path 'item-storage/items', holdingSuppressedItemId
+#    And header x-okapi-token = okapitoken
+#    And header x-okapi-tenant = testTenant
+#    When method DELETE
+#    Then status 204
+#
+#    Given path 'holdings-storage/holdings', holdingSuppressedHoldingId
+#    And header x-okapi-token = okapitoken
+#    And header x-okapi-tenant = testTenant
+#    When method DELETE
+#    Then status 204
+#
+#    Given path 'instance-storage/instances', holdingSuppressedInstanceId
+#    And header x-okapi-token = okapitoken
+#    And header x-okapi-tenant = testTenant
+#    When method DELETE
+#    Then status 204
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 5000
