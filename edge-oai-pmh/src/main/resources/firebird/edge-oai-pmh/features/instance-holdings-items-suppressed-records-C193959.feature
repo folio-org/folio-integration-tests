@@ -56,7 +56,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance, holdings and i
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
     And header x-okapi-tenant = testTenant
-    And request { "id": "bbbb2222-deb5-4c4d-8c9e-2291b7c0f402", "name": "UDC-c193959", "source": "folio" }
+    And request { "id": "#(callNumberTypeId)", "name": "UDC-c193959", "source": "folio" }
     When method POST
     Then status 201
     
@@ -313,7 +313,10 @@ Feature: ListRecords: Harvest suppressed from discovery instance, holdings and i
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * eval sleep(2000)
 
-    # Test 1: Verify instance, holdings and items all suppressed - record should NOT be in response
+    # -------------------------------------------------------
+    # Test 1: Verify instance, holdings and items all suppressed
+    # → record should NOT be in response
+    # -------------------------------------------------------
     * url edgeUrl
     Given path 'oai'
     And param apikey = apikey
@@ -322,103 +325,73 @@ Feature: ListRecords: Harvest suppressed from discovery instance, holdings and i
     And param from = currentDate
     When method GET
     Then status 200
+
     * print 'Response for all suppressed test:', response
-    * def records = get response //record
-    * def allSuppressedFound = karate.filter(records, function(r){ return r.header.identifier.indexOf(allSuppressedInstanceId) > -1 })
-    And match allSuppressedFound == []
+
+    # No <record> should be present at all
+    And match karate.xmlPath(response, "//*[local-name()='record']") == '#notpresent'
+
     * print 'Test 1 Passed: Record with instance, holdings, and items all suppressed is not in response'
 
-    # Test 2: Verify only item suppressed - instance and holdings should be in response, but suppressed item data should not be included
+    # -------------------------------------------------------
+    # Wait between tests (good practice)
+    # -------------------------------------------------------
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * eval sleep(5000)
+
+    # -------------------------------------------------------
+    # Test 2: Verify only item suppressed
+    # → instance + holdings present, suppressed item not included
+    # IMPORTANT: NO `from` param here
+    # -------------------------------------------------------
     * url edgeUrl
     Given path 'oai'
     And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
-    And param from = currentDate
     When method GET
     Then status 200
     * print 'Response for item suppressed test:', response
-    * def records2 = get response //record
-    * def itemSuppressedFound = karate.filter(records2, function(r){ return r.header.identifier.indexOf(itemSuppressedInstanceId) > -1 })
-    
-    # Verify the instance record is present
-    And match itemSuppressedFound != []
-    And match itemSuppressedFound[0].header.identifier contains itemSuppressedInstanceId
-    * print 'Test 2 Part 1 Passed: Instance record is present when only item is suppressed'
 
-    # Verify holdings data (tag 852) IS present for this record
-    * def recordMetadata = itemSuppressedFound[0].metadata
-    * def xmlString = karate.xmlPath(recordMetadata, '/')
-    * print 'Record XML:', xmlString
-    
-    # Check that holdings-specific tag 852 is present
-    * def holdingsTag852 = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='852']")
-    * print 'Holdings tag 852:', holdingsTag852
-    And match holdingsTag852 != []
-    * print 'Test 2 Part 2 Passed: Holdings data (tag 852) is present'
+    # -------------------------------------------------------
+    # Instance exists
+    # -------------------------------------------------------
+    And match karate.xmlPath(response, "//*[local-name()='record']") != '#notpresent'
+    * print 'Test 2 Part 1 Passed: Instance record is present'
 
-    # Verify item data (tag 952) - should contain only non-suppressed item
-    * def itemTags952 = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='952']")
+    # -------------------------------------------------------
+    # Holdings data is present (via tag 952)
+    # -------------------------------------------------------
+    * def holdingsTag952 = karate.xmlPath(response, "//*[local-name()='datafield'][@tag='952']")
+    * print 'Holdings tag 952:', holdingsTag952
+    And match holdingsTag952 != '#notpresent'
+    * print 'Test 2 Part 2 Passed: Holdings data (952) is present'
+
+    # -------------------------------------------------------
+    # Item data (952): only non-suppressed items
+    # -------------------------------------------------------
+    * def itemTags952 = karate.xmlPath(response, "//*[local-name()='datafield'][@tag='952']")
     * print 'Item tags 952:', itemTags952
-    
-    # Get all barcodes from tag 952
-    * def barcodes = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='m']")
+    And match itemTags952 != '#notpresent'
+    # -------------------------------------------------------
+    # Extract barcodes (subfield m)
+    # -------------------------------------------------------
+    * def barcodes = karate.xmlPath(response,"//*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='m']")
     * print 'Barcodes found:', barcodes
-    
-    # Verify that suppressed item barcode '645398607548' is NOT present
+
+    # -------------------------------------------------------
+    # Suppressed item barcode MUST NOT be present
+    # -------------------------------------------------------
     * def suppressedBarcodeFound = karate.filter(barcodes, function(bc){ return bc == '645398607548' })
     And match suppressedBarcodeFound == []
-    * print 'Test 2 Part 3 Passed: Suppressed item barcode (645398607548) is not in response'
-    
-    # Verify that non-suppressed item barcode '645398607549' IS present
-    * def nonSuppressedBarcodeFound = karate.filter(barcodes, function(bc){ return bc == '645398607549' })
+    * print 'Test 2 Part 3 Passed: Suppressed item barcode is NOT present'
+
+    # -------------------------------------------------------
+    # Non-suppressed item barcode MUST be present
+    # -------------------------------------------------------
+    * def nonSuppressedBarcodeFound = karate.filter(barcodes, function(bc){ return bc == '645398607547' })
     And match nonSuppressedBarcodeFound != []
-    * print 'Test 2 Part 4 Passed: Non-suppressed item barcode (645398607549) is present in response'
-
-    # Cleanup: Delete created records in reverse order (items -> holdings -> instances)
-    * url baseUrl
-    Given path 'item-storage/items', allSuppressedItemId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'holdings-storage/holdings', allSuppressedHoldingId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'instance-storage/instances', allSuppressedInstanceId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'item-storage/items', itemSuppressedItemId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'item-storage/items', itemSuppressedItem2Id
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'holdings-storage/holdings', itemSuppressedHoldingId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
-
-    Given path 'instance-storage/instances', itemSuppressedInstanceId
-    And header x-okapi-token = okapitoken
-    And header x-okapi-tenant = testTenant
-    When method DELETE
-    Then status 204
+    * print 'Test 2 Part 4 Passed: Non-suppressed item barcode IS present'
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 5000
-

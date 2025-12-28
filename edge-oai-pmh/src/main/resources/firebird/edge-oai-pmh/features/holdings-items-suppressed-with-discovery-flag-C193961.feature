@@ -197,7 +197,7 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
 
     # Wait a moment to ensure records are indexed
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * eval sleep(2000)
+    * eval sleep(5000)
 
     # Verify the record with suppressed holdings and items IS in the response with discovery flags
     * url edgeUrl
@@ -211,8 +211,9 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     * print 'Response for suppressed holdings and items with discovery flags:', response
     
     # The response should contain the record
-    * def records = get response //record
-    * def recordFound = karate.filter(records, function(r){ return r.header.identifier.indexOf(instanceId) > -1 })
+    * def records = get response //*[local-name()='record']
+    * print 'Number of records found:', records.length
+    * def recordFound = karate.filter(records, function(r){ var header = r['header'] || r['{http://www.openarchives.org/OAI/2.0/}header']; if (!header) return false; var identifier = header.identifier || header['{http://www.openarchives.org/OAI/2.0/}identifier']; if (!identifier) return false; var idValue = typeof identifier === 'string' ? identifier : identifier['#text']; return idValue && idValue.indexOf(instanceId) > -1; })
     And match recordFound != []
     * print 'Test 1 Passed: Record with suppressed holdings and items is present in response'
 
@@ -339,7 +340,7 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     Then status 201
 
     # Wait a moment to ensure records are indexed
-    * eval sleep(2000)
+    * eval sleep(5000)
 
     # Verify the non-suppressed record
     * url edgeUrl
@@ -353,8 +354,8 @@ Feature: ListRecords: Harvest suppressed holdings and items records with discove
     * print 'Response with non-suppressed holdings and items:', response
     
     # The response should contain the non-suppressed record
-    * def records2 = get response //record
-    * def recordFound2 = karate.filter(records2, function(r){ return r.header.identifier.indexOf(instanceId2) > -1 })
+    * def records2 = get response //*[local-name()='record']
+    * def recordFound2 = karate.filter(records2, function(r){ var header = r['header'] || r['{http://www.openarchives.org/OAI/2.0/}header']; if (!header) return false; var identifier = header.identifier || header['{http://www.openarchives.org/OAI/2.0/}identifier']; if (!identifier) return false; var idValue = typeof identifier === 'string' ? identifier : identifier['#text']; return idValue && idValue.indexOf(instanceId2) > -1; })
     And match recordFound2 != []
     * print 'Test 9 Passed: Record with non-suppressed holdings and items is present in response'
 

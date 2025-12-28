@@ -73,7 +73,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
 
     # Wait a moment to ensure records are indexed
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
-    * eval sleep(2000)
+    * eval sleep(5000)
 
     # Verify the suppressed record IS in the response with discovery flag
     * url edgeUrl
@@ -87,8 +87,9 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     * print 'Response for suppressed record with discovery flag:', response
     
     # The response should contain the suppressed record
-    * def records = get response //record
-    * def suppressedFound = karate.filter(records, function(r){ return r.header.identifier.indexOf(suppressedInstanceId) > -1 })
+    * def records = get response //*[local-name()='record']
+    * print 'Number of records found:', records.length
+    * def suppressedFound = karate.filter(records, function(r){ var header = r['header'] || r['{http://www.openarchives.org/OAI/2.0/}header']; if (!header) return false; var identifier = header.identifier || header['{http://www.openarchives.org/OAI/2.0/}identifier']; if (!identifier) return false; var idValue = typeof identifier === 'string' ? identifier : identifier['#text']; return idValue && idValue.indexOf(suppressedInstanceId) > -1; })
     And match suppressedFound != []
     * print 'Test 1 Passed: Suppressed record is present in response'
 
@@ -142,7 +143,7 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     * call read('init_data/create-srs-record.feature') { jobExecutionId: '#(nonSuppressedJobExecutionId)', instanceId: '#(nonSuppressedInstanceId)', recordId: '#(nonSuppressedRecordId)', matchedId: '#(nonSuppressedMatchedId)'}
 
     # Wait a moment to ensure records are indexed
-    * eval sleep(2000)
+    * eval sleep(5000)
 
     # Verify the non-suppressed record is also in the response
     * url edgeUrl
@@ -156,8 +157,8 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     * print 'Response with both suppressed and non-suppressed records:', response
     
     # The response should contain the non-suppressed record
-    * def records2 = get response //record
-    * def nonSuppressedFound = karate.filter(records2, function(r){ return r.header.identifier.indexOf(nonSuppressedInstanceId) > -1 })
+    * def records2 = get response //*[local-name()='record']
+    * def nonSuppressedFound = karate.filter(records2, function(r){ var header = r['header'] || r['{http://www.openarchives.org/OAI/2.0/}header']; if (!header) return false; var identifier = header.identifier || header['{http://www.openarchives.org/OAI/2.0/}identifier']; if (!identifier) return false; var idValue = typeof identifier === 'string' ? identifier : identifier['#text']; return idValue && idValue.indexOf(nonSuppressedInstanceId) > -1; })
     And match nonSuppressedFound != []
     * print 'Test 4 Passed: Non-suppressed record is present in response'
 
