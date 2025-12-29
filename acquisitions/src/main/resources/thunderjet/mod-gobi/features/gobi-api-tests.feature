@@ -1,3 +1,4 @@
+@parallel=false
 Feature: GOBI api tests
 
   Background:
