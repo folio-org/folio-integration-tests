@@ -52,9 +52,13 @@ Feature: Central inventory
     * def v = call createLibrary libraries
 
   Scenario: create service points
+    * def randomStr = call random_string
+    * def name = 'Service-point-' + randomStr
+    * def code = 'TPS-' + randomStr
+    * def discoveryDisplayName = 'Service-point-1-' + randomStr
     * table servicePoints
-      | id                     | name            | code  | discoveryDisplayName |
-      | centralServicePointsId | 'Service point' | 'TPS' | 'Service point 1'    |
+      | id                     | name      | code      | discoveryDisplayName      |
+      | centralServicePointsId | '#(name)' | '#(code)' | '#(discoveryDisplayName)' |
     * def v = call createServicePoint servicePoints
 
   Scenario: create holdings sources

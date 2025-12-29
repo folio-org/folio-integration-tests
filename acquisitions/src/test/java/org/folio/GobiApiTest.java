@@ -20,7 +20,7 @@ class GobiApiTest extends TestBaseEureka {
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-gobi/features/";
   private static final String TEST_TENANT = "testmodgobi";
-  private static final int THREAD_COUNT = 4;
+  private static final int THREAD_COUNT = 1;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("gobi-api-tests", true),
