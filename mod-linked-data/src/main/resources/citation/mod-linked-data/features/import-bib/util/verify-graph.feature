@@ -70,6 +70,11 @@ Feature: Verify Linked Data Graph
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/adminhist'] == ['Co-published with the Australian War Memorial.']
     * match instanceSubgraph.doc['http://bibfra.me/vocab/lite/note'] contains 'Abstract also in English.'
 
+  @C436745
+  Scenario: Verify date-start and date-end
+    * match workSubgraph.doc['http://bibfra.me/vocab/lite/dateStart'] == ['2016']
+    * match workSubgraph.doc['http://bibfra.me/vocab/lite/dateEnd'] == ['2020']
+
   @C958464
   Scenario: Verify Hub created from MARC 600
     # 1. Find the SUBJECT edge with the expected label

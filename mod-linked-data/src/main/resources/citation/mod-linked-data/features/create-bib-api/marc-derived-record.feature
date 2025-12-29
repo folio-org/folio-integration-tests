@@ -9,6 +9,7 @@ Feature: MARC Derived Records
   Scenario: Validate MARC derived record
     * def getMarcCall = call getDerivedMarc { resourceId:  '#(instanceId)' }
     * def fields = getMarcCall.response.parsedRecord.content.fields
+    * print fields
     * match fields contains { 005: "#notnull" }
     * match fields contains { 010: { subfields: [ { a: "  1234567890" } ], ind1: " ", ind2: " " } }
     * match fields contains { 020: { subfields: [ { a: "0987654321" }, { q: "Hardcover" } ], ind1: " ", ind2: " " } }
@@ -37,3 +38,9 @@ Feature: MARC Derived Records
   @C627244
   Scenario: Validate 001 (HRID)
     * match fields contains { 001: "#(hrid)" }
+
+  @C464306
+  Scenario: Validate 245 and 246 (Titles)
+    * match fields contains { 245: { subfields: [ { a : "create-bib-title" }, { b: "Instance Sub title"}, { n: "3"}, { p: "part 3" } ], ind1: " ", ind2: "2" } }
+    * match fields contains { 246: { subfields: [ { a: "Variant title of the instance" }, { b: "variant sub title" }, { f: "2024" }, { i: "Note about variant title" }, { n: "2" }, { p: "part 2" } ], ind1: " ", ind2: "1" } }
+    * match fields contains { 246: { subfields: [ { a: "Parallel title of the instance"}, { b: "Parallel sub title"}, { f: "2025" }, { i: "Note about parallel title" }, { n: "4" }, { p: "part 4" } ], ind1: " ", ind2: "1" } }
