@@ -1,5 +1,6 @@
 Feature: Verify Linked Data Graph
-  Scenario: Fetch Instance Subgraph
+  @C506675
+  Scenario: Fetch Instance Subgraph using inventory ID
     * def instanceResourceIdCall = call getResourceIdFromInventoryId { inventoryId:  '#(inventoryInstanceIdFromSearchResponse)' }
     * def instanceResourceId = instanceResourceIdCall.response.id
     * def subgraphCall = call getResourceGraph { resourceId: '#(instanceResourceId)' }
