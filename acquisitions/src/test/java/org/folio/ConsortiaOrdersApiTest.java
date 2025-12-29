@@ -50,7 +50,7 @@ class ConsortiaOrdersApiTest extends TestBaseEureka {
   void consortiaOrdersApiTestBeforeAll() {
     System.setProperty("testTenant", TENANT + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/consortia/init-consortia.feature");
+    runFeature("classpath:thunderjet/consortia/init-consortia-orders.feature");
   }
 
   @AfterAll
