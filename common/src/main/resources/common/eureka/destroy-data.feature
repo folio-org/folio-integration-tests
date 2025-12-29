@@ -26,6 +26,7 @@ Feature: destroy data for tenant
     When method GET
     * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
     * def entitlementTemplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+
     Given path 'entitlements'
     And param purge = true
     And request entitlementTemplate
