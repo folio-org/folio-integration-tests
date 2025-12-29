@@ -38,6 +38,7 @@ function fn() {
     postSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
     putSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putSourceRecordToStorage'),
     searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
+    searchLinkedDataHub: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataHub'),
     searchInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchInventoryInstance'),
     browseAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@browseAuthority'),
     searchAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchAuthority'),

@@ -14,8 +14,6 @@ Feature: Admin metadata
     * def adminMetadataGraphCall = call getResourceGraph { resourceId:  '#(adminMetadataId)' }
     * def adminMetadataGraph = adminMetadataGraphCall.response
     * retry until karate.exists(adminMetadataGraph.doc['http://bibfra.me/vocab/library/controlNumber']) == true
-    * def currentDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(new java.util.Date())
-    * match adminMetadataGraph.doc['http://bibfra.me/vocab/lite/createdDate'][0] == currentDate
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/library/controlNumber'][0] == hrid
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/library/modifyingAgency'] == ['LC', 'AGR']
     * match adminMetadataGraph.doc['http://bibfra.me/vocab/library/catalogingAgency'][0] == 'DLC'
@@ -27,3 +25,8 @@ Feature: Admin metadata
     * match catalogingLanguageGraph.doc['http://bibfra.me/vocab/lite/link'][0] == 'http://id.loc.gov/vocabulary/languages/eng'
     * match catalogingLanguageGraph.doc['http://bibfra.me/vocab/library/code'][0] == 'eng'
     * match catalogingLanguageGraph.doc['http://bibfra.me/vocab/library/term'][0] == 'English'
+
+  @C831966
+  Scenario: Validate created date
+    * def currentDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(new java.util.Date())
+    * match adminMetadataGraph.doc['http://bibfra.me/vocab/lite/createdDate'][0] == currentDate

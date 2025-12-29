@@ -9,6 +9,7 @@ Feature: LCCN pattern validation
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
+  @C624318
   Scenario: Create resources with enabled validation and then repeat with disabled validation
     # Step 1: Enable validation
     * configure headers = testAdminHeaders

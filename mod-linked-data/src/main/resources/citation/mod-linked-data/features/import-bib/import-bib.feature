@@ -62,3 +62,9 @@ Feature: Integration with SRS for import flow
 
     # Step 11: Verify exported RDF
     * callonce read('util/verify-rdf.feature')
+
+    # Step 12: Verify hubs are indexed
+    * callonce read('util/verify-hub-search.feature')
+
+    # Step 13: Derive MARC record and verify
+    * callonce read('util/verify-marc.feature')
