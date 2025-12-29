@@ -26,25 +26,12 @@ Feature: destroy data for tenant
     When method GET
     * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
     * def entitlementTemplate = read('classpath:common/eureka/samples/entitlement-entity.json')
-
-    * eval
-    """
-    if (applicationIds.length > 0) {
-      var response = karate.http('https://' + baseUrl) // Use your project's base URL variable
-        .path('entitlements')
-        .param('purge', true)
-        .header('Authorization', 'Bearer ' + keycloakMasterToken)
-        .body(entitlementTemplate)
-        .delete();
-      if (res.status != 200) {
-        karate.fail('Delete entitlements has failed with status: ' + response.status);
-      } else {
-        karate.log('Deleted entitlements result:', response.status, 'count:', applicationIds.length);
-      }
-    } else {
-      karate.log('No entitlements were found to delete');
-    }
-    """
+    Given path 'entitlements'
+    And param purge = true
+    And request entitlementTemplate
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method DELETE
+    * match [200, 404] contains responseStatus
 
   @deleteTenant
   Scenario: delete tenant
