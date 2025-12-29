@@ -20,7 +20,7 @@ class ConsortiaOrdersApiTest extends TestBaseEureka {
   // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/consortia/features/";
   private static final String TENANT = "testconsortia";
-  private static final int THREAD_COUNT = 4;
+  private static final int THREAD_COUNT = 1; // Consortia tests share tenant resources, must run sequentially
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("consortia-orders", true);
