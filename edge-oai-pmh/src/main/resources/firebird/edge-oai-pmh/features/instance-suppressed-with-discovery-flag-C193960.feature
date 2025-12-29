@@ -40,6 +40,16 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     And header x-okapi-tenant = testTenant
     When method PUT
     Then status 204
+    
+    # Verify the configuration was applied
+    Given path '/oai-pmh/configuration-settings', behaviorId
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method GET
+    Then status 200
+    * print 'Updated configuration:', response
+    And match response.configValue.suppressedRecordsProcessing == 'true'
 
     # Create a new instance with discoverySuppress set to true
     * def suppressedInstanceId = 'ffff6666-9f41-4837-8662-a1d99118005a'
@@ -61,6 +71,16 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     And request instance
     When method POST
     Then status 201
+    
+    # Verify the instance was created with discoverySuppress = true
+    Given path 'instance-storage/instances', suppressedInstanceId
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method GET
+    Then status 200
+    * print 'Created suppressed instance:', response
+    And match response.discoverySuppress == true
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * call sleep 2000
@@ -75,45 +95,78 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
     * eval sleep(5000)
 
-    # Verify the suppressed record IS in the response with discovery flag
+    # -------------------------------------------------------
+    # Transfer suppressed records with discovery flag
+    # -------------------------------------------------------
     * url edgeUrl
     Given path 'oai'
     And param apikey = apikey
     And param metadataPrefix = 'marc21'
     And param verb = 'ListRecords'
     And param from = currentDate
+    And param until = currentDate
     When method GET
     Then status 200
-    * print 'Response for suppressed record with discovery flag:', response
-    
-    # The response should contain the suppressed record
-    * def records = get response //*[local-name()='record']
-    * print 'Number of records found:', records.length
-    * def suppressedFound = karate.filter(records, function(r){ var header = r['header'] || r['{http://www.openarchives.org/OAI/2.0/}header']; if (!header) return false; var identifier = header.identifier || header['{http://www.openarchives.org/OAI/2.0/}identifier']; if (!identifier) return false; var idValue = typeof identifier === 'string' ? identifier : identifier['#text']; return idValue && idValue.indexOf(suppressedInstanceId) > -1; })
-    And match suppressedFound != []
-    * print 'Test 1 Passed: Suppressed record is present in response'
+    * print 'OAI response:', response
 
-    # Verify that the record contains the 999 field with subfield $t set to 1
-    * def recordMetadata = suppressedFound[0].metadata
-    * def xmlString = karate.xmlPath(recordMetadata, '/')
-    * print 'Record XML:', xmlString
+    # -------------------------------------------------------
+    # Ensure response is NOT an error
+    # -------------------------------------------------------
+    And match karate.xmlPath(response, "//*[local-name()='error']") == '#notpresent'
+
+    # -------------------------------------------------------
+    # Extract ALL OAI records
+    # -------------------------------------------------------
+    * def records = karate.xmlPath(response, "//*[local-name()='record']")
+    * print 'Number of records found:', records.length
+    And match records != '#notpresent'
     
-    # Get the 999 field
-    * def field999 = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='999']")
+    # Debug: Print all instance IDs in the response
+    * def allInstanceIds = karate.map(records, function(r){ return karate.xmlPath(r, "string(.//*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'])"); })
+    * print 'All instance IDs in response:', allInstanceIds
+    * print 'Looking for suppressed instance ID:', suppressedInstanceId
+
+    # -------------------------------------------------------
+    # Find suppressed instance by MARC 999$s (INSTANCE UUID)
+    # -------------------------------------------------------
+    * def suppressedRecords = karate.filter(records, function(r){ var instanceId = karate.xmlPath(r, "string(.//*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'])"); return instanceId && instanceId == suppressedInstanceId; })
+    * print 'Suppressed records found:', suppressedRecords
+
+    # ✔ Record MUST be present
+    And match suppressedRecords != []
+    * print 'Test 1 Passed: Suppressed instance IS present in ListRecords response'
+
+    # -------------------------------------------------------
+    # Extract MARC record XML
+    # -------------------------------------------------------
+    * def marcRecord = karate.xmlPath(suppressedRecords[0],".//*[local-name()='record' and namespace-uri()='http://www.loc.gov/MARC21/slim']")
+
+    * print 'MARC record XML:', marcRecord
+    And match marcRecord != '#notpresent'
+
+    # -------------------------------------------------------
+    # Verify 999 field exists
+    # -------------------------------------------------------
+    * def field999 = karate.xmlPath(marcRecord, ".//*[local-name()='datafield'][@tag='999']")
+
     * print '999 field:', field999
-    And match field999 != []
+    And match field999 != '#notpresent'
+
     * print 'Test 2 Passed: 999 field is present'
-    
-    # Get subfield $t from 999 field
-    * def subfield_t = karate.xmlPath(recordMetadata, "//*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='t']")
-    * print 'Subfield $t value:', subfield_t
-    And match subfield_t != []
-    
-    # Verify that subfield $t is set to 1 (indicating suppressed from discovery)
-    * def subfieldValue = subfield_t[0]
-    * print 'Subfield $t content:', subfieldValue
-    And match subfieldValue == '1'
-    * print 'Test 3 Passed: Subfield $t in 999 field is set to 1 (discovery suppressed flag)'
+
+    # -------------------------------------------------------
+    # Verify subfield $t exists
+    # -------------------------------------------------------
+    * def subfieldT = karate.xmlPath(marcRecord,".//*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='t']")
+
+    * print '999$t:', subfieldT
+    And match subfieldT != '#notpresent'
+
+    # -------------------------------------------------------
+    # Verify subfield $t value == 1
+    # -------------------------------------------------------
+    And match subfieldT[0] == '1'
+    * print 'Test 3 Passed: 999$t = 1 (discovery suppressed flag is set)'
 
     # Create a non-suppressed instance for comparison
     * def nonSuppressedInstanceId = 'ffff6666-9f41-4837-8662-a1d99118006a'
@@ -157,8 +210,8 @@ Feature: ListRecords: Harvest suppressed from discovery instance records with di
     * print 'Response with both suppressed and non-suppressed records:', response
     
     # The response should contain the non-suppressed record
-    * def records2 = get response //*[local-name()='record']
-    * def nonSuppressedFound = karate.filter(records2, function(r){ var header = r['header'] || r['{http://www.openarchives.org/OAI/2.0/}header']; if (!header) return false; var identifier = header.identifier || header['{http://www.openarchives.org/OAI/2.0/}identifier']; if (!identifier) return false; var idValue = typeof identifier === 'string' ? identifier : identifier['#text']; return idValue && idValue.indexOf(nonSuppressedInstanceId) > -1; })
+    * def records2 = karate.xmlPath(response, "//*[local-name()='record']")
+    * def nonSuppressedFound = karate.filter(records2, function(r){ var instanceId = karate.xmlPath(r, "string(.//*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'])"); return instanceId && instanceId == nonSuppressedInstanceId; })
     And match nonSuppressedFound != []
     * print 'Test 4 Passed: Non-suppressed record is present in response'
 
