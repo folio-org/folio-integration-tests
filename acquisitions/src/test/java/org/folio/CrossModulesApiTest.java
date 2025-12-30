@@ -8,16 +8,17 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
+@Order(6)
 @FolioTest(team = "thunderjet", module = "cross-modules")
 public class CrossModulesApiTest extends TestBaseEureka {
 
-  // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
   private static final String TEST_TENANT = "testcross";
   private static final int THREAD_COUNT = 4;

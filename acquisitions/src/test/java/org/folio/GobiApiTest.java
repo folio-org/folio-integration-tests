@@ -8,19 +8,20 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
+@Order(14)
 @FolioTest(team = "thunderjet", module = "mod-gobi")
 class GobiApiTest extends TestBaseEureka {
 
-  // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-gobi/features/";
   private static final String TEST_TENANT = "testmodgobi";
-  private static final int THREAD_COUNT = 1;
+  private static final int THREAD_COUNT = 1; // Gobi tests share tenant resources, must run sequentially
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("gobi-api-tests", true),

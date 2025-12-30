@@ -9,16 +9,17 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
+@Order(8)
 @FolioTest(team = "thunderjet", module = "mod-finance")
 public class FinanceApiTest extends TestBaseEureka {
 
-  // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-finance/features/";
   private static final String TEST_TENANT = "testfinance";
   private static final int THREAD_COUNT = 4;

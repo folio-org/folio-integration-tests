@@ -7,6 +7,7 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
@@ -23,6 +24,7 @@ import java.util.UUID;
  *   java -Dport=19000 -Dokapi_url=http://localhost:8000 -Dsecure_store_props=path/to/ephemeral.properties -jar target/edge-orders-fat.jar
  * The port number to use for edge modules is specified in karate-config.js.
  */
+@Order(11)
 @FolioTest(team = "thunderjet", module = "edge-orders")
 class EdgeOrdersApiTest extends TestBaseEureka {
 

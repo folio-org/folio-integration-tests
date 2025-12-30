@@ -5,10 +5,12 @@ import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
+@Order(2)
 @FolioTest(team = "thunderjet", module = "mod-data-export-spring")
 public class DataExportSpringApiTest extends TestBaseEureka {
 

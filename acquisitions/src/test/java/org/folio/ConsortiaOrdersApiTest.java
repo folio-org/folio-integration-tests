@@ -8,16 +8,17 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
+@Order(1)
 @FolioTest(team = "thunderjet", module = "consortia")
 class ConsortiaOrdersApiTest extends TestBaseEureka {
 
-  // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/consortia/";
   private static final String TENANT = "testconsortia";
   private static final int THREAD_COUNT = 1; // Consortia tests share tenant resources, must run sequentially

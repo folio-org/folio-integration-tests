@@ -8,6 +8,7 @@ import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
@@ -15,10 +16,10 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
+@Order(5)
 @FolioTest(team = "thunderjet", module = "mod-orders")
 public class OrdersSmokeApiTest extends TestBaseEureka {
 
-  // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final String TEST_TENANT = "testorders";
   private static final int THREAD_COUNT = 4;
