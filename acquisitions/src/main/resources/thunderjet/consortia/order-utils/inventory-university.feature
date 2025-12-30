@@ -55,9 +55,13 @@ Feature: Global inventory
     * def v = call createLibrary libraries
 
   Scenario: Create service points
+    * def randomStr = call random_string
+    * def name = 'Service-point-' + randomStr
+    * def code = 'TPS-' + randomStr
+    * def discoveryDisplayName = 'Service-point-' + randomStr
     * table servicePoints
-      | id                        | name            | code  | discoveryDisplayName |
-      | universityServicePointsId | 'Service point' | 'TPS' | 'Service point 1'    |
+      | id                        | name | code | discoveryDisplayName |
+      | universityServicePointsId | name | code | discoveryDisplayName |
     * def v = call createServicePoint servicePoints
 
   Scenario: Create holdings sources

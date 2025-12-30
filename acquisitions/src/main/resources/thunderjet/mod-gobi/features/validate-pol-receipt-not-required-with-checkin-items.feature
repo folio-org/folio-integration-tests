@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Validate POL receipt status with checkin items
 
   Background:

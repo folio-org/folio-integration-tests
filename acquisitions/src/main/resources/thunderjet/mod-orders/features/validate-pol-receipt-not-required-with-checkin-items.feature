@@ -1,4 +1,4 @@
-# Created for MODORDERS-1065
+# For MODORDERS-1065
 Feature: Validate PO Lines receipt status with check-in items
 
   Background:

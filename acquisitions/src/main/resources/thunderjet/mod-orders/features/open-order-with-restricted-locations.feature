@@ -1,5 +1,5 @@
+# For MODORDERS-969
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-969
 Feature: Open ongoing order
 
   Background:
