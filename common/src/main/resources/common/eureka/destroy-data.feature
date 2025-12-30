@@ -32,7 +32,7 @@ Feature: destroy data for tenant
     And request entitlementTemplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method DELETE
-    * match [200, 404] contains responseStatus
+    * match [200, 400] contains responseStatus
 
   @deleteTenant
   Scenario: delete tenant

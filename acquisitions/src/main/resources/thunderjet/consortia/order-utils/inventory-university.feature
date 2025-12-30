@@ -58,10 +58,10 @@ Feature: Global inventory
     * def randomStr = call random_string
     * def name = 'Service-point-' + randomStr
     * def code = 'TPS-' + randomStr
-    * def discoveryDisplayName = 'Service-point-1-' + randomStr
+    * def discoveryDisplayName = 'Service-point-' + randomStr
     * table servicePoints
-      | id                        | name      | code      | discoveryDisplayName      |
-      | universityServicePointsId | '#(name)' | '#(code)' | '#(discoveryDisplayName)' |
+      | id                        | name | code | discoveryDisplayName |
+      | universityServicePointsId | name | code | discoveryDisplayName |
     * def v = call createServicePoint servicePoints
 
   Scenario: Create holdings sources

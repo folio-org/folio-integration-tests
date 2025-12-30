@@ -55,10 +55,10 @@ Feature: Central inventory
     * def randomStr = call random_string
     * def name = 'Service-point-' + randomStr
     * def code = 'TPS-' + randomStr
-    * def discoveryDisplayName = 'Service-point-1-' + randomStr
+    * def discoveryDisplayName = 'Service-point-' + randomStr
     * table servicePoints
-      | id                     | name      | code      | discoveryDisplayName      |
-      | centralServicePointsId | '#(name)' | '#(code)' | '#(discoveryDisplayName)' |
+      | id                      | name | code | discoveryDisplayName |
+      | centralServicePointsId  | name | code | discoveryDisplayName |
     * def v = call createServicePoint servicePoints
 
   Scenario: create holdings sources
