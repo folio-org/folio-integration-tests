@@ -8,6 +8,7 @@ Feature: Import Bibframe2 RDF - Verify RDF
   Scenario: Validate Instance
     * def rdfCall = call getRdf
     * def rdfResponse = rdfCall.response
+    * print rdfResponse
     * def instance = karate.filter(rdfResponse, x => x['@id'] == 'http://localhost:8081/linked-data-editor/resources/' + resourceId)[0]
     * match instance['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Instance'
     * match instance['http://id.loc.gov/ontologies/bibframe/dimensions'][0]['@value'] == '19 cm'
@@ -101,5 +102,6 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * match instance['http://id.loc.gov/ontologies/bibframe/adminMetadata'].map(x => x['@id']) contains adminMetadata['@id']
 
   Scenario: Validate Creation Date
+    * def currentDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(new java.util.Date())
     * def creationDate = adminMetadata["http://id.loc.gov/ontologies/bibframe/creationDate"][0]["@value"]
     * match creationDate == currentDate

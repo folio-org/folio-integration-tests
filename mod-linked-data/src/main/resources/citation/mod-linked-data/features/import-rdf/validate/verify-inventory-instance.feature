@@ -11,11 +11,14 @@ Feature: Import Bibframe2 RDF - Verify Inventory instance
     * def inventoryInstanceId = searchCall.response.instances[0].id
     * def getInventoryInstanceCall = call getInventoryInstance { id: '#(inventoryInstanceId)' }
     * def response = getInventoryInstanceCall.response
+    * print response
     * def hrid = response.hrid
     * match response.source == 'LINKED_DATA'
 
     * match response.identifiers[*].value contains '2015047302'
     * match response.identifiers[*].value contains '9781452152448 board bk'
+    * match response.identifiers[*].value contains '9783958296879'
+    * match response.identifiers[*].value contains '9783957861153 paperback'
 
     * def subjectValues = karate.map(response.subjects, function(x){ return x.value })
     * match subjectValues == '#[6]'
@@ -39,5 +42,9 @@ Feature: Import Bibframe2 RDF - Verify Inventory instance
     * match nonPrimaryContributorNames contains 'International Congress on Philosophy, 2023, Vienna'
 
     * match response.publication contains { publisher: 'Chronicle Books LLC', place: 'San Francisco, CA', dateOfPublication: '[2016]', role: 'Publication' }
+    * match response.publication contains { publisher: "Kenneth Raymond Wight Associates", place: "Princeton, New Jersey", dateOfPublication: "[1965?]", role: "Production" }
+    * match response.publication contains { publisher: "Distributed by Allegro Corporation", place: "Portland, OR", dateOfPublication: "[2013]", role: "Distribution" }
+    * match response.publication contains { publisher: "Arion Press", place: "San Francisco", dateOfPublication: null, role: "Manufacture" }
+
     * def ldIdentifier = karate.filter(response.identifiers, function(x){ return x.value && x.value.startsWith('(ld)'); })[0].value
     * def resourceId = ldIdentifier.replace('(ld)', '').trim()
