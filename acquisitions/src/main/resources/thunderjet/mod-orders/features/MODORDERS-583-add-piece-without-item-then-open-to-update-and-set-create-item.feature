@@ -1,5 +1,5 @@
+# For MODORDERS-583
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-583
 Feature: If I don't choose to create an item when creating the piece. If I edit that piece and select create item the item must created
 
   Background:

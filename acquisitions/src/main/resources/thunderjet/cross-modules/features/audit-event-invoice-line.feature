@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Audit events for Invoice Line
 
   Background:

@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODFIN-264
+# For MODFIN-264
 @parallel=false
 Feature: Budget and fund optimistic locking
 

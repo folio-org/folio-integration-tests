@@ -1,4 +1,4 @@
-# for https://issues.folio.org/browse/MODFISTO-270
+# For MODFISTO-270
 @parallel=false
 Feature: Planned budgets without transactions should be deleted
 

@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-385
+# For MODINVOICE-385
 @parallel=false
 Feature: Cancel invoice and unrelease 2 encumbrances
 

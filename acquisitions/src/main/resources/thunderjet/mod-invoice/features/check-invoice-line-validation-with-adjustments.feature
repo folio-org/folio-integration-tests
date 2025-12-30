@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-449
+# For MODINVOICE-449
 Feature: Check invoiceLine validation with  adjustments
 
   Background:

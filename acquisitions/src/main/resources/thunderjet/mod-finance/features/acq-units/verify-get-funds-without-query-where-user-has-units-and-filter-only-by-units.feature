@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Get funds without providing filter query should take into account acquisition units
 
   Background:

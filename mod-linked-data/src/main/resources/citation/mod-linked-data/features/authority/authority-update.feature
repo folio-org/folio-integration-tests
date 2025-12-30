@@ -17,7 +17,6 @@ Feature: Authority update
     And match postAuthorityCall.response.qmRecordId == '#notnull'
 
     # Step 2: search for the created authority
-    * configure headers = testUserHeaders
     * def query = 'headingRef < "PAVELTEST" or headingRef >= "PAVELTEST"'
     * def browseAuthorityCall = call browseAuthority
     And match browseAuthorityCall.response.items[0].authority.id == '#notnull'
@@ -30,6 +29,7 @@ Feature: Authority update
     * def sourceRecordId = getAuthoritySrsCall.response.id
 
     # Step 4: create a work linking it to the authority by SrsId
+    * configure headers = testUserHeaders
     * def resourceRequest = read('samples/work_with_authority.json')
     * def postWorkCall = call postResource
     * def workResponse = postWorkCall.response.resource['http://bibfra.me/vocab/lite/Work']

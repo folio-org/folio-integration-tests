@@ -1,4 +1,4 @@
-# https://issues.folio.org/browse/MODEBSNET-53
+# For MODEBSNET-53
 Feature: Update Ebsconet Order Line with empty locations
 
   Background:
