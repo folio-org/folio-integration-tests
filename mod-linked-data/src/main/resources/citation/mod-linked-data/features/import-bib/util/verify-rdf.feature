@@ -71,10 +71,7 @@ Feature: Verify exported Bibframe2 RDF
     * def creator = contributorsRdfs.filter(x => x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))[0]
     * match creator['http://id.loc.gov/ontologies/bibframe/role'][0]['@id'] == 'http://id.loc.gov/vocabulary/relators/aut'
     * def creatorAgentId = creator['http://id.loc.gov/ontologies/bibframe/agent'][0]['@id']
-    * def creatorAgent = rdf.filter(x => x['@id'] == creatorAgentId)[0]
-    * match creatorAgent['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Agent'
-    * match creatorAgent['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Person'
-    * match creatorAgent['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'Edgell, David L., Sr., David Lee, 1938'
+    * match creatorAgentId == 'http://id.loc.gov/rwo/agents/n87116094'
 
     * def contributors = contributorsRdfs.filter(x => !x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))
 

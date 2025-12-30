@@ -10,7 +10,16 @@ Feature: Integration with SRS for import flow
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
   Scenario: Import MARC BIB record from SRS to linked-data
-    # Step 1: Setup - Create a new MARC bib record in SRS
+    # Step 1: Setup - Create a new MARC authority record and then a bib record that refers the authority record
+    * configure headers = testAdminHeaders
+    * def sourceRecordRequest = read('samples/authority_person_edgell_david.json')
+    * def postAuthorityCall = call postSourceRecordToStorage
+    * match postAuthorityCall.response.qmRecordId == '#notnull'
+    * def query = '(lccn="n87116094")'
+    * def searchAuthorityCall = call searchAuthority
+    * print searchAuthorityCall.response
+    * def authorityIdOfn87116094 = searchAuthorityCall.response.authorities[0].id
+
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/srs-request.json')
     * call postSourceRecordToStorage
@@ -46,7 +55,7 @@ Feature: Integration with SRS for import flow
     * call postImport { inventoryId: "#(inventoryInstanceIdFromSearchResponse)" }
 
     # Step 7: Verify that an instance and work are created in linked-data
-    * callonce read('util/verify.feature@verifyInstanceAndWork')
+    * callonce read('util/verify-api.feature')
 
     # Step 8: Verify that source of instance is changed to LINKED_DATA
     * callonce read('util/verify.feature@verifyInventoryInstanceUpdated')
