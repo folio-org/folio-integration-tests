@@ -1,5 +1,6 @@
 Feature: Verify Linked Data Graph
-  Scenario: Fetch Instance Subgraph
+  @C506675
+  Scenario: Fetch Instance Subgraph using inventory ID
     * def instanceResourceIdCall = call getResourceIdFromInventoryId { inventoryId:  '#(inventoryInstanceIdFromSearchResponse)' }
     * def instanceResourceId = instanceResourceIdCall.response.id
     * def subgraphCall = call getResourceGraph { resourceId: '#(instanceResourceId)' }
@@ -69,3 +70,52 @@ Feature: Verify Linked Data Graph
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/biogdata'] == ['Florence Mardirosian was American choral conductor of Armenian decent.']
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/adminhist'] == ['Co-published with the Australian War Memorial.']
     * match instanceSubgraph.doc['http://bibfra.me/vocab/lite/note'] contains 'Abstract also in English.'
+
+  @C436745
+  Scenario: Verify date-start and date-end
+    * match workSubgraph.doc['http://bibfra.me/vocab/lite/dateStart'] == ['2016']
+    * match workSubgraph.doc['http://bibfra.me/vocab/lite/dateEnd'] == ['2020']
+
+  @C958464
+  Scenario: Verify Hub created from MARC 600
+    # 1. Find the SUBJECT edge with the expected label
+    * def subjectEdgeMarc600 = workSubgraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT' && x.target.label == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin -- Drama -- Parodies, imitations, etc')[0]
+    * def subjectMarc600 = subjectEdgeMarc600.target
+
+    # Verify subject label and doc
+    * match subjectMarc600.label == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin -- Drama -- Parodies, imitations, etc'
+    * match subjectMarc600.doc['http://bibfra.me/vocab/lite/name'][0] == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin'
+    * match subjectMarc600.doc['http://bibfra.me/vocab/lite/label'][0] == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin -- Drama -- Parodies, imitations, etc'
+    * match subjectMarc600.doc['http://bibfra.me/vocab/lite/language'][0] == 'German & Latin'
+    * match subjectMarc600.doc['http://bibfra.me/vocab/library/formSubdivision'][0] == 'Drama'
+    * match subjectMarc600.doc['http://bibfra.me/vocab/library/generalSubdivision'][0] == 'Parodies, imitations, etc'
+    * match subjectMarc600.types contains 'CONCEPT'
+    * match subjectMarc600.types contains 'HUB'
+
+    # Verify SUB_FOCUS edges
+    * def subFocusLabelsMarc600 = subjectMarc600.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS').map(x => x.target.label)
+    * match subFocusLabelsMarc600 contains 'Drama'
+    * match subFocusLabelsMarc600 contains 'Parodies, imitations, etc'
+
+    # Verify FOCUS edge
+    * def focusEdgeMarc600 = subjectMarc600.outgoingEdges.filter(x => x.predicate == 'FOCUS')[0]
+    * def focusMarc600 = focusEdgeMarc600.target
+    * match focusMarc600.label == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin'
+    * match focusMarc600.doc['http://bibfra.me/vocab/lite/label'][0] == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin'
+    * match focusMarc600.doc['http://bibfra.me/vocab/lite/language'][0] == 'German & Latin'
+    * match focusMarc600.types contains 'HUB'
+
+    # Verify TITLE edge from FOCUS
+    * def titleEdgeMarc600 = focusMarc600.outgoingEdges.filter(x => x.predicate == 'TITLE')[0]
+    * def titleMarc600 = titleEdgeMarc600.target
+    * match titleMarc600.label == 'Medea'
+    * match titleMarc600.doc['http://bibfra.me/vocab/library/mainTitle'][0] == 'Medea'
+    * match titleMarc600.types contains 'TITLE'
+
+    # Verify CREATOR edge from FOCUS
+    * def creatorEdgeMarc600 = focusMarc600.outgoingEdges.filter(x => x.predicate == 'CREATOR')[0]
+    * def creatorMarc600 = creatorEdgeMarc600.target
+    * match creatorMarc600.label == 'Dracontius, Blossius Aemilius, active 5th century'
+    * match creatorMarc600.doc['http://bibfra.me/vocab/lite/name'][0] == 'Dracontius, Blossius Aemilius'
+    * match creatorMarc600.doc['http://bibfra.me/vocab/lite/date'][0] == 'active 5th century'
+    * match creatorMarc600.types contains 'PERSON'

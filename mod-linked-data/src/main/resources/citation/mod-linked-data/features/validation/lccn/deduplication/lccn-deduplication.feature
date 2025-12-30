@@ -9,6 +9,7 @@ Feature: LCCN validation for duplicates.
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
+  @C624317
   Scenario: Create a new resource in Linked Data, enable LCCN deduplication and try to create a resource with same LCCN.
     # Step 1: Enable LCCN deduplication
     * configure headers = testAdminHeaders

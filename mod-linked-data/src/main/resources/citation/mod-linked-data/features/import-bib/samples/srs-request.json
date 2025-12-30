@@ -53,6 +53,14 @@
       ]
     },
     {
+      "tag":"046",
+      "content":"$k 2016 $l 2020",
+      "indicators":[
+        "0",
+        "\\"
+      ]
+    },
+    {
       "tag":"050",
       "content":"$a PZ3.P785 $b Si",
       "indicators":[
@@ -185,6 +193,14 @@
       "content":"$a Abstract also in English.",
       "indicators":[
         "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"600",
+      "content":"$a Dracontius, Blossius Aemilius, $d active 5th century. $t Medea. $l German & Latin $v Drama $x Parodies, imitations, etc.",
+      "indicators":[
+        "1",
         "\\"
       ]
     },
