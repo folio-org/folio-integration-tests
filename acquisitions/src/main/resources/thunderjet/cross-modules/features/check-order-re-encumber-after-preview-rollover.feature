@@ -1,5 +1,4 @@
-# For https://issues.folio.org/browse/MODORDERS-915
-# and https://issues.folio.org/browse/MODORDERS-920
+# For MODORDERS-915, MODORDERS-920
 @parallel=false
 Feature: Check order re-encumber after preview rollover
 

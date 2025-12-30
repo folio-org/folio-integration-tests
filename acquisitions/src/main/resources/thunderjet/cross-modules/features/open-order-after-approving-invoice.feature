@@ -1,5 +1,5 @@
+# For MODORDERS-859
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-859
 Feature: Open order after approving invoice
 
   Background:

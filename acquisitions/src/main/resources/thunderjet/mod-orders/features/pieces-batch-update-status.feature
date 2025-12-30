@@ -1,4 +1,5 @@
-# MODORDERS-1210
+# For MODORDERS-1210
+@parallel=false
 Feature: Update Pieces statuses in batch
 
   Background:

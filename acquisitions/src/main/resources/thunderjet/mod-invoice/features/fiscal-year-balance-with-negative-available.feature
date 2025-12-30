@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODFISTO-285
+# For MODFISTO-285
 @parallel=false
 Feature: Check fiscal year balance when using a negative available
 

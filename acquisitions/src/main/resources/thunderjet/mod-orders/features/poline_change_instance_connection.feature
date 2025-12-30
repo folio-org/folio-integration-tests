@@ -1,5 +1,4 @@
-@parallel=false
-# for https://issues.folio.org/browse/MODORDERS-890
+# For MODORDERS-890
 Feature: PoLine change instance connection
 
   Background:

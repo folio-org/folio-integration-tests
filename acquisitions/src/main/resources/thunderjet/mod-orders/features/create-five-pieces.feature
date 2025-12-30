@@ -1,5 +1,5 @@
+# For MODORDERS-681
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-681
 Feature: Create fives pieces for an open order
 
   Background:

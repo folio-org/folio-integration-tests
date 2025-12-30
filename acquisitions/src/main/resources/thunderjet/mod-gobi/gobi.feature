@@ -1,3 +1,4 @@
+@parallel=false
 Feature: mod-gobi integration tests
 
   Background:

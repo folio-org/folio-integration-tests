@@ -1,4 +1,4 @@
-# created for https://issues.folio.org/browse/MODORDERS-578
+# For MODORDERS-578
 Feature: Open order without creating holdings
 
   Background:

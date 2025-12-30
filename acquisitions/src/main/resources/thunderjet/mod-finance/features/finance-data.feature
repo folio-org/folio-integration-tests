@@ -1,5 +1,5 @@
+# For FAT-17236, MODFIN-402, MODFIN-407, MODFISTO-517
 Feature: Karate tests for FY finance bulk get/update functionality
-  # for FAT-17236, MODFIN-402, MODFIN-407, MODFISTO-517
 
   Background:
     * print karate.info.scenarioName

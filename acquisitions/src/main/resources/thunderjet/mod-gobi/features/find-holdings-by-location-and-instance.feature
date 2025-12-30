@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Find holdings by location and instance
 
   Background:

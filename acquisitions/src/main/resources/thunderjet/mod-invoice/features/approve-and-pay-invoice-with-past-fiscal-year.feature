@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-463
+# For MODINVOICE-463
 @parallel=false
 Feature: Approve and pay invoice with past fiscal year
 

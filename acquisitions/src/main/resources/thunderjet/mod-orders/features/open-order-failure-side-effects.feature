@@ -1,5 +1,5 @@
+# For MODORDERS-528
 @parallel=false
-# created for https://issues.folio.org/browse/MODORDERS-528
 Feature: Open order failure side effects
 
   Background:

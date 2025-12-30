@@ -1,5 +1,4 @@
-# For: https://folio-org.atlassian.net/browse/MODORDERS-1356
-#      https://folio-org.atlassian.net/browse/MODORDSTOR-485
+# For MODORDERS-1356, MODORDSTOR-485
 Feature: Piece sequence numbers
 
   Background:

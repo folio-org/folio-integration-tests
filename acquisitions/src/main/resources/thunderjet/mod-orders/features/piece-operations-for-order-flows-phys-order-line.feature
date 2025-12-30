@@ -1,4 +1,4 @@
-# for https://issues.folio.org/browse/MODORDERS-568
+# For MODORDERS-568
 Feature: Test operations affecting pieces for physical po line with different options
 
   # This test does the following operations for all cases given in the data table at the end:
