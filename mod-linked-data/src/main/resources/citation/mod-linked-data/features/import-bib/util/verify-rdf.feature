@@ -1,11 +1,4 @@
 Feature: Verify exported Bibframe2 RDF
-  Background:
-    * url baseUrl
-    * call login testUser
-    * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = testUserHeaders
-    * def baseResourceUrl = 'http://localhost:8081/linked-data-editor/resources/'
-
   Scenario: Fetch Instance Subgraph
     * def rdfCall = call getRdf { resourceId:  '#(instanceResourceId)' }
     * def rdf = rdfCall.response
@@ -64,8 +57,8 @@ Feature: Verify exported Bibframe2 RDF
     * eval validateTitleResource(rdf, instanceRdf, workRdf, 'http://id.loc.gov/ontologies/bibframe/VariantTitle', 'http://id.loc.gov/vocabulary/vartitletype/run', 'Nrithya vidhyaa', null, null, null, null, null)
     * eval validateTitleResource(rdf, instanceRdf, workRdf, 'http://id.loc.gov/ontologies/bibframe/VariantTitle', 'http://id.loc.gov/vocabulary/vartitletype/cap', 'Padenie Parizha', 'roman', null, null, null, null)
 
-  @C805759
-  Scenario: Verify Creator & contrinutors of work
+  @C805758
+  Scenario: Verify Creator (LCCN present)
     * def contributionIds = workRdf['http://id.loc.gov/ontologies/bibframe/contribution'].map(x => x['@id'])
     * def contributorsRdfs = contributionIds.map(id => rdf.filter(x => x['@id'] == id)[0])
     * def creator = contributorsRdfs.filter(x => x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))[0]
@@ -73,6 +66,8 @@ Feature: Verify exported Bibframe2 RDF
     * def creatorAgentId = creator['http://id.loc.gov/ontologies/bibframe/agent'][0]['@id']
     * match creatorAgentId == 'http://id.loc.gov/rwo/agents/n87116094'
 
+  @C805759
+  Scenario: Verify Contrinutors (LCCN Not present)
     * def contributors = contributorsRdfs.filter(x => !x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))
 
     * def familyContributor = contributors.filter(x => rdf.filter(a => a['@id'] == x['http://id.loc.gov/ontologies/bibframe/agent'][0]['@id'])[0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'Rinehart family, Rinehart, Family Rinehart')[0]
