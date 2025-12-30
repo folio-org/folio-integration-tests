@@ -1,4 +1,7 @@
 Feature: Verify exported Bibframe2 RDF
+  Background:
+    * def baseResourceUrl = 'http://localhost:8081/linked-data-editor/resources/'
+
   Scenario: Fetch Instance Subgraph
     * def rdfCall = call getRdf { resourceId:  '#(instanceResourceId)' }
     * def rdf = rdfCall.response
