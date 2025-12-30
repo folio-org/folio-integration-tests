@@ -1,4 +1,4 @@
-# For MODINVOICE-583, UIOR-1406, https://foliotest.testrail.io/index.php?/runs/view/3260 (R3260), https://foliotest.testrail.io/index.php?/tests/view/5840056 (T5840056)
+# For MODINVOICE-583, UIOR-1406, https://foliotest.testrail.io/index.php?/cases/view/722381
 Feature: Release encumbrance when changing expense class both in PO line and invoice line (releaseEncumbrance=true)
 
   Background:
@@ -15,6 +15,7 @@ Feature: Release encumbrance when changing expense class both in PO line and inv
 
     * callonce variables
 
+  @C722381
   @Positive
   Scenario: Release encumbrance when changing expense class both in PO line and invoice line with releaseEncumbrance=true
     # Generate unique identifiers for this test scenario

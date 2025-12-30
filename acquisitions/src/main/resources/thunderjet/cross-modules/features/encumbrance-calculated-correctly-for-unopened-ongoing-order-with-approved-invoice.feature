@@ -15,6 +15,7 @@ Feature: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approv
 
     * callonce variables
 
+  @C844257
   @Positive
   Scenario: Encumbrance Calculated Correctly For Unopened Ongoing Order With Approved Invoice
     # Generate unique identifiers for this test scenario

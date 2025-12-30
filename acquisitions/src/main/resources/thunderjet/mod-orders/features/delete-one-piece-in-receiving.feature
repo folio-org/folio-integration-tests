@@ -16,6 +16,7 @@ Feature: Delete One Piece In Receiving
 
     * callonce variables
 
+  @C422159
   @Positive
   Scenario: Delete One Piece In Receiving And Verify Quantity Update
     * def fundId = call uuid

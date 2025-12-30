@@ -942,7 +942,7 @@ Feature: mod bulk operations holdings features
     And param query = query
     When method GET
     Then status 200
-    And match response.holdingsRecords[0].administrativeNotes[0] == ''
+    And match response.holdingsRecords[0].administrativeNotes[0] == '#notpresent'
     And match response.holdingsRecords[0].notes[0].note == ''
 
   Scenario: In-App approach remove notes

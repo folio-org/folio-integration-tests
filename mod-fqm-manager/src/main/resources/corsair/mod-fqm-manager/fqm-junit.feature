@@ -77,6 +77,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.electronic-access-relationships.collection.get' |
       | 'inventory-storage.holdings-note-types.collection.get'             |
       | 'inventory-storage.holdings-sources.item.post'                     |
+      | 'inventory-storage.holdings-types.collection.get'                  |
       | 'inventory-storage.holdings.item.get'                              |
       | 'inventory-storage.holdings.item.post'                             |
       | 'inventory-storage.identifier-types.collection.get'                |

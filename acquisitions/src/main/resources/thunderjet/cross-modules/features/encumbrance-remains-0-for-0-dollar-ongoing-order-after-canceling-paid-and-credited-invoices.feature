@@ -15,6 +15,7 @@ Feature: Encumbrance remains 0 for an $0 Ongoing order when paid and credited in
 
     * callonce variables
 
+  @C844264
   @Positive
   Scenario: Encumbrance remains 0 for an $0 Ongoing order when paid and credited invoices exist and after invoices cancelation
     # Generate unique identifiers for this test scenario

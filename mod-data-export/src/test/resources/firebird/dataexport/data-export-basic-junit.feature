@@ -17,6 +17,8 @@ Feature: mod-orders integration tests
       | 'mod-entities-links'        |
       | 'mod-quick-marc'            |
       | 'mod-users'                 |
+      | 'mod-linked-data'           |
+      | 'mod-fqm-manager'           |
 
     * table userPermissions
       | name                                                           |
@@ -78,9 +80,15 @@ Feature: mod-orders integration tests
       | 'data-export.export-authority-deleted.post'                    |
       | 'data-export.job.collection.get'                               |
       | 'data-export.job-executions.item.delete'                       |
+      | 'inventory-storage.authorities.collection.get'                 |
+      | 'data-export.configuration.post'                               |
+      | 'source-storage.records.formatted.item.get'                    |
+      | 'linked-data.resources.import.post'                            |
+      | 'linked-data.resources.rdf.get'                                |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 1200000 }
 
   Scenario: init global data
     * callonce read('classpath:global/mod_inventory_init_data.feature')

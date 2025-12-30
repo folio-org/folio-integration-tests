@@ -31,6 +31,12 @@ class EdgeDcbApiTest extends TestBaseEureka {
 
     @Test
     void testPickupFlow() { runFeatureTest("pickup-flow-proxy.feature"); }
+
+    @Test
+    void testRefreshShadowLocations() {
+        runFeatureTest("refresh-shadow-locations.feature");
+    }
+
     @BeforeAll
     public void setup() {
         runFeature("classpath:volaris/edge-dcb/edge-dcb-junit.feature");

@@ -103,14 +103,6 @@ Feature: init data for mod-entities-links
     When method PUT
     Then status 204
 
-  @PostCountLinks
-  Scenario: Count instance-authority links by authority ids
-    * def ids = karate.get('extIds')
-    Given path '/links/authorities/bulk/count'
-    And request ids
-    When method POST
-    Then status 200
-
   @TryPutInstanceLinks
   Scenario: Try to update instance-authority links collection for
     * def link = karate.get('extRequestBody')

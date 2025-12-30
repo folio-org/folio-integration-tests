@@ -33,7 +33,6 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.preview.get'                            |
       | 'linked-data.resources.import.post'                            |
       | 'linked-data.import.file.post'                                 |
-      | 'search.authorities.collection.get'                            |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
@@ -49,12 +48,7 @@ Feature: mod-linked-data integration tests
       | 'source-storage.records.post'                                  |
       | 'source-storage.records.generation.item.put'                   |
       | 'source-storage.records.formatted.item.get'                    |
-      | 'marc-records-editor.item.post'                                |
-      | 'marc-records-editor.item.put'                                 |
       | 'browse.authorities.collection.get'                            |
-      | 'specification-storage.specifications.collection.get'          |
-      | 'specification-storage.specification.rules.collection.get'     |
-      | 'specification-storage.specification.rules.item.patch'         |
       | 'ui-quick-marc.settings.lccn-duplicate-check.edit'             |
       | 'mod-settings.entries.collection.get'                          |
       | 'mod-settings.entries.item.get'                                |
@@ -63,5 +57,17 @@ Feature: mod-linked-data integration tests
       | 'mod-settings.global.write.ui-quick-marc.lccn-duplicate-check.manage' |
       | 'mod-settings.global.read.ui-quick-marc.lccn-duplicate-check.manage' |
 
+    * table adminPermissions
+      | name                                                           |
+      | 'marc-records-editor.item.post'                                |
+      | 'marc-records-editor.item.put'                                |
+      | 'search.authorities.collection.get'                            |
+      | 'specification-storage.specifications.collection.get'          |
+      | 'specification-storage.specification.rules.collection.get'     |
+      | 'specification-storage.specification.rules.item.patch'         |
+
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/setup-users.feature')
+
+  Scenario: Create admin user
+    * call read('classpath:common/eureka/create-additional-user.feature') { testUser: '#(testAdmin)', userPermissions: '#(adminPermissions)' }

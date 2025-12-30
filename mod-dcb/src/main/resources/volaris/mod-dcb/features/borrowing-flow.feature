@@ -159,19 +159,16 @@ Feature: Borrowing Flow Scenarios
 
   @GetTransactionStatusListAfterCancelled
   Scenario: Get Transaction status list after Cancelled
-    * def endDate = call getCurrentUtcDate
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def orgPath = '/transactions/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-    Given path newPath
-    And param apikey = key
-    And param fromDate = startDate
-    And param toDate = endDate
-    When method GET
-    Then status 200
-    And match $.totalRecords == 1
-    And match $.maximumPageNumber == 0
+    * def pollConfig = { expectedRecords: 1, path: '#(newPath)', apikey: '#(key)', baseUrl: '#(baseUrlNew)', startDate: '#(startDate)' }
+
+    Given def pollResult = call read("classpath:volaris/mod-dcb/reusable/poll-transaction-statuses.feature@PollTransactionStatuses") { config: '#(pollConfig)' }
+    Then def response = pollResult.response
+    And match response.totalRecords == 1
+    And match response.maximumPageNumber == 0
     And match response.transactions[0].id == dcbTransactionIdValidation8
     And match response.transactions[0].status == 'CANCELLED'
 
@@ -380,19 +377,15 @@ Feature: Borrowing Flow Scenarios
 
   @GetTransactionStatusListAfterOpen
   Scenario: Get Transaction status list after Open
-    * def endDate = call getCurrentUtcDate
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
-    * url baseUrlNew
     * def orgPath = '/transactions/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-    Given path newPath
-    And param apikey = key
-    And param fromDate = startDate
-    And param toDate = endDate
-    When method GET
-    Then status 200
-    And match $.totalRecords == 2
-    And match $.maximumPageNumber == 0
+    * def pollConfig = { expectedRecords: 2, path: '#(newPath)', apikey: '#(key)', baseUrl: '#(baseUrlNew)', startDate: '#(startDate)' }
+
+    Given def pollResult = call read("classpath:volaris/mod-dcb/reusable/poll-transaction-statuses.feature@PollTransactionStatuses") { config: '#(pollConfig)' }
+    Then def response = pollResult.response
+    And match response.totalRecords == 2
+    And match response.maximumPageNumber == 0
     And match response.transactions[0].id == dcbTransactionIdValidation8
     And match response.transactions[0].status == 'CANCELLED'
     And match response.transactions[1].id == dcbTransactionId31
@@ -437,19 +430,15 @@ Feature: Borrowing Flow Scenarios
 
   @GetTransactionStatusListAfterAwaitingPickup
   Scenario: Get Transaction status list after awaiting pickup
-    * def endDate = call getCurrentUtcDate
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
-    * url baseUrlNew
     * def orgPath = '/transactions/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-    Given path newPath
-    And param apikey = key
-    And param fromDate = startDate
-    And param toDate = endDate
-    When method GET
-    Then status 200
-    And match $.totalRecords == 3
-    And match $.maximumPageNumber == 0
+    * def pollConfig = { expectedRecords: 3, path: '#(newPath)', apikey: '#(key)', baseUrl: '#(baseUrlNew)', startDate: '#(startDate)' }
+
+    Given def pollResult = call read("classpath:volaris/mod-dcb/reusable/poll-transaction-statuses.feature@PollTransactionStatuses") { config: '#(pollConfig)' }
+    Then def response = pollResult.response
+    And match response.totalRecords == 3
+    And match response.maximumPageNumber == 0
     And match response.transactions[0].id == dcbTransactionIdValidation8
     And match response.transactions[0].status == 'CANCELLED'
     And match response.transactions[1].id == dcbTransactionId31
@@ -496,21 +485,15 @@ Feature: Borrowing Flow Scenarios
 
   @GetTransactionStatusListAfterItemCheckOut
   Scenario: Get Transaction status list after Check out
-    * def endDate = call getCurrentUtcDate
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
-    * url baseUrlNew
     * def orgPath = '/transactions/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-    Given path newPath
-    And param apikey = key
-    And param fromDate = startDate
-    And param toDate = endDate
-    And param pageSize = 3
-    And param pageNumber = 1
-    When method GET
-    Then status 200
-    And match $.totalRecords == 4
-    And match $.maximumPageNumber == 1
+    * def pollConfig = { expectedRecords: 4, pageSize: 3, pageNumber: 1, path: '#(newPath)', apikey: '#(key)', baseUrl: '#(baseUrlNew)', startDate: '#(startDate)' }
+
+    Given def pollResult = call read("classpath:volaris/mod-dcb/reusable/poll-transaction-statuses.feature@PollTransactionStatuses") { config: '#(pollConfig)' }
+    Then def response = pollResult.response
+    And match response.totalRecords == 4
+    And match response.maximumPageNumber == 1
     And match response.transactions[0].id == dcbTransactionId31
     And match response.transactions[0].status == 'ITEM_CHECKED_OUT'
 
@@ -593,21 +576,15 @@ Feature: Borrowing Flow Scenarios
 
   @GetTransactionStatusListAfterCheckIn
   Scenario: Get Transaction status list after Check In
-    * def endDate = call getCurrentUtcDate
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
-    * url baseUrlNew
     * def orgPath = '/transactions/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-    Given path newPath
-    And param apikey = key
-    And param fromDate = startDate
-    And param toDate = endDate
-    And param pageSize = 3
-    And param pageNumber = 1
-    When method GET
-    Then status 200
-    And match $.totalRecords == 5
-    And match $.maximumPageNumber == 1
+    * def pollConfig = { expectedRecords: 5, pageSize: 3, pageNumber: 1, path: '#(newPath)', apikey: '#(key)', baseUrl: '#(baseUrlNew)', startDate: '#(startDate)' }
+
+    Given def pollResult = call read("classpath:volaris/mod-dcb/reusable/poll-transaction-statuses.feature@PollTransactionStatuses") { config: '#(pollConfig)' }
+    Then def response = pollResult.response
+    And match response.totalRecords == 5
+    And match response.maximumPageNumber == 1
     And match response.transactions[0].id == dcbTransactionId31
     And match response.transactions[0].status == 'ITEM_CHECKED_OUT'
     And match response.transactions[1].id == dcbTransactionId31
@@ -643,20 +620,14 @@ Feature: Borrowing Flow Scenarios
 
   @GetTransactionStatusListAfterClosed
   Scenario: Get Transaction status list after Closed
-    * def endDate = call getCurrentUtcDate
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
-    * url baseUrlNew
     * def orgPath = '/transactions/status'
     * def newPath = proxyCall == true ? proxyPath+orgPath : orgPath
-    Given path newPath
-    And param apikey = key
-    And param fromDate = startDate
-    And param toDate = endDate
-    And param pageSize = 1
-    And param pageNumber = 5
-    When method GET
-    Then status 200
-    And match $.totalRecords == 6
-    And match $.maximumPageNumber == 5
+    * def pollConfig = { expectedRecords: 6, pageSize: 1, pageNumber: 5, path: '#(newPath)', apikey: '#(key)', baseUrl: '#(baseUrlNew)', startDate: '#(startDate)' }
+
+    Given def pollResult = call read("classpath:volaris/mod-dcb/reusable/poll-transaction-statuses.feature@PollTransactionStatuses") { config: '#(pollConfig)' }
+    Then def response = pollResult.response
+    And match response.totalRecords == 6
+    And match response.maximumPageNumber == 5
     And match response.transactions[0].id == dcbTransactionId31
     And match response.transactions[0].status == 'CLOSED'

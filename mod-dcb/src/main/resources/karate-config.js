@@ -16,7 +16,6 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9703',
-    centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -104,11 +103,10 @@ function fn() {
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-volaris-edge.ci.folio.org';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
-    config.mockServerUrl = karate.properties['mockServerUrl'] || 'https://folio-etesting-cikarate-mockserver.ci.folio.org';
     config.admin = {
       tenant: '${admin.tenant}',
       name: '${admin.name}',

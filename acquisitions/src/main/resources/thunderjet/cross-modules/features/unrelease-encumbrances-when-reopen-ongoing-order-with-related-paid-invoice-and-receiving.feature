@@ -20,6 +20,7 @@ Feature: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invo
 
     * callonce variables
 
+  @C356782
   @Positive
   # TestRail: https://foliotest.testrail.io/index.php?/cases/view/356782
   Scenario: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invoice And Receiving
@@ -191,6 +192,7 @@ Feature: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invo
     When method GET
     Then status 200
 
+  @C356412
   @Positive
   # TestRail: https://foliotest.testrail.io/index.php?/cases/view/356412
   Scenario: Unrelease Encumbrances When Reopen Received One-Time Order With Related Approved Invoice (Release Encumbrance = False)
@@ -322,6 +324,7 @@ Feature: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invo
     When method GET
     Then status 200
 
+  @C358532
   @Positive
   # TestRail: https://foliotest.testrail.io/index.php?/cases/view/358532
   Scenario: Unrelease Encumbrances When Reopen Unreceived One-Time Order With Related Paid Invoice (Release Encumbrance = False)
@@ -435,6 +438,7 @@ Feature: Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invo
     When method GET
     Then status 200
 
+  @C356785
   @Positive
   # TestRail: https://foliotest.testrail.io/index.php?/cases/view/356785
   Scenario: Unrelease Encumbrances When Reopen Ongoing Order With Related Approved Invoice And No Receiving (Release Encumbrance = False)

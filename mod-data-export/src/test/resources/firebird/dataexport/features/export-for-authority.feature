@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Tests export hodings records
 
   Background:
@@ -13,13 +14,22 @@ Feature: Tests export hodings records
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
-  #Positive scenarios
 
-  Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
-    #should create file definition
+  Scenario Outline: test upload file and export flow for authority when related MARC_AUTHORITY records exist.
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "100000"
+      }
+      """
+    When method POST
+    Then status 201
+
     Given path 'data-export/file-definitions'
     And def fileDefinitionId = uuid()
-    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -47,8 +57,8 @@ Feature: Tests export hodings records
     And retry until response.status == 'COMPLETED' && response.sourcePath != null
     When method GET
     Then status 200
+    * print 'File definition response:', response
 
-    #should export instances and return 204
     Given path 'data-export/export'
     And configure headers = headersUser
     And def requestBody = {'fileDefinitionId':'#(fileDefinitionId)','jobProfileId':'#(defaultAuthorityJobProfileId)','idType':'authority'}
@@ -73,10 +83,10 @@ Feature: Tests export hodings records
     And match response.link == '#notnull'
     * def downloadLink = response.link
 
-    #download link content should not be empty
     Given url downloadLink
     When method GET
     Then status 200
+    * print response
     And match response == '#notnull'
 
     Examples:
@@ -87,7 +97,7 @@ Feature: Tests export hodings records
     #should create file definition
     Given path 'data-export/file-definitions'
     And def fileDefinitionId = uuid()
-    And def fileDefinition = {'id':#(fileDefinitionId),'fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
+    And def fileDefinition = {'id':'#(fileDefinitionId)','fileName':'<fileName>', 'uploadFormat':'<uploadFormat>'}
     And request fileDefinition
     When method POST
     Then status 201
@@ -146,6 +156,53 @@ Feature: Tests export hodings records
     When method GET
     Then status 200
     And match response == '#notnull'
+
+    #verify according to C805753
+    And def Checker = Java.type("org.folio.utils.MarcFileInstanceFieldsExistenceChecker")
+    And def checker = new Checker(response)
+    And checker.checkLccn() == true
+    And checker.checkCancelledSystemControlNumbers() == true
+    And checker.checkIssn() == true
+    And checker.checkUpc() == true
+    And checker.checkInvalidUpc() == true
+    And checker.checkIsmn() == true
+    And checker.checkInvalidIssn() == true
+    And checker.checkDoi() == true
+    And checker.checkHandle() == true
+    And checker.checkUrn() == true
+    And checker.checkAsin() == true
+    And checker.checkBnb() == true
+    And checker.checkLocalIdentifier() == true
+    And checker.checkOtherStandartIdentifier() == true
+    And checker.checkStdEdNl() == true
+    And checker.checkUkMac() == true
+    And checker.checkPublisherDistributionNumber() == true
+    And checker.checkCoden() == true
+    And checker.checkSystemControlNumber() == true
+    And checker.checkGpoItemNumber() == true
+    And checker.checkReportNumber() == true
+    And checker.checkUniformTitle() == true
+    And checker.checkTitle() == true
+    And checker.checkVariantTitle() == true
+    And checker.checkFormerTitle() == true
+    And checker.checkEdition() == true
+    And checker.checkPlacePublisherPublicationDate() == true
+    And checker.checkPublicationFrequency() == true
+    And checker.checkText() == true
+    And checker.checkPublicationRange() == true
+    And checker.checkSeriesStatements() == true
+    And checker.checkGeneralNote() == true
+    And checker.checkSubjects() == true
+    And checker.checkGenre() == true
+    And checker.checkContributorPersonalName() == true
+    And checker.checkContributorCorporateName() == true
+    And checker.checkContributorMeetingName() == true
+    And checker.checkElectronicAccessResourceRelationship() == true
+    And checker.checkElectronicAccessVersionOfResourceRelationship() == true
+    And checker.checkElectronicAccessRelatedResourceRelationship() == true
+    And checker.checkElectronicAccessOtherRelationship() == true
+    And checker.checkId() == true
+    And checker.checkLeaderStatus('d') == false
 
     Examples:
       | fileName                      | uploadFormat |

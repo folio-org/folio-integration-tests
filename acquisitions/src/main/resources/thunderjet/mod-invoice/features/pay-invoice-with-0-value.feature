@@ -15,6 +15,7 @@ Feature: Pay Invoice With 0 Value
 
     * callonce variables
 
+  @C357044
   @Positive
   Scenario: Pay Invoice With 0 Value
     * def fundId1 = call uuid

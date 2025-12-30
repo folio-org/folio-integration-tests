@@ -48,6 +48,22 @@
         "\\",
         "\\"
       ]
+    },
+    {
+      "tag":"450",
+      "content":"$a Primary readers",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"450",
+      "content":"$w nne $a Primers",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
     }
   ],
   "parsedRecordDtoId":"00000000-0000-0000-0000-000000000000",

@@ -15,6 +15,7 @@ Feature: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
 
     * callonce variables
 
+  @C895660
   @Positive
   Scenario: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
     # Generate unique identifiers for this test scenario
