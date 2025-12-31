@@ -1,12 +1,12 @@
 Feature: Verify linked data graph using APIs
 
-  Scenario: Search for the new instance in linked-data's mod-search
+  Scenario: Vefify instance in mod-search
     * def expectedSearchResponse = read('samples/expected-search-response.json')
     * def searchCall = call searchLinkedDataWork
     * def searchResult = searchCall.response.content[0]
     * match searchResult contains expectedSearchResponse
 
-  Scenario: Fetch the work resource and validate
+  Scenario: Verify work resource
     * def getWorkCall = call getResource { id: "#(searchResult.id)" }
     * def workTitles = getWorkCall.response.resource['http://bibfra.me/vocab/lite/Work']['http://bibfra.me/vocab/library/title']
     * def workMainTitleObj = workTitles.filter(x => x['http://bibfra.me/vocab/library/Title']).map(x => x['http://bibfra.me/vocab/library/Title'])[0]

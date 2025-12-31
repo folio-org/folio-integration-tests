@@ -66,6 +66,11 @@ class ModLinkedDataTest extends TestBaseEureka {
 
   @Test
   void rdfImport() {
-      runFeatureTest("import-rdf/import-rdf.feature");
+    runFeatureTest("import-rdf/import-rdf.feature");
+  }
+
+  @Test
+  void authorityCreate() {
+    runFeatureTest("authority/authority-create.feature");
   }
 }

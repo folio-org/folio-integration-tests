@@ -2,7 +2,7 @@ Feature: Verify exported Bibframe2 RDF
   Background:
     * def baseResourceUrl = 'http://localhost:8081/linked-data-editor/resources/'
 
-  Scenario: Fetch Instance Subgraph
+  Scenario: Verify RDF can be generated for the graph
     * def rdfCall = call getRdf { resourceId:  '#(instanceResourceId)' }
     * def rdf = rdfCall.response
     * def instanceRdf = rdf.filter(x => x['@id'] == baseResourceUrl + instanceResourceId)[0]
@@ -10,7 +10,7 @@ Feature: Verify exported Bibframe2 RDF
     * def workRdf = rdf.filter(x => x['@id'] == workId)[0]
 
   @C794523
-  Scenario: Verify statement of responsibility, dimensions and titles
+  Scenario: Verify statement of responsibility, dimensions and titles in the RDF
     * match instanceRdf['http://id.loc.gov/ontologies/bibframe/dimensions'] == [{ '@value': '31 cm +' }]
     * match instanceRdf['http://id.loc.gov/ontologies/bibframe/responsibilityStatement'] == [{ '@value': 'by Ernest Poole' }]
 
@@ -61,7 +61,7 @@ Feature: Verify exported Bibframe2 RDF
     * eval validateTitleResource(rdf, instanceRdf, workRdf, 'http://id.loc.gov/ontologies/bibframe/VariantTitle', 'http://id.loc.gov/vocabulary/vartitletype/cap', 'Padenie Parizha', 'roman', null, null, null, null)
 
   @C805758
-  Scenario: Verify Creator (LCCN present)
+  Scenario: Verify Creator (LCCN present) in the RDF
     * def contributionIds = workRdf['http://id.loc.gov/ontologies/bibframe/contribution'].map(x => x['@id'])
     * def contributorsRdfs = contributionIds.map(id => rdf.filter(x => x['@id'] == id)[0])
     * def creator = contributorsRdfs.filter(x => x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))[0]
@@ -70,7 +70,7 @@ Feature: Verify exported Bibframe2 RDF
     * match creatorAgentId == 'http://id.loc.gov/rwo/agents/n87116094'
 
   @C805759
-  Scenario: Verify Contrinutors (LCCN Not present)
+  Scenario: Verify Contrinutors (LCCN Not present) in the RDF
     * def contributors = contributorsRdfs.filter(x => !x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))
 
     * def familyContributor = contributors.filter(x => rdf.filter(a => a['@id'] == x['http://id.loc.gov/ontologies/bibframe/agent'][0]['@id'])[0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'Rinehart family, Rinehart, Family Rinehart')[0]
@@ -101,7 +101,7 @@ Feature: Verify exported Bibframe2 RDF
     * match meetingAgent['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Meeting'
     * match meetingAgent['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'International Business Engineering Conference, 2018, Legian, Bali, Indonesia'
 
-  Scenario: Verify provision activity
+  Scenario: Verify provision activity in the RDF
     * def provisionActivityIds = instanceRdf['http://id.loc.gov/ontologies/bibframe/provisionActivity'].map(x => x['@id'])
 
     * def mcmillan = rdf.filter(x => x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/ProvisionActivity') && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Publication') && x['http://id.loc.gov/ontologies/bflc/simpleAgent'] && x['http://id.loc.gov/ontologies/bflc/simpleAgent'][0]['@value'] == 'The Macmillan Company')
