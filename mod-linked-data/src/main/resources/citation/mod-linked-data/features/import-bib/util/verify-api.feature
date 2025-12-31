@@ -14,7 +14,6 @@ Feature: Verify linked data graph using APIs
 
   @C627246
   Scenario: Verify that the creator has 'isPreferred' set to true as it is a controlled authority
-    * print getWorkCall.response
     * def expectedCreator = [{ id: '#notnull', label: 'Edgell, David L., Sr., David Lee, 1938', isPreferred: true, type: 'http://bibfra.me/vocab/lite/Person', roles: ['http://bibfra.me/vocab/relation/author']}]
     * match getWorkCall.response.resource['http://bibfra.me/vocab/lite/Work']['_creatorReference'] == expectedCreator
 

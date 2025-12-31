@@ -11,7 +11,6 @@ Feature: Import Bibframe2 RDF - Verify Inventory instance
     * def inventoryInstanceId = searchCall.response.instances[0].id
     * def getInventoryInstanceCall = call getInventoryInstance { id: '#(inventoryInstanceId)' }
     * def response = getInventoryInstanceCall.response
-    * print response
     * def hrid = response.hrid
     * match response.source == 'LINKED_DATA'
 

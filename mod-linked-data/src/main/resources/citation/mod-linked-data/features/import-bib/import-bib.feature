@@ -17,7 +17,6 @@ Feature: Integration with SRS for import flow
     * match postAuthorityCall.response.qmRecordId == '#notnull'
     * def query = '(lccn="n87116094")'
     * def searchAuthorityCall = call searchAuthority
-    * print searchAuthorityCall.response
     * def authorityIdOfn87116094 = searchAuthorityCall.response.authorities[0].id
 
     * configure headers = testAdminHeaders

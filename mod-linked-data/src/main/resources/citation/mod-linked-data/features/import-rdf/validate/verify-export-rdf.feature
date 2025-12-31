@@ -8,7 +8,6 @@ Feature: Import Bibframe2 RDF - Verify RDF
   Scenario: Validate Instance
     * def rdfCall = call getRdf
     * def rdfResponse = rdfCall.response
-    * print rdfResponse
     * def instance = karate.filter(rdfResponse, x => x['@id'] == 'http://localhost:8081/linked-data-editor/resources/' + resourceId)[0]
     * match instance['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Instance'
     * match instance['http://id.loc.gov/ontologies/bibframe/dimensions'][0]['@value'] == '19 cm'

@@ -100,3 +100,52 @@ Feature: Verify exported Bibframe2 RDF
     * match meetingAgent['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Agent'
     * match meetingAgent['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Meeting'
     * match meetingAgent['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'International Business Engineering Conference, 2018, Legian, Bali, Indonesia'
+
+  Scenario: Verify provision activity
+    * def provisionActivityIds = instanceRdf['http://id.loc.gov/ontologies/bibframe/provisionActivity'].map(x => x['@id'])
+
+    * def mcmillan = rdf.filter(x => x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/ProvisionActivity') && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Publication') && x['http://id.loc.gov/ontologies/bflc/simpleAgent'] && x['http://id.loc.gov/ontologies/bflc/simpleAgent'][0]['@value'] == 'The Macmillan Company')
+    * match mcmillan == '#[1]'
+    * def mcmillan = mcmillan[0]
+    * match provisionActivityIds contains mcmillan['@id']
+    * match mcmillan['http://id.loc.gov/ontologies/bibframe/date'] == [{ '@value': '1927' }]
+    * match mcmillan['http://id.loc.gov/ontologies/bflc/simpleDate'] == [{ '@value': '1927' }]
+    * match mcmillan['http://id.loc.gov/ontologies/bflc/simplePlace'] == [{ '@value': 'New York' }]
+    * match mcmillan['http://id.loc.gov/ontologies/bibframe/place'] == [{ '@id': 'http://id.loc.gov/vocabulary/countries/nyu' }]
+
+    # Verification for ProvisionActivity/Publication object with simpleDate 2000
+    * eval provision2000 = rdf.filter(x => x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/ProvisionActivity') && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Publication') && x['http://id.loc.gov/ontologies/bflc/simpleDate'] && x['http://id.loc.gov/ontologies/bflc/simpleDate'][0]['@value'] == '2000')
+    * match provision2000 == '#[1]'
+    * def provision2000 = provision2000[0]
+    * match provisionActivityIds contains provision2000['@id']
+    * match provision2000['http://id.loc.gov/ontologies/bibframe/date'] == [{ '@value': '1927' }]
+    * match provision2000['http://id.loc.gov/ontologies/bibframe/place'] == [{ '@id': 'http://id.loc.gov/vocabulary/countries/nyu' }]
+
+    # Verification for ProvisionActivity/Publication object with simpleAgent 'Academic Press is an Imprint of Elsevier'
+    * eval elsevier = rdf.filter(x => x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/ProvisionActivity') && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Publication') && x['http://id.loc.gov/ontologies/bflc/simpleAgent'] && x['http://id.loc.gov/ontologies/bflc/simpleAgent'][0]['@value'] == 'Academic Press is an Imprint of Elsevier')
+    * match elsevier == '#[1]'
+    * def elsevier = elsevier[0]
+    * match provisionActivityIds contains elsevier['@id']
+    * match elsevier['http://id.loc.gov/ontologies/bibframe/date'] == [{ '@value': '1927' }]
+    * match elsevier['http://id.loc.gov/ontologies/bflc/simpleDate'] == [{ '@value': '2019' }]
+    * match elsevier['http://id.loc.gov/ontologies/bflc/simplePlace'] == [{ '@value': 'San Diego' }]
+    * match elsevier['http://id.loc.gov/ontologies/bibframe/place'] == [{ '@id': 'http://id.loc.gov/vocabulary/countries/nyu' }]
+
+    # Verification for ProvisionActivity/Distribution object with simpleAgent 'For sale by the Superintendent of Documents, U.S. Government Publishing Office'
+    * eval gpo = rdf.filter(x => x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/ProvisionActivity') && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Distribution') && x['http://id.loc.gov/ontologies/bflc/simpleAgent'] && x['http://id.loc.gov/ontologies/bflc/simpleAgent'][0]['@value'] == 'For sale by the Superintendent of Documents, U.S. Government Publishing Office')
+    * match gpo == '#[1]'
+    * def gpo = gpo[0]
+    * match provisionActivityIds contains gpo['@id']
+    * match gpo['http://id.loc.gov/ontologies/bibframe/date'] == [{ '@value': '1927' }]
+    * match gpo['http://id.loc.gov/ontologies/bflc/simplePlace'] == [{ '@value': 'Washington, DC' }]
+    * match gpo['http://id.loc.gov/ontologies/bibframe/place'] == [{ '@id': 'http://id.loc.gov/vocabulary/countries/nyu' }]
+
+    # Verification for ProvisionActivity/Manufacture object with simpleAgent 'Imp. Nounagnon & Fils'
+    * eval nounagnon = rdf.filter(x => x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/ProvisionActivity') && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Manufacture') && x['http://id.loc.gov/ontologies/bflc/simpleAgent'] && x['http://id.loc.gov/ontologies/bflc/simpleAgent'][0]['@value'] == 'Imp. Nounagnon & Fils')
+    * match nounagnon == '#[1]'
+    * def nounagnon = nounagnon[0]
+    * match provisionActivityIds contains nounagnon['@id']
+    * match nounagnon['http://id.loc.gov/ontologies/bibframe/date'] == [{ '@value': '1927' }]
+    * match nounagnon['http://id.loc.gov/ontologies/bflc/simpleDate'] == [{ '@value': '2018' }]
+    * match nounagnon['http://id.loc.gov/ontologies/bflc/simplePlace'] == [{ '@value': 'Benin' }]
+    * match nounagnon['http://id.loc.gov/ontologies/bibframe/place'] == [{ '@id': 'http://id.loc.gov/vocabulary/countries/nyu' }]

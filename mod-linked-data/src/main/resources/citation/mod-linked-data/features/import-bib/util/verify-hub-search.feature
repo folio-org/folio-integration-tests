@@ -3,7 +3,6 @@ Feature: Hub Search
   Scenario Outline: Verify hub is indexed.
     * def query = '<query>'
     * def searchCall = call searchLinkedDataHub
-    * print searchCall.response
     * match searchCall.response.totalRecords == 1
     * def actualLabel = searchCall.response.content[0].label
     * def actualId = searchCall.response.content[0].id

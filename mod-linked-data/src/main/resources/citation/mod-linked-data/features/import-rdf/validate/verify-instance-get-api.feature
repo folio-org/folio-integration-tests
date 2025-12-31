@@ -3,7 +3,6 @@ Feature: Import Bibframe2 RDF - Verify Get instance API
   Scenario: Get instance data using API
     * def getInstanceResourceCall = call getResource { id: "#(resourceId)" }
     * def instanceResource = getInstanceResourceCall.response
-    * print instanceResource
 
   @C788734
   Scenario: Verify Identifiers (LCCN, ISBN, IAN)
