@@ -88,9 +88,9 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-corsair-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
     config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
     config.admin = {
       tenant: 'supertenant',

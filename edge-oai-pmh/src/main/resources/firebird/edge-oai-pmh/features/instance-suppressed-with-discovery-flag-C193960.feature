@@ -117,5 +117,5 @@ Feature: instance suppressed with discovery flag C193960
     # Verify 999 field contains subfield $t that is set to 1 (suppression flag)
     * def tValue = karate.xmlPath(response, "//record[header/identifier[contains(.,'" + newInstanceId + "')]]//datafield[@tag='999']/subfield[@code='t']/text()")
     * print 'Suppression flag (999$t):', tValue
-    And match tValue contains == '1'
+    And match tValue contains '1'
 
