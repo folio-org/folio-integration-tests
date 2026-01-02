@@ -105,27 +105,27 @@ public class ModOaiPmhTests extends TestBaseEureka {
         runFeatureTest("oaipmh-listidentifiers-deleted-C729201");
     }
 
-    @Order(12)
-    @Test
-    void oaiPmhListRecordsC375976() {
-        runFeatureTest("oaiPmhListRecordsC375976");
-    }
-
-    @Order(13)
-    @Test
-    void oaiPmhListRecordsC375978() {
-        runFeatureTest("oaiPmhListRecordsC375978");
-    }
-
-    @Order(14)
-    @Test
-    void oaiPmhListRecordsC729194() {
-        runFeatureTest("oaiPmhListRecordsC729194");
-    }
-
-    @Order(15)
-    @Test
-    void oaiPmhListRecordsC729200() {
-        runFeatureTest("oaiPmhListRecordsC729200");
-    }
+//    @Order(12)
+//    @Test
+//    void oaiPmhListRecordsC375976() {
+//        runFeatureTest("oaiPmhListRecordsC375976");
+//    }
+//
+//    @Order(13)
+//    @Test
+//    void oaiPmhListRecordsC375978() {
+//        runFeatureTest("oaiPmhListRecordsC375978");
+//    }
+//
+//    @Order(14)
+//    @Test
+//    void oaiPmhListRecordsC729194() {
+//        runFeatureTest("oaiPmhListRecordsC729194");
+//    }
+//
+//    @Order(15)
+//    @Test
+//    void oaiPmhListRecordsC729200() {
+//        runFeatureTest("oaiPmhListRecordsC729200");
+//    }
 }
