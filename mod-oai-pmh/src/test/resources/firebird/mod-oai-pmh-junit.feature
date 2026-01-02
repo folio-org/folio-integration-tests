@@ -11,6 +11,7 @@ Feature: bulk operations integration tests
       | 'mod-login'                 |
       | 'mod-source-record-storage' |
       | 'mod-inventory-storage'     |
+      | 'mod-quick-marc'            |
 
     * table userPermissions
       | name                                                          |
@@ -60,9 +61,17 @@ Feature: bulk operations integration tests
       | 'oai-pmh.configuration-settings.item.post'                    |
       | 'oai-pmh.configuration-settings.item.put'                     |
       | 'oai-pmh.configuration-settings.item.delete'                  |
+      | 'marc-records-editor.item.get'                                |
+      | 'marc-records-editor.item.put'                                |
+      | 'marc-records-editor.validate.post'                           |
+      | 'inventory-storage.holdings.collection.get'                   |
+      | 'inventory-storage.items.collection.get'                      |
+      | 'inventory-storage.holdings.item.get'                         |
+      | 'inventory-storage.holdings-types.item.post'                  |
       | 'inventory-storage.items.item.get'                            |
       | 'inventory-storage.items.collection.get'                      |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 1200000 }
     Given call read('classpath:global/setup-data.feature')
