@@ -16,8 +16,6 @@ Feature: Derived Bibframe2 RDF
     * match instance['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Instance'
     * match instance['http://id.loc.gov/ontologies/bibframe/title'] == '#[3]'
     * match instance['http://id.loc.gov/ontologies/bibframe/title'][*]['@id'] contains baseResourceUrl + instanceMainTitleId
-    * match instance['http://id.loc.gov/ontologies/bibframe/identifiedBy'] == '#[3]'
-    * match instance['http://id.loc.gov/ontologies/bibframe/identifiedBy'][*]['@id'] contains baseResourceUrl + isbnId
     * match instance['http://id.loc.gov/ontologies/bibframe/instanceOf'][*]['@id'] contains baseResourceUrl + workId
 
     * def title = rdf.filter(x => x['@id'] == baseResourceUrl + instanceMainTitleId)[0]
@@ -27,14 +25,24 @@ Feature: Derived Bibframe2 RDF
     * match title['http://id.loc.gov/ontologies/bibframe/partNumber'][0]['@value'] == '3'
     * match title['http://id.loc.gov/ontologies/bibframe/subtitle'][0]['@value'] == 'Instance Sub title'
 
-    * def isbnResource = rdf.filter(x => x['@id'] == baseResourceUrl + isbnId)[0]
-    * match isbnResource['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Isbn'
-    * match isbnResource['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][*]['@value'] contains '0987654321'
-    * match isbnResource['http://id.loc.gov/ontologies/bibframe/qualifier'][*]['@value'] contains 'Hardcover'
-    * match isbnResource['http://id.loc.gov/ontologies/bibframe/status'][*]['@id'] contains 'http://id.loc.gov/vocabulary/mstatus/current'
-
     * def work = rdf.filter(x => x['@id'] == baseResourceUrl + workId)[0]
     * match work['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Work'
     * match work['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Monograph'
     * match work['http://id.loc.gov/ontologies/bibframe/title'] == '#[1]'
 
+  @C813010
+  Scenario: Validate ISBN, LCCN and EAN
+    * match instance['http://id.loc.gov/ontologies/bibframe/identifiedBy'] == '#[3]'
+
+    * def isbnObj = rdf.filter(x => x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Isbn') && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'] && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['@value'] == '0987654321')[0]
+    * match isbnObj['http://id.loc.gov/ontologies/bibframe/qualifier'][0]['@value'] == 'Hardcover'
+    * match isbnObj['http://id.loc.gov/ontologies/bibframe/status'][0]['@id'] == 'http://id.loc.gov/vocabulary/mstatus/current'
+    * match instance['http://id.loc.gov/ontologies/bibframe/identifiedBy'].map(x => x['@id']) contains isbnObj['@id']
+
+    * def lccnObj = rdf.filter(x =>x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Lccn') && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'] && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['@value'].trim() == '1234567890')[0]
+    * match lccnObj['http://id.loc.gov/ontologies/bibframe/status'][0]['@id'] == 'http://id.loc.gov/vocabulary/mstatus/current'
+    * match instance['http://id.loc.gov/ontologies/bibframe/identifiedBy'].map(x => x['@id']) contains lccnObj['@id']
+
+    * def eanObj = rdf.filter(x => x['@type'] && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Ean') && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'] && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['@value'] == 'IAN value')[0]
+    * match eanObj['http://id.loc.gov/ontologies/bibframe/qualifier'][0]['@value'] == 'IAN Qualifier'
+    * match instance['http://id.loc.gov/ontologies/bibframe/identifiedBy'].map(x => x['@id']) contains eanObj['@id']

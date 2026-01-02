@@ -47,13 +47,16 @@ Feature: Import Bibframe2 RDF
     # Step 4: Verify new instance in mod-inventory
     * callonce read('validate/verify-inventory-instance.feature')
 
-    # Step 5: Validate graph
+    # Step 5: Validate Instance API
+    * callonce read('validate/verify-instance-get-api.feature')
+
+    # Step 6: Validate graph
     * callonce read('validate/verify-graph.feature')
 
-    # Step 6: Export RDF and validate
+    # Step 7: Export RDF and validate
     * callonce read('validate/verify-export-rdf.feature')
 
-    # Step 7: Update instance resource using API
+    # Step 8: Update instance resource using API
     * def getResourceCall = call getResource { id: "#(resourceId)" }
     * def updateInstanceRequest = JSON.parse(JSON.stringify(getResourceCall.response))
     * def instance = updateInstanceRequest.resource['http://bibfra.me/vocab/lite/Instance']
@@ -67,7 +70,7 @@ Feature: Import Bibframe2 RDF
     * def putCall = call putResource { id: '#(resourceId)' , resourceRequest: '#(updateInstanceRequest)' }
     * def updatedResourceId = putCall.response.resource['http://bibfra.me/vocab/lite/Instance'].id
 
-    # Step 8: Validate updated resource in invetnory
+    # Step 9: Validate updated resource in invetnory
     * def query = 'title all "Pride & prejudice" UPDATED'
     * def searchCall = call searchInventoryInstance
     * def getInventoryInstanceCall = call getInventoryInstance { id: '#(inventoryInstanceId)' }
@@ -81,7 +84,7 @@ Feature: Import Bibframe2 RDF
     * match response.publication contains { publisher: 'Chronicle Books LLC - UPDATED', place: 'San Francisco, CA', dateOfPublication: '2017', role: 'Publication' }
     * match response.subjects[*].value contains 'Readers (Primary)'
 
-    # Step 9: Export RDF again and validate
+    # Step 10: Export RDF again and validate
     * def rdfCall = call getRdf { resourceId: '#(updatedResourceId)' }
     * def rdfResponse = rdfCall.response
     * def instance = karate.filter(rdfResponse, function(x){ return x['@id'] == 'http://localhost:8081/linked-data-editor/resources/' + updatedResourceId; })[0]

@@ -6,6 +6,7 @@ Feature: Integration with mod-invetnory for new Instances: Outbound
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
+  @C494366
   Scenario: Should create instance in mod-inventory
     # Search Instance in mod-search and retrieve ID of the instance created
     * def query = 'title all "create-bib-title"'

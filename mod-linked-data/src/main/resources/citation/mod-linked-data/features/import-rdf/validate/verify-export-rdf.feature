@@ -101,5 +101,6 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * match instance['http://id.loc.gov/ontologies/bibframe/adminMetadata'].map(x => x['@id']) contains adminMetadata['@id']
 
   Scenario: Validate Creation Date
+    * def currentDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(new java.util.Date())
     * def creationDate = adminMetadata["http://id.loc.gov/ontologies/bibframe/creationDate"][0]["@value"]
     * match creationDate == currentDate
