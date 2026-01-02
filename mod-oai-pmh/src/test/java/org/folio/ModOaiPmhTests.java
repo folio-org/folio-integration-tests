@@ -96,5 +96,9 @@ public class ModOaiPmhTests extends TestBaseEureka {
         runFeatureTest("oaipmh-listidentifiers-deleted-C729201");
     }
 
+    @Test
+    void oaiPmhListRecordsC375976() {
+        runFeatureTest("oaiPmhListRecordsC375976");
+    }
 
 }
