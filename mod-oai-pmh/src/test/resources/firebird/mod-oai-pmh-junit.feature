@@ -11,6 +11,7 @@ Feature: bulk operations integration tests
       | 'mod-login'                 |
       | 'mod-source-record-storage' |
       | 'mod-inventory-storage'     |
+      | 'mod-quick-marc'            |
 
     * table userPermissions
       | name                                                          |
@@ -62,6 +63,13 @@ Feature: bulk operations integration tests
       | 'oai-pmh.configuration-settings.item.delete'                  |
       | 'inventory-storage.items.item.get'                            |
       | 'inventory-storage.items.collection.get'                      |
+      | 'marc-records-editor.item.get'                                |
+      | 'marc-records-editor.item.put'                                |
+      | 'marc-records-editor.validate.post'                           |
+      | 'inventory-storage.holdings.collection.get'                   |
+      | 'inventory-storage.items.collection.get'                      |
+      | 'inventory-storage.holdings.item.get'                         |
+      | 'inventory-storage.holdings-types.item.post'                  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
