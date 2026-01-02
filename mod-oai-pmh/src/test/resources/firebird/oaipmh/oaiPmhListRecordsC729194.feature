@@ -16,9 +16,10 @@ Feature: ListRecords: SRS - Verify that set for deletion MARC Instances are harv
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
-    # Use different instances from srs_init_data to avoid conflicts with other tests
-    * def testInstanceId1 = '3c4ae3f3-b460-4a89-a2f9-78ce3145e4fc'
-    * def testInstanceId2 = 'c1d3be12-ecec-4fab-9237-baf728575185'
+    # Create NEW instances for this test to avoid affecting other tests
+    # Using unique IDs that won't conflict with existing test data
+    * def testInstanceId1 = 'c729194a-1111-4111-a111-111111111111'
+    * def testInstanceId2 = 'c729194b-2222-4222-a222-222222222222'
 
     # Current date function for date range filtering
     * def currentOnlyDate = function(){return java.time.LocalDateTime.now(java.time.ZoneOffset.UTC).format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))}
@@ -26,46 +27,6 @@ Feature: ListRecords: SRS - Verify that set for deletion MARC Instances are harv
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
 
-    # CRITICAL: Always restore instances to clean state before ANY scenario runs
-    Given url baseUrl
-    And path 'instance-storage/instances', testInstanceId1
-    And header x-okapi-token = okapitoken
-    And header Accept = 'application/json'
-    When method GET
-    Then status 200
-    * def bgCleanupInstance1 = response
-    * def bgCleanupVersion1 = response._version
-    * set bgCleanupInstance1._version = bgCleanupVersion1
-    * set bgCleanupInstance1.deleted = false
-    * set bgCleanupInstance1.discoverySuppress = false
-    * set bgCleanupInstance1.staffSuppress = false
-    Given path 'instance-storage/instances', testInstanceId1
-    And header Accept = 'text/plain'
-    And header x-okapi-token = okapitoken
-    And request bgCleanupInstance1
-    When method PUT
-    Then status 204
-
-    Given url baseUrl
-    And path 'instance-storage/instances', testInstanceId2
-    And header x-okapi-token = okapitoken
-    And header Accept = 'application/json'
-    When method GET
-    Then status 200
-    * def bgCleanupInstance2 = response
-    * def bgCleanupVersion2 = response._version
-    * set bgCleanupInstance2._version = bgCleanupVersion2
-    * set bgCleanupInstance2.deleted = false
-    * set bgCleanupInstance2.discoverySuppress = false
-    * set bgCleanupInstance2.staffSuppress = false
-    Given path 'instance-storage/instances', testInstanceId2
-    And header Accept = 'text/plain'
-    And header x-okapi-token = okapitoken
-    And request bgCleanupInstance2
-    When method PUT
-    Then status 204
-
-    * call sleep 2000
 
 
   @Positive @C729194
@@ -90,7 +51,63 @@ Feature: ListRecords: SRS - Verify that set for deletion MARC Instances are harv
     * print 'Record source:', behaviorValue.recordsSource
     * assert behaviorValue.deletedRecordsSupport == 'persistent'
 
-    # Save original instance states
+    # Create two MARC instances for this test
+    # Instance 1
+    * def marcInstance1 =
+    """
+    {
+      "id": "#(testInstanceId1)",
+      "source": "MARC",
+      "title": "Test MARC Instance 1 for C729194",
+      "hrid": "instC729194001",
+      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "contributors": [
+        {
+          "name": "Test Author C729194-1",
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+        }
+      ]
+    }
+    """
+
+    # Instance 2
+    * def marcInstance2 =
+    """
+    {
+      "id": "#(testInstanceId2)",
+      "source": "MARC",
+      "title": "Test MARC Instance 2 for C729194",
+      "hrid": "instC729194002",
+      "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f",
+      "contributors": [
+        {
+          "name": "Test Author C729194-2",
+          "contributorNameTypeId": "2b94c631-fca9-4892-a730-03ee529ffe2a"
+        }
+      ]
+    }
+    """
+
+    # Create both instances
+    Given url baseUrl
+    And path 'instance-storage/instances'
+    And header x-okapi-token = okapitoken
+    And header Accept = 'application/json'
+    And request marcInstance1
+    When method POST
+    Then status 201
+
+    Given url baseUrl
+    And path 'instance-storage/instances'
+    And header x-okapi-token = okapitoken
+    And header Accept = 'application/json'
+    And request marcInstance2
+    When method POST
+    Then status 201
+
+    * call sleep 2000
+
+    # Save original instance states for cleanup
     Given url baseUrl
     And path 'instance-storage/instances', testInstanceId1
     And header x-okapi-token = okapitoken
@@ -321,46 +338,20 @@ Feature: ListRecords: SRS - Verify that set for deletion MARC Instances are harv
     When method PUT
     Then status 204
 
-    # Cleanup: Restore both instances to original state
+    # Cleanup: Physically delete both created instances
     Given url baseUrl
     And path 'instance-storage/instances', testInstanceId1
     And header x-okapi-token = okapitoken
-    And header Accept = 'application/json'
-    When method GET
-    Then status 200
-    * def currentVersion1 = response._version
-
-    * set originalInstance1._version = currentVersion1
-    * set originalInstance1.deleted = false
-    * set originalInstance1.discoverySuppress = false
-    * set originalInstance1.staffSuppress = false
-
-    Given path 'instance-storage/instances', testInstanceId1
     And header Accept = 'text/plain'
-    And header x-okapi-token = okapitoken
-    And request originalInstance1
-    When method PUT
+    When method DELETE
     Then status 204
 
     Given url baseUrl
     And path 'instance-storage/instances', testInstanceId2
     And header x-okapi-token = okapitoken
-    And header Accept = 'application/json'
-    When method GET
-    Then status 200
-    * def currentVersion2 = response._version
-
-    * set originalInstance2._version = currentVersion2
-    * set originalInstance2.deleted = false
-    * set originalInstance2.discoverySuppress = false
-    * set originalInstance2.staffSuppress = false
-
-    Given path 'instance-storage/instances', testInstanceId2
     And header Accept = 'text/plain'
-    And header x-okapi-token = okapitoken
-    And request originalInstance2
-    When method PUT
+    When method DELETE
     Then status 204
 
-    # Wait for restoration to fully propagate
-    * call sleep 2000
+    # Wait for deletion to fully propagate
+    * call sleep 5000
