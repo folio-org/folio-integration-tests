@@ -27,23 +27,7 @@ Feature: ListRecords: SRS - Verify that set for deletion MARC Instances are harv
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
 
-
-
-  @Positive @C729194 @ignore
   Scenario: C729194 - Verify set for deletion MARC instances are harvested with Persistent deleted records support
-
-    # ⚠️ WARNING: This test is marked @ignore because it affects other OAI-PMH tests
-    # The issue is that newly created instances get indexed by OAI-PMH before they can be deleted,
-    # which changes the expected record counts in other tests like oaipmh-enhancement.feature
-    #
-    # To run this test in isolation:
-    # 1. Run it alone (not as part of the full test suite)
-    # 2. Ensure no other OAI-PMH tests run immediately after
-    # 3. Wait at least 10 seconds after test completion before running other OAI-PMH tests
-    #
-    # Root cause: OAI-PMH indexes instances immediately upon creation, but deleted instances
-    # that were never harvested before deletion may not appear in ListRecords responses.
-    # This creates a paradox where the test affects other tests but cannot validate its own behavior.
 
     # Preconditions verification: Ensure "Record source" is set to "Source record storage"
     # Preconditions verification: Ensure "Suppressed records processing" is set to "Transfer suppressed records with discovery flag value"

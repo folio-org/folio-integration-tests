@@ -116,4 +116,19 @@ public class ModOaiPmhTests extends TestBaseEureka {
         runFeatureTest("oaiPmhListRecordsC729200");
     }
 
+    @Test
+    void oaiPmhListRecordsC378101() {
+        runFeatureTest("oaiPmhListRecordsC378101");
+    }
+
+    @Test
+    void oaiPmhListRecordsC380606() {
+        runFeatureTest("oaiPmhListRecordsC380606");
+    }
+
+    @Test
+    void oaiPmhListRecordsC397334() {
+        runFeatureTest("oaiPmhListRecordsC397334");
+    }
+
 }
