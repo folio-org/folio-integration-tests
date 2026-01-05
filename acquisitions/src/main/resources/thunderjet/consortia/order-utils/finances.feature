@@ -11,8 +11,8 @@ Feature: Central finances
   Scenario: Create fiscal years
     * table fiscalYears
       | id                         | code     | periodStart            | periodEnd              | series |
-      | centralFiscalYearId        | 'FY2025' | '2025-01-01T00:00:00Z' | '2025-12-31T23:59:59Z' | 'FY'   |
-      | centralPlannedFiscalYearId | 'FY2026' | '2026-01-01T00:00:00Z' | '2026-12-31T23:59:59Z' | 'FY'   |
+      | centralFiscalYearId        | 'FY2026' | '2026-01-01T00:00:00Z' | '2026-12-31T23:59:59Z' | 'FY'   |
+      | centralPlannedFiscalYearId | 'FY2027' | '2027-01-01T00:00:00Z' | '2027-12-31T23:59:59Z' | 'FY'   |
     * def v = call createFiscalYear fiscalYears
 
   Scenario: Create ledgers
