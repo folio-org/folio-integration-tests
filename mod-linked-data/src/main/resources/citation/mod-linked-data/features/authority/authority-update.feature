@@ -9,6 +9,7 @@ Feature: Authority update
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
+  @C584550
   Scenario: create authority and work, then update authority
     # Step 1: create an authority
     * configure headers = testAdminHeaders
