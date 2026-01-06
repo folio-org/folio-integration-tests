@@ -82,6 +82,7 @@ class OrdersApiTest extends TestBaseEureka {
     FEATURE_55("piece-audit-history", true),
     FEATURE_56("piece-batch-job", true),
     FEATURE_57("piece-deletion-restriction", true),
+    FEATURE_86("piece-item-synchronization", true),
     FEATURE_58("piece-operations-for-order-flows-mixed-order-line", false),
     FEATURE_59("pieces-batch-update-status", true),
     FEATURE_60("piece-status-transitions", true),
@@ -493,6 +494,12 @@ class OrdersApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceDeletionRestriction() {
     runFeatureTest(Feature.FEATURE_57.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void pieceItemSynchronization() {
+    runFeatureTest(Feature.FEATURE_86.getFileName());
   }
 
   @Test
