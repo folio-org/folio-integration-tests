@@ -109,7 +109,8 @@ class OrdersApiTest extends TestBaseEureka {
     FEATURE_82("validate-fund-distribution-for-zero-price", true),
     FEATURE_83("validate-pol-receipt-not-required-with-checkin-items", true),
     FEATURE_84("create-order-with-suppress-instance-from-discovery", true),
-    FEATURE_85("auto-populate-fund-code", true);
+    FEATURE_85("auto-populate-fund-code", true),
+    FEATURE_86("holding-detail", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -661,5 +662,11 @@ class OrdersApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void autoPopulateFundCodeInPoLine() {
     runFeatureTest(Feature.FEATURE_85.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void retrieveHoldingDetailsWithPiecesAndItems() {
+    runFeatureTest(Feature.FEATURE_86.getFileName());
   }
 }

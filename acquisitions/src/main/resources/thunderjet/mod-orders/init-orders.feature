@@ -49,6 +49,7 @@ Feature: Initialize mod-orders integration tests
       | 'orders.bind-pieces.item.delete'               |
       | 'orders.check-in.collection.post'              |
       | 'orders.collection.get'                        |
+      | 'orders.holding-detail.item.post'              |
       | 'orders.item.approve'                          |
       | 'orders.item.delete'                           |
       | 'orders.item.get'                              |
