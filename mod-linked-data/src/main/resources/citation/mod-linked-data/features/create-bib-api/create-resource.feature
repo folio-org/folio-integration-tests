@@ -20,4 +20,3 @@ Feature: Create Work and Instance resource using API
     * match instance contains only deep expectedInstanceResponse
     * def instanceId = instance.id
     * def instanceMainTitleId = instance['http://bibfra.me/vocab/library/title'].find(x => x['http://bibfra.me/vocab/library/Title'])['http://bibfra.me/vocab/library/Title'].id
-    * def isbnId = instance['http://library.link/vocab/map'].find(x => x['http://library.link/identifier/ISBN'])['http://library.link/identifier/ISBN'].id

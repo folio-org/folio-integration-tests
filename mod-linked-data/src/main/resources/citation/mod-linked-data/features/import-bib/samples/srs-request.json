@@ -157,6 +157,46 @@
       ]
     },
     {
+      "tag":"260",
+      "content":"$c 2000.",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"264",
+      "content":"$a San Diego : $b Academic Press is an Imprint of Elsevier, $c 2019.",
+      "indicators":[
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag":"264",
+      "content":"$a Washington, DC : $b For sale by the Superintendent of Documents, U.S. Government Publishing Office",
+      "indicators":[
+        "\\",
+        "2"
+      ]
+    },
+    {
+      "tag":"264",
+      "content":"$a [Benin] : $b Imp. Nounagnon & Fils, $c [2018]",
+      "indicators":[
+        "\\",
+        "3"
+      ]
+    },
+    {
+      "tag":"264",
+      "content":"$c ©2019",
+      "indicators":[
+        "\\",
+        "4"
+      ]
+    },
+    {
       "tag":"300",
       "content":"$3 book $a 2 volumes : $b illustrations ; $c 31 cm + $e 1 computer disc (illustrations ; 4 3/4 in.)",
       "indicators":[

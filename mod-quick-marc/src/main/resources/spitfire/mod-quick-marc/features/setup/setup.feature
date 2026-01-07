@@ -162,6 +162,7 @@ Feature: Setup quickMARC
     When method POST
     Then status 201
 
+    * def hrid001Field = response.hrid
     * def recordId = uuid()
     Given path 'source-storage/records'
     And request read(samplePath + 'setup-records/marc-holdings.json')

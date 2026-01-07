@@ -81,7 +81,7 @@ Feature: Test MARC records literal dollar in subfield
     * match subfieldA['a'] == "$1"
 
     * print "Update subfield for 852 field"
-    * marcHoldingRecord.fields[5].content = "$a{dollar}1 {dollar}{dollar}2"
+    * marcHoldingRecord.fields[5].content = "$b MARC tag $a{dollar}1 {dollar}{dollar}2"
     * set marcHoldingRecord._actionType = 'edit'
     * call read('setup/setup.feature@PutRecord') {parsedRecordId: '#(marcHoldingRecord.parsedRecordId)', record: '#(marcHoldingRecord)' }
 
@@ -89,7 +89,7 @@ Feature: Test MARC records literal dollar in subfield
     * def record = call read('setup/setup.feature@GetRecordById') {recordId: '#(marcHoldingId)' }
     And def quickMarcJson = record.response
     * def field852 = quickMarcJson.fields.find(f => f.tag == "852")
-    * match field852.content == "$a {dollar}1 {dollar}{dollar}2"
+    * match field852.content == "$b MARC tag $a {dollar}1 {dollar}{dollar}2"
 
     * def srsRecord = call read('setup/setup.feature@GetSRSRecord') {recordId: '#(marcHoldingId)', idType: 'HOLDINGS' }
     * def record = srsRecord.response.parsedRecord.content
