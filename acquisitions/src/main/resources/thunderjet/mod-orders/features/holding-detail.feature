@@ -124,78 +124,63 @@ Feature: Retrieve Holding Details With Pieces And Items
     And match holding4Data != null
     And match holding5Data != null
 
-    # 12. Verify Holding 1 Has Correct Number Of Pieces And Items Based On order1Location1Qty
-    * print '12. Verify Holding 1 Has Correct Number Of Pieces And Items'
-    And match holding1Data.pieces_detail_collection != null
-    And match holding1Data.items_detail_collection != null
-    And match holding1Data.pieces_detail_collection.pieces_detail == '#array'
-    And match holding1Data.items_detail_collection.items_detail == '#array'
-    * def holding1Pieces = holding1Data.pieces_detail_collection.pieces_detail
-    * def holding1Items = holding1Data.items_detail_collection.items_detail
-    And match each holding1Pieces contains { id: '#string', itemId: '#string' }
-    And match each holding1Items contains { id: '#string' }
-    And match karate.sizeOf(holding1Pieces) == order1Location1Qty
-    And match karate.sizeOf(holding1Items) == order1Location1Qty
-    And match holding1Data.pieces_detail_collection.totalRecords == order1Location1Qty
-    And match holding1Data.items_detail_collection.totalRecords == order1Location1Qty
+    # 12. Verify All Holdings Have Correct Number Of Pieces And Items Using Table
+    * print '12. Verify All Holdings Have Correct Number Of Pieces And Items Using Table'
+    * def holdingsTable =
+    """
+    [
+      { holdingData: '#(holding1Data)', expectedQty: '#(order1Location1Qty)', holdingName: 'Holding 1' },
+      { holdingData: '#(holding2Data)', expectedQty: '#(order1Location2Qty)', holdingName: 'Holding 2' },
+      { holdingData: '#(holding3Data)', expectedQty: '#(order2Location1Qty)', holdingName: 'Holding 3' },
+      { holdingData: '#(holding4Data)', expectedQty: '#(order2Location2Qty)', holdingName: 'Holding 4' },
+      { holdingData: '#(holding5Data)', expectedQty: '#(order2Location3Qty)', holdingName: 'Holding 5' }
+    ]
+    """
+    * def verifyHolding =
+    """
+    function(holding) {
+      var data = holding.holdingData;
+      var expected = holding.expectedQty;
+      var name = holding.holdingName;
 
-    # 13. Verify Piece Item IDs Match Item IDs In Items Collection For Holding 1
-    * print '13. Verify Piece Item IDs Match Item IDs In Items Collection For Holding 1'
-    * def holding1ItemIds = karate.map(holding1Items, function(item){ return item.id })
-    * def holding1PieceItemIds = karate.map(holding1Pieces, function(piece){ return piece.itemId })
-    And match holding1ItemIds contains only holding1PieceItemIds
+      karate.log('Verifying ' + name + ' with expected quantity: ' + expected);
 
-    # 14. Verify Holding 2 Has Correct Number Of Pieces And Items Based On order1Location2Qty
-    * print '14. Verify Holding 2 Has Correct Number Of Pieces And Items'
-    And match holding2Data.pieces_detail_collection.pieces_detail == '#array'
-    And match holding2Data.items_detail_collection.items_detail == '#array'
-    * def holding2Pieces = holding2Data.pieces_detail_collection.pieces_detail
-    * def holding2Items = holding2Data.items_detail_collection.items_detail
-    And match each holding2Pieces contains { id: '#string', itemId: '#string' }
-    And match each holding2Items contains { id: '#string' }
-    And match karate.sizeOf(holding2Pieces) == order1Location2Qty
-    And match karate.sizeOf(holding2Items) == order1Location2Qty
-    And match holding2Data.pieces_detail_collection.totalRecords == order1Location2Qty
-    And match holding2Data.items_detail_collection.totalRecords == order1Location2Qty
+      // Verify collections exist
+      karate.match(data.pieces_detail_collection, '!= null');
+      karate.match(data.items_detail_collection, '!= null');
+      karate.match(data.pieces_detail_collection.pieces_detail, '#array');
+      karate.match(data.items_detail_collection.items_detail, '#array');
 
-    # 15. Verify Holding 3 Has Correct Number Of Pieces And Items Based On order2Location1Qty
-    * print '15. Verify Holding 3 Has Correct Number Of Pieces And Items'
-    And match holding3Data.pieces_detail_collection.pieces_detail == '#array'
-    And match holding3Data.items_detail_collection.items_detail == '#array'
-    * def holding3Pieces = holding3Data.pieces_detail_collection.pieces_detail
-    * def holding3Items = holding3Data.items_detail_collection.items_detail
-    And match each holding3Pieces contains { id: '#string', itemId: '#string' }
-    And match each holding3Items contains { id: '#string' }
-    And match karate.sizeOf(holding3Pieces) == order2Location1Qty
-    And match karate.sizeOf(holding3Items) == order2Location1Qty
-    And match holding3Data.pieces_detail_collection.totalRecords == order2Location1Qty
-    And match holding3Data.items_detail_collection.totalRecords == order2Location1Qty
+      // Extract pieces and items
+      var pieces = data.pieces_detail_collection.pieces_detail;
+      var items = data.items_detail_collection.items_detail;
 
-    # 16. Verify Holding 4 Has Correct Number Of Pieces And Items Based On order2Location2Qty
-    * print '16. Verify Holding 4 Has Correct Number Of Pieces And Items'
-    And match holding4Data.pieces_detail_collection.pieces_detail == '#array'
-    And match holding4Data.items_detail_collection.items_detail == '#array'
-    * def holding4Pieces = holding4Data.pieces_detail_collection.pieces_detail
-    * def holding4Items = holding4Data.items_detail_collection.items_detail
-    And match each holding4Pieces contains { id: '#string', itemId: '#string' }
-    And match each holding4Items contains { id: '#string' }
-    And match karate.sizeOf(holding4Pieces) == order2Location2Qty
-    And match karate.sizeOf(holding4Items) == order2Location2Qty
-    And match holding4Data.pieces_detail_collection.totalRecords == order2Location2Qty
-    And match holding4Data.items_detail_collection.totalRecords == order2Location2Qty
+      // Verify each piece and item structure
+      for (var i = 0; i < pieces.length; i++) {
+        karate.match(pieces[i].id, '#string');
+        karate.match(pieces[i].itemId, '#string');
+      }
+      for (var i = 0; i < items.length; i++) {
+        karate.match(items[i].id, '#string');
+      }
 
-    # 17. Verify Holding 5 Has Correct Number Of Pieces And Items Based On order2Location3Qty
-    * print '17. Verify Holding 5 Has Correct Number Of Pieces And Items'
-    And match holding5Data.pieces_detail_collection.pieces_detail == '#array'
-    And match holding5Data.items_detail_collection.items_detail == '#array'
-    * def holding5Pieces = holding5Data.pieces_detail_collection.pieces_detail
-    * def holding5Items = holding5Data.items_detail_collection.items_detail
-    And match each holding5Pieces contains { id: '#string', itemId: '#string' }
-    And match each holding5Items contains { id: '#string' }
-    And match karate.sizeOf(holding5Pieces) == order2Location3Qty
-    And match karate.sizeOf(holding5Items) == order2Location3Qty
-    And match holding5Data.pieces_detail_collection.totalRecords == order2Location3Qty
-    And match holding5Data.items_detail_collection.totalRecords == order2Location3Qty
+      // Verify sizes
+      karate.match(pieces.length, expected);
+      karate.match(items.length, expected);
+      karate.match(data.pieces_detail_collection.totalRecords, expected);
+      karate.match(data.items_detail_collection.totalRecords, expected);
+
+      // Verify piece itemIds match item ids
+      var itemIds = karate.map(items, function(item){ return item.id });
+      var pieceItemIds = karate.map(pieces, function(piece){ return piece.itemId });
+      itemIds.sort();
+      pieceItemIds.sort();
+      karate.match(itemIds, pieceItemIds);
+
+      return true;
+    }
+    """
+    * karate.forEach(holdingsTable, verifyHolding)
 
   @Negative
   Scenario: Retrieve Holding Details With Empty Holding IDs Returns Empty Response
