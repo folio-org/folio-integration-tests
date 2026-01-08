@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.SharedOrdersTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.util.UUID;
-
 @Order(3)
 @FolioTest(team = "thunderjet", module = "mod-orders")
 class OrdersApiTest extends TestBaseEureka {
@@ -23,6 +21,8 @@ class OrdersApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final String TEST_TENANT = "testorders";
   private static final int THREAD_COUNT = 4;
+
+  private boolean createdSharedTenant = false;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("bind-piece", true),
@@ -135,14 +135,12 @@ class OrdersApiTest extends TestBaseEureka {
 
   @BeforeAll
   void ordersApiTestBeforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-orders/init-orders.feature");
+    createdSharedTenant = SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   void ordersApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    SharedOrdersTenant.cleanupTenant(createdSharedTenant, this::runFeature);
   }
 
   @Test

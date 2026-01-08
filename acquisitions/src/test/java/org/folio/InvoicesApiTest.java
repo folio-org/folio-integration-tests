@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.SharedInvoicesTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.util.UUID;
-
 @Order(9)
 @FolioTest(team = "thunderjet", module = "mod-invoice")
 public class InvoicesApiTest extends TestBaseEureka {
@@ -22,6 +20,8 @@ public class InvoicesApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
   private static final String TEST_TENANT = "testinvoice";
   private static final int THREAD_COUNT = 4;
+
+  private boolean createdSharedTenant = false;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("approve-and-pay-invoice-with-past-fiscal-year", true),
@@ -81,14 +81,12 @@ public class InvoicesApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-invoice/init-invoice.feature");
+    createdSharedTenant = SharedInvoicesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   public void invoicesApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    SharedInvoicesTenant.cleanupTenant(createdSharedTenant, this::runFeature);
   }
 
   @Test
