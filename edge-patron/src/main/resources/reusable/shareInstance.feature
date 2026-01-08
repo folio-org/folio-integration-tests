@@ -5,7 +5,7 @@ Feature: Share Instance
     * url baseUrl
 
   Scenario: shareInstance
-    * def sharingId = call uuid
+    * def sharingId = call random_uuid
     * def sharingId = karate.get('sharingId', sharingId)
 
     Given path 'consortia', consortiumId, 'sharing/instances'

@@ -9,7 +9,6 @@ Feature: MARC Derived Records
   Scenario: Validate MARC derived record
     * def getMarcCall = call getDerivedMarc { resourceId:  '#(instanceId)' }
     * def fields = getMarcCall.response.parsedRecord.content.fields
-    * print fields
     * match fields contains { 005: "#notnull" }
     * match fields contains { 010: { subfields: [ { a: "  1234567890" } ], ind1: " ", ind2: " " } }
     * match fields contains { 020: { subfields: [ { a: "0987654321" }, { q: "Hardcover" } ], ind1: " ", ind2: " " } }
