@@ -211,6 +211,9 @@ Feature: mod-orders integration tests
   Scenario: Piece deletion restrictions from order and order line
     * call read('features/piece-deletion-restriction.feature')
 
+  Scenario: Piece item synchronization
+    * call read('features/piece-item-synchronization.feature')
+
   # Need to revise cases again, because almost of them was covered in the another features.
   # Also need better to split feature between package and non-package
   @ignore

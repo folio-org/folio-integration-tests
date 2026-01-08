@@ -176,6 +176,7 @@ Feature: Initialize mod-orders integration tests
       | 'inventory.items.collection.get'                              |
       | 'inventory.items.item.get'                                    |
       | 'inventory.items.item.post'                                   |
+      | 'inventory.items.item.put'                                    |
       | 'inventory.items.move.item.post'                              |
       | 'inventory.tenant-items.collection.get'                       |
       | 'lost-item-fees-policies.collection.get'                      |
