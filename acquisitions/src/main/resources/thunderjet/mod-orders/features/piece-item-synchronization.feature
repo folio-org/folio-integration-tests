@@ -31,12 +31,12 @@ Feature: Piece and Item synchronization
     * def testCallNumber2 = 'CALL-NUM-SYNC-002'
     * def testAccessionNumber2 = 'ACCESSION-002'
 
-    # 1: Create and open order with order line
+    # 1. Create and open order with order line
     * def v = call createOrder { 'id': '#(orderId)' }
     * def v = call createOrderLine { 'id': '#(poLineId)', 'orderId': '#(orderId)', 'createInventory': 'Instance, Holding, Item', 'checkinItems': false }
     * def v = call openOrder { 'orderId': '#(orderId)' }
 
-    # 2: Get title ID and instance ID from order line
+    # 2. Get title ID and instance ID from order line
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -49,7 +49,7 @@ Feature: Piece and Item synchronization
     Then status 200
     * def instanceId = $.instanceId
 
-    # 3: Get holdings and piece created
+    # 3. Get holdings and piece created
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
@@ -66,13 +66,13 @@ Feature: Piece and Item synchronization
     And match $.totalRecords == 1
     * def pieceId = $.pieces[0].id
 
-    # 4: Receive piece
+    # 4. Receive piece
     * table receivePieceDetails
       | pieceId | poLineId | holdingId |
       | pieceId | poLineId | holdingId |
     * def v = call receivePieceWithHolding receivePieceDetails
 
-    # 5: Verify piece is received and get item ID
+    # 5. Verify piece is received and get item ID
     Given path 'orders/pieces', pieceId
     And retry until response.receivingStatus == 'Received'
     When method GET
@@ -81,7 +81,7 @@ Feature: Piece and Item synchronization
     And match $.itemId == '#present'
     * def itemId = $.itemId
 
-    # 6: Update piece fields (barcode, callNumber, accessionNumber)
+    # 6. Update piece fields (barcode, callNumber, accessionNumber)
     * def updatedPiece = $
     * set updatedPiece.barcode = testBarcode1
     * set updatedPiece.callNumber = testCallNumber1
@@ -91,7 +91,7 @@ Feature: Piece and Item synchronization
     When method PUT
     Then status 204
 
-    # 7: Verify piece fields are updated
+    # 7. Verify piece fields are updated
     Given path 'orders/pieces', pieceId
     When method GET
     Then status 200
@@ -99,7 +99,7 @@ Feature: Piece and Item synchronization
     And match $.callNumber == testCallNumber1
     And match $.accessionNumber == testAccessionNumber1
 
-    # 8: Verify item fields are also synchronized
+    # 8. Verify item fields are also synchronized
     * configure headers = headersAdmin
     Given path 'inventory/items', itemId
     When method GET
@@ -108,7 +108,7 @@ Feature: Piece and Item synchronization
     And match $.itemLevelCallNumber == testCallNumber1
     And match $.accessionNumber == testAccessionNumber1
 
-    # 9: Update item fields (barcode, callNumber, accessionNumber)
+    # 9. Update item fields (barcode, callNumber, accessionNumber)
     * def updatedItem = $
     * set updatedItem.barcode = testBarcode2
     * set updatedItem.itemLevelCallNumber = testCallNumber2
@@ -118,7 +118,7 @@ Feature: Piece and Item synchronization
     When method PUT
     Then status 204
 
-    # 10: Verify item fields are updated
+    # 10. Verify item fields are updated
     Given path 'inventory/items', itemId
     When method GET
     Then status 200
@@ -126,7 +126,7 @@ Feature: Piece and Item synchronization
     And match $.itemLevelCallNumber == testCallNumber2
     And match $.accessionNumber == testAccessionNumber2
 
-    # 11: Verify piece fields are also synchronized back
+    # 11. Verify piece fields are also synchronized back
     * configure headers = headersUser
     Given path 'orders/pieces', pieceId
     When method GET
@@ -154,7 +154,7 @@ Feature: Piece and Item synchronization
     * def testCallNumber2 = 'CALL-NUM-BIND-002'
     * def testAccessionNumber2 = 'ACCESSION-BIND-002'
 
-    # 1: Create and open order with order line
+    # 1. Create and open order with order line
     * def v = call createOrder { 'id': '#(orderId2)' }
     * def v = call createOrderLine { 'id': '#(poLineId2)', 'orderId': '#(orderId2)', 'createInventory': 'Instance, Holding, Item', 'checkinItems': true }
 
@@ -171,7 +171,7 @@ Feature: Piece and Item synchronization
 
     * def v = call openOrder { 'orderId': '#(orderId2)' }
 
-    # 2: Get title ID and instance ID from order line
+    # 2. Get title ID and instance ID from order line
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId2
     When method GET
@@ -184,7 +184,7 @@ Feature: Piece and Item synchronization
     Then status 200
     * def instanceId = $.instanceId
 
-    # 3: Get holdings created
+    # 3. Get holdings created
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
@@ -193,7 +193,7 @@ Feature: Piece and Item synchronization
     And match $.totalRecords == 1
     * def holdingId = $.holdingsRecords[0].id
 
-    # 4: Manually create piece since checkinItems is true
+    # 4. Manually create piece since checkinItems is true
     * configure headers = headersUser
     * def pieceId = call uuid
     * table piecesData
@@ -201,13 +201,13 @@ Feature: Piece and Item synchronization
       | pieceId | poLineId2 | titleId | holdingId | 'Physical' | true       |
     * def v = call createPieceWithHoldingOrLocation piecesData
 
-    # 5: Receive piece
+    # 5. Receive piece
     * table receivePieceDetails
       | pieceId | poLineId  | holdingId |
       | pieceId | poLineId2 | holdingId |
     * def v = call receivePieceWithHolding receivePieceDetails
 
-    # 6: Verify piece is received and get original item ID
+    # 6. Verify piece is received and get original item ID
     Given path 'orders/pieces', pieceId
     And retry until response.receivingStatus == 'Received'
     When method GET
@@ -216,7 +216,7 @@ Feature: Piece and Item synchronization
     And match $.itemId == '#present'
     * def originalItemId = $.itemId
 
-    # 7: Bind piece - this will create a new bound item
+    # 7. Bind piece - this will create a new bound item
     * configure headers = headersUser
     * def bindPieceCollection = read('classpath:samples/mod-orders/bindPieces/bindPieceCollection.json')
     * set bindPieceCollection.poLineId = poLineId2
@@ -231,7 +231,7 @@ Feature: Piece and Item synchronization
     And match response.itemId == '#present'
     * def newBoundItemId = response.itemId
 
-    # 8: Verify piece is bound to new item
+    # 8. Verify piece is bound to new item
     Given path 'orders/pieces', pieceId
     When method GET
     Then status 200
@@ -239,7 +239,7 @@ Feature: Piece and Item synchronization
     And match $.bindItemId == newBoundItemId
     And match $.itemId == originalItemId
 
-    # 9: Update bound item fields (barcode, callNumber, accessionNumber)
+    # 9. Update bound item fields (barcode, callNumber, accessionNumber)
     * configure headers = headersAdmin
     Given path 'inventory/items', newBoundItemId
     When method GET
@@ -253,7 +253,7 @@ Feature: Piece and Item synchronization
     When method PUT
     Then status 204
 
-    # 10: Verify bound item fields are updated
+    # 10. Verify bound item fields are updated
     Given path 'inventory/items', newBoundItemId
     When method GET
     Then status 200
@@ -261,7 +261,7 @@ Feature: Piece and Item synchronization
     And match $.itemLevelCallNumber == boundCallNumber2
     And match $.accessionNumber == boundAccessionNumber2
 
-    # 11: Verify piece fields are NOT updated (no synchronization with bound item)
+    # 11. Verify piece fields are NOT updated (no synchronization with bound item)
     * configure headers = headersUser
     Given path 'orders/pieces', pieceId
     When method GET
@@ -270,7 +270,7 @@ Feature: Piece and Item synchronization
     And match $.callNumber == '#notpresent'
     And match $.accessionNumber == '#notpresent'
 
-    # 12: Update original item fields (barcode, callNumber, accessionNumber)
+    # 12. Update original item fields (barcode, callNumber, accessionNumber)
     * configure headers = headersAdmin
     Given path 'inventory/items', originalItemId
     When method GET
@@ -284,7 +284,7 @@ Feature: Piece and Item synchronization
     When method PUT
     Then status 204
 
-    # 13: Verify original item fields are updated
+    # 13. Verify original item fields are updated
     Given path 'inventory/items', originalItemId
     When method GET
     Then status 200
@@ -292,7 +292,7 @@ Feature: Piece and Item synchronization
     And match $.itemLevelCallNumber == testCallNumber2
     And match $.accessionNumber == testAccessionNumber2
 
-    # 14: Verify piece fields ARE synchronized with original item
+    # 14. Verify piece fields ARE synchronized with original item
     * configure headers = headersUser
     Given path 'orders/pieces', pieceId
     When method GET
