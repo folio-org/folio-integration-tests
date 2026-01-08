@@ -5,7 +5,7 @@ Feature: Create Item
     * url baseUrl
 
   Scenario: createItem
-    * def itemId = call random_uuid
+    * def itemId = call uuid
     * def id = karate.get('id', itemId)
     * def status = karate.get('status', 'Available')
     Given path 'inventory/items'
