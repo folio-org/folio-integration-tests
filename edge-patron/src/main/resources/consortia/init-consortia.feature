@@ -69,7 +69,7 @@ Feature: Initialize mod-consortia integration tests
     # load university tenant variables
     * callonce variablesUniversity
     # create disable instance matching config id for university tenant
-    * def isInstanceMatchingDisabledId = callonce random_uuid
+    * def isInstanceMatchingDisabledId = callonce uuid
 
     # generate names for tenants
     * def random = callonce randomMillis

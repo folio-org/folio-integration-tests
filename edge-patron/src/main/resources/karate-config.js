@@ -67,7 +67,7 @@ function fn() {
       return text;
     },
 
-    random_uuid: function () {
+    uuid: function () {
       return java.util.UUID.randomUUID() + '';
     },
 
