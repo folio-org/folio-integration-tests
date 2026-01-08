@@ -493,7 +493,7 @@ Feature: edge-oai-pmh features
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 1
     And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='001'] == 'inst000000000145'
-    And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='005'] contains '2025'
+    And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='005'] contains '2026'
     And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='008'] contains '210107'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == '67dfac11-1caf-4470-9ad1-d533f6360bc8'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
@@ -691,3 +691,4 @@ Scenario: List records with marc21_withholdings prefix, should be 3 records incl
     And header x-okapi-tenant = testTenant
     When method DELETE
     Then status 204
+
