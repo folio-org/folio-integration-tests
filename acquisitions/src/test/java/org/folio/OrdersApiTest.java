@@ -82,7 +82,6 @@ class OrdersApiTest extends TestBaseEureka {
     FEATURE_55("piece-audit-history", true),
     FEATURE_56("piece-batch-job", true),
     FEATURE_57("piece-deletion-restriction", true),
-    FEATURE_86("piece-item-synchronization", true),
     FEATURE_58("piece-operations-for-order-flows-mixed-order-line", false),
     FEATURE_59("pieces-batch-update-status", true),
     FEATURE_60("piece-status-transitions", true),
@@ -111,7 +110,8 @@ class OrdersApiTest extends TestBaseEureka {
     FEATURE_83("validate-pol-receipt-not-required-with-checkin-items", true),
     FEATURE_84("create-order-with-suppress-instance-from-discovery", true),
     FEATURE_85("auto-populate-fund-code", true),
-    FEATURE_86("holding-detail", true);
+    FEATURE_86("holding-detail", true)
+    FEATURE_87("piece-item-synchronization", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -497,12 +497,6 @@ class OrdersApiTest extends TestBaseEureka {
   }
 
   @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void pieceItemSynchronization() {
-    runFeatureTest(Feature.FEATURE_86.getFileName());
-  }
-
-  @Test
   @Disabled
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceOperations() {
@@ -675,5 +669,11 @@ class OrdersApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void retrieveHoldingDetailsWithPiecesAndItems() {
     runFeatureTest(Feature.FEATURE_86.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void pieceItemSynchronization() {
+    runFeatureTest(Feature.FEATURE_87.getFileName());
   }
 }
