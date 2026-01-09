@@ -31,15 +31,14 @@ public class BulkOperationsSimulation extends Simulation {
       System.getProperty("karate.env", "local");
 
   public static final double SUCCESSFUL_REQUESTS_RATE = 99.0;
-  public static final int RESPONSE_MAX_TIME = 50_000;
 
-  private static String generateTenantId() {
+  private String generateTenantId() {
     String constantString = "testtenant";
     long randomLong = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
     return constantString + randomLong;
   }
 
-  private static String initTenant() {
+  private String initTenant() {
     String tenantId = generateTenantId();
     System.setProperty("testTenant", tenantId);
     System.out.printf("Running BulkOperationsUsersFlowSimulation with karate.env=%s, testTenant=%s%n",
@@ -68,18 +67,22 @@ public class BulkOperationsSimulation extends Simulation {
         .systemProperty("karate.env", KARATE_ENV);
 
     ScenarioBuilder before = scenario("00 - Setup modules and dependencies")
-        .exec(karateFeature(MOD_BULK_OPERATIONS_JUNIT));
+        .group("00")
+        .on(exec(karateFeature(MOD_BULK_OPERATIONS_JUNIT)));
 
     ScenarioBuilder init = scenario("01 - Initialize data for users")
-        .exec(karateFeature(INIT_DATA_FOR_USERS));
+        .group("01")
+        .on(exec(karateFeature(INIT_DATA_FOR_USERS)));
 
     ScenarioBuilder create = scenario("02 - Create bulk operations - positive users flow")
-        .repeat(CREATE_ITERATIONS).on(
-            exec(karateFeature(USERS_POSITIVE_SCENARIOS))
+        .group("02")
+        .on(repeat(CREATE_ITERATIONS)
+            .on(exec(karateFeature(USERS_POSITIVE_SCENARIOS)))
         );
 
     ScenarioBuilder after = scenario("99 - Destroy data and cleanup")
-        .exec(karateFeature(DESTROY_DATA));
+        .group("99")
+        .on(exec(karateFeature(DESTROY_DATA)));
 
     setUp(
         before.injectOpen(atOnceUsers(1))
@@ -104,8 +107,10 @@ public class BulkOperationsSimulation extends Simulation {
     )
         .protocols(protocol)
         .assertions(
-            global().successfulRequests().percent().gt(SUCCESSFUL_REQUESTS_RATE),
-            global().responseTime().max().lt(RESPONSE_MAX_TIME)
+            details("02", "POST /bulk-operations/upload").successfulRequests().percent().gt(SUCCESSFUL_REQUESTS_RATE),
+            details("02", "POST /bulk-operations/upload").responseTime().max().lt(1_500),
+            details("02", "POST /bulk-operations/{operationId}/content-update").successfulRequests().percent().gt(SUCCESSFUL_REQUESTS_RATE),
+            details("02", "POST /bulk-operations/{operationId}/content-update").responseTime().max().lt(1_200)
         );
   }
 }
