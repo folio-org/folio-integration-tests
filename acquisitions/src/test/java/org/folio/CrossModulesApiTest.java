@@ -21,7 +21,6 @@ public class CrossModulesApiTest extends TestBaseEureka {
   private static final String TEST_TENANT = "testcross";
   private static final int THREAD_COUNT = 4;
 
-  private boolean createdSharedTenant = false;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("approve-invoice-using-different-fiscal-years", true),
@@ -104,12 +103,12 @@ public class CrossModulesApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void crossModuleApiTestBeforeAll() {
-    createdSharedTenant = SharedCrossModulesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
+    SharedCrossModulesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   public void crossModuleApiTestAfterAll() {
-    SharedCrossModulesTenant.cleanupTenant(createdSharedTenant, this::runFeature);
+    SharedCrossModulesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test

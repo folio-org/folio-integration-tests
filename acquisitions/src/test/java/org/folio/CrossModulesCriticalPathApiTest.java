@@ -22,7 +22,6 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   private static final String TEST_TENANT = "testcross";
   private static final int THREAD_COUNT = 4;
 
-  private boolean createdSharedTenant = false;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("unrelease-encumbrances-when-reopen-ongoing-order-with-related-paid-invoice-and-receiving", true),
@@ -77,13 +76,13 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void crossModulesCriticalPathApiTestBeforeAll() {
-    createdSharedTenant = SharedCrossModulesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
+  public void crossModuleCriticalPathApiTestBeforeAll() {
+    SharedCrossModulesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   public void crossModulesCriticalPathApiTestAfterAll() {
-    SharedCrossModulesTenant.cleanupTenant(createdSharedTenant, this::runFeature);
+    SharedCrossModulesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test

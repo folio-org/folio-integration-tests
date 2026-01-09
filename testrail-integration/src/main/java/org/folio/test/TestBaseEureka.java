@@ -137,6 +137,43 @@ public abstract class TestBaseEureka {
       .concat(featureName), featureName, threadCount, testInfo);
   }
 
+  private void internalRun(String path, String featureName, int threadCount, TestInfo testInfo) {
+    AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
+    RuntimeHook hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
+
+    Runner.Builder builder = Runner.path(path)
+      .outputHtmlReport(true)
+      .outputCucumberJson(true)
+      .outputJunitXml(true)
+      .hook(hook)
+      .tags("~@Ignore", "~@NoTestRail");
+    // This is critically important for the Test Rail integration, because the scenario results
+    // only hold a pointer to the json report that we just generated after the feature run, and if
+    // we truncate the folder, the pointer when used will point to nowhere, and will throw an exception
+    if (isTestRailEnabled() || isInitOrDestroyData(featureName)) {
+      var prefix = getFolderPrefix(featureName);
+      builder.reportDir(timestampedReportDir().concat(prefix));
+    }
+
+    Results results = builder.parallel(threadCount);
+    try {
+      testIntegrationService.generateReport(results.getReportDir());
+    } catch (IOException ioe) {
+      logger.error("Error occurred during feature's report generation in an internal run: {}", ioe.getMessage());
+    }
+    testIntegrationService.addResult(featureName, results);
+
+    Assertions.assertEquals(0, results.getFailCount());
+  }
+
+  private boolean isInitOrDestroyData(String featureName) {
+    return featureName.startsWith("init-") || featureName.endsWith("destroy-data.feature");
+  }
+
+  private String getFolderPrefix(String featureName) {
+    return featureName.startsWith("init-") ? "-init" : featureName.endsWith("destroy-data.feature") ? "-destroy-data" : "";
+  }
+
   // ============================== For a list of files with multiple features ==============================
 
   public void runFeatures(CommonFeature[] values, int threadCount, TestInfo testInfo) {
@@ -181,34 +218,6 @@ public abstract class TestBaseEureka {
       logger.error("Error occurred during feature's report generation in a prepared run: {}", ioe.getMessage());
     }
     finalFeatureNames.forEach(featureName -> testIntegrationService.addResult(featureName, results));
-
-    Assertions.assertEquals(0, results.getFailCount());
-  }
-
-  private void internalRun(String path, String featureName, int threadCount, TestInfo testInfo) {
-    AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
-    RuntimeHook hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
-
-    Runner.Builder builder = Runner.path(path)
-      .outputHtmlReport(true)
-      .outputCucumberJson(true)
-      .outputJunitXml(true)
-      .hook(hook)
-      .tags("~@Ignore", "~@NoTestRail");
-    // This is critically important for the Test Rail integration, because the scenario results
-    // only hold a pointer to the json report that we just generated after the feature run, and if
-    // we truncate the folder, the pointer when used will point to nowhere, and will throw an exception
-    if (isTestRailEnabled()) {
-      builder.reportDir(timestampedReportDir());
-    }
-
-    Results results = builder.parallel(threadCount);
-    try {
-      testIntegrationService.generateReport(results.getReportDir());
-    } catch (IOException ioe) {
-      logger.error("Error occurred during feature's report generation in an internal run: {}", ioe.getMessage());
-    }
-    testIntegrationService.addResult(featureName, results);
 
     Assertions.assertEquals(0, results.getFailCount());
   }

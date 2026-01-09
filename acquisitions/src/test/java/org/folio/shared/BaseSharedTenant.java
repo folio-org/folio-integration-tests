@@ -17,11 +17,17 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseSharedTenant {
 
   private static final Logger logger = LoggerFactory.getLogger(BaseSharedTenant.class);
-  private static final Object FILE_LOCK = new Object();
   private static final String DESTROY_FEATURE_PATH = "classpath:common/eureka/destroy-data.feature";
+  private static final Object FILE_LOCK = new Object();
+  private static final String TEST_TENANT = "testTenant";
+  private static final String TEST_TENANT_ID = "testTenantId";
+  private static final String OWNER = "owner";
 
-  protected record TenantConfig(String tenantPrefix, String initFeaturePath, String tenantFilePath) {}
-  protected record TenantContext(Class<?> ownerClass, Consumer<String> featureRunner) {}
+  protected record TenantConfig(String tenantPrefix, String initFeaturePath, String tenantFilePath) {
+  }
+
+  protected record TenantContext(Class<?> ownerClass, Consumer<String> featureRunner) {
+  }
 
   protected BaseSharedTenant() {
   }
@@ -30,33 +36,35 @@ public abstract class BaseSharedTenant {
     if (isIndividualRunMode()) {
       var uniqueTenant = config.tenantPrefix() + RandomUtils.nextLong();
       var uniqueTenantId = UUID.randomUUID().toString();
-      System.setProperty("testTenant", uniqueTenant);
-      System.setProperty("testTenantId", uniqueTenantId);
+      System.setProperty(TEST_TENANT, uniqueTenant);
+      System.setProperty(TEST_TENANT_ID, uniqueTenantId);
       logger.info("initializeTenant:: Created unique tenant (Individual mode) {} for {}", uniqueTenant, context.ownerClass().getSimpleName());
       context.featureRunner().accept(config.initFeaturePath());
 
       return true;
-    } else {
-      var createdTenant = getOrCreateSharedTenant(config.tenantPrefix(), context.ownerClass(), config.tenantFilePath());
-      if (createdTenant) {
-        context.featureRunner().accept(config.initFeaturePath());
-      }
-
-      return createdTenant;
     }
+
+    var createdTenant = getOrCreateSharedTenant(config.tenantPrefix(), context.ownerClass(), config.tenantFilePath());
+    if (createdTenant) {
+      context.featureRunner().accept(config.initFeaturePath());
+    }
+
+    return createdTenant;
   }
 
-  protected static void cleanupTenant(boolean createdTenant, TenantConfig config, TenantContext context, String lastClassName) {
+  protected static void cleanupTenant(TenantConfig config, TenantContext context, String lastClassName) {
     if (isIndividualRunMode()) {
       context.featureRunner().accept(DESTROY_FEATURE_PATH);
-    } else if (createdTenant) {
-      if (isLastClass(lastClassName)) {
-        logger.info("cleanupTenant:: Cleaning up shared tenant (Last class)");
-        context.featureRunner().accept(DESTROY_FEATURE_PATH);
-        deleteSharedTenantFile(config.tenantFilePath());
-      } else {
-        logger.info("cleanupTenant:: Skipping cleanup, tenant will be reused (Not last class)");
-      }
+      return;
+    }
+
+    var callingClassName = context.ownerClass() != null ? context.ownerClass().getName() : null;
+    if (lastClassName.equals(callingClassName)) {
+      logger.info("cleanupTenant:: Cleaning up shared tenant (Last class: {})", callingClassName);
+      context.featureRunner().accept(DESTROY_FEATURE_PATH);
+      deleteSharedTenantFile(config.tenantFilePath());
+    } else {
+      logger.info("cleanupTenant:: Skipping cleanup, tenant will be reused (Current class: {}, Last class: {})", callingClassName, lastClassName);
     }
   }
 
@@ -70,12 +78,12 @@ public abstract class BaseSharedTenant {
         var tenantFile = new File(tenantFilePath);
         if (tenantFile.exists()) {
           var props = loadTenantProperties(tenantFile);
-          var existingTenant = props.getProperty("tenant");
-          var existingTenantId = props.getProperty("tenantId");
-          var existingOwner = props.getProperty("owner");
+          var existingTenant = props.getProperty(TEST_TENANT);
+          var existingTenantId = props.getProperty(TEST_TENANT_ID);
+          var existingOwner = props.getProperty(OWNER);
           if (existingTenant != null && existingTenantId != null) {
-            System.setProperty("testTenant", existingTenant);
-            System.setProperty("testTenantId", existingTenantId);
+            System.setProperty(TEST_TENANT, existingTenant);
+            System.setProperty(TEST_TENANT_ID, existingTenantId);
             logger.info("getOrCreateSharedTenant:: Reusing tenant (Shared mode) {} (created by {}) for {}", existingTenant, existingOwner, ownerClass.getSimpleName());
             return false;
           }
@@ -85,8 +93,8 @@ public abstract class BaseSharedTenant {
         var newTenantId = UUID.randomUUID().toString();
         var ownerName = ownerClass.getSimpleName();
         saveTenantProperties(tenantFile, newTenant, newTenantId, ownerName);
-        System.setProperty("testTenant", newTenant);
-        System.setProperty("testTenantId", newTenantId);
+        System.setProperty(TEST_TENANT, newTenant);
+        System.setProperty(TEST_TENANT_ID, newTenantId);
         logger.info("getOrCreateSharedTenant:: Shared mode: Created shared tenant {} by {}", newTenant, ownerName);
 
         return true;
@@ -111,9 +119,9 @@ public abstract class BaseSharedTenant {
 
   private static void saveTenantProperties(File file, String tenant, String tenantId, String owner) {
     var props = new Properties();
-    props.setProperty("tenant", tenant);
-    props.setProperty("tenantId", tenantId);
-    props.setProperty("owner", owner);
+    props.setProperty(TEST_TENANT, tenant);
+    props.setProperty(TEST_TENANT_ID, tenantId);
+    props.setProperty(OWNER, owner);
     try {
       Files.createDirectories(Paths.get(file.getParent()));
       try (var fos = new FileOutputStream(file)) {
@@ -136,18 +144,6 @@ public abstract class BaseSharedTenant {
         }
       }
     }
-  }
-
-  private static boolean isLastClass(String lastClassName) {
-    var stackTrace = Thread.currentThread().getStackTrace();
-    for (var element : stackTrace) {
-      var className = element.getClassName();
-      if (className.equals(lastClassName)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 }
 

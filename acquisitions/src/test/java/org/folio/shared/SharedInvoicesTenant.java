@@ -17,10 +17,10 @@ public class SharedInvoicesTenant extends BaseSharedTenant {
     return BaseSharedTenant.initializeTenant(config, context);
   }
 
-  public static void cleanupTenant(boolean createdTenant, Consumer<String> destroyFeatureRunner) {
+  public static void cleanupTenant(Class<?> ownerClass, Consumer<String> destroyFeatureRunner) {
     var config = new TenantConfig(null, INIT_FEATURE_PATH, SHARED_TENANT_FILE);
-    var context = new TenantContext(null, destroyFeatureRunner);
-    BaseSharedTenant.cleanupTenant(createdTenant, config, context, LAST_CLASS_NAME);
+    var context = new TenantContext(ownerClass, destroyFeatureRunner);
+    BaseSharedTenant.cleanupTenant(config, context, LAST_CLASS_NAME);
   }
 }
 

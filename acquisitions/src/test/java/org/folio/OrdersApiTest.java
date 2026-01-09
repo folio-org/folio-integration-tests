@@ -22,7 +22,6 @@ class OrdersApiTest extends TestBaseEureka {
   private static final String TEST_TENANT = "testorders";
   private static final int THREAD_COUNT = 4;
 
-  private boolean createdSharedTenant = false;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("bind-piece", true),
@@ -136,12 +135,12 @@ class OrdersApiTest extends TestBaseEureka {
 
   @BeforeAll
   void ordersApiTestBeforeAll() {
-    createdSharedTenant = SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
+    SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   void ordersApiTestAfterAll() {
-    SharedOrdersTenant.cleanupTenant(createdSharedTenant, this::runFeature);
+    SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
