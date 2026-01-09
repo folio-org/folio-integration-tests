@@ -171,7 +171,7 @@ public abstract class TestBaseEureka {
   }
 
   private String getFolderPrefix(String featureName) {
-    return featureName.startsWith("init-") ? "-init" : featureName.endsWith("destroy-data.feature") ? "-destroy-data" : "";
+    return featureName.startsWith("init-") ? "-init" : featureName.endsWith("destroy-data.feature") ? "-destroy" : "";
   }
 
   // ============================== For a list of files with multiple features ==============================
