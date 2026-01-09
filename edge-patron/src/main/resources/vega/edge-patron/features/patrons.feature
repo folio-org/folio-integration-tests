@@ -9,9 +9,9 @@ Feature: patron tests
     * def owner = random_string
     * def amount = call random_numbers
     * def status = 'Available'
-    * def requestId = call random_uuid
-    * def servicePointId = call random_uuid
-    * def materialTypeId = call random_uuid
+    * def requestId = call uuid
+    * def servicePointId = call uuid
+    * def materialTypeId = call uuid
     * callonce read('classpath:prokopovych/edge-patron/features/util/initData.feature@postMaterialType')
 
   Scenario: Return total fees/fines regardless of fee/fine being attached to an item for a patron.
