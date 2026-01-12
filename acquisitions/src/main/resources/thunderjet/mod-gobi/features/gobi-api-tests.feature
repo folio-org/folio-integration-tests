@@ -1,3 +1,4 @@
+@parallel=false
 Feature: GOBI api tests
 
   Background:
@@ -72,7 +73,7 @@ Feature: GOBI api tests
     # Cleanup order data
     * def v = call cleanupOrderData { orderId: "#(orderId)" }
 
-  # Created for https://issues.folio.org/browse/MODGOBI-195
+  # For MODGOBI-195
   Scenario: Try to create an order with invalid custom mapping and check error response
     # post invalid UnlistedPrintMonograph
     * def invalid_mapping = read('classpath:samples/mod-gobi/invalid-mappings/unlisted-print-monograph.json')
@@ -180,7 +181,7 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request valid_mapping
     When method POST
-    Then status 422
+    Then status 409
 
     # Verify the newly added mapping
     Given path '/gobi/orders/custom-mappings/UnlistedPrintSerial'

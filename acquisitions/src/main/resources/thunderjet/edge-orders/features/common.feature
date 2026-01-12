@@ -12,7 +12,24 @@ Feature: Edge Orders COMMON
     * def headersAdmin = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenAdmin)", "Accept": "application/json, text/plain", "x-okapi-tenant": "#(testTenant)" }
 
     * callonce variables
-    * def apiKey = "eyJzIjoiZmxpcGFZTTdLcG9wbWhGbEYiLCJ0IjoidGVzdGVkZ2VvcmRlcnMiLCJ1IjoidGVzdC11c2VyIn0="
+
+    * def generateApiKey =
+      """
+      function(tenant, user) {
+        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var randomS = '';
+        for (var i = 0; i < 16; i++) {
+          randomS += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        var payload = {"s":randomS,"t":tenant,"u":user};
+        var payloadString = JSON.stringify(payload);
+        var bytes = new java.lang.String(payloadString).getBytes('UTF-8');
+        var Base64 = Java.type('java.util.Base64');
+        var encoded = Base64.getEncoder().encodeToString(bytes);
+        return encoded;
+      }
+      """
+    * def apiKey = generateApiKey(testTenant, testEdgeUser)
     * configure retry = { count: 10, interval: 5000 }
 
   @Positive
@@ -43,10 +60,10 @@ Feature: Edge Orders COMMON
       | "/organizations"                           | "with offset only"      | 0      | ""    | "organizations"        |
       | "/organizations"                           | "with limit only"       | ""     | 10    | "organizations"        |
       | "/organizations"                           | "with offset and limit" | 0      | 10    | "organizations"        |
-      | "/orders/addresses/billing-and-shipping"   | "no offset & limit"     | ""     | ""    | "configs"              |
-      | "/orders/addresses/billing-and-shipping"   | "with offset only"      | 0      | ""    | "configs"              |
-      | "/orders/addresses/billing-and-shipping"   | "with limit only"       | ""     | 10    | "configs"              |
-      | "/orders/addresses/billing-and-shipping"   | "with offset and limit" | 0      | 10    | "configs"              |
+      | "/orders/addresses/billing-and-shipping"   | "no offset & limit"     | ""     | ""    | "items"                |
+      | "/orders/addresses/billing-and-shipping"   | "with offset only"      | 0      | ""    | "items"                |
+      | "/orders/addresses/billing-and-shipping"   | "with limit only"       | ""     | 10    | "items"                |
+      | "/orders/addresses/billing-and-shipping"   | "with offset and limit" | 0      | 10    | "items"                |
       | "/orders/custom-fields"                    | "no offset & limit"     | ""     | ""    | "customFields"         |
       | "/orders/custom-fields"                    | "with offset only"      | 0      | ""    | "customFields"         |
       | "/orders/custom-fields"                    | "with limit only"       | ""     | 10    | "customFields"         |
@@ -93,7 +110,7 @@ Feature: Edge Orders COMMON
     And path "/finance/fund-codes-expense-classes"
     And param type = "COMMON"
     And param apiKey = apiKey
-    And param fiscalYearCode = "FY2026"
+    And param fiscalYearCode = "FY2027"
     Then retry until responseStatus == 200
     When method GET
     And match response.fundCodeVsExpClassesTypes == "#present"

@@ -15,6 +15,7 @@ Feature: Encumbrance Calculated Correctly After Canceling Invoice With Other Pai
 
     * callonce variables
 
+  @C877073
   @Positive
   Scenario: Encumbrance Calculated Correctly After Canceling Invoice With Other Paid And Credit Invoices
     # Generate unique identifiers for this test scenario

@@ -1,4 +1,4 @@
-# created for https://issues.folio.org/browse/MODORDERS-842
+# For MODORDERS-842
 @parallel=false
 Feature: Change fund distribution and check initial amount encumbered
 

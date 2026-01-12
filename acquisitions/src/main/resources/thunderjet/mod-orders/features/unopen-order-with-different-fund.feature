@@ -1,5 +1,5 @@
+# For MODORDERS-626, MODORDERS-894, MODORDERS-1222
 Feature: Unopen order and change fund distribution
-  Tickets: MODORDERS-626, MODORDERS-894, MODORDERS-1222
 
   Background:
     * print karate.info.scenarioName

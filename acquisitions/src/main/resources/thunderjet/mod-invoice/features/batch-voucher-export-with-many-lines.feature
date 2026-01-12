@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-312
+# For MODINVOICE-312
 @parallel=false
 Feature: Batch voucher export with many lines
 

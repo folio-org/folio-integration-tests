@@ -32,16 +32,20 @@ function fn() {
     getResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResource'),
     getInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getInventoryInstance'),
     putInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putInventoryInstance'),
+    getResourceIdFromInventoryId: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceIdFromInventoryId'),
     postResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postResource'),
     putResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putResource'),
     postSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
     putSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putSourceRecordToStorage'),
     searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
+    searchLinkedDataHub: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataHub'),
     searchInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchInventoryInstance'),
+    browseAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@browseAuthority'),
     searchAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchAuthority'),
     getSourceRecordFormatted: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getSourceRecordFormatted'),
     getResourceGraph: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph'),
     getDerivedMarc: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getDerivedMarc'),
+    getRdf: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getRdf'),
     getResourceSupportCheck: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceSupportCheck'),
     getResourcePreview: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourcePreview'),
     validationErrorWithCodeOnResourceCreation: karate.read('classpath:citation/mod-linked-data/features/util/validation-resource.feature@validationErrorWithCodeOnResourceCreation'),
@@ -77,6 +81,24 @@ function fn() {
 
     sleep: function(seconds) {
       java.lang.Thread.sleep(seconds * 1000)
+    },
+
+    resolveSubgraphIfId: function(idOrSubgraph) {
+      if (typeof idOrSubgraph === 'number') {
+        return karate.call('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph', { resourceId: idOrSubgraph }).response;
+      }
+      return idOrSubgraph;
+    },
+
+    assertMatch: function (actual, expected, message) {
+      var result = karate.match(actual, expected);
+      if (!result.pass) {
+        karate.fail(message !== undefined ? message : result.message);
+      }
+    },
+
+    assertTrue: function (condition, message) {
+      assertMatch(condition, true, message);
     }
   };
 

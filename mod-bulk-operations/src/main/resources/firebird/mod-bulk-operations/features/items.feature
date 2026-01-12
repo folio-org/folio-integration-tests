@@ -1200,7 +1200,7 @@ Feature: mod bulk operations items features
     And param query = query
     When method GET
     Then status 200
-    And match response.items[0].administrativeNotes[0] == ''
+    And match response.items[0].administrativeNotes[0] == '#notpresent'
     And match response.items[0].circulationNotes[0].note == ''
     And match response.items[0].notes[0].note == ''
 

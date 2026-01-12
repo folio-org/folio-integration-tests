@@ -1,5 +1,5 @@
+# For MODORDERS-519
 @parallel=false
-# for https://issues.folio.org/browse/MODORDERS-519
 Feature: Receive piece against non-package POL
 
   Background:

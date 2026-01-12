@@ -4,6 +4,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,18 +16,16 @@ class ModLinkedDataTest extends TestBaseEureka {
     "classpath:citation/mod-linked-data/features/";
 
   public ModLinkedDataTest() {
-    super(
-      new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH))
-    );
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
   @BeforeAll
-  public void setup() {
+  void setup() {
     runFeature("classpath:citation/mod-linked-data/linked-data-junit.feature");
   }
 
   @AfterAll
-  public void tearDown() {
+  void tearDown() {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
@@ -63,5 +62,15 @@ class ModLinkedDataTest extends TestBaseEureka {
   @Test
   void lccnDeduplication() {
     runFeatureTest("validation/lccn/deduplication/lccn-deduplication.feature");
+  }
+
+  @Test
+  void rdfImport() {
+    runFeatureTest("import-rdf/import-rdf.feature");
+  }
+
+  @Test
+  void authorityCreate() {
+    runFeatureTest("authority/authority-create.feature");
   }
 }

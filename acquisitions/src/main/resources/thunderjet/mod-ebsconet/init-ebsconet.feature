@@ -10,7 +10,7 @@ Feature: Initialize mod-ebsconet integration tests
       | 'mod-login'                 |
       | 'mod-permissions'           |
       | 'mod-users'                 |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-ebsconet'              |
       | 'mod-orders-storage'        |
       | 'mod-orders'                |
@@ -39,7 +39,6 @@ Feature: Initialize mod-ebsconet integration tests
     # testAdmin is only used to initialize global data
     * table adminPermissions
       | name                                                          |
-      | 'configuration.entries.item.post'                             |
       | 'orders-storage.settings.item.post'                           |
       | 'finance.budgets.item.post'                                   |
       | 'finance.expense-classes.item.post'                           |

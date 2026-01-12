@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODORDERS-712
+# For MODORDERS-712
 Feature: Rollover with closed order
 
   Background:
@@ -59,7 +59,7 @@ Feature: Rollover with closed order
     * def v = call openOrder { orderId: #(orderId) }
     * def v = call closeOrderRemoveLines { orderId: #(orderId) }
 
-  ## https://issues.folio.org/browse/MODORDERS-904
+  ## For MODORDERS-904
   ## Remove encumbrance from specific po line
   ## call endpoints other than mod-orders with admin token
     * configure headers = headersAdmin

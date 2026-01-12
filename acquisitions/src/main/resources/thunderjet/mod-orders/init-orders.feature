@@ -9,7 +9,7 @@ Feature: Initialize mod-orders integration tests
     * table modules
       | name                        |
       | 'mod-audit'                 |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-feesfines'             |
       | 'mod-finance'               |
       | 'mod-finance-storage'       |
@@ -49,6 +49,7 @@ Feature: Initialize mod-orders integration tests
       | 'orders.bind-pieces.item.delete'               |
       | 'orders.check-in.collection.post'              |
       | 'orders.collection.get'                        |
+      | 'orders.holding-detail.item.post'              |
       | 'orders.item.approve'                          |
       | 'orders.item.delete'                           |
       | 'orders.item.get'                              |
@@ -108,9 +109,6 @@ Feature: Initialize mod-orders integration tests
       | 'circulation.requests.item.move.post'                         |
       | 'circulation.requests.item.post'                              |
       | 'circulation.rules.put'                                       |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.post'                             |
-      | 'configuration.entries.item.put'                              |
       | 'orders-storage.settings.collection.get'                      |
       | 'orders-storage.settings.item.post'                           |
       | 'orders-storage.settings.item.put'                            |
@@ -178,6 +176,7 @@ Feature: Initialize mod-orders integration tests
       | 'inventory.items.collection.get'                              |
       | 'inventory.items.item.get'                                    |
       | 'inventory.items.item.post'                                   |
+      | 'inventory.items.item.put'                                    |
       | 'inventory.items.move.item.post'                              |
       | 'inventory.tenant-items.collection.get'                       |
       | 'lost-item-fees-policies.collection.get'                      |

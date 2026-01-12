@@ -6,8 +6,12 @@ import com.intuit.karate.Runner;
 import com.intuit.karate.RuntimeHook;
 import com.intuit.karate.StringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.folio.test.karate.FolioRuntimeHook;
+import org.folio.test.config.CommonFeature;
+import org.folio.test.hooks.FolioRuntimeHook;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
+import org.folio.test.shared.SharedCacheInstanceExtension;
+import org.folio.test.utils.EnvUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,229 +19,300 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.folio.test.config.TestParam.CLIENT_SECRET;
+import static org.folio.test.config.TestParam.KARATE_ENV;
+import static org.folio.test.config.TestParam.TEST_TENANT;
+import static org.folio.test.config.TestParam.TEST_TENANT_ID;
+import static org.folio.test.config.TestRailEnv.TESTRAIL_RUN_ID;
+
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(ReportPortalExtension.class)
+@ExtendWith(SharedCacheInstanceExtension.class)
 public abstract class TestBaseEureka {
 
+  private static final Logger logger = LoggerFactory.getLogger(TestBaseEureka.class);
+  private static final int DEFAULT_THREAD_COUNT = 1;
+  private static final String DEFAULT_TENANT_TEMPLATE = "testtenant";
 
-    private static final int DEFAULT_THREAD_COUNT = 1;
-    private static final String TENANT_TEMPLATE = "testtenant";
+  protected final TestIntegrationService testIntegrationService;
+  protected final TestRailService testRailService;
+  private final Integer runId;
+  private final Map<Class<?>, AtomicInteger> testCounts = new HashMap<>();
+  private boolean shouldCreateTenant = false;
 
-    protected static final Logger logger = LoggerFactory.getLogger(TestBaseEureka.class);
+  public TestBaseEureka(TestIntegrationService testIntegrationService) {
+    this(testIntegrationService, null);
+  }
 
-    private final TestIntegrationService testIntegrationService;
+  public TestBaseEureka(TestIntegrationService testIntegrationService, TestRailService testRailService) {
+    this.testIntegrationService = testIntegrationService;
+    this.testRailService = testRailService;
+    this.runId = EnvUtils.getInt(TESTRAIL_RUN_ID);
+  }
 
-    private Map<Class<?>, AtomicInteger> testCounts = new HashMap<>();
+  @BeforeAll
+  public void beforeAll() {
+    runHook();
+  }
 
-    private boolean shouldCreateTenant = false;
+  public void runHook() {
+    Optional.ofNullable(System.getenv(KARATE_ENV.getValue()))
+      .ifPresent(env -> System.setProperty(KARATE_ENV.getValue(), env));
+    // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
+    var testTenant = System.getProperty(TEST_TENANT.getValue());
+    if (StringUtils.isBlank(testTenant)) {
+      System.setProperty(TEST_TENANT.getValue(), DEFAULT_TENANT_TEMPLATE + RandomUtils.nextLong());
+      System.setProperty(TEST_TENANT_ID.getValue(), UUID.randomUUID().toString());
+      shouldCreateTenant = true;
+    } else {
+      shouldCreateTenant = false;
+    }
+    // Provide clientSecret to work with keycloak
+    var clientSecret = System.getenv(CLIENT_SECRET.getValue());
+    if (clientSecret != null) {
+      System.setProperty(CLIENT_SECRET.getValue(), clientSecret);
+    }
+  }
 
-    public TestBaseEureka(TestIntegrationService integrationHelper) {
-        this.testIntegrationService = integrationHelper;
+  @AfterAll
+  public void afterAll() {
+    if (isTestRailEnabled()) {
+      var results = testIntegrationService.getResults();
+      testRailService.createResults(runId, results);
+    }
+  }
+
+  // ============================== For one file & multiple features ==============================
+
+  protected void runFeature(String featurePath) {
+    runFeature(featurePath, DEFAULT_THREAD_COUNT, null);
+  }
+
+  protected void runFeature(String featurePath, TestInfo testInfo) {
+    runFeature(featurePath, DEFAULT_THREAD_COUNT, testInfo);
+  }
+
+  protected void runFeature(String featurePath, int threadCount, TestInfo testInfo) {
+    if (StringUtils.isBlank(featurePath)) {
+      logger.warn("runFeature:: No feature path specified");
+      return;
+    }
+    var idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
+    var featureName = featurePath.substring(++idx);
+    internalRun(featurePath, featureName, threadCount, testInfo);
+  }
+
+  // ============================== For one file & one feature ==============================
+
+  protected void runFeatureTest(String featureName) {
+    runFeatureTest(featureName, DEFAULT_THREAD_COUNT, null);
+  }
+
+  protected void runFeatureTest(String featureName, int threadCount) {
+    runFeatureTest(featureName, threadCount, null);
+  }
+
+  protected void runFeatureTest(String featureName, TestInfo testInfo) {
+    runFeatureTest(featureName, DEFAULT_THREAD_COUNT, testInfo);
+  }
+
+  protected void runFeatureTest(String featureName, int threadCount, TestInfo testInfo) {
+    if (StringUtils.isBlank(featureName)) {
+      logger.warn("runFeatureTest:: No test feature name specified");
+      return;
+    }
+    if (!featureName.endsWith("feature")) {
+      featureName = featureName.concat(".feature");
+    }
+    internalRun(testIntegrationService.getTestConfiguration()
+      .basePath()
+      .concat(featureName), featureName, threadCount, testInfo);
+  }
+
+  // ============================== For a list of files with multiple features ==============================
+
+  public void runFeatures(CommonFeature[] values, int threadCount, TestInfo testInfo) {
+    var featureNames = Arrays.stream(values)
+      .filter(CommonFeature::isEnabled)
+      .map(CommonFeature::getFileName)
+      .toList();
+    var testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
+    var hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
+
+    var finalFeatureNames = new ArrayList<String>();
+    featureNames.forEach(featureName -> {
+      if (!featureName.endsWith("feature")) {
+        featureName = featureName.concat(".feature");
+      }
+      finalFeatureNames.add(featureName);
+    });
+    logger.info("runFeatures:: Preparing features to run concurrently with {} threads", threadCount);
+
+    var paths = finalFeatureNames.stream()
+      .map(featureName -> {
+        if (!featureName.startsWith("classpath:")) {
+          return testIntegrationService.getTestConfiguration().basePath().concat(featureName);
+        }
+        return featureName;
+      })
+      .peek(featureName -> logger.info("runFeatures:: Preparing a feature: {}", featureName))
+      .toList();
+
+    var builder = Runner.path(paths)
+      .outputHtmlReport(true)
+      .outputCucumberJson(true)
+      .outputJunitXml(true)
+      .hook(hook)
+      .tags("~@Ignore", "~@NoTestRail");
+    builder.reportDir(timestampedReportDir());
+
+    var results = builder.parallel(threadCount);
+    try {
+      testIntegrationService.generateReport(results.getReportDir());
+    } catch (IOException ioe) {
+      logger.error("Error occurred during feature's report generation in a prepared run: {}", ioe.getMessage());
+    }
+    finalFeatureNames.forEach(featureName -> testIntegrationService.addResult(featureName, results));
+
+    Assertions.assertEquals(0, results.getFailCount());
+  }
+
+  private void internalRun(String path, String featureName, int threadCount, TestInfo testInfo) {
+    AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
+    RuntimeHook hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
+
+    Runner.Builder builder = Runner.path(path)
+      .outputHtmlReport(true)
+      .outputCucumberJson(true)
+      .outputJunitXml(true)
+      .hook(hook)
+      .tags("~@Ignore", "~@NoTestRail");
+    // This is critically important for the Test Rail integration, because the scenario results
+    // only hold a pointer to the json report that we just generated after the feature run, and if
+    // we truncate the folder, the pointer when used will point to nowhere, and will throw an exception
+    if (isTestRailEnabled()) {
+      builder.reportDir(timestampedReportDir());
     }
 
-    private void internalRun(String path, String featureName, int threadCount, TestInfo testInfo) {
-        AtomicInteger testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
+    Results results = builder.parallel(threadCount);
+    try {
+      testIntegrationService.generateReport(results.getReportDir());
+    } catch (IOException ioe) {
+      logger.error("Error occurred during feature's report generation in an internal run: {}", ioe.getMessage());
+    }
+    testIntegrationService.addResult(featureName, results);
 
-        RuntimeHook hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
+    Assertions.assertEquals(0, results.getFailCount());
+  }
 
-        Runner.Builder builder = Runner.path(path)
-                .outputHtmlReport(true)
-                .outputCucumberJson(true)
-                .outputJunitXml(true)
-                .hook(hook)
-                .tags("~@Ignore", "~@NoTestRail");
+  private boolean isTestRailEnabled() {
+    return testRailService != null && runId != null;
+  }
 
+  /**
+   * Signal creation/deletion of a test tenant in FOLIO
+   */
+  public boolean shouldCreateTenant() {
+    return shouldCreateTenant;
+  }
 
-        Results results = builder.parallel(threadCount);
+  /**
+   * Builder for running features with custom configuration
+   */
+  public FeatureRunner feature(String featurePath) {
+    return new FeatureRunner(featurePath);
+  }
 
+  /**
+   * Helper method to generate timestamped report directory
+   */
+  protected String timestampedReportDir() {
+    return "target/karate-reports-" + System.currentTimeMillis();
+  }
+
+  public class FeatureRunner {
+    private final String featurePath;
+    private String reportDir;
+    private int threadCount = DEFAULT_THREAD_COUNT;
+    private TestInfo testInfo;
+    private boolean outputHtmlReport = true;
+
+    private FeatureRunner(String featurePath) {
+      this.featurePath = featurePath;
+    }
+
+    public FeatureRunner reportDir(String reportDir) {
+      this.reportDir = reportDir;
+      return this;
+    }
+
+    public FeatureRunner threadCount(int threadCount) {
+      this.threadCount = threadCount;
+      return this;
+    }
+
+    public FeatureRunner testInfo(TestInfo testInfo) {
+      this.testInfo = testInfo;
+      return this;
+    }
+
+    public FeatureRunner outputHtmlReport(boolean outputHtmlReport) {
+      this.outputHtmlReport = outputHtmlReport;
+      return this;
+    }
+
+    public void run() {
+      if (StringUtils.isBlank(featurePath)) {
+        logger.warn("run:: No feature path specified");
+        return;
+      }
+
+      String actualFeaturePath = featurePath;
+      if (!featurePath.startsWith("classpath:")) {
+        actualFeaturePath = testIntegrationService.getTestConfiguration()
+          .basePath()
+          .concat(featurePath);
+      }
+
+      // Use TestBaseEureka.this.getClass() to get the actual test class (e.g., DataImportApiTest)
+      // instead of the inner FeatureRunner class, so FolioRuntimeHook can find the @FolioTest annotation
+      AtomicInteger testCount = testCounts.computeIfAbsent(TestBaseEureka.this.getClass(), key -> new AtomicInteger());
+      RuntimeHook hook = new FolioRuntimeHook(TestBaseEureka.this.getClass(), testInfo, testCount.incrementAndGet());
+
+      Runner.Builder builder = Runner.path(actualFeaturePath)
+        .outputCucumberJson(true)
+        .outputJunitXml(true)
+        .outputHtmlReport(outputHtmlReport)
+        .hook(hook)
+        .tags("~@Ignore", "~@NoTestRail");
+      if (reportDir != null) {
+        builder = builder.reportDir(reportDir);
+      }
+
+      // Only generate report if not using custom reportDir or if explicitly enabled
+      Results results = builder.parallel(threadCount);
+      if (reportDir == null || outputHtmlReport) {
         try {
-            testIntegrationService.generateReport(results.getReportDir());
+          testIntegrationService.generateReport(results.getReportDir());
         } catch (IOException ioe) {
-            logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
+          logger.error("Error occurred during feature's report generation in a run: {}", ioe.getMessage());
         }
+      }
 
-        testIntegrationService.addResult(featureName, results);
+      int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
+      String featureName = featurePath.substring(++idx);
+      testIntegrationService.addResult(featureName, results);
 
-        Assertions.assertEquals(0, results.getFailCount());
-
-        logger.debug("feature {} run result {} ", path, results.getErrorMessages());
+      Assertions.assertEquals(0, results.getFailCount());
+      logger.debug("run:: Ran feature {} with result: {} ", featurePath, results.getErrorMessages());
     }
-
-    protected void runFeature(String featurePath) {
-        this.runFeature(featurePath, DEFAULT_THREAD_COUNT, null);
-    }
-
-    protected void runFeature(String featurePath, TestInfo testInfo) {
-        this.runFeature(featurePath, DEFAULT_THREAD_COUNT, testInfo);
-    }
-
-    protected void runFeature(String featurePath, int threadCount, TestInfo testInfo) {
-        if (StringUtils.isBlank(featurePath)) {
-            logger.warn("No feature path specified");
-            return;
-        }
-        int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
-        internalRun(featurePath, featurePath.substring(++idx), threadCount, testInfo);
-    }
-
-    protected void runFeatureTest(String testFeatureName) {
-        this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT, null);
-    }
-
-    protected void runFeatureTest(String testFeatureName, TestInfo testInfo) {
-        this.runFeatureTest(testFeatureName, DEFAULT_THREAD_COUNT, testInfo);
-    }
-
-    protected void runFeatureTest(String testFeatureName, int threadCount) {
-        this.runFeatureTest(testFeatureName, threadCount, null);
-    }
-
-    protected void runFeatureTest(String testFeatureName, int threadCount, TestInfo testInfo) {
-        if (StringUtils.isBlank(testFeatureName)) {
-            logger.warn("No test feature name specified");
-            return;
-        }
-        if (!testFeatureName.endsWith("feature")) {
-            testFeatureName = testFeatureName.concat(".feature");
-        }
-        internalRun(testIntegrationService.getTestConfiguration()
-                .getBasePath()
-                .concat(testFeatureName), testFeatureName, threadCount, testInfo);
-    }
-
-    @BeforeAll
-    public void beforeAll() {
-        runHook();
-    }
-
-    @AfterAll
-    public void afterAll() {
-    }
-
-    public void runHook() {
-        Optional.ofNullable(System.getenv("karate.env"))
-                .ifPresent(env -> System.setProperty("karate.env", env));
-        // Provide uniqueness of "testTenant" based on the value specified when karate tests runs
-        String testTenant = System.getProperty("testTenant");
-        if (StringUtils.isBlank(testTenant)) {
-            System.setProperty("testTenant", TENANT_TEMPLATE + RandomUtils.nextLong());
-            System.setProperty("testTenantId", UUID.randomUUID().toString());
-            shouldCreateTenant = true;
-        } else {
-            shouldCreateTenant = false;
-        }
-        // Provide clientSecret to work with keycloak
-        String clientSecret = System.getenv("clientSecret");
-        if (clientSecret != null) {
-            System.setProperty("clientSecret", clientSecret);
-        }
-    }
-
-    /**
-     * Signal creation/deletion of a test tenant in FOLIO
-     */
-    public boolean shouldCreateTenant() {
-        return shouldCreateTenant;
-    }
-
-    /**
-     * Builder for running features with custom configuration
-     */
-    public FeatureRunner feature(String featurePath) {
-        return new FeatureRunner(featurePath);
-    }
-
-    /**
-     * Helper method to generate timestamped report directory
-     */
-    protected String timestampedReportDir() {
-        return "target/karate-reports-" + System.currentTimeMillis();
-    }
-
-    public class FeatureRunner {
-        private final String featurePath;
-        private String reportDir;
-        private int threadCount = DEFAULT_THREAD_COUNT;
-        private TestInfo testInfo;
-        private boolean outputHtmlReport = true;
-
-        private FeatureRunner(String featurePath) {
-            this.featurePath = featurePath;
-        }
-
-        public FeatureRunner reportDir(String reportDir) {
-            this.reportDir = reportDir;
-            return this;
-        }
-
-        public FeatureRunner threadCount(int threadCount) {
-            this.threadCount = threadCount;
-            return this;
-        }
-
-        public FeatureRunner testInfo(TestInfo testInfo) {
-            this.testInfo = testInfo;
-            return this;
-        }
-
-        public FeatureRunner outputHtmlReport(boolean outputHtmlReport) {
-            this.outputHtmlReport = outputHtmlReport;
-            return this;
-        }
-
-        public void run() {
-            if (StringUtils.isBlank(featurePath)) {
-                logger.warn("No feature path specified");
-                return;
-            }
-
-            String actualFeaturePath = featurePath;
-            if (!featurePath.startsWith("classpath:")) {
-                actualFeaturePath = testIntegrationService.getTestConfiguration()
-                        .getBasePath()
-                        .concat(featurePath);
-            }
-
-            // Use TestBaseEureka.this.getClass() to get the actual test class (e.g., DataImportApiTest)
-            // instead of the inner FeatureRunner class, so FolioRuntimeHook can find the @FolioTest annotation
-            AtomicInteger testCount = testCounts.computeIfAbsent(TestBaseEureka.this.getClass(), key -> new AtomicInteger());
-            RuntimeHook hook = new FolioRuntimeHook(TestBaseEureka.this.getClass(), testInfo, testCount.incrementAndGet());
-
-            Runner.Builder builder = Runner.path(actualFeaturePath)
-                    .outputCucumberJson(true)
-                    .outputJunitXml(true)
-                    .outputHtmlReport(outputHtmlReport)
-                    .hook(hook)
-                    .tags("~@Ignore", "~@NoTestRail");
-
-            if (reportDir != null) {
-                builder = builder.reportDir(reportDir);
-            }
-
-            Results results = builder.parallel(threadCount);
-
-            // Only generate report if not using custom reportDir or if explicitly enabled
-            if (reportDir == null || outputHtmlReport) {
-                try {
-                    testIntegrationService.generateReport(results.getReportDir());
-                } catch (IOException ioe) {
-                    logger.error("Error occurred during feature's report generation: {}", ioe.getMessage());
-                }
-            }
-
-            int idx = Math.max(featurePath.lastIndexOf("/"), featurePath.lastIndexOf("\\"));
-            String featureName = featurePath.substring(++idx);
-            testIntegrationService.addResult(featureName, results);
-
-            Assertions.assertEquals(0, results.getFailCount());
-            logger.debug("feature {} run result {} ", featurePath, results.getErrorMessages());
-        }
-    }
-
+  }
 }

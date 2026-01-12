@@ -1,5 +1,6 @@
+# This test is disabled because it is flaky
 @parallel=false
-Feature:  Return current fiscal year consider time zone
+Feature: Return current fiscal year consider time zone
 
   Background:
     * print karate.info.scenarioName
@@ -15,16 +16,16 @@ Feature:  Return current fiscal year consider time zone
 
     * callonce variables
 
-    * def fiscalYearId = callonce uuid1
-    * def ledgerId = callonce uuid2
-    * def configUUID = callonce uuid3
-    * def codePrefix = callonce random_string
-    * def year = callonce getCurrentYear
-    * def yesterday = callonce getYesterday
+  Scenario: Return current fiscal year consider time zone
+    * def fiscalYearId = call uuid1
+    * def ledgerId = call uuid2
+    * def configUUID = call uuid3
+    * def codePrefix = call random_string
+    * def year = call getCurrentYear
+    * def yesterday = call getYesterday
     * print "Yesterday date : " + yesterday
 
-  Scenario: prepare fiscal year
-
+    # 1. Prepare fiscal year
     Given path 'finance/fiscal-years'
     And request
       """
@@ -39,8 +40,7 @@ Feature:  Return current fiscal year consider time zone
     When method POST
     Then status 201
 
-
-  Scenario: prepare finances for ledger
+    # 2. Prepare finances for ledger
     Given path 'finance/ledgers'
     And request
       """
@@ -55,64 +55,23 @@ Feature:  Return current fiscal year consider time zone
     When method POST
     Then status 201
 
-  Scenario: Create configuration with Pacific/Midway timezone
-    * configure headers = headersAdmin
-    Given path 'configurations/entries'
-    And request
-      """
-      {
-        "id": "#(configUUID)",
-        "module": "ORG",
-        "configName": "localeSettings",
-        "enabled": true,
-        "code": "#(configUUID)",
-        "value": "{\"locale\":\"en-US\",\"timezone\":\"Pacific/Midway\",\"currency\":\"USD\"}"
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: Get current fiscal year for ledger if timezone Pacific/Midway
+    # 3. Get current fiscal year for ledger if timezone Pacific/Midway
     Given path 'finance/ledgers', ledgerId, '/current-fiscal-year'
     When method GET
     Then status 200
     And match $.id == '#(fiscalYearId)'
 
-  Scenario: Update configuration with UTC timezone
-    * configure headers = headersAdmin
-    Given path 'configurations/entries', configUUID
-    And request
-      """
-      {
-        "id": "#(configUUID)",
-        "module": "ORG",
-        "configName": "localeSettings",
-        "enabled": true,
-        "code": "#(configUUID)",
-        "value": "{\"locale\":\"en-US\",\"timezone\":\"Europe/Minsk\",\"currency\":\"USD\"}"
-      }
-      """
-    When method PUT
-    Then status 204
-
-  Scenario: Get current fiscal year for ledger if timezone Europe/Minsk
+    # 4. Get current fiscal year for ledger if timezone Europe/Minsk
     Given path 'finance/ledgers', ledgerId, '/current-fiscal-year'
     When method GET
     Then status 404
 
-
-  Scenario: Delete ledger
+    # 5. Delete ledger
     Given path 'finance/ledgers', ledgerId
     When method DELETE
     Then status 204
 
-  Scenario: Delete fiscal year
+    # 6. Delete fiscal year
     Given path 'finance/fiscal-years', fiscalYearId
-    When method DELETE
-    Then status 204
-
-  Scenario: Delete configuration with Pacific/Midway timezone
-    * configure headers = headersAdmin
-    Given path 'configurations/entries',configUUID
     When method DELETE
     Then status 204

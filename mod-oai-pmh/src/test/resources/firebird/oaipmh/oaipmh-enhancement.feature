@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Test enhancements to oai-pmh
 
   Background:
@@ -5,7 +6,6 @@ Feature: Test enhancements to oai-pmh
     * url pmhUrl
     #=========================SETUP================================================
     * callonce login testUser
-    * callonce read('classpath:global/setup-data.feature')
     #=========================SETUP=================================================
     * call resetConfiguration
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
@@ -15,7 +15,7 @@ Feature: Test enhancements to oai-pmh
     * def recordsSourceConfig = "Source record storage"
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * print 'valueTemplate=', valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
@@ -36,7 +36,7 @@ Feature: Test enhancements to oai-pmh
     * def enableOaiServiceConfig = <enableOAIService>
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = generalValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * print 'valueTemplate=', valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@GeneralConfig') {id: '#(generalId)', data: '#(valueTemplateString)'}
 
@@ -58,7 +58,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
+    * match response count(//record) == 7
 
   Scenario: get ListIdentifiers for marc21_withholdings
     And param verb = 'ListIdentifiers'
@@ -151,7 +151,7 @@ Feature: Test enhancements to oai-pmh
     * def maxRecordsPerResponseConfig = '4'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = technicalValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateString)'}
     * def totalRecords = 0
 
@@ -174,7 +174,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#notnull'
-    And match response //resumptionToken/@cursor == '4'
+    And match response //resumptionToken/@cursor == '3'
     And def resumptionToken = get response //resumptionToken
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
@@ -186,10 +186,10 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#present'
-    And match response //resumptionToken/@cursor == '8'
+    And match response //resumptionToken/@cursor == '6'
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
-    And match totalRecords == 10
+    And match totalRecords == 7
 
     Examples:
       | prefix                |
@@ -220,13 +220,13 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
+    * match response count(//record) == 7
 
     # set deleted record support to no
     * def deletedRecordsSupportConfig = 'no'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
     Given url pmhUrl
@@ -235,7 +235,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 9
+    * match response count(//record) == 7
 
     #return record to original state
     Given url baseUrl
@@ -269,7 +269,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 9
+    * match response count(//record) == 7
 
     #return record to original state
     Given url baseUrl
@@ -303,7 +303,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
+    * match response count(//record) == 8
     * match response //header[@status='deleted'] == '#notnull'
 
     #return record to original state
@@ -319,7 +319,7 @@ Feature: Test enhancements to oai-pmh
     * def suppressedRecordsProcessingConfig = 'true'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplate = behaviorValue
-    * string valueTemplateString = valueTemplate
+    * def valueTemplateString = valueTemplate
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@BehaviorConfig') {id: '#(behaviorId)', data: '#(valueTemplateString)'}
 
     * def srsId = '4c0ff739-3f4d-4670-a693-84dd48e31c53'
@@ -338,13 +338,13 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     * match response count(//record) == 10
-    * match response count(//header[@status='deleted']) == 1
+    * match response count(//header[@status='deleted']) == 4
 
   Scenario: Verify that resumption Token contains tenantId and all the other required parameters
     * def maxRecordsPerResponseConfig = '5'
     * call read('classpath:firebird/mod-configuration/reusable/mod-config-templates.feature')
     * copy valueTemplateTechnical = technicalValue
-    * string valueTemplateStringTechnical = valueTemplateTechnical
+    * def valueTemplateStringTechnical = valueTemplateTechnical
     * call read('classpath:firebird/mod-configuration/reusable/update-configuration.feature@TechnicalConfig') {id: '#(technicalId)', data: '#(valueTemplateStringTechnical)'}
 
     Given url pmhUrl

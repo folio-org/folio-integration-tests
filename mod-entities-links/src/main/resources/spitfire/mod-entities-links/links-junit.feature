@@ -17,7 +17,6 @@ Feature: mod-notes integration tests
       | 'instance-authority.linking-rules.collection.get'    |
       | 'instance-authority.linking-rules.item.get'          |
       | 'instance-authority.linking-rules.item.patch'        |
-      | 'instance-authority-links.authorities.bulk.post'     |
       | 'instance-authority-links.instances.collection.get'  |
       | 'instance-authority-links.instances.collection.put'  |
       | 'inventory-storage.authorities.collection.get'       |

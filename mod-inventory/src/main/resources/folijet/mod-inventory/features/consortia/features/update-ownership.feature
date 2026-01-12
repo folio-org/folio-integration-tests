@@ -64,9 +64,11 @@ Feature: Updating ownership of holdings and item api tests
           function() {
             if (responseStatus == 401) {
               karate.log('Unauthorized, re-logging in as universityUser');
-              karate.call('classpath:common-consortia/eureka/initData.feature@Login', { user: universityUser1 });
-              var newHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': okapitoken, 'x-okapi-tenant': universityTenant, 'Accept': 'application/json' };
+              var loginResult = karate.call('classpath:common-consortia/eureka/initData.feature@Login', universityUser1);
+              var newToken = loginResult.okapitoken;
+              var newHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': newToken, 'x-okapi-tenant': universityUser1.tenant, 'Accept': 'application/json' };
               karate.configure('headers', newHeaders);
+              karate.configure('cookies', { folioAccessToken: newToken });
               return false;
             }
             if (responseStatus == 200 && response.sharingInstances && response.sharingInstances.length > 0) {
@@ -77,7 +79,6 @@ Feature: Updating ownership of holdings and item api tests
           }
           """
     * configure retry = { count: 40, interval: 10000 }
-    * configure headers = headersUniversity
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenant
@@ -92,16 +93,25 @@ Feature: Updating ownership of holdings and item api tests
     And match sharingInstance.status == 'COMPLETE'
 
     # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
-    * configure headers = headersUniversity
-
     Given path 'inventory/instances', instanceId
     When method GET
     Then status 200
     And match response.id == instanceId
     And match response.source == 'CONSORTIUM-FOLIO'
 
+    # Verify is shared instance is accessible on the central tenant
+    * configure headers = headersConsortia
+    * configure retry = { count: 10, interval: 10000 }
+
+    Given path 'inventory/instances', instanceId
+    And retry until responseStatus == 200
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+
     # Update ownership of holdings
     * configure headers = headersUniversity
+    * configure retry = { count: 10, interval: 10000 }
 
     Given path 'inventory/holdings/update-ownership'
     And request
@@ -113,6 +123,7 @@ Feature: Updating ownership of holdings and item api tests
         targetLocationId: '#(consortiaLocation)'
       }
       """
+    And retry until responseStatus == 200
     When method POST
     Then status 200
     And assert response.notUpdatedEntities.length == 0

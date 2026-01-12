@@ -91,6 +91,30 @@ Feature: init data for mod-configuration
     When method POST
     Then status 201
 
+    Given path 'locations'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
+    And request
+      """
+      {
+        "id": "f55d27c6-a8eb-461b-acd6-5dea81771e70",
+        "name": "MAIN LIBRARY",
+        "code": "MA/SI/D/2",
+        "isActive": true,
+        "institutionId": "40ee00ca-a518-4b49-be01-0638d0a4ac57",
+        "campusId": "62cf76b7-cca5-4d33-9217-edf42ce1a848",
+        "libraryId": "5d78803e-ca04-4b4a-aeae-2c63b924518b",
+        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+        "servicePointIds": [
+          "3a40852d-49fd-4df2-a1f9-6e2641a6e91f"
+        ],
+        "servicePoints": []
+      }
+      """
+    When method POST
+    Then status 201
+
     Given path 'loan-types'
     And header Accept = 'application/json'
     And header x-okapi-token = okapitoken
@@ -222,6 +246,36 @@ Feature: init data for mod-configuration
       "source": "folio"
     }
     """
+    When method POST
+    Then status 201
+
+    Given path 'holdings-sources'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
+    And request
+      """
+      {
+        "id": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
+        "name": "MARC",
+        "source": "folio"
+      }
+      """
+    When method POST
+    Then status 201
+
+    Given path 'holdings-types'
+    And header Accept = 'application/json'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testUser.tenant
+    And request
+      """
+      {
+        "source": "folio",
+        "name": "Electronic",
+        "id": "996f93e2-5b5e-4cf2-9168-33ced1f95eed"
+      }
+      """
     When method POST
     Then status 201
 

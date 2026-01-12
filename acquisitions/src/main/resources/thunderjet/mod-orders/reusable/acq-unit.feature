@@ -1,4 +1,4 @@
-@Ignore
+@ignore
 Feature: Reusable components for acquisition units
 
   Background:

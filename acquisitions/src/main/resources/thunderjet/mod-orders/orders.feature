@@ -1,3 +1,4 @@
+@parallel=false
 Feature: mod-orders integration tests
 
   Background:
@@ -49,6 +50,9 @@ Feature: mod-orders integration tests
 
   Scenario: Check new tags created in central tag repository
     * call read('features/check-new-tags-in-central-tag-repository.feature')
+
+  Scenario: Retrieve holding details with pieces and items
+    * call read('features/holding-detail.feature')
 
   @ignore
   Scenario: Check order lines number retrieve limit
@@ -165,6 +169,9 @@ Feature: mod-orders integration tests
   Scenario: Open order with manual exchange rate
     * call read('features/open-order-with-manual-exchange-rate.feature')
 
+  Scenario: Open order with many Product IDs
+    * call read('features/open-order-with-many-product-ids.feature')
+
   Scenario: Open order without holdings
     * call read('features/open-order-without-holdings.feature')
 
@@ -204,8 +211,11 @@ Feature: mod-orders integration tests
   Scenario: Piece deletion restrictions from order and order line
     * call read('features/piece-deletion-restriction.feature')
 
-# Need to revise cases again, because almost of them was covered in the another features.
-# Also need better to split feature between package and non-package
+  Scenario: Piece item synchronization
+    * call read('features/piece-item-synchronization.feature')
+
+  # Need to revise cases again, because almost of them was covered in the another features.
+  # Also need better to split feature between package and non-package
   @ignore
   Scenario: Piece operations
     * call read('features/piece-operations-for-order-flows-mixed-order-line.feature')

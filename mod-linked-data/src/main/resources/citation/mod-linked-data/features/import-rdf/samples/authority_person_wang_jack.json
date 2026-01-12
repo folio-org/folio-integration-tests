@@ -1,0 +1,78 @@
+{
+  "externalId":"00000000-0000-0000-0000-000000000000",
+  "leader":"00000nz\\\\a2200000o\\\\4500",
+  "fields":[
+    {
+      "tag":"001",
+      "content":"no2012142443"
+    },
+    {
+      "tag":"008",
+      "content":{
+        "Undef_18":"\\\\\\\\\\\\\\\\\\\\",
+        "Undef_30":"\\",
+        "Undef_34":"\\\\\\\\",
+        "Geo Subd":"\\",
+        "Roman":"a",
+        "Lang":"\\",
+        "Kind rec":"a",
+        "Cat Rules":"a",
+        "SH Sys":"a",
+        "Series":"a",
+        "Numb Series":"a",
+        "Main use":"a",
+        "Subj use":"a",
+        "Series use":"a",
+        "Type Subd":"a",
+        "Govt Ag":"\\",
+        "RefEval":"a",
+        "RecUpd":"a",
+        "Pers Name":"a",
+        "Level Est":"a",
+        "Mod Rec":"\\",
+        "Source":"\\"
+      }
+    },
+    {
+      "tag":"010",
+      "content":"$a no2012142443",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"100",
+      "content":"$a Wang, Jack, $d 1972-",
+      "indicators":[
+        "1",
+        "\\"
+      ]
+    },
+    {
+      "tag":"400",
+      "content":"$a Jack Wang, $d 1972-",
+      "indicators":[
+        "1",
+        "\\"
+      ]
+    },
+    {
+      "tag":"500",
+      "content":"$a Jack Wang, $d 1972-",
+      "indicators":[
+        "1",
+        "\\"
+      ]
+    }
+  ],
+  "parsedRecordDtoId":"00000000-0000-0000-0000-000000000000",
+  "relatedRecordVersion":1,
+  "marcFormat":"AUTHORITY",
+  "suppressDiscovery":false,
+  "updateInfo":{
+    "recordState":"NEW"
+  },
+  "_actionType":"create",
+  "parsedRecordId":"398f0ffd-958c-4218-a37c-64146dbbe9ae"
+}

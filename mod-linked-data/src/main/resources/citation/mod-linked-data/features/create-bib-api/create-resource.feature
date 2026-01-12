@@ -16,5 +16,7 @@ Feature: Create Work and Instance resource using API
     * def instanceRequest = read('samples/instance-request.json')
     * def expectedInstanceResponse = read('samples/instance-expected-response.json')
     * def postInstanceCall = call postResource { resourceRequest: '#(instanceRequest)' }
-    And match postInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'] contains only deep expectedInstanceResponse
-    * def instanceId = postInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].id
+    * def instance = postInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance']
+    * match instance contains only deep expectedInstanceResponse
+    * def instanceId = instance.id
+    * def instanceMainTitleId = instance['http://bibfra.me/vocab/library/title'].find(x => x['http://bibfra.me/vocab/library/Title'])['http://bibfra.me/vocab/library/Title'].id

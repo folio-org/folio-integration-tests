@@ -9,7 +9,7 @@ Feature: Cross-module integration tests
     * table modules
       | name                        |
       | 'mod-permissions'           |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-login'                 |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
@@ -105,9 +105,6 @@ Feature: Cross-module integration tests
       | 'acquisitions-units.memberships.item.delete'                  |
       | 'acquisitions-units.memberships.item.post'                    |
       | 'acquisitions-units.units.item.post'                          |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.post'                             |
-      | 'configuration.entries.item.put'                              |
       | 'orders-storage.settings.collection.get'                      |
       | 'orders-storage.settings.item.post'                           |
       | 'orders-storage.settings.item.put'                            |
@@ -142,7 +139,7 @@ Feature: Cross-module integration tests
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
-    * call read("classpath:common/eureka/keycloak.feature@configureAccessTokenTime") { "AccessTokenLifespance" : 7200 }
+    * call read("classpath:common/eureka/keycloak.feature@configureAccessTokenTime") { "AccessTokenLifespance" : 3600 }
 
   Scenario: Create admin user
     * def v = call createAdditionalUser { testUser: '#(testAdmin)', userPermissions: '#(adminPermissions)' }

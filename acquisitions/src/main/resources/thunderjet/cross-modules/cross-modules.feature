@@ -239,3 +239,36 @@ Feature: cross-module integration tests
   Scenario: Encumbrance After Removing Fund Distribution From POL
     * call read('features/encumbrance-after-removing-fund-distribution-from-pol.feature')
 
+  Scenario: Encumbrance Is Created As Released After Releasing It Manually And Changing The Fund Distribution
+    * call read('features/encumbrance-released-after-manual-release-and-fund-change-ongoing.feature')
+
+  Scenario: Encumbrance Is Created As Released After Changing The Fund Distribution With Paid Invoice Release True
+    * call read('features/encumbrance-released-after-fund-change-with-paid-invoice-release-true.feature')
+
+  Scenario: Encumbrance Is Created As Released After Manual Release And Fund Change With Paid Invoice Release False
+    * call read('features/encumbrance-released-after-manual-release-and-fund-change-with-paid-invoice-release-false.feature')
+    
+  Scenario: Budget Summary And Encumbrances Updated Correctly When Editing POL With Related Invoice After Rollover Of Fiscal Year
+    * call read('features/budget-and-encumbrance-updated-correctly-after-editing-pol-with-invoice-after-rollover.feature')
+
+  Scenario: Cancel A Paid Invoice After Changing Fund Distribution In The PO Line
+    * call read('features/cancel-paid-invoice-after-changing-fund-distribution.feature')
+
+  Scenario: Subscription Info, Tags, And Comments Can Be Edited In A Paid Invoice When The Fund's Budget From Prior FY Is Closed
+    * call read('features/subscription-and-tags-editable-in-paid-invoice-after-rollover-with-closed-budget.feature')
+
+  Scenario: Subscription Info, Tags, And Comments Can Be Edited In An Approved Invoice When The Fund's Budget Is Set To Inactive
+    * call read('features/subscription-and-tags-editable-in-approved-invoice-with-inactive-budget.feature')
+
+  Scenario: Encumbrance Remains Unreleased After Changing Expense Class In PO Line With Paid Invoice
+    * call read('features/encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice.feature')
+
+  Scenario: Encumbrance And Budget Updated Correctly After Editing Fund Distribution And Increasing Cost With Paid Invoice
+    * call read('features/encumbrance-and-budget-updated-correctly-after-editing-fund-distribution-and-increasing-cost-with-paid-invoice.feature')
+
+  Scenario: Fund Distribution Can Be Changed After Rollover When Re-Encumber Is Not Active
+    * call read('features/fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active.feature')
+
+  Scenario: Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice
+    * call read('features/encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice.feature')
+

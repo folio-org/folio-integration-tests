@@ -53,6 +53,14 @@
       ]
     },
     {
+      "tag":"046",
+      "content":"$k 2016 $l 2020",
+      "indicators":[
+        "0",
+        "\\"
+      ]
+    },
+    {
       "tag":"050",
       "content":"$a PZ3.P785 $b Si",
       "indicators":[
@@ -70,7 +78,7 @@
     },
     {
       "tag":"100",
-      "content":"$a Poole, Ernest, $d 1880-1950",
+      "content":"$a Edgell, David L., $c Sr. $q (David Lee), $d 1938- $e author.",
       "indicators":[
         "1",
         "\\"
@@ -85,6 +93,62 @@
       ]
     },
     {
+      "tag":"246",
+      "content":"$i Title facing title page : $a Yehudim, Elohim ṿe-hisṭoryah",
+      "indicators":[
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Capital y derechos de la naturaleza--y la humanidad--en México y Nuestra América en el siglo XXI : $b esencia, complejidad y dialéctica de la esclavitud y exterminio sistémico de los animales $f tomo II",
+      "indicators":[
+        "3",
+        "2"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Teenage mutant ninja turtles, $p Battle lines. $n Vol. 21",
+      "indicators":[
+        "3",
+        "4"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$i Colophon title also in pinyin: $a Zhongguo yuedu tongshi. $p Mingdai juan",
+      "indicators":[
+        "1",
+        " "
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Drama uygulamaları",
+      "indicators":[
+        "1",
+        "8"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Nrithya vidhyaa",
+      "indicators":[
+        "1",
+        "7"
+      ]
+    },
+    {
+      "tag":"246",
+      "content":"$a Padenie Parizha : $b roman",
+      "indicators":[
+        "1",
+        "6"
+      ]
+    },
+    {
       "tag":"260",
       "content":"$a New York, $b The Macmillan Company, $c 1927.",
       "indicators":[
@@ -93,8 +157,48 @@
       ]
     },
     {
+      "tag":"260",
+      "content":"$c 2000.",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"264",
+      "content":"$a San Diego : $b Academic Press is an Imprint of Elsevier, $c 2019.",
+      "indicators":[
+        "\\",
+        "1"
+      ]
+    },
+    {
+      "tag":"264",
+      "content":"$a Washington, DC : $b For sale by the Superintendent of Documents, U.S. Government Publishing Office",
+      "indicators":[
+        "\\",
+        "2"
+      ]
+    },
+    {
+      "tag":"264",
+      "content":"$a [Benin] : $b Imp. Nounagnon & Fils, $c [2018]",
+      "indicators":[
+        "\\",
+        "3"
+      ]
+    },
+    {
+      "tag":"264",
+      "content":"$c ©2019",
+      "indicators":[
+        "\\",
+        "4"
+      ]
+    },
+    {
       "tag":"300",
-      "content":"$a 4 p. l., 3-382 p. $c 20 cm.",
+      "content":"$3 book $a 2 volumes : $b illustrations ; $c 31 cm + $e 1 computer disc (illustrations ; 4 3/4 in.)",
       "indicators":[
         "\\",
         "\\"
@@ -105,6 +209,38 @@
       "content":"$a cartographic image $b cri ",
       "indicators":[
         "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"545",
+      "content":"$a Florence Mardirosian was American choral conductor of Armenian decent.",
+      "indicators":[
+        "0",
+        "\\"
+      ]
+    },
+    {
+      "tag":"545",
+      "content":"$a Co-published with the Australian War Memorial.",
+      "indicators":[
+        "1",
+        "\\"
+      ]
+    },
+    {
+      "tag":"545",
+      "content":"$a Abstract also in English.",
+      "indicators":[
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag":"600",
+      "content":"$a Dracontius, Blossius Aemilius, $d active 5th century. $t Medea. $l German & Latin $v Drama $x Parodies, imitations, etc.",
+      "indicators":[
+        "1",
         "\\"
       ]
     },
@@ -150,9 +286,33 @@
     },
     {
       "tag":"700",
-      "content":"$a Kaffanke, Jakobus.",
+      "content":"$a Edward $b VI, $c King of England, $d 1537-1553.",
       "indicators":[
-        "\\",
+        "0",
+        "\\"
+      ]
+    },
+    {
+      "tag":"700",
+      "content":"$a Rinehart family $c Rinehart $q Family Rinehart",
+      "indicators":[
+        "3",
+        "\\"
+      ]
+    },
+    {
+      "tag":"710",
+      "content":"$a Horror Writers Association. $b Ann Radcliffe Academic  $n (1st : $d 2017 : $c Long Beach, Calif.)",
+      "indicators":[
+        "2",
+        "\\"
+      ]
+    },
+    {
+      "tag":"711",
+      "content":"$a International Business Engineering Conference $n (2nd :  $d 2018 : $c Legian, Bali, Indonesia)",
+      "indicators":[
+        "2",
         "\\"
       ]
     },

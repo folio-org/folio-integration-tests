@@ -262,5 +262,15 @@
         "dissertation id"
       ]
     }
+  ],
+  "_hubs": [
+    {
+      "_relation": "http://bibfra.me/vocab/lite/expressionOf",
+      "_hub": {
+        "id": "#notnull",
+        "http://bibfra.me/vocab/lite/label": [ "Code général des impôts (1999)" ],
+        "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/resources/hubs/d8d7c870-7f49-929a-62a9-15054beb2a68" ]
+      }
+    }
   ]
 }

@@ -8,10 +8,11 @@ function fn() {
   // The "testTenant" property could be specified during test runs
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
+  var testEdgeUser = karate.properties['testEdgeUser'];
 
   var config = {
     baseUrl: 'http://localhost:8000',
-    edgeUrl: 'http://localhost:9000',
+    edgeUrl: 'http://localhost:19000',
     ftpUrl: 'ftp://ftp.ci.folio.org',
     ftpPort:  21,
     ftpUser: 'folio',
@@ -25,6 +26,7 @@ function fn() {
 
     testTenant: testTenant,
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    testEdgeUser: testEdgeUser,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
@@ -69,6 +71,7 @@ function fn() {
     createBudgetExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createBudgetExpenseClass.feature'),
     rollover: karate.read('classpath:thunderjet/mod-finance/reusable/rollover.feature'),
     verifyReleasedEncumbrance: karate.read('classpath:thunderjet/mod-finance/reusable/verify-released-encumbrance.feature'),
+    shiftFiscalYearPeriods: karate.read('classpath:thunderjet/cross-modules/reusable/shiftFiscalYearPeriods.feature'),
 
     // inventory
     createItem: karate.read('classpath:thunderjet/consortia/reusable/createItem.feature'),
@@ -242,7 +245,6 @@ function fn() {
     // UI: http://localhost:3000/
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
-    config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   } else if (env == 'snapshot-2') {
     // UI: https://folio-etesting-snapshot2-diku.ci.folio.org/

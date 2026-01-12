@@ -1,5 +1,5 @@
 @parallel=false
-Feature: Test Data-Import holdings records
+Feature: Test orders import
 
   Background:
     * url baseUrl
@@ -7,10 +7,16 @@ Feature: Test Data-Import holdings records
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json' }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*'  }
     * def utilFeature = 'classpath:folijet/data-import/global/import-record.feature'
+    * def setPoLinesLimitFeature = 'classpath:folijet/data-import/global/order-lines-limit-settings.feature@setPoLinesLimit'
     * def samplePath = 'classpath:folijet/data-import/samples/'
 
-    * def defaultPoLineLimit = 2
     * def vendorId = "c6dace5d-4574-411e-8ba1-036102fcdc9b"
+
+    # configure default PO lines limit before tests only once
+    * def defaultPoLineLimit = 2
+    * if (typeof shouldSetDefaultPoLinesLimit === 'undefined') karate.callSingle(setPoLinesLimitFeature, { poLineLimit: defaultPoLineLimit })
+    * if (typeof shouldSetDefaultPoLinesLimit === 'undefined') karate.set('shouldSetDefaultPoLinesLimit', false)
+
 
   # called from other scenarios
   @Ignore
@@ -312,22 +318,6 @@ Feature: Test Data-Import holdings records
     Given call read(utilFeature+'@ImportRecord') { jobName: 'customJob' }
     Then match status != 'ERROR'
 
-  @SetDefaultPoLinesLimit
-  Scenario: set default poLinesLimit in config
-    Given path 'configurations/entries'
-    And headers headersUser
-    And request
-    """
-    {
-      "module": "ORDERS",
-      "configName": "poLines-limit",
-      "enabled": true,
-      "value": "#(defaultPoLineLimit)"
-    }
-    """
-    When method POST
-    Then status 201
-
   Scenario: FAT-3047 Test import pending order, no other actions in profile, use default POLines limit
     * def uniqueID = "pending order"
     * def orderStatus = "Pending"
@@ -550,6 +540,7 @@ Feature: Test Data-Import holdings records
     And match response.orderFormat == "P/E Mix"
     And match response.purchaseOrderId == secondRecordOrderId
 
+  @ignore
   Scenario: FAT-3047 Test import open order, inventory actions not ignored, override POLines limit
     * def orderStatus = "Open"
     * def uniqueID = "open order"

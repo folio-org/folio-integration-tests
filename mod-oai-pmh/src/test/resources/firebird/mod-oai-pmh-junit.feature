@@ -9,19 +9,15 @@ Feature: bulk operations integration tests
       | 'mod-permissions'           |
       | 'mod-oai-pmh'               |
       | 'mod-login'                 |
-      | 'mod-configuration'         |
       | 'mod-source-record-storage' |
       | 'mod-inventory-storage'     |
+      | 'mod-quick-marc'            |
 
     * table userPermissions
       | name                                                          |
       | 'oai-pmh.records.collection.get'                              |
       | 'source-storage.records.item.get'                             |
       | 'source-storage.snapshots.post'                               |
-      | 'configuration.entries.collection.get'                        |
-      | 'configuration.entries.item.put'                              |
-      | 'configuration.entries.item.get'                              |
-      | 'configuration.entries.item.post'                             |
       | 'inventory-storage.instance-types.item.post'                  |
       | 'inventory-storage.location-units.institutions.item.post'     |
       | 'inventory-storage.location-units.campuses.item.post'         |
@@ -60,6 +56,21 @@ Feature: bulk operations integration tests
       | 'okapi.proxy.tenants.modules.enabled.get'                     |
       | 'okapi.proxy.tenants.modules.enabled.post'                    |
       | 'okapi.proxy.tenants.modules.list'                            |
+      | 'oai-pmh.configuration-settings.collection.get'               |
+      | 'oai-pmh.configuration-settings.item.get'                     |
+      | 'oai-pmh.configuration-settings.item.post'                    |
+      | 'oai-pmh.configuration-settings.item.put'                     |
+      | 'oai-pmh.configuration-settings.item.delete'                  |
+      | 'inventory-storage.items.item.get'                            |
+      | 'inventory-storage.items.collection.get'                      |
+      | 'marc-records-editor.item.get'                                |
+      | 'marc-records-editor.item.put'                                |
+      | 'marc-records-editor.validate.post'                           |
+      | 'inventory-storage.holdings.collection.get'                   |
+      | 'inventory-storage.items.collection.get'                      |
+      | 'inventory-storage.holdings.item.get'                         |
+      | 'inventory-storage.holdings-types.item.post'                  |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
+    Given call read('classpath:global/setup-data.feature')

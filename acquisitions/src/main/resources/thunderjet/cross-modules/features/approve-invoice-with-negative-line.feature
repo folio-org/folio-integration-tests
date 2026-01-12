@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-346
+# For MODINVOICE-346
 @parallel=false
 Feature: Approve an invoice with a negative line
 

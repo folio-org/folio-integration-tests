@@ -2,16 +2,29 @@ Feature: Integration with SRS for import flow
 
   Background:
     * url baseUrl
+
+    * call login testAdmin
+    * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = testUserHeaders
 
   Scenario: Import MARC BIB record from SRS to linked-data
-    # Step 1: Create a new MARC bib record in SRS
+    # Step 1: Setup - Create a new MARC authority record and then a bib record that refers the authority record
+    * configure headers = testAdminHeaders
+    * def sourceRecordRequest = read('samples/authority_person_edgell_david.json')
+    * def postAuthorityCall = call postSourceRecordToStorage
+    * match postAuthorityCall.response.qmRecordId == '#notnull'
+    * def query = '(lccn="n87116094")'
+    * def searchAuthorityCall = call searchAuthority
+    * def authorityIdOfn87116094 = searchAuthorityCall.response.authorities[0].id
+
+    * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/srs-request.json')
     * call postSourceRecordToStorage
 
     # Step 2: Verify new instance in mod-inventory
+    * configure headers = testUserHeaders
     * def query = 'title all "Silent storms"'
     * callonce read('util/verify.feature@verifyInventoryInstance') { expectedSource: 'MARC' }
 
@@ -41,7 +54,7 @@ Feature: Integration with SRS for import flow
     * call postImport { inventoryId: "#(inventoryInstanceIdFromSearchResponse)" }
 
     # Step 7: Verify that an instance and work are created in linked-data
-    * callonce read('util/verify.feature@verifyInstanceAndWork')
+    * callonce read('util/verify-api.feature')
 
     # Step 8: Verify that source of instance is changed to LINKED_DATA
     * callonce read('util/verify.feature@verifyInventoryInstanceUpdated')
@@ -51,3 +64,15 @@ Feature: Integration with SRS for import flow
     * def searchCall = call searchInventoryInstance
     * match searchCall.response.totalRecords == 1
 
+
+    # Step 10: Verify subgraph of the imported instance
+    * callonce read('util/verify-graph.feature')
+
+    # Step 11: Verify exported RDF
+    * callonce read('util/verify-rdf.feature')
+
+    # Step 12: Verify hubs are indexed
+    * callonce read('util/verify-hub-search.feature')
+
+    # Step 13: Derive MARC record and verify
+    * callonce read('util/verify-marc.feature')

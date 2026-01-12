@@ -56,6 +56,20 @@ Feature: mod-audit integration tests
       | 'inventory-storage.instances.item.get'                                        |
       | 'marc-records-editor.item.get'                                                |
       | 'marc-records-editor.item.put'                                                |
+      | 'oai-pmh.configuration-settings.collection.get'                               |
+      | 'oai-pmh.configuration-settings.item.get'                                     |
+      | 'oai-pmh.configuration-settings.item.post'                                    |
+      | 'oai-pmh.configuration-settings.item.put'                                     |
+      | 'oai-pmh.configuration-settings.item.delete'                                  |
+      | 'inventory-storage.instances.item.put'                                        |
+      | 'source-storage.records.put'                                                  |
+      | 'source-storage.records.item.get'                                             |
+      | 'inventory-storage.items.item.delete'                                         |
+      | 'inventory-storage.holdings.item.delete'                                      |
+      | 'inventory-storage.instances.item.delete'                                     |
+      | 'source-storage.records.delete'                                               |
+      | 'source-storage.snapshots.delete'                                             |
+      | 'inventory.instances.item.delete'                                             |
 
     * def testTenant = 'testoaipmh'
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }

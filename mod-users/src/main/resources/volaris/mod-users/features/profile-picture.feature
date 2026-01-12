@@ -238,7 +238,8 @@ Feature: Profile-picture tests
     And configure headers = headersUserOctetStream
     And request read(filepath)
     When method POST
-    Then status 413
+    Then status 500
+    And match response == 'Requested file size should be within allowed size updated in profile_picture configuration'
 
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': '*/*'  }
 

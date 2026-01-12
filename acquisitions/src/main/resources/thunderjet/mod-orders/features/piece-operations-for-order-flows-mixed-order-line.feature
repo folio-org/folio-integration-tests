@@ -1,4 +1,6 @@
-# for https://issues.folio.org/browse/MODORDERS-568
+# For MODORDERS-568
+# This test is disabled because it is flaky
+@parallel=false
 Feature: Test operations affecting pieces with different po line options
 
   # This test does the following operations for all cases given in the data table at the end:
@@ -39,6 +41,7 @@ Feature: Test operations affecting pieces with different po line options
   Background:
     * print karate.info.scenarioName
     * url baseUrl
+    * configure retry = { count: 10, interval: 1000 }
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
@@ -229,12 +232,21 @@ Feature: Test operations affecting pieces with different po line options
     And match $.receivingStatus == 'Received'
 
     * print 'Check the quantity in the order line'
+    * def isQuantityUpdated =
+      """
+      function(response) {
+        var expectedPhysical = <checkinItems> ? 1 : 2;
+        var expectedTotal = <checkinItems> ? 2 : 3;
+        return response.locations != null &&
+               response.locations.length == 1 &&
+               response.locations[0].quantityPhysical == expectedPhysical &&
+               response.locations[0].quantity == expectedTotal
+      }
+      """
     Given path 'orders/order-lines', poLineId
+    And retry until responseStatus == 200 && isQuantityUpdated(response)
     When method GET
     Then status 200
-    And match $.locations == '#[1]'
-    And match $.locations[0].quantityPhysical == <checkinItems> ? 1 : 2
-    And match $.locations[0].quantity == <checkinItems> ? 2 : 3
 
     * print 'Unreceive the piece'
     Given path 'orders/receive'

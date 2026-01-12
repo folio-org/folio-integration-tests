@@ -9,7 +9,7 @@ Feature: prepare data for api test
   Scenario: create entitlement response
     * print "---create entitlement response---"
     * call read('classpath:common/eureka/application.feature@applicationSearch')
-    * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+    * def entitlementTemplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
     * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
@@ -19,13 +19,13 @@ Feature: prepare data for api test
     And param tenantParameters = tenantParameters
     And param async = true
     And param purgeOnRollback = false
-    And request entitlementTamplate
+    And request entitlementTemplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
     And header x-okapi-token = keycloakMasterToken
     When method POST
     * def flowId = response.flowId
 
-    * configure retry = { count: 40, interval: 30000 }
+    * configure retry = { count: 80, interval: 15000 }
     Given path 'entitlement-flows', flowId
     And param includeStages = true
     And header Authorization = 'Bearer ' + keycloakMasterToken
