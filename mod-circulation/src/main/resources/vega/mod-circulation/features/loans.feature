@@ -838,8 +838,10 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # find current module id for age-to-lost processor delay time
+    * configure retry = { count: 10, interval: 2000 }
     Given path '/scheduler/timers'
     And param limit = 100
+    And retry until karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
     When method GET
     Then status 200
     * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
@@ -970,8 +972,10 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # find current module id for age-to-lost processor delay time
+    * configure retry = { count: 10, interval: 2000 }
     Given path '/scheduler/timers'
     And param limit = 100
+    And retry until karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
     When method GET
     Then status 200
     * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
