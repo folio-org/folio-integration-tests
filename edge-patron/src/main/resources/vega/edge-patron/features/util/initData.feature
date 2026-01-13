@@ -19,7 +19,7 @@ Feature: init data for edge-patron
   @PostItem
   Scenario: create item
 #   instancetypes
-    * def instanceTypeId = call random_uuid
+    * def instanceTypeId = call uuid
     * def instanceTypeEntityRequest = read('samples/item/instance-type-entity-request.json')
     * instanceTypeEntityRequest.name = instanceTypeEntityRequest.name + ' ' + random_string()
     * instanceTypeEntityRequest.code = instanceTypeEntityRequest.code + ' ' + random_string()
@@ -32,7 +32,7 @@ Feature: init data for edge-patron
     Then status 201
 
 #   instance
-    * def instanceId = call random_uuid
+    * def instanceId = call uuid
     * def instanceEntityRequest = read('samples/item/instance-entity-request.json')
 
     Given path 'inventory', 'instances'
@@ -41,7 +41,7 @@ Feature: init data for edge-patron
     When method POST
     Then status 201
 #   ServicePoint
-    * def servicePointId = call random_uuid
+    * def servicePointId = call uuid
     * def servicePointEntityRequest = read('samples/service-point/service-point-entity-request.json')
     * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
     * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
@@ -52,10 +52,10 @@ Feature: init data for edge-patron
     When method POST
     Then status 201
 #   Location
-    * def institutionId = call random_uuid
-    * def campusId = call random_uuid
-    * def libraryId = call random_uuid
-    * def locationId = call random_uuid
+    * def institutionId = call uuid
+    * def campusId = call uuid
+    * def libraryId = call uuid
+    * def locationId = call uuid
 
     * def locationUnitInstitutionEntityRequest = read('samples/location/location-unit-institution-entity-request.json')
     * locationUnitInstitutionEntityRequest.name = locationUnitInstitutionEntityRequest.name + ' ' + random_string()
@@ -96,7 +96,7 @@ Feature: init data for edge-patron
     When method POST
     Then status 201
 #   Holdings
-    * def holdingId = call random_uuid
+    * def holdingId = call uuid
     * def holdingsEntityRequest = read('samples/item/holdings-entity-request.json')
 
     Given path 'holdings-storage', 'holdings'
@@ -105,7 +105,7 @@ Feature: init data for edge-patron
     When method POST
     Then status 201
 #   item
-    * def permanentLoanTypeId = call random_uuid
+    * def permanentLoanTypeId = call uuid
     * def permanentLoanTypeEntityRequest = read('samples/item/permanent-loan-type-entity-request.json')
     * permanentLoanTypeEntityRequest.name = permanentLoanTypeEntityRequest.name + ' ' + random_string()
 
@@ -116,7 +116,7 @@ Feature: init data for edge-patron
     Then status 201
 
     * def itemBarcode = call random_numbers
-    * def itemId = call random_uuid
+    * def itemId = call uuid
     * def itemEntityRequest = read('samples/item/item-entity-request.json')
 
     Given path 'inventory', 'items'
@@ -127,7 +127,7 @@ Feature: init data for edge-patron
 
   @PostPatronGroupAndUser
   Scenario: create Patron Group & User
-    * def patronId = call random_uuid
+    * def patronId = call uuid
     * def patronName = call random_string
     * def createPatronGroupRequest = read('samples/user/create-patronGroup-request.json')
 
@@ -139,7 +139,7 @@ Feature: init data for edge-patron
 
     * def userBarcode = call random_numbers
     * def userName = call random_string
-    * def userId = call random_uuid
+    * def userId = call uuid
     * def externalId = call random_string
     * def createUserRequest = read('samples/user/create-user-request.json')
 
@@ -151,7 +151,7 @@ Feature: init data for edge-patron
 
   @PostOwnerAndFine
   Scenario: create owner and fee/fine
-    * def ownerId = call random_uuid
+    * def ownerId = call uuid
     * def createOwnerRequest = read('samples/fine/create-owner-entity.json')
 
     Given path 'owners'
@@ -160,8 +160,8 @@ Feature: init data for edge-patron
     When method POST
     Then status 201
 
-    * def feeFineId = call random_uuid
-    * def fineId = call random_uuid
+    * def feeFineId = call uuid
+    * def fineId = call uuid
     * def createFineRequest = read('samples/fine/create-fee-entity-request.json')
 
     Given path 'accounts'
@@ -172,7 +172,7 @@ Feature: init data for edge-patron
 
   @PostOwnerAndCharges
   Scenario: create owner and charges
-    * def ownerId = call random_uuid
+    * def ownerId = call uuid
     * def createOwnerRequest = read('samples/fine/create-owner-entity.json')
 
     Given path 'owners'
@@ -181,8 +181,8 @@ Feature: init data for edge-patron
     When method POST
     Then status 201
 
-    * def feeFineId = call random_uuid
-    * def fineId = call random_uuid
+    * def feeFineId = call uuid
+    * def fineId = call uuid
     * def createChargeRequest = read('samples/charges/create-charges-entity-request.json')
 
     Given path 'accounts'
@@ -193,11 +193,11 @@ Feature: init data for edge-patron
 
   @PostPolicies
   Scenario: create policies
-    * def loanPolicyId = call random_uuid
-    * def lostItemFeePolicyId = call random_uuid
-    * def overdueFinePoliciesId = call random_uuid
-    * def patronPolicyId = call random_uuid
-    * def requestPolicyId = call random_uuid
+    * def loanPolicyId = call uuid
+    * def lostItemFeePolicyId = call uuid
+    * def overdueFinePoliciesId = call uuid
+    * def patronPolicyId = call uuid
+    * def requestPolicyId = call uuid
     * def loanPolicyEntityRequest = read('samples/policies/loan-policy-entity-request.json')
 
     Given path 'loan-policy-storage/loan-policies'

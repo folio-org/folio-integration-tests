@@ -9,26 +9,33 @@ Feature: Import authority into graph
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
+  * def validateResource =
+    """
+    function(resource, expectedDoc, expectedLabel) {
+      assertTrue(resource != null, 'Resource is null');
+      for (var key2 in expectedDoc) {
+        var actualValue = resource.doc[key2] ? resource.doc[key2] : undefined;
+        var expectedValue = expectedDoc[key2];
+        assertMatch(actualValue, expectedValue, 'Resource doc field mismatch for ' + key2 + ': expected ' + JSON.stringify(expectedValue) + ', got ' + JSON.stringify(actualValue));
+      }
+      assertMatch(resource.label, expectedLabel, 'Resource label mismatch: expected ' + expectedLabel + ', got ' + resource.label);
+      return true;
+    }
+    """
+
   * def validateAuthoritySubgraphSimple =
     """
-    function(subgraph, expectedType, expectedDoc, expectedLabel, expectedOutgoingType, expectedOutgoingDoc, expectedOutgoingLabel) {
+    function(subgraph, expectedType, expectedDoc, expectedLabel, identifiers) {
       assertTrue(subgraph.types && subgraph.types.includes(expectedType), 'Type mismatch: expected ' + expectedType + ', got ' + JSON.stringify(subgraph.types));
-      for (var key in expectedDoc) {
-        var actualArr = subgraph.doc[key] ? subgraph.doc[key] : undefined;
-        var expectedArr = expectedDoc[key];
-        assertMatch(actualArr, expectedArr, 'Doc field mismatch for ' + key + ': expected ' + JSON.stringify(expectedArr) + ', got ' + JSON.stringify(actualArr));
-      }
-      assertMatch(subgraph.label, expectedLabel, 'Label mismatch: expected ' + expectedLabel + ', got ' + subgraph.label);
+      validateResource(subgraph, expectedDoc, expectedLabel);
       assertTrue(subgraph.outgoingEdges && subgraph.outgoingEdges.length > 0, 'No outgoing edges found');
-      var outgoing = subgraph.outgoingEdges[0];
-      var expectedTypes = ['IDENTIFIER', expectedOutgoingType];
-      assertMatch(outgoing.target.types ? outgoing.target.types.sort() : [], expectedTypes.sort(), 'Outgoing types mismatch: expected ["IDENTIFIER", ' + expectedOutgoingType + '], got ' + JSON.stringify(outgoing.target.types));
-      for (var key2 in expectedOutgoingDoc) {
-        var actualOutgoingArr = outgoing.target.doc[key2] ? outgoing.target.doc[key2] : undefined;
-        var expectedOutgoingArr = expectedOutgoingDoc[key2];
-        assertMatch(actualOutgoingArr, expectedOutgoingArr, 'Outgoing doc field mismatch for ' + key2 + ': expected ' + JSON.stringify(expectedOutgoingArr) + ', got ' + JSON.stringify(actualOutgoingArr));
-      }
-      assertMatch(outgoing.target.label, expectedOutgoingLabel, 'Outgoing label mismatch: expected ' + expectedOutgoingLabel + ', got ' + outgoing.target.label);
+      identifiers.forEach((identifier, idx) => {
+        var outgoing = subgraph.outgoingEdges.find(edge => {
+          var types = edge.target.types || [];
+          return edge.predicate == 'MAP' && types.includes('IDENTIFIER') && types.includes(identifier.identifierType) && types.length === 2;
+        });
+        validateResource(outgoing.target, identifier.identifierDoc, identifier.identifierLabel);
+      });
       return true;
     }
     """
@@ -51,7 +58,7 @@ Feature: Import authority into graph
     * def authorityResourceId = authorityResourceIdCall.response.id
     * def subgraphCall = call getResourceGraph { resourceId: '#(authorityResourceId)' }
     * def authoritySubgraph = subgraphCall.response
-    * eval validateAuthoritySubgraphSimple(authoritySubgraph, params.expectedType, params.expectedDoc, params.expectedLabel, params.expectedOutgoingType, params.expectedOutgoingDoc, params.expectedOutgoingLabel)
+    * eval validateAuthoritySubgraphSimple(authoritySubgraph, params.expectedType, params.expectedDoc, params.expectedLabel, params.identifiers)
 
   @C569567
   Scenario: create & verify meeting authortity - no $v, $x, $y or $z present
@@ -70,13 +77,24 @@ Feature: Import authority into graph
         'http://bibfra.me/vocab/library/numberOfParts': ['20th :']
       },
       expectedLabel: 'Feria Internacional del Libro de La Paz, 2015, La Paz, Bolivia',
-      expectedOutgoingType: 'ID_LCCN',
-      expectedOutgoingDoc: {
-        'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/n2023009652'],
-        'http://bibfra.me/vocab/lite/name': ['n2023009652'],
-        'http://bibfra.me/vocab/lite/label': ['n2023009652']
-      },
-      expectedOutgoingLabel: 'n2023009652'
+      identifiers: [
+        {
+          identifierType: 'ID_LCNAF',
+          identifierDoc: {
+            'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/n2023009652'],
+            'http://bibfra.me/vocab/lite/name': ['n2023009652'],
+            'http://bibfra.me/vocab/lite/label': ['n2023009652']
+          },
+          identifierLabel: 'n2023009652'
+        }, {
+          identifierType: 'ID_LOCAL',
+          identifierDoc: {
+            'http://bibfra.me/vocab/lite/name': ['12111953'],
+            'http://bibfra.me/vocab/lite/label': ['12111953']
+          },
+          identifierLabel: '12111953'
+        }
+      ]
     }
     """
     * call read('authority-create.feature@validateAuthortiySubgraph') params
@@ -96,13 +114,24 @@ Feature: Import authority into graph
         'http://bibfra.me/vocab/library/subordinateUnit': ['Department of Natural Resources', 'Land Records Information Section']
       },
       expectedLabel: 'Alaska, Department of Natural Resources, Land Records Information Section',
-      expectedOutgoingType: 'ID_LCCN',
-      expectedOutgoingDoc: {
-        "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/authorities/n96085736" ],
-        "http://bibfra.me/vocab/lite/name": [ "n96085736" ],
-        "http://bibfra.me/vocab/lite/label": [ "n96085736" ]
-      },
-      expectedOutgoingLabel: 'n96085736'
+      identifiers: [
+        {
+          identifierType: 'ID_LCNAF',
+          identifierDoc: {
+            "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/authorities/n96085736" ],
+            "http://bibfra.me/vocab/lite/name": [ "n96085736" ],
+            "http://bibfra.me/vocab/lite/label": [ "n96085736" ]
+          },
+          identifierLabel: 'n96085736'
+        }, {
+          identifierType: 'ID_LOCAL',
+          identifierDoc: {
+            'http://bibfra.me/vocab/lite/name': ['3179428'],
+            'http://bibfra.me/vocab/lite/label': ['3179428']
+          },
+          identifierLabel: '3179428'
+        }
+      ]
     }
     """
     * call read('authority-create.feature@validateAuthortiySubgraph') params
@@ -121,13 +150,24 @@ Feature: Import authority into graph
           'http://library.link/vocab/resourcePreferred': ['true'],
         },
         expectedLabel: 'Valley Forge (Pa.)',
-        expectedOutgoingType: 'ID_LCCN',
-        expectedOutgoingDoc: {
-          "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/authorities/n79006873" ],
-          "http://bibfra.me/vocab/lite/name": [ "n79006873" ],
-          "http://bibfra.me/vocab/lite/label": [ "n79006873" ]
-        },
-        expectedOutgoingLabel: 'n79006873'
+        identifiers: [
+          {
+            identifierType: 'ID_LCNAF',
+            identifierDoc: {
+              "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/authorities/n79006873" ],
+              "http://bibfra.me/vocab/lite/name": [ "n79006873" ],
+              "http://bibfra.me/vocab/lite/label": [ "n79006873" ]
+            },
+            identifierLabel: 'n79006873'
+          }, {
+            identifierType: 'ID_LOCAL',
+            identifierDoc: {
+              'http://bibfra.me/vocab/lite/name': ['3747060'],
+              'http://bibfra.me/vocab/lite/label': ['3747060']
+            },
+            identifierLabel: '3747060'
+          }
+        ]
       }
       """
     * call read('authority-create.feature@validateAuthortiySubgraph') params

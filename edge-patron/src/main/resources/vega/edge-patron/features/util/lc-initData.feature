@@ -8,7 +8,7 @@ Feature: init data for edge-patron
 
   @PostPatronGroupAndUser
   Scenario: create Patron Group & User
-    * def patronId = call random_uuid
+    * def patronId = call uuid
     * def patronName = 'Remote Non-circulating'
     * def createPatronGroupRequest = read('samples/user/create-patronGroup-request.json')
 
@@ -21,7 +21,7 @@ Feature: init data for edge-patron
   @CreateHomeAddressType
   Scenario: Create 'home' addressType for user
     * print "Create 'home' addressType for user"
-    * def homeAddressTypeId = call random_uuid
+    * def homeAddressTypeId = call uuid
     * def createPatronGroupRequest = read('samples/address/address-type.json')
 
     Given path '/addresstypes'

@@ -83,7 +83,7 @@ Feature: LC user registration tests tests
 
     * def oldExternalSystemId = response.externalSystemId
     * createStagingUserRequest.generalInfo.firstName = 'NEW_FIRST_NAME'
-    * def newExternalSystemId = call random_uuid
+    * def newExternalSystemId = call uuid
     * createStagingUserRequest.externalSystemId = newExternalSystemId
 
     Given url edgeUrl
@@ -106,7 +106,7 @@ Feature: LC user registration tests tests
     * def email = 'karate-' + random_num + '@karatetest.com'
     * def createStagingUserRequest = read('samples/user/create-lc-user-request.json')
 
-    * def externalSystemId = call random_uuid
+    * def externalSystemId = call uuid
 
     Given url edgeUrl
     And path 'patron/' + externalSystemId
@@ -136,8 +136,8 @@ Feature: LC user registration tests tests
     * def userBarcode = 'barcode_' + random_num
     * def type = 'patron'
     * def userName = call random_string
-    * def userId = call random_uuid
-    * def externalId = call random_uuid
+    * def userId = call uuid
+    * def externalId = call uuid
     * def createUserRequest = read('samples/user/create-user-request.json')
 
     Given url baseUrl
@@ -187,8 +187,8 @@ Feature: LC user registration tests tests
     * def userBarcode = 'barcode_' + random_num
     * def type = 'patron'
     * def userName = call random_string
-    * def userId = call random_uuid
-    * def externalId = call random_uuid
+    * def userId = call uuid
+    * def externalId = call uuid
     * def createUserRequest = read('samples/user/create-user-request.json')
 
     Given url baseUrl
@@ -199,10 +199,10 @@ Feature: LC user registration tests tests
     Then status 201
 
     * def random_num = call random_numbers
-    * def userName = call random_uuid
-    * def userId = call random_uuid
+    * def userName = call uuid
+    * def userId = call uuid
     * def userBarcode = 'barcode_' + random_num
-    * def externalId = call random_uuid
+    * def externalId = call uuid
     * createUserRequest.barcode = userBarcode
     * createUserRequest.username = userName
     * createUserRequest.id = userId
@@ -233,7 +233,7 @@ Feature: LC user registration tests tests
     And path 'patron/registration-status'
     And param apikey = apikey
     And param emailId = 'karate@test.com'
-    And param externalSystemId = call random_uuid
+    And param externalSystemId = call uuid
     When method GET
     Then status 400
 
@@ -268,8 +268,8 @@ Feature: LC user registration tests tests
     * def userBarcode = 'barcode_' + random_num
     * def type = 'patron'
     * def userName = call random_string
-    * def userId = call random_uuid
-    * def externalId = call random_uuid
+    * def userId = call uuid
+    * def externalId = call uuid
     * def createUserRequest = read('samples/user/create-user-request.json')
 
     Given url baseUrl
@@ -337,7 +337,7 @@ Feature: LC user registration tests tests
     * def stagingUserId = response.id
     * def stagingExtSysId = response.externalSystemId
 
-    * def invalidUserId = call random_uuid
+    * def invalidUserId = call uuid
 
     # try creating staging-user into main user
     Given url baseUrl
@@ -351,8 +351,8 @@ Feature: LC user registration tests tests
   Scenario: [Positive] POST:failed:404 and Test if Staging-User not found error
     * print '[Positive] POST:failed:404 and Test if Staging-User not found error'
 
-    * def invalidStagingUserId = call random_uuid
-    * def userId = call random_uuid
+    * def invalidStagingUserId = call uuid
+    * def userId = call uuid
 
     # try merging staging-user into main user
     Given url baseUrl
