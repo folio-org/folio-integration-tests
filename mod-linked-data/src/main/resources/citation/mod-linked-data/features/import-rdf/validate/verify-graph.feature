@@ -49,24 +49,25 @@ Feature: Import Bibframe2 RDF - Verify graph
     * eval validateSubjectGraph(subjectGraphs, 'Middle East', middleEastDoc, 'PLACE', middleEastDoc, null)
 
     # Validate Austria (AT) subject
-    * def austriaDoc = { 'http://bibfra.me/vocab/lite/name': ['Austria (AT)'], 'http://bibfra.me/vocab/lite/label': ['Austria (AT)', 'Austria'] }
-    * eval validateSubjectGraph(subjectGraphs, 'Austria (AT), Austria', austriaDoc, 'PLACE', austriaDoc, null)
+    * def austriaDoc = { 'http://bibfra.me/vocab/lite/name': ['Austria (AT)'], 'http://bibfra.me/vocab/lite/label': ['Austria (AT), Austria'] }
+    * def austriaFocusTargetDoc = { 'http://bibfra.me/vocab/lite/name': ['Austria (AT)'], 'http://bibfra.me/vocab/lite/label': ['Austria (AT)', 'Austria'] }
+    * eval validateSubjectGraph(subjectGraphs, 'Austria (AT), Austria', austriaDoc, 'PLACE', austriaFocusTargetDoc, null)
 
     # Validate Delaware. General Assembly. subject
-    * def delawareDoc = { 'http://bibfra.me/vocab/lite/name': ['Delaware. General Assembly. House of representatives.'], 'http://bibfra.me/vocab/lite/label': ['Delaware. General Assembly.', 'Delaware. General Assembly. House of representatives.'] }
+    * def delawareDoc = { 'http://bibfra.me/vocab/lite/name': ['Delaware. General Assembly. House of representatives.'], 'http://bibfra.me/vocab/lite/label': ['Delaware. General Assembly., Delaware. General Assembly. House of representatives.'] }
     * def delawareTargetDoc = { 'http://bibfra.me/vocab/lite/name': ['Delaware. General Assembly. House of representatives.'], 'http://bibfra.me/vocab/lite/label': ['Delaware. General Assembly.', 'Delaware. General Assembly. House of representatives.'] }
     * eval validateSubjectGraph(subjectGraphs, 'Delaware. General Assembly., Delaware. General Assembly. House of representatives.', delawareDoc, 'JURISDICTION', delawareTargetDoc, null)
 
     # Validate Readers (Primary) subject with LCCN
     * def readersDoc = { 'http://bibfra.me/vocab/lite/name': ['Readers (Primary)'], 'http://bibfra.me/vocab/lite/label': ['Readers (Primary)'] }
     * def readersTargetDoc = { 'http://bibfra.me/vocab/lite/name': ['Readers (Primary)'], 'http://bibfra.me/vocab/lite/label': ['Readers (Primary)'], 'http://library.link/vocab/resourcePreferred': ['true'] }
-    * def readersLccn = { label: 'sh85111655', types: ['ID_LCCN'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/sh85111655'], 'http://bibfra.me/vocab/lite/name': ['sh85111655'], 'http://bibfra.me/vocab/lite/label': ['sh85111655'] } }
+    * def readersLccn = { label: 'sh85111655', types: ['ID_LCSH'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/sh85111655'], 'http://bibfra.me/vocab/lite/name': ['sh85111655'], 'http://bibfra.me/vocab/lite/label': ['sh85111655'] } }
     * eval validateSubjectGraph(subjectGraphs, 'Readers (Primary)', readersDoc, 'TOPIC', readersTargetDoc, readersLccn)
 
     # Validate Wang, Jack, 1972 subject with LCCN
     * def wangDoc = { 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'], 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972'] }
     * def wangTargetDoc = { 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972'], 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'], 'http://library.link/vocab/resourcePreferred': ['true'] }
-    * def wangLccn = { label: 'no2012142443', types: ['ID_LCCN'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/no2012142443'], 'http://bibfra.me/vocab/lite/name': ['no2012142443'], 'http://bibfra.me/vocab/lite/label': ['no2012142443'] } }
+    * def wangLccn = { label: 'no2012142443', types: ['ID_LCNAF'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/no2012142443'], 'http://bibfra.me/vocab/lite/name': ['no2012142443'], 'http://bibfra.me/vocab/lite/label': ['no2012142443'] } }
     * eval validateSubjectGraph(subjectGraphs, 'Wang, Jack, 1972', wangDoc, 'PERSON', wangTargetDoc, wangLccn)
 
     # Validate Private flying -- Periodicals -- Accidents -- United States subject with LCCN and sub-focuses
