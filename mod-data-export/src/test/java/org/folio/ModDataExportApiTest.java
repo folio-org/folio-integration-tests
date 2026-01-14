@@ -163,4 +163,10 @@ public class ModDataExportApiTest extends TestBaseEureka {
     void linkedDataExportTest() {
         runFeatureTest("export-for-linked-data");
     }
+
+    @Test
+    @Order(23)
+    void exportDeletedJobProfileTest() {
+        runFeatureTest("export-deleted-job-profile");
+    }
 }
