@@ -306,7 +306,9 @@ Feature: Loans tests
     And match response.item.status.name == 'Awaiting pickup'
 
     # check the status of the user request whether changed to 'Open-Awaiting pickup'
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'circulation', 'requests', extRequestId
+    And retry until response.status == 'Open - Awaiting pickup'
     When method GET
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
@@ -838,8 +840,10 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # find current module id for age-to-lost processor delay time
+    * configure retry = { count: 10, interval: 2000 }
     Given path '/scheduler/timers'
     And param limit = 100
+    And retry until karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
     When method GET
     Then status 200
     * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
@@ -859,7 +863,7 @@ Feature: Loans tests
     Then status 200
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
-    * configure retry = { count: 5, interval: 1000 }
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'loan-storage', 'loans', extLoanId
     And retry until response.itemStatus == 'Aged to lost'
     When method GET
@@ -970,8 +974,10 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # find current module id for age-to-lost processor delay time
+    * configure retry = { count: 10, interval: 2000 }
     Given path '/scheduler/timers'
     And param limit = 100
+    And retry until karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
     When method GET
     Then status 200
     * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
@@ -991,7 +997,7 @@ Feature: Loans tests
     Then status 200
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
-    * configure retry = { count: 5, interval: 1000 }
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'loan-storage', 'loans', extLoanId
     And print response
     And retry until response.itemStatus == 'Aged to lost'

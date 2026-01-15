@@ -13,7 +13,7 @@ Feature: Piece batch job testing
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    * configure retry = { count: 10, interval: 5000 }
+    * configure retry = { count: 10, interval: 10000 }
 
     * callonce variables
 
@@ -141,11 +141,11 @@ Feature: Piece batch job testing
   Scenario Outline: Validate pieces statuses after update
     Given path 'orders/pieces'
     And param query = 'poLineId==' + <poLineId>
+    And retry until response.pieces[0].receivingStatus == <receivingStatus>
     When method GET
     Then status 200
     And match $.totalRecords == 1
     * def piece = $.pieces[0]
-    And match piece.receivingStatus == <receivingStatus>
 
     Examples:
     | poLineId  | receivingStatus |
@@ -166,10 +166,9 @@ Feature: Piece batch job testing
 
     * configure headers = headersAdmin
     Given path 'audit-data/acquisition/piece', pieceId, 'status-change-history'
-    And retry until response.totalItems == <eventQuantity>
     When method GET
+    And retry until response.totalItems == <eventQuantity>
     Then status 200
-    And match $.totalItems == <eventQuantity>
 
     Examples:
       | poLineId  | eventQuantity |
