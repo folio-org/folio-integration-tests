@@ -147,19 +147,17 @@ Feature: Retrieve Holding Details With Pieces And Items
       karate.log('Verifying ' + name + ' with expected quantity: ' + expected);
 
       // Verify collections exist
+      karate.match(data.poLines_detail_collection, '!= null');
       karate.match(data.pieces_detail_collection, '!= null');
       karate.match(data.items_detail_collection, '!= null');
+      karate.match(data.poLines_detail_collection.poLines_detail, '#array');
       karate.match(data.pieces_detail_collection.pieces_detail, '#array');
       karate.match(data.items_detail_collection.items_detail, '#array');
 
-      // Verify poLines_detail_collection exists and has correct structure
-      var poLinesCollection = data.poLines_detail_collection || data.poLine_detail_collection;
-      karate.match(poLinesCollection, '!= null');
-      var poLines = poLinesCollection.poLines_detail || poLinesCollection.poLine_detail;
-      karate.match(poLines, '#array');
-      karate.match(poLines.length, 1);
-      karate.match(poLines[0].id, expectedPoLineId);
-      karate.match(poLinesCollection.totalRecords, 1);
+      // Extract and verify each poLine structure
+      karate.match(data.poLines_detail_collection.poLines_detail.length, 1);
+      karate.match(data.poLines_detail_collection.poLines_detail[0].id, expectedPoLineId);
+      karate.match(data.poLines_detail_collection.totalRecords, 1);
 
       // Extract pieces and items
       var pieces = data.pieces_detail_collection.pieces_detail;

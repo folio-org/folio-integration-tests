@@ -90,12 +90,13 @@ public abstract class BaseSharedTenant {
 
   private static boolean isIndividualRunMode() {
     // To run tests in efficient "shared pool and tenant" mode -Dtest.mode=no-shared-pool VM option should NOT be set
-    // because this mode is enabled by default for the nightly Karate CI runs. It can be set if you explicitly want
-    // "shared pool and tenant" activity to the disabled
+    // because this mode is enabled by default for the nightly Karate CI runs. We can mimic the CI behavior locally
+    // by setting -Dkarate.env=dev-shared. But if you explicitly want "shared pool and tenant" activity to be disabled
+    // do NOT use either -Dtest.mode=no-shared-pool OR -Dkarate.env=dev-shared
     var disableSharedPoolAndTenantWithNoSharedPool = "no-shared-pool".equals(System.getProperty("test.mode"));
 
-    // To run tests individually without "shared pool and tenant" mode -Dkarate.env=dev VM option CAN should be set
-    // this will run the tests the "old-school way" on newly created thread pool and tenant
+    // To run tests individually without "shared pool and tenant" mode set -Dkarate.env=dev VM option
+    // to run the tests the "old-school way" locally with newly created thread pools and tenant per feature
     var disableSharedPoolAndTenantWithKarateEnv = "dev".equals(System.getProperty("karate.env"));
 
     return disableSharedPoolAndTenantWithNoSharedPool || disableSharedPoolAndTenantWithKarateEnv;
