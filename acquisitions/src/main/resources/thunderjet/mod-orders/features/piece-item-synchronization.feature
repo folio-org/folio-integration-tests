@@ -53,9 +53,9 @@ Feature: Piece and Item synchronization
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match $.totalRecords == 1
     * def holdingId = $.holdingsRecords[0].id
 
     * configure headers = headersUser
@@ -189,9 +189,9 @@ Feature: Piece and Item synchronization
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match $.totalRecords == 1
     * def holdingId = $.holdingsRecords[0].id
 
     # 4. Manually create piece since checkinItems is true
@@ -333,9 +333,9 @@ Feature: Piece and Item synchronization
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match $.totalRecords == 1
     * def holdingId = $.holdingsRecords[0].id
 
     * configure headers = headersUser
