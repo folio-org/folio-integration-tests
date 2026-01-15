@@ -41,18 +41,27 @@ public abstract class BaseSharedTenant {
       var uniqueTenantId = UUID.randomUUID().toString();
       System.setProperty(TEST_TENANT, uniqueTenant);
       System.setProperty(TEST_TENANT_ID, uniqueTenantId);
-      logger.info("initializeTenant:: Created unique tenant (Explicit individual mode) {} for {}", uniqueTenant, context.ownerClass().getSimpleName());
-      context.featureRunner().accept(config.initFeaturePath());
-
-      return true;
+      logger.info("initializeTenant:: Created unique tenant (Individual mode) {} for {}", uniqueTenant, context.ownerClass().getSimpleName());
+      try {
+        context.featureRunner().accept(config.initFeaturePath());
+        return true;
+      } catch (Exception e) {
+        logger.error("initializeTenant:: Failed to initialize individual tenant: {}", e.getMessage(), e);
+        throw new RuntimeException("Failed to initialize individual tenant", e);
+      }
     }
 
-    var createdTenant = getOrCreateSharedTenant(config.tenantPrefix(), context.ownerClass(), config.tenantFilePath());
-    if (createdTenant) {
-      context.featureRunner().accept(config.initFeaturePath());
+    try {
+      var createdTenant = getOrCreateSharedTenant(config.tenantPrefix(), context.ownerClass(), config.tenantFilePath());
+      if (createdTenant) {
+        context.featureRunner().accept(config.initFeaturePath());
+      }
+      return createdTenant;
+    } catch (Exception e) {
+      logger.error("initializeTenant:: Failed to initialize shared tenant, deleting tenant file: {}", e.getMessage(), e);
+      deleteSharedTenantFile(config.tenantFilePath());
+      throw new RuntimeException("Failed to initialize shared tenant", e);
     }
-
-    return createdTenant;
   }
 
   protected static void cleanupTenant(TenantConfig config, TenantContext context, String lastClassName) {
@@ -68,8 +77,15 @@ public abstract class BaseSharedTenant {
     var callingClassName = context.ownerClass() != null ? context.ownerClass().getName() : null;
     if (lastClassName.equals(callingClassName)) {
       logger.info("cleanupTenant:: Cleaning up shared tenant (Last class: {})", callingClassName);
-      context.featureRunner().accept(DESTROY_FEATURE_PATH);
-      deleteSharedTenantFile(config.tenantFilePath());
+      try {
+        context.featureRunner().accept(DESTROY_FEATURE_PATH);
+        logger.info("cleanupTenant:: Successfully cleaned up tenant data");
+      } catch (Exception e) {
+        logger.error("cleanupTenant:: Failed to cleanup tenant data: {}", e.getMessage(), e);
+      } finally {
+        deleteSharedTenantFile(config.tenantFilePath());
+        logger.info("cleanupTenant:: Deletion of shared tenant file completed");
+      }
     } else {
       logger.info("cleanupTenant:: Skipping cleanup, tenant will be reused (Current class: {}, Last class: {})", callingClassName, lastClassName);
     }
