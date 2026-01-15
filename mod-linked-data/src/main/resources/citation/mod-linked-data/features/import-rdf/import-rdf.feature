@@ -64,8 +64,10 @@ Feature: Import Bibframe2 RDF
     * set instance['http://bibfra.me/vocab/library/publication'][0]['http://bibfra.me/vocab/lite/date'][0] = "2017"
     * set instance['http://bibfra.me/vocab/library/publication'][0]['http://bibfra.me/vocab/lite/name'][0] = "Chronicle Books LLC - UPDATED"
     * set instance['http://bibfra.me/vocab/library/publication'][0]['http://bibfra.me/vocab/lite/providerDate'][0] = "2017"
-    * set instance['http://library.link/vocab/map'][0]['http://library.link/identifier/LCCN']['http://bibfra.me/vocab/lite/name'][0] = "2015047302-UPDATED"
-    * set instance['http://library.link/vocab/map'][1]['http://library.link/identifier/ISBN']['http://bibfra.me/vocab/lite/name'][0] = "9781452152448-UPDATED"
+    * def lccnObj = karate.filter(instance['http://library.link/vocab/map'], x => x['http://library.link/identifier/LCCN'] != null)
+    * set lccnObj[0]['http://library.link/identifier/LCCN']['http://bibfra.me/vocab/lite/name'][0] = "2015047302-UPDATED"
+    * def isbnBoardObj = karate.filter(instance['http://library.link/vocab/map'], x => x['http://library.link/identifier/ISBN'] != null && x['http://library.link/identifier/ISBN']['http://bibfra.me/vocab/library/qualifier'] && x['http://library.link/identifier/ISBN']['http://bibfra.me/vocab/library/qualifier'][0] == 'board bk')
+    * set isbnBoardObj[0]['http://library.link/identifier/ISBN']['http://bibfra.me/vocab/lite/name'][0] = "9781452152448-UPDATED"
     * set instance['_workReference'][0] = { id: "#(workResourceId)" }
     * def putCall = call putResource { id: '#(resourceId)' , resourceRequest: '#(updateInstanceRequest)' }
     * def updatedResourceId = putCall.response.resource['http://bibfra.me/vocab/lite/Instance'].id
@@ -75,7 +77,7 @@ Feature: Import Bibframe2 RDF
     * def searchCall = call searchInventoryInstance
     * def getInventoryInstanceCall = call getInventoryInstance { id: '#(inventoryInstanceId)' }
     * def response = getInventoryInstanceCall.response
-    * def ldIdentifiers = karate.filter(response.identifiers, function(x){ return x.value && x.value.startsWith('(ld)'); })
+    * def ldIdentifiers = karate.filter(response.identifiers, x => x.value && x.value.startsWith('(ld)'))
     * match ldIdentifiers == '#[1]'
     * match ldIdentifiers[0].value == '(ld) ' + updatedResourceId
     * match response.source == 'LINKED_DATA'
@@ -87,13 +89,13 @@ Feature: Import Bibframe2 RDF
     # Step 10: Export RDF again and validate
     * def rdfCall = call getRdf { resourceId: '#(updatedResourceId)' }
     * def rdfResponse = rdfCall.response
-    * def instance = karate.filter(rdfResponse, function(x){ return x['@id'] == 'http://localhost:8081/linked-data-editor/resources/' + updatedResourceId; })[0]
-    * def provisionActivityId = instance['http://id.loc.gov/ontologies/bibframe/provisionActivity'][0]['@id']
-    * def provisionActivity = karate.filter(rdfResponse, function(x){ return x['@id'] == provisionActivityId; })[0]
+    * def instance = karate.filter(rdfResponse, x => x['@id'] == 'http://localhost:8081/linked-data-editor/resources/' + updatedResourceId)[0]
+    * def provisionActivityIds = karate.map(instance['http://id.loc.gov/ontologies/bibframe/provisionActivity'], x => x['@id'])
+    * def provisionActivity = karate.filter(rdfResponse, x => x['@type'] != null && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Publication') && x['http://id.loc.gov/ontologies/bflc/simpleAgent'][0]['@value'] == 'Chronicle Books LLC - UPDATED')[0]
     * match provisionActivity['@type'] contains 'http://id.loc.gov/ontologies/bibframe/ProvisionActivity'
     * match provisionActivity['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Publication'
     * match provisionActivity['http://id.loc.gov/ontologies/bibframe/date'][0]['@value'] == '2017'
     * match provisionActivity['http://id.loc.gov/ontologies/bflc/simpleDate'][0]['@value'] == '2017'
-    * match provisionActivity['http://id.loc.gov/ontologies/bflc/simpleAgent'][0]['@value'] == 'Chronicle Books LLC - UPDATED'
     * match provisionActivity['http://id.loc.gov/ontologies/bflc/simplePlace'][0]['@value'] == 'San Francisco, CA'
     * match provisionActivity['http://id.loc.gov/ontologies/bibframe/place'][0]['@id'] == 'http://id.loc.gov/vocabulary/countries/cau'
+    * match provisionActivityIds contains provisionActivity['@id']
