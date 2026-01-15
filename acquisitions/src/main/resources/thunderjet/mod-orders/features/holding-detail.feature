@@ -129,11 +129,11 @@ Feature: Retrieve Holding Details With Pieces And Items
     * def holdingsTable =
     """
     [
-      { holdingData: '#(holding1Data)', expectedQty: '#(order1Location1Qty)', holdingName: 'Holding 1' },
-      { holdingData: '#(holding2Data)', expectedQty: '#(order1Location2Qty)', holdingName: 'Holding 2' },
-      { holdingData: '#(holding3Data)', expectedQty: '#(order2Location1Qty)', holdingName: 'Holding 3' },
-      { holdingData: '#(holding4Data)', expectedQty: '#(order2Location2Qty)', holdingName: 'Holding 4' },
-      { holdingData: '#(holding5Data)', expectedQty: '#(order2Location3Qty)', holdingName: 'Holding 5' }
+      { holdingData: '#(holding1Data)', expectedQty: '#(order1Location1Qty)', expectedPoLineId: '#(poLine1Id)', holdingName: 'Holding 1' },
+      { holdingData: '#(holding2Data)', expectedQty: '#(order1Location2Qty)', expectedPoLineId: '#(poLine1Id)', holdingName: 'Holding 2' },
+      { holdingData: '#(holding3Data)', expectedQty: '#(order2Location1Qty)', expectedPoLineId: '#(poLine2Id)', holdingName: 'Holding 3' },
+      { holdingData: '#(holding4Data)', expectedQty: '#(order2Location2Qty)', expectedPoLineId: '#(poLine2Id)', holdingName: 'Holding 4' },
+      { holdingData: '#(holding5Data)', expectedQty: '#(order2Location3Qty)', expectedPoLineId: '#(poLine2Id)', holdingName: 'Holding 5' }
     ]
     """
     * def verifyHolding =
@@ -141,6 +141,7 @@ Feature: Retrieve Holding Details With Pieces And Items
     function(holding) {
       var data = holding.holdingData;
       var expected = holding.expectedQty;
+      var expectedPoLineId = holding.expectedPoLineId;
       var name = holding.holdingName;
 
       karate.log('Verifying ' + name + ' with expected quantity: ' + expected);
@@ -151,6 +152,15 @@ Feature: Retrieve Holding Details With Pieces And Items
       karate.match(data.pieces_detail_collection.pieces_detail, '#array');
       karate.match(data.items_detail_collection.items_detail, '#array');
 
+      // Verify poLines_detail_collection exists and has correct structure
+      var poLinesCollection = data.poLines_detail_collection || data.poLine_detail_collection;
+      karate.match(poLinesCollection, '!= null');
+      var poLines = poLinesCollection.poLines_detail || poLinesCollection.poLine_detail;
+      karate.match(poLines, '#array');
+      karate.match(poLines.length, 1);
+      karate.match(poLines[0].id, expectedPoLineId);
+      karate.match(poLinesCollection.totalRecords, 1);
+
       // Extract pieces and items
       var pieces = data.pieces_detail_collection.pieces_detail;
       var items = data.items_detail_collection.items_detail;
@@ -159,6 +169,7 @@ Feature: Retrieve Holding Details With Pieces And Items
       for (var i = 0; i < pieces.length; i++) {
         karate.match(pieces[i].id, '#string');
         karate.match(pieces[i].itemId, '#string');
+        karate.match(pieces[i].poLineId, expectedPoLineId);
       }
       for (var i = 0; i < items.length; i++) {
         karate.match(items[i].id, '#string');

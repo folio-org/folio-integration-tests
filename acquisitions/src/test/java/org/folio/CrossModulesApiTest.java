@@ -21,7 +21,6 @@ public class CrossModulesApiTest extends TestBaseEureka {
   private static final String TEST_TENANT = "testcross";
   private static final int THREAD_COUNT = 4;
 
-
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("approve-invoice-using-different-fiscal-years", true),
     FEATURE_2("approve-invoice-with-negative-line", true),

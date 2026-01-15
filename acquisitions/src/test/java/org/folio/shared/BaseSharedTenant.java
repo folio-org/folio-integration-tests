@@ -33,12 +33,15 @@ public abstract class BaseSharedTenant {
   }
 
   protected static boolean initializeTenant(TenantConfig config, TenantContext context) {
-    if (isIndividualRunMode()) {
+    var tenantFile = new File(config.tenantFilePath());
+    var explicitIndividualMode = isIndividualRunMode();
+
+    if (explicitIndividualMode || !tenantFile.exists()) {
       var uniqueTenant = config.tenantPrefix() + RandomUtils.nextLong();
       var uniqueTenantId = UUID.randomUUID().toString();
       System.setProperty(TEST_TENANT, uniqueTenant);
       System.setProperty(TEST_TENANT_ID, uniqueTenantId);
-      logger.info("initializeTenant:: Created unique tenant (Individual mode) {} for {}", uniqueTenant, context.ownerClass().getSimpleName());
+      logger.info("initializeTenant:: Created unique tenant (Explicit individual mode) {} for {}", uniqueTenant, context.ownerClass().getSimpleName());
       context.featureRunner().accept(config.initFeaturePath());
 
       return true;
@@ -53,7 +56,11 @@ public abstract class BaseSharedTenant {
   }
 
   protected static void cleanupTenant(TenantConfig config, TenantContext context, String lastClassName) {
-    if (isIndividualRunMode()) {
+    var tenantFile = new File(config.tenantFilePath());
+    var explicitIndividualMode = isIndividualRunMode();
+
+    if (explicitIndividualMode || !tenantFile.exists()) {
+      logger.info("cleanupTenant:: Cleaning up individual tenant for {}", context.ownerClass().getSimpleName());
       context.featureRunner().accept(DESTROY_FEATURE_PATH);
       return;
     }

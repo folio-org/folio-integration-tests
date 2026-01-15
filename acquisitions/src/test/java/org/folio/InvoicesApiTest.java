@@ -21,7 +21,6 @@ public class InvoicesApiTest extends TestBaseEureka {
   private static final String TEST_TENANT = "testinvoice";
   private static final int THREAD_COUNT = 4;
 
-
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("approve-and-pay-invoice-with-past-fiscal-year", true),
     FEATURE_2("batch-voucher-export-with-many-lines", true),
