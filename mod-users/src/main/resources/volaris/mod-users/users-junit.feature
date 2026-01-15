@@ -19,12 +19,11 @@ Feature: mod-users integration tests
       | 'users.item.get'                                               |
       | 'proxiesfor.item.post'                                         |
       | 'users.profile-picture.item.get'                               |
-      | 'users.configurations.item.get'                                |
-      | 'users.configurations.item.put'                                |
       | 'users.profile-picture.item.post'                              |
       | 'users.profile-picture.item.put'                               |
       | 'users.profile-picture.item.delete'                            |
       | 'users.collection.delete'                                      |
+      | 'users.settings.all'                                           |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
