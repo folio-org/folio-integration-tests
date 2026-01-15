@@ -44,6 +44,7 @@ public abstract class BaseSharedTenant {
       logger.info("initializeTenant:: Created unique tenant (Individual mode) {} for {}", uniqueTenant, context.ownerClass().getSimpleName());
       try {
         context.featureRunner().accept(config.initFeaturePath());
+
         return true;
       } catch (Exception e) {
         logger.error("initializeTenant:: Failed to initialize individual tenant: {}", e.getMessage(), e);
@@ -71,6 +72,7 @@ public abstract class BaseSharedTenant {
     if (explicitIndividualMode || !tenantFile.exists()) {
       logger.info("cleanupTenant:: Cleaning up individual tenant for {}", context.ownerClass().getSimpleName());
       context.featureRunner().accept(DESTROY_FEATURE_PATH);
+
       return;
     }
 
@@ -108,6 +110,7 @@ public abstract class BaseSharedTenant {
             System.setProperty(TEST_TENANT, existingTenant);
             System.setProperty(TEST_TENANT_ID, existingTenantId);
             logger.info("getOrCreateSharedTenant:: Reusing tenant (Shared mode) {} (created by {}) for {}", existingTenant, existingOwner, ownerClass.getSimpleName());
+
             return false;
           }
         }
