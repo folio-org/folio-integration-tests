@@ -22,7 +22,6 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
   private static final String TEST_TENANT = "testorders";
   private static final int THREAD_COUNT = 4;
 
-
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("create-order-payment-not-required-fully-receive", true),
     FEATURE_2("create-order-check-items", true),
