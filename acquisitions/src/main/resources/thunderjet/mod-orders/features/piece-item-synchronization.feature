@@ -53,9 +53,9 @@ Feature: Piece and Item synchronization
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match $.totalRecords == 1
     * def holdingId = $.holdingsRecords[0].id
 
     * configure headers = headersUser
@@ -135,6 +135,7 @@ Feature: Piece and Item synchronization
     And match $.callNumber == testCallNumber2
     And match $.accessionNumber == testAccessionNumber2
 
+
   @Positive
   Scenario: Verify piece and item field synchronization with bound item
     * def orderId2 = call uuid
@@ -188,9 +189,9 @@ Feature: Piece and Item synchronization
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match $.totalRecords == 1
     * def holdingId = $.holdingsRecords[0].id
 
     # 4. Manually create piece since checkinItems is true
@@ -300,3 +301,126 @@ Feature: Piece and Item synchronization
     And match $.barcode == testBarcode2
     And match $.callNumber == testCallNumber2
     And match $.accessionNumber == testAccessionNumber2
+
+
+  @Positive
+  Scenario: Verify piece and item field synchronization for with empty fields
+    * def originalLocationId = globalLocationsId
+    * def pieceId = call uuid
+    * def testBarcode = 'BARCODE-EMPTY-' + pieceId
+    * def testCallNumber = 'CALL-NUM-EMPTY-001'
+    * def testAccessionNumber = 'ACCESSION-EMPTY-001'
+
+    # 1. Create and open order with order line
+    * def v = call createOrder { 'id': '#(orderId)' }
+    * def v = call createOrderLine { 'id': '#(poLineId)', 'orderId': '#(orderId)', 'createInventory': 'Instance, Holding, Item', 'checkinItems': false }
+    * def v = call openOrder { 'orderId': '#(orderId)' }
+
+    # 2. Get title ID and instance ID from order line
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def titleId = $.titles[0].id
+
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def instanceId = $.instanceId
+
+    # 3. Get holdings and piece created
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * def holdingId = $.holdingsRecords[0].id
+
+    * configure headers = headersUser
+    Given path 'orders/pieces'
+    And param query = 'titleId==' + titleId + ' AND receivingStatus==Expected'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def pieceId = $.pieces[0].id
+
+    # 4. Receive piece
+    * table receivePieceDetails
+      | pieceId | poLineId | holdingId |
+      | pieceId | poLineId | holdingId |
+    * def v = call receivePieceWithHolding receivePieceDetails
+
+    # 5. Verify piece is received and get item ID
+    Given path 'orders/pieces', pieceId
+    And retry until response.receivingStatus == 'Received'
+    When method GET
+    Then status 200
+    And match $.receivingStatus == 'Received'
+    And match $.itemId == '#present'
+    * def itemId = $.itemId
+    * def updatedPiece = $
+
+    # 6. Update piece fields with empty values (barcode, callNumber, accessionNumber)
+    * set updatedPiece.barcode = ""
+    * set updatedPiece.callNumber = ""
+    * set updatedPiece.accessionNumber = ""
+    Given path 'orders/pieces', pieceId
+    And request updatedPiece
+    When method PUT
+    Then status 204
+
+    # 7. Verify item fields are synchronized
+    * configure headers = headersAdmin
+    Given path 'inventory/items', itemId
+    When method GET
+    Then status 200
+    And match $.barcode == ""
+    And match $.itemLevelCallNumber == ""
+    And match $.accessionNumber == ""
+    * def updatedItem = $
+
+    # 8. Update piece fields with non-empty values (barcode, callNumber, accessionNumber)
+    * configure headers = headersUser
+    * set updatedPiece.barcode = testBarcode
+    * set updatedPiece.callNumber = testCallNumber
+    * set updatedPiece.accessionNumber = testAccessionNumber
+    Given path 'orders/pieces', pieceId
+    And request updatedPiece
+    When method PUT
+    Then status 204
+
+    # 9. Verify item fields are synchronized
+    * configure headers = headersAdmin
+    Given path 'inventory/items', itemId
+    When method GET
+    Then status 200
+    And match $.barcode == testBarcode
+    And match $.itemLevelCallNumber == testCallNumber
+    And match $.accessionNumber == testAccessionNumber
+    * def updatedItem = $
+
+    # 10. Update item fields with empty values (barcode, callNumber, accessionNumber)
+    * set updatedItem.barcode = ""
+    * set updatedItem.itemLevelCallNumber = ""
+    * set updatedItem.accessionNumber = ""
+    Given path 'inventory/items', itemId
+    And request updatedItem
+    When method PUT
+    Then status 204
+
+    # 11. Verify piece fields are also synchronized back
+    * configure headers = headersUser
+    * def validatePieceFields =
+    """
+    function(response) {
+      return (!response.barcode || response.barcode == "") &&
+             (!response.callNumber || response.callNumber == "") &&
+             (!response.accessionNumber || response.accessionNumber == "")
+    }
+    """
+    Given path 'orders/pieces', pieceId
+    And retry until validatePieceFields(response)
+    When method GET
+    Then status 200
