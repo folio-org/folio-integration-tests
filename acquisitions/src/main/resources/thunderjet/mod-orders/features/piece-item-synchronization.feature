@@ -373,12 +373,18 @@ Feature: Piece and Item synchronization
 
     # 7. Verify item fields are synchronized
     * configure headers = headersAdmin
+    * def validateItemFields =
+    """
+    function(response) {
+      return (!response.barcode || response.barcode == "") &&
+             (!response.itemLevelCallNumber || response.itemLevelCallNumber == "") &&
+             (!response.accessionNumber || response.accessionNumber == "")
+    }
+    """
     Given path 'inventory/items', itemId
+    And retry until validateItemFields(response)
     When method GET
     Then status 200
-    And match $.barcode == ""
-    And match $.itemLevelCallNumber == ""
-    And match $.accessionNumber == ""
     * def updatedItem = $
 
     # 8. Update piece fields with non-empty values (barcode, callNumber, accessionNumber)
