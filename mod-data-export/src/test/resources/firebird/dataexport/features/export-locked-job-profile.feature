@@ -24,19 +24,19 @@ Feature: Test lock job profile
     When method POST
     Then status 201
     And def jobProfileIdToLock = response.id
-    And match response.lock == false
+    And match response.locked == false
 
   Scenario: Verify that newly created job profile can be locked
     Given path 'data-export/job-profiles', jobProfileIdToLock
     And request jobProfile
-    And set jobProfile.lock = true
+    And set jobProfile.locked = true
     When method PUT
     Then status 204
 
     Given path 'data-export/job-profiles', jobProfileIdToLock
     When method GET
     Then status 200
-    And match response.lock == true
+    And match response.locked == true
 
   # Negative scenarios
   Scenario: Verify that already locked job profile cannot be locked again
@@ -44,7 +44,7 @@ Feature: Test lock job profile
     # Try to lock already locked job profile
     Given path 'data-export/job-profiles', jobProfileIdToLock
     And request jobProfile
-    And set jobProfile.lock = true
+    And set jobProfile.locked = true
     When method PUT
     Then status 500
     And match response == 'Profile is already locked.'
@@ -58,7 +58,7 @@ Feature: Test lock job profile
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
     And request defaultJobProfile
-    And set defaultJobProfile.lock = true
+    And set defaultJobProfile.locked = true
     When method PUT
     Then status 403
     And match response contains 'Editing of default job profile is forbidden'
@@ -67,7 +67,7 @@ Feature: Test lock job profile
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
     And request defaultJobProfile
-    And set defaultJobProfile.lock = false
+    And set defaultJobProfile.locked = false
     When method PUT
     Then status 403
     And match response contains 'Editing of default job profile is forbidden'
