@@ -30,12 +30,14 @@ Feature: Test lock job profile
 
   Scenario: Verify that newly created job profile can be locked
     Given path 'data-export/job-profiles', jobProfileIdToLock
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     And request jobProfile
     And set jobProfile.locked = true
     When method PUT
     Then status 204
 
     Given path 'data-export/job-profiles', jobProfileIdToLock
+    * configure headers = headersUser
     When method GET
     Then status 200
     And match response.locked == true
@@ -47,6 +49,7 @@ Feature: Test lock job profile
 
     # Try to lock already locked job profile
     Given path 'data-export/job-profiles', jobProfileIdToLock
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     And request jobProfile
     And set jobProfile.locked = true
     When method PUT
@@ -56,11 +59,13 @@ Feature: Test lock job profile
   Scenario: Verify that default job profile cannot be locked
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
+    * configure headers = headersUser
     When method GET
     Then status 200
     And def defaultJobProfile = response
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     And request defaultJobProfile
     And set defaultJobProfile.locked = true
     When method PUT
