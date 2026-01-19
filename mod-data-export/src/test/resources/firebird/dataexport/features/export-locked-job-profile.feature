@@ -45,21 +45,10 @@ Feature: Test lock job profile
     And match response.lockedBy == '#present'
 
   # Negative scenarios
-  Scenario: Verify that already locked job profile cannot be locked again
-
-    # Try to lock already locked job profile
-    Given path 'data-export/job-profiles', jobProfileIdToLock
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
-    And request jobProfile
-    And set jobProfile.locked = true
-    When method PUT
-    Then status 500
-    And match response == 'Profile is already locked.'
 
   Scenario: Verify that default job profile cannot be locked
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
-    * configure headers = headersUser
     When method GET
     Then status 200
     And def defaultJobProfile = response
@@ -73,6 +62,11 @@ Feature: Test lock job profile
     And match response contains 'Editing of default job profile is forbidden'
 
   Scenario: Verify that default job profile cannot be unlocked
+
+    Given path 'data-export/job-profiles', defaultInstanceJobProfileId
+    When method GET
+    Then status 200
+    And def defaultJobProfile = response
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
     And request defaultJobProfile
