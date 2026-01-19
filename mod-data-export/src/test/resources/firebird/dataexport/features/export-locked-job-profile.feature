@@ -12,6 +12,7 @@ Feature: Test lock job profile
     * json jobProfileWithCustomMapping = read('classpath:samples/job_profile_with_custom_mapping.json')
     * json mappingProfile = read('classpath:samples/mapping-profile/mapping_profile.json')
     * def defaultInstanceJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
+    * def jobProfileIdToLock = '3d071c00-54bd-11eb-ae93-0242ac130002'
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
@@ -23,8 +24,9 @@ Feature: Test lock job profile
     And request jobProfile
     When method POST
     Then status 201
-    And def jobProfileIdToLock = response.id
     And match response.locked == false
+    And match response.lockedAt == '#notpresent'
+    And match response.lockedBy == '#notpresent'
 
   Scenario: Verify that newly created job profile can be locked
     Given path 'data-export/job-profiles', jobProfileIdToLock
@@ -37,6 +39,8 @@ Feature: Test lock job profile
     When method GET
     Then status 200
     And match response.locked == true
+    And match response.lockedAt == '#present'
+    And match response.lockedBy == '#present'
 
   # Negative scenarios
   Scenario: Verify that already locked job profile cannot be locked again
