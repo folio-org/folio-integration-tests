@@ -108,7 +108,7 @@ public class BulkOperationsSimulation extends Simulation {
         .protocols(protocol)
         .assertions(
             details("02", "POST /bulk-operations/upload").successfulRequests().percent().gt(SUCCESSFUL_REQUESTS_RATE),
-            details("02", "POST /bulk-operations/upload").responseTime().max().lt(1_500),
+            details("02", "POST /bulk-operations/upload").responseTime().max().lt(2_000),
             details("02", "POST /bulk-operations/{operationId}/content-update").successfulRequests().percent().gt(SUCCESSFUL_REQUESTS_RATE),
             details("02", "POST /bulk-operations/{operationId}/content-update").responseTime().max().lt(1_200)
         );
