@@ -32,6 +32,28 @@
     </dependency>
 
   </dependencies>
+
+  <profiles>
+    <!-- No shared pool profile: Run individual test methods instead of shared pool -->
+    <!-- Activate with: mvn test -PnoSharedPool -->
+    <profile>
+      <id>noSharedPool</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <test.mode>no-shared-pool</test.mode>
+              </systemPropertyVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
   <build>
     <plugins>
       <plugin>

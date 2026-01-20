@@ -1,4 +1,4 @@
-# For https://issues.folio.org/browse/MODINVOICE-363
+# For MODINVOICE-363
 @parallel=false
 Feature: Check approve and pay invoice with more than 15 invoice lines, several of which reference to same POL
 

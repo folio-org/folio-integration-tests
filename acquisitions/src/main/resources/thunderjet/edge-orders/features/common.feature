@@ -110,7 +110,7 @@ Feature: Edge Orders COMMON
     And path "/finance/fund-codes-expense-classes"
     And param type = "COMMON"
     And param apiKey = apiKey
-    And param fiscalYearCode = "FY2026"
+    And param fiscalYearCode = "FY2027"
     Then retry until responseStatus == 200
     When method GET
     And match response.fundCodeVsExpClassesTypes == "#present"

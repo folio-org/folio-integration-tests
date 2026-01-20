@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Test export deleted IDs
 
   Background:

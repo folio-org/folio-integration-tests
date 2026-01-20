@@ -2,16 +2,22 @@ Feature: LCCN validation for duplicates.
 
   Background:
     * url baseUrl
+
+    * call login testAdmin
+    * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = testUserHeaders
 
+  @C624317
   Scenario: Create a new resource in Linked Data, enable LCCN deduplication and try to create a resource with same LCCN.
     # Step 1: Enable LCCN deduplication
+    * configure headers = testAdminHeaders
     * def settingRequest = read('samples/setting-request.json')
     * call postSetting
 
     # Step 2: Create work and instance
+    * configure headers = testUserHeaders
     * def workRequest = read('samples/work-request.json')
     * def workResponse = call postResource { resourceRequest: '#(workRequest)' }
     * def workId = workResponse.response.resource['http://bibfra.me/vocab/lite/Work'].id
@@ -30,8 +36,10 @@ Feature: LCCN validation for duplicates.
     * call validationErrorWithCodeOnResourceCreation { resource: '#(duplicateLccnInstanceRequest)', code: 'lccn_not_unique'}
 
     # Step 5: Disable LCCN deduplication setting
+    * configure headers = testAdminHeaders
     * eval settingRequest.value.duplicateLccnCheckingEnabled = false
     * call putSetting { id : '#(settingRequest.id)', settingRequest : '#(settingRequest)'}
 
     # Step 6: Create new instance with existing LCCN, verify success
+    * configure headers = testUserHeaders
     * call postResource { resourceRequest: '#(duplicateLccnInstanceRequest)' }

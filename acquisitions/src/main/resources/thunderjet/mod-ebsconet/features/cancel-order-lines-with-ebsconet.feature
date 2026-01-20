@@ -1,5 +1,5 @@
+# For MODEBSNET-22
 @parallel=false
-# For https://issues.folio.org/browse/MODEBSNET-22
 Feature: Cancel order lines with ebsconet
 
   Background:

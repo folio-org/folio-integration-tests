@@ -1,4 +1,5 @@
-Feature: Tests export hodings records
+@parallel=false
+Feature: Tests export holdings records
 
   Background:
     * url baseUrl

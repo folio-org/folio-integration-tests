@@ -6,6 +6,7 @@ import com.intuit.karate.Runner;
 import com.intuit.karate.RuntimeHook;
 import com.intuit.karate.StringUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.folio.test.config.CommonFeature;
 import org.folio.test.hooks.FolioRuntimeHook;
 import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
@@ -18,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -147,8 +150,9 @@ public abstract class TestBaseEureka {
     // This is critically important for the Test Rail integration, because the scenario results
     // only hold a pointer to the json report that we just generated after the feature run, and if
     // we truncate the folder, the pointer when used will point to nowhere, and will throw an exception
-    if (isTestRailEnabled()) {
-      builder.reportDir(timestampedReportDir());
+    if (isTestRailEnabled() || isInitOrDestroyData(featureName)) {
+      var prefix = getFolderPrefix(featureName);
+      builder.reportDir(timestampedReportDir().concat(prefix));
     }
 
     Results results = builder.parallel(threadCount);
@@ -158,6 +162,62 @@ public abstract class TestBaseEureka {
       logger.error("Error occurred during feature's report generation in an internal run: {}", ioe.getMessage());
     }
     testIntegrationService.addResult(featureName, results);
+
+    Assertions.assertEquals(0, results.getFailCount());
+  }
+
+  private boolean isInitOrDestroyData(String featureName) {
+    return featureName.startsWith("init-") || featureName.endsWith("destroy-data.feature");
+  }
+
+  private String getFolderPrefix(String featureName) {
+    return featureName.startsWith("init-") ? "-init" : featureName.endsWith("destroy-data.feature") ? "-destroy" : "";
+  }
+
+  // ============================== For a list of files with multiple features ==============================
+
+  public void runFeatures(CommonFeature[] values, int threadCount, TestInfo testInfo) {
+    var featureNames = Arrays.stream(values)
+      .filter(CommonFeature::isEnabled)
+      .map(CommonFeature::getFileName)
+      .toList();
+    var testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
+    var hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
+
+    var finalFeatureNames = new ArrayList<String>();
+    featureNames.forEach(featureName -> {
+      if (!featureName.endsWith("feature")) {
+        featureName = featureName.concat(".feature");
+      }
+      finalFeatureNames.add(featureName);
+    });
+    logger.info("runFeatures:: Preparing features to run concurrently with {} threads", threadCount);
+
+    var paths = finalFeatureNames.stream()
+      .map(featureName -> {
+        if (!featureName.startsWith("classpath:")) {
+          return testIntegrationService.getTestConfiguration().basePath().concat(featureName);
+        }
+        return featureName;
+      })
+      .peek(featureName -> logger.info("runFeatures:: Preparing a feature: {}", featureName))
+      .toList();
+
+    var builder = Runner.path(paths)
+      .outputHtmlReport(true)
+      .outputCucumberJson(true)
+      .outputJunitXml(true)
+      .hook(hook)
+      .tags("~@Ignore", "~@NoTestRail");
+    builder.reportDir(timestampedReportDir());
+
+    var results = builder.parallel(threadCount);
+    try {
+      testIntegrationService.generateReport(results.getReportDir());
+    } catch (IOException ioe) {
+      logger.error("Error occurred during feature's report generation in a prepared run: {}", ioe.getMessage());
+    }
+    finalFeatureNames.forEach(featureName -> testIntegrationService.addResult(featureName, results));
 
     Assertions.assertEquals(0, results.getFailCount());
   }
@@ -242,7 +302,6 @@ public abstract class TestBaseEureka {
         .outputHtmlReport(outputHtmlReport)
         .hook(hook)
         .tags("~@Ignore", "~@NoTestRail");
-
       if (reportDir != null) {
         builder = builder.reportDir(reportDir);
       }

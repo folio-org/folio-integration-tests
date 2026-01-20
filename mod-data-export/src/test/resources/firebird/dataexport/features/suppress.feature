@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Test for suppressing fields
 
   Background:

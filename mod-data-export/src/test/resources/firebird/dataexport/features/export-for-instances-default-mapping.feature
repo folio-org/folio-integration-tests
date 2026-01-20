@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Tests mapping instance to marc file and presence of necessary fields
 
   Background:

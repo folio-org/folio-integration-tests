@@ -1,0 +1,26 @@
+{
+  "id": "84032151-39a5-4cef-8810-5350eb316301",
+  "hrid": "hold000000000033",
+  "instanceId": "81a96bc1-6dab-4bee-8c9d-67170c7c2858",
+  "permanentLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+  "effectiveLocationId": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
+  "sourceId": "f32d531e-df79-46b3-8932-cdd35f7a2264",
+  "callNumber": "gf as LC Modified",
+  "acquisitionMethod": "Purchase at vendor system",
+  "acquisitionFormat": "Physical",
+  "receiptStatus": "Pending",
+  "discoverySuppress": true,
+  "electronicAccess": [
+    {
+      "uri": "https://search.proquest.com/publication/1396348",
+      "linkText": "link text 1",
+      "materialsSpecification": "1.2012 -",
+      "publicNote": "via ProQuest, the last 12 months are not available due to an embargo",
+      "relationshipId": "f5d0068e-6272-458e-8a81-b85e7b9a14aa"
+    }
+  ],
+  "metadata": {
+    "createdDate": "2020-11-23T12:04:22.866+00:00",
+    "updatedDate": "2020-11-23T12:04:22.866+00:00"
+  }
+}

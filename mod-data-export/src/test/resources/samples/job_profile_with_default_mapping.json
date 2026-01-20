@@ -1,0 +1,7 @@
+{
+  "id":"3d071c00-54bd-11eb-ae93-0242ac130002",
+  "name":"APITest-JobProfile-to-be-deleted",
+  "destination": "fileSystem",
+  "description": "Job profile for API tests",
+  "mappingProfileId": "25d81cbe-9686-11ea-bb37-0242ac130002"
+}

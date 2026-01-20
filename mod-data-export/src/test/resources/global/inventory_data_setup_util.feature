@@ -3,12 +3,13 @@ Feature: calls for inventory storage related data setup
   Background:
     * url baseUrl
 
-    * callonce login testUser
-    * def okapitokenAdmin = okapitoken
+#    * callonce login testUser
+#    * def okapitokenAdmin = okapitoken
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def prepareHolding = function(holding, instanceId) {return holding.replaceAll("replace_instanceId", instanceId);}
     * def prepareItem = function(item, holdingId) {return item.replaceAll("replace_holdingId", holdingId);}
+    * def prepareAuthority = function(authority, authorityId) {return authority.replaceAll("replace_authorityId", authorityId);}
 
   @PostInstanceType
   Scenario: create instance type if not exists
@@ -71,6 +72,38 @@ Feature: calls for inventory storage related data setup
     When method POST
     Then status 201
 
+  @PostInstance2
+  Scenario: create instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:samples/instance2.json')
+    * set instance.id = instanceId
+    * set instance.hrid = 'inst' + random(100000) + randomString(7)
+    And request instance
+    When method POST
+    Then status 201
+
+  @PostInstance3
+  Scenario: create instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:samples/instance3.json')
+    * set instance.id = instanceId
+    * set instance.hrid = 'inst' + random(100000) + randomString(7)
+    And request instance
+    When method POST
+    Then status 201
+
+  @PostInstance4
+  Scenario: create instance
+    Given path 'instance-storage/instances'
+    * def instance = read('classpath:samples/instance4.json')
+    * set instance.id = instanceId
+    * set instance.hrid = 'inst' + random(100000) + randomString(7)
+    And request instance
+    When method POST
+    Then status 201
+
+
+
   @PostHolding
   Scenario: create holding
     * string holdingTemplate = read('classpath:samples/holding.json')
@@ -93,10 +126,14 @@ Feature: calls for inventory storage related data setup
 
   @PostAuthority
   Scenario: create authority
+    * def templateFile = karate.get('templateFile', 'classpath:samples/authority.json')
+    * string authorityTemplate = read(templateFile)
+    * json authority = prepareAuthority(authorityTemplate, authorityId)
     Given path 'authority-storage/authorities'
-    And request read('classpath:samples/authority.json')
+    And request authority
     When method POST
     Then status 201
+    And match response.id == '#notnull'
 
   @PostItem
   Scenario: create item

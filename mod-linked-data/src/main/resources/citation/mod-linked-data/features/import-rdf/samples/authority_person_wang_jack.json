@@ -48,6 +48,22 @@
         "1",
         "\\"
       ]
+    },
+    {
+      "tag":"400",
+      "content":"$a Jack Wang, $d 1972-",
+      "indicators":[
+        "1",
+        "\\"
+      ]
+    },
+    {
+      "tag":"500",
+      "content":"$a Jack Wang, $d 1972-",
+      "indicators":[
+        "1",
+        "\\"
+      ]
     }
   ],
   "parsedRecordDtoId":"00000000-0000-0000-0000-000000000000",

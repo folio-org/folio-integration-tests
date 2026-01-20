@@ -493,7 +493,7 @@ Feature: edge-oai-pmh features
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 1
     And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='001'] == 'inst000000000145'
-    And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='005'] contains '2025'
+    And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='005'] contains '2026'
     And match response//metadata/*[local-name()='record']/*[local-name()='controlfield'][@tag='008'] contains '210107'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == '67dfac11-1caf-4470-9ad1-d533f6360bc8'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
@@ -643,3 +643,52 @@ Scenario: List records with marc21_withholdings prefix, should be 3 records incl
     And match response count(/OAI-PMH/ListRecords/record) == 1
     And def resToken = get response //resumptionToken
     And match resToken == ""
+
+  Scenario: Cleanup - Delete item2
+    * url baseUrl
+    Given path 'item-storage/items', itemId2
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+  Scenario: Cleanup - Delete holding2
+    * url baseUrl
+    Given path 'holdings-storage/holdings', holdingId2
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+  Scenario: Cleanup - Delete instance2
+    * url baseUrl
+    Given path 'instance-storage/instances', instanceId2
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+  Scenario: Cleanup - Delete instanceIdLinkedData
+    * url baseUrl
+    Given path 'instance-storage/instances', instanceIdLinkedData
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+  Scenario: Cleanup - Delete recordId2
+    * url baseUrl
+    Given path 'source-storage/records', recordId2
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+
+  Scenario: Cleanup - Delete jobExecutionId2 snapshot
+    * url baseUrl
+    Given path 'source-storage/snapshots', jobExecutionId2
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    When method DELETE
+    Then status 204
+

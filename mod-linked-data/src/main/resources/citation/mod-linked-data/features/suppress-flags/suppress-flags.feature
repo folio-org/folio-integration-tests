@@ -2,13 +2,18 @@ Feature: Suppress Flags in Inventory
 
   Background:
     * url baseUrl
+
+    * call login testAdmin
+    * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
-    * configure headers = testUserHeaders
+
     * configure retry = { count: 20, interval: 5000 }
 
   Scenario: Create an instance in Inventory, change Suppress Flags and check their values in search index
     # Create a new instance in Linked data
+    * configure headers = testUserHeaders
     * def workRequest = read('samples/create-work-request.json')
     * def postWorkCall = call postResource { resourceRequest: '#(workRequest)' }
     * def workId = postWorkCall.response.resource['http://bibfra.me/vocab/lite/Work'].id
@@ -26,9 +31,11 @@ Feature: Suppress Flags in Inventory
     * def inventoryInstance = getInventoryInstanceResponse.response
     * eval inventoryInstance['staffSuppress'] = true
     * eval inventoryInstance['discoverySuppress'] = true
+    * configure headers = testAdminHeaders
     * call putInventoryInstance
 
     # Search the Check Suppress Flags values
+    * configure headers = testUserHeaders
     Given path 'search/linked-data/works'
     And param query = query
     And retry until response.content[0].instances[0].suppress && response.content[0].instances[0].suppress.staff == true && response.content[0].instances[0].suppress.fromDiscovery == true

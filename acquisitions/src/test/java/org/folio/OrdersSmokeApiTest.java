@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.SharedOrdersTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -8,16 +8,42 @@ import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.util.UUID;
-
+@Order(5)
 @FolioTest(team = "thunderjet", module = "mod-orders")
 public class OrdersSmokeApiTest extends TestBaseEureka {
 
-  // default module settings
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
+  private static final String TEST_TENANT = "testorders";
+  private static final int THREAD_COUNT = 4;
+
+  private enum Feature implements org.folio.test.config.CommonFeature {
+    FEATURE_1("create-order-payment-not-required-fully-receive", true),
+    FEATURE_2("create-order-check-items", true),
+    FEATURE_3("delete-one-piece-in-receiving", true),
+    FEATURE_4("change-order-instance-connection", true);
+
+    private final String fileName;
+    private final boolean isEnabled;
+
+    Feature(String fileName, boolean isEnabled) {
+      this.fileName = fileName;
+      this.isEnabled = isEnabled;
+    }
+
+    public boolean isEnabled() {
+      return isEnabled;
+    }
+
+    public String getFileName() {
+      return fileName;
+    }
+  }
 
   public OrdersSmokeApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -25,37 +51,46 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void ordersSmokeApiTestBeforeAll() {
-    System.setProperty("testTenant", "testorders" + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-orders/init-orders.feature");
+    SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   public void ordersSmokeApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) Run features")
+  @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void runFeatures() {
+    runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
   @Test
   @DisplayName("(Thunderjet) (C743) Create Order Payment Not Required Fully Receive")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void createOrderPaymentNotRequiredFullyReceive() {
-    runFeatureTest("create-order-payment-not-required-fully-receive");
+    runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 
   @Test
   @DisplayName("(Thunderjet) (C358972) Create Order Check Items")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void createOrderCheckItems() {
-    runFeatureTest("create-order-check-items");
+    runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 
   @Test
   @DisplayName("(Thunderjet) (C422159) Delete One Piece In Receiving")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void deleteOnePieceInReceiving() {
-    runFeatureTest("delete-one-piece-in-receiving");
+    runFeatureTest(Feature.FEATURE_3.getFileName());
   }
 
   @Test
   @DisplayName("(Thunderjet) (C354277) Change Order Instance Connection")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void changeOrderInstanceConnection() {
-    runFeatureTest("change-order-instance-connection");
+    runFeatureTest(Feature.FEATURE_4.getFileName());
   }
 }

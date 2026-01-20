@@ -38,6 +38,7 @@ function fn() {
     postSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
     putSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putSourceRecordToStorage'),
     searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
+    searchLinkedDataHub: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataHub'),
     searchInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchInventoryInstance'),
     browseAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@browseAuthority'),
     searchAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchAuthority'),
@@ -83,10 +84,21 @@ function fn() {
     },
 
     resolveSubgraphIfId: function(idOrSubgraph) {
-        if (typeof idOrSubgraph === 'number') {
-          return karate.call('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph', { resourceId: idOrSubgraph }).response;
-        }
-        return idOrSubgraph;
+      if (typeof idOrSubgraph === 'number') {
+        return karate.call('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph', { resourceId: idOrSubgraph }).response;
+      }
+      return idOrSubgraph;
+    },
+
+    assertMatch: function (actual, expected, message) {
+      var result = karate.match(actual, expected);
+      if (!result.pass) {
+        karate.fail(message !== undefined ? message : result.message);
+      }
+    },
+
+    assertTrue: function (condition, message) {
+      assertMatch(condition, true, message);
     }
   };
 

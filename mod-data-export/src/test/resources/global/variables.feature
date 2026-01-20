@@ -7,5 +7,7 @@ Feature: Global variables
     * def defaultHoldingJobProfileId = '5e9835fc-0e51-44c8-8a47-f7b8fce35da7'
     * def defaultAuthorityJobProfileId = '56944b1c-f3f9-475b-bed0-7387c33620ce'
     * def defaultAuthorityMappingProfileId = '5d636597-a59d-4391-a270-4e79d5ba70e3'
+    * def defaultLinkedDataJobProfileId = '42ca0945-f66c-4bc1-8d1a-7aa8b2e4483a'
+    * def defaultLinkedDataMappingProfileId = 'f8b400da-6a0c-4058-be10-cece93265c32'
     * def customJobProfileId = '21719e06-2bd3-448f-8d36-bd95af46ffad'
     * def customJobProfileSuppressId = '6e23d3ec-29a4-4e76-8de6-d22602154f5d'

@@ -73,7 +73,7 @@ Feature: mod-patron-blocks integration tests
       | 'mod-settings.entries.item.get'                           |
       | 'mod-settings.global.read.mod-circulation'                |
       | 'mod-settings.global.read.circulation'                    |
-      | 'mod-settings.global.read.authority-storage'              |
+      | 'mod-settings.global.read.authority-storage.manage'       |
       | 'feesfines.accounts-bulk.check-waive.post'                |
 
   Scenario: create tenant and users for testing

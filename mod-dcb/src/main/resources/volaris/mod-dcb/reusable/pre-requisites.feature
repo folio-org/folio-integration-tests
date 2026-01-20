@@ -324,6 +324,18 @@ Feature: Testing Lending Flow
     When method POST
     Then status 201
 
+    * def itemEntityRequest14 = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
+    * itemEntityRequest14.barcode = itemBarcode121
+    * itemEntityRequest14.id = itemId121
+    * itemEntityRequest14.holdingsRecordId = karate.get('extHoldingsRecordId', holdingId)
+    * itemEntityRequest14.materialType.id = karate.get('extMaterialTypeId', intMaterialTypeId)
+    * itemEntityRequest14.status.name = karate.get('extStatusName', intStatusName)
+
+    Given path 'inventory', 'items'
+    And request itemEntityRequest14
+    When method POST
+    Then status 201
+
   @PostGroup
   Scenario: Create Groups
     * def groupEntityRequest = read('classpath:volaris/mod-dcb/features/samples/user/group-entity-request.json')

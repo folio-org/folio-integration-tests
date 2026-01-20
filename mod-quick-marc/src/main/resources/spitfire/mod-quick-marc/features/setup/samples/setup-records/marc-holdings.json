@@ -12,6 +12,9 @@
       "leader": "00536cy  a22001694  4500",
       "fields": [
         {
+          "001": "#(hrid001Field)"
+        },
+        {
           "004": "#(instanceHrid)"
         },
         {
