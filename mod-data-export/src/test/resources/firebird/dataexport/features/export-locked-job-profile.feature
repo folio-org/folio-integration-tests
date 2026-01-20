@@ -69,6 +69,7 @@ Feature: Test lock job profile
     And def defaultJobProfile = response
 
     Given path 'data-export/job-profiles', defaultInstanceJobProfileId
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
     And request defaultJobProfile
     And set defaultJobProfile.locked = false
     When method PUT
