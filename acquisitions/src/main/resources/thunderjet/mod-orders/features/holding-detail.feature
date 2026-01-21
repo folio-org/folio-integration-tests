@@ -191,6 +191,156 @@ Feature: Retrieve Holding Details With Pieces And Items
     """
     * karate.forEach(holdingsTable, verifyHolding)
 
+  @Positive
+  Scenario: Retrieve Holding Details For Two Orders With Same Holding And Create Inventory None
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def order1Id = call uuid
+    * def order2Id = call uuid
+    * def order3Id = call uuid
+    * def poLine1Id = call uuid
+    * def poLine2Id = call uuid
+    * def poLine3Id = call uuid
+    * def instanceId = call uuid
+    * def holdingId = call uuid
+    * def holdingId2 = call uuid
+
+    # 1. Create Fund And Budget
+    * print '1. Create Fund And Budget'
+    * configure headers = headersAdmin
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)', status: 'Active' }
+
+    # 2. Create Instance
+    * print '2. Create Instance'
+    * def v = call createInstance { id: '#(instanceId)', title: 'Test Instance', instanceTypeId: '#(globalInstanceTypeId)' }
+
+    # 3. Create First Holding
+    * print '3. Create First Holding'
+    * def v = call createHolding { id: '#(holdingId)', instanceId: '#(instanceId)', locationId: '#(globalLocationsId)', sourceId: '#(globalHoldingsSourceId)' }
+
+    # 4. Create Second Holding
+    * print '4. Create Second Holding'
+    * def v = call createHolding { id: '#(holdingId2)', instanceId: '#(instanceId)', locationId: '#(globalLocationsId2)', sourceId: '#(globalHoldingsSourceId)' }
+
+    # 5. Create First Order
+    * print '5. Create First Order'
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(order1Id)' }
+
+    # 6. Create First Order Line With Create Inventory None And First Holding ID
+    * print '6. Create First Order Line With Create Inventory None And First Holding ID'
+    * def order1Locations = [{ holdingId: '#(holdingId)', quantityPhysical: 2, quantity: 2 }]
+    * call createOrderLine { id: '#(poLine1Id)', orderId: '#(order1Id)', fundId: '#(fundId)', locations: '#(order1Locations)', quantity: 2, createInventory: 'None' }
+
+    # 7. Create Second Order
+    * print '7. Create Second Order'
+    * def v = call createOrder { id: '#(order2Id)' }
+
+    # 8. Create Second Order Line With Create Inventory None And Same First Holding ID
+    * print '8. Create Second Order Line With Create Inventory None And Same First Holding ID'
+    * def order2Locations = [{ holdingId: '#(holdingId)', quantityPhysical: 3, quantity: 3 }]
+    * call createOrderLine { id: '#(poLine2Id)', orderId: '#(order2Id)', fundId: '#(fundId)', locations: '#(order2Locations)', quantity: 3, createInventory: 'None' }
+
+    # 9. Create Third Order
+    * print '9. Create Third Order'
+    * def v = call createOrder { id: '#(order3Id)' }
+
+    # 10. Create Third Order Line With Create Inventory None And Second Holding ID
+    * print '10. Create Third Order Line With Create Inventory None And Second Holding ID'
+    * def order3Locations = [{ holdingId: '#(holdingId2)', quantityPhysical: 4, quantity: 4 }]
+    * call createOrderLine { id: '#(poLine3Id)', orderId: '#(order3Id)', fundId: '#(fundId)', locations: '#(order3Locations)', quantity: 4, createInventory: 'None' }
+
+    # 11. Open First Order
+    * print '11. Open First Order'
+    * def v = call openOrder { orderId: '#(order1Id)' }
+
+    # 12. Open Second Order
+    * print '12. Open Second Order'
+    * def v = call openOrder { orderId: '#(order2Id)' }
+
+    # 13. Open Third Order
+    * print '13. Open Third Order'
+    * def v = call openOrder { orderId: '#(order3Id)' }
+
+    # 14. Prepare Holding Detail Request With Both Holding IDs
+    * print '14. Prepare Holding Detail Request With Both Holding IDs'
+    * def holdingDetailRequest = { holdingIds: ['#(holdingId)', '#(holdingId2)'] }
+
+    # 15. Call Holding Detail Endpoint
+    * print '15. Call Holding Detail Endpoint'
+    Given path 'orders/holding-detail'
+    And request holdingDetailRequest
+    When method POST
+    Then status 200
+
+    # 16. Verify Response Structure
+    * print '16. Verify Response Structure'
+    And match response == '#object'
+    * def holdingKey = holdingId + ''
+    * def holdingKey2 = holdingId2 + ''
+    * def holdingData = karate.get('response["' + holdingKey + '"]')
+    * def holdingData2 = karate.get('response["' + holdingKey2 + '"]')
+    And match holdingData != null
+    And match holdingData2 != null
+
+    # 17. Verify Both Holdings Using Table And Verification Function
+    * print '17. Verify Both Holdings Using Table And Verification Function'
+    * def expectedPoLineIds1 = [poLine1Id, poLine2Id]
+    * def expectedPoLineIds2 = [poLine3Id]
+    * def holdingsTable =
+    """
+    [
+      { holdingData: '#(holdingData)', expectedPoLineIds: '#(expectedPoLineIds1)', expectedPiecesCount: 0, expectedItemsCount: 0, holdingName: 'Holding With 2 PoLines' },
+      { holdingData: '#(holdingData2)', expectedPoLineIds: '#(expectedPoLineIds2)', expectedPiecesCount: 0, expectedItemsCount: 0, holdingName: 'Holding With 1 PoLine' }
+    ]
+    """
+    * def verifyHoldingWithInventoryNone =
+    """
+    function(holding) {
+      var data = holding.holdingData;
+      var expectedPoLineIds = holding.expectedPoLineIds;
+      var expectedPiecesCount = holding.expectedPiecesCount;
+      var expectedItemsCount = holding.expectedItemsCount;
+      var name = holding.holdingName;
+
+      karate.log('Verifying ' + name);
+
+      // Verify collections exist
+      karate.match(data.poLines_detail_collection, '!= null');
+      karate.match(data.pieces_detail_collection, '!= null');
+      karate.match(data.items_detail_collection, '!= null');
+      karate.match(data.poLines_detail_collection.poLines_detail, '#array');
+      karate.match(data.pieces_detail_collection.pieces_detail, '#array');
+      karate.match(data.items_detail_collection.items_detail, '#array');
+
+      // Verify poLines
+      var poLines = data.poLines_detail_collection.poLines_detail;
+      karate.match(poLines.length, expectedPoLineIds.length);
+      karate.match(data.poLines_detail_collection.totalRecords, expectedPoLineIds.length);
+
+      // Verify each poLine has valid id and matches expected ids
+      for (var i = 0; i < poLines.length; i++) {
+        karate.match(poLines[i].id, '#string');
+      }
+      var actualPoLineIds = karate.map(poLines, function(poLine){ return poLine.id });
+      for (var i = 0; i < expectedPoLineIds.length; i++) {
+        karate.match(actualPoLineIds, '#[] ' + expectedPoLineIds[i]);
+      }
+
+      // Verify pieces (should be empty for Create Inventory None)
+      var pieces = data.pieces_detail_collection.pieces_detail;
+      karate.match(pieces.length, expectedPiecesCount);
+
+      // Verify items (should be empty for Create Inventory None)
+      var items = data.items_detail_collection.items_detail;
+      karate.match(items.length, expectedItemsCount);
+
+      return true;
+    }
+    """
+    * karate.forEach(holdingsTable, verifyHoldingWithInventoryNone)
+
   @Negative
   Scenario: Retrieve Holding Details With Empty Holding IDs Returns Empty Response
     # 1. Prepare Empty Holding Detail Request
@@ -206,5 +356,40 @@ Feature: Retrieve Holding Details With Pieces And Items
 
     # 3. Verify Response Is Empty Object
     * print '3. Verify Response Is Empty Object'
+    And match response == {}
+
+  @Negative
+  Scenario: Retrieve Holding Details For Holdings Without PoLines Returns Empty Response
+    * def instanceId = call uuid
+    * def holdingId1 = call uuid
+    * def holdingId2 = call uuid
+
+    # 1. Create Instance
+    * print '1. Create Instance'
+    * configure headers = headersAdmin
+    * def v = call createInstance { id: '#(instanceId)', title: 'Instance Without PoLines', instanceTypeId: '#(globalInstanceTypeId)' }
+
+    # 2. Create First Holding
+    * print '2. Create First Holding'
+    * def v = call createHolding { id: '#(holdingId1)', instanceId: '#(instanceId)', locationId: '#(globalLocationsId)', sourceId: '#(globalHoldingsSourceId)' }
+
+    # 3. Create Second Holding
+    * print '3. Create Second Holding'
+    * def v = call createHolding { id: '#(holdingId2)', instanceId: '#(instanceId)', locationId: '#(globalLocationsId2)', sourceId: '#(globalHoldingsSourceId)' }
+
+    # 4. Prepare Holding Detail Request With Holdings That Have No PoLines
+    * print '4. Prepare Holding Detail Request With Holdings That Have No PoLines'
+    * def holdingDetailRequest = { holdingIds: ['#(holdingId1)', '#(holdingId2)'] }
+
+    # 5. Call Holding Detail Endpoint
+    * print '5. Call Holding Detail Endpoint'
+    * configure headers = headersUser
+    Given path 'orders/holding-detail'
+    And request holdingDetailRequest
+    When method POST
+    Then status 200
+
+    # 6. Verify Response Is Empty Object Since Holdings Have No Associated PoLines
+    * print '6. Verify Response Is Empty Object Since Holdings Have No Associated PoLines'
     And match response == {}
 

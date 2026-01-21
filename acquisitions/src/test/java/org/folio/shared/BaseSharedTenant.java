@@ -38,7 +38,7 @@ public abstract class BaseSharedTenant {
       var uniqueTenantId = UUID.randomUUID().toString();
       System.setProperty(TEST_TENANT, uniqueTenant);
       System.setProperty(TEST_TENANT_ID, uniqueTenantId);
-      logger.info("initializeTenant:: Created unique tenant (Individual mode) {} for {}", uniqueTenant, context.ownerClass().getSimpleName());
+      logger.info("initializeTenant:: Created unique individual tenant{} for {}", uniqueTenant, context.ownerClass().getSimpleName());
       try {
         context.featureRunner().accept(config.initFeaturePath());
 
@@ -54,6 +54,7 @@ public abstract class BaseSharedTenant {
       if (createdTenant) {
         context.featureRunner().accept(config.initFeaturePath());
       }
+
       return createdTenant;
     } catch (Exception e) {
       logger.error("initializeTenant:: Failed to initialize shared tenant, deleting tenant file: {}", e.getMessage(), e);
@@ -64,10 +65,14 @@ public abstract class BaseSharedTenant {
 
   protected static void cleanupTenant(TenantConfig config, TenantContext context, String lastClassName) {
     if (isIndividualRunMode()) {
-      logger.info("cleanupTenant:: Cleaning up individual tenant for {}", context.ownerClass().getSimpleName());
-      context.featureRunner().accept(DESTROY_FEATURE_PATH);
+      try {
+        logger.info("cleanupTenant:: Cleaning up individual tenant for {}", context.ownerClass().getSimpleName());
+        context.featureRunner().accept(DESTROY_FEATURE_PATH);
 
-      return;
+        return;
+      } finally {
+        deleteSharedTenantFile(config.tenantFilePath());
+      }
     }
 
     var callingClassName = context.ownerClass() != null ? context.ownerClass().getName() : null;
@@ -114,7 +119,7 @@ public abstract class BaseSharedTenant {
           if (existingTenant != null && existingTenantId != null) {
             System.setProperty(TEST_TENANT, existingTenant);
             System.setProperty(TEST_TENANT_ID, existingTenantId);
-            logger.info("getOrCreateSharedTenant:: Reusing tenant (Shared mode) {} (created by {}) for {}", existingTenant, existingOwner, ownerClass.getSimpleName());
+            logger.info("getOrCreateSharedTenant:: Reusing tenant {} (created by {}) for {}", existingTenant, existingOwner, ownerClass.getSimpleName());
 
             return false;
           }
@@ -126,7 +131,7 @@ public abstract class BaseSharedTenant {
         saveTenantProperties(tenantFile, newTenant, newTenantId, ownerName);
         System.setProperty(TEST_TENANT, newTenant);
         System.setProperty(TEST_TENANT_ID, newTenantId);
-        logger.info("getOrCreateSharedTenant:: Shared mode: Created shared tenant {} by {}", newTenant, ownerName);
+        logger.info("getOrCreateSharedTenant:: Created shared tenant {} by {}", newTenant, ownerName);
 
         return true;
       } catch (Exception e) {
