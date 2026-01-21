@@ -12,23 +12,12 @@ Feature: Import Bibframe2 RDF
   Scenario: Import RDF file to graph & update graph using API.
     # Step 1 (Setup): create authority records referenced in the RDF file & wait till the records are available in mod-search
     * configure headers = testAdminHeaders
-    * def sourceRecordRequest = read('samples/authority_person_wang_jack.json')
-    * def postAuthorityCall = call postSourceRecordToStorage
-    * match postAuthorityCall.response.qmRecordId == '#notnull'
-    * def query = '(lccn="no2012142443")'
-    * def searchAuthorityCall = call searchAuthority
-
-    * def sourceRecordRequest = read('samples/authority_subject_readers.json')
-    * def postAuthorityCall = call postSourceRecordToStorage
-    * match postAuthorityCall.response.qmRecordId == '#notnull'
-    * def query = '(lccn="sh85111655")'
-    * def searchAuthorityCall = call searchAuthority
-
-    * def sourceRecordRequest = read('samples/authority_subject_private_flying.json')
-    * def postAuthorityCall = call postSourceRecordToStorage
-    * match postAuthorityCall.response.qmRecordId == '#notnull'
-    * def query = '(lccn="sh2008001841")'
-    * def searchAuthorityCall = call searchAuthority
+    * call read('import-rdf.feature@createAutority') { fileName: 'authority_person_wang_jack.json', query: '(lccn="no2012142443")' }
+    * call read('import-rdf.feature@createAutority') { fileName: 'authority_subject_readers.json', query: '(lccn="sh85111655")' }
+    * call read('import-rdf.feature@createAutority') { fileName: 'authority_subject_private_flying.json', query: '(lccn="sh2008001841")' }
+    * call read('import-rdf.feature@createAutority') { fileName: 'authority_subject_history.json', query: '(lccn="sh99005024")' }
+    * call read('import-rdf.feature@createAutority') { fileName: 'authority_subject_dyes.json', query: '(lccn="sh85040281")' }
+    * call read('import-rdf.feature@createAutority') { fileName: 'fast_authority_japan.json', query: '(naturalId="fst01204082")' }
 
     # Step 2: Import RDF file
     * def fileName = 'rdf.json'
@@ -99,3 +88,11 @@ Feature: Import Bibframe2 RDF
     * match provisionActivity['http://id.loc.gov/ontologies/bflc/simplePlace'][0]['@value'] == 'San Francisco, CA'
     * match provisionActivity['http://id.loc.gov/ontologies/bibframe/place'][0]['@id'] == 'http://id.loc.gov/vocabulary/countries/cau'
     * match provisionActivityIds contains provisionActivity['@id']
+
+  @ignore
+  @createAutority
+  Scenario: Create authority & verify
+    * def sourceRecordRequest = read('samples/' + fileName)
+    * def postAuthorityCall = call postSourceRecordToStorage
+    * match postAuthorityCall.response.qmRecordId == '#notnull'
+    * def searchAuthorityCall = call searchAuthority { query: '#(query)' }
