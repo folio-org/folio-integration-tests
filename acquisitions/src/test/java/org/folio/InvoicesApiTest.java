@@ -54,7 +54,8 @@ public class InvoicesApiTest extends TestBaseEureka {
     FEATURE_30("set-invoice-fiscal-year-automatically", true),
     FEATURE_31("should_populate_vendor_address_on_get_voucher_by_id", true),
     FEATURE_32("voucher-numbers", true),
-    FEATURE_33("voucher-with-lines-using-same-external-account", true);
+    FEATURE_33("voucher-with-lines-using-same-external-account", true),
+    FEATURE_34("voucher-with-lines-using-same-external-account", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -290,5 +291,11 @@ public class InvoicesApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void voucherWithLinesUsingSameExternalAccount() {
     runFeatureTest(Feature.FEATURE_33.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void fundCodeAutoPopulateInvoiceLines() {
+    runFeatureTest(Feature.FEATURE_34.getFileName());
   }
 }
