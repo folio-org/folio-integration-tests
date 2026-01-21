@@ -55,7 +55,7 @@ public class InvoicesApiTest extends TestBaseEureka {
     FEATURE_31("should_populate_vendor_address_on_get_voucher_by_id", true),
     FEATURE_32("voucher-numbers", true),
     FEATURE_33("voucher-with-lines-using-same-external-account", true),
-    FEATURE_34("voucher-with-lines-using-same-external-account", true);
+    FEATURE_34("fund-code-auto-populate-invoice-lines", true);
 
     private final String fileName;
     private final boolean isEnabled;

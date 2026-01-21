@@ -28,7 +28,7 @@ Feature: Fund code is automatically populated for invoice lines if it is missing
     # 1. Create an active Fund with current budget and money allocation
     * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)", code: "AUTO-FUND-001", name: "Auto Populate Test Fund" }
-    * def fundCode = v.response.code
+    * def fundCode = v.response.fund.code
     * def v = call createBudget { id: "#(budgetId)", allocated: 1000, fundId: "#(fundId)", status: "Active" }
 
     # 2. Create an Invoice in "Open" status without invoice lines
