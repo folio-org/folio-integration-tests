@@ -15,7 +15,7 @@ Use any examples stored in acquisitions/ai/prompt/examples folder if needed.
 
 Make sure you adhere with our system prompt found in acquisitions/ai/ACQ_{{FOLDER}}_SYSTEM_PROMPT.md.
 Make sure the new feature has correct comment, print and header formats, and that we don't deviate from the norms.
-Use our reusable features defined in acquisitions/karate-config.js when necessary. 
+Use our reusable features defined in acquisitions/src/main/resources/karate-config.js when necessary. 
 At the end add our new feature to acquisitions/src/main/resources/thunderjet/{{FOLDER}}/{{MODULE}}.feature, and the associated Java method to {{FOLDER}}ApiTest. 
 
 Do not create any explanatory markdown guides.

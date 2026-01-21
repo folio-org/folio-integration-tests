@@ -192,7 +192,7 @@ Feature: Retrieve Holding Details With Pieces And Items
     * karate.forEach(holdingsTable, verifyHolding)
 
   @Positive
-  Scenario: Retrieve Holding Details For Two Orders With Same Holding And Create Inventory None
+  Scenario: Retrieve Holding Details For Two Orders With Same Holding And One Order With Another But All Opened With Create Inventory None
     * def fundId = call uuid
     * def budgetId = call uuid
     * def order1Id = call uuid
