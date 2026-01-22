@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.SharedInvoicesTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -14,14 +14,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.util.UUID;
-
 @Order(10)
 @FolioTest(team = "thunderjet", module = "mod-invoice")
 public class InvoicesSmokeApiTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
-  private static final String TEST_TENANT = "testinvoice";
+  private static final String TEST_TENANT = "testinvoices";
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
@@ -50,14 +48,12 @@ public class InvoicesSmokeApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void invoicesSmokeApiTestBeforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-invoice/init-invoice.feature");
+    SharedInvoicesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   public void invoicesSmokeApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    SharedInvoicesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test

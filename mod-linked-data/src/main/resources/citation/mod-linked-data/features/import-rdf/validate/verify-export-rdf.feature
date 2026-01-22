@@ -59,9 +59,9 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * eval validateContributor(rdfResponse, workContributions, 'Delaware. General Assembly. House of representatives.', 'http://id.loc.gov/ontologies/bibframe/Jurisdiction', ['http://id.loc.gov/vocabulary/relators/fnd', 'http://id.loc.gov/vocabulary/relators/fpy'])
 
   Scenario: Validate subjects of Work
-    * match work['http://id.loc.gov/ontologies/bibframe/subject'][*]['@id'] contains 'http://id.loc.gov/authorities/sh85111655'
+    * match work['http://id.loc.gov/ontologies/bibframe/subject'][*]['@id'] contains 'http://id.loc.gov/authorities/subjects/sh85111655'
     * match work['http://id.loc.gov/ontologies/bibframe/subject'][*]['@id'] contains 'http://id.loc.gov/rwo/agents/no2012142443'
-    * match work['http://id.loc.gov/ontologies/bibframe/subject'][*]['@id'] contains 'http://id.loc.gov/authorities/sh2008001841'
+    * match work['http://id.loc.gov/ontologies/bibframe/subject'][*]['@id'] contains 'http://id.loc.gov/authorities/subjects/sh2008001841'
     * def validateSubject =
       """
       function(rdfResponse, work, label, expectedType) {

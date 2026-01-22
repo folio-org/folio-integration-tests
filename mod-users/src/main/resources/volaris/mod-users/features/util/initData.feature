@@ -60,3 +60,24 @@ Feature: init data for mod-users
     """
     When method POST
     Then status 201
+
+  @PostProfilePictureConfigSetting
+  Scenario: Create Setting for Profile Picture configuration
+    * def createSettingRequest =
+    """
+      {
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "ThisIsASimpleDefaultKeyToTestIts"
+        }
+      }
+    """
+
+    Given path '/users/settings/entries'
+    And request createSettingRequest
+    When method POST
+    * if (responseStatus == 400) karate.match(response, 'value already exists in table settings: profile_picture_config')
+    * assert responseStatus == 201 || responseStatus == 400

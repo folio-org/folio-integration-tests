@@ -10,7 +10,7 @@ Feature: MARC Derived Records
 
   @C594517
   Scenario: Verify MARC 100 has $9
-    * match fields contains { 100: { subfields: [ { a: "Edgell, David L." }, { c: "Sr." }, { d: "1938-" }, { e: "author" }, { q: "David Lee" }, { 0: "http://id.loc.gov/authorities/n87116094" }, { 4: "aut" }, { 9: '#(authorityIdOfn87116094)' } ], ind1: " ", ind2: " " }}
+    * match fields contains { 100: { subfields: [ { a: "Edgell, David L." }, { c: "Sr." }, { d: "1938-" }, { e: "author" }, { q: "David Lee" }, { 0: "http://id.loc.gov/authorities/names/n87116094" }, { 4: "aut" }, { 9: '#(authorityIdOfn87116094)' } ], ind1: " ", ind2: " " }}
 
   @C506683
   Scenario: Verify 26X fields
