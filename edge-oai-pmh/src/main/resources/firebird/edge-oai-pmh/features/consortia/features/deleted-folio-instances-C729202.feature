@@ -261,15 +261,15 @@ Feature: Deleted FOLIO instances
     And match response//header/@status == 'deleted'
 
     # Instance 2
-    #    Given path 'oai/records'
-    #    And param apikey = universityApikey
-    #    And param metadataPrefix = 'marc21_withholdings'
-    #    And param verb = 'GetRecord'
-    #    And param identifier = identifier2
-    #    When method GET
-    #    Then status 200
-    #    And match response//header/identifier == identifier2
-    #    And match response//header/@status == 'deleted'
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'GetRecord'
+    And param identifier = identifier2
+    When method GET
+    Then status 200
+    And match response//header/identifier == identifier2
+    And match response//header/@status == 'deleted'
 
     # Instance 3
     Given path 'oai/records'
@@ -402,14 +402,14 @@ Feature: Deleted FOLIO instances
     And match response//error/@code == 'idDoesNotExist'
 
     # Instance 2
-    #    Given path 'oai/records'
-    #    And param apikey = universityApikey
-    #    And param metadataPrefix = 'marc21_withholdings'
-    #    And param verb = 'GetRecord'
-    #    And param identifier = identifier2
-    #    When method GET
-    #    Then status 200
-    #    And match response//error/@code == 'idDoesNotExist'
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'GetRecord'
+    And param identifier = identifier2
+    When method GET
+    Then status 200
+    And match response//error/@code == 'idDoesNotExist'
 
     # Instance 3
     Given path 'oai/records'
