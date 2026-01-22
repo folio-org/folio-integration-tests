@@ -36,8 +36,6 @@ Feature: Approve an invoice using different fiscal years
     * def fundCode1 = 'FUND1'
     * def fundCode2 = 'FUND2'
     * def fundCode3 = 'FUND3'
-    * def possibleMessage1 = 'Multiple fiscal years are used with the funds ' + fundCode1 + ' and ' + fundCode3 + '.'
-    * def possibleMessage2 = 'Multiple fiscal years are used with the funds ' + fundCode3 + ' and ' + fundCode1 + '.'
 
     * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
@@ -246,7 +244,9 @@ Feature: Approve an invoice using different fiscal years
     When method PUT
     Then status 422
     * def message = $.errors[0].message
-    And assert message == possibleMessage1 || message == possibleMessage2
+    And match $.errors[0].code == 'multipleFiscalYears'
+    And match message contains fundId1
+    And match message contains fundId3
 
 
   Scenario: Try to approve the invoice
@@ -356,7 +356,9 @@ Feature: Approve an invoice using different fiscal years
     When method PUT
     Then status 422
     * def message = $.errors[0].message
-    And assert message == possibleMessage1 || message == possibleMessage2
+    And match $.errors[0].code == 'multipleFiscalYears'
+    And match message contains fundId1
+    And match message contains fundId3
 
 
   Scenario: Change invoice line 4 fund distribution to use fund 2
