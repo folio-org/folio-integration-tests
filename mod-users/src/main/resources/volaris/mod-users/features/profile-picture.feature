@@ -9,25 +9,34 @@ Feature: Profile-picture tests
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def statusSuccess = function(){ var status = karate.get('responseStatus'); return status >= 200 && status < 300 }
 
+  Scenario: Create Profile Picture Setting
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostProfilePictureConfigSetting')
+
   Scenario: Set enabledObjectStorage = false (by default DB will be enabled), set enabled = true (when profile picture feature is enabled)
 
-    # prepare tenant
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
+    * def id = response.settings[0].id
+    * def encryptionKey = response.settings[0].value.encryptionKey
+    * def version = response.settings[0]._version
 
-    Given path '/users/configurations/entry/' + id
+    Given path '/users/settings/entries/' + id
     And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "#(encryptionKey)"
-          }
+      """
+      {
+        "id": "#(id)",
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)"
+        },
+        "_version": "#(version)"
+      }
       """
     When method PUT
     Then status 204
@@ -97,23 +106,30 @@ Feature: Profile-picture tests
   Scenario: Set enabledObjectStorage = false (by default DB will be enabled), set enabled = false (when profile picture feature is not enabled, it should give error)
 
     # prepare tenant
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
+    * def id = response.settings[0].id
+    * def encryptionKey = response.settings[0].value.encryptionKey
+    * def version = response.settings[0]._version
 
-    Given path '/users/configurations/entry/' + id
+    Given path '/users/settings/entries/' + id
     And request
-        """
-             {
-               "id": "#(id)",
-               "configName": "PROFILE_PICTURE_CONFIG",
-               "enabled": false,
-               "enabledObjectStorage": false,
-               "encryptionKey": "#(encryptionKey)"
-             }
-         """
+      """
+      {
+        "id": "#(id)",
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": false,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)"
+        },
+        "_version": "#(version)"
+      }
+      """
     When method PUT
     Then status 204
 
@@ -185,23 +201,30 @@ Feature: Profile-picture tests
   Scenario: Validation file size.
 
     # prepare tenant
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
+    * def id = response.settings[0].id
+    * def encryptionKey = response.settings[0].value.encryptionKey
+    * def version = response.settings[0]._version
 
-    Given path '/users/configurations/entry/' + id
+    Given path '/users/settings/entries/' + id
     And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "#(encryptionKey)",
-            "maxFileSize": 4
-          }
+      """
+      {
+        "id": "#(id)",
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)",
+          "maxFileSize": 4
+        },
+        "_version": "#(version)"
+      }
       """
     When method PUT
     Then status 204
@@ -218,16 +241,21 @@ Feature: Profile-picture tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': '*/*'  }
 
     # remove the maxFIleSize from config. Try to upload an image more than 10 mb. We should get error.
-    Given path '/users/configurations/entry/' + id
+    * def version = version + 1
+    Given path '/users/settings/entries/' + id
     And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "#(encryptionKey)"
-          }
+      """
+      {
+        "id": "#(id)",
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)"
+        },
+        "_version": "#(version)"
+      }
       """
     When method PUT
     Then status 204
@@ -244,17 +272,22 @@ Feature: Profile-picture tests
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)',  'Accept': '*/*'  }
 
     # Update configuration. Give maxFileSize value more than 10. Should get error.
-    Given path '/users/configurations/entry/' + id
+    * def version = version + 1
+    Given path '/users/settings/entries/' + id
     And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "#(encryptionKey)",
-            "maxFileSize": 14
-          }
+      """
+      {
+        "id": "#(id)",
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)",
+          "maxFileSize": 14
+        },
+        "_version": "#(version)"
+      }
       """
     When method PUT
     Then status 500
@@ -263,38 +296,50 @@ Feature: Profile-picture tests
   Scenario: Validation Encryption key
 
     # prepare tenant
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
+    * def id = response.settings[0].id
+    * def encryptionKey = response.settings[0].value.encryptionKey
+    * def version = response.settings[0]._version
 
     # try to update the encryption key with same key
-    Given path '/users/configurations/entry/' + id
+    Given path '/users/settings/entries/' + id
     And request
       """
       {
         "id": "#(id)",
-        "configName": "PROFILE_PICTURE_CONFIG",
-        "enabled": true,
-        "enabledObjectStorage": false,
-        "encryptionKey": "#(encryptionKey)",
-        "maxFileSize": 4
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)",
+          "maxFileSize": 4
+        },
+        "_version": "#(version)"
       }
       """
     When method PUT
     Then status 204
 
     # try to update the encryption key with another key
-    Given path '/users/configurations/entry/' + id
+    * def version = version + 1
+    Given path '/users/settings/entries/' + id
     And request
       """
       {
         "id": "#(id)",
-        "configName": "PROFILE_PICTURE_CONFIG",
-        "enabled": true,
-        "enabledObjectStorage": false,
-        "encryptionKey": "another key "
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "another key "
+        },
+        "_version": "#(version)"
       }
       """
     When method PUT
@@ -302,16 +347,21 @@ Feature: Profile-picture tests
     And match response == 'Cannot update the Encryption key'
 
     # try to update the encryption key with null value
-    Given path '/users/configurations/entry/' + id
+    * def version = version + 1
+    Given path '/users/settings/entries/' + id
     And request
       """
       {
         "id": "#(id)",
-        "configName": "PROFILE_PICTURE_CONFIG",
-        "enabled": true,
-        "enabledObjectStorage": false,
-        "encryptionKey": null,
-        "maxFileSize": 14
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": null,
+          "maxFileSize": 14
+        },
+        "_version": "#(version)"
       }
       """
     When method PUT
@@ -319,21 +369,28 @@ Feature: Profile-picture tests
     And match response == 'Cannot update the Encryption key'
 
     # try to get the configuration
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    And match response.encryptionKey == encryptionKey
+    And match response.settings[0].value.encryptionKey == encryptionKey
+    * def version = response.settings[0]._version
 
     # try to update the configuration when encryptionKey field is not present
-    Given path '/users/configurations/entry/' + id
+    Given path '/users/settings/entries/' + id
     And request
       """
       {
         "id": "#(id)",
-        "configName": "PROFILE_PICTURE_CONFIG",
-        "enabled": true,
-        "enabledObjectStorage": false,
-        "maxFileSize": 14
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "maxFileSize": 14
+        },
+        "_version": "#(version)"
       }
       """
     When method PUT
@@ -341,7 +398,9 @@ Feature: Profile-picture tests
     And match response == 'Cannot update the Encryption key'
 
     # get the configuration
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    And match response.encryptionKey == encryptionKey
+    And match response.settings[0].value.encryptionKey == encryptionKey
