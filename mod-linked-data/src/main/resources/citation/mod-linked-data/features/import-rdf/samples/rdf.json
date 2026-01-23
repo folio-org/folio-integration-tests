@@ -679,6 +679,9 @@
         "@id": "_:b57iddOtlocdOtgovresourcesworks12731900"
       },
       {
+        "@id": "_:b57iddOtlocdOtgovresourcesworks12731901"
+      },
+      {
         "@id": "http://id.loc.gov/authorities/subjects/sh2008001841"
       }
     ],
@@ -714,6 +717,114 @@
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
         "@value": "Austria (AT)"
+      }
+    ]
+  },
+  {
+    "@id": "_:b57iddOtlocdOtgovresourcesworks12731901",
+    "@type": [
+      "http://id.loc.gov/ontologies/bibframe/Topic",
+      "http://www.loc.gov/mads/rdf/v1#ComplexSubject"
+    ],
+    "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": [
+      {
+        "@language": "en",
+        "@value": "Dyes and dyeing--Textile fibers--Japan--History--19th century--Exhibitions"
+      }
+    ],
+    "http://www.loc.gov/mads/rdf/v1#componentList": [
+      {
+        "@list": [
+          {
+            "@id": "http://id.loc.gov/authorities/subjects/sh85040281"
+          },
+          {
+            "@id": "_:b321iddOtlocdOtgovresourcesworks21120935"
+          },
+          {
+            "@id": "http://id.loc.gov/rwo/agents/n78089021-781"
+          },
+          {
+            "@id": "http://id.loc.gov/authorities/subjects/sh99005024"
+          },
+          {
+            "@id": "http://id.loc.gov/authorities/subjects/sh2002012475"
+          },
+          {
+            "@id": "http://id.loc.gov/authorities/subjects/sh99001275"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "@id": "http://id.loc.gov/authorities/subjects/sh99001275",
+    "@type": [
+      "http://www.loc.gov/mads/rdf/v1#GenreForm"
+    ],
+    "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": [
+      {
+        "@value": "Exhibitions"
+      }
+    ]
+  },
+  {
+    "@id": "_:b321iddOtlocdOtgovresourcesworks21120935",
+    "@type": [
+      "http://www.loc.gov/mads/rdf/v1#Topic"
+    ],
+    "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": [
+      {
+        "@value": "Textile fibers"
+      }
+    ]
+  },
+  {
+    "@id": "http://id.loc.gov/rwo/agents/n78089021-781",
+    "@type": [
+      "http://www.loc.gov/mads/rdf/v1#Geographic"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Japan"
+      }
+    ]
+  },
+  {
+    "@id": "http://id.loc.gov/authorities/subjects/sh85040281",
+    "@type": [
+      "http://www.loc.gov/mads/rdf/v1#Topic",
+      "http://www.loc.gov/mads/rdf/v1#Topic"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Dyes and dyeing"
+      }
+    ]
+  },
+  {
+    "@id": "http://id.loc.gov/authorities/subjects/sh99005024",
+    "@type": [
+      "http://www.loc.gov/mads/rdf/v1#Topic",
+      "http://www.loc.gov/mads/rdf/v1#Topic"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "History"
+      }
+    ]
+  },
+  {
+    "@id": "http://id.loc.gov/authorities/subjects/sh2002012475",
+    "@type": [
+      "http://www.loc.gov/mads/rdf/v1#Temporal"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "19th century"
       }
     ]
   },

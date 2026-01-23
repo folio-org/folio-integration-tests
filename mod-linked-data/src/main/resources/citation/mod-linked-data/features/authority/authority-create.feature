@@ -81,7 +81,7 @@ Feature: Import authority into graph
         {
           identifierType: 'ID_LCNAF',
           identifierDoc: {
-            'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/n2023009652'],
+            'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/names/n2023009652'],
             'http://bibfra.me/vocab/lite/name': ['n2023009652'],
             'http://bibfra.me/vocab/lite/label': ['n2023009652']
           },
@@ -118,7 +118,7 @@ Feature: Import authority into graph
         {
           identifierType: 'ID_LCNAF',
           identifierDoc: {
-            "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/authorities/n96085736" ],
+            "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/authorities/names/n96085736" ],
             "http://bibfra.me/vocab/lite/name": [ "n96085736" ],
             "http://bibfra.me/vocab/lite/label": [ "n96085736" ]
           },
@@ -154,7 +154,7 @@ Feature: Import authority into graph
           {
             identifierType: 'ID_LCNAF',
             identifierDoc: {
-              "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/authorities/n79006873" ],
+              "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/authorities/names/n79006873" ],
               "http://bibfra.me/vocab/lite/name": [ "n79006873" ],
               "http://bibfra.me/vocab/lite/label": [ "n79006873" ]
             },
