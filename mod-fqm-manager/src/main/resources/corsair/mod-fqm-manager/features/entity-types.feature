@@ -123,37 +123,41 @@ Feature: Entity types
     And match $.name == 'simple_location'
     And match $.labelAlias == 'Locations'
     And match $.columns == '#present'
-    Given path 'entity-types', locationsEntityTypeId, 'columns', 'name', 'values'
+    Given path 'entity-types', locationsEntityTypeId, 'field-values'
+    And param field = 'name'
     When method GET
     Then status 200
     And match $.content[0].value == '#present'
 
   Scenario: Get column values for instance.languages
-    Given path 'entity-types', instanceEntityTypeId, 'columns', 'instance.languages', 'values'
+    Given path 'entity-types', instanceEntityTypeId, 'field-values'
+    And param field = 'instance.languages'
     When method GET
     Then status 200
     And match $.content[0].value == '#present'
 
   Scenario: Get column name and value with search parameter
-    * def columnName = 'name'
-    * def parameter  = {search: 'Location'}
-    Given path 'entity-types', locationsEntityTypeId, 'columns', columnName, 'values'
-    And params parameter
+    * def fieldName = 'name'
+    Given path 'entity-types', locationsEntityTypeId, 'field-values'
+    And param field = fieldName
+    And param search = 'Location'
     When method GET
     Then status 200
     * def label = $.content[0].label
     * match label contains 'Location 1'
 
   Scenario: Get column name and value microservice for invalid column name should return '404 Not Found' Response
-    * def columnName  = 'invalid_column_name'
-    Given path 'entity-types', loanEntityTypeId, 'columns', columnName, 'values'
+    * def fieldName  = 'invalid_column_name'
+    Given path 'entity-types', loanEntityTypeId, 'field-values'
+    And param field = fieldName
     When method GET
     Then status 404
 
   Scenario: Get column name and value microservice for invalid entity-type-id should return '404 Not Found' Response
-    * def columnName  = 'invalid_column_name'
+    * def fieldName  = 'invalid_column_name'
     * def invalidId = call uuid1
-    Given path 'entity-types', invalidId, 'columns', columnName, 'values'
+    Given path 'entity-types', invalidId, 'field-values'
+    And param field = fieldName
     When method GET
     Then status 404
 
