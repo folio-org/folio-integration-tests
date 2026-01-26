@@ -151,7 +151,7 @@ public class ModDataExportApiTest extends TestBaseEureka {
     void NegativeConfigExportC432315Test() {
         runFeatureTest("negative-config-export-C432315");
     }
-  
+
     @Test
     @Order(21)
     void dataExportDeletedAuthoritiesDeletedProfileTest() {
@@ -168,5 +168,11 @@ public class ModDataExportApiTest extends TestBaseEureka {
     @Order(23)
     void exportDeletedJobProfileTest() {
         runFeatureTest("export-deleted-job-profile");
+    }
+
+    @Test
+    @Order(24)
+    void exportLockedJobProfileTest() {
+        runFeatureTest("export-locked-job-profile");
     }
 }
