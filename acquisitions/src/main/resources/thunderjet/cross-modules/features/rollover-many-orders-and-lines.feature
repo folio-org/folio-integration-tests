@@ -4,7 +4,6 @@ Feature: Rollover many orders and lines
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
@@ -12,10 +11,9 @@ Feature: Rollover many orders and lines
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-
     * callonce variables
 
-
+  @Positive
   Scenario: Rollover many orders and lines using different ledgers
     * def series = call random_string
     * def fromYear = callonce getCurrentYear
@@ -36,7 +34,8 @@ Feature: Rollover many orders and lines
     * def rolloverId1 = call uuid
     * def rolloverId2 = call uuid
 
-  ## Create fiscal years and associated ledgers
+    # 1. Create fiscal years and associated ledgers
+    print '1. Create fiscal years and associated ledgers'
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: #(fyId1), code: '#(series + "0001")', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: '#(series)' }
@@ -46,7 +45,8 @@ Feature: Rollover many orders and lines
     * def v = call createLedger { id: #(ledgerId1), fiscalYearId: #(fyId1) }
     * def v = call createLedger { id: #(ledgerId2), fiscalYearId: #(fyId1) }
 
-  ## Create funds and budgets
+    # 2. Create funds and budgets
+    print '2. Create funds and budgets'
     * def v = call createFund { id: #(fundId1), code: #(fundId1), ledgerId: #(ledgerId1) }
     * def v = call createFund { id: #(fundId2), code: #(fundId2), ledgerId: #(ledgerId2) }
     * def v = call createBudget { id: #(budgetId1), fundId: #(fundId1), fiscalYearId: #(fyId1), allocated: 10000, status: 'Active' }
@@ -54,7 +54,8 @@ Feature: Rollover many orders and lines
     * def v = call createBudget { id: #(budgetId3), fundId: #(fundId1), fiscalYearId: #(fyId2), allocated: 10000, status: 'Active' }
     * def v = call createBudget { id: #(budgetId4), fundId: #(fundId2), fiscalYearId: #(fyId2), allocated: 10000, status: 'Active' }
 
-  ## Create 450 orders
+    # 3. Create 450 orders
+    print '3. Create 450 orders'
     * def orderParameters = []
     * def createOrderParameterArray =
     """
@@ -67,7 +68,8 @@ Feature: Rollover many orders and lines
     * eval createOrderParameterArray()
     * def v = call createOrder orderParameters
 
-  ## Create the order lines
+    # 4. Create the order lines
+    print '4. Create the order lines'
     * def lineParameters = []
     * def createLineParameterArray =
     """
@@ -82,7 +84,8 @@ Feature: Rollover many orders and lines
     * eval createLineParameterArray()
     * def v = call createOrderLine lineParameters
 
-  # Open all the orders
+    # 5. Open all the orders
+    print '5. Open all the orders'
     * def openOrderParameters = []
     * def openOrderParameterArray =
     """
@@ -95,7 +98,8 @@ Feature: Rollover many orders and lines
     * eval openOrderParameterArray()
     * def v = call openOrder openOrderParameters
 
-  # Close some orders
+    # 6. Close some orders
+    print '6. Close some orders'
     * def closeOrderParameters = []
     * def closeOrderParameterArray =
       """
@@ -108,7 +112,8 @@ Feature: Rollover many orders and lines
     * eval closeOrderParameterArray()
     * def v = call closeOrder closeOrderParameters
 
-  ## Rollover the 2 ledgers
+    # 7. Rollover the 2 ledgers
+    print '7. Rollover the 2 ledgers'
     * def budgetsRollover = [ { rolloverAllocation: false, adjustAllocation: 0, rolloverBudgetValue: 'None', setAllowances: false } ]
     * def encumbrancesRollover = [ { orderType: 'One-time', basedOn: 'Remaining', increaseBy: 0 } ]
     * table rollovers
@@ -117,7 +122,8 @@ Feature: Rollover many orders and lines
       | rolloverId2 | ledgerId2 | fyId1            | fyId2          | budgetsRollover | encumbrancesRollover |
     * def v = call rollover rollovers
 
-  ## Check rollover statuses
+    # 8. Check rollover statuses
+    print '8. Check rollover statuses'
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId1
     When method GET
@@ -130,7 +136,8 @@ Feature: Rollover many orders and lines
     Then status 200
     And match $.ledgerFiscalYearRolloverProgresses[*].overallRolloverStatus == ['Success']
 
-  ## Check rollover errors
+    # 9. Check rollover errors
+    print '9. Check rollover errors'
     Given path 'finance/ledger-rollovers-errors'
     And param query = 'ledgerRolloverId==' + rolloverId1
     When method GET
@@ -143,7 +150,8 @@ Feature: Rollover many orders and lines
     Then status 200
     And match $.totalRecords == 0
 
-  ## Check encumbrance links and encumbrances
+    # 10. Check encumbrance links and encumbrances
+    print '10. Check encumbrance links and encumbrances'
     Given path 'orders/order-lines', lineParameters[0].id
     When method GET
     Then status 200

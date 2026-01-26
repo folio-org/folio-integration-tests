@@ -465,6 +465,7 @@ public class CrossModulesApiTest extends TestBaseEureka {
   @Test
   // disabled because it is very long
   @Disabled
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void rolloverManyOrdersAndLines() {
     runFeatureTest(Feature.FEATURE_58.getFileName());
   }

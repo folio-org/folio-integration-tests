@@ -4,7 +4,6 @@ Feature: Rollover orders using different ledgers
   Background:
     * print karate.info.scenarioName
     * url baseUrl
-
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * callonce login testUser
@@ -12,10 +11,9 @@ Feature: Rollover orders using different ledgers
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-
     * callonce variables
 
-
+  @Positive
   Scenario: Rollover open orders with 2 lines using different ledgers
     * def series = call random_string
     * def fromYear = callonce getCurrentYear
@@ -39,7 +37,8 @@ Feature: Rollover orders using different ledgers
     * def rolloverId1 = call uuid
     * def rolloverId2 = call uuid
 
-  ## Create fiscal years and associated ledgers
+    # 1. Create fiscal years and associated ledgers
+    print '1. Create fiscal years and associated ledgers'
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: #(fyId1), code: '#(series + "0001")', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: '#(series)' }
@@ -49,7 +48,8 @@ Feature: Rollover orders using different ledgers
     * def v = call createLedger { id: #(ledgerId1), fiscalYearId: #(fyId1) }
     * def v = call createLedger { id: #(ledgerId2), fiscalYearId: #(fyId1) }
 
-  ## Create funds and budgets
+    # 2. Create funds and budgets
+    print '2. Create funds and budgets'
     * def v = call createFund { id: #(fundId1), code: #(fundId1), ledgerId: #(ledgerId1) }
     * def v = call createFund { id: #(fundId2), code: #(fundId2), ledgerId: #(ledgerId2) }
     * def v = call createBudget { id: #(budgetId1), fundId: #(fundId1), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
@@ -57,7 +57,8 @@ Feature: Rollover orders using different ledgers
     * def v = call createBudget { id: #(budgetId3), fundId: #(fundId1), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
     * def v = call createBudget { id: #(budgetId4), fundId: #(fundId2), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
 
-  ## Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)
+    # 3. Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)
+    print '3. Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)'
     * def v = call createOrder { id: #(orderId1), orderType: 'One-Time', reEncumber: false }
     * def v = call createOrderLine { id: #(poLineId1), orderId: #(orderId1), fundId: #(fundId1) }
     * def v = call createOrderLine { id: #(poLineId2), orderId: #(orderId1), fundId: #(fundId2) }
@@ -65,11 +66,13 @@ Feature: Rollover orders using different ledgers
     * def v = call createOrderLine { id: #(poLineId3), orderId: #(orderId2), fundId: #(fundId1) }
     * def v = call createOrderLine { id: #(poLineId4), orderId: #(orderId2), fundId: #(fundId2) }
 
-  # Open the orders
+    # 4. Open the orders
+    print '4. Open the orders'
     * def v = call openOrder { orderId: #(orderId1) }
     * def v = call openOrder { orderId: #(orderId2) }
 
-  ## Rollover the 2 ledgers
+    # 5. Rollover the 2 ledgers
+    print '5. Rollover the 2 ledgers'
     * def budgetsRollover = [ { rolloverAllocation: false, adjustAllocation: 0, rolloverBudgetValue: 'None', setAllowances: false } ]
     * def encumbrancesRollover = [ { orderType: 'One-time', basedOn: 'Remaining', increaseBy: 0 } ]
     * table rollovers
@@ -78,7 +81,8 @@ Feature: Rollover orders using different ledgers
       | rolloverId2 | ledgerId2 | fyId1            | fyId2          | budgetsRollover | encumbrancesRollover |
     * def v = call rollover rollovers
 
-  ## Check rollover statuses
+    # 6. Check rollover statuses
+    print '6. Check rollover statuses'
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId1
     When method GET
@@ -91,7 +95,8 @@ Feature: Rollover orders using different ledgers
     Then status 200
     And match $.ledgerFiscalYearRolloverProgresses[*].overallRolloverStatus == ['Success']
 
-  ## Check rollover errors
+    # 7. Check rollover errors
+    print '7. Check rollover errors'
     Given path 'finance/ledger-rollovers-errors'
     And param query = 'ledgerRolloverId==' + rolloverId1
     When method GET
@@ -105,7 +110,8 @@ Feature: Rollover orders using different ledgers
     Then status 200
     And match $.totalRecords == 0
 
-  ## Get encumbrance links
+    # 8. Get encumbrance links
+    print '8. Get encumbrance links'
     Given path 'orders/order-lines'
     And param query = 'purchaseOrderId==' + orderId1
     When method GET
@@ -120,7 +126,8 @@ Feature: Rollover orders using different ledgers
     And match $.totalRecords == 2
     * def encumbrancesIds2 = $.poLines[*].fundDistribution[0].encumbrance
 
-  ## Check encumbrance transactions in FY2
+    # 9. Check encumbrance transactions in FY2
+    print '9. Check encumbrance transactions in FY2'
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2 + ' AND encumbrance.sourcePurchaseOrderId==' + orderId1
     When method GET
@@ -138,6 +145,7 @@ Feature: Rollover orders using different ledgers
     And match each $.transactions[*].amount == 1
 
 
+  @Positive
   Scenario: Rollover open orders with 2 lines, one using different ledgers
     * def series = call random_string
     * def fromYear = callonce getCurrentYear
@@ -161,7 +169,8 @@ Feature: Rollover orders using different ledgers
     * def rolloverId1 = call uuid
     * def rolloverId2 = call uuid
 
-  ## Create fiscal years and associated ledgers
+    # 1. Create fiscal years and associated ledgers
+    print '1. Create fiscal years and associated ledgers'
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: #(fyId1), code: '#(series + "0001")', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: '#(series)' }
@@ -171,7 +180,8 @@ Feature: Rollover orders using different ledgers
     * def v = call createLedger { id: #(ledgerId1), fiscalYearId: #(fyId1) }
     * def v = call createLedger { id: #(ledgerId2), fiscalYearId: #(fyId1) }
 
-  ## Create funds and budgets
+    # 2. Create funds and budgets
+    print '2. Create funds and budgets'
     * def v = call createFund { id: #(fundId1), code: #(fundId1), ledgerId: #(ledgerId1) }
     * def v = call createFund { id: #(fundId2), code: #(fundId2), ledgerId: #(ledgerId2) }
     * def v = call createBudget { id: #(budgetId1), fundId: #(fundId1), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
@@ -179,7 +189,8 @@ Feature: Rollover orders using different ledgers
     * def v = call createBudget { id: #(budgetId3), fundId: #(fundId1), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
     * def v = call createBudget { id: #(budgetId4), fundId: #(fundId2), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
 
-  ## Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)
+    # 3. Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)
+    print '3. Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)'
     * def v = call createOrder { id: #(orderId1), orderType: 'One-Time', reEncumber: false }
     * def v = call createOrderLine { id: #(poLineId1), orderId: #(orderId1), fundId: #(fundId1) }
     * table fundDistributionTable1
@@ -196,11 +207,13 @@ Feature: Rollover orders using different ledgers
       | fundId2 | 'fund2' | 'percentage'     | 50    |
     * def v = call createOrderLine { id: #(poLineId4), orderId: #(orderId2), fundDistribution: #(fundDistributionTable2) }
 
-  # Open the orders
+    # 4. Open the orders
+    print '4. Open the orders'
     * def v = call openOrder { orderId: #(orderId1) }
     * def v = call openOrder { orderId: #(orderId2) }
 
-  ## Rollover the 2 ledgers
+    # 5. Rollover the 2 ledgers
+    print '5. Rollover the 2 ledgers'
     * def budgetsRollover = [ { rolloverAllocation: false, adjustAllocation: 0, rolloverBudgetValue: 'None', setAllowances: false } ]
     * def encumbrancesRollover = [ { orderType: 'One-time', basedOn: 'Remaining', increaseBy: 0 } ]
     * table rollovers
@@ -209,7 +222,8 @@ Feature: Rollover orders using different ledgers
       | rolloverId2 | ledgerId2 | fyId1            | fyId2          | budgetsRollover | encumbrancesRollover |
     * def v = call rollover rollovers
 
-  ## Check rollover statuses
+    # 6. Check rollover statuses
+    print '6. Check rollover statuses'
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId1
     When method GET
@@ -222,7 +236,8 @@ Feature: Rollover orders using different ledgers
     Then status 200
     And match $.ledgerFiscalYearRolloverProgresses[*].overallRolloverStatus == ['Success']
 
-  ## Check rollover errors
+    # 7. Check rollover errors
+    print '7. Check rollover errors'
     Given path 'finance/ledger-rollovers-errors'
     And param query = 'ledgerRolloverId==' + rolloverId1
     When method GET
@@ -236,7 +251,8 @@ Feature: Rollover orders using different ledgers
     Then status 200
     And match $.totalRecords == 0
 
-  ## Get encumbrance links
+    # 8. Get encumbrance links
+    print '8. Get encumbrance links'
     Given path 'orders/order-lines'
     And param query = 'purchaseOrderId==' + orderId1
     When method GET
@@ -251,7 +267,8 @@ Feature: Rollover orders using different ledgers
     And match $.totalRecords == 2
     * def encumbrancesIds2 = $.poLines[*].fundDistribution[*].encumbrance
 
-  ## Check encumbrance transactions in FY2
+    # 9. Check encumbrance transactions in FY2
+    print '9. Check encumbrance transactions in FY2'
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2 + ' AND encumbrance.sourcePurchaseOrderId==' + orderId1
     When method GET
