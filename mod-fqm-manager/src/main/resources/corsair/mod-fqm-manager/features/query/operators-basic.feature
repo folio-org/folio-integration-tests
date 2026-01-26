@@ -33,7 +33,7 @@ Feature: Query with basic operators
     * assert totalRecords > 0
 
   Scenario: Run query with $gt operator and check results
-    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.created_date\": {\"$gt\":\"2020-01-01\"}}' }
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.user_created_date\": {\"$gt\":\"2020-01-01\"}}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 
@@ -46,7 +46,7 @@ Feature: Query with basic operators
     * assert totalRecords > 0
 
   Scenario: Run query with $lt operator and check results
-    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.created_date\": {\"$lt\":\"2040-01-01\"}}' }
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.user_created_date\": {\"$lt\":\"2040-01-01\"}}' }
     * def queryCall = call postQuery
     * def queryId = queryCall.queryId
 

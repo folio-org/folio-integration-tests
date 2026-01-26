@@ -66,13 +66,16 @@ function fn() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     },
+
     uuid: function () {
       return java.util.UUID.randomUUID() + '';
     },
+
     //to generate random barcode
     random_numbers: function() {
       return Math.floor(Math.random() * 1000000);
     },
+
     uuids: function (n) {
       var list = [];
       for (var i = 0; i < n; i++) {
@@ -80,10 +83,12 @@ function fn() {
       }
       return list;
     },
+
     randomMillis: function() {
       return java.lang.System.currentTimeMillis() + '';
     }
   };
+
   if (env == 'dev') {
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
     config.kcClientId = 'supersecret';
@@ -117,5 +122,6 @@ function fn() {
     config.baseUrl = 'https://folio-edev-vega-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-vega-keycloak.ci.folio.org';
   }
+
   return config;
 }

@@ -15,6 +15,9 @@ Feature: Users tests
 
     * def headersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)','x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
+  Scenario: Create Profile Picture Setting
+    * call read('classpath:volaris/mod-users/features/util/initData.feature@PostProfilePictureConfigSetting')
+
   Scenario: Create a new User with PatronGroup.
     * def username = call random_string
     * def barcode = call random_numbers
@@ -192,23 +195,30 @@ Feature: Users tests
 
   Scenario: Update User's Profile Picture
 
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
+    * def id = response.settings[0].id
+    * def encryptionKey = response.settings[0].value.encryptionKey
+    * def version = response.settings[0]._version
 
-    Given path '/users/configurations/entry/' + id
+    Given path '/users/settings/entries/' + id
     And request
     """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "#(encryptionKey)"
-          }
-      """
+      {
+        "id": "#(id)",
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)",
+        },
+        "_version": "#(version)"
+      }
+    """
     When method PUT
     Then status 204
 
@@ -252,22 +262,29 @@ Feature: Users tests
 
   Scenario: Delete User. Linked Profile Picture should stay.
 
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
+    * def id = response.settings[0].id
+    * def encryptionKey = response.settings[0].value.encryptionKey
+    * def version = response.settings[0]._version
 
-    Given path '/users/configurations/entry/' + id
+    Given path '/users/settings/entries/' + id
     And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "#(encryptionKey)"
-          }
+      """
+      {
+        "id": "#(id)",
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)",
+        },
+        "_version": "#(version)"
+      }
       """
     When method PUT
     Then status 204
@@ -302,22 +319,29 @@ Feature: Users tests
 
   Scenario: Delete Profile Picture, which is already has linked to User.
 
-    Given path '/users/configurations/entry'
+    Given path '/users/settings/entries'
     When method GET
+    And param query = '(key="PROFILE_PICTURE_CONFIG")'
+    And param limit = 1
     Then status 200
-    * def id = response.id
-    * def encryptionKey = response.encryptionKey
+    * def id = response.settings[0].id
+    * def encryptionKey = response.settings[0].value.encryptionKey
+    * def version = response.settings[0]._version
 
-    Given path '/users/configurations/entry/' + id
+    Given path '/users/settings/entries/' + id
     And request
-    """
-         {
-            "id": "#(id)",
-            "configName": "PROFILE_PICTURE_CONFIG",
-            "enabled": true,
-            "enabledObjectStorage": false,
-            "encryptionKey": "#(encryptionKey)"
-          }
+      """
+      {
+        "id": "#(id)",
+        "scope": "mod-users",
+        "key": "PROFILE_PICTURE_CONFIG",
+        "value": {
+          "enabled": true,
+          "enabledObjectStorage": false,
+          "encryptionKey": "#(encryptionKey)",
+        },
+        "_version": "#(version)"
+      }
       """
     When method PUT
     Then status 204

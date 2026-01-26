@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.SharedInvoicesTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-
-import java.util.UUID;
 
 @Order(9)
 @FolioTest(team = "thunderjet", module = "mod-invoice")
@@ -56,7 +54,8 @@ public class InvoicesApiTest extends TestBaseEureka {
     FEATURE_30("set-invoice-fiscal-year-automatically", true),
     FEATURE_31("should_populate_vendor_address_on_get_voucher_by_id", true),
     FEATURE_32("voucher-numbers", true),
-    FEATURE_33("voucher-with-lines-using-same-external-account", true);
+    FEATURE_33("voucher-with-lines-using-same-external-account", true),
+    FEATURE_34("fund-code-auto-populate-invoice-lines", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -81,14 +80,12 @@ public class InvoicesApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void invoicesApiTestBeforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-invoice/init-invoice.feature");
+    SharedInvoicesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   public void invoicesApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    SharedInvoicesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
@@ -294,5 +291,11 @@ public class InvoicesApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void voucherWithLinesUsingSameExternalAccount() {
     runFeatureTest(Feature.FEATURE_33.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void fundCodeAutoPopulateInvoiceLines() {
+    runFeatureTest(Feature.FEATURE_34.getFileName());
   }
 }

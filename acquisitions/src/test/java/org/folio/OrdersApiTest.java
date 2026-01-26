@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.SharedOrdersTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-
-import java.util.UUID;
 
 @Order(3)
 @FolioTest(team = "thunderjet", module = "mod-orders")
@@ -109,7 +107,9 @@ class OrdersApiTest extends TestBaseEureka {
     FEATURE_82("validate-fund-distribution-for-zero-price", true),
     FEATURE_83("validate-pol-receipt-not-required-with-checkin-items", true),
     FEATURE_84("create-order-with-suppress-instance-from-discovery", true),
-    FEATURE_85("auto-populate-fund-code", true);
+    FEATURE_85("auto-populate-fund-code", true),
+    FEATURE_86("holding-detail", true),
+    FEATURE_87("piece-item-synchronization", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -134,14 +134,12 @@ class OrdersApiTest extends TestBaseEureka {
 
   @BeforeAll
   void ordersApiTestBeforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-orders/init-orders.feature");
+    SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   void ordersApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
@@ -661,5 +659,17 @@ class OrdersApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void autoPopulateFundCodeInPoLine() {
     runFeatureTest(Feature.FEATURE_85.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void retrieveHoldingDetailsWithPiecesAndItems() {
+    runFeatureTest(Feature.FEATURE_86.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void pieceItemSynchronization() {
+    runFeatureTest(Feature.FEATURE_87.getFileName());
   }
 }

@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.SharedOrdersTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-
-import java.util.UUID;
 
 @Order(5)
 @FolioTest(team = "thunderjet", module = "mod-orders")
@@ -53,14 +51,12 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void ordersSmokeApiTestBeforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/mod-orders/init-orders.feature");
+    SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   public void ordersSmokeApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test

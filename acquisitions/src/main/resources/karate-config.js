@@ -241,7 +241,7 @@ function fn() {
   }
   karate.repeat(100, rand);
 
-  if (env == 'dev') {
+  if (env == 'dev' || env == 'dev-shared') {
     // UI: http://localhost:3000/
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';

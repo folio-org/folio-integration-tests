@@ -16,15 +16,24 @@ Feature: Import Bibframe2 RDF - Verify Inventory instance
 
     * match response.identifiers[*].value contains '2015047302'
     * match response.identifiers[*].value contains '9781452152448 board bk'
+    * match response.identifiers[*].value contains '9783958296879'
+    * match response.identifiers[*].value contains '9783957861153 paperback'
 
     * def subjectValues = karate.map(response.subjects, function(x){ return x.value })
-    * match subjectValues == '#[6]'
+    * match subjectValues == '#[7]'
     * match subjectValues contains 'Readers (Primary)'
     * match subjectValues contains 'Middle East'
     * match subjectValues contains 'Delaware. General Assembly. House of representatives'
     * match subjectValues contains 'Wang, Jack 1972-'
     * match subjectValues contains 'Austria (AT)'
     * match subjectValues contains 'Private flying--Periodicals--Accidents--United States'
+    * def dyesSubject = karate.filter(subjectValues, function(x){ return x.startsWith('Dyes and dyeing--'); })[0]
+    * match dyesSubject != null
+    * assert dyesSubject.contains('Textile fibers--') || dyesSubject.contains('--Textile fibers')
+    * assert dyesSubject.contains('Japan--') || dyesSubject.contains('--Japan')
+    * assert dyesSubject.contains('History--') || dyesSubject.contains('--History')
+    * assert dyesSubject.contains('19th century--') || dyesSubject.contains('--19th century')
+    * assert dyesSubject.contains('Exhibitions--') || dyesSubject.contains('--Exhibitions')
 
     * def primaryContributors = karate.filter(response.contributors, function(x){ return x.name == 'Wang, Jack 1972-' && x.primary == true })
     * match primaryContributors == '#[1]'
@@ -39,5 +48,9 @@ Feature: Import Bibframe2 RDF - Verify Inventory instance
     * match nonPrimaryContributorNames contains 'International Congress on Philosophy, 2023, Vienna'
 
     * match response.publication contains { publisher: 'Chronicle Books LLC', place: 'San Francisco, CA', dateOfPublication: '[2016]', role: 'Publication' }
+    * match response.publication contains { publisher: "Kenneth Raymond Wight Associates", place: "Princeton, New Jersey", dateOfPublication: "[1965?]", role: "Production" }
+    * match response.publication contains { publisher: "Distributed by Allegro Corporation", place: "Portland, OR", dateOfPublication: "[2013]", role: "Distribution" }
+    * match response.publication contains { publisher: "Arion Press", place: "San Francisco", dateOfPublication: null, role: "Manufacture" }
+
     * def ldIdentifier = karate.filter(response.identifiers, function(x){ return x.value && x.value.startsWith('(ld)'); })[0].value
     * def resourceId = ldIdentifier.replace('(ld)', '').trim()

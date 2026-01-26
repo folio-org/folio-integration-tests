@@ -13,32 +13,6 @@ Feature: Util functions for verifying instance and work
     * def supportCheckCall = call getResourceSupportCheck { inventoryId: "#(inventoryInstanceIdFromSearchResponse)"}
     And match supportCheckCall.response == true
 
-  @verifyInstanceAndWork
-  Scenario: Search for the new instance in linked-data's mod-search and validate work and instance from mod-linked-data
-    * def expectedSearchResponse = read('samples/expected-search-response.json')
-    * def searchCall = call searchLinkedDataWork
-    * def searchResult = searchCall.response.content[0]
-    * match searchResult contains expectedSearchResponse
-    * def getWorkCall = call getResource { id: "#(searchResult.id)" }
-    * def workTitles = getWorkCall.response.resource['http://bibfra.me/vocab/lite/Work']['http://bibfra.me/vocab/library/title']
-    * def workMainTitleObj = workTitles.filter(x => x['http://bibfra.me/vocab/library/Title']).map(x => x['http://bibfra.me/vocab/library/Title'])[0]
-    * match workMainTitleObj['http://bibfra.me/vocab/library/mainTitle'][0] == 'Silent storms,'
-
-    * def getInstanceCall = call getResource { id: "#(searchResult.instances[0].id)" }
-    * def instanceTitles = getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance']['http://bibfra.me/vocab/library/title']
-    * def instanceMainTitleObj = instanceTitles.filter(x => x['http://bibfra.me/vocab/library/Title']).map(x => x['http://bibfra.me/vocab/library/Title'])[0]
-    * match instanceMainTitleObj['http://bibfra.me/vocab/library/mainTitle'][0] == 'Silent storms,'
-
-    And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata ==
-      """
-      {
-        "source": "LINKED_DATA",
-        "inventoryId": "#notnull",
-        "srsId": "#notnull"
-      }
-      """
-    And match getInstanceCall.response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.inventoryId == inventoryInstanceIdFromSearchResponse
-
   @verifyInventoryInstanceUpdated
   Scenario: Verify instance source is updated to LINKED_DATA
     * def getInventoryInstanceCall = call getInventoryInstance { id: "#(inventoryInstanceIdFromSearchResponse)" }

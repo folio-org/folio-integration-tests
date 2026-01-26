@@ -1,6 +1,6 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.SharedCrossModulesTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-
-import java.util.UUID;
 
 @Order(7)
 @FolioTest(team = "thunderjet", module = "cross-modules")
@@ -77,15 +75,13 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void crossModulesCriticalPathApiTestBeforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
-    System.setProperty("testTenantId", UUID.randomUUID().toString());
-    runFeature("classpath:thunderjet/cross-modules/init-cross-modules.feature");
+  public void crossModuleCriticalPathApiTestBeforeAll() {
+    SharedCrossModulesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
   public void crossModulesCriticalPathApiTestAfterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    SharedCrossModulesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
