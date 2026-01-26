@@ -86,6 +86,7 @@ Feature: mod-orders integration tests
       | 'linked-data.resources.import.post'                            |
       | 'linked-data.resources.rdf.get'                                |
       | 'data-export.job-profiles.item.lock.execute'                   |
+      | 'data-export.mapping-profiles.item.lock.execute'               |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
