@@ -175,4 +175,10 @@ public class ModDataExportApiTest extends TestBaseEureka {
     void exportLockedJobProfileTest() {
         runFeatureTest("export-locked-job-profile");
     }
+
+    @Test
+    @Order(25)
+    void exportLockedMappingProfileTest() {
+        runFeatureTest("export-locked-mapping-profile");
+    }
 }
