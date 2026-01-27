@@ -181,4 +181,10 @@ public class ModDataExportApiTest extends TestBaseEureka {
     void exportDeleteMappingProfileTest() {
         runFeatureTest("export-delete-mapping-profile");
     }
+  
+    @Test
+    @Order(26)
+    void exportLockedMappingProfileTest() {
+        runFeatureTest("export-locked-mapping-profile");
+    }
 }
