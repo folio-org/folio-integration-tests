@@ -98,6 +98,7 @@ function fn() {
 
     // orders
     createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
+    createOrderFromJson: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-from-json.feature'),
     updateOrder: karate.read('classpath:thunderjet/mod-orders/reusable/update-order.feature'),
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
     unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
