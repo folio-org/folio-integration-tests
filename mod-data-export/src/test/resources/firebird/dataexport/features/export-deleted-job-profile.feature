@@ -318,3 +318,28 @@ Feature: Test delete job profile
       | test-export-instance-csv-invalid.csv | csv          |
 
   # Negative scenarios (attempt to delete locked job profile), to be completed
+
+  Scenario: Verify that locked job profile cannot be deleted
+    #create job profile
+    Given path 'data-export/job-profiles'
+    And request jobProfile
+    When method POST
+    Then status 201
+    And match response.locked == false
+    And match response.lockedAt == '#notpresent'
+    And match response.lockedBy == '#notpresent'
+    And def jobProfileIdToLockAndDelete = response.id
+
+    #lock job profile
+    Given path 'data-export/job-profiles', jobProfileIdToLockAndDelete
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain' }
+    And request jobProfile
+    And set jobProfile.locked = true
+    When method PUT
+    Then status 204
+
+    #delete job profile
+    Given path 'data-export/job-profiles', jobProfileIdToLockAndDelete
+    When method DELETE
+    Then status 500
+    And match response contains 'This profile is locked. Please unlock the profile to proceed with editing/deletion.'
