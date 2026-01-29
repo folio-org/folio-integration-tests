@@ -846,8 +846,7 @@ Feature: Loans tests
     And retry until response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
     When method GET
     Then status 200
-    * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
-    * def modules = karate.filter(response.timerDescriptors, fun)
+    * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
     * assert modules.length > 0, 'Scheduler timer for age-to-lost not found after retries'
     * def currentModuleId = modules[0].moduleId
     * def timerId = modules[0].id
@@ -981,8 +980,7 @@ Feature: Loans tests
     And retry until response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
     When method GET
     Then status 200
-    * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
-    * def modules = karate.filter(response.timerDescriptors, fun)
+    * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
     * assert modules.length > 0, 'Scheduler timer for age-to-lost not found after retries'
     * def currentModuleId = modules[0].moduleId
     * def timerId = modules[0].id
