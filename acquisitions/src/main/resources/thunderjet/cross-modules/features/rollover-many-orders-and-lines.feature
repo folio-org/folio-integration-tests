@@ -37,21 +37,21 @@ Feature: Rollover many orders and lines
     * print '1. Create fiscal years and associated ledgers'
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId1), code: '#(series + "0001")', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: '#(series)' }
+    * def v = call createFiscalYear { id: '#(fyId1)', code: '#(series + "0001")', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: '#(series)' }
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId2), code: '#(series + "0002")', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: '#(series)' }
-    * def v = call createLedger { id: #(ledgerId1), fiscalYearId: #(fyId1) }
-    * def v = call createLedger { id: #(ledgerId2), fiscalYearId: #(fyId1) }
+    * def v = call createFiscalYear { id: '#(fyId2)', code: '#(series + "0002")', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: '#(series)' }
+    * def v = call createLedger { id: '#(ledgerId1)', fiscalYearId: '#(fyId1)' }
+    * def v = call createLedger { id: '#(ledgerId2)', fiscalYearId: '#(fyId1)' }
 
     # 2. Create funds and budgets
     * print '2. Create funds and budgets'
-    * def v = call createFund { id: #(fundId1), code: #(fundId1), ledgerId: #(ledgerId1) }
-    * def v = call createFund { id: #(fundId2), code: #(fundId2), ledgerId: #(ledgerId2) }
-    * def v = call createBudget { id: #(budgetId1), fundId: #(fundId1), fiscalYearId: #(fyId1), allocated: 10000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId2), fundId: #(fundId2), fiscalYearId: #(fyId1), allocated: 10000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId3), fundId: #(fundId1), fiscalYearId: #(fyId2), allocated: 10000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId4), fundId: #(fundId2), fiscalYearId: #(fyId2), allocated: 10000, status: 'Active' }
+    * def v = call createFund { id: '#(fundId1)', code: '#(fundId1)', ledgerId: '#(ledgerId1)' }
+    * def v = call createFund { id: '#(fundId2)', code: '#(fundId2)', ledgerId: '#(ledgerId2)' }
+    * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId1)', fiscalYearId: '#(fyId1)', allocated: 10000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', fiscalYearId: '#(fyId1)', allocated: 10000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId3)', fundId: '#(fundId1)', fiscalYearId: '#(fyId2)', allocated: 10000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId4)', fundId: '#(fundId2)', fiscalYearId: '#(fyId2)', allocated: 10000, status: 'Active' }
 
     # 3. Create a composite order template, save JSON to create others quickly
     * print '3. Create a composite order template, save JSON to create others quickly'

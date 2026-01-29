@@ -41,35 +41,35 @@ Feature: Rollover orders using different ledgers
     * print '1. Create fiscal years and associated ledgers'
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId1), code: '#(series + "0001")', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: '#(series)' }
+    * def v = call createFiscalYear { id: '#(fyId1)', code: '#(series + "0001")', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: '#(series)' }
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId2), code: '#(series + "0002")', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: '#(series)' }
-    * def v = call createLedger { id: #(ledgerId1), fiscalYearId: #(fyId1) }
-    * def v = call createLedger { id: #(ledgerId2), fiscalYearId: #(fyId1) }
+    * def v = call createFiscalYear { id: '#(fyId2)', code: '#(series + "0002")', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: '#(series)' }
+    * def v = call createLedger { id: '#(ledgerId1)', fiscalYearId: '#(fyId1)' }
+    * def v = call createLedger { id: '#(ledgerId2)', fiscalYearId: '#(fyId1)' }
 
     # 2. Create funds and budgets
     * print '2. Create funds and budgets'
-    * def v = call createFund { id: #(fundId1), code: #(fundId1), ledgerId: #(ledgerId1) }
-    * def v = call createFund { id: #(fundId2), code: #(fundId2), ledgerId: #(ledgerId2) }
-    * def v = call createBudget { id: #(budgetId1), fundId: #(fundId1), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId2), fundId: #(fundId2), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId3), fundId: #(fundId1), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId4), fundId: #(fundId2), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
+    * def v = call createFund { id: '#(fundId1)', code: '#(fundId1)', ledgerId: '#(ledgerId1)' }
+    * def v = call createFund { id: '#(fundId2)', code: '#(fundId2)', ledgerId: '#(ledgerId2)' }
+    * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId1)', fiscalYearId: '#(fyId1)', allocated: 1000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', fiscalYearId: '#(fyId1)', allocated: 1000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId3)', fundId: '#(fundId1)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId4)', fundId: '#(fundId2)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
 
     # 3. Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)
     * print '3. Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)'
-    * def v = call createOrder { id: #(orderId1), orderType: 'One-Time', reEncumber: false }
-    * def v = call createOrderLine { id: #(poLineId1), orderId: #(orderId1), fundId: #(fundId1) }
-    * def v = call createOrderLine { id: #(poLineId2), orderId: #(orderId1), fundId: #(fundId2) }
-    * def v = call createOrder { id: #(orderId2), orderType: 'One-Time', reEncumber: true }
-    * def v = call createOrderLine { id: #(poLineId3), orderId: #(orderId2), fundId: #(fundId1) }
-    * def v = call createOrderLine { id: #(poLineId4), orderId: #(orderId2), fundId: #(fundId2) }
+    * def v = call createOrder { id: '#(orderId1)', orderType: 'One-Time', reEncumber: false }
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(fundId1)' }
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId1)', fundId: '#(fundId2)' }
+    * def v = call createOrder { id: '#(orderId2)', orderType: 'One-Time', reEncumber: true }
+    * def v = call createOrderLine { id: '#(poLineId3)', orderId: '#(orderId2)', fundId: '#(fundId1)' }
+    * def v = call createOrderLine { id: '#(poLineId4)', orderId: '#(orderId2)', fundId: '#(fundId2)' }
 
     # 4. Open the orders
     * print '4. Open the orders'
-    * def v = call openOrder { orderId: #(orderId1) }
-    * def v = call openOrder { orderId: #(orderId2) }
+    * def v = call openOrder { orderId: '#(orderId1)' }
+    * def v = call openOrder { orderId: '#(orderId2)' }
 
     # 5. Rollover the 2 ledgers
     * print '5. Rollover the 2 ledgers'
@@ -173,44 +173,44 @@ Feature: Rollover orders using different ledgers
     * print '1. Create fiscal years and associated ledgers'
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId1), code: '#(series + "0001")', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: '#(series)' }
+    * def v = call createFiscalYear { id: '#(fyId1)', code: '#(series + "0001")', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: '#(series)' }
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId2), code: '#(series + "0002")', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: '#(series)' }
-    * def v = call createLedger { id: #(ledgerId1), fiscalYearId: #(fyId1) }
-    * def v = call createLedger { id: #(ledgerId2), fiscalYearId: #(fyId1) }
+    * def v = call createFiscalYear { id: '#(fyId2)', code: '#(series + "0002")', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: '#(series)' }
+    * def v = call createLedger { id: '#(ledgerId1)', fiscalYearId: '#(fyId1)' }
+    * def v = call createLedger { id: '#(ledgerId2)', fiscalYearId: '#(fyId1)' }
 
     # 2. Create funds and budgets
     * print '2. Create funds and budgets'
-    * def v = call createFund { id: #(fundId1), code: #(fundId1), ledgerId: #(ledgerId1) }
-    * def v = call createFund { id: #(fundId2), code: #(fundId2), ledgerId: #(ledgerId2) }
-    * def v = call createBudget { id: #(budgetId1), fundId: #(fundId1), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId2), fundId: #(fundId2), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId3), fundId: #(fundId1), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId4), fundId: #(fundId2), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
+    * def v = call createFund { id: '#(fundId1)', code: '#(fundId1)', ledgerId: '#(ledgerId1)' }
+    * def v = call createFund { id: '#(fundId2)', code: '#(fundId2)', ledgerId: '#(ledgerId2)' }
+    * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId1)', fiscalYearId: '#(fyId1)', allocated: 1000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', fiscalYearId: '#(fyId1)', allocated: 1000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId3)', fundId: '#(fundId1)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId4)', fundId: '#(fundId2)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
 
     # 3. Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)
     * print '3. Create the orders and lines (one with reEncumber:false, the other with reEncumber:true)'
-    * def v = call createOrder { id: #(orderId1), orderType: 'One-Time', reEncumber: false }
-    * def v = call createOrderLine { id: #(poLineId1), orderId: #(orderId1), fundId: #(fundId1) }
+    * def v = call createOrder { id: '#(orderId1)', orderType: 'One-Time', reEncumber: false }
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(fundId1)' }
     * table fundDistributionTable1
       | fundId  | code    | distributionType | value |
       | fundId1 | 'fund1' | 'percentage'     | 50    |
       | fundId2 | 'fund2' | 'percentage'     | 50    |
-    * def v = call createOrderLine { id: #(poLineId2), orderId: #(orderId1), fundDistribution: #(fundDistributionTable1) }
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId1)', fundDistribution: '#(fundDistributionTable1)' }
 
-    * def v = call createOrder { id: #(orderId2), orderType: 'One-Time', reEncumber: true }
-    * def v = call createOrderLine { id: #(poLineId3), orderId: #(orderId2), fundId: #(fundId1) }
+    * def v = call createOrder { id: '#(orderId2)', orderType: 'One-Time', reEncumber: true }
+    * def v = call createOrderLine { id: '#(poLineId3)', orderId: '#(orderId2)', fundId: '#(fundId1)' }
     * table fundDistributionTable2
       | fundId  | code    | distributionType | value |
       | fundId1 | 'fund1' | 'percentage'     | 50    |
       | fundId2 | 'fund2' | 'percentage'     | 50    |
-    * def v = call createOrderLine { id: #(poLineId4), orderId: #(orderId2), fundDistribution: #(fundDistributionTable2) }
+    * def v = call createOrderLine { id: '#(poLineId4)', orderId: '#(orderId2)', fundDistribution: '#(fundDistributionTable2)' }
 
     # 4. Open the orders
     * print '4. Open the orders'
-    * def v = call openOrder { orderId: #(orderId1) }
-    * def v = call openOrder { orderId: #(orderId2) }
+    * def v = call openOrder { orderId: '#(orderId1)' }
+    * def v = call openOrder { orderId: '#(orderId2)' }
 
     # 5. Rollover the 2 ledgers
     * print '5. Rollover the 2 ledgers'
