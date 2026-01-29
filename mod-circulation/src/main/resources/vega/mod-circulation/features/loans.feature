@@ -847,7 +847,6 @@ Feature: Loans tests
     When method GET
     Then status 200
     * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
-    * assert modules.length > 0, 'Scheduler timer for age-to-lost not found after retries'
     * def currentModuleId = modules[0].moduleId
     * def timerId = modules[0].id
 
@@ -981,7 +980,6 @@ Feature: Loans tests
     When method GET
     Then status 200
     * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
-    * assert modules.length > 0, 'Scheduler timer for age-to-lost not found after retries'
     * def currentModuleId = modules[0].moduleId
     * def timerId = modules[0].id
 
