@@ -2,7 +2,7 @@ Feature: Tenants
 
   Background:
     * url baseUrl
-    * configure retry = { count: 2, interval: 5000 }
+    * configure retry = { count: 5, interval: 5000 }
     * configure readTimeout = 3000000
 
   @create
@@ -27,5 +27,6 @@ Feature: Tenants
     And header Accept = 'application/json'
     And header Authorization = 'Bearer ' + keycloakMasterToken
     And header X-Okapi-Token = keycloakMasterToken
+    And retry until responseStatus == 204
     When method DELETE
     Then status 204
