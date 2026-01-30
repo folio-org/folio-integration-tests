@@ -31,8 +31,9 @@ Feature: destroy data for tenant
     And param purge = true
     And request entitlementTemplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
+    And retry until responseStatus == 200
     When method DELETE
-    * match [200, 400] contains responseStatus
+    Then status 200
 
   @deleteTenant
   Scenario: delete tenant
