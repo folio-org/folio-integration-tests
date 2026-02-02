@@ -77,7 +77,6 @@ Feature: Rollover with closed order
     Then status 204
   ## get updated po line with empty encumbrance
     Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
-    And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
     * def emptyEncumbrancePoLineUpdated = response
@@ -155,7 +154,6 @@ Feature: Rollover with closed order
   ## Check po line with empty encumbrance hasn't been modified after rollover
     * configure headers = headersAdmin
     Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
-    And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
     And match response.metadata.updatedDate == emptyEncumbrancePoLineUpdated.metadata.updatedDate
