@@ -395,3 +395,33 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
       overExpended:  '#notpresent'
     }
     """
+
+
+  Scenario: Get ledgers with specified fiscalYear parameter
+    # 1. Create another fiscal year
+    * def codePrefix = call random_string
+    * def currentYear = call getCurrentYear
+    * def newFyId = call uuid
+    * def newFyCode = codePrefix + currentYear
+    * def periodStart = currentYear + '-01-01T00:00:00Z'
+    * def periodEnd = currentYear + '-12-30T23:59:59Z'
+    * def v = callonce createFiscalYear { id: '#(newFyId)', code: '#(newFyCode)', periodStart: '#(periodStart)', periodEnd: '#(periodEnd)' }
+
+    # 2. Create ledgers for the new fiscal year
+    * def newLedgerId1 = call uuid
+    * def newLedgerId2 = call uuid
+    * table ledgersToCreate
+      | id           | fiscalYearId |
+      | newLedgerId1 | newFyId      |
+      | newLedgerId2 | newFyId      |
+    * def v = call createLedger ledgersToCreate
+
+    # 3. Fetch ledgers for the new fiscal year and verify that only newly created ledgers are returned
+    Given path 'finance/ledgers'
+    And param fiscalYear = newFyId
+    When method GET
+    Then status 200
+    And match response.ledgers == '#[2]'
+    * match response.totalRecords == 2
+    * def ledger1 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + newLedgerId1 + '")]')[0]
+    * def ledger2 = karate.jsonPath(response, '$.ledgers[*][?(@.id == "' + newLedgerId2 + '")]')[0]
