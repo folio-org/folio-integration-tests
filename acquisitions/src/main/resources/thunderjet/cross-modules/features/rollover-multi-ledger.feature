@@ -1,4 +1,4 @@
-# For MODORDERS-1388
+# For MODORDERS-1388 and MODFISTO-549
 Feature: Rollover orders using different ledgers
 
   Background:
@@ -144,6 +144,18 @@ Feature: Rollover orders using different ledgers
     And match $.transactions[*].id contains only encumbrancesIds2
     And match each $.transactions[*].amount == 1
 
+    # 10. Check the budgets
+    * print '10. Check the budgets'
+    Given path 'finance/budgets', budgetId3
+    When method GET
+    Then status 200
+    And match $.encumbered == 1
+
+    Given path 'finance/budgets', budgetId4
+    When method GET
+    Then status 200
+    And match $.encumbered == 1
+
 
   @Positive
   Scenario: Rollover open orders with 2 lines, one using different ledgers
@@ -284,3 +296,15 @@ Feature: Rollover orders using different ledgers
     And match $.totalRecords == 3
     And match $.transactions[*].id contains only encumbrancesIds2
     And match $.transactions[*].amount contains only [0.5,0.5,1.0]
+
+    # 10. Check the budgets
+    * print '10. Check the budgets'
+    Given path 'finance/budgets', budgetId3
+    When method GET
+    Then status 200
+    And match $.encumbered == 1.5
+
+    Given path 'finance/budgets', budgetId4
+    When method GET
+    Then status 200
+    And match $.encumbered == 0.5
