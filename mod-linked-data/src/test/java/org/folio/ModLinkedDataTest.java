@@ -73,4 +73,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void authorityCreate() {
     runFeatureTest("authority/authority-create.feature");
   }
+
+  @Test
+  void connectWorkToHubViaApi() {
+    runFeatureTest("hub/connect-work-to-hub-api.feature");
+  }
 }
