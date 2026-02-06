@@ -51,5 +51,5 @@ Feature: Query migration and versioning
     * def testQueryMigrated = function(x) { const q = JSON.parse(x); const _version = q._version; delete q._version; return JSON.stringify(q) === JSON.stringify({}) && /\d+/.test(_version); }
     * assert testQueryMigrated(response.fqlQuery)
     And match response.fields == []
-    And match response.warnings[0].description == 'Record type drv_loan_status is no longer available. You may be able to use simple_loans instead. For reference, your original query was {"loan_status": {"$ne":"zz"}}.'
+    And match response.warnings[0].description == 'Record type drv_loan_status is no longer available. You may be able to use simple_loans instead. For reference, your original query was {"loan_status":{"$ne":"zz"}}.'
     And match response.warnings[0].type == 'REMOVED_ENTITY'

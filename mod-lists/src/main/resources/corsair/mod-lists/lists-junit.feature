@@ -54,6 +54,7 @@ Feature: mod-lists integration tests
       | 'lists.item.update'                                         |
       | 'lists.item.versions.collection.get'                        |
       | 'lists.item.versions.item.get'                              |
+      | 'locale.item.get'                                            |
       | 'inventory-storage.alternative-title-types.collection.get'  |
       | 'inventory-storage.holdings-sources.item.post'              |
       | 'inventory-storage.holdings.item.post'                      |
@@ -73,6 +74,7 @@ Feature: mod-lists integration tests
       | 'inventory-storage.item-note-types.collection.get'          |
       | 'inventory-storage.nature-of-content-terms.collection.get'  |
       | 'tags.collection.get'                                       |
+      | 'tenant-addresses.collection.get'                           |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
