@@ -1,6 +1,5 @@
 {
-  "id": "75a6e405-1fcc-4bdb-9dbf-8286901c864a",
-  "module": "SETTINGS",
-  "configName": "TLR",
-  "value": "#(tlrConfig)"
+  "name": "generalTlr",
+  "value": "#(tlrConfig)",
+  "id": "e46c2db5-0760-4eaa-a36c-92f4e3d9e9e1"
 }

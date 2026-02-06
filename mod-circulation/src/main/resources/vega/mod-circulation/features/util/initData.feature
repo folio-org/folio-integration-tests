@@ -559,7 +559,7 @@ Feature: init data for mod-circulation
 
     * def tlrConfigEntry = read('classpath:vega/mod-circulation/features/samples/tlr-config-entry-request.json')
     * tlrConfigEntry.value = karate.toString(tlrConfigValue)
-    Given path 'configurations/entries'
+    Given path 'circulation/settings'
     And request tlrConfigEntry
     When method POST
     Then status 201
@@ -567,7 +567,7 @@ Feature: init data for mod-circulation
   @DeleteTlrConfig
   Scenario: delete TLR configuration entry
     * def tlrConfig = read('classpath:vega/mod-circulation/features/samples/tlr-config-entry-request.json')
-    Given path 'configurations', 'entries', tlrConfig.id
+    Given path 'circulation', 'settings', tlrConfig.id
     When method DELETE
     Then status 204
 
