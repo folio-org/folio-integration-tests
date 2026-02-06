@@ -1,5 +1,5 @@
 {
-  "name": "generalTlr",
-  "value": "#(tlrConfig)",
-  "id": "e46c2db5-0760-4eaa-a36c-92f4e3d9e9e1"
+  "id": "91c754c3-33b4-492c-83ba-bd7426e56021",
+  "name": "TLR",
+  "value": "#(tlrConfigValue)"
 }
