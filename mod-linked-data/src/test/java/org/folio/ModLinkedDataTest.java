@@ -78,4 +78,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void connectWorkToHubViaApi() {
     runFeatureTest("hub/connect-work-to-hub-api.feature");
   }
+
+  @Test
+  void previewAndImportHub() {
+    runFeatureTest("hub/preview-import-hub.feature");
+  }
 }
