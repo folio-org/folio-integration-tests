@@ -80,6 +80,36 @@ Feature: Order Lifecycle Management
 
 ## Test Patterns & Best Practices
 
+### 0. ⚠️ CRITICAL: Feature File Naming Convention ⚠️
+**NEVER create long feature file names - they cause Karate report generation failures and Windows path issues!**
+
+- **Maximum recommended length:** 80-90 characters for the entire filename
+- **Common mistake:** Using full TestRail case titles as filenames (TOO LONG)
+- **Consequences of long names:**
+  - Karate HTML reports generate 404 errors (report links break)
+  - Windows path limit (260 characters) exceeded during git checkout
+  - CI/CD pipeline failures
+  - Team members unable to clone/checkout repository
+
+**❌ BAD Examples (TOO LONG):**
+```
+order-encumbrance-calculated-correctly-after-canceling-paid-invoice-when-other-paid-invoices-exist-release-false.feature (130 chars)
+order-workflow-status-updated-correctly-after-receiving-pieces-when-multiple-locations-configured.feature (107 chars)
+```
+
+**✅ GOOD Examples (CONCISE):**
+```
+order-encumbrance-after-canceling-paid-invoice-with-other-invoices.feature (75 chars)
+order-workflow-status-after-receiving-pieces-multiple-locations.feature (72 chars)
+```
+
+**Best Practices for Naming:**
+- Remove redundant words: "calculated-correctly", "when", "exists", "updated-correctly"
+- Use abbreviations where clear: "with" instead of "when-another", "after" instead of "after-canceling"
+- Focus on key differentiators: the actual test scenario, not implementation details
+- Keep scenario titles descriptive in the .feature file content, but keep filenames short
+- Think about URL lengths: Karate report URLs include the full file path
+
 ### 1. TestRail Integration
 - **Bugfest-Only Requirement**: TestRail case references are only required when Java methods are stored in `*Smoke*.java`, `*Extended*.java`, or `*CriticalPath*.java` files
 - **TestRail Case Format**: Include Jira ticket and TestRail case references in comments: `# For FAT-21333, https://foliotest.testrail.io/index.php?/cases/view/354277`

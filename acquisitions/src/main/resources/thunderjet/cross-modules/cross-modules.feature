@@ -275,5 +275,19 @@ Feature: cross-module integration tests
   Scenario: Rollover orders using different ledgers
     * call read('features/rollover-multi-ledger.feature')
 
-#  Scenario: Rollover many orders and lines (disabled because it is very long)
-#    * call read('features/rollover-many-orders-and-lines.feature')
+  #  Scenario: Rollover many orders and lines (disabled because it is very long)
+  #    * call read('features/rollover-many-orders-and-lines.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice When Other Paid Invoices Exist Release False
+    * call read('features/encumbrance-after-canceling-paid-invoice-with-other-paid-invoices-release-false.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice When Other Approved Invoices Exist Release False
+    * call read('features/encumbrance-after-canceling-approved-invoice-with-other-approved-invoices-release-false.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice Release False When Another Paid Invoice Release True Exists
+    * call read('features/encumbrance-after-canceling-paid-invoice-with-mixed-release-settings.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice Release False When Another Approved Invoice Release True Exists
+    * call read('features/encumbrance-after-canceling-approved-invoice-with-mixed-release-settings.feature')
+
+

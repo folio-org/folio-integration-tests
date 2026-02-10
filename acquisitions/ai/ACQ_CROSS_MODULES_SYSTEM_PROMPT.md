@@ -499,6 +499,35 @@ function(response) {
 
 ## Test Creation Guidelines
 
+### ⚠️ CRITICAL: Feature File Naming Convention ⚠️
+**NEVER create long feature file names - they cause Karate report generation failures and Windows path issues!**
+
+- **Maximum recommended length:** 80-90 characters for the entire filename
+- **Common mistake:** Using full TestRail case titles as filenames (TOO LONG)
+- **Consequences of long names:**
+  - Karate HTML reports generate 404 errors (report links break)
+  - Windows path limit (260 characters) exceeded during git checkout
+  - CI/CD pipeline failures
+  - Team members unable to clone/checkout repository
+
+**❌ BAD Examples (TOO LONG):**
+```
+encumbrance-calculated-correctly-after-canceling-paid-invoice-when-other-paid-invoices-exist-release-false.feature (122 chars)
+encumbrance-calculated-correctly-after-canceling-approved-invoice-release-false-when-another-approved-invoice-release-true-exists.feature (140 chars)
+```
+
+**✅ GOOD Examples (CONCISE):**
+```
+encumbrance-after-canceling-paid-invoice-with-other-paid-invoices-release-false.feature (88 chars)
+encumbrance-after-canceling-approved-invoice-with-mixed-release-settings.feature (81 chars)
+```
+
+**Best Practices for Naming:**
+- Remove redundant words: "calculated-correctly", "when", "exists"
+- Use abbreviations where clear: "with" instead of "when-another", "mixed" instead of "release-false-when-another-release-true"
+- Focus on key differentiators: the actual test scenario, not implementation details
+- Keep scenario titles descriptive in the .feature file content, but keep filenames short
+
 ### Comment and Print Format
 - Use format: "N. comment text" (where N is the step number)
 - No "Step" word in comments or prints
