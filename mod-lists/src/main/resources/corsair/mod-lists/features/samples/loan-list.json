@@ -1,0 +1,9 @@
+{
+  "name": "Loan List",
+  "description": "Loan List",
+  "entityTypeId": "d6729885-f2fb-4dc7-b7d0-a865a7f461e4",
+  "fqlQuery": "{\"$and\": [{\"loans.due_date\" : {\"$gt\": \"2026-01-01\"}}]}",
+  "isActive": "true",
+  "isPrivate": "false"
+}
+

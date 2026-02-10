@@ -24,7 +24,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match $.code == "read-list.not.found"
 
   Scenario: A newly created list should return all the versions
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * call postList
 
     Given path 'lists', listId, 'versions'
@@ -194,7 +194,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
   Scenario: Versions should have the same access control as the original list
     # create original as admin
     * configure headers = testUser2Headers
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * call postList {listRequest: '#(listRequest)'}
 
     # initial version is not private, so user can access
@@ -232,7 +232,7 @@ Feature: Scenarios that are primarily focused around the list versioning feature
     And match $.code == "read-list.is.private"
 
   Scenario: Deleting a list will also delete its versions
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * call postList {listRequest: '#(listRequest)'}
 
     Given path 'lists', listId, 'versions'

@@ -1,8 +1,0 @@
-{
-  "name": "Integration User Test List",
-  "description": "Instance List",
-  "entityTypeId": "6b08439b-4f8e-4468-8046-ea620f5cfb74",
-  "fqlQuery": "{\"$and\": [{\"instance.title\" : {\"$eq\": \"Some title\"}}]}",
-  "isActive": "true",
-  "isPrivate": "false"
-}
