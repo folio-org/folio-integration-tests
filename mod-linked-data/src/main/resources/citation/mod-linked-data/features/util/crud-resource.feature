@@ -110,3 +110,19 @@ Feature: CRUD operations on a resource
     When method Get
     Then status 200
     * def response = $
+
+  @previewHub
+  Scenario: Preview HUB
+    Given path 'linked-data/hub'
+    And param hubUri = hubUri
+    When method GET
+    Then status 200
+    * def response = $
+
+  @importHub
+  Scenario: Import HUB
+    Given path 'linked-data/hub'
+    And param hubUri = hubUri
+    When method POST
+    Then status 200
+    * def response = $
