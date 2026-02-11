@@ -179,16 +179,16 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     * def newLocationId = globalLocationsId2
     * def originalLocationId = globalLocationsId
 
-    # 1: Create fund and budget
+    # 1. Create fund and budget
     * configure headers = headersAdmin
     * call createFund { 'id': '#(fundId)' }
     * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
     * configure headers = headersUser
 
-    # 2: Create order
+    # 2. Create order
     * def v = call createOrder { 'id': '#(orderId)' }
 
-    # 3: Create order line with quantity 1 and create inventory instance, holding, item
+    # 3. Create order line with quantity 1 and create inventory instance, holding, item
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -202,10 +202,10 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     When method POST
     Then status 201
 
-    # 4: Open order
+    # 4. Open order
     * def v = call openOrder { 'orderId': '#(orderId)' }
 
-    # 5: Get title ID from order line
+    # 5. Get title ID from order line
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -213,13 +213,13 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.totalRecords == 1
     * def titleId = $.titles[0].id
 
-    # 6: Get instance ID from order line
+    # 6. Get instance ID from order line
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * def instanceId = $.instanceId
 
-    # 7: Get holdings created for original location
+    # 7. Get holdings created for original location
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
@@ -229,7 +229,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     * def originalHoldingId = $.holdingsRecords[0].id
     * configure headers = headersUser
 
-    # 8: Get expected piece and verify it is in expected status with original holding ID
+    # 8. Get expected piece and verify it is in expected status with original holding ID
     Given path 'orders/pieces'
     And param query = 'titleId==' + titleId + ' AND receivingStatus==Expected'
     When method GET
@@ -240,7 +240,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.pieces[0].locationId == '#notpresent'
     * def pieceId = $.pieces[0].id
 
-    # 9: Receive piece with new location ID
+    # 9. Receive piece with new location ID
     Given path 'orders/check-in'
     And param deleteHoldings = true
     And request
@@ -268,7 +268,7 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
 
-    # 10: Verify piece is now received with new holding ID
+    # 10. Verify piece is now received with new holding ID
     Given path 'orders/pieces', pieceId
     And retry until response.receivingStatus == 'Received'
     When method GET
@@ -279,20 +279,20 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.locationId == '#notpresent'
     * def newHoldingId = $.holdingId
 
-    # 11: Verify that old holding is deleted
+    # 11. Verify that old holding is deleted
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings', originalHoldingId
     And retry until responseStatus == 404
     When method GET
 
-    # 12: Verify new holding was created in different location
+    # 12. Verify new holding was created in different location
     Given path 'holdings-storage/holdings', newHoldingId
     And retry until responseStatus == 200
     When method GET
     And match $.permanentLocationId == newLocationId
     And match $.instanceId == instanceId
 
-    # 13: Verify instance has only one holding now (the new one)
+    # 13. Verify instance has only one holding now (the new one)
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
     And retry until responseStatus == 200 && response.totalRecords == 1
