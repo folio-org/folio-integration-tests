@@ -51,7 +51,11 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
     FEATURE_26("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice", true),
     FEATURE_27("encumbrance-and-budget-updated-correctly-after-editing-fund-distribution-and-increasing-cost-with-paid-invoice", true),
     FEATURE_28("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active", true),
-    FEATURE_29("encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice", true);
+    FEATURE_29("encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice", true),
+    FEATURE_30("total-expended-no-encumbrances", true),
+    FEATURE_31("total-expended-different-fiscal-years", true),
+    FEATURE_32("total-expended-no-paid-invoices", true),
+    FEATURE_33("total-expended-different-fund-distributions", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -292,5 +296,33 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceReleasedAfterExpenseClassChangeInPolAndInvoiceWithPaidInvoice() {
     runFeatureTest(Feature.FEATURE_29.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C594371) Total Expended Amount Calculation When Order Has No Encumbrances")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void totalExpendedNoEncumbrances() {
+    runFeatureTest(Feature.FEATURE_30.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C594372) Total Expended Amount Calculation With Paid Invoices From Different Fiscal Years")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void totalExpendedDifferentFiscalYears() {
+    runFeatureTest(Feature.FEATURE_31.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C610241) Total Expended Amount Calculation With No Encumbrances And No Related Paid Invoices")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void totalExpendedNoPaidInvoices() {
+    runFeatureTest(Feature.FEATURE_32.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C605930) Total Expended Amount Calculation With Different Fund Distributions")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void totalExpendedDifferentFundDistributions() {
+    runFeatureTest(Feature.FEATURE_33.getFileName());
   }
 }

@@ -23,8 +23,8 @@ Feature: Create order line
     * def checkinItems = karate.get("checkinItems", poLine.checkinItems)
     * def createInventory = karate.get("createInventory", poLine.physical.createInventory)
     * def fundDistribution = karate.get("fundDistribution", poLine.fundDistribution)
-    * def fundId = karate.get("fundId", fundDistribution[0].fundId)
-    * def expenseClassId = karate.get("expenseClassId", fundDistribution[0].expenseClassId)
+    * def fundId = karate.get("fundId", fundDistribution.length > 0 ? fundDistribution[0].fundId : null)
+    * def expenseClassId = karate.get("expenseClassId", fundDistribution.length > 0 ? fundDistribution[0].expenseClassId : null)
     * def claimingActive = karate.get("claimingActive", poLine.claimingActive)
     * def claimingInterval = karate.get("claimingInterval", poLine.claimingInterval)
     * def suppressInstanceFromDiscovery = karate.get("suppressInstanceFromDiscovery", null)
@@ -32,9 +32,9 @@ Feature: Create order line
 
     * set poLine.id = id
     * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.fundDistribution[0].expenseClassId = expenseClassId
+    * if (fundId != null) poLine.fundDistribution[0].fundId = fundId
+    * if (fundId != null) poLine.fundDistribution[0].code = fundId
+    * if (expenseClassId != null) poLine.fundDistribution[0].expenseClassId = expenseClassId
     * set poLine.cost.listUnitPrice = listUnitPrice
     * set poLine.cost.listUnitPriceElectronic = listUnitPriceElectronic
     * set poLine.cost.poLineEstimatedPrice = listUnitPrice
