@@ -1,4 +1,5 @@
 # For MODORDERS-1366, https://foliotest.testrail.io/index.php?/cases/view/844840
+@parallel=false
 Feature: Piece received via receiving full-screen in a new holding can be edited
 
   Background:
@@ -168,3 +169,300 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     And match $.totalRecords == 1
     And match $.items[0].barcode == testBarcode
     And match $.items[0].status.name == 'In process'
+
+  @Positive
+  Scenario: Piece received via receiving full-screen in a new holding can be edited
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def newLocationId = globalLocationsId2
+    * def originalLocationId = globalLocationsId
+
+    # 1: Create fund and budget
+    * configure headers = headersAdmin
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * configure headers = headersUser
+
+    # 2: Create order
+    * def v = call createOrder { 'id': '#(orderId)' }
+
+    # 3: Create order line with quantity 1 and create inventory instance, holding, item
+    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * set poLine.id = poLineId
+    * set poLine.purchaseOrderId = orderId
+    * set poLine.physical.createInventory = 'Instance, Holding'
+    * set poLine.cost.quantityPhysical = 1
+    * set poLine.fundDistribution[0].fundId = fundId
+    * set poLine.locations[0].locationId = originalLocationId
+    * set poLine.locations[0].quantityPhysical = 1
+    Given path 'orders/order-lines'
+    And request poLine
+    When method POST
+    Then status 201
+
+    # 4: Open order
+    * def v = call openOrder { 'orderId': '#(orderId)' }
+
+    # 5: Get title ID from order line
+    Given path 'orders/titles'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def titleId = $.titles[0].id
+
+    # 6: Get instance ID from order line
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def instanceId = $.instanceId
+
+    # 7: Get holdings created for original location
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def originalHoldingId = $.holdingsRecords[0].id
+    * configure headers = headersUser
+
+    # 8: Get expected piece and verify it is in expected status with original holding ID
+    Given path 'orders/pieces'
+    And param query = 'titleId==' + titleId + ' AND receivingStatus==Expected'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.pieces[0].receivingStatus == 'Expected'
+    And match $.pieces[0].holdingId == originalHoldingId
+    And match $.pieces[0].locationId == '#notpresent'
+    * def pieceId = $.pieces[0].id
+
+    # 9: Receive piece with new location ID
+    Given path 'orders/check-in'
+    And param deleteHoldings = true
+    And request
+    """
+    {
+      toBeCheckedIn: [
+        {
+          checkedIn: 1,
+          checkInPieces: [
+            {
+              id: '#(pieceId)',
+              itemStatus: 'In process',
+              displayOnHolding: false,
+              locationId: '#(newLocationId)',
+              createItem: true
+            }
+          ],
+          poLineId: '#(poLineId)'
+        }
+      ],
+      totalRecords: 1
+    }
+    """
+    When method POST
+    Then status 200
+    And match $.receivingResults[0].processedSuccessfully == 1
+
+    # 10: Verify piece is now received with new holding ID
+    Given path 'orders/pieces', pieceId
+    And retry until response.receivingStatus == 'Received'
+    When method GET
+    Then status 200
+    And match $.receivingStatus == 'Received'
+    And match $.holdingId == '#present'
+    And match $.holdingId != originalHoldingId
+    And match $.locationId == '#notpresent'
+    * def newHoldingId = $.holdingId
+
+    # 11: Verify that old holding is deleted
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', originalHoldingId
+    And retry until responseStatus == 404
+    When method GET
+
+    # 12: Verify new holding was created in different location
+    Given path 'holdings-storage/holdings', newHoldingId
+    And retry until responseStatus == 200
+    When method GET
+    And match $.permanentLocationId == newLocationId
+    And match $.instanceId == instanceId
+
+    # 13: Verify instance has only one holding now (the new one)
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    And retry until responseStatus == 200 && response.totalRecords == 1
+    When method GET
+    Then status 200
+    * configure headers = headersUser
+
+
+#  @Positive
+#  Scenario: Receiving Piece To New Holding With Delete Holdings Removes Empty Original Holding
+#    * def fundId = call uuid
+#    * def budgetId = call uuid
+#    * def orderId = call uuid
+#    * def poLineId = call uuid
+#    * def newLocationId = globalLocationsId2
+#    * def originalLocationId = globalLocationsId
+#
+#    # 1. Create fund and budget
+#    * configure headers = headersAdmin
+#    * call createFund { 'id': '#(fundId)' }
+#    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+#    * configure headers = headersUser
+#
+#    # 2. Create order
+#    * def v = call createOrder { 'id': '#(orderId)' }
+#
+#    # 3. Create order line with quantity 1 and create inventory instance and holding
+#    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+#    * set poLine.id = poLineId
+#    * set poLine.purchaseOrderId = orderId
+#    * set poLine.physical.createInventory = 'Instance, Holding, Item'
+#    * set poLine.cost.quantityPhysical = 1
+#    * set poLine.fundDistribution[0].fundId = fundId
+#    * set poLine.locations[0].locationId = originalLocationId
+#    * set poLine.locations[0].quantityPhysical = 1
+#    Given path 'orders/order-lines'
+#    And request poLine
+#    When method POST
+#    Then status 201
+#
+#    # 4. Open order
+#    * def v = call openOrder { 'orderId': '#(orderId)' }
+#
+#    # 5. Get title ID from order line
+#    Given path 'orders/titles'
+#    And param query = 'poLineId==' + poLineId
+#    When method GET
+#    Then status 200
+#    And match $.totalRecords == 1
+#    * def titleId = $.titles[0].id
+#
+#    # 6. Get instance ID from order line
+#    Given path 'orders/order-lines', poLineId
+#    When method GET
+#    Then status 200
+#    * def instanceId = $.instanceId
+#
+#    # 7. Get holdings created for original location
+#    * configure headers = headersAdmin
+#    Given path 'holdings-storage/holdings'
+#    And param query = 'instanceId==' + instanceId
+#    Then retry until responseStatus == 200
+#    And retry until response.totalRecords == 1
+#    When method GET
+#    Then status 200
+#    * def originalHoldingId = $.holdingsRecords[0].id
+#
+#    # 8. Get expected piece and verify it is in expected status with original holding ID
+#    Given path 'orders/pieces'
+#    And param query = 'titleId==' + titleId + ' AND receivingStatus==Expected'
+#    When method GET
+#    Then status 200
+#    And match $.totalRecords == 1
+#    And match $.pieces[0].receivingStatus == 'Expected'
+#    And match $.pieces[0].holdingId == originalHoldingId
+#    And match $.pieces[0].locationId == '#notpresent'
+#    * def pieceId = $.pieces[0].id
+#
+#    # 9. Receive piece with new location ID and deleteHoldings set to true
+#    Given path 'orders/check-in'
+#    And param deleteHoldings = true
+#    And request
+#    """
+#    {
+#      toBeCheckedIn: [
+#        {
+#          checkedIn: 1,
+#          checkInPieces: [
+#            {
+#              id: '#(pieceId)',
+#              itemStatus: 'In process',
+#              displayOnHolding: false,
+#              locationId: '#(newLocationId)',
+#              createItem: true
+#            }
+#          ],
+#          poLineId: '#(poLineId)'
+#        }
+#      ],
+#      totalRecords: 1
+#    }
+#    """
+#    When method POST
+#    Then status 200
+#    And match $.receivingResults[0].processedSuccessfully == 1
+#
+#    # 11. Verify piece is now received with new holding ID and new item
+#    * def isPieceReceivedWithNewHolding =
+#    """
+#    function(response) {
+#      return response.receivingStatus == 'Received' &&
+#      response.holdingId != null && response.holdingId != originalHoldingId &&
+#      response.itemId != null &&
+#      response.locationId == null;
+#    }
+#    """
+#    Given path 'orders/pieces', pieceId
+#    And retry until isPieceReceivedWithNewHolding(response)
+#    When method GET
+#    Then status 200
+#    * def newHoldingId = $.holdingId
+#    * def newItemId = $.itemId
+#
+#    # 12. Verify new holding was created in different location
+#    * configure headers = headersAdmin
+#    * def isNewHoldingCreated =
+#    """
+#    function(response) {
+#      return response.permanentLocationId == newLocationId &&
+#      response.instanceId == instanceId;
+#    }
+#    """
+#    Given path 'holdings-storage/holdings', newHoldingId
+#    And retry until responseStatus == 200
+#    And retry until isNewHoldingCreated(response)
+#    When method GET
+#    Then status 200
+#
+#    # 13. Verify original empty holding was deleted
+#    Given path 'holdings-storage/holdings', originalHoldingId
+#    And retry until responseStatus == 404
+#    When method GET
+#    Then status 404
+#
+#    # 14. Verify instance now has only one holding (the new one)
+#    * def isOnlyNewHoldingPresent =
+#    """
+#    function(response) {
+#      return response.totalRecords == 1 &&
+#      response.holdingsRecords[0].id == newHoldingId;
+#    }
+#    """
+#    Given path 'holdings-storage/holdings'
+#    And param query = 'instanceId==' + instanceId
+#    Then retry until responseStatus == 200
+#    And retry until isOnlyNewHoldingPresent(response)
+#    When method GET
+#    Then status 200
+#
+#    # 15. Verify new item was created in new holding
+#    * def isNewItemCreated =
+#    """
+#    function(response) {
+#      return response.holdingsRecordId == newHoldingId &&
+#      response.status.name == 'In process';
+#    }
+#    """
+#    Given path 'inventory/items', newItemId
+#    And retry until responseStatus == 200
+#    And retry until isNewItemCreated(response)
+#    When method GET
+#    Then status 200
+
