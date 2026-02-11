@@ -27,7 +27,7 @@ Feature: destroy data for tenant
     * def applicationIds = response || response.entitlements ? karate.map(response.entitlements, x => x.applicationId) : []
     * if (applicationIds && applicationIds.length > 0) karate.call('classpath:common/eureka/destroy-data.feature@performDeleteEntitlement', { testTenantId: testTenantId, applicationIds: applicationIds })
 
-  # This is needed to make DELETE /entitlements because it's not idempotent and fails on empty applicationIds
+  # This is needed to make DELETE /entitlements idempotent because it's not at the moment and fails on empty applicationIds
   @ignore
   @performDeleteEntitlement
   Scenario: perform delete entitlement
