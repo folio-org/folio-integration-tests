@@ -28,25 +28,25 @@ public class ModBulkOperationsApiTest extends TestBaseEureka {
         runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
-//    @Test
-//    public void testUsers() {
-//        runFeatureTest("users.feature");
-//    }
-//
-//    @Test
-//    public void testHoldings() {
-//        runFeatureTest("holdings.feature");
-//    }
-//
-//    @Test
-//    public void testItems() {
-//        runFeatureTest("items.feature");
-//    }
-//
-//    @Test
-//    public void testInstances() {
-//        runFeatureTest("instances.feature");
-//    }
+    @Test
+    public void testUsers() {
+        runFeatureTest("users.feature");
+    }
+
+    @Test
+    public void testHoldings() {
+        runFeatureTest("holdings.feature");
+    }
+
+    @Test
+    public void testItems() {
+        runFeatureTest("items.feature");
+    }
+
+    @Test
+    public void testInstances() {
+        runFeatureTest("instances.feature");
+    }
 
     @Test
     void testEcsSetup() {
