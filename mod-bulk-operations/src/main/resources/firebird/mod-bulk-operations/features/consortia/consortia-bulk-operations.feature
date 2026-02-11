@@ -18,8 +18,7 @@ Feature: mod-consortia and mod-bulk-operations integration tests
       | 'mod-bulk-operations'       |
 
     * table userPermissions
-      | name                                                               |
-      | 'consortia.all'                                                    |
+      | name                                                      |
       | 'addresstypes.item.post'                                  |
       | 'bulk-edit.item.post'                                     |
       | 'bulk-edit.start.item.post'                               |
@@ -83,6 +82,15 @@ Feature: mod-consortia and mod-bulk-operations integration tests
       | 'users.item.post'                                         |
       | 'users.item.put'                                          |
       | 'source-storage.stream.source-records.collection.get'     |
+      | 'user-tenants.collection.get'                             |
+      | 'user-tenants.collection.post'                            |
+      | 'consortium-search.holdings.batch.collection.get'         |
+      | 'consortium-search.items.batch.collection.get'            |
+      | 'consortium-search.instances.batch.collection.get'        |
+      | 'consortia.all'                                           |
+      | 'user-tenants.item.post'                                  |
+
+
 
     # define consortium
     * def consortiumId = '111841e3-e6fb-4191-8fd8-5674a5107c31'
