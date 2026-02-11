@@ -47,4 +47,9 @@ public class ModBulkOperationsApiTest extends TestBaseEureka {
     public void testInstances() {
         runFeatureTest("instances.feature");
     }
+
+    @Test
+    void testEcsSetup() {
+        runFeatureTest("consortia/consortia-bulk-operations");
+    }
 }
