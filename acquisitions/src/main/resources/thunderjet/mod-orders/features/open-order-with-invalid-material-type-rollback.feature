@@ -218,7 +218,7 @@ Feature: Open Order With Invalid Material Type Rollback
     Then status 500
     And match response.errors[0].code contains 'itemCreationFailed'
 
-    # 7. Verify InstanceId Was Set On Order Line (because instance was matched)
+    # 7. Verify InstanceId Was Not Set On Order Line (because Inventory operations failed)
     * configure headers = headersUser
     Given path 'orders/order-lines', poLineId2
     When method GET
