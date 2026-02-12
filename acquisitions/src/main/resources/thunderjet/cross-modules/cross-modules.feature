@@ -275,5 +275,20 @@ Feature: cross-module integration tests
   Scenario: Rollover orders using different ledgers
     * call read('features/rollover-multi-ledger.feature')
 
-#  Scenario: Rollover many orders and lines (disabled because it is very long)
-#    * call read('features/rollover-many-orders-and-lines.feature')
+  #  Scenario: Rollover many orders and lines (disabled because it is very long)
+  #    * call read('features/rollover-many-orders-and-lines.feature')
+
+  Scenario: Total Expended Amount Calculation When Order Has No Encumbrances
+    * call read('features/total-expended-no-encumbrances.feature')
+
+  Scenario: Total Expended Amount Calculation With Paid Invoices From Different Fiscal Years
+    * call read('features/total-expended-different-fiscal-years.feature')
+
+  Scenario: Total Expended Amount Calculation With No Encumbrances And No Related Paid Invoices
+    * call read('features/total-expended-no-paid-invoices.feature')
+
+  Scenario: Total Expended Amount Calculation With Different Fund Distributions
+    * call read('features/total-expended-different-fund-distributions.feature')
+
+  Scenario: Total Expended Amount Calculation With Fund Distribution And Encumbrance
+    * call read('features/total-expended-with-fund-distribution-and-encumbrance.feature')
