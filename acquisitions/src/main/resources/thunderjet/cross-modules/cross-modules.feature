@@ -292,4 +292,3 @@ Feature: cross-module integration tests
 
   Scenario: Total Expended Amount Calculation With Fund Distribution And Encumbrance
     * call read('features/total-expended-with-fund-distribution-and-encumbrance.feature')
-

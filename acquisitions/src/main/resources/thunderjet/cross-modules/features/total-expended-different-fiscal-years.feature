@@ -30,7 +30,6 @@ Feature: Total Expended Amount Calculation With Paid Invoices From Different Fis
     * def invoice1LineId = call uuid
     * def invoice2Id = call uuid
     * def invoice2LineId = call uuid
-    * def randomSuffix = callonce randomMillis
     * def rolloverId = call uuid
 
     # 1. Create Two Consecutive Fiscal Years With Identical Unique Letter Part
@@ -79,13 +78,13 @@ Feature: Total Expended Amount Calculation With Paid Invoices From Different Fis
 
     # 7. Perform Rollover For Ledger
     * print '7. Perform Rollover For Ledger'
-    * def budgetsRollover = [{ rolloverAllocation: true, adjustAllocation: 0, rolloverBudgetValue: 'None', setAllowances: false }]
+    * def budgetsRollover = [{ rolloverAllocation: true, adjustAllocation: 0, rolloverBudgetValue: 'None', setAllowances: false, addAvailableTo: 'Available' }]
     * def encumbrancesRollover = [{ orderType: 'Ongoing', basedOn: 'InitialAmount' }, { orderType: 'Ongoing-Subscription', basedOn: 'InitialAmount' }, { orderType: 'One-time', basedOn: 'InitialAmount' }]
-    * def v = call rollover { id: "#(rolloverId)", ledgerId: "#(ledgerId)", fromFiscalYearId: "#(fiscalYear1Id)", toFiscalYearId: "#(fiscalYear2Id)", budgetsRollover: '#(budgetsRollover)', encumbrancesRollover: '#(encumbrancesRollover)' }
+    * def v = call rollover { id: "#(rolloverId)", ledgerId: "#(ledgerId)", fromFiscalYearId: "#(fiscalYear1Id)", toFiscalYearId: "#(fiscalYear2Id)", restrictEncumbrance: true, restrictExpenditures: true, needCloseBudgets: true, rolloverType: 'Commit', budgetsRollover: '#(budgetsRollover)', encumbrancesRollover: '#(encumbrancesRollover)' }
 
     # 8. Update FY1 Period End To Yesterday And FY2 Period Begin To Today To Make FY2 Current
     * print '8. Update FY1 Period End To Yesterday And FY2 Period Begin To Today To Make FY2 Current'
-    * def v = call shiftFiscalYearPeriods { fromFiscalYearId: "#(fiscalYear1Id)", toFiscalYearId: "#(fiscalYear2Id)" }
+    * def v = call shiftFiscalYearPeriods { fromFiscalYearId: "#(fiscalYear1Id)", toFiscalYearId: "#(fiscalYear2Id)", series: "FYTB" }
 
     # 9. Create Invoice 2 With Release Encumbrance Option Active
     * print '9. Create Invoice 2 With Release Encumbrance Option Active'
@@ -112,6 +111,3 @@ Feature: Total Expended Amount Calculation With Paid Invoices From Different Fis
     And retry until validateOrderTotals(response)
     When method GET
     Then status 200
-
-
-

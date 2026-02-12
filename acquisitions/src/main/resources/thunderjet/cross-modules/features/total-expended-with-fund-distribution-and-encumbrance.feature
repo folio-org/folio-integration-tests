@@ -84,5 +84,3 @@ Feature: Total Expended Amount Calculation With Fund Distribution And Encumbranc
     And retry until validateOrderTotals(response)
     When method GET
     Then status 200
-
-

@@ -70,4 +70,3 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka {
     runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 }
-

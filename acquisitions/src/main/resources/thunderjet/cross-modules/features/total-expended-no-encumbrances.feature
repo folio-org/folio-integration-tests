@@ -36,24 +36,24 @@ Feature: Total Expended Amount Calculation When Order Has No Encumbrances
     * def invoice2LineId = call uuid
     * def invoice3Id = call uuid
     * def invoice3LineId = call uuid
-    * def randomSuffix = callonce randomMillis
     * def rolloverId = call uuid
 
     # 1. Create Two Consecutive Fiscal Years With Identical Unique Letter Part
     * def currentYear = new Date().getFullYear()
-    * def nextYear = currentYear + 1
-    * def fiscalYearCode1 = 'FYTC' + currentYear
-    * def fiscalYearCode2 = 'FYTC' + nextYear
-    * def fiscalYearCode3 = 'FYTD' + currentYear
+    * def prevYear = currentYear - 1
+    * def yesterday = call getYesterday
 
-    # 1. Create First Fiscal Year With Period Including Today
-    * print '1. Create First Fiscal Year With Period Including Today'
-    * def fy1StartDate = currentYear + '-01-01T00:00:00.000Z'
-    * def fy1EndDate = currentYear + '-12-31T23:59:59.999Z'
-    * def fy2StartDate = nextYear + '-01-01T00:00:00.000Z'
-    * def fy2EndDate = nextYear + '-12-31T23:59:59.999Z'
-    * def v = call createFiscalYear { id: "#(fiscalYear1Id)", code: "#(fiscalYearCode1)", periodStart: "#(fy1StartDate)", periodEnd: "#(fy1EndDate)" }
-    * def v = call createFiscalYear { id: "#(fiscalYear2Id)", code: "#(fiscalYearCode2)", periodStart: "#(fy2StartDate)", periodEnd: "#(fy2EndDate)" }
+    # 1. Create First Fiscal Year In Past Year
+    * print '1. Create First Fiscal Year In Past Year'
+    * def fiscalYearCode1 = 'ZA' + prevYear
+    * def fy1StartDate = prevYear + '-01-01T00:00:00.000Z'
+    * def fy1EndDate = prevYear + '-12-31T23:59:59.999Z'
+    * def v = call createFiscalYear { id: "#(fiscalYear1Id)", code: "#(fiscalYearCode1)", periodStart: "#(fy1StartDate)", periodEnd: "#(fy1EndDate)", series: "ZA" }
+
+    * def fiscalYearCode2 = 'ZA' + currentYear
+    * def fy2StartDate = yesterday + 'T00:00:00.000Z'
+    * def fy2EndDate = currentYear + '-12-31T23:59:59.999Z'
+    * def v = call createFiscalYear { id: "#(fiscalYear2Id)", code: "#(fiscalYearCode2)", periodStart: "#(fy2StartDate)", periodEnd: "#(fy2EndDate)", series: "ZA" }
 
     # 2. Create Ledger A Related To First Fiscal Year
     * print '2. Create Ledger A Related To First Fiscal Year'
@@ -73,7 +73,7 @@ Feature: Total Expended Amount Calculation When Order Has No Encumbrances
     # 5. Create Invoice 1, Specify Fund Distribution With Fund A
     * print '5. Create Invoice 1, Specify Fund Distribution With Fund A'
     * def v = call createInvoice { id: "#(invoice1Id)", fiscalYearId: "#(fiscalYear1Id)" }
-    * def v = call createInvoiceLine { invoiceLineId: "#(invoice1LineId)", invoiceId: "#(invoice1Id)", poLineId: "#(orderLineId)", fundId: "#(fundAId)", total: 1.00, releaseEncumbrance: true }
+    * def v = call createInvoiceLine { invoiceLineId: "#(invoice1LineId)", invoiceId: "#(invoice1Id)", poLineId: "#(orderLineId)", fundId: "#(fundAId)", total: 1.00, releaseEncumbrance: false }
 
     # 6. Approve And Pay Invoice 1
     * print '6. Approve And Pay Invoice 1'
@@ -86,51 +86,48 @@ Feature: Total Expended Amount Calculation When Order Has No Encumbrances
 
     # 7. Perform Rollover For Ledger
     * print '7. Perform Rollover For Ledger'
-    * def budgetsRollover = [{ rolloverAllocation: true, adjustAllocation: 0, rolloverBudgetValue: 'None', setAllowances: false }]
+    * def budgetsRollover = [{ rolloverAllocation: true, adjustAllocation: 0, rolloverBudgetValue: 'None', setAllowances: false, addAvailableTo: 'Available' }]
     * def encumbrancesRollover = [{ orderType: 'Ongoing', basedOn: 'InitialAmount' }, { orderType: 'Ongoing-Subscription', basedOn: 'InitialAmount' }, { orderType: 'One-time', basedOn: 'InitialAmount' }]
-    * def v = call rollover { id: "#(rolloverId)", ledgerId: "#(ledgerId)", fromFiscalYearId: "#(fiscalYear1Id)", toFiscalYearId: "#(fiscalYear2Id)", budgetsRollover: '#(budgetsRollover)', encumbrancesRollover: '#(encumbrancesRollover)' }
+    * def v = call rollover { id: "#(rolloverId)", ledgerId: "#(ledgerId)", fromFiscalYearId: "#(fiscalYear1Id)", toFiscalYearId: "#(fiscalYear2Id)", restrictEncumbrance: true, restrictExpenditures: true, needCloseBudgets: true, rolloverType: 'Commit', budgetsRollover: '#(budgetsRollover)', encumbrancesRollover: '#(encumbrancesRollover)' }
 
-    # 8. Update FY1 Period End To Yesterday And FY2 Period Begin To Today To Make FY2 Current
-    * print '8. Update FY1 Period End To Yesterday And FY2 Period Begin To Today To Make FY2 Current'
-    * def v = call shiftFiscalYearPeriods { fromFiscalYearId: "#(fiscalYear1Id)", toFiscalYearId: "#(fiscalYear2Id)" }
-
-    # 9. Create Credit Invoice 2 For Order, Specify Fund Distribution With Fund A
-    * print '9. Create Credit Invoice 2 For Order, Specify Fund Distribution With Fund A'
+    # 8. Create Credit Invoice 2 For Order, Specify Fund Distribution With Fund A
+    * print '8. Create Credit Invoice 2 For Order, Specify Fund Distribution With Fund A'
     * def v = call createInvoice { id: "#(invoice2Id)", fiscalYearId: "#(fiscalYear2Id)" }
-    * def v = call createInvoiceLine { invoiceLineId: "#(invoice2LineId)", invoiceId: "#(invoice2Id)", poLineId: "#(orderLineId)", fundId: "#(fundAId)", total: -1.00, releaseEncumbrance: true }
+    * def v = call createInvoiceLine { invoiceLineId: "#(invoice2LineId)", invoiceId: "#(invoice2Id)", poLineId: "#(orderLineId)", fundId: "#(fundAId)", total: -1.00, releaseEncumbrance: false }
 
-    # 10. Approve And Pay Invoice 2 For Current / Second Fiscal Year
-    * print '10. Approve And Pay Invoice 2 For Current / Second Fiscal Year'
+    # 9. Approve And Pay Invoice 2 For Current / Second Fiscal Year
+    * print '9. Approve And Pay Invoice 2 For Current / Second Fiscal Year'
     * def v = call approveInvoice { invoiceId: "#(invoice2Id)" }
     * def v = call payInvoice { invoiceId: "#(invoice2Id)" }
 
-    # 11. Create Another Fiscal Year With Different Unique Letter Part
-    * print '11. Create Another Fiscal Year With Different Unique Letter Part'
+    # 10. Create Another Fiscal Year With Different Unique Letter Part
+    * print '10. Create Another Fiscal Year With Different Unique Letter Part'
+    * def fiscalYearCode3 = 'FYZ' + currentYear
     * def fy3StartDate = currentYear + '-01-01T00:00:00.000Z'
     * def fy3EndDate = currentYear + '-12-31T23:59:59.999Z'
-    * def v = call createFiscalYear { id: "#(fiscalYear3Id)", code: "#(fiscalYearCode3)", periodStart: "#(fy3StartDate)", periodEnd: "#(fy3EndDate)" }
+    * def v = call createFiscalYear { id: "#(fiscalYear3Id)", code: "#(fiscalYearCode3)", periodStart: "#(fy3StartDate)", periodEnd: "#(fy3EndDate)", series: "FYZ" }
 
-    # 12. Create Ledger B Related To Created Fiscal Year
-    * print '12. Create Ledger B Related To Created Fiscal Year'
+    # 11. Create Ledger B Related To Created Fiscal Year
+    * print '11. Create Ledger B Related To Created Fiscal Year'
     * def v = call createLedger { id: "#(ledgerBId)", fiscalYearId: "#(fiscalYear3Id)" }
 
-    # 13. Create Fund B With Budget Having Money Allocation
-    * print '13. Create Fund B With Budget Having Money Allocation'
+    # 12. Create Fund B With Budget Having Money Allocation
+    * print '12. Create Fund B With Budget Having Money Allocation'
     * def v = call createFund { id: "#(fundBId)", ledgerId: "#(ledgerBId)", name: "Fund B" }
     * def v = call createBudget { id: "#(budgetBId)", fundId: "#(fundBId)", fiscalYearId: "#(fiscalYear3Id)", allocated: 100, status: "Active" }
 
-    # 14. Create Invoice 3 For Order, Specify Fund Distribution With Fund B
-    * print '14. Create Invoice 3 For Order, Specify Fund Distribution With Fund B'
+    # 13. Create Invoice 3 For Order, Specify Fund Distribution With Fund B
+    * print '13. Create Invoice 3 For Order, Specify Fund Distribution With Fund B'
     * def v = call createInvoice { id: "#(invoice3Id)", fiscalYearId: "#(fiscalYear3Id)" }
-    * def v = call createInvoiceLine { invoiceLineId: "#(invoice3LineId)", invoiceId: "#(invoice3Id)", poLineId: "#(orderLineId)", fundId: "#(fundBId)", total: 1.00, releaseEncumbrance: true }
+    * def v = call createInvoiceLine { invoiceLineId: "#(invoice3LineId)", invoiceId: "#(invoice3Id)", poLineId: "#(orderLineId)", fundId: "#(fundBId)", total: 1.00, releaseEncumbrance: false }
 
-    # 15. Approve And Pay Invoice 3
-    * print '15. Approve And Pay Invoice 3'
+    # 14. Approve And Pay Invoice 3
+    * print '14. Approve And Pay Invoice 3'
     * def v = call approveInvoice { invoiceId: "#(invoice3Id)" }
     * def v = call payInvoice { invoiceId: "#(invoice3Id)" }
 
-    # 16. Navigate To Order Details Pane And Verify Total Expended
-    * print '16. Navigate To Order Details Pane And Verify Total Expended'
+    # 15. Navigate To Order Details Pane And Verify Total Expended
+    * print '15. Navigate To Order Details Pane And Verify Total Expended'
     * def validateOrderTotals =
     """
     function(response) {
@@ -144,6 +141,3 @@ Feature: Total Expended Amount Calculation When Order Has No Encumbrances
     And retry until validateOrderTotals(response)
     When method GET
     Then status 200
-
-
-

@@ -94,5 +94,3 @@ Feature: Total Expended Amount Calculation With No Encumbrances And No Related P
     And retry until validateOrderTotals(response)
     When method GET
     Then status 200
-
-
