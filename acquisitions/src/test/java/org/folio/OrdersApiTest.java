@@ -109,7 +109,8 @@ class OrdersApiTest extends TestBaseEureka {
     FEATURE_84("create-order-with-suppress-instance-from-discovery", true),
     FEATURE_85("auto-populate-fund-code", true),
     FEATURE_86("holding-detail", true),
-    FEATURE_87("piece-item-synchronization", true);
+    FEATURE_87("piece-item-synchronization", true),
+    FEATURE_88("open-order-with-invalid-material-type-rollback", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -671,5 +672,11 @@ class OrdersApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceItemSynchronization() {
     runFeatureTest(Feature.FEATURE_87.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void openOrderWithInvalidMaterialTypeRollback() {
+    runFeatureTest(Feature.FEATURE_88.getFileName());
   }
 }

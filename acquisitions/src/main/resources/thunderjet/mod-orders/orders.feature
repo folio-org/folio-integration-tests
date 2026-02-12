@@ -297,3 +297,6 @@ Feature: mod-orders integration tests
 
   Scenario: Validate fund distribution for zero price
     * call read('features/validate-fund-distribution-for-zero-price.feature')
+
+  Scenario: Open order with invalid material type rollback
+    * call read('features/open-order-with-invalid-material-type-rollback.feature')
