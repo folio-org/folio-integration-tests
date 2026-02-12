@@ -91,7 +91,7 @@ Feature: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice
     """
     function(response) {
       var transaction = response.transactions[0];
-      return transaction.amount == -100.00 &&
+      return transaction.amount == 100.00 &&
              transaction.encumbrance.status == 'Unreleased' &&
              transaction.encumbrance.initialAmountEncumbered == 100.00 &&
              transaction.encumbrance.amountAwaitingPayment == 0.00 &&

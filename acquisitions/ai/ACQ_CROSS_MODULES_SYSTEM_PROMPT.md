@@ -544,6 +544,36 @@ encumbrance-after-canceling-approved-invoice-with-mixed-release-settings.feature
 - Never assert on order-lines fund distributions (they don't hold amounts)
 - Avoid checking secondary fields like IDs or nulls unless specifically required
 
+### ⚠️ CRITICAL: TestRail Bracket Notation - Transaction Amounts ⚠️
+**NEVER interpret brackets in TestRail as negative numbers!**
+
+When TestRail case steps show transaction amounts in brackets like **($100.00)** or **(amount)**, this is a **visual UI convention only** to indicate that the budget will be reduced. The actual transaction amount field should **always be positive**.
+
+**❌ WRONG Interpretation:**
+```javascript
+// TestRail shows: "Amount" - ($100.00)
+transaction.amount == -100.00  // ❌ WRONG! Never use negative
+```
+
+**✅ CORRECT Interpretation:**
+```javascript
+// TestRail shows: "Amount" - ($100.00)  
+transaction.amount == 100.00  // ✅ CORRECT! Always positive
+```
+
+**Examples from TestRail:**
+- **"Amount" - ($10.00)** → `transaction.amount == 10.00`
+- **"Amount" - ($100.00)** → `transaction.amount == 100.00`
+- **"Awaiting payment" = ($20.00)** → `amountAwaitingPayment == 20.00` (absolute value)
+
+**Why brackets are used in TestRail:**
+- Visual indicator for QA testers that this amount reduces available budget
+- UI convention from accounting software (debit/credit notation)
+- Does NOT represent negative values in API responses
+- All transaction amounts in FOLIO APIs are stored as positive values
+
+**Rule:** When you see brackets in TestRail expected results, treat them as **absolute positive values**. The system internally tracks whether the transaction increases or decreases budget through other fields (transaction type, source/destination funds, etc.), not through negative amounts.
+
 ### Reusable Features
 - Always use reusable features for common operations
 - Add scenarios to cross-modules.feature

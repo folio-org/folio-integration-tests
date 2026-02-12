@@ -80,7 +80,7 @@ Feature: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice When
     """
     function(response) {
       var transaction = response.transactions[0];
-      return transaction.amount == -10.00 &&
+      return transaction.amount == 10.00 &&
              transaction.encumbrance.status == 'Unreleased' &&
              transaction.encumbrance.initialAmountEncumbered == 100.00 &&
              transaction.encumbrance.amountAwaitingPayment == 0.00 &&
@@ -126,7 +126,7 @@ Feature: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice When
     """
     function(response) {
       var transaction = response.transactions[0];
-      return transaction.amount == -100.00 &&
+      return transaction.amount == 100.00 &&
              transaction.encumbrance.status == 'Unreleased' &&
              transaction.encumbrance.initialAmountEncumbered == 100.00 &&
              transaction.encumbrance.amountAwaitingPayment == 0.00 &&
@@ -145,11 +145,12 @@ Feature: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice When
     """
     function(response) {
       return response.allocated == 1000.00 &&
-             response.encumbered == 0.00 &&
+             response.encumbered == 100.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 0.00 &&
              response.credits == 0.00 &&
-             response.available == 1000.00;
+             response.available == 900.00 &&
+             response.unavailable == 100.00;
     }
     """
     Given path 'finance/budgets', budgetId
