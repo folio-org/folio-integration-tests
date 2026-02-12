@@ -24,10 +24,10 @@ Feature: Total Expended Amount Calculation With Fund Distribution And Encumbranc
     * def orderId = call uuid
     * def orderLineId = call uuid
     * def invoice1Id = call uuid
-    * def invoice1LineId = call uuid
     * def invoice2Id = call uuid
-    * def invoice2LineId = call uuid
     * def invoice3Id = call uuid
+    * def invoice1LineId = call uuid
+    * def invoice2LineId = call uuid
     * def invoice3LineId = call uuid
 
     # 1. Create Fund With Budget Having Money Allocation

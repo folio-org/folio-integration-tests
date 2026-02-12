@@ -28,8 +28,8 @@ Feature: Total Expended Amount Calculation With Different Fund Distributions
     * def orderId = call uuid
     * def orderLineId = call uuid
     * def invoice1Id = call uuid
-    * def invoice1LineId = call uuid
     * def invoice2Id = call uuid
+    * def invoice1LineId = call uuid
     * def invoice2LineId = call uuid
 
     # 1. Create Three Different Funds With Current Budgets

@@ -31,10 +31,10 @@ Feature: Total Expended Amount Calculation When Order Has No Encumbrances
     * def orderId = call uuid
     * def orderLineId = call uuid
     * def invoice1Id = call uuid
-    * def invoice1LineId = call uuid
     * def invoice2Id = call uuid
-    * def invoice2LineId = call uuid
     * def invoice3Id = call uuid
+    * def invoice1LineId = call uuid
+    * def invoice2LineId = call uuid
     * def invoice3LineId = call uuid
     * def rolloverId = call uuid
 

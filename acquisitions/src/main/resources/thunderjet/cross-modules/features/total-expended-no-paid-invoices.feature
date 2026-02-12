@@ -24,12 +24,12 @@ Feature: Total Expended Amount Calculation With No Encumbrances And No Related P
     * def orderId = call uuid
     * def orderLineId = call uuid
     * def invoice1Id = call uuid
-    * def invoice1LineId = call uuid
     * def invoice2Id = call uuid
-    * def invoice2LineId = call uuid
     * def invoice3Id = call uuid
-    * def invoice3LineId = call uuid
     * def invoice4Id = call uuid
+    * def invoice1LineId = call uuid
+    * def invoice2LineId = call uuid
+    * def invoice3LineId = call uuid
     * def invoice4LineId = call uuid
 
     # 1. Create Fund A With Budget Having Money Allocation
