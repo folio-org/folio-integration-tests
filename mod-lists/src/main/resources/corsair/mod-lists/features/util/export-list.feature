@@ -12,7 +12,7 @@ Feature: Export a list
     # If 'fields' is provided, use it. Otherwise, fetch all columns from entity-types
     * def providedFields = karate.get('fields')
     * def columnsResponse = providedFields == null ? karate.call('classpath:corsair/mod-lists/features/util/get-all-columns.feature', { entityTypeId: entityTypeId }) : null
-    * def allFields = columnsResponse != null ? columnsResponse.allFields : null
+    * def allFields = columnsResponse != null ? columnsResponse.allColumns : null
     * def requestBody = providedFields != null ? providedFields : allFields
 
     Given path 'lists', listId, 'exports'
