@@ -1,0 +1,9 @@
+{
+  "name": "Item List",
+  "description": "Item List",
+  "entityTypeId": "d0213d22-32cf-490f-9196-d81c3c66e53f",
+  "fqlQuery": "{\"$and\": [{\"items.barcode\" : {\"$eq\": \"1234\"}}]}",
+  "isActive": "true",
+  "isPrivate": "false"
+}
+
