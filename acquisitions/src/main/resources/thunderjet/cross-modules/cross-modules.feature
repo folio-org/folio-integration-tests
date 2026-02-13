@@ -278,6 +278,21 @@ Feature: cross-module integration tests
   #  Scenario: Rollover many orders and lines (disabled because it is very long)
   #    * call read('features/rollover-many-orders-and-lines.feature')
 
+  Scenario: Total Expended Amount Calculation When Order Has No Encumbrances
+    * call read('features/total-expended-no-encumbrances.feature')
+
+  Scenario: Total Expended Amount Calculation With Paid Invoices From Different Fiscal Years
+    * call read('features/total-expended-different-fiscal-years.feature')
+
+  Scenario: Total Expended Amount Calculation With No Encumbrances And No Related Paid Invoices
+    * call read('features/total-expended-no-paid-invoices.feature')
+
+  Scenario: Total Expended Amount Calculation With Different Fund Distributions
+    * call read('features/total-expended-different-fund-distributions.feature')
+
+  Scenario: Total Expended Amount Calculation With Fund Distribution And Encumbrance
+    * call read('features/total-expended-with-fund-distribution-and-encumbrance.feature')
+
   Scenario: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice When Other Paid Invoices Exist Release False
     * call read('features/encumbrance-after-canceling-paid-invoice-with-other-paid-invoices-release-false.feature')
 

@@ -1,5 +1,5 @@
 Feature: rollover
-  # parameters: id, ledgerId, fromFiscalYearId, toFiscalYearId, restrictEncumbrance, restrictExpenditures, needCloseBudgets, budgetsRollover, encumbrancesRollover
+  # parameters: id, ledgerId, fromFiscalYearId, toFiscalYearId, restrictEncumbrance, restrictExpenditures, needCloseBudgets, rolloverType, budgetsRollover, encumbrancesRollover
 
   Background:
     * url baseUrl
@@ -8,6 +8,7 @@ Feature: rollover
     * def restrictEncumbrance = karate.get('restrictEncumbrance', false)
     * def restrictExpenditures = karate.get('restrictExpenditures', false)
     * def needCloseBudgets = karate.get('needCloseBudgets', true)
+    * def rolloverType = karate.get('rolloverType', 'Commit')
 
     ## Fiscal year rollover
     Given path 'finance/ledger-rollovers'
@@ -21,6 +22,7 @@ Feature: rollover
         "restrictEncumbrance": "#(restrictEncumbrance)",
         "restrictExpenditures": "#(restrictExpenditures)",
         "needCloseBudgets": "#(needCloseBudgets)",
+        "rolloverType": "#(rolloverType)",
         "budgetsRollover": "#(budgetsRollover)",
         "encumbrancesRollover": "#(encumbrancesRollover)"
       }

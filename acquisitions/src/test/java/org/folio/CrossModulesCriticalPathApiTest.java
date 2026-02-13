@@ -53,10 +53,14 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
     FEATURE_27("encumbrance-and-budget-updated-correctly-after-editing-fund-distribution-and-increasing-cost-with-paid-invoice", true),
     FEATURE_28("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active", true),
     FEATURE_29("encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice", true),
-    FEATURE_30("encumbrance-after-canceling-paid-invoice-with-other-paid-invoices-release-false", true),
-    FEATURE_31("encumbrance-after-canceling-approved-invoice-with-other-approved-invoices-release-false", true),
-    FEATURE_32("encumbrance-after-canceling-paid-invoice-with-mixed-release-settings", false),
-    FEATURE_33("encumbrance-after-canceling-approved-invoice-with-mixed-release-settings", false);
+    FEATURE_30("total-expended-no-encumbrances", true),
+    FEATURE_31("total-expended-different-fiscal-years", true),
+    FEATURE_32("total-expended-no-paid-invoices", true),
+    FEATURE_33("total-expended-different-fund-distributions", true),
+    FEATURE_34("encumbrance-after-canceling-paid-invoice-with-other-paid-invoices-release-false", true),
+    FEATURE_35("encumbrance-after-canceling-approved-invoice-with-other-approved-invoices-release-false", true),
+    FEATURE_36("encumbrance-after-canceling-paid-invoice-with-mixed-release-settings", false),
+    FEATURE_37("encumbrance-after-canceling-approved-invoice-with-mixed-release-settings", false);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -300,17 +304,45 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
+  @DisplayName("(Thunderjet) (C594371) Total Expended Amount Calculation When Order Has No Encumbrances")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void totalExpendedNoEncumbrances() {
+    runFeatureTest(Feature.FEATURE_30.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C594372) Total Expended Amount Calculation With Paid Invoices From Different Fiscal Years")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void totalExpendedDifferentFiscalYears() {
+    runFeatureTest(Feature.FEATURE_31.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C610241) Total Expended Amount Calculation With No Encumbrances And No Related Paid Invoices")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void totalExpendedNoPaidInvoices() {
+    runFeatureTest(Feature.FEATURE_32.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C605930) Total Expended Amount Calculation With Different Fund Distributions")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void totalExpendedDifferentFundDistributions() {
+    runFeatureTest(Feature.FEATURE_33.getFileName());
+  }
+
+  @Test
   @DisplayName("(Thunderjet) (C1028985) Encumbrance Is Calculated Correctly After Canceling A Paid Invoice When Other Paid Invoices Exist Release False")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceCalculatedCorrectlyAfterCancelingPaidInvoiceReleaseFalse() {
-    runFeatureTest(Feature.FEATURE_30.getFileName());
+    runFeatureTest(Feature.FEATURE_34.getFileName());
   }
 
   @Test
   @DisplayName("(Thunderjet) (C1028984) Encumbrance Is Calculated Correctly After Canceling An Approved Invoice When Other Approved Invoices Exist Release False")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceCalculatedCorrectlyAfterCancelingApprovedInvoiceReleaseFalse() {
-    runFeatureTest(Feature.FEATURE_31.getFileName());
+    runFeatureTest(Feature.FEATURE_35.getFileName());
   }
 
   // Disabled due to conflicting requirements
@@ -319,7 +351,7 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @DisplayName("(Thunderjet) (C1028981) Encumbrance Is Calculated Correctly After Canceling A Paid Invoice Release False When Another Paid Invoice Release True Exists")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceCalculatedCorrectlyAfterCancelingPaidInvoiceWithMixedReleaseSettings() {
-    runFeatureTest(Feature.FEATURE_32.getFileName());
+    runFeatureTest(Feature.FEATURE_36.getFileName());
   }
 
   // Disabled due to conflicting requirements
@@ -328,6 +360,6 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @DisplayName("(Thunderjet) (C1028980) Encumbrance Is Calculated Correctly After Canceling An Approved Invoice Release False When Another Approved Invoice Release True Exists")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceCalculatedCorrectlyAfterCancelingApprovedInvoiceWithMixedReleaseSettings() {
-    runFeatureTest(Feature.FEATURE_33.getFileName());
+    runFeatureTest(Feature.FEATURE_37.getFileName());
   }
 }
