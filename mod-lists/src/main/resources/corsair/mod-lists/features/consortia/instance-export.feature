@@ -41,7 +41,7 @@ Feature: Scenarios that are primarily focused around exporting instance list dat
 
   @Positive
   Scenario: Test export list with selected columns
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/instance-list.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/instance-list-ecs.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
