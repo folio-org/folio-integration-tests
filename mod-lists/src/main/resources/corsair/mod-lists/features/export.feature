@@ -131,81 +131,81 @@ Feature: Scenarios that are primarily focused around exporting list data
     * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')
     * def exportId = exportResult.exportId
     * def listId = exportResult.listId
-    * def allColumnNames = exportResult.allColumnNames
+    * def allFields = exportResult.allFields
 
     Given path 'lists', listId, 'exports', exportId
     When method GET
     Then status 200
-    And match $.fields == allColumnNames
+    And match $.fields == allFields
 
   Scenario: Export test - Item - All columns
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/item-list.json')
     * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')
     * def exportId = exportResult.exportId
     * def listId = exportResult.listId
-    * def allColumnNames = exportResult.allColumnNames
+    * def allFields = exportResult.allFields
 
     Given path 'lists', listId, 'exports', exportId
     When method GET
     Then status 200
-    And match $.fields == allColumnNames
+    And match $.fields == allFields
 
   Scenario: Export test - Holdings - All columns
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/holdings-list.json')
     * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')
     * def exportId = exportResult.exportId
     * def listId = exportResult.listId
-    * def allColumnNames = exportResult.allColumnNames
+    * def allFields = exportResult.allFields
 
     Given path 'lists', listId, 'exports', exportId
     When method GET
     Then status 200
-    And match $.fields == allColumnNames
+    And match $.fields == allFields
 
   Scenario: Export test - Organization - All columns
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/organization-list.json')
     * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')
     * def exportId = exportResult.exportId
     * def listId = exportResult.listId
-    * def allColumnNames = exportResult.allColumnNames
+    * def allFields = exportResult.allFields
 
     Given path 'lists', listId, 'exports', exportId
     When method GET
     Then status 200
-    And match $.fields == allColumnNames
+    And match $.fields == allFields
 
   Scenario: Export test - Loan - All columns
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/loan-list.json')
     * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')
     * def exportId = exportResult.exportId
     * def listId = exportResult.listId
-    * def allColumnNames = exportResult.allColumnNames
+    * def allFields = exportResult.allFields
 
     Given path 'lists', listId, 'exports', exportId
     When method GET
     Then status 200
-    And match $.fields == allColumnNames
+    And match $.fields == allFields
 
   Scenario: Export test - POL - All columns
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/pol-list.json')
     * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')
     * def exportId = exportResult.exportId
     * def listId = exportResult.listId
-    * def allColumnNames = exportResult.allColumnNames
+    * def allFields = exportResult.allFields
 
     Given path 'lists', listId, 'exports', exportId
     When method GET
     Then status 200
-    And match $.fields == allColumnNames
+    And match $.fields == allFields
 
   Scenario: Export test - User - All columns
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')
     * def exportId = exportResult.exportId
     * def listId = exportResult.listId
-    * def allColumnNames = exportResult.allColumnNames
+    * def allFields = exportResult.allFields
 
     Given path 'lists', listId, 'exports', exportId
     When method GET
     Then status 200
-    And match $.fields == allColumnNames
+    And match $.fields == allFields
