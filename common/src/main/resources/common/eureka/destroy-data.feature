@@ -24,9 +24,17 @@ Feature: destroy data for tenant
     And param limit = totalAmount
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
-    * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
-    * def entitlementTemplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+    * def applicationIds = response || response.entitlements ? karate.map(response.entitlements, x => x.applicationId) : []
+    * if (applicationIds && applicationIds.length > 0) karate.call('classpath:common/eureka/destroy-data.feature@performDeleteEntitlement', { testTenantId: testTenantId, applicationIds: applicationIds })
 
+  # This is needed to make DELETE /entitlements idempotent because it's not at the moment and fails on empty applicationIds
+  @ignore
+  @performDeleteEntitlement
+  Scenario: perform delete entitlement
+    * print "---perform delete entitlement---"
+    * def entitlementTemplate = read('classpath:common/eureka/samples/entitlement-entity.json')
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
     Given path 'entitlements'
     And param purge = true
     And request entitlementTemplate
@@ -39,4 +47,6 @@ Feature: destroy data for tenant
   Scenario: delete tenant
     * print "---delete tenant---"
     Given call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(testTenantId)' }
+
+
 
