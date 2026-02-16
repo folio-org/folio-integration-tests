@@ -149,12 +149,12 @@ Feature: Encumbrance remains 0 for a re-opened One-time order with an approved i
     """
     function(response) {
       return response.allocated == 1000.00 &&
-             response.encumbered == 10.00 &&
+             response.encumbered == 0.00 &&
              response.awaitingPayment == 50.00 &&
              response.expenditures == 0.00 &&
              response.credits == 0.00 &&
-             response.unavailable == 60.00 &&
-             response.available == 940.00;
+             response.unavailable == 50.00 &&
+             response.available == 950.00;
     }
     """
     Given path 'finance/budgets', budgetId
