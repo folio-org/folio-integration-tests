@@ -7,7 +7,7 @@ Feature: Scenarios that are primarily focused around updating/editing lists
     * configure headers = testUserHeaders
 
   Scenario: Update list with a PUT request and confirm that it is updated
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -27,7 +27,7 @@ Feature: Scenarios that are primarily focused around updating/editing lists
     And match $.version ==  version + 1
 
   Scenario: Put request should return 404 for list id that does not exist
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def invalidId = call uuid1
     Given path 'lists', invalidId
     And request listRequest

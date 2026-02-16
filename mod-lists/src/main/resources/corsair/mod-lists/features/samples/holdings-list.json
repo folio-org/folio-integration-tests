@@ -1,0 +1,8 @@
+{
+  "name": "Holdings List",
+  "description": "Holdings List",
+  "entityTypeId": "8418e512-feac-4a6a-a56d-9006aab31e33",
+  "fqlQuery": "{\"$and\": [{\"holdings.hrid\" : {\"$eq\": \"1234\"}}]}",
+  "isActive": "true",
+  "isPrivate": "false"
+}
