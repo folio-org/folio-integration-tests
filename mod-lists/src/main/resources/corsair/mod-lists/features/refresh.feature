@@ -7,7 +7,7 @@ Feature: Scenarios that are primarily focused around refreshing lists
     * configure headers = testUserHeaders
 
   Scenario: Post list refresh should fail if list is already refreshing
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -35,7 +35,7 @@ Feature: Scenarios that are primarily focused around refreshing lists
     Then status 400
 
   Scenario: Cancel a refresh
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -62,7 +62,7 @@ Feature: Scenarios that are primarily focused around refreshing lists
     * def userRequest = read('classpath:corsair/mod-lists/features/samples/user-request.json')
     * userRequest.id = '00000000-1111-2222-9999-44444444444'
     * userRequest.username = 'integration_test_user_789'
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * listRequest.fqlQuery = '{\"$and\": [{\"users.username\" : {\"$regex\": \"integration_test_user\"}}]}'
     Given path 'lists'
     And request listRequest
