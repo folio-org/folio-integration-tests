@@ -8,7 +8,6 @@ import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -59,8 +58,8 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
     FEATURE_33("total-expended-different-fund-distributions", true),
     FEATURE_34("encumbrance-after-canceling-paid-invoice-with-other-paid-invoices-release-false", true),
     FEATURE_35("encumbrance-after-canceling-approved-invoice-with-other-approved-invoices-release-false", true),
-    FEATURE_36("encumbrance-after-canceling-paid-invoice-with-mixed-release-settings", false),
-    FEATURE_37("encumbrance-after-canceling-approved-invoice-with-mixed-release-settings", false);
+    FEATURE_36("encumbrance-after-canceling-paid-invoice-with-mixed-release-settings", true),
+    FEATURE_37("encumbrance-after-canceling-approved-invoice-with-mixed-release-settings", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -253,7 +252,7 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   void budgetAndEncumbranceUpdatedCorrectlyAfterEditingPolWithInvoiceAfterRollover() {
     runFeatureTest(Feature.FEATURE_22.getFileName());
   }
-  
+
   @Test
   @DisplayName("(Thunderjet) (C895660) Cancel A Paid Invoice After Changing Fund Distribution In The PO Line")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
@@ -345,18 +344,14 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
     runFeatureTest(Feature.FEATURE_35.getFileName());
   }
 
-  // Disabled due to conflicting requirements
   @Test
-  @Disabled
   @DisplayName("(Thunderjet) (C1028981) Encumbrance Is Calculated Correctly After Canceling A Paid Invoice Release False When Another Paid Invoice Release True Exists")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceCalculatedCorrectlyAfterCancelingPaidInvoiceWithMixedReleaseSettings() {
     runFeatureTest(Feature.FEATURE_36.getFileName());
   }
 
-  // Disabled due to conflicting requirements
   @Test
-  @Disabled
   @DisplayName("(Thunderjet) (C1028980) Encumbrance Is Calculated Correctly After Canceling An Approved Invoice Release False When Another Approved Invoice Release True Exists")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceCalculatedCorrectlyAfterCancelingApprovedInvoiceWithMixedReleaseSettings() {

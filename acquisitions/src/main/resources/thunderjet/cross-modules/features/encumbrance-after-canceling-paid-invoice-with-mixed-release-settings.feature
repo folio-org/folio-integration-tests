@@ -71,7 +71,7 @@ Feature: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice Rele
     function(response) {
       var transaction = response.transactions[0];
       return transaction.amount == 0.00 &&
-             transaction.encumbrance.status == 'Unreleased' &&
+             transaction.encumbrance.status == 'Released' &&
              transaction.encumbrance.initialAmountEncumbered == 100.00 &&
              transaction.encumbrance.amountAwaitingPayment == 0.00 &&
              transaction.encumbrance.amountExpended == 150.00;
@@ -82,13 +82,39 @@ Feature: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice Rele
     And retry until validateEncumbranceAfterCancel1(response)
     When method GET
     Then status 200
+    * def encumbranceId = response.transactions[0].id
 
-    # 8. Cancel Invoice 2
-    * print '8. Cancel Invoice 2'
+    # 8. Unrelease Encumbrance After Cancelling Invoice 1
+    * print '8. Unrelease Encumbrance After Cancelling Invoice 1'
+    Given path 'finance/unrelease-encumbrance', encumbranceId
+    When method POST
+    Then status 204
+
+    # 9. Verify Encumbrance State After Unreleasing
+    * print '9. Verify Encumbrance State After Unreleasing'
+    * def validateEncumbranceAfterUnrelease =
+    """
+    function(response) {
+      var transaction = response.transactions[0];
+      return transaction.amount == 0.00 &&
+             transaction.encumbrance.status == 'Unreleased' &&
+             transaction.encumbrance.initialAmountEncumbered == 100.00 &&
+             transaction.encumbrance.amountAwaitingPayment == 0.00 &&
+             transaction.encumbrance.amountExpended == 150.00;
+    }
+    """
+    Given path 'finance/transactions'
+    And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId
+    And retry until validateEncumbranceAfterUnrelease(response)
+    When method GET
+    Then status 200
+
+    # 10. Cancel Invoice 2
+    * print '10. Cancel Invoice 2'
     * def v = call cancelInvoice { invoiceId: "#(invoice2Id)" }
 
-    # 9. Verify Encumbrance State After Cancelling Invoice 2
-    * print '9. Verify Encumbrance State After Cancelling Invoice 2'
+    # 11. Verify Encumbrance State After Cancelling Invoice 2
+    * print '11. Verify Encumbrance State After Cancelling Invoice 2'
     * def validateEncumbranceAfterCancel2 =
     """
     function(response) {
@@ -106,17 +132,17 @@ Feature: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice Rele
     When method GET
     Then status 200
 
-    # 10. Verify Budget State After Cancelling All Invoices
-    * print '10. Verify Budget State After Cancelling All Invoices'
+    # 12. Verify Budget State After Cancelling All Invoices
+    * print '12. Verify Budget State After Cancelling All Invoices'
     * def validateBudgetAfterCancelAll =
     """
     function(response) {
       return response.allocated == 1000.00 &&
-             response.encumbered == 0.00 &&
+             response.encumbered == 100.00 &&
              response.awaitingPayment == 0.00 &&
              response.expenditures == 0.00 &&
              response.credits == 0.00 &&
-             response.available == 1000.00;
+             response.available == 900.00;
     }
     """
     Given path 'finance/budgets', budgetId

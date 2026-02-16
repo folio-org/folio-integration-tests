@@ -130,7 +130,7 @@ Feature: Encumbrance remains 0 for a re-opened One-time order with an approved i
     """
     function(response) {
       var transaction = response.transactions[0];
-      return transaction.amount == 10.00 &&
+      return transaction.amount == 0.00 &&
              transaction.encumbrance.status == 'Unreleased' &&
              transaction.encumbrance.initialAmountEncumbered == 10.00 &&
              transaction.encumbrance.amountAwaitingPayment == 50.00 &&
