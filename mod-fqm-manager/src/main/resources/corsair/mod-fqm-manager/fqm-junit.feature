@@ -132,6 +132,7 @@ Feature: mod-fqm-manager integration tests
       | 'owners.collection.get'                                            |
       | 'patron-blocks.user-summary.item.get'                              |
       | 'payments.collection.get'                                          |
+      | 'proxiesfor.collection.get'                                        |
       | 'refunds.collection.get'                                           |
       | 'search.instances.collection.get'                                  |
       | 'source-storage.records.collection.get'                            |
