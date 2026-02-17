@@ -96,10 +96,6 @@ Feature: prepare data for api test
   @specifyUserCredentials
   Scenario: specify user credentials
     * print "---specify user credentials---"
-    # Pause for 120s because entitlement is unreliable and does not guarantee that the secrets were created on time or at all
-    * def env = karate.env
-    * def pauseIfDev = function(){ if (env == 'dev' || env == 'dev-shared') { karate.log('---sleeping for 120s---'); java.lang.Thread.sleep(120000); } }
-    * call pauseIfDev
     * def userName = testUser.name
     * def userId = karate.get('userId')
     * def password = testUser.password

@@ -359,7 +359,7 @@ Feature: Retrieve Holding Details With Pieces And Items
     And match response == {}
 
   @Negative
-  Scenario: Retrieve Holding Details For Holdings Without PoLines Returns Empty Response
+  Scenario: Retrieve Holding Details For Holdings Without PoLines Returns Empty Collections
     * def instanceId = call uuid
     * def holdingId1 = call uuid
     * def holdingId2 = call uuid
@@ -389,7 +389,23 @@ Feature: Retrieve Holding Details With Pieces And Items
     When method POST
     Then status 200
 
-    # 6. Verify Response Is Empty Object Since Holdings Have No Associated PoLines
-    * print '6. Verify Response Is Empty Object Since Holdings Have No Associated PoLines'
-    And match response == {}
+    # 6. Verify Response Contains Holdings With Empty Collections Since Holdings Have No Associated PoLines
+    * print '6. Verify Response Contains Holdings With Empty Collections Since Holdings Have No Associated PoLines'
+    * def holding1Key = holdingId1 + ''
+    * def holding2Key = holdingId2 + ''
+    * def holding1Data = karate.get('response["' + holding1Key + '"]')
+    * def holding2Data = karate.get('response["' + holding2Key + '"]')
+    And match holding1Data.poLines_detail_collection.poLines_detail == []
+    And match holding1Data.poLines_detail_collection.totalRecords == 0
+    And match holding1Data.pieces_detail_collection.pieces_detail == []
+    And match holding1Data.pieces_detail_collection.totalRecords == 0
+    And match holding1Data.items_detail_collection.items_detail == []
+    And match holding1Data.items_detail_collection.totalRecords == 0
+    And match holding2Data.poLines_detail_collection.poLines_detail == []
+    And match holding2Data.poLines_detail_collection.totalRecords == 0
+    And match holding2Data.pieces_detail_collection.pieces_detail == []
+    And match holding2Data.pieces_detail_collection.totalRecords == 0
+    And match holding2Data.items_detail_collection.items_detail == []
+    And match holding2Data.items_detail_collection.totalRecords == 0
+
 
