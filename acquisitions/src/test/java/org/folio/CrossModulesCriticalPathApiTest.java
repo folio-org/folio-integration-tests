@@ -22,6 +22,7 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   private static final String TEST_TENANT = "testcross";
   private static final int THREAD_COUNT = 4;
 
+  // TODO CI retrigger
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("unrelease-encumbrances-when-reopen-ongoing-order-with-related-paid-invoice-and-receiving", true),
     FEATURE_2("encumbrance-calculated-correctly-for-unopened-ongoing-order-with-approved-invoice", true),
