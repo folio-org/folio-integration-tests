@@ -101,6 +101,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
       | 'inventory-storage.nature-of-content-terms.collection.get'         |
+      | 'proxiesfor.collection.get'                                        |
       | 'tags.collection.get'                                              |
 
     # define consortium
