@@ -22,6 +22,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-pubsub'                |
       | 'mod-patron-blocks'         |
       | 'mod-feesfines'             |
+      | 'mod-settings'              |
       | 'mod-tags'                  |
 
     * table userPermissions
@@ -113,6 +114,7 @@ Feature: mod-fqm-manager integration tests
       | 'invoice.invoice-lines.collection.get'                             |
       | 'invoice.invoices.collection.get'                                  |
       | 'linked-data.resources.rdf.get'                                    |
+      | 'locale.item.get'                                                  |
       | 'lost-item-fees-policies.collection.get'                           |
       | 'manual-block-templates.collection.get'                            |
       | 'manualblocks.collection.get'                                      |
