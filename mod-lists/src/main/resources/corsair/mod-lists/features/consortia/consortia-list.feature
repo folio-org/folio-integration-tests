@@ -123,19 +123,44 @@ Feature: mod-consortia and mod-lists integration tests
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
+  @smoke
   Scenario: Create ['central', 'university'] tenants and set up admins
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
 
+  @smoke
   Scenario: Consortium api tests
     * call read('consortium.feature')
 
+  @smoke
   Scenario: Tenant api tests
     * call read('tenant.feature')
 
-  Scenario: Instance Export
-    * call read('instance-export.feature')
+  @smoke
+  Scenario: ECS Export - Instance list with all columns
+    * call read('ecs-export.feature') { listFile: 'instance-list-ecs.json', ecsField: 'instance.tenant_name' }
 
+  @smoke
+  Scenario: ECS Export - Instance list with selected columns
+    * call read('ecs-export.feature') { listFile: 'instance-list-ecs.json', fields: ['instance.hrid', 'instance.title', 'instance.id'] }
+
+  @smoke
+  Scenario: ECS Export - Item list with all columns
+    * call read('ecs-export.feature') { listFile: 'item-list.json', ecsField: 'items.tenant_name' }
+
+  @smoke
+  Scenario: ECS Export - Item list with selected columns
+    * call read('ecs-export.feature') { listFile: 'item-list.json', fields: ['items.id', 'items.barcode', 'items.hrid'] }
+
+  @smoke
+  Scenario: ECS Export - Holdings list with all columns
+    * call read('ecs-export.feature') { listFile: 'holdings-list.json', ecsField: 'holdings.tenant_name' }
+
+  @smoke
+  Scenario: ECS Export - Holdings list with selected columns
+    * call read('ecs-export.feature') { listFile: 'holdings-list.json', fields: ['holdings.id', 'holdings.hrid', 'holdings.instance_id'] }
+
+  @smoke
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}
