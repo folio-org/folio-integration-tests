@@ -58,6 +58,7 @@ Feature: mod-linked-data integration tests
       | 'inventory.instances.item.put'                                        |
       | 'browse.authorities.collection.get'                                   |
       | 'source-storage.records.formatted.item.get'                           |
+      | 'linked-data.admin.caches.delete'                                     |
 
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')
