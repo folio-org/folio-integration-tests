@@ -27,7 +27,8 @@ class GobiApiTest extends TestBaseEureka {
     FEATURE_1("gobi-api-tests", true),
     FEATURE_2("find-holdings-by-location-and-instance", true),
     FEATURE_3("validate-pol-receipt-not-required-with-checkin-items", true),
-    FEATURE_4("validate-pol-suppress-instance-from-discovery", true);
+    FEATURE_4("validate-pol-suppress-instance-from-discovery", true),
+    FEATURE_5("verify-tenant-address-lookup.feature", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -91,5 +92,11 @@ class GobiApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void validatePoLineSuppressInstanceFromDiscovery() {
     runFeatureTest(Feature.FEATURE_4.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void validateTenantAddressLookup() {
+    runFeatureTest(Feature.FEATURE_5.getFileName());
   }
 }

@@ -29,3 +29,6 @@ Feature: mod-gobi integration tests
 
   Scenario: Validate POL suppress instance from discovery
     * call read('features/validate-pol-suppress-instance-from-discovery.feature')
+
+  Scenario: Verify tenant address lookup populates billTo on order
+    * call read('features/verify-tenant-address-lookup.feature')

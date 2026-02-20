@@ -70,6 +70,8 @@ Feature: Initialize mod-gobi integration tests
       | 'inventory.instances.item.post'                               |
       | 'organizations.organizations.item.post'                       |
       | 'orders.item.delete'                                          |
+      | 'tenant-addresses.item.post'                                  |
+      | 'tenant-addresses.item.delete'                                |
 
   Scenario: Create tenant and test user
     * call read('classpath:common/eureka/setup-users.feature')
