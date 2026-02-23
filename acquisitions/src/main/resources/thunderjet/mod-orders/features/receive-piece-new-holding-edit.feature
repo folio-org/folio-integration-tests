@@ -299,3 +299,143 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
     When method GET
     Then status 200
     * configure headers = headersUser
+
+  @Positive
+  Scenario: Holding referenced by another PO line should not be deleted during checkin with deleteHoldings flag
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def order1Id = call uuid
+    * def order2Id = call uuid
+    * def poLine1Id = call uuid
+    * def poLine2Id = call uuid
+    * def sharedLocationId = globalLocationsId
+    * def newLocationId = globalLocationsId2
+
+    # 1. Create fund and budget
+    * configure headers = headersAdmin
+    * call createFund { 'id': '#(fundId)' }
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * configure headers = headersUser
+
+    # 2. Create first order
+    * def v = call createOrder { 'id': '#(order1Id)' }
+
+    # 3. Create first order line with quantity 1 at shared location, create inventory Instance, Holding
+    * def poLine1 = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * set poLine1.id = poLine1Id
+    * set poLine1.purchaseOrderId = order1Id
+    * set poLine1.physical.createInventory = 'Instance, Holding'
+    * set poLine1.cost.quantityPhysical = 1
+    * set poLine1.fundDistribution[0].fundId = fundId
+    * set poLine1.locations[0].locationId = sharedLocationId
+    * set poLine1.locations[0].quantityPhysical = 1
+    Given path 'orders/order-lines'
+    And request poLine1
+    When method POST
+    Then status 201
+
+    # 4. Open first order
+    * def v = call openOrder { 'orderId': '#(order1Id)' }
+
+    # 5. Get instance ID and holding ID from first order line
+    Given path 'orders/order-lines', poLine1Id
+    When method GET
+    Then status 200
+    * def instanceId = $.instanceId
+    * def sharedHoldingId = $.locations[0].holdingId
+
+    # 6. Verify shared holding exists
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', sharedHoldingId
+    When method GET
+    Then status 200
+    And match $.permanentLocationId == sharedLocationId
+    * configure headers = headersUser
+
+    # 7. Create second order
+    * def v = call createOrder { 'id': '#(order2Id)' }
+
+    # 8. Create second order line referencing the SAME holding as first order
+    * def poLine2 = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
+    * set poLine2.id = poLine2Id
+    * set poLine2.purchaseOrderId = order2Id
+    * set poLine2.physical.createInventory = 'None'
+    * set poLine2.cost.quantityPhysical = 1
+    * set poLine2.fundDistribution[0].fundId = fundId
+    * set poLine2.locations[0].holdingId = sharedHoldingId
+    * set poLine2.locations[0].quantityPhysical = 1
+    Given path 'orders/order-lines'
+    And request poLine2
+    When method POST
+    Then status 201
+
+    # 9. Open second order
+    * def v = call openOrder { 'orderId': '#(order2Id)' }
+
+    # 10. Get expected piece from first order and verify it has the shared holding ID
+    Given path 'orders/pieces'
+    And param query = 'poLineId==' + poLine1Id + ' AND receivingStatus==Expected'
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.pieces[0].holdingId == sharedHoldingId
+    * def pieceId = $.pieces[0].id
+
+    # 11. Receive piece from first order with deleteHoldings=true, moving to new location
+    Given path 'orders/check-in'
+    And param deleteHoldings = true
+    And request
+    """
+    {
+      toBeCheckedIn: [
+        {
+          checkedIn: 1,
+          checkInPieces: [
+            {
+              id: '#(pieceId)',
+              itemStatus: 'In process',
+              displayOnHolding: false,
+              locationId: '#(newLocationId)',
+              createItem: true
+            }
+          ],
+          poLineId: '#(poLine1Id)'
+        }
+      ],
+      totalRecords: 1
+    }
+    """
+    When method POST
+    Then status 200
+    And match $.receivingResults[0].processedSuccessfully == 1
+
+    # 12. Verify piece is now received with a NEW holding ID (not the shared one)
+    Given path 'orders/pieces', pieceId
+    And retry until response.receivingStatus == 'Received'
+    When method GET
+    Then status 200
+    And match $.receivingStatus == 'Received'
+    And match $.holdingId == '#present'
+    And match $.holdingId != sharedHoldingId
+    * def newHoldingId = $.holdingId
+
+    # 13. Verify that the shared holding is NOT deleted (because second order line still references it)
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings', sharedHoldingId
+    When method GET
+    Then status 200
+    And match $.permanentLocationId == sharedLocationId
+
+    # 14. Verify the new holding was created in the new location
+    Given path 'holdings-storage/holdings', newHoldingId
+    When method GET
+    Then status 200
+    And match $.permanentLocationId == newLocationId
+    And match $.instanceId == instanceId
+
+    # 15. Verify second order line still references the shared holding
+    * configure headers = headersUser
+    Given path 'orders/order-lines', poLine2Id
+    When method GET
+    Then status 200
+    And match $.locations[0].holdingId == sharedHoldingId
