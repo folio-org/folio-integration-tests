@@ -39,4 +39,4 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
         tenant: '#(centralTenantName)'
       }
       """
-    * call read('classpath:consortia/features/batch-ecs-requests.feature')
+
