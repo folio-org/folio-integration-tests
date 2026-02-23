@@ -1115,6 +1115,7 @@ Feature: Ledger fiscal year rollover
     When method GET
     Then status 200
     And match response.cost.fyroAdjustmentAmount == <fyroAdjustment>
+    And match response.metadata == "#notnull"
     * match response.fundDistribution[*].encumbrance contains any encumbranceIds
     * match response.fundDistribution[*].value contains only <fundAmount>
 
