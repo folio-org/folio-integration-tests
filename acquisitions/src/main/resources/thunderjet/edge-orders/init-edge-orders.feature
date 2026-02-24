@@ -59,8 +59,7 @@ Feature: Initialize edge-orders integration tests
       | "organizations.organizations.item.post"                   |
       | "orders-storage.custom-fields.collection.get"             |
       | "users.collection.get"                                    |
-      | "mod-settings.entries.collection.get"                     |
-      | "ui-tenant-settings.settings.addresses"                   |
+      | "tenant-addresses.collection.get"                         |
 
     * table adminPermissions
       | name                                                          |
