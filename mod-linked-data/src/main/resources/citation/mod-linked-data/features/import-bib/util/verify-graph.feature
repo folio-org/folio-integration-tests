@@ -79,13 +79,13 @@ Feature: Verify Linked Data Graph
   @C958464
   Scenario: Verify Hub created from MARC 600
     # 1. Find the SUBJECT edge with the expected label
-    * def subjectEdgeMarc600 = workSubgraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT' && x.target.label == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin -- Drama -- Parodies, imitations, etc')[0]
+    * def subjectEdgeMarc600 = workSubgraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT' && x.target.label == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin -- Parodies, imitations, etc -- Drama')[0]
     * def subjectMarc600 = subjectEdgeMarc600.target
 
     # Verify subject label and doc
-    * match subjectMarc600.label == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin -- Drama -- Parodies, imitations, etc'
+    * match subjectMarc600.label == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin -- Parodies, imitations, etc -- Drama'
     * match subjectMarc600.doc['http://bibfra.me/vocab/lite/name'][0] == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin'
-    * match subjectMarc600.doc['http://bibfra.me/vocab/lite/label'][0] == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin -- Drama -- Parodies, imitations, etc'
+    * match subjectMarc600.doc['http://bibfra.me/vocab/lite/label'][0] == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin -- Parodies, imitations, etc -- Drama'
     * match subjectMarc600.doc['http://bibfra.me/vocab/lite/language'][0] == 'German & Latin'
     * match subjectMarc600.doc['http://bibfra.me/vocab/library/formSubdivision'][0] == 'Drama'
     * match subjectMarc600.doc['http://bibfra.me/vocab/library/generalSubdivision'][0] == 'Parodies, imitations, etc'
@@ -100,8 +100,8 @@ Feature: Verify Linked Data Graph
     # Verify FOCUS edge
     * def focusEdgeMarc600 = subjectMarc600.outgoingEdges.filter(x => x.predicate == 'FOCUS')[0]
     * def focusMarc600 = focusEdgeMarc600.target
-    * match focusMarc600.label == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin'
-    * match focusMarc600.doc['http://bibfra.me/vocab/lite/label'][0] == 'Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin'
+    * match focusMarc600.label == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin'
+    * match focusMarc600.doc['http://bibfra.me/vocab/lite/label'][0] == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin'
     * match focusMarc600.doc['http://bibfra.me/vocab/lite/language'][0] == 'German & Latin'
     * match focusMarc600.types contains 'HUB'
 
