@@ -16,7 +16,10 @@ Feature: LCCN validation for duplicates.
     * def settingRequest = read('samples/setting-request.json')
     * call postSetting
 
-    # Step 2: Create work and instance
+    # Step 2: Clear caches to ensure setting is applied before resource creation
+    * call deleteCache
+
+    # Step 3: Create work and instance
     * configure headers = testUserHeaders
     * def workRequest = read('samples/work-request.json')
     * def workResponse = call postResource { resourceRequest: '#(workRequest)' }
@@ -25,21 +28,24 @@ Feature: LCCN validation for duplicates.
     * def instanceRequest = read('samples/instance-request.json')
     * def instanceResponse = call postResource { resourceRequest: '#(instanceRequest)' }
 
-    # Step 3: Update the instance with same LCCN (here we check linked-data -> mod-search interaction and id exclusion)
+    # Step 4: Update the instance with same LCCN (here we check linked-data -> mod-search interaction and id exclusion)
     * def instanceId = instanceResponse.response.resource['http://bibfra.me/vocab/lite/Instance'].id
     * call putResource { id: '#(instanceId)' , resourceRequest: '#(instanceRequest)' }
     * def query = '(lccn=nn0987654321)'
     * call searchInventoryInstance
 
-    # Step 4: Create new instance with existing LCCN, verify bad request
+    # Step 5: Create new instance with existing LCCN, verify bad request
     * def duplicateLccnInstanceRequest = read('samples/duplicate-lccn-instance-request.json')
     * call validationErrorWithCodeOnResourceCreation { resource: '#(duplicateLccnInstanceRequest)', code: 'lccn_not_unique'}
 
-    # Step 5: Disable LCCN deduplication setting
+    # Step 6: Disable LCCN deduplication setting
     * configure headers = testAdminHeaders
     * eval settingRequest.value.duplicateLccnCheckingEnabled = false
     * call putSetting { id : '#(settingRequest.id)', settingRequest : '#(settingRequest)'}
 
-    # Step 6: Create new instance with existing LCCN, verify success
+    # Step 7: Clear caches to ensure setting is applied before next resource creation
+    * call deleteCache
+
+    # Step 8: Create new instance with existing LCCN, verify success
     * configure headers = testUserHeaders
     * call postResource { resourceRequest: '#(duplicateLccnInstanceRequest)' }
