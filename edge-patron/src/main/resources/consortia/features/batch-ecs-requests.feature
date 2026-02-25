@@ -18,9 +18,6 @@ Feature: ECS Batch Request creation
     * callonce variablesUniversity
 
   Scenario: Create batch ECS request
-    // apiKey for centralUser
-    * def apiKey = 'eyJzIjogImJkYXdubzNJcGx3byIsICJ0IjogImNlbnRyYWwxMjM0NTY3IiwgInUiOiAiY2VudHJhbF91c2VyIn0K'
-
     And path 'users', centralUserId
     When method GET
     Then status 200
@@ -37,7 +34,7 @@ Feature: ECS Batch Request creation
     # create batch request
     Given url edgeUrl
     And path 'patron/account/', extternalSystemId, 'instance', universityInstanceId, 'batch-request'
-    And param apikey = apikey
+    And param apikey = apiKey
     And request batchRequestEntity
     And method POST
     Then status 201
@@ -49,7 +46,7 @@ Feature: ECS Batch Request creation
     # verify batch request status until it becomes 'Completed'
     Given url edgeUrl
     And path 'patron/account/', extternalSystemId, 'instance', universityInstanceId, 'batch-request', batchId, 'status'
-    And param apikey = apikey
+    And param apikey = apiKey
     And request batchRequestEntity
     And retry until response.status == 'Completed'
     And method GET
@@ -80,7 +77,7 @@ Feature: ECS Batch Request creation
     # verify batchRequestInfo record in holds and batches section from patron/account response
     Given url edgeUrl
     And path 'patron/account/', extternalSystemId
-    And param apikey = apikey
+    And param apikey = apiKey
     And param includeHolds = true
     And param includeBatches = true
     When method GET

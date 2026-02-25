@@ -8,6 +8,25 @@ Feature: Initialize mod-consortia integration tests
     * configure readTimeout = 600000
     * configure connectTimeout = 600000
 
+    * table modules
+      | name                        |
+      | 'mod-permissions'           |
+      | 'okapi'                     |
+      | 'mod-users'                 |
+      | 'mod-login'                 |
+      | 'mod-inventory-storage'     |
+      | 'mod-pubsub'                |
+      | 'mod-circulation-storage'   |
+      | 'mod-source-record-manager' |
+      | 'mod-entities-links'        |
+      | 'mod-inventory'             |
+      | 'folio-custom-fields'       |
+      | 'edge-patron'               |
+      | 'mod-patron'                |
+      | 'mod-tlr'                   |
+      | 'mod-circulation'           |
+      | 'mod-circulation-bff'       |
+
     # Permissions for consortiaAdmin and universityUser
     * table userPermissions
       | name                                                        |
@@ -73,13 +92,14 @@ Feature: Initialize mod-consortia integration tests
     * def isInstanceMatchingDisabledId = callonce uuid
 
     # generate names for tenants
-    # * def random = callonce randomMillis
+    * def random = callonce randomMillis
     * def uuids = callonce uuids 4
     * def centralTenantId = uuids[0]
-    * def centralTenantName = 'central1719557974290'
+    #* def centralTenantName = 'ttttpatron'
+    * def centralTenantName = 'central' + random
     * def centralTenant = { id : '#(centralTenantId)', name: '#(centralTenantName)' }
     * def universityTenantId = uuids[1]
-    * def universityTenantName = 'university1719557974290'
+    * def universityTenantName = 'university' + random
     * def universityTenant = { id : '#(universityTenantId)', name: '#(universityTenantName)' }
 
     * def universityUserId = uuids[2]
@@ -92,6 +112,7 @@ Feature: Initialize mod-consortia integration tests
     * def universityUser = { id: '#(universityUserId)', username: 'university_user', password: 'university_user_password', type: 'staff', tenant: '#(universityTenantName)' }
 
     * def centralUser = { id: '#(centralUserId)', username: 'central_user', password: 'central_user_password', type: 'staff', tenant: '#(centralTenantName)' }
+    #* def centralUser = { id: '#(centralUserId)', username: 'testpatron', password: 'password', type: 'staff', tenant: '#(centralTenantName)' }
 
     # reusable features
     * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
