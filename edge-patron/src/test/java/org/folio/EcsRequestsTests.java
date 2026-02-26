@@ -1,5 +1,8 @@
 package org.folio;
 
+import static java.lang.System.setProperty;
+
+import java.util.UUID;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -28,5 +31,24 @@ class EcsRequestsTests extends TestBaseEureka {
   @Test
   void ecsRequestsTest() {
     runFeatureTest("ecs-requests.feature");
+  }
+
+  @Override
+  public void runHook() {
+    super.runHook();
+    setProperty("centralAdminId", randomUUID());
+    setProperty("centralUserId", randomUUID());
+    setProperty("universityUserId",randomUUID());
+
+    setProperty("consortiumId", randomUUID());
+
+    setProperty("randomNumbers", String.valueOf(java.lang.System.currentTimeMillis()));
+
+    setProperty("centralTenantId", randomUUID());
+    setProperty("universityTenantId", randomUUID());
+  }
+
+  private String randomUUID() {
+    return UUID.randomUUID().toString();
   }
 }

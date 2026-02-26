@@ -11,6 +11,17 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
+  var randomNumbers = karate.properties['randomNumbers'] ? karate.properties['randomNumbers'] : '1234567890';
+  var centralTenantName = 'central' + randomNumbers;
+  var centralTenantId = karate.properties['centralTenantId'];
+  var universityTenantName = 'university' + randomNumbers;
+  var universityTenantId = karate.properties['universityTenantId'];
+  var centralAdminId = karate.properties['centralAdminId'];
+  var centralUserId = karate.properties['centralUserId'];
+  var universityUserId = karate.properties['universityUserId'];
+
+  var consortiumId = karate.properties['consortiumId'];
+
   var config = {
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -23,6 +34,15 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: 'ttttpatron', name: 'testpatron', password: 'password'},
+
+    centralTenantName: centralTenantName,
+    centralTenantId: centralTenantId ? centralTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    universityTenantName: universityTenantName,
+    universityTenantId: universityTenantId ? universityTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+
+    consortiaAdmin: { id: centralAdminId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenantName },
+    universityUser: { id: universityUserId, username: 'university_user', password: 'university_user_password', type: 'staff', tenant: universityTenantName },
+    centralUser: { id: centralUserId, username: 'central_user', password: 'central_user_password', type: 'staff', tenant: centralTenantName },
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -90,9 +110,21 @@ function fn() {
   };
 
   if (env == 'dev') {
-    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
-    config.kcClientId = 'supersecret';
-    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-volaris-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+
+    config.kcClientId = 'folio-backend-admin-client';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.checkDepsDuringModInstall = 'false';
+    config.apikey = 'eyJzIjoiQnJVZEpkbDJrQSIsInQiOiJ0dHR0cGF0cm9uIiwidSI6InRlc3RwYXRyb24ifQ==';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
   } else if (env == 'snapshot-2') {
     config.apikey = 'eyJzIjoiQnJVZEpkbDJrQSIsInQiOiJ0dHR0cGF0cm9uIiwidSI6InRlc3RwYXRyb24ifQ==';
     config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';

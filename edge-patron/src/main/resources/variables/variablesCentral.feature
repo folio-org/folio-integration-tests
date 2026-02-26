@@ -48,7 +48,3 @@ Feature: Central variables
   Scenario: orders variables
     * def centralApprovalPlanAcqMethodId = 'e69a29f8-f4b2-472e-8b6b-bfca1679dd38'
     * def centralPurchaseAcqMethodId = 'f64e8df1-33de-4bb1-970d-5d2767e712a3'
-
-  Scenario: User IDs
-    * def centralAdminId = '122b3d2b-4788-4f1e-9117-56daa91cb75c'
-    * def centralUserId = '6d27d190-b6e4-4075-b80f-01517bafb2d4'
