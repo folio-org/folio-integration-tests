@@ -25,6 +25,7 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    linkedDataBulkImportUser: {tenant: testTenant, name: 'linked-data-bulk-import', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
