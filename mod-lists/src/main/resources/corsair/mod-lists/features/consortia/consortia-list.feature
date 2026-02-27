@@ -123,28 +123,28 @@ Feature: mod-consortia and mod-lists integration tests
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
-    Scenario: Create ['central', 'university'] tenants and set up admins
+  Scenario: Create ['central', 'university'] tenants and set up admins
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
 
-    Scenario: Consortium api tests
+  Scenario: Consortium api tests
     * call read('consortium.feature')
 
-    Scenario: Tenant api tests
+  Scenario: Tenant api tests
     * call read('tenant.feature')
 
-    Scenario Outline: ECS Export - <entityType> with <columnType>
+  Scenario Outline: ECS Export - <entityType> with <columnType>
     * call read('ecs-export.feature') <params>
 
     Examples:
-      | entityType | columnType        | params                                                                                    |
-      | Instance   | all columns       | { listFile: 'instance-list-ecs.json', ecsField: 'instance.tenant_name' }                 |
-      | Instance   | selected columns  | { listFile: 'instance-list-ecs.json', fields: ['instance.hrid', 'instance.title', 'instance.id'] } |
-      | Item       | all columns       | { listFile: 'item-list.json', ecsField: 'items.tenant_name' }                            |
-      | Item       | selected columns  | { listFile: 'item-list.json', fields: ['items.id', 'items.barcode', 'items.hrid'] }      |
-      | Holdings   | all columns       | { listFile: 'holdings-list.json', ecsField: 'holdings.tenant_name' }                     |
-      | Holdings   | selected columns  | { listFile: 'holdings-list.json', fields: ['holdings.id', 'holdings.hrid', 'holdings.instance_id'] } |
+      | entityType | columnType       | params                                                                                               |
+      | Instance   | all columns      | { listFile: 'instance-list-ecs.json', ecsField: 'instance.tenant_name' }                             |
+      | Instance   | selected columns | { listFile: 'instance-list-ecs.json', fields: ['instance.hrid', 'instance.title', 'instance.id'] }   |
+      | Item       | all columns      | { listFile: 'item-list.json', ecsField: 'items.tenant_name' }                                        |
+      | Item       | selected columns | { listFile: 'item-list.json', fields: ['items.id', 'items.barcode', 'items.hrid'] }                  |
+      | Holdings   | all columns      | { listFile: 'holdings-list.json', ecsField: 'holdings.tenant_name' }                                 |
+      | Holdings   | selected columns | { listFile: 'holdings-list.json', fields: ['holdings.id', 'holdings.hrid', 'holdings.instance_id'] } |
 
-    Scenario: Destroy created ['university', 'central'] tenants
+  Scenario: Destroy created ['university', 'central'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}
