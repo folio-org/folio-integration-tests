@@ -33,7 +33,7 @@ Feature: Create Work connected to Hubs as subjects via API
           "http://bibfra.me/vocab/library/title":[
             {
               "http://bibfra.me/vocab/library/Title":{
-                "http://bibfra.me/vocab/library/mainTitle":[ "a test work with two hub subjects" ]
+                "http://bibfra.me/vocab/library/mainTitle":[ "hub-as-subject-work" ]
               }
             }
           ],
@@ -95,7 +95,7 @@ Feature: Create Work connected to Hubs as subjects via API
             {
               "http://bibfra.me/vocab/library/Title":{
                 "http://bibfra.me/vocab/library/mainTitle":[
-                  "A test instance connected to work that has Hub subjects"
+                  "hub-as-subject-instance"
                 ]
               }
             }
