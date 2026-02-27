@@ -19,7 +19,7 @@ Feature: update of two authorities records linked to one instance tests
     When method GET
     Then status 200
     And match response.parsedRecord.content.fields[*].100 != null
-    And match response.parsedRecord.content.fields[*].100.subfields[*].9 != []
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 == ['#(authorityId1)']
 
     # save bib snapshotId to use for retry later
     * def bibSnapshotId = response.snapshotId
@@ -43,6 +43,11 @@ Feature: update of two authorities records linked to one instance tests
     And request record
     When method PUT
     Then status 202
+
+    Given path '/links/instances', instanceId
+    And retry until response.totalRecords == 0
+    When method GET
+    Then status 200
 
     # count links
     Given path '/search/authorities'
@@ -124,6 +129,11 @@ Feature: update of two authorities records linked to one instance tests
     And request record
     When method PUT
     Then status 202
+
+    Given path '/links/instances', instanceId
+    And retry until response.totalRecords == 0
+    When method GET
+    Then status 200
 
     # count links
     Given path '/search/authorities'
