@@ -39,6 +39,7 @@ function fn() {
     centralTenantId: centralTenantId ? centralTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     universityTenantName: universityTenantName,
     universityTenantId: universityTenantId ? universityTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    consortiumId: consortiumId,
 
     consortiaAdmin: { id: centralAdminId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenantName },
     universityUser: { id: universityUserId, username: 'university_user', password: 'university_user_password', type: 'staff', tenant: universityTenantName },
