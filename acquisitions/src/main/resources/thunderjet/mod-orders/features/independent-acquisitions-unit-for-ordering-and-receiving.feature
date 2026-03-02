@@ -1,4 +1,4 @@
-# created for MODORDERS-982
+# For MODORDERS-982
 @parallel=false
 Feature: Independent acquisitions unit for ordering and receiving
 

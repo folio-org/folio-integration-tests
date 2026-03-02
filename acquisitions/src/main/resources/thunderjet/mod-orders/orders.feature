@@ -300,3 +300,6 @@ Feature: mod-orders integration tests
 
   Scenario: Open order with invalid material type rollback
     * call read('features/open-order-with-invalid-material-type-rollback.feature')
+
+  Scenario: Receive pieces and delete empty holding
+    * call read('features/receive-pieces-delete-empty-holding.feature')
