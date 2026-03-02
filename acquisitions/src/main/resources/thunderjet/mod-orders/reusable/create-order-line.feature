@@ -1,7 +1,7 @@
 @ignore
 Feature: Create order line
   # parameters: id, orderId, fundId, listUnitPrice, listUnitPriceElectronic, isPackage, titleOrPackage, paymentStatus, receiptStatus, locations, orderFormat
-  # quantity, quantityElectronic, checkinItems, createInventory, fundDistribution, claimingActive, claimingInterval, suppressInstanceFromDiscovery, productIds
+  # quantity, quantityElectronic, checkinItems, createInventory, eresourceCreateInventory, fundDistribution, claimingActive, claimingInterval, suppressInstanceFromDiscovery, productIds
 
   Background:
     * url baseUrl
@@ -22,6 +22,7 @@ Feature: Create order line
     * def quantityElectronic = karate.get("quantityElectronic", 0)
     * def checkinItems = karate.get("checkinItems", poLine.checkinItems)
     * def createInventory = karate.get("createInventory", poLine.physical.createInventory)
+    * def eresourceCreateInventory = karate.get("eresourceCreateInventory", poLine.eresource.createInventory)
     * def fundDistribution = karate.get("fundDistribution", poLine.fundDistribution)
     * def fundId = karate.get("fundId", fundDistribution.length > 0 ? fundDistribution[0].fundId : null)
     * def expenseClassId = karate.get("expenseClassId", fundDistribution.length > 0 ? fundDistribution[0].expenseClassId : null)
@@ -48,6 +49,7 @@ Feature: Create order line
     * set poLine.locations = locations
     * set poLine.checkinItems = checkinItems
     * set poLine.physical.createInventory = createInventory
+    * set poLine.eresource.createInventory = eresourceCreateInventory
     * set poLine.fundDistribution = fundDistribution
     * set poLine.claimingActive = claimingActive
     * set poLine.claimingInterval = claimingInterval

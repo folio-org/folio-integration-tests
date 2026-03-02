@@ -23,7 +23,8 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("receive-piece-new-holding-edit", true);
+    FEATURE_1("receive-piece-new-holding-edit", true),
+    FEATURE_2("receive-pieces-delete-empty-holding", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -68,5 +69,12 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void createOrderPaymentNotRequiredFullyReceive() {
     runFeatureTest(Feature.FEATURE_1.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C1045969) Receive pieces for POL with Instance Holdings and delete empty holding")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void receivePiecesDeleteEmptyHolding() {
+    runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 }
