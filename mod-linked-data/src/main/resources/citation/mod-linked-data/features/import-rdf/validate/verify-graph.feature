@@ -71,12 +71,12 @@ Feature: Import Bibframe2 RDF - Verify graph
     * def wangLccn = { label: 'no2012142443', types: ['ID_LCNAF'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/names/no2012142443'], 'http://bibfra.me/vocab/lite/name': ['no2012142443'], 'http://bibfra.me/vocab/lite/label': ['no2012142443'] } }
     * eval validateSubjectGraph(subjectGraphs, 'Wang, Jack, 1972', wangDoc, 'PERSON', wangTargetDoc, wangLccn)
 
-    # Validate Private flying -- Periodicals -- Accidents -- United States subject with LCCN and sub-focuses
+    # Validate Private flying -- Accidents -- United States -- Periodicals subject with LCCN and sub-focuses
     * def conceptDoc =
       """
       {
         'http://bibfra.me/vocab/lite/name': [ 'Private flying' ],
-        'http://bibfra.me/vocab/lite/label': [ 'Private flying -- Periodicals -- Accidents -- United States' ],
+        'http://bibfra.me/vocab/lite/label': [ 'Private flying -- Accidents -- United States -- Periodicals' ],
         'http://library.link/vocab/resourcePreferred': [ 'true' ],
         'http://bibfra.me/vocab/library/formSubdivision': [ 'Periodicals' ],
         'http://bibfra.me/vocab/library/generalSubdivision': [ 'Accidents' ],
@@ -98,8 +98,8 @@ Feature: Import Bibframe2 RDF - Verify graph
       'http://bibfra.me/vocab/lite/label': ['sh2008001841']
       }
       """
-    * eval validateSubjectGraph(subjectGraphs, 'Private flying -- Periodicals -- Accidents -- United States', conceptDoc, 'TOPIC', focusDoc, null)
-    * def subject = subjectGraphs.filter(x => x.label == 'Private flying -- Periodicals -- Accidents -- United States')[0]
+    * eval validateSubjectGraph(subjectGraphs, 'Private flying -- Accidents -- United States -- Periodicals', conceptDoc, 'TOPIC', focusDoc, null)
+    * def subject = subjectGraphs.filter(x => x.label == 'Private flying -- Accidents -- United States -- Periodicals')[0]
     * def subjectLccnDoc = subject.outgoingEdges.filter(x => x.predicate == 'MAP').map(x => x.target.doc)
     * def subFocusLabels = subject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS').map(x => x.target.label)
     * match subFocusLabels contains 'Accidents'
@@ -109,7 +109,7 @@ Feature: Import Bibframe2 RDF - Verify graph
 
   @C986305
   Scenario: Validate blank node complex subject imported into graph
-    # Validate Dyes and dyeing -- Textile fibers -- Japan -- History -- 19th century -- Exhibitions subject with flexible label order
+    # Validate Dyes and dyeing -- History -- Textile fibers -- Japan -- 19th century -- Exhibitions subject with flexible label order
     * def dyesSubject = subjectGraphs.filter(x => x.label.startsWith('Dyes and dyeing'))[0]
     * def dyesDoc = { 'http://bibfra.me/vocab/lite/name': ['Dyes and dyeing'], 'http://bibfra.me/vocab/lite/label': [#(dyesSubject.label)], 'http://bibfra.me/vocab/library/formSubdivision': ['Exhibitions'], 'http://bibfra.me/vocab/library/generalSubdivision': ['Textile fibers', 'History'], 'http://bibfra.me/vocab/library/geographicSubdivision': ['Japan'], 'http://bibfra.me/vocab/library/chronologicalSubdivision': ['19th century'] }
 

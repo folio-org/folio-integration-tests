@@ -36,7 +36,11 @@ Feature: bulk operations integration tests
       | 'data-export.job.item.get'                                |
       | 'data-export.job.item.post'                               |
       | 'departments.item.post'                                   |
+      | 'inventory-storage.instances.item.get'                    |
+      | 'inventory-storage.instance-date-types.collection.get'    |
+      | 'inventory-storage.classification-types.collection.get'   |
       | 'inventory-storage.classification-types.item.post'        |
+      | 'inventory-storage.contributor-name-types.collection.get' |
       | 'inventory-storage.contributor-name-types.item.post'      |
       | 'inventory-storage.contributor-types.collection.get'      |
       | 'inventory-storage.holdings-sources.item.get'             |
@@ -47,6 +51,7 @@ Feature: bulk operations integration tests
       | 'inventory-storage.holdings.item.put'                     |
       | 'inventory-storage.identifier-types.item.post'            |
       | 'inventory-storage.instance-formats.collection.get'       |
+      | 'inventory-storage.instance-statuses.collection.get'      |
       | 'inventory-storage.instance-types.collection.get'         |
       | 'inventory-storage.instance-types.item.post'              |
       | 'inventory-storage.instances.item.post'                   |
@@ -56,8 +61,11 @@ Feature: bulk operations integration tests
       | 'inventory-storage.locations.item.get'                    |
       | 'inventory-storage.locations.item.post'                   |
       | 'inventory-storage.loan-types.item.get'                   |
+      | 'inventory-storage.nature-of-content-terms.collection.get'|
       | 'inventory-storage.service-points.item.post'              |
+      | 'inventory-storage.statistical-code-types.collection.get' |
       | 'inventory-storage.statistical-code-types.item.post'      |
+      | 'inventory-storage.statistical-codes.collection.get'      |
       | 'inventory-storage.statistical-codes.item.post'           |
       | 'inventory.instances.collection.get'                      |
       | 'inventory.instances.item.get'                            |

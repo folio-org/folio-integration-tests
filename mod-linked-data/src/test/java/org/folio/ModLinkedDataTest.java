@@ -83,4 +83,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void previewAndImportHub() {
     runFeatureTest("hub/preview-import-hub.feature");
   }
+
+  @Test
+  void hubAsSubjectOfWork() {
+    runFeatureTest("hub/hubs-as-subject.feature");
+  }
 }

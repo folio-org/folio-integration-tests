@@ -41,4 +41,4 @@ Feature: Create Work connected to Hubs via API
     # Verify that the derived MARC fields contains marc 240
     * def getMarcCall = call getDerivedMarc { resourceId:  '#(instanceId)' }
     * def fields = getMarcCall.response.parsedRecord.content.fields
-    * match fields contains { "240": { "subfields": [ { "a": "Barbakʻaże, Datʻo. 1966-. Trpʻoba camebultʻa" }, { "a": "Trpʻoba camebultʻa" } ], "ind1": " ", "ind2": " " } }
+    * match fields contains { "240": { "subfields": [ { "a": "Trpʻoba camebultʻa" } ], "ind1": " ", "ind2": " " } }
