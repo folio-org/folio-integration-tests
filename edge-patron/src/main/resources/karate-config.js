@@ -12,7 +12,7 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var randomNumbers = karate.properties['randomNumbers'] ? karate.properties['randomNumbers'] : '1234567890';
-  var centralTenantName = 'central' + randomNumbers;
+  var centralTenantName = 'ttttpatron';
   var centralTenantId = karate.properties['centralTenantId'];
   var universityTenantName = 'university' + randomNumbers;
   var universityTenantId = karate.properties['universityTenantId'];
@@ -40,10 +40,12 @@ function fn() {
     universityTenantName: universityTenantName,
     universityTenantId: universityTenantId ? universityTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     consortiumId: consortiumId,
+    centralUserId: centralUserId,
+    centralAdminId: centralAdminId,
 
     consortiaAdmin: { id: centralAdminId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenantName },
     universityUser: { id: universityUserId, username: 'university_user', password: 'university_user_password', type: 'staff', tenant: universityTenantName },
-    centralUser: { id: centralUserId, username: 'central_user', password: 'central_user_password', type: 'staff', tenant: centralTenantName },
+    centralUser: { id: centralUserId, username: 'testpatron', password: 'password', type: 'staff', tenant: centralTenantName },
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -136,6 +138,13 @@ function fn() {
     config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
+    config.kcClientId = 'folio-backend-admin-client';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}'

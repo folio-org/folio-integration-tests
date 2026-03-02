@@ -4,11 +4,6 @@ Feature: ECS Batch Request creation
   Background:
     * url baseUrl
 
-    * print 'username: ' + centralUser.username
-    * print 'password: ' + centralUser.password
-    * print 'centralUserId: ' + centralUserId
-    * print 'tenantName: ' + centralTenantName
-
     * call eurekaLogin { username: '#(centralUser.username)', password: '#(centralUser.password)', tenant: '#(centralTenantName)' }
     * def headersConsortia = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': '*/*' }
 
@@ -23,8 +18,6 @@ Feature: ECS Batch Request creation
     Then status 200
     * def extternalSystemId = response.externalSystemId
 
-    * print 'externalSystemId: ' + extternalSystemId
-
     * def itemId1 = universityItemId1
     * def itemId2 = universityItemId2
     * def itemId3 = universityItemId3
@@ -34,7 +27,7 @@ Feature: ECS Batch Request creation
     # create batch request
     Given url edgeUrl
     And path 'patron/account/', extternalSystemId, 'instance', universityInstanceId, 'batch-request'
-    And param apikey = apiKey
+    And param apikey = apikey
     And request batchRequestEntity
     And method POST
     Then status 201
@@ -46,7 +39,7 @@ Feature: ECS Batch Request creation
     # verify batch request status until it becomes 'Completed'
     Given url edgeUrl
     And path 'patron/account/', extternalSystemId, 'instance', universityInstanceId, 'batch-request', batchId, 'status'
-    And param apikey = apiKey
+    And param apikey = apikey
     And request batchRequestEntity
     And retry until response.status == 'Completed'
     And method GET
@@ -77,7 +70,7 @@ Feature: ECS Batch Request creation
     # verify batchRequestInfo record in holds and batches section from patron/account response
     Given url edgeUrl
     And path 'patron/account/', extternalSystemId
-    And param apikey = apiKey
+    And param apikey = apikey
     And param includeHolds = true
     And param includeBatches = true
     When method GET
