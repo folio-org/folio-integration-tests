@@ -50,7 +50,7 @@ Feature: Create new instance under existing work using RDF import
     * def instances = searchCall.response.content[0].instances
     * match instances[*].id contains insanceResourceId
 
-    # Step 4 - Fetch existing work resource & asert that it now contains a "link" property
+    # Step 4 - Fetch existing work resource & assert that it now contains a "link" property
     * def workGraphCall = call getResourceGraph { resourceId: '#(workResourceId)' }
     * def workGraphResponse = workGraphCall.response
     * match workGraphResponse.doc contains { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/resources/works/existing-work'] }
