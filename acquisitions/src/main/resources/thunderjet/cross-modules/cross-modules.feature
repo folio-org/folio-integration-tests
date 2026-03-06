@@ -20,6 +20,9 @@ Feature: cross-module integration tests
   Scenario: Approve an invoice using different fiscal years
     * call read('features/approve-invoice-using-different-fiscal-years.feature')
 
+  Scenario: Approve invoice with different fund than order
+    * call read('features/approve-invoice-with-different-fund-than-order.feature')
+
   Scenario: Approve invoice with negative line
     * call read('features/approve-invoice-with-negative-line.feature')
 

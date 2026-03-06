@@ -80,7 +80,8 @@ public class CrossModulesApiTest extends TestBaseEureka {
     FEATURE_55("update-encumbrance-links-with-fiscal-year", true),
     FEATURE_56("update_fund_in_poline_when_invoice_approved", true),
     FEATURE_57("rollover-multi-ledger", true),
-    FEATURE_58("rollover-many-orders-and-lines", false);
+    FEATURE_58("rollover-many-orders-and-lines", false),
+    FEATURE_59("approve-invoice-with-different-fund-than-order", false);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -469,4 +470,11 @@ public class CrossModulesApiTest extends TestBaseEureka {
   void rolloverManyOrdersAndLines() {
     runFeatureTest(Feature.FEATURE_58.getFileName());
   }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void approveInvoiceWithDifferentFundThanOrder() {
+    runFeatureTest(Feature.FEATURE_59.getFileName());
+  }
+
 }

@@ -13,7 +13,7 @@ Feature: Create invoice line
     * def adjustments = karate.get('adjustments', [])
     * def tags = karate.get('tags', null)
     * def invoiceLine = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-    * def fundCode = karate.get('fundCode', invoiceLine.fundDistributions[0].code)
+    * def fundCode = karate.get('fundCode', fundId)
 
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId

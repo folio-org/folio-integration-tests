@@ -1,4 +1,4 @@
-# created for MODORDERS-982
+# For MODORDERS-982
 @parallel=false
 Feature: Independent acquisitions unit for ordering and receiving
 
@@ -8,17 +8,17 @@ Feature: Independent acquisitions unit for ordering and receiving
 
     * def testUser2 = { tenant: '#(testTenant)', name: 'test-user-2', password: 'test' }
     * table user2Permissions
-      | name                                           |
-      | 'orders.acquisitions-units-assignments.assign' |
-      | 'orders.acquisitions-units-assignments.manage' |
-      | 'orders.item.get'                              |
-      | 'orders.item.put'                              |
-      | 'orders.titles.collection.get'                 |
-      | 'orders.titles.item.get'                       |
-      | 'orders.titles.item.post'                      |
-      | 'orders.titles.item.put'                       |
-      | 'titles.acquisitions-units-assignments.assign' |
-      | 'titles.acquisitions-units-assignments.manage' |
+      | name                                                   |
+      | 'orders.acquisitions-units-assignments.create.execute' |
+      | 'orders.acquisitions-units-assignments.manage.execute' |
+      | 'orders.item.get'                                      |
+      | 'orders.item.put'                                      |
+      | 'orders.titles.collection.get'                         |
+      | 'orders.titles.item.get'                               |
+      | 'orders.titles.item.post'                              |
+      | 'orders.titles.item.put'                               |
+      | 'titles.acquisitions-units-assignments.create.execute' |
+      | 'titles.acquisitions-units-assignments.manage.execute' |
     * def v = callonce createAdditionalUser { testUser: '#(testUser2)',  userPermissions: '#(user2Permissions)' }
 
     * callonce login testAdmin

@@ -46,7 +46,7 @@ Feature: Initialize edge-orders integration tests
       | "mosaic.orders.item.post"                                 |
       | "mosaic.validate.get"                                     |
       | "okapi.proxy.tenants.modules.list"                        |
-      | "orders.acquisitions-units-assignments.manage"            |
+      | "orders.acquisitions-units-assignments.manage.execute"    |
       | "orders.acquisition-methods.collection.get"               |
       | "orders.item.get"                                         |
       | "orders.item.post"                                        |

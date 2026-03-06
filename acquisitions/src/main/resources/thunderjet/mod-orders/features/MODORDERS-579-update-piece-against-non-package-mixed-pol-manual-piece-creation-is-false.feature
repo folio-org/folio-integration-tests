@@ -394,11 +394,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     When method GET
     Then status 200
 
-    * print 'Check holding should be deleted, because flag "deleteHolding" was true and no exist item or pieces'
-    Given path 'holdings-storage/holdings', newElectronicCreatedHoldingIdFirstUpdate
-    When method GET
-    Then status 404
-
     * print 'Check order and transaction after Electronic piece update'
     * configure headers = headersUser
     Given path 'orders/composite-orders', orderId

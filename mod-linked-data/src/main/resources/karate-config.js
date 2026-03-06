@@ -25,10 +25,12 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    linkedDataBulkImportUser: {tenant: testTenant, name: 'linked-data-bulk-import', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
+    deleteCache: karate.read('classpath:citation/mod-linked-data/features/util/admin.feature@deleteCache'),
     getResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResource'),
     getInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getInventoryInstance'),
     putInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putInventoryInstance'),

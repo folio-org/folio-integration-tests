@@ -9,21 +9,61 @@
 ### Create a new Karate feature
 
 ```txt
-Create a new Karate feature in acquisitions/src/main/resources/thunderjet/{{FOLDER}} folder with {{NAME}} name. 
+Create a new Karate feature in acquisitions/src/main/resources/thunderjet/{{FOLDER}} folder (with {{NAME}} name).
 This new feature must perform {{FINE_DETAILS}}.
-Use any examples stored in acquisitions/ai/prompt/examples folder if needed.  
+Use any examples stored in acquisitions/ai/prompt/examples folder if needed.
 
-Make sure you adhere with our system prompt found in acquisitions/ai/ACQ_{{FOLDER}}_SYSTEM_PROMPT.md.
+Make sure you adhere with our system prompt found in acquisitions/ai/ACQ_{{ORDERS|CROSS_MODULES}}_SYSTEM_PROMPT.md.
 Make sure the new feature has correct comment, print and header formats, and that we don't deviate from the norms.
-Use our reusable features defined in acquisitions/src/main/resources/karate-config.js when necessary. 
-At the end add our new feature to acquisitions/src/main/resources/thunderjet/{{FOLDER}}/{{MODULE}}.feature, and the associated Java method to {{FOLDER}}ApiTest. 
+Use our reusable features defined in acquisitions/src/main/resources/karate-config.js when necessary.
+At the end add our new feature to acquisitions/src/main/resources/thunderjet/{{FOLDER}}/{{ROOT_FILE}}.feature, and the associated Java method to {{CLASS_NAME_PREFIX}}ApiTest.
 
 Do not create any explanatory markdown guides.
-Do not overcomplicate the solution with unknown syntax. 
-Do not add scenarios or Java methods in the middle of the file; add them at the end (i.e. append-only). 
+Do not overcomplicate the solution with unknown syntax.
+Do not add scenarios or Java methods in the middle of the file; add them at the end (i.e. append-only).
 Do not run unix-based (e.g. grep, sed, ls, tail, head, etc) or Windows commands (e.g. dir, findstr, etc); use your editor tools to make changes.
-Do not run mvn test by yourself, it is too slow. 
+Do not run mvn test by yourself, it is too slow.
 Think for longer if needed, be accurate.
 ```
 
-> Replace `{{FOLDER}}`, `{{NAME}}`, `{{MODULE}}` and populate `{{FINE_DETAILS}}` with test-related fine details
+> Replace `{{FOLDER}}`, `{{NAME}}`, `{{ROOT_FILE}}`, `{{CLASS_NAME_PREFIX}} and populate `{{FINE_DETAILS}}` with test-related fine details
+
+- A Test Rail-based example in mod-orders folder to generate a feature for case C1045969
+
+```txt
+Create a new Karate feature in acquisitions/src/main/resources/thunderjet/mod-orders folder.
+This new feature must mirror test rail case C1045969.
+Use any examples stored in acquisitions/ai/prompt/examples folder if needed.
+
+Make sure you adhere with our system prompt found in acquisitions/ai/ACQ_ORDERS_SYSTEM_PROMPT.md.
+Make sure the new feature has correct comment, print and header formats, and that we don't deviate from the norms.
+Use our reusable features defined in acquisitions/src/main/resources/karate-config.js when necessary.
+At the end add our new feature to acquisitions/src/main/resources/thunderjet/mod-orders/orders.feature, and the associated Java method to OrdersCriticalPathApiTest.
+
+Do not create any explanatory markdown guides.
+Do not overcomplicate the solution with unknown syntax.
+Do not add scenarios or Java methods in the middle of the file; add them at the end (i.e. append-only).
+Do not run unix-based (e.g. grep, sed, ls, tail, head, etc) or Windows commands (e.g. dir, findstr, etc); use your editor tools to make changes.
+Do not run mvn test by yourself, it is too slow.
+Think for longer if needed, be accurate.
+```
+
+- A Test Rail-based example in consortia folder to generate a feature for case C1045969
+
+```txt
+Create a new Karate feature in acquisitions/src/main/resources/thunderjet/consortia folder.
+This new feature must mirror test rail case C934325.
+Use any examples stored in acquisitions/ai/prompt/examples folder if needed.
+
+Make sure you adhere with our system prompt found in acquisitions/ai/ACQ_ORDERS_SYSTEM_PROMPT.md.
+Make sure the new feature has correct comment, print and header formats, and that we don't deviate from the norms.
+Use our reusable features defined in acquisitions/src/main/resources/karate-config.js when necessary.
+At the end add our new feature to acquisitions/src/main/resources/thunderjet/consortia/consortia-orders.feature.feature, and the associated Java method to ConsortiaOrdersApiTest.
+
+Do not create any explanatory markdown guides.
+Do not overcomplicate the solution with unknown syntax.
+Do not add scenarios or Java methods in the middle of the file; add them at the end (i.e. append-only).
+Do not run unix-based (e.g. grep, sed, ls, tail, head, etc) or Windows commands (e.g. dir, findstr, etc); use your editor tools to make changes.
+Do not run mvn test by yourself, it is too slow.
+Think for longer if needed, be accurate.
+```
