@@ -43,7 +43,7 @@ class QuickMarcApiTest extends TestBaseEureka {
     @Test
     @Order(4)
     void testQuickMarcParallelUpdateOfLinkedAuthorityRecordsFeature() {
-        runFeatureTest("quick-marc-update-linked-authority-records.feature", 2);
+        runFeatureTest("quick-marc-update-linked-authority-records.feature");
     }
 
     @Test

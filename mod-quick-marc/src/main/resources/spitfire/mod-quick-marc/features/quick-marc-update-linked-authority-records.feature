@@ -20,9 +20,19 @@ Feature: update of two authorities records linked to one instance tests
     Then status 200
     And match response.parsedRecord.content.fields[*].100 != null
     And match response.parsedRecord.content.fields[*].100.subfields[*].9 == ['#(authorityId1)']
+    And match response.parsedRecord.content.fields[*].600 != null
+    And match response.parsedRecord.content.fields[*].600.subfields[*].9 == ['#(authorityId1)']
+    And match response.parsedRecord.content.fields[*].240 != null
+    And match response.parsedRecord.content.fields[*].240.subfields[*].9 == ['#(authorityId2)']
 
     # save bib snapshotId to use for retry later
     * def bibSnapshotId = response.snapshotId
+
+    # check instance links
+    Given path '/links/instances', instanceId
+    And retry until response.totalRecords == 3
+    When method GET
+    Then status 200
 
     # retrieve quick marc authority record
     Given path '/records-editor/records'
@@ -44,12 +54,13 @@ Feature: update of two authorities records linked to one instance tests
     When method PUT
     Then status 202
 
+    # check instance links
     Given path '/links/instances', instanceId
-    And retry until response.totalRecords == 0
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
 
-    # count links
+    # count links for the authorityId1 record
     Given path '/search/authorities'
     And param query = '(id==' + authorityId1 + ' and authRefType==("Authorized"))'
     And retry until response.authorities[0].numberOfTitles == 0
@@ -65,6 +76,8 @@ Feature: update of two authorities records linked to one instance tests
     Then status 200
     And match response.parsedRecord.content.fields[*].100 != null
     And match response.parsedRecord.content.fields[*].100.subfields[*].9 == []
+    And match response.parsedRecord.content.fields[*].600 != null
+    And match response.parsedRecord.content.fields[*].600.subfields[*].9 == []
 
     # retrieve quick marc authority record
     Given path '/records-editor/records'
@@ -98,6 +111,12 @@ Feature: update of two authorities records linked to one instance tests
     When method PUT
     Then status 202
 
+    # check instance links
+    Given path '/links/instances', instanceId
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
+
   Scenario: Should unlink bib record on second authority field update making it unlinkable
     # retrieve marc bib record and check it contains a link
     Given path '/source-storage/records', instanceId, 'formatted'
@@ -105,7 +124,7 @@ Feature: update of two authorities records linked to one instance tests
     When method GET
     Then status 200
     And match response.parsedRecord.content.fields[*].240 != null
-    And match response.parsedRecord.content.fields[*].240.subfields[*].9 != []
+    And match response.parsedRecord.content.fields[*].240.subfields[*].9 == ['#(authorityId2)']
 
     # save bib snapshotId to use for retry later
     * def bibSnapshotId = response.snapshotId
@@ -130,12 +149,13 @@ Feature: update of two authorities records linked to one instance tests
     When method PUT
     Then status 202
 
+    # check instance links
     Given path '/links/instances', instanceId
-    And retry until response.totalRecords == 0
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
 
-    # count links
+    # count links for the authorityId2 record
     Given path '/search/authorities'
     And param query = '(id==' + authorityId2 + ' and authRefType==("Authorized"))'
     And retry until response.authorities[0].numberOfTitles == 0
