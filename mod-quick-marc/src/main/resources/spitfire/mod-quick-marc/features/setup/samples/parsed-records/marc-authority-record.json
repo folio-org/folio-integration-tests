@@ -61,15 +61,6 @@
     },
     {
       "isProtected": true,
-      "tag": "999",
-      "indicators": [
-        "f",
-        "f"
-      ],
-      "content": "$s 4caeba6e-8dd0-4eef-852a-cd3ab45d19d8 $i 21ec6f93-6ef0-498c-b2eb-330d6949d4d5"
-    },
-    {
-      "isProtected": true,
       "tag": "001",
       "content": "n  00001263 "
     },
