@@ -8,6 +8,25 @@ Feature: Initialize mod-consortia integration tests
     * configure readTimeout = 600000
     * configure connectTimeout = 600000
 
+    * table modules
+      | name                        |
+      | 'mod-permissions'           |
+      | 'okapi'                     |
+      | 'mod-users'                 |
+      | 'mod-login'                 |
+      | 'mod-inventory-storage'     |
+      | 'mod-pubsub'                |
+      | 'mod-circulation-storage'   |
+      | 'mod-source-record-manager' |
+      | 'mod-entities-links'        |
+      | 'mod-inventory'             |
+      | 'folio-custom-fields'       |
+      | 'edge-patron'               |
+      | 'mod-patron'                |
+      | 'mod-tlr'                   |
+      | 'mod-circulation'           |
+      | 'mod-circulation-bff'       |
+
     # Permissions for consortiaAdmin and universityUser
     * table userPermissions
       | name                                                        |
@@ -48,6 +67,7 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory.items.collection.get'                            |
       | 'inventory.items.item.delete'                               |
       | 'inventory.items.item.get'                                  |
+      | 'inventory.items.item.post'                                 |
       | 'inventory.items.move.item.post'                            |
       | 'inventory.tenant-items.collection.get'                     |
       | 'lost-item-fees-policies.collection.get'                    |
@@ -61,6 +81,11 @@ Feature: Initialize mod-consortia integration tests
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
       | 'users.item.put'                                            |
+      | 'users.collection.get'                                      |
+      | 'patron.account.instance-batch-request.item.post'           |
+      | 'patron.account.instance-batch-request-status.item.get'     |
+      | 'patron.account.item.get'                                   |
+      | 'circulation.requests.collection.get'                       |
 
     # load global variables
     * callonce variables
@@ -72,25 +97,8 @@ Feature: Initialize mod-consortia integration tests
     * def isInstanceMatchingDisabledId = callonce uuid
 
     # generate names for tenants
-    * def random = callonce randomMillis
-    * def uuids = callonce uuids 4
-    * def centralTenantId = uuids[0]
-    * def centralTenantName = 'central' + random
     * def centralTenant = { id : '#(centralTenantId)', name: '#(centralTenantName)' }
-    * def universityTenantId = uuids[1]
-    * def universityTenantName = 'university' + random
     * def universityTenant = { id : '#(universityTenantId)', name: '#(universityTenantName)' }
-
-    * def universityUserId = uuids[2]
-
-    # define consortium
-    * def consortiumId = uuids[3]
-
-    # define main users
-    * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenantName)' }
-    * def universityUser = { id: '#(universityUserId)', username: 'university_user', password: 'university_user_password', type: 'staff', tenant: '#(universityTenantName)' }
-
-    * def centralUser = { id: '#(centralUserId)', username: 'central_user', password: 'central_user_password', type: 'staff', tenant: '#(centralTenantName)' }
 
     # reusable features
     * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
@@ -160,6 +168,7 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory.items-by-holdings-id.collection.get'             |
       | 'inventory.items.collection.get'                            |
       | 'inventory.items.item.delete'                               |
+      | 'inventory.items.item.post'                                 |
       | 'inventory-storage.holdings.collection.get'                 |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
