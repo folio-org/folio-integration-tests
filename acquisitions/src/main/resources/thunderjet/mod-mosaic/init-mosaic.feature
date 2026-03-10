@@ -66,6 +66,7 @@ Feature: Initialize mod-mosaic integration tests
       | "orders.order-templates.item.get"                             |
       | "orders.order-templates.item.post"                            |
       | "orders.po-lines.collection.get"                              |
+      | "organizations.organizations.collection.get"                  |
       | "organizations.organizations.item.post"                       |
       | "users.collection.get"                                        |
 
