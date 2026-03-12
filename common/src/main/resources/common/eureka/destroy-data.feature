@@ -29,9 +29,9 @@ Feature: destroy data for tenant
 
     Given path 'entitlements'
     And param purge = true
+    And param async = true
     And request entitlementTemplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
-    And retry until responseStatus == 200
     When method DELETE
     Then status 200
 
