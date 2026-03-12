@@ -89,6 +89,8 @@ Feature: Initialize mod-consortia integration tests
     * def centralTenantUuid = uuids[0]
     * def centralTenantName = 'central' + random
     * def centralTenantId = centralTenantName
+    # make centralTenantId available to sub-feature calls (e.g. @InstallApplications) via karate.get
+    * karate.set('centralTenantId', centralTenantId)
     * def centralTenant = { id : '#(centralTenantUuid)', name: '#(centralTenantName)' }
     * def universityTenantUuid = uuids[1]
     * def universityTenantName = 'university' + random

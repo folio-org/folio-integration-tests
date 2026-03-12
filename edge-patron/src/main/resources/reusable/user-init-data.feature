@@ -23,12 +23,13 @@ Feature:
     When method POST
     * if (responseStatus == 201) karate.log('Group created')
     * if (responseStatus == 422 && response.errors && response.errors[0].message && response.errors[0].message.contains('value already exists')) karate.log('Group already exists, treat as success')
-    * if (!(responseStatus == 201 || (responseStatus == 422 && response.errors && response.errors[0].message && response.errors[0].message.contains('value already exists')))) karate.fail('Unexpected error creating group: ' + response)
+    * if (!(responseStatus == 201 || (responseStatus == 422 && response.errors && response.errors[0].message && response.errors[0].message.contains('value already exists')))) karate.fail('Unexpected error creating group. Status: ' + responseStatus + ', response: ' + karate.toJson(response))
     * def result = { groupId: groupId }
 
   @CreateUser
   Scenario: Create User
     * def userId = karate.get('userId', 'd3803887-08fd-4876-9a73-5f6d78683890')
+    * def groupId = karate.get('patronId', karate.get('groupId', java.util.UUID.randomUUID().toString()))
     * def firstName = karate.get('firstName', 'Elon')
     * def lastName = karate.get('lastName', 'Musk')
     * def userBarcode = karate.get('userBarcode', '12345612')
