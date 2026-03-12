@@ -6,7 +6,8 @@ Feature: destroy data for tenant
 
     * url baseUrl
     * configure readTimeout = 3000000
-    * configure retry = { count: 5, interval: 5000 }
+    # max polling time: ~10 minutes (40 retries x 15s)
+    * configure retry = { count: 40, interval: 15000 }
 
   @destroyEntitlement
   Scenario: delete entitlement
@@ -34,6 +35,13 @@ Feature: destroy data for tenant
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method DELETE
     Then status 200
+    * def flowId = response.flowId
+
+    Given path 'entitlement-flows', flowId
+    And param includeStages = true
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
+    When method GET
 
   @deleteTenant
   Scenario: delete tenant
