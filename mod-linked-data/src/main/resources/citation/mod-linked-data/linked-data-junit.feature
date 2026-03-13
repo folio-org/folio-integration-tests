@@ -60,6 +60,7 @@ Feature: mod-linked-data integration tests
       | 'browse.authorities.collection.get'                                   |
       | 'source-storage.records.formatted.item.get'                           |
       | 'linked-data.admin.caches.delete'                                     |
+      | 'base-url.item.put'                                                   |
 
     * table linkedDataBulkImportPermissions
       | name                                                       |
