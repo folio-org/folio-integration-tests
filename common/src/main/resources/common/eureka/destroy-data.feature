@@ -19,6 +19,7 @@ Feature: destroy data for tenant
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     * def totalAmount = response.totalRecords
+    * if (totalAmount < 1) karate.abort()
 
     Given path 'entitlements'
     And param query = 'tenantId==' + testTenantId
@@ -26,6 +27,7 @@ Feature: destroy data for tenant
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
+    * if (applicationIds.length < 1) karate.abort()
     * def entitlementTemplate = read('classpath:common/eureka/samples/entitlement-entity.json')
 
     Given path 'entitlements'
