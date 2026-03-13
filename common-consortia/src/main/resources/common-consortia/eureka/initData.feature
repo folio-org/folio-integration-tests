@@ -3,7 +3,8 @@ Feature: init data for consortia
   Background:
     * url baseUrl
     * configure readTimeout = 300000
-    * configure retry = { count: 20, interval: 10000 }
+    # max polling time: ~10 minutes (40 retries x 15s)
+    * configure retry = { count: 40, interval: 15000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }
 
   @PostTenant
@@ -75,10 +76,18 @@ Feature: init data for consortia
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     Given path 'entitlements'
     And param purge = true
+    And param async = true
     And request entitlementTamplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method DELETE
     Then status 200
+    * def flowId = response.flowId
+
+    Given path 'entitlement-flows', flowId
+    And param includeStages = true
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    * retry until response.status == "finished" || response.status == "cancelled" || response.status == "cancellation_failed" || response.status == "failed"
+    When method GET
 
   @PostAdmin
   Scenario: Create an admin with credentials, and add all existing permissions of enabled modules
