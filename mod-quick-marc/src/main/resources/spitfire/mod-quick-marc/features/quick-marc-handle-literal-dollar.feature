@@ -6,7 +6,7 @@ Feature: Test MARC records literal dollar in subfield
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
   Scenario: Check marc bib literal dollar in subfield
-    * def marcBib = call read('setup/setup.feature@CreateMarcBibRecord')
+    * def marcBib = call read('setup/setup.feature@CreateMarcBibRecord') { hrid: "393892" }
     * def marcBibRecord = marcBib.response
     * def marcBibId = marcBibRecord.externalId
     * def field905 = marcBibRecord.fields.find(f => f.tag == "905")
@@ -68,7 +68,7 @@ Feature: Test MARC records literal dollar in subfield
     * match subfieldA == "Test Ke$ha $100"
 
   Scenario: Check marc holding literal dollar in subfield
-    * def marcHolding = call read('setup/setup.feature@CreateHoldingRecord')
+    * def marcHolding = call read('setup/setup.feature@CreateHoldingRecord') { hrid: '393896' }
     * def marcHoldingRecord = marcHolding.response
     * def marcHoldingId = marcHoldingRecord.externalId
     * def field852 = marcHoldingRecord.fields.find(f => f.tag == "852")
