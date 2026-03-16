@@ -41,3 +41,6 @@ Feature: mod-mosaic integration tests
 
   Scenario: Validate Order
     Given call read("features/validate-order.feature")
+
+  Scenario: Generate Default Order Template
+    Given call read("features/generate-default-order-template.feature")
