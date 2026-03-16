@@ -145,7 +145,7 @@ Feature: Check remaining amount upon invoice approval
     And request invoicePayload
     When method PUT
     Then status 422
-    * match response.errors[0].code == 'fundCannotBePaid'
+    * match response.errors[0].code == 'budgetRestrictedExpendituresError'
 
     * configure headers = headersAdmin
     Given path 'finance/transactions'
