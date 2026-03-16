@@ -14,7 +14,9 @@ Feature: Verify exported Bibframe2 RDF
 
   @C794523
   Scenario: Verify statement of responsibility, dimensions and titles in the RDF
-    * def instanceRdf = rdf.filter(x => x['@id'] == baseResourceUrl + instanceResourceId)[0]
+    * def matchingInstances = rdf.filter(x => x['@id'] == baseResourceUrl + instanceResourceId)
+    * assert matchingInstances.length > 0
+    * def instanceRdf = matchingInstances[0]
     * def workId = instanceRdf['http://id.loc.gov/ontologies/bibframe/instanceOf'][0]['@id']
     * def workRdf = rdf.filter(x => x['@id'] == workId)[0]
     * match instanceRdf['http://id.loc.gov/ontologies/bibframe/dimensions'] == [{ '@value': '31 cm +' }]
