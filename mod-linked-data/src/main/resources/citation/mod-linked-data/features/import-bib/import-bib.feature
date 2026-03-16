@@ -6,6 +6,19 @@ Feature: Integration with SRS for import flow
     * call login testAdmin
     * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
+    * def foliioUiUrl = 'https://my-library.foliio.org'
+    * configure headers = testAdminHeaders
+    Given path '/base-url'
+    And request
+      """
+      {
+        "baseUrl": "#(foliioUiUrl)"
+      }
+      """
+    When method PUT
+    * assert responseStatus == 201
+    * call deleteCache
+
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
@@ -69,7 +82,7 @@ Feature: Integration with SRS for import flow
     * callonce read('util/verify-graph.feature')
 
     # Step 11: Verify exported RDF
-    * callonce read('util/verify-rdf.feature')
+    * callonce read('util/verify-rdf.feature') { foliioUiUrl: '#(foliioUiUrl)' }
 
     # Step 12: Verify hubs are indexed
     * callonce read('util/verify-hub-search.feature')
