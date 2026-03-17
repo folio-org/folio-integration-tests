@@ -116,7 +116,8 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * configure headers = headersCentral
     * def ilrGroupId = java.util.UUID.randomUUID().toString()
     * print 'DEBUG: ilrGroupId value:', ilrGroupId
-    * def ilrGroup = 'lib'
+    * def randomNum = callonce randomMillis
+    * def ilrGroup = 'lib' + randomNum
     * def ilrTenantId = centralTenantName
     * def groupResult = call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(ilrGroupId)', group: '#(ilrGroup)', tenantId: '#(ilrTenantId)' }
     * def ilrPatronId = groupResult.groupId
@@ -162,7 +163,7 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     And def sharingInstanceId = response.id
 
     # Verify status is 'COMPLETE'
-    * configure retry = { count: 120, interval: 30000 }
+    * configure retry = { count: 20, interval: 30000 }
     * print 'Polling for sharing status completion...'
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId

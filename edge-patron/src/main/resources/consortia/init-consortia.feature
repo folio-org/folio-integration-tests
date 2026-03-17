@@ -125,6 +125,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-users'                 |
       | 'mod-pubsub'                |
       | 'mod-audit'                 |
+      | 'mod-search'                |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
       | 'mod-circulation-storage'   |
@@ -137,7 +138,6 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
       | 'mod-consortia'             |
-      | 'mod-search'                |
 
     * call setupTenant { tenantId: '#(centralTenantUuid)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenantUuid)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
@@ -218,6 +218,18 @@ Feature: Initialize mod-consortia integration tests
     * call putCaps { tenant: '#(universityTenantName)', user: '#(shadowConsortiaAdmin)' }
 
   Scenario: Prepare data
+    * def result = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+
+    # Check user-tenants with tenantId param (as mod-search does)
+    * configure retry = { count: 20, interval: 30000 }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(result.okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
+    Given path 'user-tenants'
+    And param tenantId = centralTenantName
+    And retry until responseStatus == 200
+    When method GET
+    Then status 200
+    * print 'DEBUG: user-tenants by tenantId before setup:', response
+
     * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
     * call read('classpath:utils/inventory.feature')
     * call read('classpath:utils/inventory-university.feature')
