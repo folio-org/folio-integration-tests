@@ -15,6 +15,7 @@ function fn() {
   var config = {
     tenantParams: {loadReferenceData: true},
     baseUrl: 'http://localhost:8000',
+    foliioUiUrl: karate.properties['foliioUiUrl'] || 'https://my-library.foliio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 

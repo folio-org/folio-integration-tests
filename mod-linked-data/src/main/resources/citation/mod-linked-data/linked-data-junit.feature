@@ -60,6 +60,7 @@ Feature: mod-linked-data integration tests
       | 'browse.authorities.collection.get'                                   |
       | 'source-storage.records.formatted.item.get'                           |
       | 'linked-data.admin.caches.delete'                                     |
+      | 'base-url.item.put'                                                   |
 
     * table linkedDataBulkImportPermissions
       | name                                                       |
@@ -77,3 +78,6 @@ Feature: mod-linked-data integration tests
 
   Scenario: Create linked-data-bulk-import user
     * call read('classpath:common/eureka/create-additional-user.feature') { testUser: '#(linkedDataBulkImportUser)', userPermissions: '#(linkedDataBulkImportPermissions)' }
+
+  Scenario: set FOLIO UI base-url for the tenant
+    * call read('classpath:citation/mod-linked-data/features/util/base-url.feature@putBaseUrl')

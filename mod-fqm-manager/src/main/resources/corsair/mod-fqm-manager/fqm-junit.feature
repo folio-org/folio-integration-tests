@@ -118,11 +118,11 @@ Feature: mod-fqm-manager integration tests
       | 'lost-item-fees-policies.collection.get'                           |
       | 'manual-block-templates.collection.get'                            |
       | 'manualblocks.collection.get'                                      |
-      | 'orders-storage.acquisition-methods.collection.get'                |
       | 'orders-storage.pieces.collection.get'                             |
       | 'orders-storage.po-lines.item.post'                                |
       | 'orders-storage.purchase-orders.item.post'                         |
       | 'orders-storage.titles.collection.get'                             |
+      | 'orders.acquisition-methods.collection.get'                        |
       | 'orders.item.get'                                                  |
       | 'orders.po-lines.item.get'                                         |
       | 'organizations-storage.categories.collection.get'                  |
