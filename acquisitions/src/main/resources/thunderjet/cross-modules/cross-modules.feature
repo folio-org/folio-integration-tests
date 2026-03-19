@@ -38,7 +38,7 @@ Feature: cross-module integration tests
   Scenario: Cancel invoice and unrelease 2 encumbrances
     * call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')
 
-  Scenario: Cancel invoice
+  Scenario: Cancel an invoice linked to an order
     * call read('features/cancel-invoice-linked-to-order.feature')
 
   Scenario: Cancel an invoice with an Encumbrance

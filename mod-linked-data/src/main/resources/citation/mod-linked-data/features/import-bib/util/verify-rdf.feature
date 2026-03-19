@@ -1,16 +1,24 @@
 Feature: Verify exported Bibframe2 RDF
+
   Background:
-    * def baseResourceUrl = 'http://localhost:8081/linked-data-editor/resources/'
+    * def baseResourceUrl = foliioUiUrl + '/linked-data-editor/resources/'
 
   Scenario: Verify RDF can be generated for the graph
     * def rdfCall = call getRdf { resourceId:  '#(instanceResourceId)' }
     * def rdf = rdfCall.response
-    * def instanceRdf = rdf.filter(x => x['@id'] == baseResourceUrl + instanceResourceId)[0]
-    * def workId = instanceRdf['http://id.loc.gov/ontologies/bibframe/instanceOf'][0]['@id']
-    * def workRdf = rdf.filter(x => x['@id'] == workId)[0]
+
+  @C1259776
+  Scenario: Verify RDF contains a resource whose resource id url starts with foliioUiUrl
+    * def matchingInstances = rdf.filter(x => x['@id'] == baseResourceUrl + instanceResourceId)
+    * assert matchingInstances.length > 0
 
   @C794523
   Scenario: Verify statement of responsibility, dimensions and titles in the RDF
+    * def matchingInstances = rdf.filter(x => x['@id'] == baseResourceUrl + instanceResourceId)
+    * assert matchingInstances.length > 0
+    * def instanceRdf = matchingInstances[0]
+    * def workId = instanceRdf['http://id.loc.gov/ontologies/bibframe/instanceOf'][0]['@id']
+    * def workRdf = rdf.filter(x => x['@id'] == workId)[0]
     * match instanceRdf['http://id.loc.gov/ontologies/bibframe/dimensions'] == [{ '@value': '31 cm +' }]
     * match instanceRdf['http://id.loc.gov/ontologies/bibframe/responsibilityStatement'] == [{ '@value': 'by Ernest Poole' }]
 
