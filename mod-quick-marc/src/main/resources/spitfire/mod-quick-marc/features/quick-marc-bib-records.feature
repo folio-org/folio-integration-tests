@@ -355,7 +355,7 @@ Feature: Test quickMARC
     Then match response.fields[?(@.tag=='003')] == []
     Then match response.fields[?(@.tag=='035')].content == ["$a (OCoLC)64758"]
 
-  Scenario: Verify 035 and 003 remain unchanged when updating a MARC-BIB record
+  Scenario: Verify 035 and 003 remain unchanged when updating a MARC-BIB record.Check optimistic locking on update.
     * def quickMarcJson =
       """
       {
@@ -405,6 +405,16 @@ Feature: Test quickMARC
     And param externalId = id
     And headers headersUser
     When method GET
-    Then status 200    
+    Then status 200
     Then match response.fields[?(@.tag=='003')].content == ["$a test 003 field"]
     Then match response.fields[?(@.tag=='035')].content == ["$a (OCoLC)ocn000064758"]
+
+    # Simulate optimistic locking failure by sending the same update again without retrieving the record (version is not updated)
+    * def expectedMessage = "Cannot update record " + quickMarcRecord.parsedRecordId + " because it has been changed (optimistic locking): Stored _version is 1, _version of request is 0"
+
+    Given path 'records-editor/records', quickMarcRecord.parsedRecordId
+    And headers headersUser
+    And request quickMarcRecord
+    When method PUT
+    Then status 409
+    Then match response.message == expectedMessage

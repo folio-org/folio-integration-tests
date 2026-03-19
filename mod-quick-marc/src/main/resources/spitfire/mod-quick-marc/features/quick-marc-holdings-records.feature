@@ -273,7 +273,7 @@ Feature: Test quickMARC holdings records
   #   ================= negative test cases =================
 
   Scenario: Quick-marc record contains invalid 004 and not linked to instance record HRID
-    * def expectedMessage = "Failed to map marc-holdings record with parsedRecordId null: No instance found for HRID: wrongHrid"
+    * def expectedMessage = "Failed to map marc-holdings record with parsedRecordId null: No instance found for HRID: wrongHrid in tenant: " + testTenant
     * def holdings = read(samplePath + 'parsed-records/holdings.json')
     * set holdings.fields[?(@.tag=='004')].content = 'wrongHrid'
     * set holdings._actionType = 'create'
