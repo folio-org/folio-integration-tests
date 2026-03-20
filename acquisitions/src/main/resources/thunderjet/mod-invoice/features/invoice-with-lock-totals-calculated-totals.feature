@@ -88,27 +88,27 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     And request invoiceLinePayload
     When method POST
     Then status 201
-    And match $.adjustmentsTotal == 20.86
-    And match $.subTotal == 49.38
-    And match $.total == 70.24
+    And match $.adjustmentsTotal == 15.37
+    And match $.subTotal == 54.32
+    And match $.total == 69.69
 
   Scenario: Verify invoice line totals persisted
     Given path 'invoice/invoice-lines'
     And param query = 'invoiceId==' + firstInvoiceId
     When method GET
     Then status 200
-    And match $.invoiceLines[0].adjustmentsTotal == 20.86
-    And match $.invoiceLines[0].subTotal == 49.38
-    And match $.invoiceLines[0].total == 70.24
+    And match $.invoiceLines[0].adjustmentsTotal == 15.37
+    And match $.invoiceLines[0].subTotal == 54.32
+    And match $.invoiceLines[0].total == 69.69
 
   Scenario: 1. Verify invoice totals are updated
     Given path 'invoice/invoices', firstInvoiceId
     When method GET
     Then status 200
-    And match $.adjustmentsTotal == 68.2
-    And match $.subTotal == 49.38
+    And match $.adjustmentsTotal == 63.95
+    And match $.subTotal == 54.32
     And match $.lockTotal == 12.34
-    And match $.total == 117.58
+    And match $.total == 118.27
 
   Scenario: Add second invoice line with adjustment to created invoice
     # ============= create invoice lines ===================
@@ -142,10 +142,10 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     Given path 'invoice/invoices', firstInvoiceId
     When method GET
     Then status 200
-    And match $.adjustmentsTotal == 78.82
-    And match $.subTotal == 65.25
+    And match $.adjustmentsTotal == 74.57
+    And match $.subTotal == 70.19
     And match $.lockTotal == 12.34
-    And match $.total == 144.07
+    And match $.total == 144.76
 
   Scenario: Update second line by removing adjustments
     Given path 'invoice/invoice-lines' , secondInvoiceLineId
@@ -155,7 +155,6 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
 
     Given path 'invoice/invoice-lines' , secondInvoiceLineId
     * set secondInvoiceLine.adjustments = []
-    * set secondInvoiceLine.subTotal = 8.13
     And request secondInvoiceLine
     When method PUT
     Then status 204
@@ -170,27 +169,27 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     * def totals = $.invoiceLines[0,1].total
     And match $.invoiceLines == '#[2]'
     And match (adjustmentsTotals) contains any [15.37, 0.0]
-    And match (subTotals) contains any [54.32, 8.13]
-    And match (totals) contains any [69.69, 8.13]
+    And match (subTotals) contains any [54.32, 15.87]
+    And match (totals) contains any [69.69, 15.87]
 
   Scenario: Verify invoice totals are updated - by query
     Given path 'invoice/invoices'
     And param query = 'id==' + firstInvoiceId
     When method GET
     Then status 200
-    And match $.invoices[0].adjustmentsTotal == 70.24
-    And match $.invoices[0].subTotal == 57.51
+    And match $.invoices[0].adjustmentsTotal == 67.92
+    And match $.invoices[0].subTotal == 70.19
     And match $.invoices[0].lockTotal == 12.34
-    And match $.invoices[0].total == 127.75
+    And match $.invoices[0].total == 138.11
 
   Scenario: Verify invoice totals are updated - by id
     Given path 'invoice/invoices', firstInvoiceId
     When method GET
     Then status 200
-    And match $.adjustmentsTotal == 70.24
-    And match $.subTotal == 57.51
+    And match $.adjustmentsTotal == 67.92
+    And match $.subTotal == 70.19
     And match $.lockTotal == 12.34
-    And match $.total == 127.75
+    And match $.total == 138.11
 
   Scenario: Delete second invoice line
     # ============= try to delete approved invoice line ===================
@@ -204,28 +203,28 @@ Feature: Check invoice and invoice lines total amount calculation, when adjustme
     When method GET
     Then status 200
     And match $.invoiceLines == '#[1]'
-    And match $.invoiceLines[0].adjustmentsTotal == 20.86
-    And match $.invoiceLines[0].subTotal == 49.38
-    And match $.invoiceLines[0].total == 70.24
+    And match $.invoiceLines[0].adjustmentsTotal == 15.37
+    And match $.invoiceLines[0].subTotal == 54.32
+    And match $.invoiceLines[0].total == 69.69
 
   Scenario: Verify invoice totals are updated by query after line deletion
     Given path 'invoice/invoices'
     And param query = 'id==' + firstInvoiceId
     When method GET
     Then status 200
-    And match $.invoices[0].adjustmentsTotal == 68.2
-    And match $.invoices[0].subTotal == 49.38
+    And match $.invoices[0].adjustmentsTotal == 63.95
+    And match $.invoices[0].subTotal == 54.32
     And match $.invoices[0].lockTotal == 12.34
-    And match $.invoices[0].total == 117.58
+    And match $.invoices[0].total == 118.27
 
   Scenario: Verify invoice totals are updated by id after line deletion
     Given path 'invoice/invoices', firstInvoiceId
     When method GET
     Then status 200
-    And match $.adjustmentsTotal == 68.2
-    And match $.subTotal == 49.38
+    And match $.adjustmentsTotal == 63.95
+    And match $.subTotal == 54.32
     And match $.lockTotal == 12.34
-    And match $.total == 117.58
+    And match $.total == 118.27
 
   Scenario: Create second invoice with and 3 types of adjustments
     * set invoicePayload.id = secondInvoiceId
