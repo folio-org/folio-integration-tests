@@ -73,7 +73,7 @@ Feature: mod-lists integration tests
       | 'lists.item.versions.item.get'                                  |
       | 'locale.item.get'                                               |
       | 'proxiesfor.collection.get'                                     |
-      | 'orders-storage.acquisition-methods.collection.get'             |
+      | 'orders.acquisition-methods.collection.get'                     |
       | 'orders.item.get'                                               |
       | 'orders.po-lines.item.get'                                      |
       | 'organizations-storage.categories.collection.get'               |
