@@ -28,7 +28,7 @@
     { "value": "ISSN Value", "identifierTypeId": "#notnull" },
     { "value": "IAN value IAN Qualifier", "identifierTypeId": "#notnull" },
     { "value": "Other ID value Other ID qualifier", "identifierTypeId": "#notnull" },
-    { "value": "(ld) 7703115071360541867", "identifierTypeId": "#notnull" }
+    { "value": "(ld) -4624843526214131877", "identifierTypeId": "#notnull" }
   ],
   "classifications": [
     { "classificationNumber": "Lib-Congress-number Lib-Congress-number-item", "classificationTypeId": "#notnull" },
