@@ -70,6 +70,9 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.query.purge.post'                                             |
       | 'fqm.query.sync.get'                                               |
       | 'fqm.version.get'                                                  |
+      | 'inventory-storage.authorities.collection.get'                     |
+      | 'inventory-storage.authority-note-types.collection.get'            |
+      | 'inventory-storage.authority-source-files.collection.get'          |
       | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
