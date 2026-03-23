@@ -60,10 +60,13 @@ Feature: Initialize mod-mosaic integration tests
       | "inventory.instances.item.post"                               |
       | "mosaic.configuration.item.get"                               |
       | "mosaic.configuration.item.put"                               |
+      | "mosaic.template.item.post"                                   |
       | "orders.collection.get"                                       |
+      | "orders.order-templates.collection.get"                       |
       | "orders.order-templates.item.get"                             |
       | "orders.order-templates.item.post"                            |
       | "orders.po-lines.collection.get"                              |
+      | "organizations.organizations.collection.get"                  |
       | "organizations.organizations.item.post"                       |
       | "users.collection.get"                                        |
 
