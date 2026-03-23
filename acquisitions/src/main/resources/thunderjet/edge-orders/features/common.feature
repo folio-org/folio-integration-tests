@@ -60,10 +60,10 @@ Feature: Edge Orders COMMON
       | "/organizations"                           | "with offset only"      | 0      | ""    | "COMMON" | "organizations"        |
       | "/organizations"                           | "with limit only"       | ""     | 10    | "COMMON" | "organizations"        |
       | "/organizations"                           | "with offset and limit" | 0      | 10    | "COMMON" | "organizations"        |
-      | "/orders/addresses/billing-and-shipping"   | "no offset & limit"     | ""     | ""    | "COMMON" | "addresses"            |
-      | "/orders/addresses/billing-and-shipping"   | "with offset only"      | 0      | ""    | "COMMON" | "addresses"            |
-      | "/orders/addresses/billing-and-shipping"   | "with limit only"       | ""     | 10    | "COMMON" | "addresses"            |
-      | "/orders/addresses/billing-and-shipping"   | "with offset and limit" | 0      | 10    | "COMMON" | "addresses"            |
+      | "/orders/addresses/billing-and-shipping"   | "no offset & limit"     | ""     | ""    | "COMMON" | "configs"              |
+      | "/orders/addresses/billing-and-shipping"   | "with offset only"      | 0      | ""    | "COMMON" | "configs"              |
+      | "/orders/addresses/billing-and-shipping"   | "with limit only"       | ""     | 10    | "COMMON" | "configs"              |
+      | "/orders/addresses/billing-and-shipping"   | "with offset and limit" | 0      | 10    | "COMMON" | "configs"              |
       | "/orders/custom-fields"                    | "no offset & limit"     | ""     | ""    | "COMMON" | "customFields"         |
       | "/orders/custom-fields"                    | "with offset only"      | 0      | ""    | "COMMON" | "customFields"         |
       | "/orders/custom-fields"                    | "with limit only"       | ""     | 10    | "COMMON" | "customFields"         |
