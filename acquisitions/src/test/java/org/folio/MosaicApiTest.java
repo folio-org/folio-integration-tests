@@ -32,7 +32,8 @@ class MosaicApiTest extends TestBaseEureka {
     FEATURE_6("create-order-6-with-open-workflow-status.feature", true),
     FEATURE_7("create-order-7-with-check-in-items.feature", true),
     FEATURE_8("validate-order.feature", true),
-    FEATURE_9("generate-default-order-template.feature", true);
+    FEATURE_9("generate-default-order-template.feature", true),
+    FEATURE_10("create-order-8-with-ongoing-type.feature", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -126,5 +127,11 @@ class MosaicApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void generateDefaultOrderTemplate() {
     runFeatureTest(Feature.FEATURE_9.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void createOrder8WithOngoingType() {
+    runFeatureTest(Feature.FEATURE_10.getFileName());
   }
 }
