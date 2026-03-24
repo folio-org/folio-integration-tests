@@ -13,11 +13,14 @@ Feature: mod-quick-marc integration tests
       | 'mod-inventory'             |
       | 'mod-inventory-storage'     |
       | 'mod-entities-links'        |
+      | 'mod-users'                 |
       | 'mod-record-specifications' |
       | 'mod-search'                |
 
     * table userPermissions
       | name                                                                     |
+      | 'user-tenants.collection.get'                                            |
+      | 'mapping-metadata.type.item.get'                                         |
       | 'search.authorities.collection.get'                                      |
       | 'instance-authority-links.instances.collection.get'                      |
       | 'inventory-storage.authorities.item.delete'                              |
@@ -32,6 +35,7 @@ Feature: mod-quick-marc integration tests
       | 'inventory-storage.instances.item.get'                                   |
       | 'inventory-storage.instances.item.post'                                  |
       | 'inventory-storage.instances.item.put'                                   |
+      | 'inventory-storage.instances.collection.get'                             |
       | 'inventory-storage.instances.preceding-succeeding-titles.collection.put' |
       | 'inventory-storage.holdings.item.put'                                    |
       | 'inventory-storage.authorities.item.put'                                 |
@@ -49,6 +53,7 @@ Feature: mod-quick-marc integration tests
       | 'source-storage.records.put'                                             |
       | 'source-storage.records.item.get'                                        |
       | 'source-storage.records.formatted.item.get'                              |
+      | 'source-storage.records.generation.item.put'                             |
       | 'source-storage.snapshots.post'                                          |
       | 'source-storage.snapshots.post'                                          |
       | 'source-storage.source-records.collection.get'                           |
