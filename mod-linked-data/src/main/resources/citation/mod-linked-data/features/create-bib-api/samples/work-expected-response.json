@@ -1,5 +1,5 @@
 {
-  "id": "8184917527973833538",
+  "id": "7208009198915731977",
   "profileId": 2,
   "http://bibfra.me/vocab/library/title": [
     {
@@ -245,17 +245,17 @@
   ],
   "http://bibfra.me/vocab/scholar/dissertation": [
     {
-      "id": "6843069100405495370",
-      "http://bibfra.me/vocab/lite/label": [
+      "id": "-428321923555880672",
+      "http://bibfra.me/vocab/lite/note": [
         "label"
       ],
       "http://bibfra.me/vocab/library/degree": [
         "degree"
       ],
-      "http://bibfra.me/vocab/library/dissertationYear": [
+      "http://bibfra.me/vocab/lite/date": [
         "dissertation year"
       ],
-      "http://bibfra.me/vocab/library/dissertationNote": [
+      "http://bibfra.me/vocab/library/miscInfo": [
         "dissertation note"
       ],
       "http://bibfra.me/vocab/library/dissertationID": [
