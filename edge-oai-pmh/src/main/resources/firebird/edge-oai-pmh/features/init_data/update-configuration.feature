@@ -62,3 +62,32 @@ Feature: update configuration
     And header x-okapi-tenant = testTenant
     When method PUT
     Then status 204
+
+  @BehaviorConfigInventory
+  Scenario: set Inventory as records source in the behavior config
+    Given path '/oai-pmh/configuration-settings'
+    And param query = 'name==behavior'
+    And header Accept = 'application/json'
+    And header Content-Type = 'application/json'
+    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
+    When method GET
+    Then status 200
+
+    * def configResponse = response
+    * def behaviorId = get[0] configResponse.configurationSettings[?(@.configName=='behavior')].id
+
+    * def updatePayload = read('classpath:samples/behavior.json')
+    * set updatePayload.configValue.suppressedRecordsProcessing = 'true'
+    * set updatePayload.configValue.recordsSource = 'Inventory'
+    * set updatePayload.configValue.deletedRecordsSupport = 'persistent'
+    * set updatePayload.configValue.errorsProcessing = '200'
+
+    Given path '/oai-pmh/configuration-settings', behaviorId
+    And request updatePayload
+    And header Accept = 'application/json'
+    And header Content-Type = 'application/json'
+    And header x-okapi-token = okapiTokenAdmin
+    And header x-okapi-tenant = testTenant
+    When method PUT
+    Then status 204
