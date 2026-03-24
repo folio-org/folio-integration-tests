@@ -44,3 +44,6 @@ Feature: mod-mosaic integration tests
 
   Scenario: Generate Default Order Template
     Given call read("features/generate-default-order-template.feature")
+
+  Scenario: Create Order With Ongoing Type
+    Given call read("features/create-order-8-with-ongoing-type.feature")
