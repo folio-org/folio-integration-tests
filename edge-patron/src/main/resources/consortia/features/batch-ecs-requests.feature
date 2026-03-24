@@ -30,9 +30,10 @@ Feature: ECS Batch Request creation
     And param apikey = apikey
     And request batchRequestEntity
     And method POST
-    Then status 201
-    And martch response.mediatedRequestStatus = 'Pending'
+    Then status 200
+    And match response.mediatedRequestStatus == 'Pending'
     And match response.batchId == '#notnull'
+    * print 'POST batch response:', response
 
     * def batchId = response.batchId
 
@@ -40,29 +41,31 @@ Feature: ECS Batch Request creation
     Given url edgeUrl
     And path 'patron/account/', extternalSystemId, 'instance', universityInstanceId, 'batch-request', batchId, 'status'
     And param apikey = apikey
-    And request batchRequestEntity
-    And retry until response.status == 'Completed'
-    And method GET
+    * retry until response.status == 'Completed'
+    When method GET
     Then status 200
-    And match response.batchRequestId == batchId
-    And match response.itemsTotal == 3
-    And match response.itemsRequested == 3
-    And match response.itemsPending == 0
-    And match response.itemsFailed == 0
-    And match response.itemsRequestedDetails[*].instanceId == [universityInstanceId, universityInstanceId, universityInstanceId]
-    And match response.itemsRequestedDetails[*].itemId contains [itemId1, itemId2, itemId3]
-    And match response.itemsRequestedDetails[*].pickUpLocationId == [servicePointId, servicePointId, servicePointId]
-    And match response.itemsRequestedDetails[0].confirmedRequestId == '#notnull'
-    And match response.itemsRequestedDetails[1].confirmedRequestId == '#notnull'
-    And match response.itemsRequestedDetails[2].confirmedRequestId == '#notnull'
+    * def batchStatusResult = response
+    * print 'batchStatusResult:', batchStatusResult
+
+    And match batchStatusResult.batchRequestId == batchId
+    And match batchStatusResult.itemsTotal == 3
+    And match batchStatusResult.itemsRequested == 3
+    And match batchStatusResult.itemsPending == 0
+    And match batchStatusResult.itemsFailed == 0
+    And match batchStatusResult.itemsRequestedDetails[*].instanceId == [universityInstanceId, universityInstanceId, universityInstanceId]
+    And match batchStatusResult.itemsRequestedDetails[*].itemId contains [itemId1, itemId2, itemId3]
+    And match batchStatusResult.itemsRequestedDetails[*].pickUpLocationId == [servicePointId, servicePointId, servicePointId]
+    And match batchStatusResult.itemsRequestedDetails[0].confirmedRequestId == '#notnull'
+    And match batchStatusResult.itemsRequestedDetails[1].confirmedRequestId == '#notnull'
+    And match batchStatusResult.itemsRequestedDetails[2].confirmedRequestId == '#notnull'
 
     # verify the created circulation requests
-    * def circulationRequestId1 = response.itemsRequestedDetails[0].confirmedRequestId
-    * def circulationRequestId2 = response.itemsRequestedDetails[0].confirmedRequestId
-    * def circulationRequestId3 = response.itemsRequestedDetails[0].confirmedRequestId
-    Given path 'circulation/requests'
+    * def circulationRequestId1 = batchStatusResult.itemsRequestedDetails[0].confirmedRequestId
+    * def circulationRequestId2 = batchStatusResult.itemsRequestedDetails[1].confirmedRequestId
+    * def circulationRequestId3 = batchStatusResult.itemsRequestedDetails[2].confirmedRequestId
+    Given url baseUrl
+    And path 'circulation/requests'
     And param query = '(id=="' + circulationRequestId1 + '" or id=="' + circulationRequestId2 + '" or id=="' + circulationRequestId3 + '")'
-    And retry until response.itemId == newItemId
     When method GET
     Then status 200
     And assert response.requests.length == 3
