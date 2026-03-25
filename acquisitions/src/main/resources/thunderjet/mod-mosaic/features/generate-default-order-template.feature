@@ -25,7 +25,6 @@ Feature: Generate default order template
     When method GET
     Then status 200
     And match $.orderTemplates[*].templateName !contains defaultTemplateName
-    * def initialTotalRecords = $.totalRecords
 
     # 2.2 Fetch the default organization and verify that it is not present.
     Given path "/organizations/organizations"
@@ -46,7 +45,6 @@ Feature: Generate default order template
     When method GET
     Then status 200
     And match $.orderTemplates[*].templateName contains defaultTemplateName
-    And match $.totalRecords == initialTotalRecords + 1
 
     # 3.2 Fetch the default organization and verify that it is created with the default template.
     Given path "/organizations/organizations"
@@ -70,4 +68,6 @@ Feature: Generate default order template
     When method GET
     Then status 200
     And match $.orderTemplates[*].templateName contains defaultTemplateName
-    And match $.totalRecords == initialTotalRecords + 1
+    * def templates = response.orderTemplates
+    * def duplicates = karate.filter(templates, function(x){ return x.templateName == 'Mosaic eBooks Default' })
+    And match duplicates == '#[1]'

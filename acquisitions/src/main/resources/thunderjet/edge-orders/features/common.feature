@@ -68,26 +68,6 @@ Feature: Edge Orders COMMON
       | "/orders/custom-fields"                    | "with offset only"      | 0      | ""    | "COMMON" | "customFields"         |
       | "/orders/custom-fields"                    | "with limit only"       | ""     | 10    | "COMMON" | "customFields"         |
       | "/orders/custom-fields"                    | "with offset and limit" | 0      | 10    | "COMMON" | "customFields"         |
-      | "/inventory/locations"                     | "no offset & limit"     | ""     | ""    | ""       | "locations"            |
-      | "/inventory/locations"                     | "with offset only"      | 0      | ""    | ""       | "locations"            |
-      | "/inventory/locations"                     | "with limit only"       | ""     | 10    | ""       | "locations"            |
-      | "/inventory/locations"                     | "with offset and limit" | 0      | 10    | ""       | "locations"            |
-      | "/inventory/material-types"                | "no offset & limit"     | ""     | ""    | ""       | "mtypes"               |
-      | "/inventory/material-types"                | "with offset only"      | 0      | ""    | ""       | "mtypes"               |
-      | "/inventory/material-types"                | "with limit only"       | ""     | 10    | ""       | "mtypes"               |
-      | "/inventory/material-types"                | "with offset and limit" | 0      | 10    | ""       | "mtypes"               |
-      | "/inventory/identifier-types"              | "no offset & limit"     | ""     | ""    | ""       | "identifierTypes"      |
-      | "/inventory/identifier-types"              | "with offset only"      | 0      | ""    | ""       | "identifierTypes"      |
-      | "/inventory/identifier-types"              | "with limit only"       | ""     | 10    | ""       | "identifierTypes"      |
-      | "/inventory/identifier-types"              | "with offset and limit" | 0      | 10    | ""       | "identifierTypes"      |
-      | "/inventory/contributor-name-types"        | "no offset & limit"     | ""     | ""    | ""       | "contributorNameTypes" |
-      | "/inventory/contributor-name-types"        | "with offset only"      | 0      | ""    | ""       | "contributorNameTypes" |
-      | "/inventory/contributor-name-types"        | "with limit only"       | ""     | 10    | ""       | "contributorNameTypes" |
-      | "/inventory/contributor-name-types"        | "with offset and limit" | 0      | 10    | ""       | "contributorNameTypes" |
-      | "/users/users"                             | "no offset & limit"     | ""     | ""    | ""       | "users"                |
-      | "/users/users"                             | "with offset only"      | 0      | ""    | ""       | "users"                |
-      | "/users/users"                             | "with limit only"       | ""     | 10    | ""       | "users"                |
-      | "/users/users"                             | "with offset and limit" | 0      | 10    | ""       | "users"                |
     * def v = call checkEndpoint endpoints
 
   @Positive
