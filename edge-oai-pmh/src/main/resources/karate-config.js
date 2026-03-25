@@ -1,69 +1,33 @@
-function fn() {
+function configuration() {
 
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
+  var retryConfig = { count: 20, interval: 30000 }
+  karate.configure('retry', retryConfig)
+
   var env = karate.env;
 
   // The "testTenant" property could be specified during test runs
-  var testTenant ="testoaipmh";
+  var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
-
-  // generate names for consortia tenants
-  var randomNumbers = karate.properties['randomNumbers'] ? karate.properties['randomNumbers'] : '1234567890';
-
-  var centralTenant = 'testconsortium';
-  var centralTenantId = karate.properties['centralTenantId'];
-  var universityTenant = 'testuniversity';
-  var universityTenantId = karate.properties['universityTenantId'];
-  var collegeTenant = 'testcollege';
-  var collegeTenantId = karate.properties['collegeTenantId'];
-
-  var consortiaAdminUserId = karate.properties['consortiaAdminUserId'];
-  var centralUser1Id = karate.properties['centralUserId'];
-  var universityUser1Id = karate.properties['universityUserId'];
-  var collegeUser1Id = karate.properties['collegeUserId'];
-
-  // define consortiumId
-  var consortiumId = karate.properties['consortiumId'];
 
   var config = {
     baseUrl: 'http://localhost:8000',
-    edgeUrl: 'http://localhost:9701',
-    admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
+    admin: {tenant: 'diku', name: 'testing_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
     kcClientId: 'folio-backend-admin-client',
     kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
 
-    apikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9',
-    consortiumApikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0Y29uc29ydGl1bSIsInUiOiJ0ZXN0X2VkZ2VfYWRtaW4ifQ==',
-    universityApikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0dW5pdmVyc2l0eSIsInUiOiJ0ZXN0X2VkZ2VfYWRtaW4ifQ==',
-    collegeApikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0Y29sbGVnZSIsInUiOiJ0ZXN0X2VkZ2VfYWRtaW4ifQ==',
-    testTenant: 'testoaipmh',
+    testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
 
-    // define consortia users and tenants
-    centralTenant: centralTenant,
-    centralTenantId: centralTenantId ? centralTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    universityTenant: universityTenant,
-    universityTenantId: universityTenantId ? universityTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    collegeTenant: collegeTenant,
-    collegeTenantId: collegeTenantId ? collegeTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    consortiumId: consortiumId,
-
-    consortiaAdmin: { id: consortiaAdminUserId, username: 'test_edge_admin', password: 'admin', tenant: centralTenant},
-    universityUser1: { id: universityUser1Id, username: 'test_edge_admin', password: 'admin', tenant: universityTenant},
-    collegeUser1: { id: collegeUser1Id, username: 'test_edge_admin', password: 'admin', tenant: collegeTenant},
-    // shadow user
-    centralUser1: { id: centralUser1Id, username: 'centralUser', password: 'central_user_password', tenant: centralTenant},
-
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:global/variables.feature'),
 
     // define global functions
     uuid: function () {
@@ -78,6 +42,10 @@ function fn() {
       return java.lang.System.currentTimeMillis() + '';
     },
 
+    plusSecond: function(time){
+      return java.time.LocalDateTime.parse(time,java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME).plusSeconds(1).toString()
+    },
+
     random_string: function() {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -85,85 +53,45 @@ function fn() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     },
-    isoDate: function() {
-      // var dtf = java.time.format.DateTimeFormatter.ISO_INSTANT;
-      var dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-      var date = java.time.LocalDateTime.now(java.time.ZoneOffset.UTC);
-      return dtf.format(date);
-    },
 
-    pause: function(millis) {
-      var Thread = Java.type('java.lang.Thread');
-      Thread.sleep(millis);
-    },
+    orWhereQuery: function(field, values) {
+      var orStr = ' or ';
+      var string = '(' + field + '=(' + values.map(x => '"' + x + '"').join(orStr) + '))';
 
-    replaceCharAtIndex: function(str, index, replacement) {
-      return str.substring(0, index) + replacement + str.substring(index + replacement.length);
+      return string;
     }
-
   };
+
+  // Create 100 functions for uuid generation
+  var rand = function(i) {
+    karate.set("uuid"+i, function() {
+      return java.util.UUID.randomUUID() + '';
+    });
+  }
+  karate.repeat(100, rand);
 
   if (env == 'dev') {
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
     config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
-  } else if (env == 'snapshot-2') {
-    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-etesting-snapshot-edge.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+  } else if (env == 'snapshot-2') {
+    config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
+  } else if (env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
     config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
     }
-  } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'testing_admin',
-      password: 'admin'
-    }
-    karate.configure('ssl',true)
-  } 
-  // else if (env == 'folio-testing-karate') {
-  //   config.baseUrl = '${baseUrl}';
-  //   config.edgeUrl = '${edgeUrl}'
-  //   config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
-  //   config.admin = {
-  //     tenant: '${admin.tenant}',
-  //     name: '${admin.name}',
-  //     password: '${admin.password}'
-  //   }
-  //   config.kcClientId = '${clientId}',
-  //   config.kcClientSecret = '${clientSecret}'
-  //   config.prototypeTenant = '${prototypeTenant}';
-  //   karate.configure('ssl',true);
-  //   config.baseKeycloakUrl = '${baseKeycloakUrl}';
-  // } 
-  // else if (env != null && env.match(/^ec2-\d+/)) {
-  //   // Config for FOLIO CI "folio-integration" public ec2- dns name
-  //   config.baseUrl = 'http://' + env + ':8000';
-  //   config.edgeUrl = 'http://' + env + ':8000';
-  //   config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
-  //   config.admin = {
-  //     tenant: 'supertenant',
-  //     name: 'admin',
-  //     password: 'admin'
-  //   }
-  // }
+    config.kcClientId = '${clientId}',
+    config.kcClientSecret = '${clientSecret}'
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
+  }
   return config;
 }
