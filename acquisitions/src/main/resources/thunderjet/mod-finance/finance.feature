@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-finance integration tests
 
   Background:

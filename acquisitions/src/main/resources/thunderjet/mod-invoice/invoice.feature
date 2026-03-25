@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-invoice integration tests
 
   Background:
