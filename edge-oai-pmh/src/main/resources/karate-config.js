@@ -138,21 +138,23 @@ function fn() {
       password: 'admin'
     }
     karate.configure('ssl',true)
-  } else if (env == 'folio-testing-karate') {
-    config.baseUrl = '${baseUrl}';
-    config.edgeUrl = '${edgeUrl}'
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
-    config.admin = {
-      tenant: '${admin.tenant}',
-      name: '${admin.name}',
-      password: '${admin.password}'
-    }
-    config.kcClientId = '${clientId}',
-    config.kcClientSecret = '${clientSecret}'
-    config.prototypeTenant = '${prototypeTenant}';
-    karate.configure('ssl',true);
-    config.baseKeycloakUrl = '${baseKeycloakUrl}';
-  } else if (env != null && env.match(/^ec2-\d+/)) {
+  } 
+  // else if (env == 'folio-testing-karate') {
+  //   config.baseUrl = '${baseUrl}';
+  //   config.edgeUrl = '${edgeUrl}'
+  //   config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+  //   config.admin = {
+  //     tenant: '${admin.tenant}',
+  //     name: '${admin.name}',
+  //     password: '${admin.password}'
+  //   }
+  //   config.kcClientId = '${clientId}',
+  //   config.kcClientSecret = '${clientSecret}'
+  //   config.prototypeTenant = '${prototypeTenant}';
+  //   karate.configure('ssl',true);
+  //   config.baseKeycloakUrl = '${baseKeycloakUrl}';
+  // } 
+  else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':8000';
     config.edgeUrl = 'http://' + env + ':8000';
