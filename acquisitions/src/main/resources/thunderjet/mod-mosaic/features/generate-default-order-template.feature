@@ -16,19 +16,17 @@ Feature: Generate default order template
 
   @Positive
   Scenario: Generate default order template
-    * def defaultTemplateName = "Mosaic eBooks Default"
-
     # 1.1 Fetch the templates and verify that the default template is not present.
     Given path "/orders/order-templates"
-    And param query = "cql.allRecords=1"
+    And param query = "templateName==Mosaic eBooks Default"
     And param limit = 1000
     When method GET
     Then status 200
-    And match $.orderTemplates[*].templateName !contains defaultTemplateName
+    And match response.totalRecords == 0
 
     # 2.2 Fetch the default organization and verify that it is not present.
     Given path "/organizations/organizations"
-    And param query = "query=(name==Mosaic)"
+    And param query = "name==Mosaic"
     When method GET
     Then status 200
     And match response.totalRecords == 0
@@ -40,15 +38,16 @@ Feature: Generate default order template
 
     # 3.1 Fetch the templates again and verify that the default template is now present.
     Given path "/orders/order-templates"
-    And param query = "cql.allRecords=1"
+    And param query = "templateName==Mosaic eBooks Default"
     And param limit = 1000
     When method GET
     Then status 200
-    And match $.orderTemplates[*].templateName contains defaultTemplateName
+    And match response.totalRecords == 1
+    And match response.orderTemplates[0].templateName == "Mosaic eBooks Default"
 
     # 3.2 Fetch the default organization and verify that it is created with the default template.
     Given path "/organizations/organizations"
-    And param query = "query=(name==Mosaic)"
+    And param query = "name==Mosaic"
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -63,11 +62,9 @@ Feature: Generate default order template
 
     # 5. Fetch the templates again and verify that there are no duplicate templates and the default template is still present.
     Given path "/orders/order-templates"
-    And param query = "cql.allRecords=1"
+    And param query = "templateName==Mosaic eBooks Default"
     And param limit = 1000
     When method GET
     Then status 200
-    And match $.orderTemplates[*].templateName contains defaultTemplateName
-    * def templates = response.orderTemplates
-    * def duplicates = karate.filter(templates, function(x){ return x.templateName == 'Mosaic eBooks Default' })
-    And match duplicates == '#[1]'
+    And match response.totalRecords == 1
+    And match response.orderTemplates[0].templateName == "Mosaic eBooks Default"
