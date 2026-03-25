@@ -154,16 +154,16 @@ function fn() {
   //   karate.configure('ssl',true);
   //   config.baseKeycloakUrl = '${baseKeycloakUrl}';
   // } 
-  else if (env != null && env.match(/^ec2-\d+/)) {
-    // Config for FOLIO CI "folio-integration" public ec2- dns name
-    config.baseUrl = 'http://' + env + ':8000';
-    config.edgeUrl = 'http://' + env + ':8000';
-    config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
-    config.admin = {
-      tenant: 'supertenant',
-      name: 'admin',
-      password: 'admin'
-    }
-  }
+  // else if (env != null && env.match(/^ec2-\d+/)) {
+  //   // Config for FOLIO CI "folio-integration" public ec2- dns name
+  //   config.baseUrl = 'http://' + env + ':8000';
+  //   config.edgeUrl = 'http://' + env + ':8000';
+  //   config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
+  //   config.admin = {
+  //     tenant: 'supertenant',
+  //     name: 'admin',
+  //     password: 'admin'
+  //   }
+  // }
   return config;
 }
