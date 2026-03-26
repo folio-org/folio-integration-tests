@@ -1419,6 +1419,123 @@ Feature: Requests tests
     When method DELETE
     Then status 204
 
+  Scenario: Search requests by item barcode, title, request id, and requester barcode fragment
+    * def instanceTypeId = call uuid1
+    * def materialTypeId = call uuid1
+    * def groupId = call uuid1
+    * def requesterId1 = call uuid1
+    * def requesterId2 = call uuid1
+    * def requesterBarcode1 = 'requester-12345'
+    * def requesterBarcode2 = 'requester-98765'
+    * def targetInstanceId = call uuid1
+    * def otherInstanceId = call uuid1
+    * def targetTitle = 'FAT-23874-title-target'
+    * def otherTitle = 'FAT-23874-title-other'
+    * def targetHoldingsRecordId = call uuid1
+    * def otherHoldingsRecordId = call uuid1
+    * def targetItemId = call uuid1
+    * def otherItemId = call uuid1
+    * def targetItemBarcode = 'FAT-23874-ITEM-1'
+    * def otherItemBarcode = 'FAT-23874-ITEM-2'
+    * def targetRequestId = call uuid1
+    * def otherRequestId = call uuid1
+    * def targetHoldingSourceId = call uuid1
+    * def otherHoldingSourceId = call uuid1
+    * def targetHoldingSourceName = random_string()
+    * def otherHoldingSourceName = random_string()
+    * def requestType = 'Page'
+    * def requestLevel = 'Item'
+
+    * def instanceTypeEntityRequest = read('samples/instance/instance-type-entity-request.json')
+    * instanceTypeEntityRequest.id = instanceTypeId
+    * instanceTypeEntityRequest.name = instanceTypeEntityRequest.name + ' ' + random_string()
+    * instanceTypeEntityRequest.code = instanceTypeEntityRequest.code + ' ' + random_string()
+    * instanceTypeEntityRequest.source = instanceTypeEntityRequest.source + ' ' + random_string()
+    Given path 'instance-types'
+    And request instanceTypeEntityRequest
+    When method POST
+    Then status 201
+
+    * def contributorNameTypeEntityRequest = read('samples/instance/contributor-name-type-entity-request.json')
+    * contributorNameTypeEntityRequest.name = contributorNameTypeEntityRequest.name + ' ' + random_string()
+    Given path 'contributor-name-types'
+    And request contributorNameTypeEntityRequest
+    When method POST
+    Then status 201
+    * def contributorNameTypeId = response.id
+
+    * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
+    * materialTypeEntityRequest.id = materialTypeId
+    * materialTypeEntityRequest.name = 'FAT-23874-material-' + random_string()
+    Given path 'material-types'
+    And request materialTypeEntityRequest
+    When method POST
+    Then status 201
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId1), extUserBarcode: #(requesterBarcode1), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId2), extUserBarcode: #(requesterBarcode2), extGroupId: #(groupId) }
+
+    * def targetInstance = read('samples/instance/instance-entity-request.json')
+    * targetInstance.id = targetInstanceId
+    * targetInstance.title = targetTitle
+    * targetInstance.instanceTypeId = instanceTypeId
+    * targetInstance.contributors[0].contributorNameTypeId = contributorNameTypeId
+    Given path 'inventory', 'instances'
+    And request targetInstance
+    When method POST
+    Then status 201
+
+    * def otherInstance = read('samples/instance/instance-entity-request.json')
+    * otherInstance.id = otherInstanceId
+    * otherInstance.title = otherTitle
+    * otherInstance.instanceTypeId = instanceTypeId
+    * otherInstance.contributors[0].contributorNameTypeId = contributorNameTypeId
+    Given path 'inventory', 'instances'
+    And request otherInstance
+    When method POST
+    Then status 201
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(targetHoldingSourceId), extHoldingSourceName: #(targetHoldingSourceName), extHoldingsRecordId: #(targetHoldingsRecordId), extInstanceId: #(targetInstanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(otherHoldingSourceId), extHoldingSourceName: #(otherHoldingSourceName), extHoldingsRecordId: #(otherHoldingsRecordId), extInstanceId: #(otherInstanceId) }
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(targetItemId), extItemBarcode: #(targetItemBarcode), extMaterialTypeId: #(materialTypeId), extHoldingsRecordId: #(targetHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(otherItemId), extItemBarcode: #(otherItemBarcode), extMaterialTypeId: #(materialTypeId), extHoldingsRecordId: #(otherHoldingsRecordId) }
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(targetRequestId), itemId: #(targetItemId), requesterId: #(requesterId1), extRequestType: #(requestType), extRequestLevel: #(requestLevel), extInstanceId: #(targetInstanceId), extHoldingsRecordId: #(targetHoldingsRecordId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(otherRequestId), itemId: #(otherItemId), requesterId: #(requesterId2), extRequestType: #(requestType), extRequestLevel: #(requestLevel), extInstanceId: #(otherInstanceId), extHoldingsRecordId: #(otherHoldingsRecordId) }
+
+    Given path 'circulation', 'requests'
+    And param query = 'item.barcode==' + targetItemBarcode
+    When method GET
+    Then status 200
+    And match response.requests[*].id contains targetRequestId
+    And match response.requests[*].id !contains otherRequestId
+    And match $.requests[0].item.barcode == targetItemBarcode
+
+    Given path 'circulation', 'requests'
+    And param query = 'instance.title==' + targetTitle
+    When method GET
+    Then status 200
+    And match response.requests[*].id contains targetRequestId
+    And match response.requests[*].id !contains otherRequestId
+    And match $.requests[0].instance.title == targetTitle
+
+    Given path 'circulation', 'requests'
+    And param query = 'id==' + targetRequestId
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == targetRequestId
+
+    Given path 'circulation', 'requests'
+    And param query = 'requester.barcode==*12345*'
+    When method GET
+    Then status 200
+    And match response.requests[*].id contains targetRequestId
+    And match response.requests[*].id !contains otherRequestId
+    And match $.requests[0].requester.barcode == requesterBarcode1
+
   Scenario: Test request sorting by service point name, shelving order
     * def holdingsRecordId1 = call uuid1
     * def callNumber1 = 'FAT5356CN2'
