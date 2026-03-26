@@ -720,6 +720,7 @@ Scenario: List records with marc21_withholdings prefix, should be 3 records incl
     When method POST
     Then status 201
 
+    * url edgeUrl
     Given path 'oai'
     And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
@@ -728,7 +729,7 @@ Scenario: List records with marc21_withholdings prefix, should be 3 records incl
     When method GET
     Then status 200
 
-    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='k'] == ['some display summary']
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='k'] == 'some display summary'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='l'] == '#notpresent'
 
     * callonce read('init_data/update-configuration.feature@BehaviorConfig')
