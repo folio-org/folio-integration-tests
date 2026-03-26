@@ -692,7 +692,7 @@ Scenario: List records with marc21_withholdings prefix, should be 3 records incl
     When method DELETE
     Then status 204
 
-  Scenario: GetRecord: Inventory: Verify if displaySummary field is present, then it appears in "k" subfield and "l" disappears
+  Scenario: GetRecord: Inventory: Verify if displaySummary field is present and if so, it appears in "k" subfield and "l" disappears
     * callonce read('init_data/update-configuration.feature@BehaviorConfigInventory')
     * url baseUrl
     Given path 'instance-storage/instances'
