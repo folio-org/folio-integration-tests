@@ -383,7 +383,14 @@ Feature: Initialize mod-consortia integration tests
     And request centralUserRecord
     When method PUT
     Then status 204
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+
+    # enable title-level requests (TLR) feature
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json, text/plain' }
+    * def tlrConfig = read('classpath:consortia/samples/tlr-config-entry-request.json')
+    Given path 'circulation/settings'
+    And request tlrConfig
+    When method POST
+    Then status 201
 
     # Create same patron group in university tenant
     # Login directly as universityUser to avoid cross-tenant token issues
