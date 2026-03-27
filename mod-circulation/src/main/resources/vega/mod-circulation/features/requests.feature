@@ -1459,7 +1459,7 @@ Feature: Requests tests
     And match $.requests[0].id == targetRequestId
 
     Given path 'circulation', 'requests'
-    And param query = '((id=="12345" or requesterId=="12345" or requester.barcode=="12345*" or instance.title="12345*" or instanceId="12345*" or item.barcode="12345*" or itemId=="12345" or itemIsbn=="12345" or searchIndex.callNumberComponents.callNumber=="12345*" or fullCallNumberIndex=="12345*")) sortby requestDate'
+    And param query = '((id=="' + requesterBarcode1 + '" or requesterId=="' + requesterBarcode1 + '" or requester.barcode=="' + requesterBarcode1 + '*" or instance.title="' + requesterBarcode1 + '*" or instanceId="' + requesterBarcode1 + '*" or item.barcode="' + requesterBarcode1 + '*" or itemId=="' + requesterBarcode1 + '" or itemIsbn=="' + requesterBarcode1 + '" or searchIndex.callNumberComponents.callNumber=="' + requesterBarcode1 + '*" or fullCallNumberIndex=="' + requesterBarcode1 + '*")) sortby requestDate'
     When method GET
     Then status 200
     And assert response.requests.length == 1
