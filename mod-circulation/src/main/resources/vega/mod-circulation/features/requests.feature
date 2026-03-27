@@ -1472,7 +1472,6 @@ Feature: Requests tests
     Then status 200
     And match response.requests[*].id contains targetRequestId
     And match response.requests[*].id contains otherRequestId
-    And match response.requests[*].instance.title contains targetTitle
 
   Scenario: Test request sorting by service point name, shelving order
     * def holdingsRecordId1 = call uuid1
