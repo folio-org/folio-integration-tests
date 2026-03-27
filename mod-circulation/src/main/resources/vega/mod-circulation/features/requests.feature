@@ -1431,7 +1431,7 @@ Feature: Requests tests
     * def otherItemBarcode = 'FAT-23874-ITEM-2'
     * def targetRequestId = call uuid1
     * def otherRequestId = call uuid1
-    * def targetTitle = 'Long Way to a Small Angry Planet'
+    * def targetTitle = 'Long'
     * def requestType = 'Page'
     * def requestLevel = 'Item'
 
@@ -1452,14 +1452,6 @@ Feature: Requests tests
     And match $.requests[0].item.barcode == targetItemBarcode
 
     Given path 'circulation', 'requests'
-    And param query = '((id=="' + targetTitle + '" or requesterId=="' + targetTitle + '" or requester.barcode=="' + targetTitle + '*" or instance.title="' + targetTitle + '*" or instanceId="' + targetTitle + '*" or item.barcode="' + targetTitle + '*" or itemId=="' + targetTitle + '" or itemIsbn=="' + targetTitle + '" or searchIndex.callNumberComponents.callNumber=="' + targetTitle + '*" or fullCallNumberIndex=="' + targetTitle + '*")) sortby requestDate'
-    When method GET
-    Then status 200
-    And match response.requests[*].id contains targetRequestId
-    And match response.requests[*].id contains otherRequestId
-    And match response.requests[*].instance.title contains targetTitle
-
-    Given path 'circulation', 'requests'
     And param query = '((id=="' + targetRequestId + '" or requesterId=="' + targetRequestId + '" or requester.barcode=="' + targetRequestId + '*" or instance.title="' + targetRequestId + '*" or instanceId="' + targetRequestId + '*" or item.barcode="' + targetRequestId + '*" or itemId=="' + targetRequestId + '" or itemIsbn=="' + targetRequestId + '" or searchIndex.callNumberComponents.callNumber=="' + targetRequestId + '*" or fullCallNumberIndex=="' + targetRequestId + '*")) sortby requestDate'
     When method GET
     Then status 200
@@ -1473,6 +1465,14 @@ Feature: Requests tests
     And assert response.requests.length == 1
     And match $.requests[0].id == targetRequestId
     And match $.requests[0].requester.barcode == requesterBarcode1
+
+    Given path 'circulation', 'requests'
+    And param query = '((id=="' + targetTitle + '" or requesterId=="' + targetTitle + '" or requester.barcode=="' + targetTitle + '*" or instance.title="' + targetTitle + '*" or instanceId="' + targetTitle + '*" or item.barcode="' + targetTitle + '*" or itemId=="' + targetTitle + '" or itemIsbn=="' + targetTitle + '" or searchIndex.callNumberComponents.callNumber=="' + targetTitle + '*" or fullCallNumberIndex=="' + targetTitle + '*")) sortby requestDate'
+    When method GET
+    Then status 200
+    And match response.requests[*].id contains targetRequestId
+    And match response.requests[*].id contains otherRequestId
+    And match response.requests[*].instance.title contains targetTitle
 
   Scenario: Test request sorting by service point name, shelving order
     * def holdingsRecordId1 = call uuid1
