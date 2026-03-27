@@ -1444,7 +1444,7 @@ Feature: Requests tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(otherRequestId), itemId: #(otherItemId), requesterId: #(requesterId2), extRequestType: #(requestType), extRequestLevel: #(requestLevel), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
 
     Given path 'circulation', 'requests'
-    And param query = 'item.barcode==' + targetItemBarcode
+    And param query = '((id=="' + targetItemBarcode + '" or requesterId=="' + targetItemBarcode + '" or requester.barcode=="' + targetItemBarcode + '*" or instance.title="' + targetItemBarcode + '*" or instanceId="' + targetItemBarcode + '*" or item.barcode="' + targetItemBarcode + '*" or itemId=="' + targetItemBarcode + '" or itemIsbn=="' + targetItemBarcode + '" or searchIndex.callNumberComponents.callNumber=="' + targetItemBarcode + '*" or fullCallNumberIndex=="' + targetItemBarcode + '*")) sortby requestDate'
     When method GET
     Then status 200
     And assert response.requests.length == 1
@@ -1452,7 +1452,7 @@ Feature: Requests tests
     And match $.requests[0].item.barcode == targetItemBarcode
 
     Given path 'circulation', 'requests'
-    And param query = 'instance.title==' + targetTitle
+    And param query = '((id=="' + targetTitle + '" or requesterId=="' + targetTitle + '" or requester.barcode=="' + targetTitle + '*" or instance.title="' + targetTitle + '*" or instanceId="' + targetTitle + '*" or item.barcode="' + targetTitle + '*" or itemId=="' + targetTitle + '" or itemIsbn=="' + targetTitle + '" or searchIndex.callNumberComponents.callNumber=="' + targetTitle + '*" or fullCallNumberIndex=="' + targetTitle + '*")) sortby requestDate'
     When method GET
     Then status 200
     And match response.requests[*].id contains targetRequestId
@@ -1460,14 +1460,14 @@ Feature: Requests tests
     And match response.requests[*].instance.title contains targetTitle
 
     Given path 'circulation', 'requests'
-    And param query = 'id==' + targetRequestId
+    And param query = '((id=="' + targetRequestId + '" or requesterId=="' + targetRequestId + '" or requester.barcode=="' + targetRequestId + '*" or instance.title="' + targetRequestId + '*" or instanceId="' + targetRequestId + '*" or item.barcode="' + targetRequestId + '*" or itemId=="' + targetRequestId + '" or itemIsbn=="' + targetRequestId + '" or searchIndex.callNumberComponents.callNumber=="' + targetRequestId + '*" or fullCallNumberIndex=="' + targetRequestId + '*")) sortby requestDate'
     When method GET
     Then status 200
     And assert response.requests.length == 1
     And match $.requests[0].id == targetRequestId
 
     Given path 'circulation', 'requests'
-    And param query = 'requester.barcode==*12345*'
+    And param query = '((id=="12345" or requesterId=="12345" or requester.barcode=="12345*" or instance.title="12345*" or instanceId="12345*" or item.barcode="12345*" or itemId=="12345" or itemIsbn=="12345" or searchIndex.callNumberComponents.callNumber=="12345*" or fullCallNumberIndex=="12345*")) sortby requestDate'
     When method GET
     Then status 200
     And assert response.requests.length == 1
