@@ -14,7 +14,6 @@ Feature: Create loan policies
     * def loanPolicyEntityRequest = read(samplesPath + 'loan-policy-entity-request.json')
 
     Given path 'loan-policy-storage/loan-policies'
-    And headers headers
     And request loanPolicyEntityRequest
     When method POST
     Then status 201
@@ -23,7 +22,6 @@ Feature: Create loan policies
     * lostItemFeePolicyEntityRequest.name = lostItemFeePolicyEntityRequest.name + ' ' + random_string()
 
     Given path 'lost-item-fees-policies'
-    And headers headers
     And request lostItemFeePolicyEntityRequest
     When method POST
     Then status 201
@@ -32,7 +30,6 @@ Feature: Create loan policies
     * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
 
     Given path 'overdue-fines-policies'
-    And headers headers
     And request overdueFinePolicyEntityRequest
     When method POST
     Then status 201
@@ -41,7 +38,6 @@ Feature: Create loan policies
     * patronNoticePolicyEntityRequest.name = patronNoticePolicyEntityRequest.name + ' ' + random_string()
 
     Given path 'patron-notice-policy-storage/patron-notice-policies'
-    And headers headers
     And request patronNoticePolicyEntityRequest
     When method POST
     Then status 201
@@ -50,7 +46,6 @@ Feature: Create loan policies
     * policyEntityRequest.name = policyEntityRequest.name + ' ' + random_string()
 
     Given path 'request-policy-storage/request-policies'
-    And headers headers
     And request policyEntityRequest
     When method POST
     Then status 201
@@ -59,7 +54,6 @@ Feature: Create loan policies
     * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
 
     Given path 'circulation-rules-storage'
-    And headers headers
     And request rulesEntityRequest
     When method PUT
     Then status 204
