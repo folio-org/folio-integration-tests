@@ -228,136 +228,138 @@ Feature: Initialize mod-consortia integration tests
     # Share university instance to central tenant to enable mod-search consortium item search indexing.
     # Headers must use universityTenantName so the final source='CONSORTIUM-FOLIO' check runs in the source tenant.
     * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
-    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json, text/plain' }
     * configure retry = { count: 30, interval: 5000 }
     * call read('classpath:reusable/shareInstance.feature') { instanceId: '#(universityInstanceId)', sourceTenantId: '#(universityTenantName)', targetTenantId: '#(centralTenantName)', consortiumId: '#(consortiumId)' }
 
     * call read('classpath:utils/configuration.feature')
+    * call karate.read('classpath:reusable/createLoanPolicies.feature')
 
     # 5. Setup circulation policies and rules for university tenant
     # Required for mod-tlr secondary request creation (Page/Recall/Hold in university tenant).
     * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
-    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
-    * configure headers = headersUni
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json, text/plain' }
 
-    * def uniLoanPolicyId = 'ac34d2dc-0001-1111-bbbb-6f7264657273'
-    * def uniLostItemFeePolicyId = 'ac34d2dc-0002-1111-bbbb-6f7264657273'
-    * def uniOverdueFinePolicyId = 'ac34d2dc-0003-1111-bbbb-6f7264657273'
-    * def uniPatronNoticePolicyId = 'ac34d2dc-0004-1111-bbbb-6f7264657273'
-    * def uniRequestPolicyId = 'ac34d2dc-0005-1111-bbbb-6f7264657273'
+    * call karate.read('classpath:reusable/createLoanPolicies.feature')
 
-    Given path 'loan-policy-storage/loan-policies'
-    And request
-      """
-      {
-        "id": "#(uniLoanPolicyId)",
-        "name": "University ECS loan policy",
-        "loanable": true,
-        "renewable": true,
-        "renewalsPolicy": { "renewFromId": "SYSTEM_DATE", "unlimited": true, "differentPeriod": false },
-        "loansPolicy": {
-          "profileId": "Rolling",
-          "period": { "duration": 3, "intervalId": "Weeks" },
-          "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
-        }
-      }
-      """
-    When method POST
-    Then status 201
-
-    Given path 'lost-item-fees-policies'
-    And request
-      """
-      {
-        "id": "#(uniLostItemFeePolicyId)",
-        "name": "University ECS lost item fee policy",
-        "itemAgedLostOverdue": { "duration": 12, "intervalId": "Months" },
-        "patronBilledAfterAgedLost": { "duration": 12, "intervalId": "Months" },
-        "chargeAmountItem": { "chargeType": "anotherCost", "amount": 10.00 },
-        "lostItemProcessingFee": 5.00,
-        "chargeAmountItemPatron": true,
-        "chargeAmountItemSystem": true,
-        "lostItemChargeFeeFine": { "duration": 6, "intervalId": "Months" },
-        "returnedLostItemProcessingFee": true,
-        "replacedLostItemProcessingFee": true,
-        "replacementProcessingFee": 0.00,
-        "replacementAllowed": true,
-        "lostItemReturned": "Charge"
-      }
-      """
-    When method POST
-    Then status 201
-
-    Given path 'overdue-fines-policies'
-    And request
-      """
-      {
-        "id": "#(uniOverdueFinePolicyId)",
-        "name": "University ECS overdue fine policy",
-        "overdueFine": { "quantity": 5.0, "intervalId": "minute" },
-        "countClosed": true,
-        "maxOverdueFine": 50.00,
-        "forgiveOverdueFine": true,
-        "overdueRecallFine": { "quantity": 1.0, "intervalId": "minute" },
-        "gracePeriodRecall": false,
-        "maxOverdueRecallFine": 50.00
-      }
-      """
-    When method POST
-    Then status 201
-
-    Given path 'patron-notice-policy-storage/patron-notice-policies'
-    And request
-      """
-      {
-        "id": "#(uniPatronNoticePolicyId)",
-        "name": "University ECS patron notice policy",
-        "loanNotices": [],
-        "feeFineNotices": [],
-        "requestNotices": []
-      }
-      """
-    When method POST
-    Then status 201
-
-    Given path 'request-policy-storage/request-policies'
-    And request
-      """
-      {
-        "id": "#(uniRequestPolicyId)",
-        "name": "University ECS request policy",
-        "requestTypes": ["Hold", "Page", "Recall"]
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def uniCircRules = 'priority: t, s, c, b, a, m, g\nfallback-policy: l ' + uniLoanPolicyId + ' o ' + uniOverdueFinePolicyId + ' i ' + uniLostItemFeePolicyId + ' r ' + uniRequestPolicyId + ' n ' + uniPatronNoticePolicyId
-    * print 'uniCircRules:', uniCircRules
-    * def uniCircRulesBody = { rulesAsText: '#(uniCircRules)' }
-
-    # Persist rules to storage
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'text/plain' }
-    Given path 'circulation-rules-storage'
-    And request uniCircRulesBody
-    When method PUT
-    Then status 204
-
-    # Update mod-circulation cache and fire Kafka CIRCULATION_RULES_UPDATED event
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json, text/plain' }
-    Given path 'circulation', 'rules'
-    And request uniCircRulesBody
-    When method PUT
-    Then status 204
-    # Wait for Kafka event to propagate to all mod-circulation replicas for the newly created tenant
-    * karate.pause(20000)
-
-    # Verify rules are set
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
-    Given path 'circulation', 'rules'
-    When method GET
-    Then status 200
-    * print 'GET circulation/rules verification - rulesAsText:', response.rulesAsText
+#    * def uniLoanPolicyId = 'ac34d2dc-0001-1111-bbbb-6f7264657273'
+#    * def uniLostItemFeePolicyId = 'ac34d2dc-0002-1111-bbbb-6f7264657273'
+#    * def uniOverdueFinePolicyId = 'ac34d2dc-0003-1111-bbbb-6f7264657273'
+#    * def uniPatronNoticePolicyId = 'ac34d2dc-0004-1111-bbbb-6f7264657273'
+#    * def uniRequestPolicyId = 'ac34d2dc-0005-1111-bbbb-6f7264657273'
+#
+#    Given path 'loan-policy-storage/loan-policies'
+#    And request
+#      """
+#      {
+#        "id": "#(uniLoanPolicyId)",
+#        "name": "University ECS loan policy",
+#        "loanable": true,
+#        "renewable": true,
+#        "renewalsPolicy": { "renewFromId": "SYSTEM_DATE", "unlimited": true, "differentPeriod": false },
+#        "loansPolicy": {
+#          "profileId": "Rolling",
+#          "period": { "duration": 3, "intervalId": "Weeks" },
+#          "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
+#        }
+#      }
+#      """
+#    When method POST
+#    Then status 201
+#
+#    Given path 'lost-item-fees-policies'
+#    And request
+#      """
+#      {
+#        "id": "#(uniLostItemFeePolicyId)",
+#        "name": "University ECS lost item fee policy",
+#        "itemAgedLostOverdue": { "duration": 12, "intervalId": "Months" },
+#        "patronBilledAfterAgedLost": { "duration": 12, "intervalId": "Months" },
+#        "chargeAmountItem": { "chargeType": "anotherCost", "amount": 10.00 },
+#        "lostItemProcessingFee": 5.00,
+#        "chargeAmountItemPatron": true,
+#        "chargeAmountItemSystem": true,
+#        "lostItemChargeFeeFine": { "duration": 6, "intervalId": "Months" },
+#        "returnedLostItemProcessingFee": true,
+#        "replacedLostItemProcessingFee": true,
+#        "replacementProcessingFee": 0.00,
+#        "replacementAllowed": true,
+#        "lostItemReturned": "Charge"
+#      }
+#      """
+#    When method POST
+#    Then status 201
+#
+#    Given path 'overdue-fines-policies'
+#    And request
+#      """
+#      {
+#        "id": "#(uniOverdueFinePolicyId)",
+#        "name": "University ECS overdue fine policy",
+#        "overdueFine": { "quantity": 5.0, "intervalId": "minute" },
+#        "countClosed": true,
+#        "maxOverdueFine": 50.00,
+#        "forgiveOverdueFine": true,
+#        "overdueRecallFine": { "quantity": 1.0, "intervalId": "minute" },
+#        "gracePeriodRecall": false,
+#        "maxOverdueRecallFine": 50.00
+#      }
+#      """
+#    When method POST
+#    Then status 201
+#
+#    Given path 'patron-notice-policy-storage/patron-notice-policies'
+#    And request
+#      """
+#      {
+#        "id": "#(uniPatronNoticePolicyId)",
+#        "name": "University ECS patron notice policy",
+#        "loanNotices": [],
+#        "feeFineNotices": [],
+#        "requestNotices": []
+#      }
+#      """
+#    When method POST
+#    Then status 201
+#
+#    Given path 'request-policy-storage/request-policies'
+#    And request
+#      """
+#      {
+#        "id": "#(uniRequestPolicyId)",
+#        "name": "University ECS request policy",
+#        "requestTypes": ["Hold", "Page", "Recall"]
+#      }
+#      """
+#    When method POST
+#    Then status 201
+#
+#    * def uniCircRules = 'priority: t, s, c, b, a, m, g\nfallback-policy: l ' + uniLoanPolicyId + ' o ' + uniOverdueFinePolicyId + ' i ' + uniLostItemFeePolicyId + ' r ' + uniRequestPolicyId + ' n ' + uniPatronNoticePolicyId
+#    * print 'uniCircRules:', uniCircRules
+#    * def uniCircRulesBody = { rulesAsText: '#(uniCircRules)' }
+#
+#    # Persist rules to storage
+#    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'text/plain' }
+#    Given path 'circulation-rules-storage'
+#    And request uniCircRulesBody
+#    When method PUT
+#    Then status 204
+#
+#    # Update mod-circulation cache and fire Kafka CIRCULATION_RULES_UPDATED event
+#    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json, text/plain' }
+#    Given path 'circulation', 'rules'
+#    And request uniCircRulesBody
+#    When method PUT
+#    Then status 204
+#    # Wait for Kafka event to propagate to all mod-circulation replicas for the newly created tenant
+#    * karate.pause(20000)
+#
+#    # Verify rules are set
+#    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
+#    Given path 'circulation', 'rules'
+#    When method GET
+#    Then status 200
+#    * print 'GET circulation/rules verification - rulesAsText:', response.rulesAsText
 
     # 6. Assign patron group to centralUser for ECS request cloning.
     # mod-tlr clones centralUser into the university tenant when creating ECS requests.
