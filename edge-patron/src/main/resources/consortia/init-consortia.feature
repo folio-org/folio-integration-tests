@@ -94,6 +94,7 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-bff.batch-request.collection.get'              |
       | 'circulation-bff.batch-request.details.collection.get'      |
       | 'search.index.instance-records.reindex.full.post'           |
+      | 'circulation.settings.item.post'                            |
 
     # load global variables
     * callonce variables
@@ -203,6 +204,7 @@ Feature: Initialize mod-consortia integration tests
       | 'overdue-fines-policies.collection.get'                     |
       | 'overdue-fines-policies.item.post'                          |
       | 'usergroups.item.post'                                      |
+      | 'circulation.settings.item.post'                            |
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }
     * configure cookies = null
     * call putCaps { tenant: '#(universityTenantName)', user: '#(shadowConsortiaAdmin)' }
@@ -385,7 +387,7 @@ Feature: Initialize mod-consortia integration tests
     Then status 204
 
     # enable title-level requests (TLR) feature
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json, text/plain' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
     * def tlrConfig = read('classpath:consortia/samples/tlr-config-entry-request.json')
     Given path 'circulation/settings'
     And request tlrConfig
