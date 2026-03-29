@@ -52,9 +52,9 @@ Feature: ECS Batch Request creation
     And match batchStatusResult.itemsRequested == 3
     And match batchStatusResult.itemsPending == 0
     And match batchStatusResult.itemsFailed == 0
-    And match batchStatusResult.itemsRequestedDetails[*].instanceId == [universityInstanceId, universityInstanceId, universityInstanceId]
-    And match batchStatusResult.itemsRequestedDetails[*].itemId contains [itemId1, itemId2, itemId3]
-    And match batchStatusResult.itemsRequestedDetails[*].pickUpLocationId == [servicePointId, servicePointId, servicePointId]
+    And match each batchStatusResult.itemsRequestedDetails[*].instanceId == universityInstanceId
+    And match batchStatusResult.itemsRequestedDetails[*].itemId contains only [itemId1, itemId2, itemId3]
+    And match each batchStatusResult.itemsRequestedDetails[*].pickUpLocationId == servicePointId
     And match batchStatusResult.itemsRequestedDetails[0].confirmedRequestId == '#notnull'
     And match batchStatusResult.itemsRequestedDetails[1].confirmedRequestId == '#notnull'
     And match batchStatusResult.itemsRequestedDetails[2].confirmedRequestId == '#notnull'
@@ -80,10 +80,10 @@ Feature: ECS Batch Request creation
     Then status 200
     And match karate.sizeOf(response.holds) == 3
     And match karate.sizeOf(response.batches) == 1
-    And match response.holds[*].batchRequestInfo.batchRequestId == [batchId, batchId, batchId]
+    And match each response.holds[*].batchRequestInfo.batchRequestId == batchId
     And match response.batches[0].status == 'Completed'
     And match response.batches[0].itemsTotal == 3
     And match response.batches[0].itemsRequested == 3
     And match karate.sizeOf(response.batches[0].itemsRequestedDetails) == 3
-    And match response.batches[0].itemsRequestedDetails[*].itemId contains [itemId1, itemId2, itemId3]
-    And match response.batches[0].itemsRequestedDetails[*].confirmedRequestId contains [circulationRequestId1, circulationRequestId2, circulationRequestId3]
+    And match response.batches[0].itemsRequestedDetails[*].itemId contains only [itemId1, itemId2, itemId3]
+    And match response.batches[0].itemsRequestedDetails[*].confirmedRequestId contains only [circulationRequestId1, circulationRequestId2, circulationRequestId3]
