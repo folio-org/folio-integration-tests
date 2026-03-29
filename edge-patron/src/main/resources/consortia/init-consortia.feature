@@ -26,6 +26,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-tlr'                   |
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
+      | 'mod-dcb'                   |
 
     # Permissions for consortiaAdmin and universityUser
     * table userPermissions
@@ -139,6 +140,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
       | 'mod-requests-mediated'     |
+      | 'mod-dcb'                   |
 
     * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenant.id)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
@@ -205,6 +207,7 @@ Feature: Initialize mod-consortia integration tests
       | 'overdue-fines-policies.item.post'                          |
       | 'usergroups.item.post'                                      |
       | 'circulation.settings.item.post'                            |
+
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }
     * configure cookies = null
     * call putCaps { tenant: '#(universityTenantName)', user: '#(shadowConsortiaAdmin)' }
