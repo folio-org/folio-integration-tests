@@ -27,6 +27,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
       | 'mod-dcb'                   |
+      | 'mod-record-specifications' |
 
     # Permissions for consortiaAdmin and universityUser
     * table userPermissions
@@ -142,6 +143,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-circulation-bff'       |
       | 'mod-requests-mediated'     |
       | 'mod-dcb'                   |
+      | 'mod-record-specifications' |
 
     * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenant.id)', tenant: '#(universityTenantName)', user: '#(universityUser)' }

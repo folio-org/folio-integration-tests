@@ -86,7 +86,7 @@ Feature: ECS Batch Request creation
     And match response.batches[0].itemsRequested == 3
     And match karate.sizeOf(response.batches[0].itemsRequestedDetails) == 3
     And match response.batches[0].itemsRequestedDetails[*].itemId contains only ['#(itemId1)', '#(itemId2)', '#(itemId3)']
-    And match response.batches[0].itemsRequestedDetails[*].confirmedRequestId contains only [circulationRequestId1, circulationRequestId2, circulationRequestId3]
+    And match response.batches[0].itemsRequestedDetails[*].confirmedRequestId contains only ['#(circulationRequestId1)', '#(circulationRequestId2)', '#(circulationRequestId3)']
 
     # verify circulation request are created in secondary/university tenant
     * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
