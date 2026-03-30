@@ -23,7 +23,8 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka {
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("total-expended-with-fund-distribution-and-encumbrance", true);
+    FEATURE_1("total-expended-with-fund-distribution-and-encumbrance", true),
+    FEATURE_2("budget-summary-when-amounts-exceed-available", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -68,5 +69,12 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void totalExpendedWithFundDistributionAndEncumbrance() {
     runFeatureTest(Feature.FEATURE_1.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C496145) Correct Financial Summary Values When Approved And Paid Amounts Exceed Available Amount")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void budgetSummaryWhenAmountsExceedAvailable() {
+    runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 }
