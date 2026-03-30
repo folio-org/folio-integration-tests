@@ -42,7 +42,7 @@ Feature: Create loan policies
     When method POST
     Then status 201
 
-    * def policyEntityRequest = read(samplesPath + 'request-policy-entity-request.json')
+    * def policyEntityRequest = read(samplesPath + 'request-policy-entity-request-for-all-types.json')
     * policyEntityRequest.name = policyEntityRequest.name + ' ' + random_string()
 
     Given path 'request-policy-storage/request-policies'
