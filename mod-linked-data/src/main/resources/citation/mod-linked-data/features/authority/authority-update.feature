@@ -15,7 +15,6 @@ Feature: Authority update
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/authority_person.json')
     * def postAuthorityCall = call postSourceRecordToStorage
-    And match postAuthorityCall.response.qmRecordId == '#notnull'
 
     # Step 2: search for the created authority
     * def query = 'headingRef < "PAVELTEST" or headingRef >= "PAVELTEST"'

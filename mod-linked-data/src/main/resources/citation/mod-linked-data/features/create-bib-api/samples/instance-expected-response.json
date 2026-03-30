@@ -272,7 +272,7 @@
       ]
     }
   ],
-  "http://bibfra.me/vocab/library/dimensions": [
+  "http://bibfra.me/vocab/lite/dimensions": [
     "8x8"
   ],
   "http://bibfra.me/vocab/library/adminMetadata": [
