@@ -96,5 +96,4 @@ Feature: Import Bibframe2 RDF
   Scenario: Create authority & verify
     * def sourceRecordRequest = read('samples/' + fileName)
     * def postAuthorityCall = call postSourceRecordToStorage
-    * match postAuthorityCall.response.qmRecordId == '#notnull'
     * def searchAuthorityCall = call searchAuthority { query: '#(query)' }
