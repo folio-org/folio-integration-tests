@@ -87,3 +87,13 @@ Feature: ECS Batch Request creation
     And match karate.sizeOf(response.batches[0].itemsRequestedDetails) == 3
     And match response.batches[0].itemsRequestedDetails[*].itemId contains only ['#(itemId1)', '#(itemId2)', '#(itemId3)']
     And match response.batches[0].itemsRequestedDetails[*].confirmedRequestId contains only [circulationRequestId1, circulationRequestId2, circulationRequestId3]
+
+    # verify circulation request are created in secondary/university tenant
+    * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
+    Given url baseUrl
+    And path 'circulation/requests'
+    And param query = '(id=="' + circulationRequestId1 + '" or id=="' + circulationRequestId2 + '" or id=="' + circulationRequestId3 + '")'
+    When method GET
+    Then status 200
+    And assert response.requests.length == 3
