@@ -25,6 +25,7 @@ Feature: Import Bibframe2 RDF
     * configure headers = { 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path '/linked-data/import/file'
     And multipart file fileName = { read: 'classpath:citation/mod-linked-data/features/import-rdf/samples/rdf.json', filename: '#(fileName)', contentType: 'application/ld+json'  }
+    And param filterType = 'http://bibfra.me/vocab/lite/Instance'
     When method POST
     Then status 200
 

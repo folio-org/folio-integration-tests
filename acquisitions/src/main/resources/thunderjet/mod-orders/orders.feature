@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-orders integration tests
 
   Background:
@@ -303,3 +302,12 @@ Feature: mod-orders integration tests
 
   Scenario: Receive pieces and delete empty holding
     * call read('features/receive-pieces-delete-empty-holding.feature')
+
+  Scenario: Unopen order deletes only empty holding for two locations
+    * call read('features/unopen-order-delete-empty-holding-two-locs.feature')
+
+  Scenario: Unopen order with 2 independent POLs deletes only empty holding
+    * call read('features/unopen-order-delete-empty-holding-two-pols.feature')
+
+  Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
+    * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')

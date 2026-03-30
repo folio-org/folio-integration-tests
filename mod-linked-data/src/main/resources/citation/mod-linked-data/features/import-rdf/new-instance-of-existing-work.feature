@@ -39,6 +39,7 @@ Feature: Create new instance under existing work using RDF import
     * configure headers = { 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path '/linked-data/import/file'
     And multipart file fileName = { read: '#(uploadRdfPath)', filename: '#(fileName)', contentType: 'application/ld+json'  }
+    And param filterType = 'http://bibfra.me/vocab/lite/Instance'
     When method POST
     Then status 200
     * def insanceResourceId = response.resources[0]
