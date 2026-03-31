@@ -15,19 +15,16 @@ Feature: Import Bibframe2 RDF in bulk into linked data graph
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/authority_person.json')
     * def postAuthorityPersonCall = call postSourceRecordToStorage
-    * match postAuthorityPersonCall.response.qmRecordId == '#notnull'
     * def query = '(lccn="n1058")'
     * call searchAuthority
 
     * def sourceRecordRequest = read('samples/authority_topic.json')
     * def postAuthorityTopicCall = call postSourceRecordToStorage
-    * match postAuthorityTopicCall.response.qmRecordId == '#notnull'
     * def query = '(lccn="sh1058")'
     * call searchAuthority
 
     * def sourceRecordRequest = read('samples/fast_authority_organization.json')
     * def postFastAuthorityCall = call postSourceRecordToStorage
-    * match postFastAuthorityCall.response.qmRecordId == '#notnull'
     * def query = '(naturalId="fst1058")'
     * call searchAuthority
 

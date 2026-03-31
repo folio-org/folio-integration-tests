@@ -50,7 +50,7 @@ Feature: Verify Linked Data Graph
 
   @C740246
   Scenario: Verify dimension, physical description and accompanying material
-    * match instanceSubgraph.doc['http://bibfra.me/vocab/library/dimensions'] == ['31 cm +']
+    * match instanceSubgraph.doc['http://bibfra.me/vocab/lite/dimensions'] == ['31 cm +']
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/physicalDescription'] == ['illustrations']
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/accompanyingMaterial'] == ['1 computer disc (illustrations ; 4 3/4 in.)']
 

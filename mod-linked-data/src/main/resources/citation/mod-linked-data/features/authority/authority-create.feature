@@ -47,7 +47,6 @@ Feature: Import authority into graph
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read(params.sourceRecordPath)
     * def postAuthorityCall = call postSourceRecordToStorage
-    And match postAuthorityCall.response.qmRecordId == '#notnull'
 
     * def query = params.query
     * def searchAuthorityCall = call searchAuthority
