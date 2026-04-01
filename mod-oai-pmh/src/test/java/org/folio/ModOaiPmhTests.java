@@ -136,4 +136,9 @@ public class ModOaiPmhTests extends TestBaseEureka {
         runFeatureTest("verifyBehaviorConfigurationC375138");
     }
 
+  @Test
+    void verifyDcbInstanceHoldings() {
+        runFeatureTest("oaipmh-dcb");
+    }
+
 }
