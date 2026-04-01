@@ -310,3 +310,9 @@ Feature: cross-module integration tests
 
   Scenario: Correct financial summary values when approved and paid amounts exceed available amount
     * call read('features/budget-summary-when-amounts-exceed-available.feature')
+
+  Scenario: Budget Summary When Encumbered Approved And Paid Exceed Available Amount
+    * call read('features/budget-summary-encumbered-approved-paid-exceed-available.feature')
+
+  Scenario: Budget Summary When Decrease Allocation Exceeds Available Amount
+    * call read('features/budget-summary-transfer-decreases-below-available.feature')
