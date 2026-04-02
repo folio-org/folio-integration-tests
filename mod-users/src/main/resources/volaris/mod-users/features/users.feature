@@ -195,7 +195,7 @@ Feature: Users tests
 
   Scenario: Update User's Profile Picture
 
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
@@ -204,7 +204,7 @@ Feature: Users tests
     * def encryptionKey = response.settings[0].value.encryptionKey
     * def version = response.settings[0]._version
 
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
     """
       {
@@ -262,7 +262,7 @@ Feature: Users tests
 
   Scenario: Delete User. Linked Profile Picture should stay.
 
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
@@ -271,7 +271,7 @@ Feature: Users tests
     * def encryptionKey = response.settings[0].value.encryptionKey
     * def version = response.settings[0]._version
 
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -319,7 +319,7 @@ Feature: Users tests
 
   Scenario: Delete Profile Picture, which is already has linked to User.
 
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
@@ -328,7 +328,7 @@ Feature: Users tests
     * def encryptionKey = response.settings[0].value.encryptionKey
     * def version = response.settings[0]._version
 
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
