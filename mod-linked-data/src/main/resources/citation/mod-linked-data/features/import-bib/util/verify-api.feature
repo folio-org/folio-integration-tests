@@ -4,7 +4,17 @@ Feature: Verify linked data graph using APIs
     * def expectedSearchResponse = read('samples/expected-search-response.json')
     * def searchCall = call searchLinkedDataWork
     * def searchResult = searchCall.response.content[0]
-    * match searchResult contains expectedSearchResponse
+    * match searchResult.languages contains only expectedSearchResponse.languages
+    * match searchResult.classifications contains only deep expectedSearchResponse.classifications
+    * match searchResult.subjects contains only expectedSearchResponse.subjects
+    * match searchResult.titles contains only deep expectedSearchResponse.titles
+    * match searchResult.contributors contains only deep expectedSearchResponse.contributors
+    * def expectedInstance = expectedSearchResponse.instances[0]
+    * def actualInstance = searchResult.instances[0]
+    * match actualInstance.identifiers contains only deep expectedInstance.identifiers
+    * match actualInstance.titles contains only deep expectedInstance.titles
+    * match actualInstance.publications contains only deep expectedInstance.publications
+    * match actualInstance.notes contains only deep expectedInstance.notes
 
   Scenario: Verify work resource
     * def getWorkCall = call getResource { id: "#(searchResult.id)" }
