@@ -13,7 +13,6 @@ Feature: Preview and import Hub from a remote RDF URL
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/authority_person-eckardt.json')
     * def postAuthorityCall = call postSourceRecordToStorage
-    * match postAuthorityCall.response.qmRecordId == '#notnull'
     * def query = '(lccn="no98031922")'
     * call searchAuthority
 

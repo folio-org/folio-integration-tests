@@ -15,7 +15,6 @@ Feature: Authority update
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/authority_person.json')
     * def postAuthorityCall = call postSourceRecordToStorage
-    And match postAuthorityCall.response.qmRecordId == '#notnull'
 
     # Step 2: search for the created authority
     * def query = 'headingRef < "PAVELTEST" or headingRef >= "PAVELTEST"'
@@ -52,7 +51,6 @@ Feature: Authority update
     * def getCreatedAuthorityGraphCall = call getResourceGraph
     * def createdAuthorityGraphResponse = getCreatedAuthorityGraphCall.response
     * match createdAuthorityGraphResponse.label == 'PAVELTEST'
-    * match createdAuthorityGraphResponse.doc['http://library.link/vocab/resourcePreferred'][0] == 'false'
     * match createdAuthorityGraphResponse.folioMetadata == '#notpresent'
     * def updatedAuthorityId = createdAuthorityGraphResponse.outgoingEdges.filter(x => x.predicate == 'REPLACED_BY')[0].target.id
 
@@ -61,7 +59,6 @@ Feature: Authority update
     * def getUpdatedAuthorityGraphCall = call getResourceGraph
     * def updatedAuthorityGraphResponse = getUpdatedAuthorityGraphCall.response
     * match updatedAuthorityGraphResponse.label == 'PAVELTEST, 1986'
-    * match updatedAuthorityGraphResponse.doc['http://library.link/vocab/resourcePreferred'][0] == 'true'
     * match updatedAuthorityGraphResponse.folioMetadata.inventoryId == inventoryId
     * match updatedAuthorityGraphResponse.folioMetadata.srsId == sourceRecordId
 

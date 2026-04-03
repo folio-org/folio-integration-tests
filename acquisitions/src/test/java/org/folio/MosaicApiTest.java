@@ -15,7 +15,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
-@Order(13)
+@Order(14)
 @FolioTest(team = "thunderjet", module = "mod-mosaic")
 class MosaicApiTest extends TestBaseEureka {
 

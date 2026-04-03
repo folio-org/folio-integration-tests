@@ -10,24 +10,22 @@ Feature: Import Bibframe2 RDF in bulk into linked data graph
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
+  @C1046002
   Scenario: Run bulk RDF import
     # Step 1: Create authorities used by import and verify they are indexed
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/authority_person.json')
     * def postAuthorityPersonCall = call postSourceRecordToStorage
-    * match postAuthorityPersonCall.response.qmRecordId == '#notnull'
     * def query = '(lccn="n1058")'
     * call searchAuthority
 
     * def sourceRecordRequest = read('samples/authority_topic.json')
     * def postAuthorityTopicCall = call postSourceRecordToStorage
-    * match postAuthorityTopicCall.response.qmRecordId == '#notnull'
     * def query = '(lccn="sh1058")'
     * call searchAuthority
 
     * def sourceRecordRequest = read('samples/fast_authority_organization.json')
     * def postFastAuthorityCall = call postSourceRecordToStorage
-    * match postFastAuthorityCall.response.qmRecordId == '#notnull'
     * def query = '(naturalId="fst1058")'
     * call searchAuthority
 

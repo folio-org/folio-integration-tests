@@ -8,10 +8,34 @@ Feature: Initialize mod-consortia integration tests
     * configure readTimeout = 600000
     * configure connectTimeout = 600000
 
+    * table modules
+      | name                        |
+      | 'mod-permissions'           |
+      | 'okapi'                     |
+      | 'mod-users'                 |
+      | 'mod-login'                 |
+      | 'mod-inventory-storage'     |
+      | 'mod-pubsub'                |
+      | 'mod-circulation-storage'   |
+      | 'mod-source-record-manager' |
+      | 'mod-entities-links'        |
+      | 'mod-inventory'             |
+      | 'folio-custom-fields'       |
+      | 'edge-patron'               |
+      | 'mod-patron'                |
+      | 'mod-tlr'                   |
+      | 'mod-circulation'           |
+      | 'mod-circulation-bff'       |
+      | 'mod-dcb'                   |
+      | 'mod-record-specifications' |
+
     # Permissions for consortiaAdmin and universityUser
     * table userPermissions
       | name                                                        |
+      | 'circulation.rules.get'                                     |
       | 'circulation.rules.put'                                     |
+      | 'circulation-storage.circulation-rules.get'                 |
+      | 'circulation-storage.circulation-rules.put'                 |
       | 'circulation.requests.item.get'                             |
       | 'circulation.requests.item.post'                            |
       | 'circulation-storage.loan-policies.collection.get'          |
@@ -48,6 +72,7 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory.items.collection.get'                            |
       | 'inventory.items.item.delete'                               |
       | 'inventory.items.item.get'                                  |
+      | 'inventory.items.item.post'                                 |
       | 'inventory.items.move.item.post'                            |
       | 'inventory.tenant-items.collection.get'                     |
       | 'lost-item-fees-policies.collection.get'                    |
@@ -61,6 +86,18 @@ Feature: Initialize mod-consortia integration tests
       | 'users.item.get'                                            |
       | 'users.item.post'                                           |
       | 'users.item.put'                                            |
+      | 'users.collection.get'                                      |
+      | 'patron.account.instance-batch-request.item.post'           |
+      | 'patron.account.instance-batch-request-status.item.get'     |
+      | 'patron.account.item.get'                                   |
+      | 'circulation.requests.collection.get'                       |
+      | 'circulation-bff.batch-requests.item.post'                  |
+      | 'circulation-bff.batch-request.item.get'                    |
+      | 'circulation-bff.batch-request.collection.get'              |
+      | 'circulation-bff.batch-request.details.collection.get'      |
+      | 'search.index.instance-records.reindex.full.post'           |
+      | 'circulation.settings.item.post'                            |
+      | 'patron.settings.item.post'                                 |
 
     # load global variables
     * callonce variables
@@ -72,25 +109,8 @@ Feature: Initialize mod-consortia integration tests
     * def isInstanceMatchingDisabledId = callonce uuid
 
     # generate names for tenants
-    * def random = callonce randomMillis
-    * def uuids = callonce uuids 4
-    * def centralTenantId = uuids[0]
-    * def centralTenantName = 'central' + random
     * def centralTenant = { id : '#(centralTenantId)', name: '#(centralTenantName)' }
-    * def universityTenantId = uuids[1]
-    * def universityTenantName = 'university' + random
     * def universityTenant = { id : '#(universityTenantId)', name: '#(universityTenantName)' }
-
-    * def universityUserId = uuids[2]
-
-    # define consortium
-    * def consortiumId = uuids[3]
-
-    # define main users
-    * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenantName)' }
-    * def universityUser = { id: '#(universityUserId)', username: 'university_user', password: 'university_user_password', type: 'staff', tenant: '#(universityTenantName)' }
-
-    * def centralUser = { id: '#(centralUserId)', username: 'central_user', password: 'central_user_password', type: 'staff', tenant: '#(centralTenantName)' }
 
     # reusable features
     * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
@@ -115,11 +135,15 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-circulation'           |
       | 'mod-feesfines'             |
       | 'mod-consortia-keycloak'    |
+      | 'mod-search'                |
       | 'edge-patron'               |
       | 'mod-patron'                |
       | 'mod-tlr'                   |
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
+      | 'mod-requests-mediated'     |
+      | 'mod-dcb'                   |
+      | 'mod-record-specifications' |
 
     * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenant.id)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
@@ -140,7 +164,10 @@ Feature: Initialize mod-consortia integration tests
       | name                                                        |
       | 'circulation.requests.item.get'                             |
       | 'circulation.requests.item.post'                            |
+      | 'circulation.rules.get'                                     |
       | 'circulation.rules.put'                                     |
+      | 'circulation-storage.circulation-rules.get'                 |
+      | 'circulation-storage.circulation-rules.put'                 |
       | 'circulation-storage.loan-policies.collection.get'          |
       | 'circulation-storage.loan-policies.item.post'               |
       | 'circulation-storage.patron-notice-policies.collection.get' |
@@ -160,6 +187,7 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory.items-by-holdings-id.collection.get'             |
       | 'inventory.items.collection.get'                            |
       | 'inventory.items.item.delete'                               |
+      | 'inventory.items.item.post'                                 |
       | 'inventory-storage.holdings.collection.get'                 |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
@@ -180,19 +208,96 @@ Feature: Initialize mod-consortia integration tests
       | 'lost-item-fees-policies.item.post'                         |
       | 'overdue-fines-policies.collection.get'                     |
       | 'overdue-fines-policies.item.post'                          |
+      | 'usergroups.item.post'                                      |
+      | 'circulation.settings.item.post'                            |
+      | 'patron.settings.item.post'                                 |
 
-    * call getAuthorizationToken { tenant: '#(universityTenantName)' }
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }
     * configure cookies = null
     * call putCaps { tenant: '#(universityTenantName)', user: '#(shadowConsortiaAdmin)' }
 
   Scenario: Prepare data
     * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+
+    # Evict mod-search stale USER_TENANTS_CACHE (populated during @InstallApplications before consortium setup)
+    # BEFORE creating items. This ensures Kafka events from inventory creation are processed with a fresh
+    # central-tenant lookup, so university tenant items are indexed in the central OpenSearch index
+    # (not in the university's own index).
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+    Given path 'search/index/instance-records/reindex/full'
+    And request {}
+    When method POST
+    Then status 200
+
     * call read('classpath:utils/inventory.feature')
     * call read('classpath:utils/inventory-university.feature')
-    * call read('classpath:utils/configuration.feature')
 
-    # 5. Disable instance matching in university tenant
+    # Share university instance to central tenant to enable mod-search consortium item search indexing.
+    # Headers must use universityTenantName so the final source='CONSORTIUM-FOLIO' check runs in the source tenant.
+    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json, text/plain' }
+    * configure retry = { count: 30, interval: 5000 }
+    * call read('classpath:reusable/shareInstance.feature') { instanceId: '#(universityInstanceId)', sourceTenantId: '#(universityTenantName)', targetTenantId: '#(centralTenantName)', consortiumId: '#(consortiumId)' }
+
+    * call read('classpath:utils/configuration.feature')
+    * call karate.read('classpath:reusable/createLoanPolicies.feature')
+
+    # Setup circulation policies and rules for university tenant
+    # Required for mod-tlr secondary request creation (Page/Recall/Hold in university tenant).
     * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
-    * def headersUni = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
-    * configure headers = headersUni
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json, text/plain' }
+
+    * call karate.read('classpath:reusable/createLoanPolicies.feature')
+
+    # Create patron group in central tenant
+    * def ecsPatronGroupId = 'ac34d2dc-0010-1111-bbbb-6f7264657273'
+    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+    Given path 'groups'
+    And request { "id": "#(ecsPatronGroupId)", "group": "ecs-patron", "desc": "ECS patron group for consortium requests" }
+    When method POST
+    * print 'POST groups central status:', responseStatus
+    * if (responseStatus != 201 && responseStatus != 422) karate.fail('Unexpected status creating patron group in central tenant: ' + responseStatus)
+
+    # update central user to have the created patron group
+    Given path 'users', centralUser.id
+    When method GET
+    Then status 200
+    * def centralUserRecord = response
+    * centralUserRecord.patronGroup = ecsPatronGroupId
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'text/plain' }
+    Given path 'users', centralUser.id
+    And request centralUserRecord
+    When method PUT
+    Then status 204
+
+    # enable title-level requests (TLR) feature
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+    * def tlrConfig = read('classpath:consortia/samples/tlr-config-entry-request.json')
+    Given path 'circulation/settings'
+    And request tlrConfig
+    When method POST
+    Then status 201
+
+    # enable Multi-Item Requesting Feature setting for the patron to get batch request information in the response of patron/account API
+    Given path 'patron/settings'
+    And request
+        """
+        {
+          "scope": "mod-patron",
+          "key": "isMultiItemRequestingFeatureEnabled",
+          "value": {
+            "enabled": "true"
+          }
+        }
+        """
+    When method POST
+    Then status 201
+
+    # Create same patron group in university tenant
+    * call eurekaLogin { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(universityTenantName)' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': 'application/json' }
+    Given path 'groups'
+    And request { "id": "#(ecsPatronGroupId)", "group": "ecs-patron", "desc": "ECS patron group for consortium requests" }
+    When method POST
+    * if (responseStatus != 201 && responseStatus != 422) karate.fail('Unexpected status creating patron group in university tenant: ' + responseStatus)

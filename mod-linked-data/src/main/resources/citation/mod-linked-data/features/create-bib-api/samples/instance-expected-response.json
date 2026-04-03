@@ -1,5 +1,5 @@
 {
-  "id": "-4624843526214131877",
+  "id": "-5739366067178503712",
   "profileId": 3,
   "http://bibfra.me/vocab/library/title": [
     {
@@ -272,7 +272,7 @@
       ]
     }
   ],
-  "http://bibfra.me/vocab/library/dimensions": [
+  "http://bibfra.me/vocab/lite/dimensions": [
     "8x8"
   ],
   "http://bibfra.me/vocab/library/adminMetadata": [

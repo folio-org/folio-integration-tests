@@ -15,7 +15,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
-@Order(15)
+@Order(16)
 @FolioTest(team = "thunderjet", module = "mod-organizations")
 public class OrganizationsApiTest extends TestBaseEureka {
 

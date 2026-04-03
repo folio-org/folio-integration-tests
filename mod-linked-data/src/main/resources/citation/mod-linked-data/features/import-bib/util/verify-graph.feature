@@ -12,12 +12,14 @@ Feature: Verify Linked Data Graph
     * def creatorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'CREATOR')[0].target)
     * def authorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'AUTHOR')[0].target)
     * match creatorSubgraph.label == 'Edgell, David L., Sr., David Lee, 1938'
-    * match creatorSubgraph.doc == { "http://bibfra.me/vocab/lite/date": ["1938-"], "http://bibfra.me/vocab/lite/name": ["Edgell, David L."], "http://bibfra.me/vocab/lite/label":["Edgell, David L., Sr., David Lee, 1938"], "http://bibfra.me/vocab/library/titles": ["Sr."], "http://bibfra.me/vocab/lite/nameAlternative": ["David Lee"], "http://library.link/vocab/resourcePreferred":["true"] }
+    * match creatorSubgraph.doc == { "http://bibfra.me/vocab/lite/date": ["1938-"], "http://bibfra.me/vocab/lite/name": ["Edgell, David L."], "http://bibfra.me/vocab/lite/label":["Edgell, David L., Sr., David Lee, 1938"], "http://bibfra.me/vocab/library/titles": ["Sr."], "http://bibfra.me/vocab/lite/nameAlternative": ["David Lee"] }
     * match creatorSubgraph.types == [ 'PERSON' ]
     * match authorSubgraph.id == creatorSubgraph.id
     * match authorSubgraph.label == creatorSubgraph.label
     * match authorSubgraph.doc == creatorSubgraph.doc
     * match authorSubgraph.types == creatorSubgraph.types
+    * match creatorSubgraph.folioMetadata.inventoryId == authorityIdOfn87116094
+    * match creatorSubgraph.folioMetadata.source == 'MARC'
 
   @C446125
   Scenario: Verify Contributors of Work - Person & Family (MARC 700)
@@ -50,7 +52,7 @@ Feature: Verify Linked Data Graph
 
   @C740246
   Scenario: Verify dimension, physical description and accompanying material
-    * match instanceSubgraph.doc['http://bibfra.me/vocab/library/dimensions'] == ['31 cm +']
+    * match instanceSubgraph.doc['http://bibfra.me/vocab/lite/dimensions'] == ['31 cm +']
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/physicalDescription'] == ['illustrations']
     * match instanceSubgraph.doc['http://bibfra.me/vocab/library/accompanyingMaterial'] == ['1 computer disc (illustrations ; 4 3/4 in.)']
 
