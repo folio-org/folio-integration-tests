@@ -17,6 +17,14 @@ Feature: Piece status transitions claiming
 
     * callonce variables
     * def previousDate = '2024-01-23T12:50:03.156+00:00'
+    * def fundId = call uuid
+    * def budgetId = call uuid
+
+    # Create finances
+    * configure headers = headersAdmin
+    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
+    * configure headers = headersUser
 
 
   # ============================================================
@@ -31,7 +39,7 @@ Feature: Piece status transitions claiming
 
     # 1. Create Ongoing order in Open status with claiming active
     * def v = call createOrder { id: '#(orderId)', orderType: 'Ongoing', ongoing: { isSubscription: false } }
-    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId)' }
 
     # 2. Run pieces claiming batch job
@@ -77,7 +85,7 @@ Feature: Piece status transitions claiming
 
     # 1. Create Ongoing order in Open status with claiming active
     * def v = call createOrder { id: '#(orderId)', orderType: 'Ongoing', ongoing: { isSubscription: false } }
-    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId)' }
 
     # 2. Set barcode, set piece status to Claim sent, send claim date to tomorrow
@@ -148,7 +156,7 @@ Feature: Piece status transitions claiming
 
     # 1. Create One-time order in Open status with claiming active, claiming interval = 3
     * def v = call createOrder { id: '#(orderId)' }
-    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 3 }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 3 }
     * def v = call openOrder { orderId: '#(orderId)' }
 
     # 2. Set piece status to Claim delayed with claimingInterval = 1 (delay claim set to tomorrow)
