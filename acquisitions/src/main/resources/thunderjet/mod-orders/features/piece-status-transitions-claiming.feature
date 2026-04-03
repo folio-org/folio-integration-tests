@@ -143,3 +143,73 @@ Feature: Piece status transitions claiming
     Then status 200
     And match $.totalRecords == 1
     And match $.items[0].status.name == 'On order'
+
+
+  # ============================================================
+  # C436794: Piece status is changed to "Late" after "Delay claim" date is passed,
+  # even when "Claiming interval" has not expired yet
+  # https://foliotest.testrail.io/index.php?/cases/view/436794
+  # ============================================================
+  @C436794
+  @Positive
+  Scenario: Verify Piece Status Changed To Late After Delay Claim Date Passed
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    # Precondition 1: Create One-Time Order In Open Status With Claiming Active And Interval 3
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 3 }
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    # Precondition 2: Set Piece Status To Claim Delayed (Delay Claim Set To Tomorrow)
+    Given path 'orders/pieces'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
+
+    * set piece.receivingStatus = 'Claim delayed'
+    * set piece.claimingInterval = 1
+    Given path 'orders/pieces', pieceId
+    And request piece
+    When method PUT
+    Then status 204
+
+    # Precondition 3.1: GET Piece To Copy Response
+    Given path 'orders/pieces', pieceId
+    When method GET
+    Then status 200
+    * def piece = $
+
+    # Precondition 3.2: PUT Piece With StatusUpdatedDate In The Past And ClaimingInterval 1
+    * set piece.statusUpdatedDate = previousDate
+    * set piece.claimingInterval = 1
+    Given path 'orders/pieces', pieceId
+    And request piece
+    When method PUT
+    Then status 204
+
+    # Precondition 3.3: Run Pieces Claiming Batch Job
+    Given path 'orders-storage/claiming/process'
+    When method POST
+    Then status 200
+    * call pause 3000
+
+    # Step 1: Verify Piece Status Changed To Late
+    * def v = call verifyPieceReceivingStatus { _pieceId: '#(pieceId)', _receivingStatus: 'Late' }
+
+    # Step 2: Verify PO Line Receipt Status Is Awaiting Receipt
+    * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Awaiting Receipt' }
+
+    # Step 3-4: Verify Item Status Is On Order
+    * def poLine = call getOrderLine { poLineId: '#(poLineId)' }
+    * def holdingId = poLine.poLine.locations[0].holdingId
+    * configure headers = headersAdmin
+    Given path 'inventory/items'
+    And param query = 'holdingsRecordId==' + holdingId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.items[0].status.name == 'On order'
