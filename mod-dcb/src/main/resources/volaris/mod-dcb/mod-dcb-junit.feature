@@ -61,6 +61,7 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.material-types.item.post'                      |
       | 'inventory-storage.service-points.collection.get'                 |
       | 'inventory-storage.service-points.item.post'                      |
+      | 'inventory-storage.service-points.item.put'                       |
       | 'inventory.instances.item.post'                                   |
       | 'inventory.items.item.post'                                       |
       | 'lost-item-fees-policies.item.post'                               |

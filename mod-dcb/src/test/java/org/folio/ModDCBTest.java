@@ -84,6 +84,18 @@ public class ModDCBTest extends TestBaseEureka {
   @Test
   void testBorrowingFlowChainOfResponsibility() {  runFeatureTest("borrowing-flow-chain-of-responsibility.feature"); }
 
+  @Test
+  void testExpirationLendingFlow() { runFeatureTest("expiration-lending-flow.feature"); }
+
+  @Test
+  void testExpirationBorrowerFlow() { runFeatureTest("expiration-borrower-flow.feature"); }
+
+  @Test
+  void testExpirationPickupFlow() { runFeatureTest("expiration-pickup-flow.feature"); }
+
+  @Test
+  void testExpirationBorrowingPickupFlow() { runFeatureTest("expiration-borrowing-pickup-flow.feature"); }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
