@@ -1,5 +1,4 @@
 # For MODORDSTOR-354
-@parallel=false
 Feature: Piece status transitions claiming
 
   Background:
@@ -17,16 +16,7 @@ Feature: Piece status transitions claiming
     * configure retry = { count: 10, interval: 10000 }
 
     * callonce variables
-
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
     * def previousDate = '2024-01-23T12:50:03.156+00:00'
-
-    # Create Finances
-    * configure headers = headersAdmin
-    * def v = callonce createFund { 'id': '#(fundId)' }
-    * def v = callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
-    * configure headers = headersUser
 
 
   # ============================================================
@@ -39,18 +29,18 @@ Feature: Piece status transitions claiming
     * def orderId = call uuid
     * def poLineId = call uuid
 
-    # Precondition 1: Create Ongoing Order In Open Status With Claiming Active
+    # 1. Create Ongoing order in Open status with claiming active
     * def v = call createOrder { id: '#(orderId)', orderType: 'Ongoing', ongoing: { isSubscription: false } }
-    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId)' }
 
-    # Precondition 2: Run Pieces Claiming Batch Job
+    # 2. Run pieces claiming batch job
     Given path 'orders-storage/claiming/process'
     When method POST
     Then status 200
     * call pause 3000
 
-    # Step 1: Check Piece In Expected Accordion - Piece Should Be In Expected Status
+    # 3. Check piece in Expected accordion - piece should be in Expected status
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     And retry until response.pieces[0].receivingStatus == 'Expected'
@@ -59,12 +49,12 @@ Feature: Piece status transitions claiming
     And match $.totalRecords == 1
     And match $.pieces[0].receiptDate == '#notpresent'
 
-    # Step 2: Verify PO Line Receipt Status Is Ongoing
+    # 4. Verify PO line receipt status is Ongoing
     * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Ongoing' }
 
-    # Step 3-4: Verify Item Status Is On Order
-    * def poLine = call getOrderLine { poLineId: '#(poLineId)' }
-    * def holdingId = poLine.poLine.locations[0].holdingId
+    # 5. Verify item status is On order
+    * def getPoLineResult = call getOrderLine { poLineId: '#(poLineId)' }
+    * def holdingId = getPoLineResult.poLine.locations[0].holdingId
     * configure headers = headersAdmin
     Given path 'inventory/items'
     And param query = 'holdingsRecordId==' + holdingId
@@ -85,12 +75,12 @@ Feature: Piece status transitions claiming
     * def poLineId = call uuid
     * def uniqueBarcode = call uuid
 
-    # Precondition 1: Create Ongoing Order In Open Status With Claiming Active
+    # 1. Create Ongoing order in Open status with claiming active
     * def v = call createOrder { id: '#(orderId)', orderType: 'Ongoing', ongoing: { isSubscription: false } }
-    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
     * def v = call openOrder { orderId: '#(orderId)' }
 
-    # Precondition 2: Set Barcode, Set Piece Status To Claim Sent, Send Claim Date To Tomorrow
+    # 2. Set barcode, set piece status to Claim sent, send claim date to tomorrow
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -107,10 +97,10 @@ Feature: Piece status transitions claiming
     When method PUT
     Then status 204
 
-    # Step 1: Check Piece In Expected Accordion - Piece Should Be In Claim Sent Status
+    # 3. Check piece in Expected accordion - piece should be in Claim sent status
     * def v = call verifyPieceReceivingStatus { _pieceId: '#(pieceId)', _receivingStatus: 'Claim sent' }
 
-    # Step 2: Change StatusUpdatedDate To Past, ClaimingInterval To 1, And Run Batch Job
+    # 4. Change statusUpdatedDate to past, claimingInterval to 1, and run batch job
     Given path 'orders/pieces', pieceId
     When method GET
     Then status 200
@@ -127,15 +117,15 @@ Feature: Piece status transitions claiming
     Then status 200
     * call pause 3000
 
-    # Step 3: Verify Piece Status Changed To Late
+    # 5. Verify piece status changed to Late
     * def v = call verifyPieceReceivingStatus { _pieceId: '#(pieceId)', _receivingStatus: 'Late' }
 
-    # Step 4: Verify PO Line Receipt Status Is Ongoing
+    # 6. Verify PO line receipt status is Ongoing
     * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Ongoing' }
 
-    # Step 5-6: Verify Item Status Is On Order
-    * def poLine = call getOrderLine { poLineId: '#(poLineId)' }
-    * def holdingId = poLine.poLine.locations[0].holdingId
+    # 7. Verify item status is On order
+    * def getPoLineResult = call getOrderLine { poLineId: '#(poLineId)' }
+    * def holdingId = getPoLineResult.poLine.locations[0].holdingId
     * configure headers = headersAdmin
     Given path 'inventory/items'
     And param query = 'holdingsRecordId==' + holdingId
@@ -156,12 +146,12 @@ Feature: Piece status transitions claiming
     * def orderId = call uuid
     * def poLineId = call uuid
 
-    # Precondition 1: Create One-Time Order In Open Status With Claiming Active And Interval 3
+    # 1. Create One-time order in Open status with claiming active, claiming interval = 3
     * def v = call createOrder { id: '#(orderId)' }
-    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 3 }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 3 }
     * def v = call openOrder { orderId: '#(orderId)' }
 
-    # Precondition 2: Set Piece Status To Claim Delayed (Delay Claim Set To Tomorrow)
+    # 2. Set piece status to Claim delayed with claimingInterval = 1 (delay claim set to tomorrow)
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
@@ -177,13 +167,11 @@ Feature: Piece status transitions claiming
     When method PUT
     Then status 204
 
-    # Precondition 3.1: GET Piece To Copy Response
+    # 3. Change statusUpdatedDate to past and claimingInterval to 1 to simulate delay claim date passed
     Given path 'orders/pieces', pieceId
     When method GET
     Then status 200
     * def piece = $
-
-    # Precondition 3.2: PUT Piece With StatusUpdatedDate In The Past And ClaimingInterval 1
     * set piece.statusUpdatedDate = previousDate
     * set piece.claimingInterval = 1
     Given path 'orders/pieces', pieceId
@@ -191,21 +179,21 @@ Feature: Piece status transitions claiming
     When method PUT
     Then status 204
 
-    # Precondition 3.3: Run Pieces Claiming Batch Job
+    # 4. Run pieces claiming batch job
     Given path 'orders-storage/claiming/process'
     When method POST
     Then status 200
     * call pause 3000
 
-    # Step 1: Verify Piece Status Changed To Late
+    # 5. Verify piece status changed to Late
     * def v = call verifyPieceReceivingStatus { _pieceId: '#(pieceId)', _receivingStatus: 'Late' }
 
-    # Step 2: Verify PO Line Receipt Status Is Awaiting Receipt
+    # 6. Verify PO line receipt status is Awaiting Receipt
     * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Awaiting Receipt' }
 
-    # Step 3-4: Verify Item Status Is On Order
-    * def poLine = call getOrderLine { poLineId: '#(poLineId)' }
-    * def holdingId = poLine.poLine.locations[0].holdingId
+    # 7. Verify item status is On order
+    * def getPoLineResult = call getOrderLine { poLineId: '#(poLineId)' }
+    * def holdingId = getPoLineResult.poLine.locations[0].holdingId
     * configure headers = headersAdmin
     Given path 'inventory/items'
     And param query = 'holdingsRecordId==' + holdingId
