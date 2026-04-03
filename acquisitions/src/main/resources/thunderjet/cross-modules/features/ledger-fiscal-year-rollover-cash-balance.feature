@@ -16,10 +16,6 @@ Feature: Test ledger fiscal year rollover based on cash balance value
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
     * def orderId = callonce uuid3
@@ -47,44 +43,22 @@ Feature: Test ledger fiscal year rollover based on cash balance value
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: #(fyId2), code: 'TESTFY0004', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: 'TESTFY' }
-    * call createLedger { 'id': '#(ledgerId)', fiscalYearId: '#(fyId1)'}
+    * def v = call createLedger { 'id': '#(ledgerId)', fiscalYearId: '#(fyId1)'}
 
 
   Scenario: Prepare finances
     * def fundCode = fundId
-    * call createFund { id: '#(fundId)', code: '#(fundCode)', ledgerId: '#(ledgerId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 100 }
+    * def v = call createFund { id: '#(fundId)', code: '#(fundCode)', ledgerId: '#(ledgerId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 100 }
 
 
   Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time',
-      reEncumber: 'False'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario Outline: Create a po lines
-    * copy poLine = orderLineTemplate
-    * set poLine.id = <poLineId>
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.paymentStatus = 'Awaiting Payment'
-    * set poLine.receiptStatus = 'Partially Received'
-    * set poLine.cost.listUnitPrice = <unitPrice>
-    * set poLine.cost.poLineEstimatedPrice = <unitPrice>
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+  Scenario Outline: Create a po line with unit price <unitPrice>
+    * def unitPrice = <unitPrice>
+    * def poLineId = <poLineId>
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: '#(unitPrice)', paymentStatus: 'Awaiting Payment', receiptStatus: 'Partially Received' }
 
     Examples:
       | unitPrice   | poLineId    |
@@ -92,93 +66,22 @@ Feature: Test ledger fiscal year rollover based on cash balance value
       | 10.0        | poLineId2   |
 
   Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   Scenario: Create an invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
-  Scenario: Create a invoice line
-    * print "Get the encumbrance id"
-    Given path 'orders/order-lines', poLineId1
-    When method GET
-    Then status 200
-    * def poLine = $
-    * def encumbranceId = poLine.fundDistribution[0].encumbrance
+  Scenario: Create an invoice line from the po line
+    * def v = call createInvoiceLineFromPoLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId1)', fundId: '#(fundId)', total: 50 }
 
-    * print "Add an invoice line linked to the po line"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId1
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 50
-    * set invoiceLine.subTotal = 50
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
-
-  Scenario: Create a invoice line
-    * print "Get the encumbrance id"
-    Given path 'orders/order-lines', poLineId1
-    When method GET
-    Then status 200
-    * def poLine = $
-    * def encumbranceId = poLine.fundDistribution[0].encumbrance
-
-    * print "Add an invoice line linked to the po line"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId2
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId1
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = -10
-    * set invoiceLine.subTotal = -10
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+  Scenario: Create a credit invoice line from the po line
+    * def v = call createInvoiceLineFromPoLine { invoiceLineId: '#(invoiceLineId2)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId1)', fundId: '#(fundId)', total: -10 }
 
   Scenario: Approve the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Pay the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Paid'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Check the budget before preview rollover
     * configure headers = headersAdmin

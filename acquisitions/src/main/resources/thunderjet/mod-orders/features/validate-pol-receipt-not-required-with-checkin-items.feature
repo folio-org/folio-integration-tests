@@ -17,8 +17,8 @@ Feature: Validate PO Lines receipt status with check-in items
     * def budgetId = callonce uuid2
 
     * configure headers = headersAdmin
-    * callonce createFund { 'id': '#(fundId)'}
-    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * def v = callonce createFund { id: '#(fundId)' }
+    * def v = callonce createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
     * configure headers = headersUser
 
   @Negative

@@ -3,6 +3,7 @@ Feature: Create order from JSON
   # parameters: order
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Create order from JSON

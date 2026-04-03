@@ -18,8 +18,8 @@ Feature: Piece deletion restrictions from order and order line
 
     # Prepare finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
     * configure headers = headersUser
 
   Scenario: Avoid deletion of piece when poLine cost quantity '1' and ReceivingWorkflow 'Syncronized'

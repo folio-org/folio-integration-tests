@@ -14,98 +14,37 @@ Feature: Check voucher from invoice with lines using the same external account
 
     * callonce variables
 
-    # prepare sample data
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-
-    # initialize common invoice data
-    * def fund1Id = callonce uuid1
-    * def code1Id = callonce uuid2
-    * def budget1Id = callonce uuid3
-    * def fund2Id = callonce uuid4
-    * def code2Id = callonce uuid5
-    * def budget2Id = callonce uuid6
-    * def invoiceId = callonce uuid7
-    * def invoiceLine1Id = callonce uuid8
-    * def invoiceLine2Id = callonce uuid9
 
   Scenario: Create budgets, invoice with 2 lines, approve it, check voucher lines
+    * def fund1Id = call uuid
+    * def code1Id = call uuid
+    * def budget1Id = call uuid
+    * def fund2Id = call uuid
+    * def code2Id = call uuid
+    * def budget2Id = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLine1Id = call uuid
+    * def invoiceLine2Id = call uuid
+
+    # 1. Create funds and budgets
     * configure headers = headersAdmin
+    * def v = call createFund { 'id': '#(fund1Id)', 'code': '#(code1Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
+    * def v = call createBudget { 'id': '#(budget1Id)', 'fundId': '#(fund1Id)', 'allocated': 10000 }
+    * def v = call createFund { 'id': '#(fund2Id)', 'code': '#(code2Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
+    * def v = call createBudget { 'id': '#(budget2Id)', 'fundId': '#(fund2Id)', 'allocated': 10000 }
 
-    * call createFund { 'id': '#(fund1Id)', 'code': '#(code1Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
-    * call createBudget { 'id': '#(budget1Id)', 'fundId': '#(fund1Id)', 'allocated': 10000 }
-    * call createFund { 'id': '#(fund2Id)', 'code': '#(code2Id)', 'ledgerId': '#(globalLedgerId)', 'externalAccountNo': '123456' }
-    * call createBudget { 'id': '#(budget2Id)', 'fundId': '#(fund2Id)', 'allocated': 10000 }
-
-    * set invoicePayload.id = invoiceId
-
-    # ============= create invoice ===================
+    # 2. Create invoice
     * configure headers = headersUser
-    Given path 'invoice/invoices'
-    And request invoicePayload
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
-    # ============= create invoice lines ===================
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-      "id": '#(invoiceLine1Id)',
-      "invoiceId": "#(invoiceId)",
-      "invoiceLineStatus": "Open",
-      "fundDistributions": [
-        {
-          "distributionType": "percentage",
-          "fundId": "#(fund1Id)",
-          "value": "100"
-        }
-      ],
-      "subTotal": "25",
-      "description": "line 1",
-      "quantity": "1"
-    }
-    """
-    When method POST
-    Then status 201
-    * def invoiceLineId1 = $.id
+    # 3. Create invoice lines
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLine1Id)', invoiceId: '#(invoiceId)', fundId: '#(fund1Id)', total: 25, description: 'line 1' }
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLine2Id)', invoiceId: '#(invoiceId)', fundId: '#(fund2Id)', total: 25, description: 'line 2' }
 
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-      "id": '#(invoiceLine2Id)',
-      "invoiceId": "#(invoiceId)",
-      "invoiceLineStatus": "Open",
-      "fundDistributions": [
-        {
-          "distributionType": "percentage",
-          "fundId": "#(fund2Id)",
-          "value": "100"
-        }
-      ],
-      "subTotal": "25",
-      "description": "line 2",
-      "quantity": "1"
-    }
-    """
-    When method POST
-    Then status 201
-    * def invoiceLineId2 = $.id
+    # 4. Approve invoice
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
-    # ============= get invoice to approve ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoiceBody = $
-    * set invoiceBody.status = "Approved"
-
-    # ============= put approved invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    And request invoiceBody
-    When method PUT
-    Then status 204
-
-    # ============= Verify voucher lines ===================
+    # 5. Verify voucher lines
     Given path '/voucher/vouchers'
     And param limit = '2147483647'
     And param query = 'invoiceId==' + invoiceId
@@ -121,9 +60,8 @@ Feature: Check voucher from invoice with lines using the same external account
     And match $.voucherLines == '#[1]'
     And match $.voucherLines[0].fundDistributions == '#[2]'
     And match $.voucherLines[0].externalAccountNumber == '123456'
-    * def fundDistributions1 = karate.jsonPath(response, "$.voucherLines[0].fundDistributions[?(@.invoiceLineId == '" + invoiceLineId1 + "')]")
-    * def fundDistributions2 = karate.jsonPath(response, "$.voucherLines[0].fundDistributions[?(@.invoiceLineId == '" + invoiceLineId2 + "')]")
+    * def fundDistributions1 = karate.jsonPath(response, "$.voucherLines[0].fundDistributions[?(@.invoiceLineId == '" + invoiceLine1Id + "')]")
+    * def fundDistributions2 = karate.jsonPath(response, "$.voucherLines[0].fundDistributions[?(@.invoiceLineId == '" + invoiceLine2Id + "')]")
 
     And match fundDistributions1[0].fundId == fund1Id
     And match fundDistributions2[0].fundId == fund2Id
-

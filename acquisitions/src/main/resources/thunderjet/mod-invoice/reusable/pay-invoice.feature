@@ -3,6 +3,7 @@ Feature: Pay invoice
   # parameters: invoiceId, poLinePaymentStatus?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Pay invoice

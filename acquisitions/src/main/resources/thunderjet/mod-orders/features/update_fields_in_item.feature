@@ -15,7 +15,6 @@ Feature: Should update copy number, enumeration and chronology in item after upd
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
 
   @Positive
   Scenario: Should update copy number, enumeration and chronology in item after updating in piece
@@ -34,18 +33,7 @@ Feature: Should update copy number, enumeration and chronology in item after upd
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
     * print '3. Create a po line'
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.paymentStatus = 'Awaiting Payment'
-    * set poLine.receiptStatus = 'Partially Received'
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', paymentStatus: 'Awaiting Payment', receiptStatus: 'Partially Received' }
 
     * print '4. Open the order'
     * def v = call openOrder { orderId: '#(orderId)' }

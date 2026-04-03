@@ -11,8 +11,6 @@ Feature: Check paymentStatus after reopen
 
     * callonce variables
 
-    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
-
 
   Scenario: Open order, approve invoice, close order, reopen order, check paymentStatus
     * def fundId = call uuid
@@ -38,15 +36,8 @@ Feature: Check paymentStatus after reopen
     * print "Create an invoice"
     * def v = call createInvoice { id: '#(invoiceId)' }
 
-    * print "Get the encumbrance id"
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLine = $
-    * def encumbranceId = poLine.fundDistribution[0].encumbrance
-
     * print "Add an invoice line linked to the po line"
-    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(encumbranceId)', total: 10 }
+    * def v = call createInvoiceLineFromPoLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', total: 10 }
 
     * print "Approve the invoice"
     * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
@@ -58,7 +49,7 @@ Feature: Check paymentStatus after reopen
     And match $.paymentStatus == 'Awaiting Payment'
 
     * print "Close the order"
-    * def v = call closeOrderRemoveLines { orderId: '#(orderId)' }
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
     * print "Reopen the order"
     * def v = call openOrder { orderId: '#(orderId)' }

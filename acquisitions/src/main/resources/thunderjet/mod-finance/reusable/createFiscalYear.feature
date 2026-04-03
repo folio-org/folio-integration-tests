@@ -2,6 +2,7 @@ Feature: Create fiscal year
   # parameters: id, code, periodStart, periodEnd, series
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Create Fiscal Year

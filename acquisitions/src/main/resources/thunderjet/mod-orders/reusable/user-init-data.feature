@@ -1,7 +1,8 @@
 @ignore
-Feature:
+Feature: User init data
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   @CreateGroup

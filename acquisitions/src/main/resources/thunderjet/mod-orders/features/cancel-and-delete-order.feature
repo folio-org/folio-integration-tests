@@ -1,5 +1,4 @@
 # For MODORDERS-699
-@parallel=false
 Feature: Cancel and delete order
 
   Background:
@@ -16,56 +15,39 @@ Feature: Cancel and delete order
 
     * call variables
 
-    * def fundId = call uuid1
-    * def budgetId = call uuid2
-    * def orderId = call uuid3
-    * def poLineId1 = call uuid4
-    * def poLineId2 = call uuid5
-
 
   Scenario: Cancel & Delete Order
-    * print '## Prepare finances'
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId1 = call uuid
+    * def poLineId2 = call uuid
+
+    # 1. Prepare finances
     * configure headers = headersAdmin
     * def v = call createFund { id: "#(fundId)" }
     * def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 1000 }
 
-
-    * print '## Create an order'
+    # 2. Create an order
     * configure headers = headersUser
     * def v = call createOrder { id: "#(orderId)" }
 
-
-    * print '## Create order lines'
+    # 3. Create order lines
     * def v = call createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
     * def v = call createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
 
-
-    * print '## Open the order'
+    # 4. Open the order
     * def v = call openOrder { orderId: "#(orderId)" }
 
+    # 5. Cancel the order
+    * def v = call cancelOrder { orderId: '#(orderId)' }
 
-    * print '## Cancel the order'
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Closed'
-    * set order.closeReason = { reason: 'Cancelled' }
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
-
-
-    * print '## Delete the order'
+    # 6. Delete the order
     Given  path 'orders/composite-orders/', orderId
     When method DELETE
     Then status 204
 
-
-    * print '## Check the encumbrances were deleted'
+    # 7. Check the encumbrances were deleted
     * configure headers = headersAdmin
     Given path '/finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + orderId

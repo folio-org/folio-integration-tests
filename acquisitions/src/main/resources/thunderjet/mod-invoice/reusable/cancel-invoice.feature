@@ -3,6 +3,7 @@ Feature: Cancel invoice
   # parameters: invoiceId, poLinePaymentStatus?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Cancel invoice

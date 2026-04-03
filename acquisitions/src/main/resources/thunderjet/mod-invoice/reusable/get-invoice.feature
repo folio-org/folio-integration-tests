@@ -4,6 +4,7 @@ Feature: Get invoice by id
   # returns: invoice
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Get invoice by id
