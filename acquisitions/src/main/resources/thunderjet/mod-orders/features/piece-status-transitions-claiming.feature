@@ -72,3 +72,74 @@ Feature: Piece status transitions claiming
     Then status 200
     And match $.totalRecords == 1
     And match $.items[0].status.name == 'On order'
+
+
+  # ============================================================
+  # C436793: Piece status is set to "Late" after "Claim sent" date passed
+  # https://foliotest.testrail.io/index.php?/cases/view/436793
+  # ============================================================
+  @C436793
+  @Positive
+  Scenario: Verify Piece Status Changed To Late After Claim Sent Date Passed
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def uniqueBarcode = call uuid
+
+    # Precondition 1: Create Ongoing Order In Open Status With Claiming Active
+    * def v = call createOrder { id: '#(orderId)', orderType: 'Ongoing', ongoing: { isSubscription: false } }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    # Precondition 2: Set Barcode, Set Piece Status To Claim Sent, Send Claim Date To Tomorrow
+    Given path 'orders/pieces'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    * def piece = $.pieces[0]
+    * def pieceId = piece.id
+
+    * set piece.receivingStatus = 'Claim sent'
+    * set piece.claimingInterval = 1
+    * set piece.barcode = uniqueBarcode
+    Given path 'orders/pieces', pieceId
+    And request piece
+    When method PUT
+    Then status 204
+
+    # Step 1: Check Piece In Expected Accordion - Piece Should Be In Claim Sent Status
+    * def v = call verifyPieceReceivingStatus { _pieceId: '#(pieceId)', _receivingStatus: 'Claim sent' }
+
+    # Step 2: Change StatusUpdatedDate To Past, ClaimingInterval To 1, And Run Batch Job
+    Given path 'orders/pieces', pieceId
+    When method GET
+    Then status 200
+    * def piece = $
+    * set piece.statusUpdatedDate = previousDate
+    * set piece.claimingInterval = 1
+    Given path 'orders/pieces', pieceId
+    And request piece
+    When method PUT
+    Then status 204
+
+    Given path 'orders-storage/claiming/process'
+    When method POST
+    Then status 200
+    * call pause 3000
+
+    # Step 3: Verify Piece Status Changed To Late
+    * def v = call verifyPieceReceivingStatus { _pieceId: '#(pieceId)', _receivingStatus: 'Late' }
+
+    # Step 4: Verify PO Line Receipt Status Is Ongoing
+    * def v = call verifyPoLineReceiptStatus { _poLineId: '#(poLineId)', _receiptStatus: 'Ongoing' }
+
+    # Step 5-6: Verify Item Status Is On Order
+    * def poLine = call getOrderLine { poLineId: '#(poLineId)' }
+    * def holdingId = poLine.poLine.locations[0].holdingId
+    * configure headers = headersAdmin
+    Given path 'inventory/items'
+    And param query = 'holdingsRecordId==' + holdingId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.items[0].status.name == 'On order'
