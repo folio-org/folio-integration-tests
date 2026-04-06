@@ -314,3 +314,6 @@ Feature: mod-orders integration tests
 
   Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
     * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
+
+  Scenario: Add piece to cancelled ongoing order
+    * call read('features/add-piece-to-cancelled-ongoing-order.feature')
