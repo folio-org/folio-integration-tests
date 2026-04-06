@@ -34,7 +34,6 @@ Feature: Testing Borrower Flow Request Expiration
     Then status 200
     And match $.items[0].status.name == 'In transit'
 
-    # Step 2: Fetch the DCB service point and update hold shelf expiry to 1 minute
     * def dcbSpName = 'DCB_' + createRequest.pickup.libraryCode + '_' + createRequest.pickup.servicePointName
     Given path 'service-points'
     Given param query = '(name= ' + dcbSpName + ')'
