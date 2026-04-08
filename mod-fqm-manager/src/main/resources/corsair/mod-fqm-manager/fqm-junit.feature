@@ -137,6 +137,7 @@ Feature: mod-fqm-manager integration tests
       | 'overdue-fines-policies.collection.get'                            |
       | 'owners.collection.get'                                            |
       | 'patron-blocks.user-summary.item.get'                              |
+      | 'patron-blocks.automated-patron-blocks.collection.get'             |
       | 'payments.collection.get'                                          |
       | 'proxiesfor.collection.get'                                        |
       | 'refunds.collection.get'                                           |

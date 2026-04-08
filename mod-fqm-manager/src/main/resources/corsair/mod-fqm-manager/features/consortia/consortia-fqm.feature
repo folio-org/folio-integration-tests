@@ -23,6 +23,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
+      | 'mod-patron-blocks'         |
       | 'mod-tags'                  |
 
 
@@ -76,6 +77,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.subject-types.collection.get'                   |
       | 'inventory-storage.nature-of-content-terms.collection.get'         |
       | 'proxiesfor.collection.get'                                        |
+      | 'patron-blocks.automated-patron-blocks.collection.get'             |
       | 'tags.collection.get'                                              |
 
     # define consortium
