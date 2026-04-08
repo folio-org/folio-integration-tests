@@ -79,6 +79,7 @@ Feature: init data for consortia
     And param async = true
     And request entitlementTamplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
+    And header X-Okapi-Token = keycloakMasterToken
     When method DELETE
     Then status 200
     * def flowId = response.flowId
