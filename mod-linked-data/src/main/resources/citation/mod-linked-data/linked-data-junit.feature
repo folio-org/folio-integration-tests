@@ -68,7 +68,7 @@ Feature: mod-linked-data integration tests
       | 'linked-data-import.start.post'                            |
       | 'linked-data-import.jobs.item.get'                         |
       | 'linked-data-import.jobs.failed-lines.collection.get'      |
-      | 'linked-data-import.jobs.item.cancel.put'                  |
+      | 'linked-data-import.jobs.item.stop.put'                  |
 
   Scenario: create a tenant and linked-data-cataloger user
     * call read('classpath:common/eureka/setup-users.feature')
