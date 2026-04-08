@@ -1,4 +1,4 @@
-# For FAT-20930, TestRail C543756
+# For FAT-20930, TestRail https://foliotest.testrail.io/index.php?/cases/view/543756
 Feature: Add piece to cancelled ongoing order
 
   Background:
@@ -15,6 +15,7 @@ Feature: Add piece to cancelled ongoing order
 
     * callonce variables
 
+  @C543756
   @Positive
   Scenario: Add piece to cancelled ongoing order
     * def fundId = call uuid
