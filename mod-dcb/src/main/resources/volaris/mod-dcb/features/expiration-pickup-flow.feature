@@ -17,6 +17,7 @@ Feature: Testing Pickup Flow Request Expiration
     * def expPickupSpName = call random_string
     * def expPickupSpCode = call random_string
 
+  @C1046007
   Scenario: Request expiration for PICKUP role transitions transaction to EXPIRED, check-in on any service point closes transaction
     * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
     * servicePointEntityRequest.id = expPickupSpId

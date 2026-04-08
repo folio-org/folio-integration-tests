@@ -15,6 +15,7 @@ Feature: Testing Borrowing-Pickup Flow Request Expiration
     * def expBPSpName = call random_string
     * def expBPSpCode = call random_string
 
+  @C1046007
   Scenario: Request expiration for BORROWING_PICKUP role transitions transaction to EXPIRED, check-in on any service point closes transaction
     * def servicePointEntityRequest = read('classpath:volaris/mod-dcb/features/samples/service-point/service-point-entity-request.json')
     * servicePointEntityRequest.id = expBPSpId

@@ -12,6 +12,7 @@ Feature: Testing Borrower Flow Request Expiration
     * def expBorrowerItemId = call uuid1
     * def expBorrowerItemBarcode = call random_string
 
+  @C1046007
   Scenario: Request expiration for BORROWER role transitions transaction to EXPIRED, check-in on any service point closes transaction
     * def createRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction-for-borrower.json')
     * createRequest.item.id = expBorrowerItemId
