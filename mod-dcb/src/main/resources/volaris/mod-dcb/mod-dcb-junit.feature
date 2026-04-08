@@ -69,6 +69,7 @@ Feature: mod-dcb integration tests
       | 'users.item.get'                                                  |
       | 'users.item.post'                                                 |
       | 'dcb.shadow_locations.refresh.post'                               |
+      | 'consortium-search.locations.collection.get'                      |
 
 
     * table userPermissions

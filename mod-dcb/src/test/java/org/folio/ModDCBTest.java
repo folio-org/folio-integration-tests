@@ -84,6 +84,12 @@ public class ModDCBTest extends TestBaseEureka {
   void testBorrowingFlowChainOfResponsibility() {  runFeatureTest("borrowing-flow-chain-of-responsibility.feature"); }
 
   @Test
+  void testRefreshDcbShadowLocations() { runFeatureTest("refresh-dcb-shadow-locations.feature"); }
+
+  @Test
+  void testShadowLocationsCreatedViaApi() { runFeatureTest("shadow-locations-created-via-api.feature"); }
+
+  @Test
   void testEcsShadowLocationsNotDisplayed() { runFeatureTest("ecs-shadow-locations-not-displayed.feature"); }
 
   @BeforeAll
