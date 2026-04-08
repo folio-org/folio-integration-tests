@@ -316,4 +316,4 @@ Feature: mod-orders integration tests
     * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
 
   Scenario: Add piece to cancelled ongoing order
-    * call read('features/add-piece-to-cancelled-ongoing-order.feature')
+    * call read('features/add-piece-to-cancelled-order.feature')

@@ -112,7 +112,7 @@ class OrdersApiTest extends TestBaseEureka {
     FEATURE_87("piece-item-synchronization", true),
     FEATURE_88("open-order-with-invalid-material-type-rollback", true),
     FEATURE_89("piece-status-transitions-claiming", true),
-    FEATURE_90("add-piece-to-cancelled-ongoing-order", true);
+    FEATURE_90("add-piece-to-cancelled-order", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -690,7 +690,7 @@ class OrdersApiTest extends TestBaseEureka {
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void addPieceToCancelledOngoingOrder() {
+  void addPieceToCancelledOrder() {
     runFeatureTest(Feature.FEATURE_90.getFileName());
   }
 }
