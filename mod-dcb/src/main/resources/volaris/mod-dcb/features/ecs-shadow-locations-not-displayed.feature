@@ -16,6 +16,7 @@ Feature: ECS | Shadow locations created via /refresh and /locations are not disp
     * def shadowAgencyCode = 'ECS-SHADOW-AGT'
 
 
+  @C1003528
   Scenario: Create shadow location institution, campus, library, and location via API with isShadow true
     Given path '/location-units/institutions'
     And request { name: 'ECS Shadow Institution Test', code: '#(shadowInstCode)', isShadow: true }
@@ -60,6 +61,7 @@ Feature: ECS | Shadow locations created via /refresh and /locations are not disp
     And match response.isShadow == true
 
 
+  @C958452
   Scenario: Create shadow location via /refresh endpoint (agency-based)
     Given path '/dcb/shadow-locations/refresh'
     And request { agencies: [ { name: 'ECS Shadow Agency Test', code: '#(shadowAgencyCode)' } ] }
@@ -75,6 +77,7 @@ Feature: ECS | Shadow locations created via /refresh and /locations are not disp
     And match $['location-units'].libraries[*].status contains only ['SUCCESS']
 
 
+  @C1003527
   Scenario: GET /locations with includeShadowLocations=true returns shadow locations with isShadow true
     Given path '/locations'
     And param query = 'code=="ecs-shadow-loc-test"'
@@ -93,6 +96,7 @@ Feature: ECS | Shadow locations created via /refresh and /locations are not disp
     And match response.locations[0].isShadow == true
 
 
+  @C1003527
   Scenario: GET /locations without includeShadowLocations param excludes shadow locations
     Given path '/locations'
     And param query = 'code=="ecs-shadow-loc-test"'
@@ -107,6 +111,7 @@ Feature: ECS | Shadow locations created via /refresh and /locations are not disp
     And match response.totalRecords == 0
 
 
+  @C1003527
   Scenario: GET /location-units endpoints exclude shadow records by default
     Given path '/location-units/institutions'
     And param query = 'code=="ecs-shadow-inst-test"'
