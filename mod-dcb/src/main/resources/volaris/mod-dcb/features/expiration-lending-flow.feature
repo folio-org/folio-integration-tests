@@ -14,6 +14,7 @@ Feature: Testing Lending Flow Request Expiration
     * def expLenderItemId = call uuid1
     * def expLenderItemBarcode = call random_string
 
+  @C1046007
   Scenario: Request expiration for LENDER role transitions transaction to EXPIRED, check-in at home service point closes transaction
     * def newItemPayload = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
     * newItemPayload.id = expLenderItemId
