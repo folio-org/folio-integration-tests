@@ -7,6 +7,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-login'                 |
       | 'mod-permissions'           |
       | 'mod-users'                 |
+      | 'mod-users-bl'              |
       | 'mod-inventory-storage'     |
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
@@ -149,6 +150,7 @@ Feature: mod-fqm-manager integration tests
       | 'users.item.delete'                                                |
       | 'users.item.get'                                                   |
       | 'users.item.post'                                                  |
+      | 'users-bl.transactions.get'                                        |
       | 'voucher.voucher-lines.collection.get'                             |
       | 'voucher.vouchers.collection.get'                                  |
       | 'waives.collection.get'                                            |
