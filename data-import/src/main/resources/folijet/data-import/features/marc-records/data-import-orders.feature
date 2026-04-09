@@ -540,7 +540,6 @@ Feature: Test orders import
     And match response.orderFormat == "P/E Mix"
     And match response.purchaseOrderId == secondRecordOrderId
 
-  @ignore
   Scenario: FAT-3047 Test import open order, inventory actions not ignored, override POLines limit
     * def orderStatus = "Open"
     * def uniqueID = "open order"
