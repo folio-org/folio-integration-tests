@@ -70,6 +70,10 @@ Feature: mod-dcb integration tests
       | 'users.item.get'                                                  |
       | 'users.item.post'                                                 |
       | 'dcb.shadow_locations.refresh.post'                               |
+      | 'consortium-search.locations.collection.get'                      |
+      | 'consortium-search.campuses.collection.get'                       |
+      | 'consortium-search.libraries.collection.get'                      |
+      | 'consortium-search.institutions.collection.get'                   |
 
 
     * table userPermissions

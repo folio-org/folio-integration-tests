@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-@Order(4)
+@Order(5)
 @FolioTest(team = "thunderjet", module = "mod-orders")
 public class OrdersCriticalPathApiTest extends TestBaseEureka {
 

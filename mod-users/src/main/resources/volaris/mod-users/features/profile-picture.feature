@@ -14,7 +14,7 @@ Feature: Profile-picture tests
 
   Scenario: Set enabledObjectStorage = false (by default DB will be enabled), set enabled = true (when profile picture feature is enabled)
 
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
@@ -23,7 +23,7 @@ Feature: Profile-picture tests
     * def encryptionKey = response.settings[0].value.encryptionKey
     * def version = response.settings[0]._version
 
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -106,7 +106,7 @@ Feature: Profile-picture tests
   Scenario: Set enabledObjectStorage = false (by default DB will be enabled), set enabled = false (when profile picture feature is not enabled, it should give error)
 
     # prepare tenant
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
@@ -115,7 +115,7 @@ Feature: Profile-picture tests
     * def encryptionKey = response.settings[0].value.encryptionKey
     * def version = response.settings[0]._version
 
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -201,7 +201,7 @@ Feature: Profile-picture tests
   Scenario: Validation file size.
 
     # prepare tenant
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
@@ -210,7 +210,7 @@ Feature: Profile-picture tests
     * def encryptionKey = response.settings[0].value.encryptionKey
     * def version = response.settings[0]._version
 
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -242,7 +242,7 @@ Feature: Profile-picture tests
 
     # remove the maxFIleSize from config. Try to upload an image more than 10 mb. We should get error.
     * def version = version + 1
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -273,7 +273,7 @@ Feature: Profile-picture tests
 
     # Update configuration. Give maxFileSize value more than 10. Should get error.
     * def version = version + 1
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -296,7 +296,7 @@ Feature: Profile-picture tests
   Scenario: Validation Encryption key
 
     # prepare tenant
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
@@ -306,7 +306,7 @@ Feature: Profile-picture tests
     * def version = response.settings[0]._version
 
     # try to update the encryption key with same key
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -327,7 +327,7 @@ Feature: Profile-picture tests
 
     # try to update the encryption key with another key
     * def version = version + 1
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -348,7 +348,7 @@ Feature: Profile-picture tests
 
     # try to update the encryption key with null value
     * def version = version + 1
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -369,7 +369,7 @@ Feature: Profile-picture tests
     And match response == 'Cannot update the Encryption key'
 
     # try to get the configuration
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
@@ -378,7 +378,7 @@ Feature: Profile-picture tests
     * def version = response.settings[0]._version
 
     # try to update the configuration when encryptionKey field is not present
-    Given path '/users/settings/entries/' + id
+    Given path '/user/settings/' + id
     And request
       """
       {
@@ -398,7 +398,7 @@ Feature: Profile-picture tests
     And match response == 'Cannot update the Encryption key'
 
     # get the configuration
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     When method GET
     And param query = '(key="PROFILE_PICTURE_CONFIG")'
     And param limit = 1
