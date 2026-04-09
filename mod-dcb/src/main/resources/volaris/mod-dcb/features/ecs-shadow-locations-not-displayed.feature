@@ -41,6 +41,30 @@ Feature: ECS | Shadow locations created via API are not displayed across applica
     And match response.locations[*].name !contains 'ECS Shadow Location Test'
     And match response.locations[*].name !contains 'ECS-SHADOW-AGT'
 
+    # GET /search/consortium/campuses excludes shadow campuses
+    Given path '/search/consortium/campuses'
+    And param limit = 1000
+    When method GET
+    Then status 200
+    And match response.campuses[*].name !contains 'ECS Shadow Campus Test'
+    And match response.campuses[*].name !contains 'ECS-SHADOW-AGT'
+
+    # GET /search/consortium/libraries excludes shadow libraries
+    Given path '/search/consortium/libraries'
+    And param limit = 1000
+    When method GET
+    Then status 200
+    And match response.libraries[*].name !contains 'ECS Shadow Library Test'
+    And match response.libraries[*].name !contains 'ECS-SHADOW-AGT'
+
+    # GET /search/consortium/institutions excludes shadow institutions
+    Given path '/search/consortium/institutions'
+    And param limit = 1000
+    When method GET
+    Then status 200
+    And match response.institutions[*].name !contains 'ECS Shadow Institution Test'
+    And match response.institutions[*].name !contains 'ECS-SHADOW-AGT'
+
     # GET /location-units/institutions excludes shadow by default, includes with param
     Given path '/location-units/institutions'
     And param query = 'code=="ecs-shadow-inst-test"'
