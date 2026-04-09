@@ -70,7 +70,3 @@ class OrdersExtendedApiTest extends TestBaseEureka {
     runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 }
-
-
-
-

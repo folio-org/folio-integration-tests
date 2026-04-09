@@ -19,7 +19,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 public class InvoicesSmokeApiTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
-  private static final String TEST_TENANT = "testinvoices";
+  private static final String TEST_TENANT = "testinvoice";
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
