@@ -1949,3 +1949,42 @@ Feature: Requests tests
     And match response.allowedServicePoints.Hold == "#notpresent"
     And match response.allowedServicePoints.Page == "#notpresent"
     And match response.allowedServicePoints.Recall == "#notpresent"
+
+  Scenario: If an allowed Page pickup service point is deleted, it should be removed from request policy allowed service points
+    * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = headersUser
+    * def requestPolicyId = call uuid1
+    * def servicePointId = call uuid1
+
+    # create pickup service point from sample
+    * def servicePointEntityRequest = read('classpath:vega/mod-circulation/features/samples/service-point-entity-request.json')
+    * servicePointEntityRequest.id = servicePointId
+    * servicePointEntityRequest.name = servicePointEntityRequest.name + ' ' + random_string()
+    * servicePointEntityRequest.code = servicePointEntityRequest.code + ' ' + random_string()
+    * servicePointEntityRequest.discoveryDisplayName = servicePointEntityRequest.discoveryDisplayName + ' ' + random_string()
+    Given path 'service-points'
+    And request servicePointEntityRequest
+    When method POST
+    Then status 201
+
+    # create request policy that only allows the created service point for page requests
+    * def requestPolicyEntityRequest = read('classpath:vega/mod-circulation/features/samples/policies/request-policy-entity-request.json')
+    * requestPolicyEntityRequest.id = requestPolicyId
+    * requestPolicyEntityRequest.name = requestPolicyEntityRequest.name + ' ' + random_string()
+    * requestPolicyEntityRequest.requestTypes = ['Page']
+    * requestPolicyEntityRequest.allowedServicePoints = { 'Page': [servicePointId] }
+    Given path 'request-policy-storage', 'request-policies'
+    And request requestPolicyEntityRequest
+    When method POST
+    Then status 201
+
+    # delete service point and verify it is removed from page allowed service points
+    Given path 'service-points', servicePointId
+    When method DELETE
+    Then status 204
+
+    * configure retry = { count: 10, interval: 2000 }
+    Given path 'request-policy-storage', 'request-policies', requestPolicyId
+    When method GET
+    Then status 200
+    And match response.allowedServicePoints.Page == "#notpresent"
