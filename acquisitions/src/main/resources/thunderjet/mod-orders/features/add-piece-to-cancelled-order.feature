@@ -1,5 +1,5 @@
-# For FAT-20930, FAT-20931, https://foliotest.testrail.io/index.php?/cases/view/543756, https://foliotest.testrail.io/index.php?/cases/view/553012
-Feature: Add piece to cancelled ongoing order
+# For FAT-20930, FAT-20931
+Feature: Add piece to cancelled order
 
   Background:
     * print karate.info.scenarioName
@@ -15,9 +15,10 @@ Feature: Add piece to cancelled ongoing order
 
     * callonce variables
 
+  # C543756: Item status is "Order closed" when add piece for cancelled ongoing order
+  # https://foliotest.testrail.io/index.php?/cases/view/543756
   @C543756
   @Positive
-  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/543756
   Scenario: Add piece to cancelled ongoing order
     * def fundId = call uuid
     * def budgetId = call uuid
@@ -71,20 +72,7 @@ Feature: Add piece to cancelled ongoing order
     And match $.totalRecords == 1
     * def titleId = $.titles[0].id
 
-    Given path 'orders/pieces'
-    And request
-    """
-    {
-      id: "#(pieceId)",
-      format: "Electronic",
-      locationId: "#(globalLocationsId2)",
-      poLineId: "#(poLineId)",
-      titleId: "#(titleId)"
-    }
-    """
-    And param createItem = true
-    When method POST
-    Then status 201
+    * def v = call createPieceWithHoldingOrLocation { id: '#(pieceId)', poLineId: '#(poLineId)', titleId: '#(titleId)', format: 'Electronic', useLocationId: true, locationId: '#(globalLocationsId2)', createItem: true }
 
     # 8. Check expected pieces
     Given path 'orders/pieces'
@@ -128,9 +116,11 @@ Feature: Add piece to cancelled ongoing order
     And match $.locations[0].quantityElectronic == 1
     And match $.locations[0].holdingId == holdingsForGlobalLocationsId.id
 
+
+  # C553012: Checking item statuses when related one-time order is in "Cancelled" status
+  # https://foliotest.testrail.io/index.php?/cases/view/553012
   @C553012
   @Positive
-  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/553012
   Scenario: Receive and unreceive piece for cancelled order
     * def fundId = call uuid
     * def budgetId = call uuid
@@ -195,27 +185,27 @@ Feature: Add piece to cancelled ongoing order
     * configure headers = headersUser
     Given path 'orders/check-in'
     And request
-      """
-      {
-        toBeCheckedIn: [
-          {
-            checkedIn: 1,
-            checkInPieces: [
-              {
-                id: "#(pieceId1)",
-                itemStatus: "In process",
-                holdingId: "#(holdingsId1)",
-                displayOnHolding: false,
-                displayToPublic: false,
-                sequenceNumber: 1
-              }
-            ],
-            poLineId: "#(poLineId)"
-          }
-        ],
-        totalRecords: 1
-      }
-      """
+    """
+    {
+      toBeCheckedIn: [
+        {
+          checkedIn: 1,
+          checkInPieces: [
+            {
+              id: "#(pieceId1)",
+              itemStatus: "In process",
+              holdingId: "#(holdingsId1)",
+              displayOnHolding: false,
+              displayToPublic: false,
+              sequenceNumber: 1
+            }
+          ],
+          poLineId: "#(poLineId)"
+        }
+      ],
+      totalRecords: 1
+    }
+    """
     When method POST
     Then status 200
     And match $.receivingResults[0].processedSuccessfully == 1
@@ -278,26 +268,26 @@ Feature: Add piece to cancelled ongoing order
     # 15. Unreceive the first piece
     Given path 'orders/receive'
     And request
-      """
-      {
-        toBeReceived: [
-          {
-            poLineId: "#(poLineId)",
-            received: 1,
-            receivedItems: [
-              {
-                itemStatus: "On order",
-                pieceId: "#(pieceId1)",
-                displayOnHolding: false,
-                displayToPublic: false,
-                sequenceNumber: 1
-              }
-            ]
-          }
-        ],
-        totalRecords: 1
-      }
-      """
+    """
+    {
+      toBeReceived: [
+        {
+          poLineId: "#(poLineId)",
+          received: 1,
+          receivedItems: [
+            {
+              itemStatus: "On order",
+              pieceId: "#(pieceId1)",
+              displayOnHolding: false,
+              displayToPublic: false,
+              sequenceNumber: 1
+            }
+          ]
+        }
+      ],
+      totalRecords: 1
+    }
+    """
     When method POST
     Then status 200
 
