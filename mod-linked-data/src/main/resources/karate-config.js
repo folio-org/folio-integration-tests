@@ -137,7 +137,7 @@ function fn() {
     config.kcClientSecret = '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env === 'rancher') {
+  } else if (env === 'edev') {
     config.baseUrl = 'https://folio-edev-citation-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-citation-keycloak.ci.folio.org';
   } else if (env != null && env.match(/^ec2-\d+/)) {
