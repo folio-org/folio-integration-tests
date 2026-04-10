@@ -37,7 +37,7 @@ Feature: Borrowing Flow Scenarios
     And request createDCBTransactionRequest
     When method POST
     Then status 404
-    And match $.errors[0].message == 'Unable to find existing user with barcode '+ patronBarcodeNonExisting + ' and id ' + patronIdNonExisting + '.'
+    And match $.errors[0].message == 'Unable to find existing user.'
 
   Scenario: Validation. If the item barcode is already present in the inventory, error will be thrown.
 
@@ -83,7 +83,7 @@ Feature: Borrowing Flow Scenarios
     And request createDCBTransactionRequest
     When method POST
     Then status 409
-    And match $.errors[0].message == 'Unable to create item with barcode ' + itemBarcodeAlreadyExists2 + ' as it exists in inventory '
+    And match $.errors[0].message == 'Unable to create item because it already exists in inventory.'
 
   Scenario: Validation. If item is not present in inventory, new virtual item will be created.
 

@@ -108,6 +108,7 @@ function fn() {
     deleteOrder: read('classpath:thunderjet/mod-orders/reusable/delete-order.feature'),
     getOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/get-order-line.feature'),
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
+    createElectronicOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-electronic-order-line.feature'),
     createOrderLineWithInstance: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line-with-instance.feature'),
     changeOrderLineInstanceConnection: karate.read('classpath:thunderjet/mod-orders/reusable/change-order-line-instance-connection.feature'),
     updateOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/update-order-line.feature'),

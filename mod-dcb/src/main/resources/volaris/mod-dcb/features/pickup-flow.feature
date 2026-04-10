@@ -82,7 +82,7 @@ Feature: Pickup Flow Scenarios
     And request createDCBTransactionRequest
     When method POST
     Then status 409
-    And match $.errors[0].message == 'Unable to create item with barcode ' + itemBarcodeAlreadyExists3 + ' as it exists in inventory '
+    And match $.errors[0].message == 'Unable to create item because it already exists in inventory.'
 
   Scenario: Validation. If item is not present in inventory, new virtual item will be created.
 
