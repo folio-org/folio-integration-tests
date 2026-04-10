@@ -7,6 +7,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-login'                 |
       | 'mod-permissions'           |
       | 'mod-users'                 |
+      | 'mod-users-bl'              |
       | 'mod-inventory-storage'     |
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
@@ -136,6 +137,7 @@ Feature: mod-fqm-manager integration tests
       | 'overdue-fines-policies.collection.get'                            |
       | 'owners.collection.get'                                            |
       | 'patron-blocks.user-summary.item.get'                              |
+      | 'patron-blocks.automated-patron-blocks.collection.get'             |
       | 'payments.collection.get'                                          |
       | 'proxiesfor.collection.get'                                        |
       | 'refunds.collection.get'                                           |
@@ -149,6 +151,7 @@ Feature: mod-fqm-manager integration tests
       | 'users.item.delete'                                                |
       | 'users.item.get'                                                   |
       | 'users.item.post'                                                  |
+      | 'users-bl.transactions.get'                                        |
       | 'voucher.voucher-lines.collection.get'                             |
       | 'voucher.vouchers.collection.get'                                  |
       | 'waives.collection.get'                                            |

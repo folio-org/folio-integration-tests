@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-@Order(7)
+@Order(8)
 @FolioTest(team = "thunderjet", module = "cross-modules")
 public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
 
