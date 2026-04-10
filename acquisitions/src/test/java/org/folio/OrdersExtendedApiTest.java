@@ -72,7 +72,7 @@ class OrdersExtendedApiTest extends TestBaseEureka {
   }
 
   @Test
-  @DisplayName("(Thunderjet) (C543756) Add piece to cancelled ongoing order")
+  @DisplayName("(Thunderjet) (C543756, @C553012) Add piece to cancelled ongoing order")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void addPieceToCancelledOngoingOrder() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
