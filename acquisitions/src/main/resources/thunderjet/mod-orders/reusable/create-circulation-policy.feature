@@ -2,6 +2,7 @@
 Feature: Reusable function to init circulation request. All @Policy ids is being used in @CirculationRules. If policy id has changes, appropriate id in rules need to be changed.
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   @CreateLoanPolicy

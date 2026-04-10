@@ -2,9 +2,10 @@
 Feature: Create pieces batch
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: Create piece
+  Scenario: Create pieces batch
     # Prepare piece collection
     * def samplePiecesIds = []
     * def samplePiecedata = []

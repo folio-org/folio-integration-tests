@@ -96,40 +96,13 @@ Feature: Test deleting an encumbrance
   Scenario: Test Error when trying to delete an encumbrance linked to an invoice
     * print "Test Error when trying to delete an encumbrance linked to an invoice"
     # create order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId3)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId3)' }
 
     # create order line
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId3
-    * set poLine.purchaseOrderId = orderId3
-    * set poLine.fundDistribution[0].fundId = globalFundId
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId3)', orderId: '#(orderId3)', fundId: '#(globalFundId)' }
 
     # open order
-    Given path 'orders/composite-orders', orderId3
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-
-    Given path 'orders/composite-orders', orderId3
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId3)' }
 
     # get order line info for later
     Given path 'orders/order-lines', poLineId3
@@ -179,17 +152,7 @@ Feature: Test deleting an encumbrance
     Then status 201
 
     # approve invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # try to delete the encumbrance
     Given path 'finance/transactions/batch-all-or-nothing'

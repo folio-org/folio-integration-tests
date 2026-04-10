@@ -16,11 +16,6 @@ Feature: Encumbrance update after expense class change
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def unopenOrder = read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature')
-
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
     * def orderId = callonce uuid3
@@ -39,16 +34,7 @@ Feature: Encumbrance update after expense class change
 
 
   Scenario: Create an order line using an expense class in a single fund distribution
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].expenseClassId = globalPrnExpenseClassId
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', expenseClassId: '#(globalPrnExpenseClassId)' }
 
 
   Scenario: Open the order

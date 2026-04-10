@@ -2,9 +2,10 @@
 Feature: Move item
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: moveItem
+  Scenario: Move item
     Given path 'inventory/items/move'
     And request
     """

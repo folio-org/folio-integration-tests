@@ -1,5 +1,4 @@
 # For MODAUD-144
-@parallel=false
 Feature: mod audit order events
 
   Background:
@@ -14,15 +13,18 @@ Feature: mod audit order events
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    * callonce variables
-    * def orderId = callonce uuid
-
     * configure retry = { count: 10, interval: 5000 }
 
-  Scenario: Create Order event
-    * callonce createOrder { id: #(orderId) }
+    * callonce variables
 
-  Scenario: Check event saved in audit
+
+  Scenario: mod audit order events
+    * def orderId = call uuid
+
+    # 1. Create Order event
+    * call createOrder { id: #(orderId) }
+
+    # 2. Check event saved in audit
     * configure headers = headersAdmin
     Given path 'audit-data/acquisition/order/', orderId
     And retry until response.totalItems == 1
@@ -32,19 +34,11 @@ Feature: mod audit order events
     And match response.orderAuditEvents[0].orderId == orderId
     And match response.orderAuditEvents[0].action == "Create"
 
-  Scenario: PUT order event
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
+    # 3. PUT order event
+    * configure headers = headersUser
+    * def v = call updateOrder { id: '#(orderId)' }
 
-    * def orderResponse = $
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: Check 2 events saved in audit
+    # 4. Check 2 events saved in audit
     * configure headers = headersAdmin
     Given path 'audit-data/acquisition/order/' + orderId
     And retry until response.totalItems == 2

@@ -15,7 +15,6 @@ Feature: Check invoiceLine validation with  adjustments
 
     * callonce variables
 
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
     * def invoiceTemplateWithNoFunds = read('classpath:samples/mod-invoice/invoices/global/invoice-with-no-fund-distribution.json')
     * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-with-adjustments.json')
 
@@ -28,17 +27,12 @@ Feature: Check invoiceLine validation with  adjustments
 
     * print "Create finances"
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
 
     * print "Create an invoice"
     * configure headers = headersUser
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     * print "Add an invoice line"
     * copy invoiceLine = invoiceLineTemplate
@@ -54,15 +48,7 @@ Feature: Check invoiceLine validation with  adjustments
     Then status 201
 
     * print "Approve the invoice"
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     * print "Check the invoice line status"
     Given path 'invoice/invoice-lines', invoiceLineId
@@ -78,8 +64,8 @@ Feature: Check invoiceLine validation with  adjustments
 
     * print "Create finances"
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active'}] }
 
     * print "Create an invoice"
     * configure headers = headersUser

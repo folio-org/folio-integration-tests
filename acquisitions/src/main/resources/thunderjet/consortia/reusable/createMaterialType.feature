@@ -2,9 +2,10 @@
 Feature: Create material type
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createMaterialType
+  Scenario: Create material type
     Given path 'material-types'
     And request
     """

@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Test API to get current budget by fund
 
   Background:
@@ -12,39 +11,39 @@ Feature: Test API to get current budget by fund
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def fundIdWithoutBudget = callonce uuid2
-    * def budgetId = callonce uuid3
 
-  Scenario: Create finances
-    * call createFund { 'id': '#(fundId)', 'code': '#(fundId)'}
-    * call createFund { 'id': '#(fundIdWithoutBudget)', 'code': '#(fundIdWithoutBudget)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+  Scenario: Test API to get current budget by fund
+    * def fundId = call uuid
+    * def fundIdWithoutBudget = call uuid
+    * def budgetId = call uuid
 
-  Scenario: Call API to get current budget for fund
+    # 1. Create finances
+    * def v = call createFund { id: '#(fundId)', code: '#(fundId)' }
+    * def v = call createFund { id: '#(fundIdWithoutBudget)', code: '#(fundIdWithoutBudget)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
+
+    # 2. Call API to get current budget for fund
     Given path 'finance/funds', fundId , 'budget'
     When method GET
     Then status 200
     And match response.fundId == fundId
 
-  Scenario: Call API to get current Active budget for fund
+    # 3. Call API to get current Active budget for fund
     Given path 'finance/funds', fundId , 'budget'
     And param status = "Active"
     When method GET
     Then status 200
     And match response.fundId == fundId
 
-  Scenario: Call API to get current budget for fund with status that doesn't exist
+    # 4. Call API to get current budget for fund with status that doesn't exist
     Given path 'finance/funds', fundId , 'budget'
     And param status = "Planned"
     When method GET
     Then status 404
     And match response.errors[0].code == "currentBudgetNotFound"
 
-  Scenario: Call API to get error if budget doesn't exist for fund
+    # 5. Call API to get error if budget doesn't exist for fund
     Given path 'finance/funds', fundIdWithoutBudget , 'budget'
     When method GET
     Then status 404
     And match response.errors[0].code == "currentBudgetNotFound"
-
-

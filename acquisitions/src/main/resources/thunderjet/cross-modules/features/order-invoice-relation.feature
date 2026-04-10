@@ -28,18 +28,7 @@ Feature: Test order invoice relation logic
 
   Scenario Outline: Create orders
     * def orderId = <orderId>
-
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     Examples:
       | orderId    |
@@ -49,18 +38,7 @@ Feature: Test order invoice relation logic
   Scenario Outline: Create order lines for <orderLineId>
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
-
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-#    * set orderLine.cost.listUnitPrice =
-    * set orderLine.fundDistribution[0].fundId = globalFundId
-
-    And request orderLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(globalFundId)' }
 
     Examples:
       | orderId    | orderLineId      |
@@ -69,25 +47,7 @@ Feature: Test order invoice relation logic
       | orderIdTwo | orderLineIdThree |
 
   Scenario: Create invoice
-    Given path 'invoice/invoices'
-    And request
-    """
-    {
-        "id": "#(invoiceId)",
-        "chkSubscriptionOverlap": true,
-        "currency": "USD",
-        "source": "User",
-        "batchGroupId": "2a2cb998-1437-41d1-88ad-01930aaeadd5",
-        "status": "Open",
-        "invoiceDate": "2020-05-21",
-        "vendorInvoiceNo": "test",
-        "accountingCode": "G64758-74828",
-        "paymentMethod": "Physical Check",
-        "vendorId": "c6dace5d-4574-411e-8ba1-036102fcdc9b"
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
   Scenario Outline: Create invoice lines
     * def orderLineId = <orderLineId>
@@ -100,24 +60,9 @@ Feature: Test order invoice relation logic
     * def fd = response.fundDistribution
     * def lineAmount = response.cost.listUnitPrice
 
-    # ============= Create lines ===================
+    # ============= Create invoice line ===================
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundDistributions: '#(fd)', poLineId: '#(orderLineId)', total: '#(lineAmount)' }
 
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-        "id": "#(invoiceLineId)",
-        "invoiceId": "#(invoiceId)",
-        "poLineId": "#(orderLineId)",
-        "invoiceLineStatus": "Open",
-        "fundDistributions": #(fd),
-        "subTotal": #(lineAmount),
-        "description": "test",
-        "quantity": "1"
-    }
-    """
-    When method POST
-    Then status 201
     Examples:
       | orderLineId      | invoiceLineId      |
       | orderLineIdOne   | invoiceLineIdOne   |
@@ -189,5 +134,3 @@ Feature: Test order invoice relation logic
       | orderId    | invoiceId | count |
       | orderId    | invoiceId | 0     |
       | orderIdTwo | invoiceId | 0     |
-
-

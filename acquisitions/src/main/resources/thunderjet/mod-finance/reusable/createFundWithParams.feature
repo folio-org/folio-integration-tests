@@ -1,9 +1,10 @@
-Feature: fund
+Feature: Create fund with params
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createFund
+  Scenario: Create fund with params
 
     * def ledgerId = karate.get('ledgerId', globalLedgerId)
     * def fundStatus = karate.get('fundStatus', 'Active')

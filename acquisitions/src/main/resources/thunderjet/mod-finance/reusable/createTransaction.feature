@@ -1,9 +1,10 @@
-Feature: transaction
+Feature: Create transaction
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createTransaction
+  Scenario: Create transaction
     * def id = karate.get('id', uuid())
     * def poLineId = karate.get('poLineId', null)
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)

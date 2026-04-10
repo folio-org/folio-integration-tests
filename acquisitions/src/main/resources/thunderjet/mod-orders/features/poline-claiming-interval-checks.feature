@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Claiming Active/Claiming interval checks
 
   Background:
@@ -12,24 +11,14 @@ Feature: Claiming Active/Claiming interval checks
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
 
   Scenario: Check that claiming fields are inherited from poLine to title
     * def orderId = call uuid
     * def poLineId = call uuid
 
     # 1. Create Order and Po Line with claiming fields
-    * def v = call createOrder { 'id': '#(orderId)' }
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.cost.listUnitPrice = 10
-    * set poLine.claimingActive = true
-    * set poLine.claimingInterval = 1
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(globalFundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
 
     # 2. Check that claiming fields are inherited to title and metadata is set
     Given path 'orders/titles'
@@ -44,21 +33,14 @@ Feature: Claiming Active/Claiming interval checks
     And match title.metadata.createdDate != null
     And match title.metadata.createdByUserId != null
 
+
   Scenario: Update claiming values for poLine and title
     * def orderId = call uuid
     * def poLineId = call uuid
 
     # 1. Create Order and Po Line with claiming fields
-    * call createOrder { 'id': '#(orderId)' }
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.claimingActive = true
-    * set poLine.claimingInterval = 2
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(globalFundId)', claimingActive: true, claimingInterval: 2 }
 
     # 2. Update Po Line claiming fields
     Given path 'orders/order-lines', poLineId
