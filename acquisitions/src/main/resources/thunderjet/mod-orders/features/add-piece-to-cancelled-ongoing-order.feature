@@ -1,4 +1,4 @@
-# For FAT-20930, TestRail https://foliotest.testrail.io/index.php?/cases/view/543756
+# For FAT-20930, https://foliotest.testrail.io/index.php?/cases/view/543756
 Feature: Add piece to cancelled ongoing order
 
   Background:
