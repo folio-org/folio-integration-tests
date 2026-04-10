@@ -3,9 +3,10 @@ Feature: Create piece
   # parameters: pieceId, poLineId, titleId, displaySummary?, sequenceNumber?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createPiece
+  Scenario: Create piece
     * def pieceId = karate.get('pieceId', null)
     * def displaySummary = karate.get('displaySummary', null)
     * def sequenceNumber = karate.get('sequenceNumber', null)

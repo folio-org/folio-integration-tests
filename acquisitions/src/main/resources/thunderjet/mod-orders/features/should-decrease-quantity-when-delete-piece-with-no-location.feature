@@ -20,30 +20,10 @@ Feature: Should decrease quantity when delete piece with no location
     * def pieceIdForElectronicQuantity = callonce uuid6
 
   Scenario: Create composite order for physical quantity
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderIdForPhysicalQuantity)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderIdForPhysicalQuantity)' }
 
   Scenario: Create composite order for electronic quantity
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderIdForElectronicQuantity)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderIdForElectronicQuantity)' }
 
     Given path 'orders/composite-orders', orderIdForPhysicalQuantity
     When method GET
@@ -92,17 +72,7 @@ Feature: Should decrease quantity when delete piece with no location
     Then status 201
 
   Scenario: Open order for physical quantity
-    Given path 'orders/composite-orders', orderIdForPhysicalQuantity
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderIdForPhysicalQuantity
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderIdForPhysicalQuantity)' }
 
     Given path 'orders/composite-orders', orderIdForPhysicalQuantity
     When method GET
@@ -118,17 +88,7 @@ Feature: Should decrease quantity when delete piece with no location
     And match $.pieces[0].receivingStatus == 'Expected'
 
   Scenario: Open order for electronic quantity
-    Given path 'orders/composite-orders', orderIdForElectronicQuantity
-    When method GET
-    Then status 200
-
-    * def orderResponseElectronic = $
-    * set orderResponseElectronic.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderIdForElectronicQuantity
-    And request orderResponseElectronic
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderIdForElectronicQuantity)' }
 
     Given path 'orders/composite-orders', orderIdForElectronicQuantity
     When method GET

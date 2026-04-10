@@ -1,11 +1,12 @@
 @ignore
-Feature: Create order line
+Feature: Create order line with instance
   # parameters: id, orderId, fundId, instanceId, listUnitPrice, isPackage, titleOrPackage, paymentStatus, receiptStatus
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createOrderLineWithInstance
+  Scenario: Create order line with instance
     * def id = karate.get('id', null)
     * def listUnitPrice = karate.get('listUnitPrice', 1.0)
     * def isPackage = karate.get('isPackage', false)

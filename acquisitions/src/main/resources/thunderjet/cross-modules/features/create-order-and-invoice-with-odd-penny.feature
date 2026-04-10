@@ -40,8 +40,8 @@ Feature: Create orders and invoices with odd penny
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
     Examples:
       | fundId  | budgetId  |
@@ -52,17 +52,7 @@ Feature: Create orders and invoices with odd penny
   Scenario Outline: Create orders
     * def orderId = <orderId>
 
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     Examples:
       | orderId  |
@@ -81,18 +71,10 @@ Feature: Create orders and invoices with odd penny
     * def fd2_30 = { 'fundId': #(fundId2), 'distributionType': 'percentage', 'value': 30}
     * def fd3_40 = { 'fundId': #(fundId3), 'distributionType': 'percentage', 'value': 40}
 
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = <amount>
-    * set orderLine.cost.exchangeRate = <exchangeRate>
-    * set orderLine.fundDistribution = <fundDistributions>
-
-    And request orderLine
-    When method POST
-    Then status 201
+    * def fundDistribution = <fundDistributions>
+    * def amount = <amount>
+    * def exchangeRate = <exchangeRate>
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', listUnitPrice: '#(amount)', exchangeRate: '#(exchangeRate)', fundDistribution: '#(fundDistribution)' }
 
     Examples:
       | orderId  | orderLineId                  | fundDistributions                 | amount | exchangeRate |
@@ -102,19 +84,7 @@ Feature: Create orders and invoices with odd penny
 
   Scenario Outline: Open order
     * def orderId = <orderId>
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     Examples:
       | orderId  |
@@ -146,7 +116,7 @@ Feature: Create orders and invoices with odd penny
       | fundId2 | 110.02 |
       | fundId3 | 80.02  |
 #
-  Scenario Outline: check encumbances
+  Scenario Outline: check encumbrances
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and fromFundId==' + <fundId> + ' and encumbrance.sourcePurchaseOrderId=='+ <orderId>
     When method GET
@@ -204,23 +174,9 @@ Feature: Create orders and invoices with odd penny
     * def fd = response.fundDistribution
     * def lineAmount = response.cost.listUnitPrice
 
-    # ============= Create lines ===================
+    # ============= Create invoice line ===================
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundDistributions: '#(fd)', total: '#(lineAmount)' }
 
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-        "id": "#(invoiceLineId)",
-        "invoiceId": "#(invoiceId)",
-        "invoiceLineStatus": "Open",
-        "fundDistributions": #(fd),
-        "subTotal": #(lineAmount),
-        "description": "test",
-        "quantity": "1"
-    }
-    """
-    When method POST
-    Then status 201
     Examples:
       | orderLineId            | invoiceId  | invoiceLineId            |
       | orderLineIdWithTwoFD   | invoiceId1 | invoiceLineIdWithTwoFD   |
@@ -238,40 +194,16 @@ Feature: Create orders and invoices with odd penny
     * def fd = response.fundDistribution
     * def lineAmount = response.cost.listUnitPrice
 
-    # ============= Create lines ===================
+    # ============= Create invoice line ===================
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundDistributions: '#(fd)', total: '#(-lineAmount)' }
 
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-        "id": "#(invoiceLineId)",
-        "invoiceId": "#(invoiceId)",
-        "invoiceLineStatus": "Open",
-        "fundDistributions": #(fd),
-        "subTotal": #(-lineAmount),
-        "description": "test",
-        "quantity": "1"
-    }
-    """
-    When method POST
-    Then status 201
     Examples:
       | orderLineId                  | invoiceId  | invoiceLineId                  |
       | orderLineIdWithThreeFDCredit | invoiceId3 | invoiceLineIdWithThreeFDCredit |
 
   Scenario Outline: approve invoice
     * def invoiceId = <invoiceId>
-    # ============= approve invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     Examples:
       | invoiceId  |
@@ -317,17 +249,7 @@ Feature: Create orders and invoices with odd penny
 
   Scenario Outline: pay invoice
     * def invoiceId = <invoiceId>
-    # ============= pay invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Paid"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
     Examples:
       | invoiceId  |

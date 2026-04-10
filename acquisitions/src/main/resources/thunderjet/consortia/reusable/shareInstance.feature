@@ -2,9 +2,10 @@
 Feature: Share Instance
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: shareInstance
+  Scenario: Share Instance
     * def sharingId = call uuid
     * def sharingId = karate.get('sharingId', sharingId)
 

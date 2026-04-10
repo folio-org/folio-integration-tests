@@ -26,17 +26,7 @@ Feature: Test order invoice relation can be deleted
 
   Scenario Outline: Create orders
     * def orderId = <orderId>
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     Examples:
       | orderId    |
@@ -47,16 +37,7 @@ Feature: Test order invoice relation can be deleted
   Scenario Outline: Create order lines for <orderLineId>
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.fundDistribution[0].fundId = globalFundId
-
-    And request orderLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(globalFundId)' }
 
     Examples:
       | orderId    | orderLineId      |
@@ -97,24 +78,9 @@ Feature: Test order invoice relation can be deleted
     * def fd = response.fundDistribution
     * def lineAmount = response.cost.listUnitPrice
 
-    # ============= Create lines ===================
+    # ============= Create invoice line ===================
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundDistributions: '#(fd)', poLineId: '#(orderLineId)', total: '#(lineAmount)' }
 
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-        "id": "#(invoiceLineId)",
-        "invoiceId": "#(invoiceId)",
-        "poLineId": "#(orderLineId)",
-        "invoiceLineStatus": "Open",
-        "fundDistributions": #(fd),
-        "subTotal": #(lineAmount),
-        "description": "test",
-        "quantity": "1"
-    }
-    """
-    When method POST
-    Then status 201
     Examples:
       | orderLineId      | invoiceLineId      |
       | orderLineIdOne   | invoiceLineIdOne   |

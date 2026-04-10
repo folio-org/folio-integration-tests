@@ -102,7 +102,6 @@ function fn() {
     updateOrder: karate.read('classpath:thunderjet/mod-orders/reusable/update-order.feature'),
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
     unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
-    unopenOrderDeleteHoldings: read('classpath:thunderjet/mod-orders/reusable/unopen-order-delete-holdings.feature'),
     deleteInstance: read('classpath:thunderjet/mod-orders/reusable/delete-instance.feature'),
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
     cancelOrder: read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature'),
@@ -135,6 +134,9 @@ function fn() {
     payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
     verifyInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line.feature'),
+
+    // cross-module
+    createInvoiceLineFromPoLine: read('classpath:thunderjet/cross-modules/reusable/create-invoice-line-from-po-line.feature'),
 
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),

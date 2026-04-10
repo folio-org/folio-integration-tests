@@ -18,9 +18,9 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
     * callonce variablesCentral
     * callonce variablesUniversity
 
-    * def fundId = callonce uuid
-    * def orderId = callonce uuid
-    * def poLineId = callonce uuid
+    * def fundId = callonce uuid { n: 1 }
+    * def orderId = callonce uuid { n: 2 }
+    * def poLineId = callonce uuid { n: 3 }
 
     * table poLineLocations
       | locationId             | quantity | quantityPhysical | tenantId             |
@@ -28,8 +28,8 @@ Feature: Update PoLine locations with tenantIds the user do not have affiliation
       | centralLocationsId2    | 1        | 1                | centralTenantName    |
       | universityLocationsId  | 1        | 1                | universityTenantName |
       | universityLocationsId2 | 1        | 1                | universityTenantName |
-    * callonce createOrder { id: '#(orderId)' }
-    * callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', quantity: 4, locations: '#(poLineLocations)', isPackage: True }
+    * def v = callonce createOrder { id: '#(orderId)' }
+    * def v = callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', quantity: 4, locations: '#(poLineLocations)', isPackage: true }
 
     * configure headers = headersUser
     * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }

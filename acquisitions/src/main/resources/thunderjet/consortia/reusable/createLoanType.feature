@@ -2,9 +2,10 @@
 Feature: Create loan type
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createLoanType
+  Scenario: Create loan type
     Given path 'loan-types'
     And request
     """

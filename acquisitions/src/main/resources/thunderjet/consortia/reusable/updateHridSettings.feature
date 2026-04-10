@@ -3,6 +3,7 @@ Feature: Update HRID settings
   # parameters: instancesPrefix, holdingsPrefix, itemsPrefix
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Update HRID settings

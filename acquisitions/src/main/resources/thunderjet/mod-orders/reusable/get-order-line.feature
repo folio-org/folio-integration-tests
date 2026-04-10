@@ -4,6 +4,7 @@ Feature: Get order line
   # returns: poLine
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Get order line

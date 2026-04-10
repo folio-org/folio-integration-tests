@@ -19,8 +19,6 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
      * def invoiceId = callonce uuid1
      * def invoiceLineId = callonce uuid2
 
-#    * def invoiceId = "34ead894-57a0-4276-8802-87fc7851f715"
-#    * def invoiceLineId = "34ead894-57a0-4276-8801-87fc7851f745"
 
   Scenario: Create invoice with lockTotal and without adjustment
     * set invoicePayload.id = invoiceId
@@ -38,7 +36,7 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
     And match $.total == 0.0
 
   Scenario: Add invoice line to created invoice
-     # ============= create invoice lines ===================
+     # ============= create invoice line ===================
     Given path 'invoice/invoice-lines'
     * set invoiceLinePayload.id = invoiceLineId
     * set invoiceLinePayload.invoiceId = invoiceId
@@ -55,16 +53,7 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
     And match $.total == 10.02
 
   Scenario: Approve invoice with lock total which equal to calculated total
-  Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+  * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Delete voucher with voucher lines after invoice approve
     Given path '/voucher/vouchers'

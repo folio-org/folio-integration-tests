@@ -15,60 +15,33 @@ Feature: Link an invoice line to a po line
 
     * callonce variables
 
-    * def poLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-
-    * def orderId = callonce uuid1
-    * def poLineId = callonce uuid2
-    * def invoiceId = callonce uuid3
-    * def invoiceLineId = callonce uuid4
-
 
   Scenario: Link an invoice line to a po line
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
+
     # Create the invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # Create the invoice line without a link to a po line
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundId: '#(globalFundId)', poLineId: null, total: 100 }
 
     # Create order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     # Create order line
-    * copy poLine = poLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = globalFundId
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(globalFundId)' }
 
     # Update invoice line to link with po line
+    Given path 'invoice/invoice-lines', invoiceLineId
+    When method GET
+    Then status 200
+
+    * def invoiceLine = $
     * set invoiceLine.poLineId = poLineId
+
     Given path 'invoice/invoice-lines', invoiceLineId
     And request invoiceLine
     When method PUT

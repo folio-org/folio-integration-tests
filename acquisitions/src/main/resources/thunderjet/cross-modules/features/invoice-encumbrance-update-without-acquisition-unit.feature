@@ -1,5 +1,4 @@
 # For MODORDERS-1073
-@parallel=false
 Feature: Invoice encumbrance update without acquisition unit
 
   Background:
@@ -16,22 +15,22 @@ Feature: Invoice encumbrance update without acquisition unit
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-    * def invoiceId = callonce uuid5
-    * def invoiceLineId = callonce uuid6
-    * def acqUnitId = callonce uuid7
-    * def acqUnitMembershipId = callonce uuid8
 
+  Scenario: Invoice encumbrance update without acquisition unit
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
+    * def acqUnitId = call uuid
+    * def acqUnitMembershipId = call uuid
 
-  Scenario: Prepare finances
+    # 1. Prepare finances
     * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
-
-  Scenario: Create acq unit
+    # 2. Create acq unit
     * configure headers = headersAdmin
     Given path 'acquisitions-units/units'
     And request
@@ -48,10 +47,8 @@ Feature: Invoice encumbrance update without acquisition unit
     When method POST
     Then status 201
 
-
-  Scenario: Create acq unit membership
-    * configure headers = headersAdmin
-    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    # 3. Create acq unit membership
+    * def res = call getUserIdByUsername { user: '#(testUser)' }
     * def userIdForMembership = res.userId
     Given path 'acquisitions-units/memberships'
     And request
@@ -65,43 +62,30 @@ Feature: Invoice encumbrance update without acquisition unit
     When method POST
     Then status 201
 
-
-  Scenario: Create an order
+    # 4. Create an order
+    * configure headers = headersUser
     * def v = call createOrder { id: '#(orderId)' }
 
-
-  Scenario: Create an order line
+    # 5. Create an order line
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10 }
 
-
-  Scenario: Open the order
+    # 6. Open the order
     * def v = call openOrder { orderId: '#(orderId)' }
 
-
-  Scenario: Create an invoice
+    # 7. Create an invoice
     * def v = call createInvoice { id: '#(invoiceId)', acqUnitIds: ['#(acqUnitId)'] }
 
+    # 8. Add an invoice line linked to the po line
+    * def v = call createInvoiceLineFromPoLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', total: 10 }
 
-  Scenario: Add an invoice line linked to the po line
-    * print "Get the encumbrance id"
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLine = $
-    * def encumbranceId = poLine.fundDistribution[0].encumbrance
-
-    * print "Add an invoice line linked to the po line"
-    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(encumbranceId)', total: 10 }
-
-
-  Scenario: Remove acq unit membership
+    # 9. Remove acq unit membership
     * configure headers = headersAdmin
     Given path 'acquisitions-units/memberships', acqUnitMembershipId
     When method DELETE
     Then status 204
 
-
-  Scenario: Remove the order line fund distribution
+    # 10. Remove the order line fund distribution
+    * configure headers = headersUser
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -114,10 +98,9 @@ Feature: Invoice encumbrance update without acquisition unit
     When method PUT
     Then status 204
 
-
-  Scenario: Re-add acq unit membership
+    # 11. Re-add acq unit membership
     * configure headers = headersAdmin
-    * def res = callonce getUserIdByUsername { user: '#(testUser)' }
+    * def res = call getUserIdByUsername { user: '#(testUser)' }
     * def userIdForMembership = res.userId
     Given path 'acquisitions-units/memberships'
     And request
@@ -131,8 +114,8 @@ Feature: Invoice encumbrance update without acquisition unit
     When method POST
     Then status 201
 
-
-  Scenario: Check the encumbrance link was removed in the invoice line
+    # 12. Check the encumbrance link was removed in the invoice line
+    * configure headers = headersUser
     Given path 'invoice/invoice-lines', invoiceLineId
     When method GET
     Then status 200

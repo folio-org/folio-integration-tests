@@ -22,8 +22,8 @@ Feature: Create Order From Minimal Template
 
     # 1. Create Funds and Budgets
     * configure headers = headersAdmin
-    * call createFund { "id": "#(fundId)", "ledgerId": "#(globalLedgerWithRestrictionsId)" }
-    * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
+    * def v = call createFund { id: "#(fundId)", ledgerId: "#(globalLedgerWithRestrictionsId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 1000, fundId: "#(fundId)", status: "Active" }
 
     # 2. Create Order Template
     Given path "/orders/order-templates"
@@ -101,8 +101,8 @@ Feature: Create Order From Minimal Template
 
     # 1. Create Funds and Budgets
     * configure headers = headersAdmin
-    * call createFund { "id": "#(fundId)", "ledgerId": "#(globalLedgerWithRestrictionsId)" }
-    * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
+    * def v = call createFund { id: "#(fundId)", ledgerId: "#(globalLedgerWithRestrictionsId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 1000, fundId: "#(fundId)", status: "Active" }
 
     # 2. Create Mosaic Order
     * configure headers = headersUser
@@ -160,8 +160,8 @@ Feature: Create Order From Minimal Template
 
     # 1. Create Funds and Budgets
     * configure headers = headersAdmin
-    * call createFund { "id": "#(fundId)", "ledgerId": "#(globalLedgerWithRestrictionsId)" }
-    * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
+    * def v = call createFund { id: "#(fundId)", ledgerId: "#(globalLedgerWithRestrictionsId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 1000, fundId: "#(fundId)", status: "Active" }
 
     # 2. Create Order Template
     Given path "/orders/order-templates"
@@ -246,8 +246,8 @@ Feature: Create Order From Minimal Template
 
     # 1. Create Funds and Budgets
     * configure headers = headersAdmin
-    * call createFund { "id": "#(fundId)", "ledgerId": "#(globalLedgerWithRestrictionsId)" }
-    * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
+    * def v = call createFund { id: "#(fundId)", ledgerId: "#(globalLedgerWithRestrictionsId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 1000, fundId: "#(fundId)", status: "Active" }
 
     # 2. Create Order Template
     Given path "/orders/order-templates"
@@ -317,8 +317,8 @@ Feature: Create Order From Minimal Template
 
     # 1. Create Funds and Budgets
     * configure headers = headersAdmin
-    * call createFund { "id": "#(fundId)", "ledgerId": "#(globalLedgerWithRestrictionsId)" }
-    * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
+    * def v = call createFund { id: "#(fundId)", ledgerId: "#(globalLedgerWithRestrictionsId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 1000, fundId: "#(fundId)", status: "Active" }
 
     # 2. Create Order Template
     Given path "/orders/order-templates"

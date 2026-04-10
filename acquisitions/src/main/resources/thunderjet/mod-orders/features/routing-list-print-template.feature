@@ -121,17 +121,7 @@ Feature: Should check processing of printing routing list functionlity
 
     * print "Create composite order to use in routing list"
     * configure headers = headersUser
-    Given path 'orders/composite-orders'
-    And request
-      """
-      {
-        id: '#(orderId)',
-        vendor: '#(globalVendorId)',
-        orderType: 'One-Time'
-      }
-      """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     * print "Create order line for composite order that will be used in routingList"
     Given path 'orders/order-lines'

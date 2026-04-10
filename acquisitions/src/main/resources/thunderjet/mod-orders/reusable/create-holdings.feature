@@ -2,6 +2,7 @@
 Feature: Create a holdings
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Create holdings

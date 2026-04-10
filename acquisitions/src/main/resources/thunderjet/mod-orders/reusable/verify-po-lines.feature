@@ -2,6 +2,7 @@
 Feature: Validate po lines
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   @ignore @VerifyPoLineReceiptStatus

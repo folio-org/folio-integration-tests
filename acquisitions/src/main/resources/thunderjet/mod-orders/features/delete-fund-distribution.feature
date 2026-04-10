@@ -26,49 +26,20 @@ Feature: Delete fund distribution and check encumbrances are removed
 
   Scenario: Create a fund and budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000 }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
 
   Scenario: Create composite order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
 
   Scenario: Create order line
-    Given path 'orders/order-lines'
-
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
 
   Scenario: Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
 
   Scenario: check budget after open order
@@ -161,17 +132,7 @@ Feature: Delete fund distribution and check encumbrances are removed
 
 
   Scenario: Unopen order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = "Pending"
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call unopenOrder { orderId: '#(orderId)' }
 
 
   Scenario: check the transaction is still there

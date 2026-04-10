@@ -3,9 +3,10 @@ Feature: Create Organization
   # parameters: id?, name?, code, status? acqUnitIds?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createOrganization
+  Scenario: Create Organization
     * def newId = callonce uuid
     * def id = karate.get('id', newId)
     * def name = karate.get('name', 'Active org for API Test')
