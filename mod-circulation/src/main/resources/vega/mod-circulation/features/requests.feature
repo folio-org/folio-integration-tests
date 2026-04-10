@@ -1950,4 +1950,3 @@ Feature: Requests tests
     And match response.allowedServicePoints.Hold == "#notpresent"
     And match response.allowedServicePoints.Page == "#notpresent"
     And match response.allowedServicePoints.Recall == "#notpresent"
-
