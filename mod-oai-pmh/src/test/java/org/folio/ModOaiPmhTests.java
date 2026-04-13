@@ -132,11 +132,16 @@ public class ModOaiPmhTests extends TestBaseEureka {
     }
 
     @Test
+    void oaiPmhGetRecord856ComponentParts() {
+        runFeatureTest("oaiPmhGetRecord856ComponentParts-C388528");
+    }
+
+    @Test
     void verifyBehaviorConfigurationC375138() {
         runFeatureTest("verifyBehaviorConfigurationC375138");
     }
 
-  @Test
+    @Test
     void verifyDcbInstanceHoldings() {
         runFeatureTest("oaipmh-dcb");
     }

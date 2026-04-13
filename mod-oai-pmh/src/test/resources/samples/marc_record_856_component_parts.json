@@ -1,0 +1,99 @@
+{
+  "id": "11111111-1111-1111-1111-111111111111",
+  "snapshotId": "11111111-1111-1111-1111-111111111111",
+  "matchedId": "11111111-1111-1111-1111-111111111111",
+  "generation": 1,
+  "recordType": "MARC_BIB",
+  "state": "ACTUAL",
+  "rawRecord": {
+    "content": "00411naa a2200133uu 4500001001400000008004100014005001700055245002700072856004600099856002400145856002100169856003800190856004900228\u001ein00000000009\u001e                                        \u001e20230515081007.7\u001e  \u001faTest_electronic access\u001e40\u001fuElectronic access: Relationship: Resource\u001e41\u001fuVersion of resource\u001e42\u001fuRelated resource\u001e43\u001fuComponent part(s) of resource 4 3\u001e44\u001fuVersion of component part(s) of resource 4 4\u001e\u001d"
+  },
+  "parsedRecord": {
+    "content": {
+      "leader": "00411naa a2200133uu 4500",
+      "fields": [
+        {
+          "001": "in00000000009"
+        },
+        {
+          "008": "                                        "
+        },
+        {
+          "005": "20230515081007.7"
+        },
+        {
+          "245": {
+            "subfields": [
+              {
+                "a": "Test_electronic access"
+              }
+            ],
+            "ind1": " ",
+            "ind2": " "
+          }
+        },
+        {
+          "856": {
+            "subfields": [
+              {
+                "u": "Electronic access: Relationship: Resource"
+              }
+            ],
+            "ind1": "4",
+            "ind2": "0"
+          }
+        },
+        {
+          "856": {
+            "subfields": [
+              {
+                "u": "Version of resource"
+              }
+            ],
+            "ind1": "4",
+            "ind2": "1"
+          }
+        },
+        {
+          "856": {
+            "subfields": [
+              {
+                "u": "Related resource"
+              }
+            ],
+            "ind1": "4",
+            "ind2": "2"
+          }
+        },
+        {
+          "856": {
+            "subfields": [
+              {
+                "u": "Component part(s) of resource 4 3"
+              }
+            ],
+            "ind1": "4",
+            "ind2": "3"
+          }
+        },
+        {
+          "856": {
+            "subfields": [
+              {
+                "u": "Version of component part(s) of resource 4 4"
+              }
+            ],
+            "ind1": "4",
+            "ind2": "4"
+          }
+        }
+      ]
+    }
+  },
+  "additionalInfo": {},
+  "externalIdsHolder": {
+    "instanceId": "11111111-1111-1111-1111-111111111111",
+    "instanceHrid": "inst00000085643"
+  },
+  "deleted": false
+}
