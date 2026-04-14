@@ -80,7 +80,7 @@ class OrdersExtendedApiTest extends TestBaseEureka {
   }
 
   @Test
-  @DisplayName("(Thunderjet) (@C353543) Update po lines when an order is closed with the 'Cancelled' reason")
+  @DisplayName("(Thunderjet) (C353543) Update po lines when an order is closed with the 'Cancelled' reason")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void updatePoLinesWhenOrderCancelled() {
     runFeatureTest(Feature.FEATURE_3.getFileName());
