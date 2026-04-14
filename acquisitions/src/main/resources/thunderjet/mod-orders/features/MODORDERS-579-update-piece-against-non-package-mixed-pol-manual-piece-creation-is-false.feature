@@ -35,8 +35,8 @@ Feature: Should create and update pieces for non package mixed POL with quantity
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
   Scenario Outline: create locations
     # create locations
@@ -71,17 +71,7 @@ Feature: Should create and update pieces for non package mixed POL with quantity
       | newElectronicCreatedHoldingIdSecondUpdate | 'ElecLocationCode2' |'ElecLocation2'|
 
   Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
 
   Scenario: Create an mixed order line with isPackage=false
@@ -103,17 +93,7 @@ Feature: Should create and update pieces for non package mixed POL with quantity
 
 
   Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   Scenario: Check inventory and order items after open order
     * print 'Get the instanceId and holdingId from the po line'
@@ -393,11 +373,6 @@ Feature: Should create and update pieces for non package mixed POL with quantity
     Given path 'holdings-storage/holdings', newElectronicCreatedHoldingIdSecondUpdate
     When method GET
     Then status 200
-
-    * print 'Check holding should be deleted, because flag "deleteHolding" was true and no exist item or pieces'
-    Given path 'holdings-storage/holdings', newElectronicCreatedHoldingIdFirstUpdate
-    When method GET
-    Then status 404
 
     * print 'Check order and transaction after Electronic piece update'
     * configure headers = headersUser

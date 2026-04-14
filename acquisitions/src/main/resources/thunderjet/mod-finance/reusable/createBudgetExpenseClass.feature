@@ -1,6 +1,7 @@
 Feature: Create Budget Expense Class
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Add expense class to budget

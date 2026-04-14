@@ -271,8 +271,8 @@ Feature: edge-oai-pmh features
     When method GET
     Then status 200
     * def instance = response
-    * instance.fields[3].indicators[0] = '2'
-    * instance.fields[3].indicators[1] = '3'
+    * instance.fields[4].indicators[0] = '2'
+    * instance.fields[4].indicators[1] = '3'
     * set instance._actionType = 'edit'
     * set instance $.relatedRecordVersion = version
     * set instance.externalHrid = 'inst000000000145'
@@ -691,4 +691,46 @@ Scenario: List records with marc21_withholdings prefix, should be 3 records incl
     And header x-okapi-tenant = testTenant
     When method DELETE
     Then status 204
+
+  Scenario: GetRecord: Inventory: Verify if displaySummary field is present and if so, it appears in "k" subfield and "l" disappears
+    * callonce read('init_data/update-configuration.feature@BehaviorConfigInventory')
+    * url baseUrl
+    Given path 'instance-storage/instances'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    * def instance = read('classpath:samples/instance2.json')
+    And request instance
+    When method POST
+    Then status 201
+    And def instanceId = response.id
+
+    Given path 'holdings-storage/holdings'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    * def holdings = read('classpath:samples/holdings3.json')
+    And request holdings
+    When method POST
+    Then status 201
+
+    Given path 'item-storage/items'
+    And header x-okapi-token = okapitoken
+    And header x-okapi-tenant = testTenant
+    * def item = read('classpath:samples/item3.json')
+    And request item
+    When method POST
+    Then status 201
+
+    * url edgeUrl
+    Given path 'oai'
+    And param apikey = apikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'GetRecord'
+    And param identifier = 'oai:folio.org:' + testTenant + '/' + instanceId
+    When method GET
+    Then status 200
+
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='k'] == 'some display summary'
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='l'] == '#notpresent'
+
+    * callonce read('init_data/update-configuration.feature@BehaviorConfig')
 

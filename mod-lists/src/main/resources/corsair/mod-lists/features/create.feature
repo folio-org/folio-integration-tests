@@ -7,7 +7,7 @@ Feature: Scenarios that are primarily focused around creating lists
     * configure headers = testUserHeaders
 
   Scenario: Post and get new list
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
 

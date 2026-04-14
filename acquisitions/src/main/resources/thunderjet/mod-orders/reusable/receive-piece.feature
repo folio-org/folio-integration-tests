@@ -3,6 +3,7 @@ Feature: Receive piece
   # parameters: pieceId, poLineId
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Receive piece

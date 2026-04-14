@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-mosaic integration tests
 
   Background:
@@ -41,3 +40,9 @@ Feature: mod-mosaic integration tests
 
   Scenario: Validate Order
     Given call read("features/validate-order.feature")
+
+  Scenario: Generate Default Order Template
+    Given call read("features/generate-default-order-template.feature")
+
+  Scenario: Create Order With Ongoing Type
+    Given call read("features/create-order-8-with-ongoing-type.feature")

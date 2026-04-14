@@ -24,8 +24,8 @@ Feature: P/E mix update piece
 
     * print "Create finances"
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
     * print "Create an order"
     * configure headers = headersUser

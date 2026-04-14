@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-orders integration tests
 
   Background:
@@ -229,6 +228,9 @@ Feature: mod-orders integration tests
   Scenario: Piece status transitions
     * call read('features/piece-status-transitions.feature')
 
+  Scenario: Piece status transitions claiming
+    * call read('features/piece-status-transitions-claiming.feature')
+
   Scenario: PoLine change instance connection
     * call read('features/poline_change_instance_connection.feature')
 
@@ -297,3 +299,21 @@ Feature: mod-orders integration tests
 
   Scenario: Validate fund distribution for zero price
     * call read('features/validate-fund-distribution-for-zero-price.feature')
+
+  Scenario: Open order with invalid material type rollback
+    * call read('features/open-order-with-invalid-material-type-rollback.feature')
+
+  Scenario: Receive pieces and delete empty holding
+    * call read('features/receive-pieces-delete-empty-holding.feature')
+
+  Scenario: Unopen order deletes only empty holding for two locations
+    * call read('features/unopen-order-delete-empty-holding-two-locs.feature')
+
+  Scenario: Unopen order with 2 independent POLs deletes only empty holding
+    * call read('features/unopen-order-delete-empty-holding-two-pols.feature')
+
+  Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
+    * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
+
+  Scenario: Add piece to cancelled ongoing order
+    * call read('features/add-piece-to-cancelled-ongoing-order.feature')

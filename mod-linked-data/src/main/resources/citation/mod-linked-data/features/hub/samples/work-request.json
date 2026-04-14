@@ -1,0 +1,25 @@
+{
+  "resource":{
+    "http://bibfra.me/vocab/lite/Work":{
+      "profileId": 2,
+      "http://bibfra.me/vocab/library/title":[
+        {
+          "http://bibfra.me/vocab/library/Title":{
+            "http://bibfra.me/vocab/library/mainTitle":[
+              "Work connected to Hub resources"
+            ]
+          }
+        }
+      ],
+      "_hubs": [
+        {
+          "_relation": "http://bibfra.me/vocab/lite/expressionOf",
+          "_hub": {
+            "label": "Barbakʻaże, Datʻo 1966- Trpʻoba camebultʻa",
+            "id": "#(hubResourceId)"
+          }
+        }
+      ]
+    }
+  }
+}

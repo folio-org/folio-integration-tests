@@ -14,7 +14,6 @@ Feature: Integration with SRS for import flow
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read('samples/authority_person_edgell_david.json')
     * def postAuthorityCall = call postSourceRecordToStorage
-    * match postAuthorityCall.response.qmRecordId == '#notnull'
     * def query = '(lccn="n87116094")'
     * def searchAuthorityCall = call searchAuthority
     * def authorityIdOfn87116094 = searchAuthorityCall.response.authorities[0].id

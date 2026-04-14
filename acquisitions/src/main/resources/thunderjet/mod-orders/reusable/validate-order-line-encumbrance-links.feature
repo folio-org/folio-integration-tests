@@ -9,7 +9,8 @@ Feature: Validate order line encumbrance links
   # in the encumbrances array, the encumbrance id is extracted & compared with the encumbrance id on
   # POL fundDistribution. If the id matches the test passes, if the match contains a null the test fails.
 
-  Background: validateOrderLineEncumbranceLinks
+  Background:
+    * print karate.info.scenarioName
     * url baseUrl
     * def getEncumbranceIdByPoLineId =
       """

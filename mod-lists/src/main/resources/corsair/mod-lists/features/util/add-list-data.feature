@@ -51,7 +51,7 @@ Feature: Add FQM query data
 
 
     # This is a workaround due to the first refresh hanging when integration tests are run. Currently investigating why
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def dummyPostCall = callonce postList
     * def dummyListId = dummyPostCall.listId
     * callonce refreshList {listId: '#(dummyListId)'}

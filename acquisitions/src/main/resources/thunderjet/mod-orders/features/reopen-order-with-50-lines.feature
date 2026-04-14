@@ -1,5 +1,4 @@
 # For MODORDERS-855
-@parallel=false
 Feature: Reopen order with 50 lines
 
   Background:
@@ -16,26 +15,24 @@ Feature: Reopen order with 50 lines
 
     * callonce variables
 
-    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
-
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-
     * configure readTimeout = 90000
 
 
-  Scenario: Prepare finances
+  Scenario: Reopen order with 50 lines
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+
+    # 1. Prepare finances
     * configure headers = headersAdmin
-    * def v = call createFund { id: #(fundId) }
-    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
+    # 2. Create an order
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario: Create an order
-    * def v = call createOrder { id: #(orderId) }
-
-
-  Scenario: Create 50 order lines
+    # 3. Create 50 order lines
     * def lineParameters = []
     * def createParameterArray =
       """
@@ -48,14 +45,13 @@ Feature: Reopen order with 50 lines
     * eval createParameterArray()
     * def v = call createOrderLine lineParameters
 
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario: Open the order
-    * def v = call openOrder { orderId: "#(orderId)" }
+    # 5. Close the order
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
-  Scenario: Close the order
-    * def v = call closeOrderRemoveLines { orderId: #(orderId) }
-
-  Scenario: Check the encumbrances were all released
+    # 6. Check the encumbrances were all released
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId + ' and encumbrance.status==Released'
@@ -63,11 +59,11 @@ Feature: Reopen order with 50 lines
     Then status 200
     And match $.totalRecords == 50
 
+    # 7. Reopen the order
+    * configure headers = headersUser
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario: Reopen the order
-    * def v = call openOrder { orderId: "#(orderId)" }
-
-  Scenario: Check the encumbrances were all unreleased
+    # 8. Check the encumbrances were all unreleased
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId + ' and encumbrance.status==Released'

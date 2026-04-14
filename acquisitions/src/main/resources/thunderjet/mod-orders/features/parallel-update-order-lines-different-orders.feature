@@ -28,24 +28,24 @@ Feature: Update order lines for different open orders in parallel (using the sam
     * def poLineId4 = callonce uuid10
 
     * configure headers = headersAdmin
-    * callonce createFund { id: '#(fundId)' }
-    * callonce createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)' }
+    * def v = callonce createFund { id: '#(fundId)' }
+    * def v = callonce createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)' }
 
     * configure headers = headersUser
-    * callonce createOrder { id: '#(orderId1)' }
-    * callonce createOrder { id: '#(orderId2)' }
-    * callonce createOrder { id: '#(orderId3)' }
-    * callonce createOrder { id: '#(orderId4)' }
+    * def v = callonce createOrder { id: '#(orderId1)' }
+    * def v = callonce createOrder { id: '#(orderId2)' }
+    * def v = callonce createOrder { id: '#(orderId3)' }
+    * def v = callonce createOrder { id: '#(orderId4)' }
 
-    * callonce createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(fundId)' }
-    * callonce createOrderLine { id: '#(poLineId2)', orderId: '#(orderId2)', fundId: '#(fundId)' }
-    * callonce createOrderLine { id: '#(poLineId3)', orderId: '#(orderId3)', fundId: '#(fundId)' }
-    * callonce createOrderLine { id: '#(poLineId4)', orderId: '#(orderId4)', fundId: '#(fundId)' }
+    * def v = callonce createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(fundId)' }
+    * def v = callonce createOrderLine { id: '#(poLineId2)', orderId: '#(orderId2)', fundId: '#(fundId)' }
+    * def v = callonce createOrderLine { id: '#(poLineId3)', orderId: '#(orderId3)', fundId: '#(fundId)' }
+    * def v = callonce createOrderLine { id: '#(poLineId4)', orderId: '#(orderId4)', fundId: '#(fundId)' }
 
-    * callonce openOrder { orderId: '#(orderId1)' }
-    * callonce openOrder { orderId: '#(orderId2)' }
-    * callonce openOrder { orderId: '#(orderId3)' }
-    * callonce openOrder { orderId: '#(orderId4)' }
+    * def v = callonce openOrder { orderId: '#(orderId1)' }
+    * def v = callonce openOrder { orderId: '#(orderId2)' }
+    * def v = callonce openOrder { orderId: '#(orderId3)' }
+    * def v = callonce openOrder { orderId: '#(orderId4)' }
 
     * callonce getOrderLine { poLineId: '#(poLineId1)' }
     * set poLine.cost.listUnitPrice = 11

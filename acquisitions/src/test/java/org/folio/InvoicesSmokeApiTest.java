@@ -14,12 +14,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-@Order(10)
+@Order(12)
 @FolioTest(team = "thunderjet", module = "mod-invoice")
 public class InvoicesSmokeApiTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
-  private static final String TEST_TENANT = "testinvoices";
+  private static final String TEST_TENANT = "testinvoice";
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {

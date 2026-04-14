@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-invoice integration tests
 
   Background:
@@ -119,3 +118,6 @@ Feature: mod-invoice integration tests
 
   Scenario: Pay Invoice With 0 Value
     * call read('features/pay-invoice-with-0-value.feature')
+
+  Scenario: Fund code is automatically populated for invoice lines if it is missing
+    * call read('features/fund-code-auto-populate-invoice-lines.feature')

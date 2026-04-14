@@ -11,24 +11,18 @@ Feature: Check poNumbers updates when invoice lines are created and updated
 
     * callonce variables
 
-    * def poLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-
-    * def orderId1 = callonce uuid1
-    * def orderId2 = callonce uuid2
-    * def poLineId1 = callonce uuid3
-    * def poLineId2 = callonce uuid4
-    * def invoiceId = callonce uuid5
-    * def invoiceLineId1 = callonce uuid6
-    * def invoiceLineId2 = callonce uuid7
-    * def invoiceLineId3 = callonce uuid8
-    * def poNumber1 = 'A1234'
-    * def poNumber2 = 'A5678'
-
 
   Scenario: Check poNumbers updates when invoice lines are created and updated
-    * print "Check poNumbers updates when invoice lines are created and updated"
+    * def orderId1 = call uuid
+    * def orderId2 = call uuid
+    * def poLineId1 = call uuid
+    * def poLineId2 = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId1 = call uuid
+    * def invoiceLineId2 = call uuid
+    * def invoiceLineId3 = call uuid
+    * def poNumber1 = 'A1234'
+    * def poNumber2 = 'A5678'
 
     # Create order 1
     Given path 'orders/composite-orders'
@@ -59,43 +53,16 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     Then status 201
 
     # Create order line for order 1
-    * copy poLine1 = poLineTemplate
-    * set poLine1.id = poLineId1
-    * set poLine1.purchaseOrderId = orderId1
-    * set poLine1.fundDistribution[0].fundId = globalFundId
-    Given path 'orders/order-lines'
-    And request poLine1
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(globalFundId)' }
 
     # Create order line for order 2
-    * copy poLine2 = poLineTemplate
-    * set poLine2.id = poLineId2
-    * set poLine2.purchaseOrderId = orderId2
-    * set poLine2.fundDistribution[0].fundId = globalFundId
-    Given path 'orders/order-lines'
-    And request poLine2
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId2)', fundId: '#(globalFundId)' }
 
     # Create the invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # Create invoice line 1 with a link to po 1
-    * copy invoiceLine1 = invoiceLineTemplate
-    * set invoiceLine1.id = invoiceLineId1
-    * set invoiceLine1.invoiceId = invoiceId
-    * set invoiceLine1.poLineId = poLineId1
-    * remove invoiceLine1.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine1
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId1)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId1)', fundId: '#(globalFundId)', total: 100 }
 
     # Check the invoice poNumbers field was updated when the invoice line 1 was created
     Given path 'invoice/invoices', invoiceId
@@ -105,6 +72,10 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     And match $.poNumbers[0] == poNumber1
 
     # Update invoice line 1 to remove the link with po 1
+    Given path 'invoice/invoice-lines', invoiceLineId1
+    When method GET
+    Then status 200
+    * def invoiceLine1 = $
     * set invoiceLine1.poLineId = null
     Given path 'invoice/invoice-lines', invoiceLineId1
     And request invoiceLine1
@@ -118,6 +89,10 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     And match $.poNumbers == '#[0]'
 
     # Update invoice line 1 to relink with po 1
+    Given path 'invoice/invoice-lines', invoiceLineId1
+    When method GET
+    Then status 200
+    * def invoiceLine1 = $
     * set invoiceLine1.poLineId = poLineId1
     Given path 'invoice/invoice-lines', invoiceLineId1
     And request invoiceLine1
@@ -132,16 +107,13 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     And match $.poNumbers[0] == poNumber1
 
     # Create invoice line 2 without a link to a po
-    * copy invoiceLine2 = invoiceLineTemplate
-    * set invoiceLine2.id = invoiceLineId2
-    * set invoiceLine2.invoiceId = invoiceId
-    * remove invoiceLine2.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine2
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId2)', invoiceId: '#(invoiceId)', poLineId: null, fundId: '#(globalFundId)', total: 100 }
 
     # Update invoice line 2 to link with po 2
+    Given path 'invoice/invoice-lines', invoiceLineId2
+    When method GET
+    Then status 200
+    * def invoiceLine2 = $
     * set invoiceLine2.poLineId = poLineId2
     Given path 'invoice/invoice-lines', invoiceLineId2
     And request invoiceLine2
@@ -157,15 +129,7 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     And match $.poNumbers[1] == poNumber2
 
     # Create invoice line 3 with a link to po 2
-    * copy invoiceLine3 = invoiceLineTemplate
-    * set invoiceLine3.id = invoiceLineId3
-    * set invoiceLine3.invoiceId = invoiceId
-    * set invoiceLine3.poLineId = poLineId2
-    * remove invoiceLine3.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine3
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId3)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId2)', fundId: '#(globalFundId)', total: 100 }
 
     # Check the invoice poNumbers field was not changed (numbers are unique)
     Given path 'invoice/invoices', invoiceId
@@ -176,6 +140,10 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     And match $.poNumbers[1] == poNumber2
 
     # Update invoice line 3 to remove the link with po 2
+    Given path 'invoice/invoice-lines', invoiceLineId3
+    When method GET
+    Then status 200
+    * def invoiceLine3 = $
     * set invoiceLine3.poLineId = null
     Given path 'invoice/invoice-lines', invoiceLineId3
     And request invoiceLine3
@@ -191,6 +159,10 @@ Feature: Check poNumbers updates when invoice lines are created and updated
     And match $.poNumbers[1] == poNumber2
 
     # Update invoice line 3 without changing links
+    Given path 'invoice/invoice-lines', invoiceLineId3
+    When method GET
+    Then status 200
+    * def invoiceLine3 = $
     * set invoiceLine3.quantity = 2
     Given path 'invoice/invoice-lines', invoiceLineId3
     And request invoiceLine3

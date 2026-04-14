@@ -26,15 +26,15 @@ Feature: Pieces API tests for cross-tenant envs
     * def createUserGroup = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@CreateGroup')
     * def setUserPatronGroup = read('classpath:thunderjet/mod-orders/reusable/user-init-data.feature@SetUserPatronGroup')
 
-    * def fundId = callonce uuid
-    * def orderId = callonce uuid
-    * def poLineId = callonce uuid
-    * def titleId = callonce uuid
-    * def pieceId = callonce uuid
+    * def fundId = callonce uuid { n: 1 }
+    * def orderId = callonce uuid { n: 2 }
+    * def poLineId = callonce uuid { n: 3 }
+    * def titleId = callonce uuid { n: 4 }
+    * def pieceId = callonce uuid { n: 5 }
 
-    * callonce createOrder { id: '#(orderId)' }
-    * callonce createOrderLine { 'id': '#(poLineId)', 'orderId': '#(orderId)', 'checkinItems': true, isPackage: True }
-    * callonce createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
+    * def v = callonce createOrder { id: '#(orderId)' }
+    * def v = callonce createOrderLine { 'id': '#(poLineId)', 'orderId': '#(orderId)', 'checkinItems': true, isPackage: true }
+    * def v = callonce createTitle { titleId: '#(titleId)', poLineId: '#(poLineId)' }
 
   @Positive
   Scenario: Check ShadowInstance, Holding and Item created in member tenant when creating piece
@@ -105,17 +105,7 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 201
 
     ## 3. Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
@@ -158,17 +148,7 @@ Feature: Pieces API tests for cross-tenant envs
     Then status 201
 
     ## 3. Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId

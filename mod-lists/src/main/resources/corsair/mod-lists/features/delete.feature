@@ -13,7 +13,7 @@ Feature: Scenarios that are primarily focused around deleting lists
     Then status 404
 
   Scenario: Post list, refresh list, export list, delete list
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
 
@@ -42,7 +42,7 @@ Feature: Scenarios that are primarily focused around deleting lists
     Then status 204
 
   Scenario: [FAT-11792] Verify GET /lists and /lists/{id}/* behave appropriately after soft deletion
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def postCall = call postList
     * def listId = postCall.listId
 

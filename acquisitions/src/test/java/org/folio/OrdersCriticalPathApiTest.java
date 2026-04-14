@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-@Order(4)
+@Order(5)
 @FolioTest(team = "thunderjet", module = "mod-orders")
 public class OrdersCriticalPathApiTest extends TestBaseEureka {
 
@@ -23,7 +23,11 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("receive-piece-new-holding-edit", true);
+    FEATURE_1("receive-piece-new-holding-edit", true),
+    FEATURE_2("receive-pieces-delete-empty-holding", true),
+    FEATURE_3("unopen-order-delete-empty-holding-two-locs", true),
+    FEATURE_4("unopen-order-delete-empty-holding-two-pols", true),
+    FEATURE_5("unopen-order-delete-empty-holding-mixed-pols", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -68,5 +72,33 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void createOrderPaymentNotRequiredFullyReceive() {
     runFeatureTest(Feature.FEATURE_1.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C1045969) Receive pieces for POL with Instance Holdings and delete empty holding")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void receivePiecesDeleteEmptyHolding() {
+    runFeatureTest(Feature.FEATURE_2.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C1273160) Unopen independent POL with 2 locations - only empty holding deleted")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void unopenOrderDeleteEmptyHoldingTwoLocs() {
+    runFeatureTest(Feature.FEATURE_3.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C1273166) Unopen order with 2 independent POLs - only empty holding deleted")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void unopenOrderDeleteEmptyHoldingTwoPols() {
+    runFeatureTest(Feature.FEATURE_4.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C1273167) Unopen order with synchronized and independent POLs - only empty holding deleted")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void unopenOrderDeleteEmptyHoldingMixedPols() {
+    runFeatureTest(Feature.FEATURE_5.getFileName());
   }
 }

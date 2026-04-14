@@ -11,6 +11,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-inventory'             |
       | 'mod-permissions'           |
       | 'mod-users'                 |
+      | 'mod-users-bl'              |
       | 'mod-consortia'             |
       | 'mod-inventory-storage'     |
       | 'mod-circulation'           |
@@ -22,6 +23,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
+      | 'mod-patron-blocks'         |
       | 'mod-tags'                  |
 
 
@@ -65,6 +67,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'user-tenants.collection.get'                                      |
       | 'user-tenants.item.post'                                           |
       | 'users.collection.get'                                             |
+      | 'users-bl.transactions.get'                                        |
       | 'inventory-storage.instance-note-types.collection.get'             |
       | 'inventory-storage.holdings-note-types.collection.get'             |
       | 'inventory-storage.electronic-access-relationships.collection.get' |
@@ -73,6 +76,8 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
       | 'inventory-storage.nature-of-content-terms.collection.get'         |
+      | 'proxiesfor.collection.get'                                        |
+      | 'patron-blocks.automated-patron-blocks.collection.get'             |
       | 'tags.collection.get'                                              |
 
     # define consortium

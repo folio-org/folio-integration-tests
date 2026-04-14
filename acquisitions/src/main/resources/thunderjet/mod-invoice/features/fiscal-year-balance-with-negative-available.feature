@@ -1,5 +1,4 @@
 # For MODFISTO-285
-@parallel=false
 Feature: Check fiscal year balance when using a negative available
 
   Background:
@@ -16,17 +15,18 @@ Feature: Check fiscal year balance when using a negative available
 
     * callonce variables
 
-    * def fiscalYearId = callonce uuid1
-    * def ledgerId = callonce uuid2
-    * def fundId1 = callonce uuid3
-    * def fundId2 = callonce uuid4
-    * def budgetId1 = callonce uuid5
-    * def budgetId2 = callonce uuid6
-    * def invoiceId = callonce uuid7
-    * def invoiceLineId = callonce uuid8
 
+  Scenario: Check fiscal year balance when using a negative available
+    * def fiscalYearId = call uuid
+    * def ledgerId = call uuid
+    * def fundId1 = call uuid
+    * def fundId2 = call uuid
+    * def budgetId1 = call uuid
+    * def budgetId2 = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
 
-  Scenario: Create new fy and ledger, fund 1 with 100, fund 2 with 0
+    # 1. Create new fy and ledger, fund 1 with 100, fund 2 with 0
     * configure headers = headersAdmin
     * def v = call createFiscalYear { id: #(fiscalYearId), code: 'FYTEST2030', periodStart: '2030-01-01T00:00:00Z', periodEnd: '2030-12-30T23:59:59Z', series: 'FY' }
     * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(fiscalYearId), restrictEncumbrance: false, restrictExpenditures: false }
@@ -35,19 +35,20 @@ Feature: Check fiscal year balance when using a negative available
     * def v = call createFund { id: #(fundId2), ledgerId: #(ledgerId) }
     * def v = call createBudget { id: #(budgetId2), allocated: 0, fundId: #(fundId2), status: Active, fiscalYearId: #(fiscalYearId) }
 
-  Scenario: Create an invoice
+    # 2. Create an invoice
+    * configure headers = headersUser
     * def v = call createInvoice { id: #(invoiceId) }
 
-  Scenario: Add an invoice line using fund 2
+    # 3. Add an invoice line using fund 2
     * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId), invoiceId: #(invoiceId), fundId: #(fundId2), total: 10 }
 
-  Scenario: Approve the invoice
+    # 4. Approve the invoice
     * def v = call approveInvoice { invoiceId: #(invoiceId) }
 
-  Scenario: Pay the invoice
+    # 5. Pay the invoice
     * def v = call payInvoice { invoiceId: #(invoiceId) }
 
-  Scenario: Check budget for fund 2
+    # 6. Check budget for fund 2
     * configure headers = headersAdmin
     Given path 'finance/budgets', budgetId2
     When method GET
@@ -58,8 +59,7 @@ Feature: Check fiscal year balance when using a negative available
     And match $.overExpended == 10
     And match $.encumbered == 0
 
-  Scenario: Check fiscal year balance
-    * configure headers = headersAdmin
+    # 7. Check fiscal year balance
     Given path 'finance/fiscal-years', fiscalYearId
     And param withFinancialSummary = true
     When method GET

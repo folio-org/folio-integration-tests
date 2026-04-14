@@ -20,8 +20,8 @@ Feature: Test instance creation with new title
     * def fundId = callonce uuid3
     * def titleId = callonce uuid4
 
-    * callonce createOrder { id: #(orderId) }
-    * callonce createOrderLine { id: #(poLineId), orderId: #(orderId), isPackage: true }
+    * def v = callonce createOrder { id: #(orderId) }
+    * def v = callonce createOrderLine { id: #(poLineId), orderId: #(orderId), isPackage: true }
 
 
   Scenario: New title creates a new instance

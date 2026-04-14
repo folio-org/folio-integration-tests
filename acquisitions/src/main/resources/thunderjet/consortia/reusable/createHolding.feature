@@ -2,9 +2,10 @@
 Feature: Create holding
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createHolding
+  Scenario: Create holding
     Given path 'holdings-storage/holdings'
     And request
       """

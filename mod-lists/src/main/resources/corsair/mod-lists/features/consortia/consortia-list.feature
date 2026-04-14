@@ -101,6 +101,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'inventory-storage.subject-sources.collection.get'                 |
       | 'inventory-storage.subject-types.collection.get'                   |
       | 'inventory-storage.nature-of-content-terms.collection.get'         |
+      | 'proxiesfor.collection.get'                                        |
       | 'tags.collection.get'                                              |
 
     # define consortium
@@ -132,8 +133,17 @@ Feature: mod-consortia and mod-lists integration tests
   Scenario: Tenant api tests
     * call read('tenant.feature')
 
-  Scenario: Instance Export
-    * call read('instance-export.feature')
+  Scenario Outline: ECS Export - <entityType> with <columnType>
+    * call read('ecs-export.feature') <params>
+
+    Examples:
+      | entityType | columnType       | params                                                                                               |
+      | Instance   | all columns      | { listFile: 'instance-list-ecs.json', ecsField: 'instance.tenant_name' }                             |
+      | Instance   | selected columns | { listFile: 'instance-list-ecs.json', fields: ['instance.hrid', 'instance.title', 'instance.id'] }   |
+      | Item       | all columns      | { listFile: 'item-list.json', ecsField: 'items.tenant_name' }                                        |
+      | Item       | selected columns | { listFile: 'item-list.json', fields: ['items.id', 'items.barcode', 'items.hrid'] }                  |
+      | Holdings   | all columns      | { listFile: 'holdings-list.json', ecsField: 'holdings.tenant_name' }                                 |
+      | Holdings   | selected columns | { listFile: 'holdings-list.json', fields: ['holdings.id', 'holdings.hrid', 'holdings.instance_id'] } |
 
   Scenario: Destroy created ['university', 'central'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}

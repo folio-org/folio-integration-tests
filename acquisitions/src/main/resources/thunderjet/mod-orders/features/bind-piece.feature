@@ -51,13 +51,13 @@ Feature: Verify Bind Piece feature
     * def periodStart = fromYear + '-01-01T00:00:00Z'
     * def periodEnd = toYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: '#(fiscalYearId)', code: 'TESTFY0369', periodStart: '#(periodStart)', periodEnd: '#(periodEnd)', series: 'TESTFY' }
-    * def v = call createLedger { 'id': '#(ledgerId)'}
-    * def v = call createFund { 'id': '#(fundId)'}
-    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * def v = call createLedger { id: '#(ledgerId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
     # 2. Create an order
     * configure headers = headersUser
-    * call createOrder { id: '#(orderId)' }
+    * def v = call createOrder { id: '#(orderId)' }
 
     # 3. Create patron and user
     * configure headers = headersAdmin
@@ -65,7 +65,7 @@ Feature: Verify Bind Piece feature
     * def v = call createUser { id: '#(userId)', patronId: '#(patronId)'}
 
     # 4. Setup Circulation Policy
-    * call createCirculationPolicy { tenant: '#(tenantId1)' }
+    * def v = call createCirculationPolicy { tenant: '#(tenantId1)' }
 
   @Negative
   Scenario: Verify ERROR cases for Bindary active can be set only for Physical or P/E Mix orders with
@@ -194,7 +194,7 @@ Feature: Verify Bind Piece feature
     * def pieceId2 = call uuid
 
     # 1. Creating Title
-    * call createTitle { titleId: "#(titleId)", poLineId: "#(poLineId1)" }
+    * def v = call createTitle { titleId: "#(titleId)", poLineId: "#(poLineId1)" }
 
 
     # 2. Create two pieces with 'pieceId1' and 'pieceId2' for titleId

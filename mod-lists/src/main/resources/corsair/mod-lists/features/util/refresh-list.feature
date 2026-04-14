@@ -1,4 +1,4 @@
-Feature: Delete list
+Feature: Refresh list
   Background:
     * url baseUrl
 

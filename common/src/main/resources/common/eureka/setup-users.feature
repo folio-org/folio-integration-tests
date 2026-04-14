@@ -117,7 +117,6 @@ Feature: prepare data for api test
     * def totalAmount = response.totalRecords
     * if (totalAmount == 0) karate.fail('The tenant has 0 entitlements, so there is no point in looking for capabilities.')
 
-
     * print "search requered capabilities ids"
     * def permissions = $userPermissions[*].name
     * def retryCount = 30
