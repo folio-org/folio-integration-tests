@@ -10,6 +10,7 @@ Feature: Import Bibframe2 RDF in bulk into linked data graph
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
+  @C1046002
   Scenario: Run bulk RDF import
     # Step 1: Create authorities used by import and verify they are indexed
     * configure headers = testAdminHeaders

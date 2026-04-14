@@ -1,5 +1,4 @@
 # For MODORDERS-616
-@parallel=false
 Feature: Change location when receiving a piece
 
   Background:
@@ -27,47 +26,18 @@ Feature: Change location when receiving a piece
     # 1. Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { "id": "#(fundId)" }
-    * call createBudget { "id": "#(budgetId)", "allocated": 10000, "fundId": "#(fundId)" }
+    * def v = call createFund { "id": "#(fundId)" }
+    * def v = call createBudget { "id": "#(budgetId)", "allocated": 10000, "fundId": "#(fundId)" }
     * configure headers = headersUser
 
     # 2. Create an order
-    Given path "orders/composite-orders"
-    And request
-    """
-    {
-      id: "#(orderId)",
-      vendor: "#(globalVendorId)",
-      orderType: "One-Time"
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     # 3. Create an order line
-    * def poLine = read("classpath:samples/mod-orders/orderLines/minimal-order-line.json")
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.physical.createInventory = "Instance, Holding, Item"
-    * set poLine.fundDistribution[0].fundId = fundId
-
-    Given path "orders/order-lines"
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
     # 4. Open the order
-    Given path "orders/composite-orders", orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path "orders/composite-orders", orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # 5. Receive the piece with a new location
     # Get the id of piece created when the order was opened

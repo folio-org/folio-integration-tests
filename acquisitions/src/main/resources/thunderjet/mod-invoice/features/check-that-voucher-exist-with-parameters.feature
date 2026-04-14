@@ -16,10 +16,6 @@ Feature: Check voucher from invoice with lines
 
     * callonce variables
 
-    # prepare sample data for creating invoice
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-
     # initialize common invoice data
     * def invoiceLine1Id = callonce uuid1
     * def invoiceLine2Id = callonce uuid2
@@ -42,8 +38,8 @@ Feature: Check voucher from invoice with lines
     * def externalAccountNo = <externalAccountNo>
     * def code = <code>
 
-    * call createFundWithParams { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)', 'code': '#(code)', 'externalAccountNo': '#(externalAccountNo)'}
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
+    * def v = call createFundWithParams { id: '#(fundId)', ledgerId: '#(globalLedgerId)', code: '#(code)', externalAccountNo: '#(externalAccountNo)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 9999 }
 
     Examples:
       | fundId  | budgetId  | code     | externalAccountNo |
@@ -53,16 +49,7 @@ Feature: Check voucher from invoice with lines
       | fund4Id | budget4Id | 'FD004' | '345678'          |
 
   Scenario: Create invoice
-
-    * set invoicePayload.id = invoiceId
-    * set invoicePayload.currency = "EUR"
-    * set invoicePayload.exchangeRate = 1.1
-
-     # ============= create invoice ===================
-    Given path 'invoice/invoices'
-    And request invoicePayload
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)', currency: 'EUR', exchangeRate: 1.1 }
 
   Scenario: Check invoice
     Given path '/invoice/invoices/' + invoiceId
@@ -72,121 +59,34 @@ Feature: Check voucher from invoice with lines
     And match response.currency == 'EUR'
 
   Scenario:  Create 3 Invoice lines
+    # ============= create invoice line 1 ===================
+    * table fundDistributions1
+    | code    | fundId  | distributionType | value |
+    | 'FD001' | fund1Id | 'percentage'     | 50    |
+    | 'FD002' | fund2Id | 'percentage'     | 50    |
 
-    # ============= create invoice lines 1 ===================
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-      "id": '#(invoiceLine1Id)',
-      "invoiceId": "#(invoiceId)",
-      "invoiceLineStatus": "Open",
-      "fundDistributions": [
-       {
-          "code":  "FD001",
-          "fundId": "#(fund1Id)",
-          "distributionType": "percentage",
-          "value": 50
-        },
-        {
-          "code":  "FD002",
-          "fundId": "#(fund2Id)",
-          "distributionType": "percentage",
-          "value": 50
-        }
-      ],
-      "subTotal": "10",
-      "description": "InvoiceLine-1",
-      "quantity": "1",
-      "total": "10"
-    }
-    """
-    When method POST
-    Then status 201
-    * def invoiceLineId1 = $.id
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLine1Id)', invoiceId: '#(invoiceId)', total: 10, fundDistributions: '#(fundDistributions1)', description: 'InvoiceLine-1' }
 
-    # ============= create invoice lines 2 ===================
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-      "id": '#(invoiceLine2Id)',
-      "invoiceId": "#(invoiceId)",
-      "invoiceLineStatus": "Open",
-      "fundDistributions": [
-        {
-          "code":  "FD002",
-          "distributionType": "percentage",
-          "fundId": "#(fund2Id)",
-          "value": "50"
-        },
-        {
-          "code":  "FD003",
-          "distributionType": "percentage",
-          "fundId": "#(fund3Id)",
-          "value": "50"
-        }
-      ],
-      "subTotal": "10",
-      "description": "InvoiceLine-2",
-      "quantity": "1",
-      "total": "10"
-    }
-    """
-    When method POST
-    Then status 201
-    * def invoiceLineId2 = $.id
+    # ============= create invoice line 2 ===================
+    * table fundDistributions2
+      | code    | fundId  | distributionType | value |
+      | 'FD002' | fund2Id | 'percentage'     | 50    |
+      | 'FD003' | fund3Id | 'percentage'     | 50    |
+
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLine2Id)', invoiceId: '#(invoiceId)', total: 10, fundDistributions: '#(fundDistributions2)', description: 'InvoiceLine-2' }
 
     # ============= create invoice lines 3 ===================
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-      "id": '#(invoiceLine3Id)',
-      "invoiceId": "#(invoiceId)",
-      "invoiceLineStatus": "Open",
-      "fundDistributions": [
-         {
-          "code":  "FD002",
-          "distributionType": "percentage",
-          "fundId": "#(fund2Id)",
-          "value": "25"
-        },
-        {
-          "code":  "FD004",
-          "distributionType": "percentage",
-          "fundId": "#(fund4Id)",
-          "value": "75"
-        }
-      ],
-      "subTotal": "20",
-      "description": "InvoiceLine-3",
-      "quantity": "1",
-      "total": "20",
-    }
-    """
-    When method POST
-    Then status 201
-    * def invoiceLineId3 = $.id
+    * table fundDistributions3
+      | code    | fundId  | distributionType | value |
+      | 'FD002' | fund2Id | 'percentage'     | 25    |
+      | 'FD004' | fund4Id | 'percentage'     | 75    |
 
-  # ============= get invoice to approve ===================
-  Scenario: invoice with approve it, check voucher lines
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLine3Id)', invoiceId: '#(invoiceId)', total: 20, fundDistributions: '#(fundDistributions3)', description: 'InvoiceLine-3' }
 
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoiceBody = $
-    * set invoiceBody.status = "Approved"
-
-    # ============= put approved invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    And request invoiceBody
-    When method PUT
-    Then status 204
+  Scenario: Approve invoice
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Verify voucher lines
-
-        # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
     And param limit = '2147483647'
     And param query = 'invoiceId==' + invoiceId

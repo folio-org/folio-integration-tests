@@ -61,13 +61,13 @@ Feature: Import Bibframe2 RDF - Verify graph
 
     # Validate Readers (Primary) subject with LCCN
     * def readersDoc = { 'http://bibfra.me/vocab/lite/name': ['Readers (Primary)'], 'http://bibfra.me/vocab/lite/label': ['Readers (Primary)'] }
-    * def readersTargetDoc = { 'http://bibfra.me/vocab/lite/name': ['Readers (Primary)'], 'http://bibfra.me/vocab/lite/label': ['Readers (Primary)'], 'http://library.link/vocab/resourcePreferred': ['true'] }
+    * def readersTargetDoc = { 'http://bibfra.me/vocab/lite/name': ['Readers (Primary)'], 'http://bibfra.me/vocab/lite/label': ['Readers (Primary)'] }
     * def readersLccn = { label: 'sh85111655', types: ['ID_LCSH'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/subjects/sh85111655'], 'http://bibfra.me/vocab/lite/name': ['sh85111655'], 'http://bibfra.me/vocab/lite/label': ['sh85111655'] } }
     * eval validateSubjectGraph(subjectGraphs, 'Readers (Primary)', readersDoc, 'TOPIC', readersTargetDoc, readersLccn)
 
     # Validate Wang, Jack, 1972 subject with LCCN
     * def wangDoc = { 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'], 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972'] }
-    * def wangTargetDoc = { 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972'], 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'], 'http://library.link/vocab/resourcePreferred': ['true'] }
+    * def wangTargetDoc = { 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972'], 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'] }
     * def wangLccn = { label: 'no2012142443', types: ['ID_LCNAF'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/names/no2012142443'], 'http://bibfra.me/vocab/lite/name': ['no2012142443'], 'http://bibfra.me/vocab/lite/label': ['no2012142443'] } }
     * eval validateSubjectGraph(subjectGraphs, 'Wang, Jack, 1972', wangDoc, 'PERSON', wangTargetDoc, wangLccn)
 
@@ -77,7 +77,6 @@ Feature: Import Bibframe2 RDF - Verify graph
       {
         'http://bibfra.me/vocab/lite/name': [ 'Private flying' ],
         'http://bibfra.me/vocab/lite/label': [ 'Private flying -- Accidents -- United States -- Periodicals' ],
-        'http://library.link/vocab/resourcePreferred': [ 'true' ],
         'http://bibfra.me/vocab/library/formSubdivision': [ 'Periodicals' ],
         'http://bibfra.me/vocab/library/generalSubdivision': [ 'Accidents' ],
         'http://bibfra.me/vocab/library/geographicSubdivision': [ 'United States' ]
@@ -100,6 +99,7 @@ Feature: Import Bibframe2 RDF - Verify graph
       """
     * eval validateSubjectGraph(subjectGraphs, 'Private flying -- Accidents -- United States -- Periodicals', conceptDoc, 'TOPIC', focusDoc, null)
     * def subject = subjectGraphs.filter(x => x.label == 'Private flying -- Accidents -- United States -- Periodicals')[0]
+    * match subject.folioMetadata.inventoryId == '#notnull'
     * def subjectLccnDoc = subject.outgoingEdges.filter(x => x.predicate == 'MAP').map(x => x.target.doc)
     * def subFocusLabels = subject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS').map(x => x.target.label)
     * match subFocusLabels contains 'Accidents'
@@ -117,8 +117,7 @@ Feature: Import Bibframe2 RDF - Verify graph
       """
       {
         "http://bibfra.me/vocab/lite/name": ["Dyes and dyeing"],
-        "http://bibfra.me/vocab/lite/label": ["Dyes and dyeing"],
-        "http://library.link/vocab/resourcePreferred": ["true"]
+        "http://bibfra.me/vocab/lite/label": ["Dyes and dyeing"]
       }
       """
     * def dyesLccn = { label: 'sh85040281', types: ['ID_LCSH'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/subjects/sh85040281'], 'http://bibfra.me/vocab/lite/name': ['sh85040281'], 'http://bibfra.me/vocab/lite/label': ['sh85040281'] } }
@@ -146,7 +145,7 @@ Feature: Import Bibframe2 RDF - Verify graph
 
     # Validate 'Japan' subfocus
     * def japanEdge = dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && x.target.label == 'Japan')[0]
-    * match japanEdge.target.doc == { "http://bibfra.me/vocab/lite/name": ["Japan"], "http://bibfra.me/vocab/lite/label": ["Japan"], "http://library.link/vocab/resourcePreferred": ["true"] }
+    * match japanEdge.target.doc == { "http://bibfra.me/vocab/lite/name": ["Japan"], "http://bibfra.me/vocab/lite/label": ["Japan"] }
     * match japanEdge.target.types contains 'PLACE'
     # Validate Japan's connection to FAST authority record
     * def fastEdge = japanEdge.target.outgoingEdges.filter(x => x.predicate == 'MAP' && x.target.label == 'fst01204082')[0]

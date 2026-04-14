@@ -24,8 +24,8 @@ Feature: Open and unopen order
 
     * print '1. Create a fund and budget'
     * configure headers = headersAdmin
-    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [ { 'expenseClassId': '#(globalPrnExpenseClassId)', 'status': 'Active' } ] }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: [ { expenseClassId: '#(globalPrnExpenseClassId)', status: 'Active' } ] }
 
     * print '2. Create a composite one-time order'
     * configure headers = headersUser
@@ -134,7 +134,7 @@ Feature: Open and unopen order
     Then status 200
 
     # 5. Unopen the second order and delete holdings
-    * def v = call unopenOrderDeleteHoldings { orderId: '#(orderId2)' }
+    * def v = call unopenOrder { orderId: '#(orderId2)', deleteHoldings: true }
 
     # 6 Verify that the holding used by the first order line is not deleted
     * configure headers = headersAdmin
@@ -216,7 +216,7 @@ Feature: Open and unopen order
     * def instanceId = poLine.instanceId
 
     * print '5. Unopen the order with deleteHoldings=true'
-    * def v = call unopenOrderDeleteHoldings { orderId: '#(orderId)' }
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
 
     * print '6. Check the holdings were deleted'
     * configure headers = headersAdmin
@@ -257,7 +257,7 @@ Feature: Open and unopen order
     * def instanceId = poLine.instanceId
 
     * print '5. Unopen the order with deleteHoldings=true'
-    * def v = call unopenOrderDeleteHoldings { orderId: '#(orderId)' }
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
 
     * print '6. Check the holdings were deleted'
     * configure headers = headersAdmin

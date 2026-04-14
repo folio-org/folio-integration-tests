@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-@Order(5)
+@Order(6)
 @FolioTest(team = "thunderjet", module = "mod-orders")
 public class OrdersSmokeApiTest extends TestBaseEureka {
 

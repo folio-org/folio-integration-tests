@@ -29,21 +29,11 @@ Feature: check Items and holding process.
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
   Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
   Scenario: Create an order line
     * def poLine = read('classpath:samples/mod-orders/orderLines/simple-order-line.json')
@@ -62,17 +52,7 @@ Feature: check Items and holding process.
     And match $.instanceId == initialInstanceId
 
   Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   Scenario: Check inventory and order items after open order
     * print 'Get the instanceId and holdingId from the po line'
@@ -98,18 +78,7 @@ Feature: check Items and holding process.
     And assert response.id == initialHoldingId
 
   Scenario: unOpen the order with deleteHoldings = false
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Pending'
-
-    Given path 'orders/composite-orders', orderId
-    And param deleteHoldings = false
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: false }
 
   Scenario: Check inventory and order items after Unopen order
     * print 'Get the instanceId and holdingId from the po line'
@@ -134,17 +103,7 @@ Feature: check Items and holding process.
     And assert response.id == initialHoldingId
 
   Scenario: Open the order again
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   Scenario: Check inventory and order items after open order
     * print 'Get the instanceId and holdingId from the po line'
@@ -170,18 +129,7 @@ Feature: check Items and holding process.
     And assert response.id == initialHoldingId
 
   Scenario: unOpen the order again with deleteHoldings = true
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Pending'
-
-    Given path 'orders/composite-orders', orderId
-    And param deleteHoldings = true
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
 
   Scenario: Check inventory and order items after unOpen order
     * print 'Get the instanceId and holdingId from the po line'

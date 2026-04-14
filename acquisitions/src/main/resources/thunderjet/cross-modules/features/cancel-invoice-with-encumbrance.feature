@@ -11,16 +11,6 @@ Feature: Cancel an invoice with an Encumbrance
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def createOrderLine = read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def approveInvoice = read('classpath:thunderjet/mod-invoice/reusable/approve-invoice.feature')
-    * def payInvoice = read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature')
-    * def cancelInvoice = read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature')
-    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
-    * def unopenOrder = read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature')
 
   @Positive
   Scenario: Cancel an invoice with an Encumbrance from a PO line in "Pending" payment status
@@ -37,20 +27,7 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "2. Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.cost.listUnitPrice = karate.get('listUnitPrice', 1.0)
-    * set poLine.cost.poLineEstimatedPrice = karate.get('listUnitPrice', 1.0)
-    * set poLine.isPackage = karate.get('isPackage', false)
-    * set poLine.titleOrPackage = karate.get('titleOrPackage', 'test')
-    * set poLine.paymentStatus = 'Pending'
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
     * print "3. Open the order"
     * def v = call openOrder { orderId: "#(orderId)" }
@@ -102,20 +79,7 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "2. Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.cost.listUnitPrice = karate.get('listUnitPrice', 1.0)
-    * set poLine.cost.poLineEstimatedPrice = karate.get('listUnitPrice', 1.0)
-    * set poLine.isPackage = karate.get('isPackage', false)
-    * set poLine.titleOrPackage = karate.get('titleOrPackage', 'test')
-    * set poLine.paymentStatus = 'Payment Not Required'
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', paymentStatus: 'Payment Not Required' }
 
     * print "3. Open the order"
     * def v = call openOrder { orderId: "#(orderId)" }
@@ -193,7 +157,7 @@ Feature: Cancel an invoice with an Encumbrance
     * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
     * print "9. Close the order"
-    * def v = call closeOrderRemoveLines { orderId: '#(orderId)' }
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
     * print "10. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }

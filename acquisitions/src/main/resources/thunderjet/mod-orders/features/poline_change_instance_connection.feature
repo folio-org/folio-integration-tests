@@ -32,7 +32,7 @@ Feature: PoLine change instance connection
   Scenario: Change instance connection with "Find or Create" and "Move" holdings operations
     # 1. Create finances
     * configure headers = headersAdmin
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
     # 2. Create instances

@@ -25,17 +25,10 @@ Feature: Should Open ongoing order if interval or renewal date is not set
     * def orderLineIdTwo = callonce uuid7
     * def orderLineIdThree = callonce uuid8
 
-  Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
+  Scenario: Prepare finances
     * configure headers = headersAdmin
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
-
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000 }
-
-    Examples:
-      | fundId | budgetId |
-      | fundId | budgetId |
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 10000 }
 
   Scenario: check budget after create
     * configure headers = headersAdmin
@@ -109,39 +102,17 @@ Feature: Should Open ongoing order if interval or renewal date is not set
   Scenario Outline: Create order lines for <orderLineId> and <fundId>
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
-
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = <amount>
-    * set orderLine.fundDistribution[0].fundId = <fundId>
-
-    And request orderLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 100 }
 
     Examples:
-      | orderId                   | orderLineId      | fundId | amount |
-      | orderIdWithoutInterval    | orderLineIdOne   | fundId | 100    |
-      | orderIdWithoutRenewalDate | orderLineIdTwo   | fundId | 100    |
-      | orderIdWithoutAll         | orderLineIdThree | fundId | 100    |
+      | orderId                   | orderLineId      |
+      | orderIdWithoutInterval    | orderLineIdOne   |
+      | orderIdWithoutRenewalDate | orderLineIdTwo   |
+      | orderIdWithoutAll         | orderLineIdThree |
 
-  Scenario Outline: Open order
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', <orderId>
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', <orderId>
-    And request orderResponse
-    When method PUT
-    Then status 204
+  Scenario Outline: Open order <orderId>
+    * def orderId = <orderId>
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     Examples:
       | orderId
@@ -150,7 +121,6 @@ Feature: Should Open ongoing order if interval or renewal date is not set
       | orderIdWithoutAll
 
   Scenario Outline: Check order line status
-    # ============= get order to open ===================
     Given path 'orders/order-lines', <orderLineId>
     When method GET
     Then status 200

@@ -29,22 +29,12 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
 
   Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
 
   * print 'Create an physical order line with isPackage=false and 2 items'
@@ -68,17 +58,7 @@ Feature: If I don't choose to create an item when creating the piece. If I edit 
 
 
     * print 'Open the order with 1 items'
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   * print 'Check inventory and order items after open order'
     * print 'Get the instanceId and holdingId from the po line'

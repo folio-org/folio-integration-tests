@@ -2,6 +2,7 @@
 Feature: Reusable components for acquisition units
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
     * def randomAcqUnitId = call uuid
 

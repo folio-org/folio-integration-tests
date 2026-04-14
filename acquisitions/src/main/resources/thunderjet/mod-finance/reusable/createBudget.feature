@@ -1,9 +1,10 @@
-Feature: budget
+Feature: Create budget
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createBudget
+  Scenario: Create budget
     * def newGeneratedBudgetId = call uuid
     * def id = karate.get('id', newGeneratedBudgetId)
     * def fundId = karate.get('fundId', globalFundId)

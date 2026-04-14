@@ -1,5 +1,4 @@
 # For MODINVOICE-346
-@parallel=false
 Feature: Approve an invoice with a negative line
 
   Background:
@@ -12,113 +11,42 @@ Feature: Approve an invoice with a negative line
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-    * def invoiceId = callonce uuid5
-    * def invoiceLineId1 = callonce uuid6
-    * def invoiceLineId2 = callonce uuid7
-    * def invoiceLineId3 = callonce uuid8
+  Scenario: Approve an invoice with a negative line
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId1 = call uuid
+    * def invoiceLineId2 = call uuid
+    * def invoiceLineId3 = call uuid
 
+    # 1. Create finances
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
 
-  Scenario: Create finances
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
+    # 2. Create an order
+    * def v = call createOrder { id: '#(orderId)' }
 
+    # 3. Create an order line
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10 }
 
-  Scenario: Create an order
-    * print "Create an order"
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # 5. Create an invoice
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
+    # 6. Create 3 invoice lines linked to the po line
+    * table invoiceLines
+      | description      | total  | invoiceLineId  |
+      | 'invoice line 1' | 10.0   | invoiceLineId1 |
+      | 'invoice line 2' | 10.0   | invoiceLineId2 |
+      | 'invoice line 3' | 10.0   | invoiceLineId3 |
+    * def v = call createInvoiceLine invoiceLines
 
-  Scenario: Create an order line
-    * print "Create an order line"
-
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.cost.listUnitPrice = 10
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open the order
-    * print "Open the order"
-
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-
-  Scenario: Create an invoice
-    * print "Create an invoice"
-
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
-
-
-  Scenario Outline: Create <description>
-    * print "Create <description>"
-
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = <id>
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    * set invoiceLine.description = '<description>'
-    * set invoiceLine.total = <amount>
-    * set invoiceLine.subTotal = <amount>
-    * set invoiceLine.releaseEncumbrance = true
-
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
-
-    Examples:
-      | description    | amount | id             |
-      | invoice line 1 | 10.0   | invoiceLineId1 |
-      | invoice line 2 | 10.0   | invoiceLineId2 |
-      | invoice line 3 | 10.0   | invoiceLineId3 |
-
-
-  Scenario: Update second invoice line
-    * print "Update second invoice line"
-
+    # 7. Update second invoice line
     Given path 'invoice/invoice-lines', invoiceLineId2
     When method GET
     Then status 200
@@ -131,25 +59,10 @@ Feature: Approve an invoice with a negative line
     When method PUT
     Then status 204
 
+    # 8. Approve the invoice
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
-  Scenario: Approve the invoice
-    * print "Approve the invoice"
-
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
-
-
-  Scenario: check the budget encumbrance
-    * print "check the budget encumbrance"
-
+    # 9. Check the budget encumbrance
     Given path 'finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET

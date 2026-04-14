@@ -27,45 +27,32 @@ Feature: Change fund distribution and check initial amount encumbered
 
 
   Scenario: Prepare finances with 4 funds
-    * def v = call createFund { id: #(fundAId) }
-    * def v = call createFund { id: #(fundBId) }
-    * def v = call createFund { id: #(fundCId) }
-    * def v = call createFund { id: #(fundDId) }
-    * def v = call createBudget { id: #(budgetAId), fundId: #(fundAId), allocated: 100 }
-    * def v = call createBudget { id: #(budgetBId), fundId: #(fundBId), allocated: 100 }
-    * def v = call createBudget { id: #(budgetCId), fundId: #(fundCId), allocated: 100 }
-    * def v = call createBudget { id: #(budgetDId), fundId: #(fundDId), allocated: 100 }
+    * def v = call createFund { id: '#(fundAId)' }
+    * def v = call createFund { id: '#(fundBId)' }
+    * def v = call createFund { id: '#(fundCId)' }
+    * def v = call createFund { id: '#(fundDId)' }
+    * def v = call createBudget { id: '#(budgetAId)', fundId: '#(fundAId)', allocated: 100 }
+    * def v = call createBudget { id: '#(budgetBId)', fundId: '#(fundBId)', allocated: 100 }
+    * def v = call createBudget { id: '#(budgetCId)', fundId: '#(fundCId)', allocated: 100 }
+    * def v = call createBudget { id: '#(budgetDId)', fundId: '#(fundDId)', allocated: 100 }
 
 
   Scenario: Create an order and line using fund A and fund B
-    * def v = call createOrder { id: #(orderId) }
+    * def v = call createOrder { id: '#(orderId)' }
 
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundAId
-    * set poLine.fundDistribution[0].code = fundAId
-    * set poLine.fundDistribution[0].distributionType = 'percentage'
-    * set poLine.fundDistribution[0].value = 50.0
-    * set poLine.fundDistribution[1].fundId = fundBId
-    * set poLine.fundDistribution[1].code = fundBId
-    * set poLine.fundDistribution[1].distributionType = 'percentage'
-    * set poLine.fundDistribution[1].value = 50.0
-    * set poLine.cost.listUnitPrice = 10.0
-    * set poLine.cost.poLineEstimatedPrice = poLine.cost.listUnitPrice
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * table fundDistribution
+      | fundId  | code    | distributionType | value |
+      | fundAId | fundAId | 'percentage'     | 50    |
+      | fundBId | fundBId | 'percentage'     | 50    |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', listUnitPrice: 10, fundDistribution: '#(fundDistribution)' }
 
 
   Scenario: Open the order
-    * def v = call openOrder { orderId: #(orderId) }
+    * def v = call openOrder { orderId: '#(orderId)' }
 
 
   Scenario: Create an invoice
-    * def v = call createInvoice { id: #(invoiceId) }
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
 
   Scenario: Add an invoice line linked to the po line
@@ -76,30 +63,17 @@ Feature: Change fund distribution and check initial amount encumbered
     * def encumbranceAId = poLine.fundDistribution[0].encumbrance
     * def encumbranceBId = poLine.fundDistribution[1].encumbrance
 
-    * def invoiceLine = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].distributionType = 'percentage'
-    * set invoiceLine.fundDistributions[0].fundId = fundAId
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceAId
-    * set invoiceLine.fundDistributions[0].value = 50
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    * set invoiceLine.fundDistributions[1].distributionType = 'percentage'
-    * set invoiceLine.fundDistributions[1].fundId = fundBId
-    * set invoiceLine.fundDistributions[1].encumbrance = encumbranceBId
-    * set invoiceLine.fundDistributions[1].value = 50
-    * set invoiceLine.total = 10.0
-    * set invoiceLine.subTotal = invoiceLine.total
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * table fundDistributions
+      | fundId  | encumbrance    | distributionType | value |
+      | fundAId | encumbranceAId | 'percentage'     | 50    |
+      | fundBId | encumbranceBId | 'percentage'     | 50    |
+
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundDistributions: '#(fundDistributions)', poLineId: '#(poLineId)', total: 10.0 }
 
 
   Scenario: Approve and pay the invoice
-    * def v = call approveInvoice { invoiceId: #(invoiceId) }
-    * def v = call payInvoice { invoiceId: #(invoiceId) }
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
 
   Scenario: Change the po line fund distribution using funds C B and D

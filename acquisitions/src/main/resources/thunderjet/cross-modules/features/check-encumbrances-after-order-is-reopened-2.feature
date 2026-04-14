@@ -16,62 +16,26 @@ Feature: Check encumbrances after order is reopened - 2
     * def budgetId = call uuid
 
     # Create a fund and budget
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000 }
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000 }
 
 
   Scenario: Use Case 1 - Allow encumbrance with expended value to be unreleased
-    * print "Use Case 1 - Allow encumbrance with expended value to be unreleased"
 
     # Create an order
     * def orderId = call uuid
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     # User has created a POL for $100 for a quantity of 2
     * def poLineId = call uuid
-    Given path 'orders/order-lines'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.cost.listUnitPrice = 50
-    * set poLine.cost.quantityPhysical = 2
-    * set poLine.locations[0].quantityPhysical = 2
-    * set poLine.locations[0].quantity = 2
-    * set poLine.cost.poLineEstimatedPrice = 100
-    * set poLine.fundDistribution[0].fundId = fundId
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 50, quantity: 2 }
     # Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # User receives 1 copy and pays first invoice for $49
     # Create invoice
     * def invoiceId = call uuid
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * set invoicePayload.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoicePayload
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
     # Add a line
     * def invoiceLineId = call uuid
     * def invoiceLinePayload =
@@ -99,25 +63,9 @@ Feature: Check encumbrances after order is reopened - 2
     When method POST
     Then status 201
     # Approve invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
     # Pay invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = 'Paid'
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
     # Encumbrance amount is now $51
     Given path '/finance/budgets'
@@ -127,17 +75,7 @@ Feature: Check encumbrances after order is reopened - 2
     And match $.budgets[0].encumbered == 51
 
     # User closes order by mistake and encumbrance is released
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Closed'
-    # remove the lines, otherwise the order will not close (see MODORDERS-514)
-    * remove order.poLines
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
@@ -165,48 +103,17 @@ Feature: Check encumbrances after order is reopened - 2
 
 
   Scenario: Use Case 2 - Prevent encumbrance from being unreleased
-    * print "Use Case 2 - Prevent encumbrance from being unreleased"
 
     # Create an order
     * def orderId = call uuid
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     # User has created a POL for $75 for a quantity of 2
     * def poLineId = call uuid
-    Given path 'orders/order-lines'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.cost.listUnitPrice = 37.5
-    * set poLine.cost.quantityPhysical = 2
-    * set poLine.locations[0].quantityPhysical = 2
-    * set poLine.locations[0].quantity = 2
-    * set poLine.cost.poLineEstimatedPrice = 75
-    * set poLine.fundDistribution[0].fundId = fundId
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 37.5, quantity: 2 }
 
     # Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # Get the order line fund distribution to create an invoice line
     Given path 'orders/order-lines', poLineId
@@ -217,12 +124,7 @@ Feature: Check encumbrances after order is reopened - 2
     # User receives 2 copies and pays all on 1 invoice line which has "Release encumbrance" = true
     # Create invoice
     * def invoiceId = call uuid
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * set invoicePayload.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoicePayload
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
     # Add a line
     * def invoiceLineId = call uuid
     * def invoiceLinePayload =
@@ -244,25 +146,9 @@ Feature: Check encumbrances after order is reopened - 2
     When method POST
     Then status 201
     # Approve invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
     # Pay invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = 'Paid'
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
     # Check encumbrances for the order
     Given path '/finance/transactions'
@@ -284,15 +170,7 @@ Feature: Check encumbrances after order is reopened - 2
     Then status 204
 
     # One of the books is damaged so user reopens the order.
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # Encumbrance is NOT unreleased because the amount has already been paid in full.
     Given path '/finance/budgets'
@@ -302,15 +180,7 @@ Feature: Check encumbrances after order is reopened - 2
     And match $.budgets[0].encumbered == 0
 
     # User receives a replacement book and closes order again.
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Closed'
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
@@ -320,47 +190,16 @@ Feature: Check encumbrances after order is reopened - 2
 
 
   Scenario: Use Case 3 - Allow encumbrance to be unreleased
-    * print "Use Case 3 - Allow encumbrance to be unreleased"
 
     # Create an order
     * def orderId = call uuid
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     # User has created a POL for $100 for a quantity of 1
     * def poLineId = call uuid
-    Given path 'orders/order-lines'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.cost.listUnitPrice = 100
-    * set poLine.cost.quantityPhysical = 1
-    * set poLine.locations[0].quantityPhysical = 1
-    * set poLine.locations[0].quantity = 1
-    * set poLine.cost.poLineEstimatedPrice = 100
-    * set poLine.fundDistribution[0].fundId = fundId
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 100 }
     # Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # Encumbrance amount is now $100
     Given path '/finance/budgets'
@@ -370,17 +209,7 @@ Feature: Check encumbrances after order is reopened - 2
     And match $.budgets[0].encumbered == 100
 
     # User closes order before receiving or paying anything
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Closed'
-    # remove the lines, otherwise the order will not close (see MODORDERS-514)
-    * remove order.poLines
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
     # Encumbrance is released
     Given path '/finance/budgets'

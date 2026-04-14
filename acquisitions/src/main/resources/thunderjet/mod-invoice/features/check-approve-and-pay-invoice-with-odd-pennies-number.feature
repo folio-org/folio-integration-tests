@@ -78,16 +78,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
     # ============= approve invoice ===================
   Scenario: Approve and Verify created invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     * print '## Check that pending payments created with correct amount of money'
     * configure headers = headersAdmin
@@ -122,16 +113,7 @@ Feature: Check approve and pay invoice with odd number of pennies in total
 
 
   Scenario: Pay And Verify the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = 'Paid'
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
     * print '## Verify payed invoice'
     Given path 'invoice/invoices', invoiceId

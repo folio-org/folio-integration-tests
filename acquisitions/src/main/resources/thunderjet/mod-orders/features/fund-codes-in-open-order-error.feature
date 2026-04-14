@@ -1,5 +1,4 @@
 # created for MODORDERS-652
-@parallel=false
 Feature: Fund codes in open order error
 
   Background:
@@ -16,17 +15,18 @@ Feature: Fund codes in open order error
 
     * callonce variables
 
-    * def fundId1 = callonce uuid1
-    * def fundId2 = callonce uuid2
-    * def budgetId1 = callonce uuid3
-    * def budgetId2 = callonce uuid4
-    * def orderId = callonce uuid5
-    * def poLineId = callonce uuid6
+
+  Scenario: Fund codes in open order error
+    * def fundId1 = call uuid
+    * def fundId2 = call uuid
+    * def budgetId1 = call uuid
+    * def budgetId2 = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
     * def fundCode = 'RESTRICTED-FUND'
 
-
-  Scenario: Create funds and budgets
+    # 1. Create funds and budgets
     * configure headers = headersAdmin
     # avoiding shared scope with def to avoid defining a fundCode variable and using it in the next call to createFund
     * def v = call createFund { id: '#(fundId1)', ledgerId: '#(globalLedgerWithRestrictionsId)', code: '#(fundCode)' }
@@ -34,40 +34,18 @@ Feature: Fund codes in open order error
     * def v = call createFund { id: '#(fundId2)', ledgerId: '#(globalLedgerId)' }
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', allocated: 100 }
 
+    # 2. Create composite order
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario: Create composite order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # 3. Create order line
+    * table fundDistribution
+      | fundId  | code        | distributionType | value |
+      | fundId1 | fundCode    | 'percentage'     | 50.0  |
+      | fundId2 | fundId2     | 'percentage'     | 50.0  |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 300, fundDistribution: '#(fundDistribution)' }
 
-
-  Scenario: Create order line
-    Given path 'orders/order-lines'
-
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].value = 50.0
-    * set poLine.fundDistribution[0].fundId = fundId1
-    * set poLine.fundDistribution[0].code = fundCode
-    * set poLine.fundDistribution[1] = { fundId: '#(fundId2)', code: '#(fundId2)', distributionType: 'percentage', value: 50.0 }
-    * set poLine.cost.listUnitPrice = 300
-    * set poLine.cost.poLineEstimatedPrice = 300
-
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open order
+    # 4. Try to open order, check error code
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200

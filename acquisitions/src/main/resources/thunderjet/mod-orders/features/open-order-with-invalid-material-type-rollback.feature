@@ -31,22 +31,12 @@ Feature: Open Order With Invalid Material Type Rollback
 
     # 1. Create Fund And Budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
     # 2. Create Order
     * configure headers = headersUser
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     # 3. Create Order Line With Invalid Material Type
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -120,8 +110,8 @@ Feature: Open Order With Invalid Material Type Rollback
     * def fundId2 = call uuid
     * def budgetId2 = call uuid
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId2)', 'ledgerId': '#(globalLedgerId)' }
-    * call createBudget { 'id': '#(budgetId2)', 'allocated': 1000, 'fundId': '#(fundId2)', 'status': 'Active' }
+    * def v = call createFund { 'id': '#(fundId2)', 'ledgerId': '#(globalLedgerId)' }
+    * def v = call createBudget { 'id': '#(budgetId2)', 'allocated': 1000, 'fundId': '#(fundId2)', 'status': 'Active' }
 
     # 2. Create an instance in inventory first (to simulate a matched instance)
     * def instanceId = call uuid
@@ -160,17 +150,7 @@ Feature: Open Order With Invalid Material Type Rollback
     # 4. Create Order
     * def orderId2 = call uuid
     * configure headers = headersUser
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId2)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId2)' }
 
     # 5. Create Order Line With Product ID Matching The Existing Instance
     * def poLineId2 = call uuid

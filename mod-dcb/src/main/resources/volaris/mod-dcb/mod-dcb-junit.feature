@@ -61,6 +61,7 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.material-types.item.post'                      |
       | 'inventory-storage.service-points.collection.get'                 |
       | 'inventory-storage.service-points.item.post'                      |
+      | 'inventory-storage.service-points.item.put'                       |
       | 'inventory.instances.item.post'                                   |
       | 'inventory.items.item.post'                                       |
       | 'lost-item-fees-policies.item.post'                               |
@@ -69,6 +70,10 @@ Feature: mod-dcb integration tests
       | 'users.item.get'                                                  |
       | 'users.item.post'                                                 |
       | 'dcb.shadow_locations.refresh.post'                               |
+      | 'consortium-search.locations.collection.get'                      |
+      | 'consortium-search.campuses.collection.get'                       |
+      | 'consortium-search.libraries.collection.get'                      |
+      | 'consortium-search.institutions.collection.get'                   |
 
 
     * table userPermissions

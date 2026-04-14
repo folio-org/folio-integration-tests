@@ -41,18 +41,8 @@ Feature: Check invoice and invoice lines deletion restrictions
     When method POST
     Then status 201
 
-    # ============= get invoice to approve ===================
-    Given path 'invoice/invoices', approvedInvoiceId
-    When method GET
-    Then status 200
-    * def invoiceBody = $
-    * set invoiceBody.status = "Approved"
-
-    # ============= put approved invoice ===================
-    Given path 'invoice/invoices', approvedInvoiceId
-    And request invoiceBody
-    When method PUT
-    Then status 204
+    # ============= approve invoice ===================
+    * def v = call approveInvoice { invoiceId: '#(approvedInvoiceId)' }
 
   Scenario: Create paid invoice and invoice line
     * copy invoicePayload = invoiceTemplate
@@ -75,28 +65,10 @@ Feature: Check invoice and invoice lines deletion restrictions
     Then status 201
 
     # ============= approve the invoice ===================
-    Given path 'invoice/invoices', paidInvoiceId
-    When method GET
-    Then status 200
-    * def invoiceBody = $
-    * set invoiceBody.status = "Approved"
-    Given path 'invoice/invoices', paidInvoiceId
-    And request invoiceBody
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(paidInvoiceId)' }
 
-    # ============= get invoice to pay ===================
-    Given path 'invoice/invoices', paidInvoiceId
-    When method GET
-    Then status 200
-    * def invoiceBody = $
-    * set invoiceBody.status = "Paid"
-
-    # ============= put paid invoice ===================
-    Given path 'invoice/invoices', paidInvoiceId
-    And request invoiceBody
-    When method PUT
-    Then status 204
+    # ============= pay invoice ===================
+    * def v = call payInvoice { invoiceId: '#(paidInvoiceId)' }
 
   # test invoice and invoice line deletion restrictions
   Scenario: Delete approved invoice and invoice line

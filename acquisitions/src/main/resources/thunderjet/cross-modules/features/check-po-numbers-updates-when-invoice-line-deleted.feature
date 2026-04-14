@@ -11,23 +11,19 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
 
     * callonce variables
 
-    * def poLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
-    * def orderId1 = callonce uuid1
-    * def orderId2 = callonce uuid2
-    * def poLineId1 = callonce uuid3
-    * def poLineId2 = callonce uuid4
-    * def invoiceId = callonce uuid5
-    * def invoiceLineId1 = callonce uuid6
-    * def invoiceLineId2 = callonce uuid7
-    * def invoiceLineId3 = callonce uuid8
+  Scenario: Invoice poNumbers needs to be updated when an invoice line is deleted
+    * def orderId1 = call uuid
+    * def orderId2 = call uuid
+    * def poLineId1 = call uuid
+    * def poLineId2 = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId1 = call uuid
+    * def invoiceLineId2 = call uuid
+    * def invoiceLineId3 = call uuid
     * def poNumber1 = 'A91277'
     * def poNumber2 = 'A95277'
 
-
-  Scenario: Invoice poNumbers needs to be updated when an invoice line is deleted
     # Create order 1
     Given path 'orders/composite-orders'
     And request
@@ -57,61 +53,21 @@ Feature: Invoice poNumbers needs to be updated when an invoice line is deleted
     Then status 201
 
     # Create order line for order 1
-    * copy poLine1 = poLineTemplate
-    * set poLine1.id = poLineId1
-    * set poLine1.purchaseOrderId = orderId1
-    * set poLine1.fundDistribution[0].fundId = globalFundId
-
-    Given path 'orders/order-lines'
-    And request poLine1
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(globalFundId)' }
 
     # Create order line for order 2
-    * copy poLine2 = poLineTemplate
-    * set poLine2.id = poLineId2
-    * set poLine2.purchaseOrderId = orderId2
-    * set poLine2.fundDistribution[0].fundId = globalFundId
-
-   Given path 'orders/order-lines'
-    And request poLine2
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId2)', fundId: '#(globalFundId)' }
 
     # Create the invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # Create invoice line 1 with a link to po 1 and invoice id
-    * copy invoiceLine1 = invoiceLineTemplate
-    * set invoiceLine1.id = invoiceLineId1
-    * set invoiceLine1.invoiceId = invoiceId
-    * set invoiceLine1.poLineId = poLineId1
-    * remove invoiceLine1.fundDistributions[0].expenseClassId
-
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine1
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId1)', invoiceId: '#(invoiceId)', fundId: '#(globalFundId)', poLineId: '#(poLineId1)', total: 100 }
 
     # Create invoice line 2 with a link to po 2 and invoice id
-    * copy invoiceLine2 = invoiceLineTemplate
-    * set invoiceLine2.id = invoiceLineId2
-    * set invoiceLine2.invoiceId = invoiceId
-    * set invoiceLine2.poLineId = poLineId2
-    * remove invoiceLine2.fundDistributions[0].expenseClassId
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId2)', invoiceId: '#(invoiceId)', fundId: '#(globalFundId)', poLineId: '#(poLineId2)', total: 100 }
 
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine2
-    When method POST
-    Then status 201
-
-    # Delete invoice line
+    # Delete invoice line 1
     Given path 'invoice/invoice-lines', invoiceLineId1
     When method DELETE
     Then status 204

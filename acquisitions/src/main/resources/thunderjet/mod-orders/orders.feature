@@ -228,6 +228,9 @@ Feature: mod-orders integration tests
   Scenario: Piece status transitions
     * call read('features/piece-status-transitions.feature')
 
+  Scenario: Piece status transitions claiming
+    * call read('features/piece-status-transitions-claiming.feature')
+
   Scenario: PoLine change instance connection
     * call read('features/poline_change_instance_connection.feature')
 
@@ -311,3 +314,9 @@ Feature: mod-orders integration tests
 
   Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
     * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
+
+  Scenario: Update PO lines when an order is cancelled
+    * call read('features/update-po-lines-when-order-cancelled.feature')
+
+  Scenario: Add piece to cancelled ongoing order
+    * call read('features/add-piece-to-cancelled-ongoing-order.feature')

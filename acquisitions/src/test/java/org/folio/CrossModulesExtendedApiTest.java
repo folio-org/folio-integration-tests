@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-@Order(8)
+@Order(9)
 @FolioTest(team = "thunderjet", module = "cross-modules")
 public class CrossModulesExtendedApiTest extends TestBaseEureka {
 
@@ -24,7 +24,9 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka {
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("total-expended-with-fund-distribution-and-encumbrance", true),
-    FEATURE_2("budget-summary-when-amounts-exceed-available", true);
+    FEATURE_2("budget-summary-when-amounts-exceed-available", true),
+    FEATURE_3("budget-summary-encumbered-approved-paid-exceed-available", true),
+    FEATURE_4("budget-summary-transfer-decreases-below-available", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -76,5 +78,19 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void budgetSummaryWhenAmountsExceedAvailable() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C496149) Correct Financial Summary Values When Encumbered Approved And Paid Amounts Exceed Available Amount")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void budgetSummaryWhenEncumberedApprovedAndPaidExceedAvailable() {
+    runFeatureTest(Feature.FEATURE_3.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C496153) Correct Financial Summary Values When Decrease Allocation Exceeds Available Amount")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void budgetSummaryWhenDecreaseAllocationExceedsAvailable() {
+    runFeatureTest(Feature.FEATURE_4.getFileName());
   }
 }

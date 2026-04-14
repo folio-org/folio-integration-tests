@@ -2,6 +2,7 @@
 Feature: Create a title
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   @title

@@ -14,23 +14,24 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * def ledgerId = call uuid
 
     # the ledger needs to have restrictEncumbrance=true
-    * call createLedger { 'id': '#(ledgerId)'}
+    * def v = call createLedger { id: '#(ledgerId)' }
 
 
   Scenario Outline: Test allowable encumbrance: remaining encumbrance would be <remaining>
     * def fundId = call uuid
+    * def budgetId = call uuid
     * def orderId = call uuid
     * def poLineId = call uuid
     * def encumbranceId = call uuid
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
 
     Given path 'finance/budgets'
     And request
     """
     {
-      "id": "#(id)",
-      "name": "#(id)",
+      "id": "#(budgetId)",
+      "name": "#(budgetId)",
       "budgetStatus": "Active",
       "fundId": "#(fundId)",
       "fiscalYearId":"#(globalFiscalYearId)",
@@ -81,6 +82,7 @@ Feature: Test allowable encumbrance and expenditure restrictions
 
   Scenario Outline: Test allowable expenditure with pending payment: remaining expenditure would be <remaining>
     * def fundId = call uuid
+    * def budgetId = call uuid
     * def orderId = call uuid
     * def invoiceId = call uuid
     * def invoiceLineId = call uuid
@@ -88,14 +90,14 @@ Feature: Test allowable encumbrance and expenditure restrictions
     * def encumbranceId = call uuid
     * def pendingPaymentId = call uuid
 
-    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
 
     Given path 'finance/budgets'
     And request
     """
     {
-      "id": "#(id)",
-      "name": "#(id)",
+      "id": "#(budgetId)",
+      "name": "#(budgetId)",
       "budgetStatus": "Active",
       "fundId": "#(fundId)",
       "fiscalYearId":"#(globalFiscalYearId)",
@@ -170,17 +172,18 @@ Feature: Test allowable encumbrance and expenditure restrictions
 
   Scenario Outline: Test allowable expenditure with payment: remaining expenditure would be <remaining>
     * def fundId = call uuid
+    * def budgetId = call uuid
     * def invoiceId = call uuid
     * def paymentId = call uuid
 
-    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
 
     Given path 'finance/budgets'
     And request
     """
     {
-      "id": "#(id)",
-      "name": "#(id)",
+      "id": "#(budgetId)",
+      "name": "#(budgetId)",
       "budgetStatus": "Active",
       "fundId": "#(fundId)",
       "fiscalYearId":"#(globalFiscalYearId)",

@@ -1445,6 +1445,7 @@ Feature: Requests tests
 
     Given path 'circulation', 'requests'
     And param query = '((id=="' + targetItemBarcode + '" or requesterId=="' + targetItemBarcode + '" or requester.barcode=="' + targetItemBarcode + '*" or instance.title="' + targetItemBarcode + '*" or instanceId="' + targetItemBarcode + '*" or item.barcode="' + targetItemBarcode + '*" or itemId=="' + targetItemBarcode + '" or itemIsbn=="' + targetItemBarcode + '" or searchIndex.callNumberComponents.callNumber=="' + targetItemBarcode + '*" or fullCallNumberIndex=="' + targetItemBarcode + '*")) sortby requestDate'
+    And param limit = 100
     When method GET
     Then status 200
     And assert response.requests.length == 1
@@ -1453,6 +1454,7 @@ Feature: Requests tests
 
     Given path 'circulation', 'requests'
     And param query = '((id=="' + targetRequestId + '" or requesterId=="' + targetRequestId + '" or requester.barcode=="' + targetRequestId + '*" or instance.title="' + targetRequestId + '*" or instanceId="' + targetRequestId + '*" or item.barcode="' + targetRequestId + '*" or itemId=="' + targetRequestId + '" or itemIsbn=="' + targetRequestId + '" or searchIndex.callNumberComponents.callNumber=="' + targetRequestId + '*" or fullCallNumberIndex=="' + targetRequestId + '*")) sortby requestDate'
+    And param limit = 100
     When method GET
     Then status 200
     And assert response.requests.length == 1
@@ -1460,6 +1462,7 @@ Feature: Requests tests
 
     Given path 'circulation', 'requests'
     And param query = '((id=="' + requesterBarcode1 + '" or requesterId=="' + requesterBarcode1 + '" or requester.barcode=="' + requesterBarcode1 + '*" or instance.title="' + requesterBarcode1 + '*" or instanceId="' + requesterBarcode1 + '*" or item.barcode="' + requesterBarcode1 + '*" or itemId=="' + requesterBarcode1 + '" or itemIsbn=="' + requesterBarcode1 + '" or searchIndex.callNumberComponents.callNumber=="' + requesterBarcode1 + '*" or fullCallNumberIndex=="' + requesterBarcode1 + '*")) sortby requestDate'
+    And param limit = 100
     When method GET
     Then status 200
     And assert response.requests.length == 1
@@ -1468,6 +1471,7 @@ Feature: Requests tests
 
     Given path 'circulation', 'requests'
     And param query = '((id=="' + targetTitle + '" or requesterId=="' + targetTitle + '" or requester.barcode=="' + targetTitle + '*" or instance.title="' + targetTitle + '*" or instanceId="' + targetTitle + '*" or item.barcode="' + targetTitle + '*" or itemId=="' + targetTitle + '" or itemIsbn=="' + targetTitle + '" or searchIndex.callNumberComponents.callNumber=="' + targetTitle + '*" or fullCallNumberIndex=="' + targetTitle + '*")) sortby requestDate'
+    And param limit = 100
     When method GET
     Then status 200
     And match response.requests[*].id contains targetRequestId
@@ -1884,6 +1888,7 @@ Feature: Requests tests
     When method PUT
     Then status 204
 
+  @C409462
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser
