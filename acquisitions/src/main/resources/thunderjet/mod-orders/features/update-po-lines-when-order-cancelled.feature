@@ -1,5 +1,4 @@
-# For MODORDERS-636
-# https://foliotest.testrail.io/index.php?/cases/view/353543
+# For MODORDERS-636, https://foliotest.testrail.io/index.php?/cases/view/353543
 Feature: Update PO Lines When Order Is Cancelled
 
   Background:
