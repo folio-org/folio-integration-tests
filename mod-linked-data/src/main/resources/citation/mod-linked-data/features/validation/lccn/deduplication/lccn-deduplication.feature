@@ -33,7 +33,7 @@ Feature: LCCN validation for duplicates.
     * call putResource { id: '#(instanceId)' , resourceRequest: '#(instanceRequest)' }
     * def query = '(lccn=nn0987654321)'
     * call searchInventoryInstance
-    * call pause 3000
+    * call sleep 3
 
     # Step 5: Create new instance with existing LCCN, verify bad request
     * def duplicateLccnInstanceRequest = read('samples/duplicate-lccn-instance-request.json')
