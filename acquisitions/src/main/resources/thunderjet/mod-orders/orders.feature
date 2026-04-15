@@ -317,3 +317,6 @@ Feature: mod-orders integration tests
 
   Scenario: Add piece to cancelled ongoing order
     * call read('features/add-piece-to-cancelled-ongoing-order.feature')
+
+  Scenario: No side effect with failed piece operation
+    * call read('features/no-side-effect-with-failed-piece-operation.feature')
