@@ -50,6 +50,7 @@ Feature: bulk operations integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'inventory-storage.instance-formats.item.post'                |
       | 'inventory-storage.ill-policies.item.post'                    |
+      | 'inventory-storage.ill-policies.item.delete'                  |
       | 'okapi.proxy.tenants.modules.post'                            |
       | 'okapi.proxy.tenants.modules.enabled.delete'                  |
       | 'inventory-storage.items.item.delete'                         |
