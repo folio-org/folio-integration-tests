@@ -320,3 +320,6 @@ Feature: mod-orders integration tests
 
   Scenario: No side effect with failed piece operation
     * call read('features/no-side-effect-with-failed-piece-operation.feature')
+
+  Scenario: Batch create pieces updates encumbrance
+    * call read('features/batch-create-pieces-updates-encumbrance.feature')
