@@ -24,7 +24,8 @@ class OrdersExtendedApiTest extends TestBaseEureka {
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("piece-status-transitions-claiming", true),
-    FEATURE_2("add-piece-to-cancelled-ongoing-order", true);
+    FEATURE_2("add-piece-to-cancelled-ongoing-order", true),
+    FEATURE_3("update-po-lines-when-order-cancelled", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -76,5 +77,12 @@ class OrdersExtendedApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void addPieceToCancelledOngoingOrder() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C353543) Update po lines when an order is closed with the 'Cancelled' reason")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void updatePoLinesWhenOrderCancelled() {
+    runFeatureTest(Feature.FEATURE_3.getFileName());
   }
 }
