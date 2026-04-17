@@ -52,7 +52,8 @@ Feature: Authority update
     * def createdAuthorityGraphResponse = getCreatedAuthorityGraphCall.response
     * match createdAuthorityGraphResponse.label == 'PAVELTEST'
     * match createdAuthorityGraphResponse.folioMetadata == '#notpresent'
-    * def updatedAuthorityId = createdAuthorityGraphResponse.outgoingEdges.filter(x => x.predicate == 'REPLACED_BY')[0].target.id
+    * def replacedByEdge = createdAuthorityGraphResponse.outgoingEdges.filter(x => x.predicate == 'REPLACED_BY')[0]
+    * def updatedAuthorityId = typeof replacedByEdge.target === 'number' ? replacedByEdge.target : replacedByEdge.target.id
 
     # Step 7: get and check the updated authority graph
     * def resourceId = updatedAuthorityId
