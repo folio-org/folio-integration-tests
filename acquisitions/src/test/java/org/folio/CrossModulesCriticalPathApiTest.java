@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.shared.SharedCrossModulesTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 @Order(8)
 @FolioTest(team = "thunderjet", module = "cross-modules")
-public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
+public class CrossModulesCriticalPathApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
   private static final String TEST_TENANT = "testcross";
@@ -59,7 +60,10 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
     FEATURE_34("encumbrance-after-canceling-paid-invoice-with-other-paid-invoices-release-false", true),
     FEATURE_35("encumbrance-after-canceling-approved-invoice-with-other-approved-invoices-release-false", true),
     FEATURE_36("encumbrance-after-canceling-paid-invoice-with-mixed-release-settings", true),
-    FEATURE_37("encumbrance-after-canceling-approved-invoice-with-mixed-release-settings", true);
+    FEATURE_37("encumbrance-after-canceling-approved-invoice-with-mixed-release-settings", true),
+    FEATURE_38("rollover-two-ledgers-with-multi-fund-pol", true),
+    FEATURE_39("rollover-three-ledgers-with-expense-classes-twice", true),
+    FEATURE_40("rollover-three-ledgers-with-different-fund-distributions", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -83,19 +87,34 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void crossModuleCriticalPathApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     SharedCrossModulesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
-  public void crossModulesCriticalPathApiTestAfterAll() {
+  @Override
+  public void afterAll() {
+    destroyTenant();
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) Destroy tenant")
+  @EnabledIfSystemProperty(named = "destroy", matches = "true")
+  public void destroyTenantManually() {
+    destroyTenant();
+  }
+
+  @Override
+  public void destroyTenant() {
     SharedCrossModulesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
@@ -356,5 +375,26 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceCalculatedCorrectlyAfterCancelingApprovedInvoiceWithMixedReleaseSettings() {
     runFeatureTest(Feature.FEATURE_37.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C987716) Encumbrances Are Rollovered Correctly When PO Lines Contain Fund Distributions Related To Two Different Ledgers And Same Fiscal Year")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void rolloverTwoLedgersWithMultiFundPol() {
+    runFeatureTest(Feature.FEATURE_38.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C987717) Encumbrances Are Rollovered Correctly When PO Lines Contain Fund Distributions Related To Three Different Ledgers And Same Fiscal Year")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void rolloverThreeLedgersWithExpenseClassesTwice() {
+    runFeatureTest(Feature.FEATURE_39.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C987720) Encumbrances Are Rollovered Correctly When PO Lines Contain Different Fund Distributions Related To Three Different Ledgers And Same Fiscal Year")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void rolloverThreeLedgersWithDifferentFundDistributions() {
+    runFeatureTest(Feature.FEATURE_40.getFileName());
   }
 }

@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 @Order(2)
 @FolioTest(team = "thunderjet", module = "mod-data-export-spring")
-public class DataExportSpringApiTest extends TestBaseEureka {
+public class DataExportSpringApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-data-export-spring/features/";
   private static final int THREAD_COUNT = 4;
@@ -42,9 +43,10 @@ public class DataExportSpringApiTest extends TestBaseEureka {
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 

@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.shared.SharedOrdersTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 @Order(6)
 @FolioTest(team = "thunderjet", module = "mod-orders")
-public class OrdersSmokeApiTest extends TestBaseEureka {
+public class OrdersSmokeApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final String TEST_TENANT = "testorders";
@@ -50,19 +51,22 @@ public class OrdersSmokeApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void ordersSmokeApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
-  public void ordersSmokeApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 

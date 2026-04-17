@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.shared.SharedCrossModulesTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 @Order(9)
 @FolioTest(team = "thunderjet", module = "cross-modules")
-public class CrossModulesExtendedApiTest extends TestBaseEureka {
+public class CrossModulesExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
   private static final String TEST_TENANT = "testcross";
@@ -50,19 +51,22 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void crossModuleExtendedApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     SharedCrossModulesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
-  public void crossModulesExtendedApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     SharedCrossModulesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
