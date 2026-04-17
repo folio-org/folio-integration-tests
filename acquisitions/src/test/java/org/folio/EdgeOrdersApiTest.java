@@ -75,7 +75,8 @@ class EdgeOrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
-  @Test@Override
+  @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   public void runFeatures() {
