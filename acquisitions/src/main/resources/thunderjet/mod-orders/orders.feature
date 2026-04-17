@@ -317,3 +317,6 @@ Feature: mod-orders integration tests
 
   Scenario: Add piece to cancelled order
     * call read('features/add-piece-to-cancelled-order.feature')
+
+  Scenario: Update PO lines when an order is cancelled
+    * call read('features/update-po-lines-when-order-cancelled.feature')

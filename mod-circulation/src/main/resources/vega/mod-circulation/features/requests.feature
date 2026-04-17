@@ -1888,6 +1888,7 @@ Feature: Requests tests
     When method PUT
     Then status 204
 
+  @C409462
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser

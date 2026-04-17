@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.shared.SharedOrdersTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 @Order(4)
 @FolioTest(team = "thunderjet", module = "mod-orders")
-class OrdersExtendedApiTest extends TestBaseEureka {
+class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final String TEST_TENANT = "testorders";
@@ -24,7 +25,8 @@ class OrdersExtendedApiTest extends TestBaseEureka {
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("piece-status-transitions-claiming", true),
-    FEATURE_2("add-piece-to-cancelled-order", true);
+    FEATURE_2("add-piece-to-cancelled-order", true),
+    FEATURE_3("update-po-lines-when-order-cancelled", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -48,19 +50,22 @@ class OrdersExtendedApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  void ordersExtendedApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
-  void ordersExtendedApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
@@ -76,5 +81,12 @@ class OrdersExtendedApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void addPieceToCancelledOrder() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C353543) Update po lines when an order is closed with the 'Cancelled' reason")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void updatePoLinesWhenOrderCancelled() {
+    runFeatureTest(Feature.FEATURE_3.getFileName());
   }
 }

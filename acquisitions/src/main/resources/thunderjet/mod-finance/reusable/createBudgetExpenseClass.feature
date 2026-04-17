@@ -8,7 +8,7 @@ Feature: Create Budget Expense Class
     * def newGeneratedId = call uuid
     * def id = karate.get('id', newGeneratedId)
 
-    Given path '/finance/budget-expense-classes'
+    Given path '/finance-storage/budget-expense-classes'
     And request
     """
       {
