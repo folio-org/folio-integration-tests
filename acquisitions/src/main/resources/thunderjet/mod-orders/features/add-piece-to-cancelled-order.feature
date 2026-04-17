@@ -1,4 +1,6 @@
 # For FAT-20930, FAT-20931
+# https://foliotest.testrail.io/index.php?/cases/view/543756
+# https://foliotest.testrail.io/index.php?/cases/view/553012
 Feature: Add piece to cancelled order
 
   Background:
@@ -15,10 +17,10 @@ Feature: Add piece to cancelled order
 
     * callonce variables
 
-  # C543756: Item status is "Order closed" when add piece for cancelled ongoing order
-  # https://foliotest.testrail.io/index.php?/cases/view/543756
+
   @C543756
   @Positive
+  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/543756
   Scenario: Add piece to cancelled ongoing order
     * def fundId = call uuid
     * def budgetId = call uuid
@@ -117,10 +119,9 @@ Feature: Add piece to cancelled order
     And match $.locations[0].holdingId == holdingsForGlobalLocationsId.id
 
 
-  # C553012: Checking item statuses when related one-time order is in "Cancelled" status
-  # https://foliotest.testrail.io/index.php?/cases/view/553012
   @C553012
   @Positive
+  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/553012
   Scenario: Receive and unreceive piece for cancelled order
     * def fundId = call uuid
     * def budgetId = call uuid
