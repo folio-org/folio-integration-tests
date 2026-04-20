@@ -70,6 +70,11 @@ public class ModListsTest extends TestBaseEureka {
     }
 
     @Test
+    void testStatisticalCodes() {
+        runFeatureTest("statistical-codes");
+    }
+
+    @Test
     void testVersioning() {
         runFeatureTest("versions");
     }
