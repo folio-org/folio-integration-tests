@@ -10,9 +10,9 @@
     },
     "httpResponse" : {
       "body" : {
-        "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJmb2xpbyIsInN1YiI6IjU4NThmOWQ4LTE1NTgtNDUxMy1hYTI1LWJhZDgzOWViODAzYSIsImVkZ2VBcGlLZXkiOiJleUp6SWpvaWFXNXVjbVZoWTJoRGJHbGxiblFpTENKMElqb2lkR1Z6ZEY5MFpXNWhiblFpTENKMUlqb2lhVzV1Y21WaFkyaERiR2xsYm5RaWZRPT0iLCJleHAiOjE2ODEzODIzNTF9.CbWIDsi4hTamBWqibY5O4ofD3jp68RmDy9akdnJw-Eg",
-        "tokenType": "Bearer",
-        "expiresIn": 599
+        "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJmb2xpbyIsInN1YiI6IjU4NThmOWQ4LTE1NTgtNDUxMy1hYTI1LWJhZDgzOWViODAzYSIsImVkZ2VBcGlLZXkiOiJleUp6SWpvaWFXNXVjbVZoWTJoRGJHbGxiblFpTENKMElqb2lkR1Z6ZEY5MFpXNWhiblFpTENKMUlqb2lhVzV1Y21WaFkyaERiR2xsYm5RaWZRPT0iLCJleHAiOjE2ODEzODIzNTF9.CbWIDsi4hTamBWqibY5O4ofD3jp68RmDy9akdnJw-Eg",
+        "token_type": "Bearer",
+        "expires_in": 599
       },
       "statusCode": 200
     }
