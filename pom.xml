@@ -36,7 +36,7 @@
     <karate.version>1.5.1</karate.version>
     <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>6.1.21</spring.version>
+    <spring.version>6.2.18</spring.version>
     <jenkins.buildNumber>${env.BUILD_NUMBER}</jenkins.buildNumber>
   </properties>
 
@@ -158,11 +158,12 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>net.minidev</groupId>
-        <artifactId>json-smart</artifactId>
-        <version>2.5.2</version>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>2.21.2</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
-
       <!-- Pin the shared submodules to the project version, so that other submodules don't need to worry about the version -->
       <dependency>
         <groupId>org.folio</groupId>
@@ -194,6 +195,16 @@
       <artifactId>junit-jupiter</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.minidev</groupId>
+      <artifactId>json-smart</artifactId>
+      <version>2.6.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf</artifactId>
+      <version>3.1.4.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
