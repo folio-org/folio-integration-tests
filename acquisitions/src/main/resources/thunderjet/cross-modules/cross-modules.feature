@@ -325,3 +325,6 @@ Feature: cross-module integration tests
 
   Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Different Fund Distributions Related To Three Different Ledgers And Same Fiscal Year
     * call read('features/rollover-three-ledgers-with-different-fund-distributions.feature')
+
+  Scenario: Rollover Based On Expended When Credit Invoice Exists
+    * call read('features/rollover-based-on-expended-with-credit-invoice.feature')
