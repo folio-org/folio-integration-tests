@@ -265,12 +265,6 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka implements A
     runFeatureTest(Feature.FEATURE_21.getFileName());
   }
 
-  @Test
-  @DisplayName("(Thunderjet) (C357580) Budget Summary And Encumbrances Updated Correctly When Editing POL With Related Invoice After Rollover Of Fiscal Year")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetAndEncumbranceUpdatedCorrectlyAfterEditingPolWithInvoiceAfterRollover() {
-    runFeatureTest(Feature.FEATURE_22.getFileName());
-  }
 
   @Test
   @DisplayName("(Thunderjet) (C895660) Cancel A Paid Invoice After Changing Fund Distribution In The PO Line")

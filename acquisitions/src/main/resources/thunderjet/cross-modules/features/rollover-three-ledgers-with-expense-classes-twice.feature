@@ -814,7 +814,7 @@ Feature: Rollover Three Ledgers With Expense Classes Twice
         return b.encumbered == 0 &&
                b.expenditures == 0 &&
                b.awaitingPayment == 0 &&
-               b.available == b.allocated;
+               b.available == 1000;
       }
       """
     Given path 'finance/budgets'

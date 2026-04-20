@@ -27,7 +27,11 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     FEATURE_1("total-expended-with-fund-distribution-and-encumbrance", true),
     FEATURE_2("budget-summary-when-amounts-exceed-available", true),
     FEATURE_3("budget-summary-encumbered-approved-paid-exceed-available", true),
-    FEATURE_4("budget-summary-transfer-decreases-below-available", true);
+    FEATURE_4("budget-summary-transfer-decreases-below-available", true),
+    // moved from CrossModulesCriticalPathApiTest (TestRail group = Extended)
+    FEATURE_5("budget-and-encumbrance-updated-correctly-after-editing-pol-with-invoice-after-rollover", true),
+    FEATURE_6("unrelease-encumbrances-when-reopen-ongoing-order-with-related-paid-invoice-and-receiving", true),
+    FEATURE_7("rollover-based-on-expended-with-credit-invoice", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -96,5 +100,28 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void budgetSummaryWhenDecreaseAllocationExceedsAvailable() {
     runFeatureTest(Feature.FEATURE_4.getFileName());
+  }
+
+  // --- moved from CrossModulesCriticalPathApiTest ---
+
+  @Test
+  @DisplayName("(Thunderjet) (C357580) Budget Summary And Encumbrances Updated Correctly When Editing POL With Related Invoice After Rollover Of Fiscal Year")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void budgetAndEncumbranceUpdatedCorrectlyAfterEditingPolWithInvoiceAfterRollover() {
+    runFeatureTest(Feature.FEATURE_5.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C356782, C356412, C358532, C356785) Unrelease Encumbrances When Reopen Ongoing Order With Related Paid Invoice And Receiving")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void unreleaseEncumbrancesWhenReopenOngoingOrderWithRelatedPaidInvoiceAndReceiving() {
+    runFeatureTest(Feature.FEATURE_6.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C503142) Rollover Based On Expended When Credit Invoice Exists")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void rolloverBasedOnExpendedWithCreditInvoice() {
+    runFeatureTest(Feature.FEATURE_7.getFileName());
   }
 }
