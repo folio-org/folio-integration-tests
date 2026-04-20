@@ -15,7 +15,7 @@ Feature: Testing Lending Flow Request Expiration
     * def expLenderItemBarcode = call random_string
 
   @C1046007
-  Scenario: Request expiration for LENDER role transitions transaction to EXPIRED, check-in at home service point closes transaction
+  Scenario: Request expiration for LENDER role transitions transaction to EXPIRED, check-in at any service point closes transaction
     * def newItemPayload = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
     * newItemPayload.id = expLenderItemId
     * newItemPayload.barcode = expLenderItemBarcode
@@ -116,7 +116,7 @@ Feature: Testing Lending Flow Request Expiration
 
     * def intCheckInDate2 = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest2 = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest2.servicePointId = servicePointId21
+    * checkInRequest2.servicePointId = servicePointId11
     * checkInRequest2.itemBarcode = expLenderItemBarcode
 
     Given path 'circulation', 'check-in-by-barcode'
@@ -124,24 +124,6 @@ Feature: Testing Lending Flow Request Expiration
     When method POST
     Then status 200
     And match $.item.status.name == 'In transit'
-    * call pause 5000
-
-    Given path 'transactions', expLenderTransactionId, 'status'
-    When method GET
-    Then status 200
-    And match $.status == 'EXPIRED'
-    And match $.role == 'LENDER'
-
-    * def intCheckInDate3 = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
-    * def checkInRequest3 = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
-    * checkInRequest3.servicePointId = servicePointId
-    * checkInRequest3.itemBarcode = expLenderItemBarcode
-
-    Given path 'circulation', 'check-in-by-barcode'
-    And request checkInRequest3
-    When method POST
-    Then status 200
-    And match $.item.status.name == 'Available'
     * call pause 5000
 
     Given path 'transactions', expLenderTransactionId, 'status'
