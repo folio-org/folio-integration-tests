@@ -32,14 +32,8 @@ Feature: Rollover Three Ledgers With Expense Classes Twice
     * def fundIdB = call uuid
     * def fundIdC = call uuid
     * def budgetId1A = call uuid
-    * def budgetId2A = call uuid
-    * def budgetId3A = call uuid
     * def budgetId1B = call uuid
-    * def budgetId2B = call uuid
-    * def budgetId3B = call uuid
     * def budgetId1C = call uuid
-    * def budgetId2C = call uuid
-    * def budgetId3C = call uuid
     * def expenseClassId1 = call uuid
     * def expenseClassId2 = call uuid
     * def orderId1 = call uuid
@@ -92,16 +86,9 @@ Feature: Rollover Three Ledgers With Expense Classes Twice
     * def v = call createBudgetExpenseClass { budgetId: '#(budgetId1B)', expenseClassId: '#(expenseClassId1)' }
     * def v = call createBudgetExpenseClass { budgetId: '#(budgetId1B)', expenseClassId: '#(expenseClassId2)' }
     * def v = call createBudget { id: '#(budgetId1C)', fundId: '#(fundIdC)', fiscalYearId: '#(fyId1)', allocated: 1000, status: 'Active' }
-    # FY2 budgets
-    # Note: createBudget automatically copies budget-expense-class records from the fund's existing active budget,
-    # so explicit createBudgetExpenseClass calls for FY2/FY3 budgets are not needed and would cause 400 duplicates.
-    * def v = call createBudget { id: '#(budgetId2A)', fundId: '#(fundIdA)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: '#(budgetId2B)', fundId: '#(fundIdB)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: '#(budgetId2C)', fundId: '#(fundIdC)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
-    # FY3 budgets
-    * def v = call createBudget { id: '#(budgetId3A)', fundId: '#(fundIdA)', fiscalYearId: '#(fyId3)', allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: '#(budgetId3B)', fundId: '#(fundIdB)', fiscalYearId: '#(fyId3)', allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: '#(budgetId3C)', fundId: '#(fundIdC)', fiscalYearId: '#(fyId3)', allocated: 1000, status: 'Active' }
+    # Note: FY2 and FY3 budgets are created by the rollovers (rolloverAllocation: true).
+    # Pre-creating them would double the allocation (1000 from createBudget + 1000 from rollover = 2000),
+    # causing available != 1000 in the final budget validation. The rollover also inherits expense classes.
 
     #========================================================================================================
     # TestRail Case Steps
