@@ -75,7 +75,7 @@ function fn() {
     config.edgeUrl = 'https://folio-edev-dreamliner-edge.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-dreamliner-keycloak.ci.folio.org';
     config.apikey = 'eyJzIjoid2hhdHNpdCIsInQiOiJ0ZXN0cnRhYyIsInUiOiJ0ZXN0LXVzZXIifQ==';
-    config.prototypeTenant='diku'
+    // config.prototypeTenant='diku'
  } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
