@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -26,7 +27,7 @@ import java.util.UUID;
  */
 @Order(13)
 @FolioTest(team = "thunderjet", module = "edge-orders")
-class EdgeOrdersApiTest extends TestBaseEureka {
+class EdgeOrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/edge-orders/features/";
   private static final String TEST_TENANT = "testedgeorders";
@@ -60,7 +61,8 @@ class EdgeOrdersApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  void edgeOrdersApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     System.setProperty("testTenant", TEST_TENANT);
     System.setProperty("testEdgeUser", "test-user");
     System.setProperty("testTenantId", UUID.randomUUID().toString());
@@ -68,14 +70,16 @@ class EdgeOrdersApiTest extends TestBaseEureka {
   }
 
   @AfterAll
-  void edgeOrdersApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 

@@ -316,3 +316,15 @@ Feature: cross-module integration tests
 
   Scenario: Budget Summary When Decrease Allocation Exceeds Available Amount
     * call read('features/budget-summary-transfer-decreases-below-available.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Fund Distributions Related To Two Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-two-ledgers-with-multi-fund-pol.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Fund Distributions Related To Three Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-three-ledgers-with-expense-classes-twice.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Different Fund Distributions Related To Three Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-three-ledgers-with-different-fund-distributions.feature')
+
+  Scenario: Rollover Based On Expended When Credit Invoice Exists
+    * call read('features/rollover-based-on-expended-with-credit-invoice.feature')

@@ -35,6 +35,7 @@ Feature: Cross-module integration tests
       | 'finance.budgets.item.post'                                |
       | 'finance.budgets.item.put'                                 |
       | 'finance.expense-classes.item.post'                        |
+      | 'finance-storage.budget-expense-classes.item.post'         |
       | 'finance.fiscal-years.item.get'                            |
       | 'finance.fiscal-years.item.post'                           |
       | 'finance.fiscal-years.item.put'                            |

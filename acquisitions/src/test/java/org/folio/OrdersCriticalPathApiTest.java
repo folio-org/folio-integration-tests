@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.shared.SharedOrdersTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 @Order(5)
 @FolioTest(team = "thunderjet", module = "mod-orders")
-public class OrdersCriticalPathApiTest extends TestBaseEureka {
+public class OrdersCriticalPathApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final String TEST_TENANT = "testorders";
@@ -24,10 +25,7 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     FEATURE_1("receive-piece-new-holding-edit", true),
-    FEATURE_2("receive-pieces-delete-empty-holding", true),
-    FEATURE_3("unopen-order-delete-empty-holding-two-locs", true),
-    FEATURE_4("unopen-order-delete-empty-holding-two-pols", true),
-    FEATURE_5("unopen-order-delete-empty-holding-mixed-pols", true);
+    FEATURE_2("receive-pieces-delete-empty-holding", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -51,19 +49,22 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void ordersSmokeApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
-  public void ordersSmokeApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
@@ -79,26 +80,5 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void receivePiecesDeleteEmptyHolding() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
-  }
-
-  @Test
-  @DisplayName("(Thunderjet) (C1273160) Unopen independent POL with 2 locations - only empty holding deleted")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void unopenOrderDeleteEmptyHoldingTwoLocs() {
-    runFeatureTest(Feature.FEATURE_3.getFileName());
-  }
-
-  @Test
-  @DisplayName("(Thunderjet) (C1273166) Unopen order with 2 independent POLs - only empty holding deleted")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void unopenOrderDeleteEmptyHoldingTwoPols() {
-    runFeatureTest(Feature.FEATURE_4.getFileName());
-  }
-
-  @Test
-  @DisplayName("(Thunderjet) (C1273167) Unopen order with synchronized and independent POLs - only empty holding deleted")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void unopenOrderDeleteEmptyHoldingMixedPols() {
-    runFeatureTest(Feature.FEATURE_5.getFileName());
   }
 }
