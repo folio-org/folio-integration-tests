@@ -1,5 +1,4 @@
 # For MODINVOICE-583, UIOR-1406, https://foliotest.testrail.io/index.php?/cases/view/710243
-@parallel=false
 Feature: Encumbrance Remains Unreleased After Changing Expense Class In PO Line With Paid Invoice Release False
 
   Background:
