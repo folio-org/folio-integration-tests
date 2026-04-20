@@ -11,6 +11,7 @@ Feature: mod-linked-data integration tests
       | 'mod-entities-links'                      |
       | 'mod-inventory'                           |
       | 'mod-inventory-storage'                   |
+      | 'mod-source-record-manager'               |
       | 'mod-source-record-storage'               |
       | 'mod-quick-marc'                          |
       | 'mod-linked-data'                         |

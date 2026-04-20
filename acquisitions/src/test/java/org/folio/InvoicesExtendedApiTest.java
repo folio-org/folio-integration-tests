@@ -17,13 +17,14 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 @Order(12)
 @FolioTest(team = "thunderjet", module = "mod-invoice")
-public class InvoicesSmokeApiTest extends TestBaseEureka implements AcquisitionsTest {
+public class InvoicesExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
   private static final String TEST_TENANT = "testinvoice";
   private static final int THREAD_COUNT = 4;
 
   private enum Feature implements org.folio.test.config.CommonFeature {
+    // moved from InvoicesSmokeApiTest (TestRail group = Extended)
     FEATURE_1("pay-invoice-with-0-value", true);
 
     private final String fileName;
@@ -43,7 +44,7 @@ public class InvoicesSmokeApiTest extends TestBaseEureka implements Acquisitions
     }
   }
 
-  public InvoicesSmokeApiTest() {
+  public InvoicesExtendedApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
@@ -74,3 +75,4 @@ public class InvoicesSmokeApiTest extends TestBaseEureka implements Acquisitions
     runFeatureTest(Feature.FEATURE_1.getFileName());
   }
 }
+
