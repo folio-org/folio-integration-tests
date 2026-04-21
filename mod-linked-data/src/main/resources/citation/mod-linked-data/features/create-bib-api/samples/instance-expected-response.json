@@ -224,9 +224,12 @@
   ],
   "http://bibfra.me/vocab/library/media": [
     {
-      "id": "-2293550384041878838",
+      "id": "7194902179740699675",
       "http://bibfra.me/vocab/library/code": [
         "z"
+      ],
+      "http://bibfra.me/vocab/library/source": [
+        "rdamedia"
       ],
       "http://bibfra.me/vocab/library/term": [
         "unspecified"
@@ -238,9 +241,12 @@
   ],
   "http://bibfra.me/vocab/library/carrier": [
     {
-      "id": "-4451844727083558855",
+      "id": "2192441468102311814",
       "http://bibfra.me/vocab/library/code": [
         "sb"
+      ],
+      "http://bibfra.me/vocab/library/source": [
+        "rdacarrier"
       ],
       "http://bibfra.me/vocab/library/term": [
         "audio belt"
