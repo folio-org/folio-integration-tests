@@ -240,39 +240,38 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * print 'DEBUG: ilrUserId:', ilrUserId
     * print 'DEBUG: itemId:', itemId
 
-#    # Now make the allowed-service-points call with debug output using consortium headers
-#    * configure headers = freshHeadersCentral
-#    Given path 'patron/account', ilrUserId, 'item', itemId, 'allowed-service-points'
-#    When method GET
-#    * print 'DEBUG: allowed-service-points response status:', responseStatus
-#    * print 'DEBUG: allowed-service-points response:', response
-#    Then status 200
-#    * def allowedServicePoints = response.allowedServicePoints
-#    * def ilrServicePointId = karate.filter(allowedServicePoints, function(x){ return x.requestTypes && x.requestTypes.indexOf('Page') > -1 })[0].id
-
+    # Now make the allowed-service-points call with debug output using consortium headers
+    * configure headers = freshHeadersCentral
+    Given path 'patron/account', ilrUserId, 'item', itemId, 'allowed-service-points'
+    When method GET
+    * print 'DEBUG: allowed-service-points response status:', responseStatus
+    * print 'DEBUG: allowed-service-points response:', response
+    Then status 200
+    * def allowedServicePoints = response.allowedServicePoints
+    * def ilrServicePointId = allowedServicePoints[0].id
 
     # Reset to standard central tenant headers
     * configure headers = headersCentral
 
     # Create ILR ECS request
     Given path 'patron/account', ilrUserId, 'item', itemId, 'hold'
+    And headers headersCentralConsortium
     And request
     """
     {
-      "servicePointId": "#(centralServicePointsId)",
-      "pickupLocationId": "#(centralServicePointsId)",
+      "instanceId": "#(instanceId)",
+      "servicePointId": "#(ilrServicePointId)",
+      "pickupLocationId": "#(ilrServicePointId)",
       "requestDate": "#(new java.util.Date().toInstant().toString())"
     }
     """
-    And retry until responseStatus == 201
     When method POST
     Then status 201
-    * def ilrRequestId = response.id
-    And match response.itemId == itemId
-    And match response.requesterId == ilrUserId
-    And match response.servicePointId == ilrServicePointId
-    And match response.requestType == 'Page'
-    And match response.requestLevel == 'Item'
+    * print 'DEBUG: ILR ECS hold response:', response
+    And match response.status == 'Open - Not yet filled'
+    And match response.item.itemId == itemId
+    And match response.item.instanceId == instanceId
+    And match response.pickupLocationId == ilrServicePointId
 
 #  Scenario: Create shared instance, holding and item in university tenant, then create TLR ECS request
 #    # Create user group and user in central tenant for this specific scenario

@@ -20,6 +20,7 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.collection.get'       |
       | 'circulation-storage.request-policies.item.post'            |
+      | 'circulation-storage.circulation-rules.put'                 |
       | 'configuration.entries.collection.get'                      |
       | 'configuration.entries.item.delete'                         |
       | 'configuration.entries.item.get'                            |
@@ -29,6 +30,8 @@ Feature: Initialize mod-consortia integration tests
       | 'inventory-storage.holdings.collection.get'                 |
       | 'inventory-storage.holdings.item.get'                       |
       | 'inventory-storage.holdings.item.post'                      |
+      | 'inventory-storage.hrid-settings.item.get'                  |
+      | 'inventory-storage.hrid-settings.item.put'                  |
       | 'inventory-storage.instance-statuses.item.post'             |
       | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.instances.item.get'                      |
@@ -165,6 +168,7 @@ Feature: Initialize mod-consortia integration tests
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.collection.get'       |
       | 'circulation-storage.request-policies.item.post'            |
+      | 'circulation-storage.circulation-rules.put'                 |
       | 'configuration.entries.collection.get'                      |
       | 'configuration.entries.item.get'                            |
       | 'configuration.entries.item.post'                           |
@@ -234,6 +238,11 @@ Feature: Initialize mod-consortia integration tests
     * call read('classpath:utils/inventory.feature')
     * call read('classpath:utils/inventory-university.feature')
     * call read('classpath:utils/configuration.feature')
+    * call read('classpath:utils/circulation.feature')
+
+    # Re-login and reset headers to central tenant after circulation setup (which ends with university tenant headers)
+    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
 
     # Create test user early to ensure mod-search cache is populated with real users before consortium calls
     * def testGroupId = java.util.UUID.randomUUID().toString()

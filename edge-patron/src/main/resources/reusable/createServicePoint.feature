@@ -12,7 +12,12 @@ Feature: Create service point
         "id": "#(id)",
         "name": "#(name)",
         "code": "#(code)",
-        "discoveryDisplayName": "#(discoveryDisplayName)"
+        "discoveryDisplayName": "#(discoveryDisplayName)",
+        "pickupLocation": true,
+        "holdShelfExpiryPeriod": {
+          "duration": 7,
+          "intervalId": "Days"
+        }
     }
     """
     When method POST

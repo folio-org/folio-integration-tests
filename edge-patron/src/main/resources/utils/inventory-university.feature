@@ -56,7 +56,8 @@ Feature: Global inventory
 
   Scenario: Create service points
     * table servicePoints
-      | id                        | name                       | code  | discoveryDisplayName           |
+      | id                        | name                          | code  | discoveryDisplayName          |
+      | universityServicePointsId | 'University Service point'    | 'UPS' | 'University Service point'    |
     * def v = call createServicePoint servicePoints
 
   Scenario: Create holdings sources
