@@ -64,6 +64,22 @@ Feature: Create circulation policies and rules
     When method PUT
     Then status 204
 
+    # Enable TLR for central tenant via configurations/entries (legacy)
+    * def tlrConfigId = call uuid
+    * def tlrConfigEntry = { id: '#(tlrConfigId)', module: 'SETTINGS', configName: 'TLR', value: '{"titleLevelRequestsFeatureEnabled":true,"tlrHoldShouldFollowCirculationRules":false,"createTitleLevelRequestsByDefault":false}' }
+    Given path 'configurations/entries'
+    And request tlrConfigEntry
+    When method POST
+    Then match [201, 422] contains responseStatus
+
+    # Enable TLR for central tenant via circulation/settings (new API)
+    * def centralTlrSettingsId = call uuid
+    * def centralTlrSettingsRequest = { id: '#(centralTlrSettingsId)', name: 'TLR', value: { titleLevelRequestsFeatureEnabled: true, tlrHoldShouldFollowCirculationRules: false, createTitleLevelRequestsByDefault: false } }
+    Given path 'circulation/settings'
+    And request centralTlrSettingsRequest
+    When method POST
+    Then match [201, 422] contains responseStatus
+
   Scenario: Create circulation policies and rules for university tenant
     * configure headers = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenantName)', 'Accept': '*/*' }
     * def uniCirculationLoanPolicyId = call uuid
@@ -123,3 +139,22 @@ Feature: Create circulation policies and rules
     And request rulesEntityRequest
     When method PUT
     Then status 204
+
+    # Enable TLR for university tenant via configurations/entries (legacy)
+    * def uniTlrConfigId = call uuid
+    * def uniTlrConfigEntry = { id: '#(uniTlrConfigId)', module: 'SETTINGS', configName: 'TLR', value: '{"titleLevelRequestsFeatureEnabled":true,"tlrHoldShouldFollowCirculationRules":false,"createTitleLevelRequestsByDefault":false}' }
+    Given path 'configurations/entries'
+    And request uniTlrConfigEntry
+    When method POST
+    Then match [201, 422] contains responseStatus
+
+    # Enable TLR for university tenant via circulation/settings (new API)
+    * def uniTlrSettingsId = call uuid
+    * def uniTlrSettingsRequest = { id: '#(uniTlrSettingsId)', name: 'TLR', value: { titleLevelRequestsFeatureEnabled: true, tlrHoldShouldFollowCirculationRules: false, createTitleLevelRequestsByDefault: false } }
+    Given path 'circulation/settings'
+    And request uniTlrSettingsRequest
+    When method POST
+    Then match [201, 422] contains responseStatus
+
+    # Re-login to central tenant to restore okapitoken for subsequent operations
+    * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }

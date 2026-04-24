@@ -76,6 +76,9 @@ Feature: Initialize mod-consortia integration tests
       | 'consortium-search.items.item.get'                          |
       | 'patron.account.item-hold.item.post'                        |
       | 'patron.account.instance-hold.item.post'                    |
+      | 'circulation.settings.item.post'                            |
+      | 'mod-settings.global.write.mod-circulation'                 |
+      | 'mod-settings.entries.item.post'                            |
 
     # load global variables
     * callonce variables
@@ -215,6 +218,9 @@ Feature: Initialize mod-consortia integration tests
       | 'consortium-search.items.item.get'                          |
       | 'patron.account.item-hold.item.post'                        |
       | 'patron.account.instance-hold.item.post'                    |
+      | 'circulation.settings.item.post'                            |
+      | 'mod-settings.global.write.mod-circulation'                 |
+      | 'mod-settings.entries.item.post'                            |
 
     * call getAuthorizationToken { tenant: '#(universityTenantName)' }
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }

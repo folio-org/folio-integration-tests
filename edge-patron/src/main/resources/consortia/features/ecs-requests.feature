@@ -1,4 +1,4 @@
-# For FAT-XXXX, Create Karate tests for ILR and TLR ECS requests via edge-patron
+# For FAT-21606, Create Karate tests for ILR and TLR ECS requests via edge-patron
 @parallel=false
 Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
 
@@ -38,22 +38,6 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * def headersUniversity = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(universityTenantName)' }
     * def headersCentralConsortium = { 'Content-Type': 'application/json', 'Authtoken-Refresh-Cache': 'true', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     * configure headers = headersCentral
-
-#    # Create test user early to ensure mod-search cache is populated with real users before consortium calls
-#    * def testGroupId = java.util.UUID.randomUUID().toString()
-#    * def testGroup = 'lib'
-#    * def testTenantId = centralTenantName
-#    * call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(testGroupId)', group: '#(testGroup)', tenantId: '#(testTenantId)' }
-#
-#    * def testUserId = java.util.UUID.randomUUID().toString()
-#    * def randomMillisValue = callonce randomMillis
-#    * def testUserBarcode = 'BG-USER-' + randomMillisValue
-#    * def testUserName = testUserBarcode
-#    * def testFirstName = 'BackgroundFirst'
-#    * def testLastName = 'BackgroundLast'
-#    * def testExternalId = java.util.UUID.randomUUID().toString()
-#    * def testPatronId = testGroupId
-#    * call read('classpath:reusable/user-init-data.feature@CreateUser') { userId: '#(testUserId)', firstName: '#(testFirstName)', lastName: '#(testLastName)', userBarcode: '#(testUserBarcode)', userName: '#(testUserName)', externalId: '#(testExternalId)', patronId: '#(testPatronId)' }
 
     # Verify consortium is properly configured
     * configure headers = headersCentralConsortium
@@ -116,8 +100,7 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * configure headers = headersCentral
     * def ilrGroupId = java.util.UUID.randomUUID().toString()
     * print 'DEBUG: ilrGroupId value:', ilrGroupId
-    * def randomNum = callonce randomMillis
-    * def ilrGroup = 'lib' + randomNum
+    * def ilrGroup = 'lib-ilr-' + ilrGroupId
     * def ilrTenantId = centralTenantName
     * def groupResult = call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(ilrGroupId)', group: '#(ilrGroup)', tenantId: '#(ilrTenantId)' }
     * def ilrPatronId = groupResult.groupId
@@ -135,16 +118,16 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * configure headers = headersUniversity
 
     # Create instance in university tenant
-    * def instanceId = callonce uuid
-    * def randomNum = callonce randomMillis
+    * def instanceId = call uuid
+    * def randomNum = '' + java.lang.System.currentTimeMillis()
     * def instanceHrid = "in" + randomNum
     * table instanceData
       | id         | title      | instanceTypeId           | hrid         |
       | instanceId | instanceId | universityInstanceTypeId | instanceHrid |
-    * callonce createInstanceWithHrid instanceData
+    * def v = call createInstanceWithHrid instanceData
 
     # Share instance to central tenant (using improved sharing)
-    * def sharingId = callonce uuid
+    * def sharingId = call uuid
     Given path 'consortia', consortiumId, 'sharing/instances'
     And request
     """
@@ -248,7 +231,11 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * print 'DEBUG: allowed-service-points response:', response
     Then status 200
     * def allowedServicePoints = response.allowedServicePoints
-    * def ilrServicePointId = allowedServicePoints[0].id
+
+    # Find Central Service point in the response by matching centralServicePointsId
+    * def matched = karate.filter(allowedServicePoints, function(x){ return x.id == centralServicePointsId })
+    * def ilrServicePointId = matched[0].id
+    * print 'DEBUG: ilrServicePointId:', ilrServicePointId
 
     # Reset to standard central tenant headers
     * configure headers = headersCentral
@@ -273,111 +260,131 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     And match response.item.instanceId == instanceId
     And match response.pickupLocationId == ilrServicePointId
 
-#  Scenario: Create shared instance, holding and item in university tenant, then create TLR ECS request
-#    # Create user group and user in central tenant for this specific scenario
-#    * configure headers = headersCentral
-#    * def tlrGroupId = java.util.UUID.randomUUID().toString()
-#    * print 'DEBUG: tlrGroupId value:', tlrGroupId
-#    * def tlrGroup = 'lib'
-#    * def tlrTenantId = centralTenantName
-#    * def groupResult = call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(tlrGroupId)', group: '#(tlrGroup)', tenantId: '#(tlrTenantId)' }
-#    * def tlrPatronId = groupResult.groupId
-#
-#    * def tlrUserId = java.util.UUID.randomUUID().toString()
-#    * def randomNum = callonce randomMillis
-#    * def tlrUserBarcode = 'TLR-ECS-UBC-' + randomNum
-#    * def tlrUserName = tlrUserBarcode
-#    * def tlrFirstName = 'TestFirstName'
-#    * def tlrLastName = 'TestLastName'
-#    * def tlrExternalId = java.util.UUID.randomUUID().toString()
-#    * call read('classpath:reusable/user-init-data.feature@CreateUser') { userId: '#(tlrUserId)', firstName: '#(tlrFirstName)', lastName: '#(tlrLastName)', userBarcode: '#(tlrUserBarcode)', userName: '#(tlrUserName)', externalId: '#(tlrExternalId)', patronId: '#(tlrPatronId)' }
-#
-#    # Switch to university tenant for instance creation
-#    * configure headers = headersUniversity
-#
-#    # Create instance in university tenant
-#    * def instanceId = callonce uuid
-#    * def randomNum = callonce randomMillis
-#    * def instanceHrid = "in" + randomNum
-#    * table instanceData
-#      | id         | title      | instanceTypeId           | hrid         |
-#      | instanceId | instanceId | universityInstanceTypeId | instanceHrid |
-#    * callonce createInstanceWithHrid instanceData
-#
-#    # Share instance to central tenant (using improved sharing)
-#    * def sharingId = callonce uuid
-#    Given path 'consortia', consortiumId, 'sharing/instances'
-#    And request
-#    """
-#    {
-#      id: '#(sharingId)',
-#      instanceIdentifier: '#(instanceId)',
-#      sourceTenantId:  '#(universityTenantName)',
-#      targetTenantId:  '#(centralTenantName)'
-#    }
-#    """
-#    When method POST
-#    Then status 201
-#    And match response.instanceIdentifier == instanceId
-#    And match response.sourceTenantId == universityTenantName
-#    And match response.targetTenantId == centralTenantName
-#    And def sharingInstanceId = response.id
-#
-#    # Verify status is 'COMPLETE'
-#    * configure retry = { count: 120, interval: 30000 }
-#    * print 'Polling for sharing status completion...'
-#    Given path 'consortia', consortiumId, 'sharing/instances'
-#    And param instanceIdentifier = instanceId
-#    And param sourceTenantId = universityTenantName
-#    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
-#    When method GET
-#    * print 'DEBUG: sharingInstances response:', response
-#    Then status 200
-#    And def sharingInstance = response.sharingInstances[0]
-#    And match sharingInstance.id == sharingInstanceId
-#    And match sharingInstance.instanceIdentifier == instanceId
-#    And match sharingInstance.sourceTenantId == universityTenantName
-#    And match sharingInstance.targetTenantId == centralTenantName
-#    And match sharingInstance.status == 'COMPLETE'
-#
-#    # Verify shared instance is updated in source tenant with source = 'CONSORTIUM-FOLIO'
-#    * java.lang.Thread.sleep(5000)
-#    Given path 'inventory/instances', instanceId
-#    When method GET
-#    Then status 200
-#    And match response.id == instanceId
-#    And match response.source == 'CONSORTIUM-FOLIO'
-#
-##    # Now make the allowed-service-points call with debug output using consortium headers
-##    * configure headers = freshHeadersCentral
-##    Given path 'patron/account', tlrUserId, 'instance', instanceId, 'allowed-service-points'
-##    When method GET
-##    * print 'DEBUG: allowed-service-points response status:', responseStatus
-##    * print 'DEBUG: allowed-service-points response:', response
-##    Then status 200
-##    * def allowedServicePoints = response.allowedServicePoints
-##    * def tlrServicePointId = karate.filter(allowedServicePoints, function(x){ return x.requestTypes && x.requestTypes.indexOf('Page') > -1 })[0].id
-#    # Use existing central service point instead of calling allowed-service-points
-#    * def tlrServicePointId = centralServicePointsId
-#
-#    # Reset to standard central tenant headers
-#    * configure headers = headersCentral
-#
-#    # Create TLR ECS request
-#    Given path 'patron/account', tlrUserId, 'instance', instanceId, 'hold'
-#    And request
-#    """
-#    {
-#      "servicePointId": "#(tlrServicePointId)",
-#      "pickupLocationId": "#(centralServicePointsId)",
-#      "requestDate": "#(new java.util.Date().toInstant().toString())"
-#    }
-#    """
-#    When method POST
-#    Then status 201
-#    * def tlrRequestId = response.id
-#    And match response.instanceId == instanceId
-#    And match response.requesterId == tlrUserId
-#    And match response.servicePointId == tlrServicePointId
-#    And match response.requestType == 'Page'
-#    And match response.requestLevel == 'Title'
+  Scenario: Create shared instance, holding and item in university tenant, then create TLR ECS request
+    # Create user group and user in central tenant for this specific scenario
+    * configure headers = headersCentral
+    * def tlrGroupId = java.util.UUID.randomUUID().toString()
+    * print 'DEBUG: tlrGroupId value:', tlrGroupId
+    * def tlrGroup = 'lib-tlr-' + tlrGroupId
+    * def tlrTenantId = centralTenantName
+    * def groupResult = call read('classpath:reusable/user-init-data.feature@CreateGroup') { id: '#(tlrGroupId)', group: '#(tlrGroup)', tenantId: '#(tlrTenantId)' }
+    * def tlrPatronId = groupResult.groupId
+
+    * def tlrUserId = java.util.UUID.randomUUID().toString()
+    * def randomNum = callonce randomMillis
+    * def tlrUserBarcode = 'TLR-ECS-UBC-' + randomNum
+    * def tlrUserName = tlrUserBarcode
+    * def tlrFirstName = 'TestFirstName'
+    * def tlrLastName = 'TestLastName'
+    * def tlrExternalId = java.util.UUID.randomUUID().toString()
+    * call read('classpath:reusable/user-init-data.feature@CreateUser') { userId: '#(tlrUserId)', firstName: '#(tlrFirstName)', lastName: '#(tlrLastName)', userBarcode: '#(tlrUserBarcode)', userName: '#(tlrUserName)', externalId: '#(tlrExternalId)', patronId: '#(tlrPatronId)' }
+
+    # Switch to university tenant for instance creation
+    * configure headers = headersUniversity
+
+    # Create instance in university tenant
+    * def instanceId = call uuid
+    * def randomNum = '' + java.lang.System.currentTimeMillis()
+    * def instanceHrid = "in" + randomNum
+    * table instanceData
+      | id         | title      | instanceTypeId           | hrid         |
+      | instanceId | instanceId | universityInstanceTypeId | instanceHrid |
+    * def v = call createInstanceWithHrid instanceData
+
+    # Share instance to central tenant
+    * def sharingId = call uuid
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And request
+    """
+    {
+      id: '#(sharingId)',
+      instanceIdentifier: '#(instanceId)',
+      sourceTenantId:  '#(universityTenantName)',
+      targetTenantId:  '#(centralTenantName)'
+    }
+    """
+    When method POST
+    Then status 201
+    And match response.instanceIdentifier == instanceId
+    And match response.sourceTenantId == universityTenantName
+    And match response.targetTenantId == centralTenantName
+    And def sharingInstanceId = response.id
+
+    # Verify status is 'COMPLETE'
+    * configure retry = { count: 20, interval: 30000 }
+    * print 'Polling for sharing status completion...'
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And param instanceIdentifier = instanceId
+    And param sourceTenantId = universityTenantName
+    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
+    When method GET
+    * print 'DEBUG: sharingInstances response:', response
+    Then status 200
+    And def sharingInstance = response.sharingInstances[0]
+    And match sharingInstance.id == sharingInstanceId
+    And match sharingInstance.instanceIdentifier == instanceId
+    And match sharingInstance.sourceTenantId == universityTenantName
+    And match sharingInstance.targetTenantId == centralTenantName
+    And match sharingInstance.status == 'COMPLETE'
+
+    # Verify shared instance is updated in source tenant with source = 'CONSORTIUM-FOLIO'
+    * java.lang.Thread.sleep(5000)
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+    And match response.id == instanceId
+    And match response.source == 'CONSORTIUM-FOLIO'
+
+    # Create holding in university tenant
+    * def tlrHoldingId = call uuid
+    * table tlrHoldingData
+      | id           | instanceId | locationId            | sourceId                   |
+      | tlrHoldingId | instanceId | universityLocationsId | universityHoldingsSourceId |
+    * def v = call createHolding tlrHoldingData
+
+    # Create item in the holding in university tenant
+    * def tlrItemId = call uuid
+    # createItem.feature uses holdingId from scope directly
+    * def holdingId = tlrHoldingId
+    * table tlrItemData
+      | id        | holdingsRecordId | barcode    | materialTypeId               | permanentLoanTypeId  | permanentLocationId   |
+      | tlrItemId | tlrHoldingId     | randomNum  | universityMaterialTypeIdPhys | universityLoanTypeId | universityLocationsId |
+    * def v = call createItem tlrItemData
+
+    # Get allowed service points for TLR instance hold (kept for debug/visibility)
+    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
+    * configure headers = freshHeadersCentral
+    Given path 'patron/account', tlrUserId, 'instance', instanceId, 'allowed-service-points'
+    When method GET
+    * print 'DEBUG: TLR allowed-service-points response status:', responseStatus
+    * print 'DEBUG: TLR allowed-service-points response:', response
+    Then status 200
+    * def allowedServicePoints = response.allowedServicePoints
+    * print 'DEBUG: allowedServicePoints:', allowedServicePoints
+
+    # Find Central Service point in the response by matching centralServicePointsId
+    * def matched = karate.filter(allowedServicePoints, function(x){ return x.id == centralServicePointsId })
+    * def tlrServicePointId = matched[0].id
+    * print 'DEBUG: tlrServicePointId:', tlrServicePointId
+
+    # Reset to standard central tenant headers
+    * configure headers = headersCentral
+
+    # Create TLR ECS request
+    Given path 'patron/account', tlrUserId, 'instance', instanceId, 'hold'
+    And headers headersCentralConsortium
+    And request
+    """
+    {
+      "instanceId": "#(instanceId)",
+      "servicePointId": "#(tlrServicePointId)",
+      "pickupLocationId": "#(tlrServicePointId)",
+      "requestDate": "#(new java.util.Date().toInstant().toString())"
+    }
+    """
+    When method POST
+    Then status 201
+    * print 'DEBUG: TLR ECS hold response:', response
+    And match response.status == 'Open - Not yet filled'
+    And match response.item.instanceId == instanceId
+    And match response.pickupLocationId == tlrServicePointId
