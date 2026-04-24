@@ -47,7 +47,8 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     FEATURE_20("subscription-and-tags-editable-in-approved-invoice-with-inactive-budget", true),
     FEATURE_21("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active", true),
     // moved from CrossModulesCriticalPathApiTest (TestRail group = Extended)
-    FEATURE_22("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice-release-false", true);
+    FEATURE_22("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice-release-false", true),
+    FEATURE_23("over-encumbrance-for-fy-ledger-and-group", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -246,5 +247,12 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceRemainsUnreleasedAfterExpenseClassChangeWithPaidInvoiceReleaseFalse() {
     runFeatureTest(Feature.FEATURE_22.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C496175) Over Encumbrance Is Calculated Correctly For Fiscal Year Ledger And Group")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void overEncumbranceCalculatedCorrectlyForFiscalYearLedgerAndGroup() {
+    runFeatureTest(Feature.FEATURE_23.getFileName());
   }
 }
