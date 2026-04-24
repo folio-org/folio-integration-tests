@@ -1,4 +1,4 @@
-# For MODINVOICE-270, MODFISTO-273, MODFISTO-284, MODINVOICE-360, MODINVOICE-446 and MODFISTO-475
+# For MODINVOICE-270, MODFISTO-273, MODFISTO-284, MODINVOICE-360, MODINVOICE-446, MODFISTO-475 and MODORDERS-1439
 Feature: Cancel an invoice linked to an order
 
   Background:
@@ -858,3 +858,101 @@ Feature: Cancel an invoice linked to an order
     When method GET
     Then status 200
     And match $.vouchers[0].status == 'Awaiting payment'
+
+
+  @Positive
+  Scenario: Cancel a paid invoice linked to an order line with received pieces
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
+
+    # 1. Create finances
+    * print "1. Create finances"
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
+
+    # 2. Create an order and line
+    * print "2. Create an order and line"
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10 }
+
+    # 3. Open the order
+    * print "3. Open the order"
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    # 4. Receive the piece
+    * print "4. Receive the piece"
+    Given path 'orders/pieces'
+    And param query = 'poLineId==' + poLineId
+    When method GET
+    Then status 200
+    * def pieceId = $.pieces[0].id
+    * def v = call receivePieceWithHolding { pieceId: '#(pieceId)', poLineId: '#(poLineId)' }
+
+    # 5. Create an invoice
+    * print "5. Create an invoice"
+    * def v = call createInvoice { id: '#(invoiceId)' }
+
+    # 6. Get the encumbrance id
+    * print "6. Get the encumbrance id"
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def encumbranceId = $.fundDistribution[0].encumbrance
+
+    # 7. Add an invoice line linked to the po line
+    * print "7. Add an invoice line linked to the po line"
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(encumbranceId)', total: 10 }
+
+    # 8. Approve the invoice
+    * print "8. Approve the invoice"
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
+
+    # 9. Pay the invoice
+    * print "9. Pay the invoice"
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
+
+    * call pause 100
+
+    # 10. Check the order was closed automatically
+    * print "10. Check the order was closed automatically"
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+    And match $.workflowStatus == 'Closed'
+
+    # 11. Check the encumbrance before cancelling
+    * print "11. Check the encumbrance before cancelling"
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    And match $.amount == 0
+    And match $.encumbrance.initialAmountEncumbered == 10
+    And match $.encumbrance.amountAwaitingPayment == 0
+    And match $.encumbrance.amountExpended == 10
+    And match $.encumbrance.status == 'Released'
+
+    # 12. Cancel the invoice
+    * print "12. Cancel the invoice"
+    * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+
+    # 13. Check the encumbrance was unreleased
+    * print "13. Check the encumbrance was unreleased"
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    And match $.amount == 10
+    And match $.encumbrance.initialAmountEncumbered == 10
+    And match $.encumbrance.amountAwaitingPayment == 0
+    And match $.encumbrance.amountExpended == 0
+    And match $.encumbrance.status == 'Unreleased'
+
+    # 14. Check the order was reopened
+    * print "14. Check the order was reopened"
+    Given path 'orders/composite-orders', orderId
+    When method GET
+    Then status 200
+    And match $.workflowStatus == 'Open'

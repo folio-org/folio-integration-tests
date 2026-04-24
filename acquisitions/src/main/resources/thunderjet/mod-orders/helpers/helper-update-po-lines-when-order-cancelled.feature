@@ -32,6 +32,8 @@ Feature: Helper for "update-po-lines-when-order-cancelled"
     When method PUT
     Then status 204
 
+    * call pause 100
+
     # 4. Verify order status after POL update and cancel if not auto-closed
     Given path 'orders/composite-orders', orderId
     When method GET

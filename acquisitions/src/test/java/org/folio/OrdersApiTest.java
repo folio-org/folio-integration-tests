@@ -37,7 +37,7 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_11("check-re-encumber-property", true),
     FEATURE_12("close-order-and-release-encumbrances", true),
     FEATURE_13("close-order-including-lines", true),
-    FEATURE_14("close-order-when-fully-paid-and-received", true),
+    FEATURE_14("order-status-automatic-change", true),
     FEATURE_15("create-five-pieces", true),
     FEATURE_16("create-open-composite-order", true),
     FEATURE_17("create-order-that-has-not-enough-money", true),
@@ -237,7 +237,7 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void closeOrderWhenFullyPaidAndReceived() {
+  void orderStatusAutomaticChange() {
     runFeatureTest(Feature.FEATURE_14.getFileName());
   }
 
