@@ -1,5 +1,4 @@
 # For MODINVOICE-473
-@parallel=false
 Feature: Set invoice fiscal year automatically
 
   Background:
@@ -16,27 +15,26 @@ Feature: Set invoice fiscal year automatically
 
     * callonce variables
 
+    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
+
+
+  Scenario: Set invoice fiscal year automatically
     * def currentYear = callonce getCurrentYear
     * def currentStart = currentYear + '-01-01T00:00:00Z'
     * def currentEnd = currentYear + '-12-30T23:59:59Z'
 
-    * def pastFiscalYearId = callonce uuid1
-    * def currentFiscalYearId = callonce uuid2
-    * def ledgerId = callonce uuid3
-    * def fundId1 = callonce uuid4
-    * def fundId2 = callonce uuid5
-    * def budgetId1 = callonce uuid6
-    * def budgetId2 = callonce uuid7
-    * def invoiceId = callonce uuid8
-    * def invoiceLineId1 = callonce uuid9
-    * def invoiceLineId2 = callonce uuid10
+    * def pastFiscalYearId = call uuid
+    * def currentFiscalYearId = call uuid
+    * def ledgerId = call uuid
+    * def fundId1 = call uuid
+    * def fundId2 = call uuid
+    * def budgetId1 = call uuid
+    * def budgetId2 = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId1 = call uuid
+    * def invoiceLineId2 = call uuid
 
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-
-
-  Scenario: Create finances
+    # 1. Create finances
     * configure headers = headersAdmin
     * def v = call createFiscalYear { id: #(pastFiscalYearId), code: 'SETFYTEST2020', periodStart: '2020-01-01T00:00:00Z', periodEnd: '2020-12-30T23:59:59Z', series: 'SETFYTEST' }
     * def v = call createFiscalYear { id: #(currentFiscalYearId), code: #('SETFYTEST' + currentYear), periodStart: #(currentStart), periodEnd: #(currentEnd), series: 'SETFYTEST' }
@@ -46,23 +44,20 @@ Feature: Set invoice fiscal year automatically
     * def v = call createBudget { id: #(budgetId1), allocated: 100, fundId: #(fundId1), status: 'Active', fiscalYearId: #(currentFiscalYearId) }
     * def v = call createBudget { id: #(budgetId2), allocated: 100, fundId: #(fundId2), status: 'Active', fiscalYearId: #(pastFiscalYearId) }
 
-
-  Scenario: Create an invoice without specifying the fiscal year
+    # 2. Create an invoice without specifying the fiscal year
+    * configure headers = headersUser
     * def v = call createInvoice { id: #(invoiceId) }
 
-
-  Scenario: Add invoice line 1 using fund 1
+    # 3. Add invoice line 1 using fund 1
     * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId1), invoiceId: #(invoiceId), fundId: #(fundId1), total: 10 }
 
-
-  Scenario: Check the invoice fiscalYearId
+    # 4. Check the invoice fiscalYearId
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
     And match $.fiscalYearId == currentFiscalYearId
 
-
-  Scenario: Try to add invoice line 2 using fund 2
+    # 5. Try to add invoice line 2 using fund 2
     # This will fail because fund2 does not have an active budget in the current fiscal year
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = invoiceLineId2

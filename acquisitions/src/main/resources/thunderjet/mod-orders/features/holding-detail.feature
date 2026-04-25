@@ -51,7 +51,7 @@ Feature: Retrieve Holding Details With Pieces And Items
       { locationId: '#(globalLocationsId2)', quantityPhysical: '#(order1Location2Qty)', quantity: '#(order1Location2Qty)' }
     ]
     """
-    * call createOrderLine { id: '#(poLine1Id)', orderId: '#(order1Id)', fundId: '#(fundId)', locations: '#(order1Locations)', quantity: '#(order1TotalQty)' }
+    * def v = call createOrderLine { id: '#(poLine1Id)', orderId: '#(order1Id)', fundId: '#(fundId)', locations: '#(order1Locations)', quantity: '#(order1TotalQty)' }
 
     # 4. Create Second Order With 3 Locations
     * print '4. Create Second Order With 3 Locations'
@@ -65,7 +65,7 @@ Feature: Retrieve Holding Details With Pieces And Items
       { locationId: '#(globalLocationsId3)', quantityPhysical: '#(order2Location3Qty)', quantity: '#(order2Location3Qty)' }
     ]
     """
-    * call createOrderLine { id: '#(poLine2Id)', orderId: '#(order2Id)', fundId: '#(fundId)', locations: '#(order2Locations)', quantity: '#(order2TotalQty)' }
+    * def v = call createOrderLine { id: '#(poLine2Id)', orderId: '#(order2Id)', fundId: '#(fundId)', locations: '#(order2Locations)', quantity: '#(order2TotalQty)' }
 
     # 5. Open First Order
     * print '5. Open First Order'
@@ -231,7 +231,7 @@ Feature: Retrieve Holding Details With Pieces And Items
     # 6. Create First Order Line With Create Inventory None And First Holding ID
     * print '6. Create First Order Line With Create Inventory None And First Holding ID'
     * def order1Locations = [{ holdingId: '#(holdingId)', quantityPhysical: 2, quantity: 2 }]
-    * call createOrderLine { id: '#(poLine1Id)', orderId: '#(order1Id)', fundId: '#(fundId)', locations: '#(order1Locations)', quantity: 2, createInventory: 'None' }
+    * def v = call createOrderLine { id: '#(poLine1Id)', orderId: '#(order1Id)', fundId: '#(fundId)', locations: '#(order1Locations)', quantity: 2, createInventory: 'None' }
 
     # 7. Create Second Order
     * print '7. Create Second Order'
@@ -240,7 +240,7 @@ Feature: Retrieve Holding Details With Pieces And Items
     # 8. Create Second Order Line With Create Inventory None And Same First Holding ID
     * print '8. Create Second Order Line With Create Inventory None And Same First Holding ID'
     * def order2Locations = [{ holdingId: '#(holdingId)', quantityPhysical: 3, quantity: 3 }]
-    * call createOrderLine { id: '#(poLine2Id)', orderId: '#(order2Id)', fundId: '#(fundId)', locations: '#(order2Locations)', quantity: 3, createInventory: 'None' }
+    * def v = call createOrderLine { id: '#(poLine2Id)', orderId: '#(order2Id)', fundId: '#(fundId)', locations: '#(order2Locations)', quantity: 3, createInventory: 'None' }
 
     # 9. Create Third Order
     * print '9. Create Third Order'
@@ -249,7 +249,7 @@ Feature: Retrieve Holding Details With Pieces And Items
     # 10. Create Third Order Line With Create Inventory None And Second Holding ID
     * print '10. Create Third Order Line With Create Inventory None And Second Holding ID'
     * def order3Locations = [{ holdingId: '#(holdingId2)', quantityPhysical: 4, quantity: 4 }]
-    * call createOrderLine { id: '#(poLine3Id)', orderId: '#(order3Id)', fundId: '#(fundId)', locations: '#(order3Locations)', quantity: 4, createInventory: 'None' }
+    * def v = call createOrderLine { id: '#(poLine3Id)', orderId: '#(order3Id)', fundId: '#(fundId)', locations: '#(order3Locations)', quantity: 4, createInventory: 'None' }
 
     # 11. Open First Order
     * print '11. Open First Order'
@@ -359,7 +359,7 @@ Feature: Retrieve Holding Details With Pieces And Items
     And match response == {}
 
   @Negative
-  Scenario: Retrieve Holding Details For Holdings Without PoLines Returns Empty Response
+  Scenario: Retrieve Holding Details For Holdings Without PoLines Returns Empty Collections
     * def instanceId = call uuid
     * def holdingId1 = call uuid
     * def holdingId2 = call uuid
@@ -389,7 +389,23 @@ Feature: Retrieve Holding Details With Pieces And Items
     When method POST
     Then status 200
 
-    # 6. Verify Response Is Empty Object Since Holdings Have No Associated PoLines
-    * print '6. Verify Response Is Empty Object Since Holdings Have No Associated PoLines'
-    And match response == {}
+    # 6. Verify Response Contains Holdings With Empty Collections Since Holdings Have No Associated PoLines
+    * print '6. Verify Response Contains Holdings With Empty Collections Since Holdings Have No Associated PoLines'
+    * def holding1Key = holdingId1 + ''
+    * def holding2Key = holdingId2 + ''
+    * def holding1Data = karate.get('response["' + holding1Key + '"]')
+    * def holding2Data = karate.get('response["' + holding2Key + '"]')
+    And match holding1Data.poLines_detail_collection.poLines_detail == []
+    And match holding1Data.poLines_detail_collection.totalRecords == 0
+    And match holding1Data.pieces_detail_collection.pieces_detail == []
+    And match holding1Data.pieces_detail_collection.totalRecords == 0
+    And match holding1Data.items_detail_collection.items_detail == []
+    And match holding1Data.items_detail_collection.totalRecords == 0
+    And match holding2Data.poLines_detail_collection.poLines_detail == []
+    And match holding2Data.poLines_detail_collection.totalRecords == 0
+    And match holding2Data.pieces_detail_collection.pieces_detail == []
+    And match holding2Data.pieces_detail_collection.totalRecords == 0
+    And match holding2Data.items_detail_collection.items_detail == []
+    And match holding2Data.items_detail_collection.totalRecords == 0
+
 

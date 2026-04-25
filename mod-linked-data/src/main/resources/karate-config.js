@@ -15,6 +15,7 @@ function fn() {
   var config = {
     tenantParams: {loadReferenceData: true},
     baseUrl: 'http://localhost:8000',
+    foliioUiUrl: karate.properties['foliioUiUrl'] || 'https://my-library.foliio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -25,10 +26,12 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    linkedDataBulkImportUser: {tenant: testTenant, name: 'linked-data-bulk-import', password: 'test'},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
+    deleteCache: karate.read('classpath:citation/mod-linked-data/features/util/admin.feature@deleteCache'),
     getResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResource'),
     getInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getInventoryInstance'),
     putInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putInventoryInstance'),
@@ -49,6 +52,8 @@ function fn() {
     getResourceSupportCheck: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceSupportCheck'),
     getResourcePreview: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourcePreview'),
     validationErrorWithCodeOnResourceCreation: karate.read('classpath:citation/mod-linked-data/features/util/validation-resource.feature@validationErrorWithCodeOnResourceCreation'),
+    previewHub: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@previewHub'),
+    importHub: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@importHub'),
     getSettings: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@getSettings'),
     putSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@putSetting'),
     postSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@postSetting'),
@@ -132,7 +137,7 @@ function fn() {
     config.kcClientSecret = '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env === 'rancher') {
+  } else if (env === 'edev') {
     config.baseUrl = 'https://folio-edev-citation-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-citation-keycloak.ci.folio.org';
   } else if (env != null && env.match(/^ec2-\d+/)) {

@@ -1,11 +1,12 @@
 @ignore
-Feature: Collection of different verifcation of encumbrance transaction
+Feature: Collection of different verification of encumbrance transaction
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   @ignore @VerifyEncumbranceTransactionStatus
-  Scenario: Verify encumbrnace transaction status
+  Scenario: Verify encumbrance transaction status
     Given path 'finance/transactions'
     And param query = 'encumbrance.sourcePurchaseOrderId==' + _orderId
     When method GET

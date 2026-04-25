@@ -71,17 +71,8 @@ Feature: Check encumbrances after order is reopened
 
 
   Scenario Outline: Add an invoice line with releaseEncumbrance=<releaseEncumbrance>
-    * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-    * set invoiceLinePayload.id = <invoiceLineId>
-    * set invoiceLinePayload.invoiceId = invoiceId
-    * set invoiceLinePayload.poLineId = <poLineId>
-    * remove invoiceLinePayload.fundDistributions[0].expenseClassId
-    * set invoiceLinePayload.releaseEncumbrance = <releaseEncumbrance>
+    * def v = call createInvoiceLine { invoiceLineId: '#(<invoiceLineId>)', invoiceId: '#(invoiceId)', fundId: '#(fundId)', poLineId: '#(<poLineId>)', total: 100, releaseEncumbrance: '#(<releaseEncumbrance>)' }
 
-    Given path 'invoice/invoice-lines'
-    And request invoiceLinePayload
-    When method POST
-    Then status 201
     Examples:
       | invoiceLineId  | poLineId        | releaseEncumbrance |
       | invoiceLineId1 | orderLineId1    | false              |
@@ -108,19 +99,7 @@ Feature: Check encumbrances after order is reopened
 
 
   Scenario: Close the order and release encumbrances
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Closed'
-    # remove the lines, otherwise the order will not close (see MODORDERS-514)
-    * remove orderResponse.poLines
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call cancelOrder { orderId: '#(orderId)' }
 
 
   Scenario: Check encumbrances status for closed order

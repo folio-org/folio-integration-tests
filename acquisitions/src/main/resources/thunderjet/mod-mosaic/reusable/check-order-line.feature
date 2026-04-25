@@ -1,12 +1,13 @@
 @ignore
-Feature: checkOrderLine
+Feature: Check order line
   # parameters: poLineNumber, titleOrPackage, listUnitPrice?, listUnitPriceElectronic?,
   # currency?, quantityPhysical?, quantityElectronic?, paymentStatus?, receiptStatus?, checkinItems?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: checkOrderLine
+  Scenario: Check order line
     Given path "orders/order-lines"
     And param query = "poLineNumber==" + poLineNumber
     When method GET

@@ -1,6 +1,7 @@
 package org.folio;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.AcquisitionsTest;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -15,9 +16,9 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.UUID;
 
-@Order(14)
+@Order(16)
 @FolioTest(team = "thunderjet", module = "mod-gobi")
-class GobiApiTest extends TestBaseEureka {
+class GobiApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-gobi/features/";
   private static final String TEST_TENANT = "testmodgobi";
@@ -27,7 +28,8 @@ class GobiApiTest extends TestBaseEureka {
     FEATURE_1("gobi-api-tests", true),
     FEATURE_2("find-holdings-by-location-and-instance", true),
     FEATURE_3("validate-pol-receipt-not-required-with-checkin-items", true),
-    FEATURE_4("validate-pol-suppress-instance-from-discovery", true);
+    FEATURE_4("validate-pol-suppress-instance-from-discovery", true),
+    FEATURE_5("verify-tenant-address-lookup.feature", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -51,21 +53,24 @@ class GobiApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  void gobiApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-gobi/init-gobi.feature");
   }
 
   @AfterAll
-  void gobiApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
@@ -91,5 +96,11 @@ class GobiApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void validatePoLineSuppressInstanceFromDiscovery() {
     runFeatureTest(Feature.FEATURE_4.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void validateTenantAddressLookup() {
+    runFeatureTest(Feature.FEATURE_5.getFileName());
   }
 }

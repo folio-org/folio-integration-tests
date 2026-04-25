@@ -1,5 +1,4 @@
 # For MODINVOICE-328
-@parallel=false
 Feature: Edit subscription dates after invoice is paid
 
   Background:
@@ -16,36 +15,25 @@ Feature: Edit subscription dates after invoice is paid
 
     * callonce variables
 
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
     * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def invoiceId = callonce uuid5
-    * def invoiceLineId = callonce uuid6
 
+  Scenario: Edit subscription dates after invoice is paid
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
 
-  Scenario: Create finances
+    # 1. Create finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 10000 }
 
+    # 2. Create an invoice
+    * configure headers = headersUser
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
-  Scenario: Create an invoice
-    * print "Create an invoice"
-
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
-
-
-  Scenario: Add an invoice line
-    * print "Add an invoice line"
-
+    # 3. Add an invoice line
     * copy invoiceLine = invoiceLineTemplate
     * set invoiceLine.id = invoiceLineId
     * set invoiceLine.invoiceId = invoiceId
@@ -62,42 +50,13 @@ Feature: Edit subscription dates after invoice is paid
     When method POST
     Then status 201
 
+    # 4. Approve the invoice
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
-  Scenario: Approve the invoice
-    * print "Approve the invoice"
+    # 5. Pay the invoice
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-
-    * def invoice = $
-    * set invoice.status = 'Approved'
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
-
-
-  Scenario: Pay the invoice
-    * print "Pay the invoice"
-
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-
-    * def invoice = $
-    * set invoice.status = 'Paid'
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
-
-
-  Scenario: Change subscription dates
-    * print "Change subscription dates"
-
+    # 6. Change subscription dates
     Given path 'invoice/invoice-lines', invoiceLineId
     When method GET
     Then status 200
@@ -111,5 +70,3 @@ Feature: Edit subscription dates after invoice is paid
     And request invoiceLine
     When method PUT
     Then status 204
-
-

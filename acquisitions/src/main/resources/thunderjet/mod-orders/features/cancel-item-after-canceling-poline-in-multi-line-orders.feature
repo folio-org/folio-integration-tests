@@ -1,5 +1,4 @@
-@parallel=false
-Feature: Cancel order
+Feature: Cancel poLine in multi-line order
 
   Background:
     * print karate.info.scenarioName
@@ -16,66 +15,36 @@ Feature: Cancel order
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId1 = callonce uuid4
-    * def poLineId2 = callonce uuid5
+  Scenario: Cancel poLine in multi-line order
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId1 = call uuid
+    * def poLineId2 = call uuid
 
-
-  Scenario: Prepare finances
+    # 1. Prepare finances
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
-  Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # 2. Create an order
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario Outline: Create a po line
-    * copy poLine = orderLineTemplate
-    * set poLine.id = <poLineId>
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.paymentStatus = '<paymentStatus>'
-    * set poLine.receiptStatus = '<receiptStatus>'
+    # 3. Create po lines
+    * def paymentStatus = 'Awaiting Payment'
+    * def receiptStatus = 'Partially Received'
+    * table lines
+      | id        |
+      | poLineId1 |
+      | poLineId2 |
+    * def v = call createOrderLine lines
 
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    Examples:
-      | paymentStatus        | receiptStatus        | poLineId  |
-      | Awaiting Payment     | Partially Received   | poLineId1 |
-      | Awaiting Payment     | Partially Received   | poLineId2 |
-
-  Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
-
-  Scenario: Cancel the orderLine
+    # 5. Cancel the orderLine
     Given path 'orders/order-lines/', poLineId1
     When method GET
     Then status 200
@@ -88,8 +57,7 @@ Feature: Cancel order
     When method PUT
     Then status 204
 
-
-  Scenario: Check the po lines after cancelling the order
+    # 6. Check the po lines after cancelling the order
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -101,7 +69,7 @@ Feature: Cancel order
     * match line2.paymentStatus == 'Awaiting Payment'
     * match line2.receiptStatus == 'Partially Received'
 
-  Scenario: Check the item after cancelling the order
+    # 7. Check the item after cancelling the order
     Given path 'orders/order-lines/', poLineId1
     When method GET
     Then status 200

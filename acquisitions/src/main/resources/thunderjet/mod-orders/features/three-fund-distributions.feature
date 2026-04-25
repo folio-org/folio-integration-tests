@@ -1,5 +1,4 @@
 # For MODORDERS-646
-@parallel=false
 Feature: Three fund distributions
 
   Background:
@@ -16,17 +15,18 @@ Feature: Three fund distributions
 
     * callonce variables
 
-    * def fundId1 = callonce uuid1
-    * def fundId2 = callonce uuid2
-    * def fundId3 = callonce uuid3
-    * def budgetId1 = callonce uuid4
-    * def budgetId2 = callonce uuid5
-    * def budgetId3 = callonce uuid6
-    * def orderId = callonce uuid7
-    * def poLineId = callonce uuid8
 
+  Scenario: Three fund distributions
+    * def fundId1 = call uuid
+    * def fundId2 = call uuid
+    * def fundId3 = call uuid
+    * def budgetId1 = call uuid
+    * def budgetId2 = call uuid
+    * def budgetId3 = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
-  Scenario: Create funds and budgets
+    # 1. Create funds and budgets
     * configure headers = headersAdmin
     * def v = call createFund { id: '#(fundId1)', ledgerId: '#(globalLedgerId)' }
     * def v = call createFund { id: '#(fundId2)', ledgerId: '#(globalLedgerId)' }
@@ -35,48 +35,17 @@ Feature: Three fund distributions
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId2)', allocated: 1000 }
     * def v = call createBudget { id: '#(budgetId3)', fundId: '#(fundId3)', allocated: 1000 }
 
+    # 2. Create a composite order
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario: Create a composite order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # 3. Create an order line
+    * table fundDistribution
+      | fundId  | code    | distributionType | value |
+      | fundId1 | fundId1 | 'amount'         | 30.0  |
+      | fundId2 | fundId2 | 'amount'         | 30.0  |
+      | fundId3 | fundId3 | 'amount'         | 30.0  |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 90, fundDistribution: '#(fundDistribution)' }
 
-
-  Scenario: Create an order line
-    Given path 'orders/order-lines'
-
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.cost.listUnitPrice = 90
-    * set poLine.cost.poLineEstimatedPrice = 90
-    * set poLine.fundDistribution[0] = { fundId:"#(fundId1)", code :"#(fundId1)", distributionType:"amount", value:30.0 }
-    * set poLine.fundDistribution[1] = { fundId:"#(fundId2)", code :"#(fundId2)", distributionType:"amount", value:30.0 }
-    * set poLine.fundDistribution[2] = { fundId:"#(fundId3)", code :"#(fundId3)", distributionType:"amount", value:30.0 }
-
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
-
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }

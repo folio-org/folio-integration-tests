@@ -15,8 +15,8 @@ Feature: Create service point
         "discoveryDisplayName": "#(discoveryDisplayName)",
         "pickupLocation": true,
         "holdShelfExpiryPeriod": {
-          "duration": 7,
-          "intervalId": "Days"
+            "duration": 3,
+            "intervalId": "Weeks"
         }
     }
     """

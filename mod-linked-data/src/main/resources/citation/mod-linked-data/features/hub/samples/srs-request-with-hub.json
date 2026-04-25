@@ -1,0 +1,55 @@
+{
+  "_actionType":"create",
+  "leader":"00596nam\\a2200217\\\\\\4500",
+  "fields":[
+    {
+      "tag":"003",
+      "content":"ICU"
+    },
+    {
+      "tag":"008",
+      "content":{
+        "Type":"a",
+        "BLvl":"m",
+        "DtSt":"s",
+        "Date1":"1927",
+        "Date2":"\\\\\\\\",
+        "Ctry":"nyu",
+        "Lang":"eng",
+        "MRec":"\\",
+        "Srce":"u",
+        "Audn":"\\",
+        "Form":"\\",
+        "GPub":"\\",
+        "Conf":"0",
+        "Fest":"0",
+        "Indx":"0",
+        "LitF":"1",
+        "Biog":"\\"
+      }
+    },
+    {
+      "tag":"245",
+      "content":"$a Trpʻoba camebultʻa $c Datʻo Barbakʻaże ; tʻargmani: Meri Pʻipʻia = Passion of the martyrs / Dato Barbakadze.",
+      "indicators":[
+        "1",
+        "0"
+      ]
+    },
+    {
+      "tag":"600",
+      "content":"$a Barbakʻaże, Datʻo, $d 1966- $t Trpʻoba camebultʻa $x Criticism and interpretation.",
+      "indicators":[
+        "1",
+        "0"
+      ]
+    }
+  ],
+  "suppressDiscovery":false,
+  "marcFormat":"BIBLIOGRAPHIC",
+  "parsedRecordId":"8c7856ba-915c-4298-846e-1d7e9cf6054f",
+  "parsedRecordDtoId":"f50330f5-99aa-4969-9399-4f0b5a450613",
+  "externalId":"148d214c-a930-4538-837a-dcc2d99d4dfa",
+  "externalHrid":"in1588315",
+  "relatedRecordVersion":1
+}

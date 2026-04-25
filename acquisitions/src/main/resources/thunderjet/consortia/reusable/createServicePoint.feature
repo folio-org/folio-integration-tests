@@ -2,9 +2,10 @@
 Feature: Create service point
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createServicePoint
+  Scenario: Create service point
     Given path 'service-points'
     And request
     """

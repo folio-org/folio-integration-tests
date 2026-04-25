@@ -47,7 +47,7 @@ Feature: Group expense classes
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
     Examples:

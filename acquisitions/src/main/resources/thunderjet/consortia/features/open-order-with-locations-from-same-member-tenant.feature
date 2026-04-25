@@ -1,5 +1,4 @@
 # For MODORDERS-1365
-@parallel=false
 Feature: Open order with the same member tenant locations
 
   Background:
@@ -17,13 +16,15 @@ Feature: Open order with the same member tenant locations
     * callonce variablesCentral
     * callonce variablesUniversity
 
-    * def fundId = callonce uuid
-    * def budgetId = callonce uuid
-    * def v = callonce createFund { 'id': '#(fundId)' }
-    * def v = callonce createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active' }
-
+    * def fundId = call uuid
+    * def budgetId = call uuid
     * def orderId = call uuid
     * def poLineId = call uuid
+
+    # 0. Create fund and budget
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 100 }
+
 
   @Positive
   Scenario: Create and open order with 'Physical' format and locations from the same member tenant

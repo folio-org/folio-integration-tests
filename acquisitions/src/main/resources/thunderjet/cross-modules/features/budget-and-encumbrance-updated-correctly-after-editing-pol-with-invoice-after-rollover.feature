@@ -98,16 +98,7 @@ Feature: Budget Summary And Encumbrances Updated Correctly When Editing POL With
 
     # 11. Close Order #2 With Reason Cancelled
     * print '11. Close Order #2 With Reason Cancelled'
-    Given path 'orders/composite-orders', order2Id
-    When method GET
-    Then status 200
-    * def order2 = response
-    * set order2.workflowStatus = 'Closed'
-    * set order2.closeReason = { reason: 'Cancelled' }
-    Given path 'orders/composite-orders', order2Id
-    And request order2
-    When method PUT
-    Then status 204
+    * def v = call cancelOrder { orderId: '#(order2Id)' }
 
     # 12. Verify Order #2 POL Receipt Status Is Cancelled And Payment Status Is Cancelled
     * print '12. Verify Order #2 POL Receipt Status Is Cancelled And Payment Status Is Cancelled'

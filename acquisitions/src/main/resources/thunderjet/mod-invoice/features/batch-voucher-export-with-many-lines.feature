@@ -17,7 +17,6 @@ Feature: Batch voucher export with many lines
     * callonce variables
 
     * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
     * def batchGroupId = callonce uuid1
     * def invoiceId = callonce uuid2
@@ -44,25 +43,17 @@ Feature: Batch voucher export with many lines
 
 
   Scenario Outline: Create <description> with a new fund
+    * def invoiceLineId = call uuid
     * def fundId = call uuid
     * def budgetId = call uuid
     * def externalAccountNo = call uuid
+
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)', externalAccountNo: '#(externalAccountNo)' }
-    * call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)', externalAccountNo: '#(externalAccountNo)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
     * configure headers = headersUser
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = call uuid
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.description = '<description>'
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundId: '#(fundId)', total: 100, description: '#(<description>)' }
 
     Examples:
       | description |
@@ -85,16 +76,7 @@ Feature: Batch voucher export with many lines
 
 
   Scenario: Approve the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
 
   Scenario: Create the batch voucher and check the number of lines

@@ -3,6 +3,7 @@ Feature: Change order line instance connection
   # parameters: poLineId, instanceId, holdingsOperation, deleteAbandonedHoldings
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: changeOrderLineInstanceConnection

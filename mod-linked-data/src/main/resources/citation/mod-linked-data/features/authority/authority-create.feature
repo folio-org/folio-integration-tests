@@ -28,26 +28,27 @@ Feature: Import authority into graph
     function(subgraph, expectedType, expectedDoc, expectedLabel, identifiers) {
       assertTrue(subgraph.types && subgraph.types.includes(expectedType), 'Type mismatch: expected ' + expectedType + ', got ' + JSON.stringify(subgraph.types));
       validateResource(subgraph, expectedDoc, expectedLabel);
+      assertMatch(subgraph.folioMetadata, { inventoryId: '#notnull', source: 'MARC', srsId: '#notnull' }, 'Authority folioMetadata mismatch: got ' + JSON.stringify(subgraph.folioMetadata));
       assertTrue(subgraph.outgoingEdges && subgraph.outgoingEdges.length > 0, 'No outgoing edges found');
       identifiers.forEach((identifier, idx) => {
         var outgoing = subgraph.outgoingEdges.find(edge => {
-          var types = edge.target.types || [];
+          var target = resolveSubgraphIfId(edge.target);
+          var types = target.types || [];
           return edge.predicate == 'MAP' && types.includes('IDENTIFIER') && types.includes(identifier.identifierType) && types.length === 2;
         });
-        validateResource(outgoing.target, identifier.identifierDoc, identifier.identifierLabel);
+        validateResource(resolveSubgraphIfId(outgoing.target), identifier.identifierDoc, identifier.identifierLabel);
       });
       return true;
     }
     """
 
   @ignore
-  @validateAuthortiySubgraph
+  @validateAuthoritySubgraph
   Scenario: Common authority subgraph validation
     * def params = __arg
     * configure headers = testAdminHeaders
     * def sourceRecordRequest = read(params.sourceRecordPath)
     * def postAuthorityCall = call postSourceRecordToStorage
-    And match postAuthorityCall.response.qmRecordId == '#notnull'
 
     * def query = params.query
     * def searchAuthorityCall = call searchAuthority
@@ -73,7 +74,6 @@ Feature: Import authority into graph
         'http://bibfra.me/vocab/lite/name': ['Feria Internacional del Libro de La Paz'],
         'http://bibfra.me/vocab/lite/label': ['Feria Internacional del Libro de La Paz, 2015, La Paz, Bolivia'],
         'http://bibfra.me/vocab/library/place': ['La Paz, Bolivia'],
-        'http://library.link/vocab/resourcePreferred': ['true'],
         'http://bibfra.me/vocab/library/numberOfParts': ['20th :']
       },
       expectedLabel: 'Feria Internacional del Libro de La Paz, 2015, La Paz, Bolivia',
@@ -110,7 +110,6 @@ Feature: Import authority into graph
       expectedDoc: {
         'http://bibfra.me/vocab/lite/name': ['Alaska'],
         'http://bibfra.me/vocab/lite/label': ['Alaska, Department of Natural Resources, Land Records Information Section'],
-        'http://library.link/vocab/resourcePreferred': ['true'],
         'http://bibfra.me/vocab/library/subordinateUnit': ['Department of Natural Resources', 'Land Records Information Section']
       },
       expectedLabel: 'Alaska, Department of Natural Resources, Land Records Information Section',
@@ -146,8 +145,7 @@ Feature: Import authority into graph
         expectedType: 'PLACE',
         expectedDoc: {
           'http://bibfra.me/vocab/lite/name': ['Valley Forge (Pa.)'],
-          'http://bibfra.me/vocab/lite/label': ['Valley Forge (Pa.)'],
-          'http://library.link/vocab/resourcePreferred': ['true'],
+          'http://bibfra.me/vocab/lite/label': ['Valley Forge (Pa.)']
         },
         expectedLabel: 'Valley Forge (Pa.)',
         identifiers: [

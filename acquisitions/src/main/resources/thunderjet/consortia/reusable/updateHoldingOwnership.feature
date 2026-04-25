@@ -2,9 +2,10 @@
 Feature: Update Holding Ownership
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: updateHoldingOwnership
+  Scenario: Update Holding Ownership
     Given path 'inventory/holdings/update-ownership'
     And request
     """

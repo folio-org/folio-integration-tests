@@ -11,7 +11,7 @@ function fn() {
   var config = {
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:8000',
-    centralServerUrl: 'https://folio-dev-volaris-2nd-mockserver.ci.folio.org',
+    centralServerUrl: 'https://folio-edev-volaris-2nd-mockserver.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -93,9 +93,17 @@ function fn() {
   karate.repeat(100, rand);
 
   if (env == 'dev') {
-    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
-    config.kcClientId = 'supersecret';
-    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+    config.baseUrl = 'https://folio-edev-volaris-2nd-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-volaris-2nd-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
+    config.kcClientId = 'folio-backend-admin-client';
+    config.centralServerUrl = karate.get('centralServerUrl') || 'https://folio-edev-volaris-2nd-mockserver.ci.folio.org';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
   } else if (env == 'snapshot-2') {
     config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';

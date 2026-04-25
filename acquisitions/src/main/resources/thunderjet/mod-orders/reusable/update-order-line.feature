@@ -3,9 +3,10 @@ Feature: Update order line
   # parameters: id, titleOrPackage?, paymentStatus?, receiptStatus?, listUnitPrice?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: updateOrderLine
+  Scenario: Update order line
     Given path '/orders/order-lines', id
     When method GET
     Then status 200

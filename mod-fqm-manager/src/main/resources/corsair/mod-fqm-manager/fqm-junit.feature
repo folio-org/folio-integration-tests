@@ -7,6 +7,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-login'                 |
       | 'mod-permissions'           |
       | 'mod-users'                 |
+      | 'mod-users-bl'              |
       | 'mod-inventory-storage'     |
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
@@ -22,6 +23,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-pubsub'                |
       | 'mod-patron-blocks'         |
       | 'mod-feesfines'             |
+      | 'mod-settings'              |
       | 'mod-tags'                  |
 
     * table userPermissions
@@ -69,6 +71,9 @@ Feature: mod-fqm-manager integration tests
       | 'fqm.query.purge.post'                                             |
       | 'fqm.query.sync.get'                                               |
       | 'fqm.version.get'                                                  |
+      | 'inventory-storage.authorities.collection.get'                     |
+      | 'inventory-storage.authority-note-types.collection.get'            |
+      | 'inventory-storage.authority-source-files.collection.get'          |
       | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
@@ -113,14 +118,15 @@ Feature: mod-fqm-manager integration tests
       | 'invoice.invoice-lines.collection.get'                             |
       | 'invoice.invoices.collection.get'                                  |
       | 'linked-data.resources.rdf.get'                                    |
+      | 'locale.item.get'                                                  |
       | 'lost-item-fees-policies.collection.get'                           |
       | 'manual-block-templates.collection.get'                            |
       | 'manualblocks.collection.get'                                      |
-      | 'orders-storage.acquisition-methods.collection.get'                |
       | 'orders-storage.pieces.collection.get'                             |
       | 'orders-storage.po-lines.item.post'                                |
       | 'orders-storage.purchase-orders.item.post'                         |
       | 'orders-storage.titles.collection.get'                             |
+      | 'orders.acquisition-methods.collection.get'                        |
       | 'orders.item.get'                                                  |
       | 'orders.po-lines.item.get'                                         |
       | 'organizations-storage.categories.collection.get'                  |
@@ -131,7 +137,9 @@ Feature: mod-fqm-manager integration tests
       | 'overdue-fines-policies.collection.get'                            |
       | 'owners.collection.get'                                            |
       | 'patron-blocks.user-summary.item.get'                              |
+      | 'patron-blocks.automated-patron-blocks.collection.get'             |
       | 'payments.collection.get'                                          |
+      | 'proxiesfor.collection.get'                                        |
       | 'refunds.collection.get'                                           |
       | 'search.instances.collection.get'                                  |
       | 'source-storage.records.collection.get'                            |
@@ -143,6 +151,7 @@ Feature: mod-fqm-manager integration tests
       | 'users.item.delete'                                                |
       | 'users.item.get'                                                   |
       | 'users.item.post'                                                  |
+      | 'users-bl.transactions.get'                                        |
       | 'voucher.voucher-lines.collection.get'                             |
       | 'voucher.vouchers.collection.get'                                  |
       | 'waives.collection.get'                                            |

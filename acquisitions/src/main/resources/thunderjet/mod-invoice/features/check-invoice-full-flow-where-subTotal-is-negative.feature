@@ -67,18 +67,9 @@ Feature: Check invoice full flow where sub total is negative
     |invoiceLineId3| -10.02 |   1     |
     |invoiceLineId4| -10.02 |   1     |
 
-    # ============= approve invoice ===================
   Scenario: Approve created invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    # ============= approve invoice ===================
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
 
   Scenario: Verify get invoice by id - invoice totals are calculated invoice and move to Approved status
@@ -100,8 +91,8 @@ Feature: Check invoice full flow where sub total is negative
     And match $.invoices[0].subTotal == 4.04
     And match $.invoices[0].total == 4.04
 
-      # ============= Verify voucher lines ===================
   Scenario: Verify voucher lines after invoice approve
+    # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
     And param limit = '2147483647'
     And param query = 'invoiceId==' + invoiceId
@@ -123,16 +114,7 @@ Feature: Check invoice full flow where sub total is negative
     And match (voucherLine.sourceIds) contains any [ '#(invoiceLineId1, invoiceLineId2, invoiceLineId3, invoiceLineId4)']
 
   Scenario: Pay for the invoice without voucher
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = 'Paid'
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Verify payed invoice
     Given path 'invoice/invoices', invoiceId

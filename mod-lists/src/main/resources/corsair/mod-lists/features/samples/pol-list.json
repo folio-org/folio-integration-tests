@@ -1,0 +1,9 @@
+{
+  "name": "POL List",
+  "description": "POL List",
+  "entityTypeId": "abc777d3-2a45-43e6-82cb-71e8c96d13d2",
+  "fqlQuery": "{\"$and\": [{\"pol.po_line_number\" : {\"$eq\": \"1234\"}}]}",
+  "isActive": "true",
+  "isPrivate": "false"
+}
+

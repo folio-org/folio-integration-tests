@@ -11,9 +11,11 @@ Feature: mod-linked-data integration tests
       | 'mod-entities-links'                      |
       | 'mod-inventory'                           |
       | 'mod-inventory-storage'                   |
+      | 'mod-source-record-manager'               |
       | 'mod-source-record-storage'               |
       | 'mod-quick-marc'                          |
       | 'mod-linked-data'                         |
+      | 'mod-linked-data-import'                  |
       | 'mod-record-specifications'               |
       | 'mod-settings'                            |
       | 'folio_quick-marc'                        |
@@ -33,6 +35,8 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.preview.get'                            |
       | 'linked-data.resources.import.post'                            |
       | 'linked-data.import.file.post'                                 |
+      | 'linked-data.hub.preview.get'                                  |
+      | 'linked-data.hub.import.post'                                  |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
@@ -56,9 +60,25 @@ Feature: mod-linked-data integration tests
       | 'inventory.instances.item.put'                                        |
       | 'browse.authorities.collection.get'                                   |
       | 'source-storage.records.formatted.item.get'                           |
+      | 'linked-data.admin.caches.delete'                                     |
+      | 'base-url.item.put'                                                   |
 
-  Scenario: create tenant and users for testing
+    * table linkedDataBulkImportPermissions
+      | name                                                       |
+      | 'linked-data-import.files.collection.post'                 |
+      | 'linked-data-import.start.post'                            |
+      | 'linked-data-import.jobs.item.get'                         |
+      | 'linked-data-import.jobs.failed-lines.collection.get'      |
+      | 'linked-data-import.jobs.item.stop.put'                  |
+
+  Scenario: create a tenant and linked-data-cataloger user
     * call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: Create admin user
     * call read('classpath:common/eureka/create-additional-user.feature') { testUser: '#(testAdmin)', userPermissions: '#(adminPermissions)' }
+
+  Scenario: Create linked-data-bulk-import user
+    * call read('classpath:common/eureka/create-additional-user.feature') { testUser: '#(linkedDataBulkImportUser)', userPermissions: '#(linkedDataBulkImportPermissions)' }
+
+  Scenario: set FOLIO UI base-url for the tenant
+    * call read('classpath:citation/mod-linked-data/features/util/base-url.feature@putBaseUrl')

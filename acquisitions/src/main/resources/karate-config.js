@@ -98,16 +98,17 @@ function fn() {
 
     // orders
     createOrder: karate.read('classpath:thunderjet/mod-orders/reusable/create-order.feature'),
+    createOrderFromJson: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-from-json.feature'),
     updateOrder: karate.read('classpath:thunderjet/mod-orders/reusable/update-order.feature'),
     openOrder: read('classpath:thunderjet/mod-orders/reusable/open-order.feature'),
     unopenOrder: read('classpath:thunderjet/mod-orders/reusable/unopen-order.feature'),
-    unopenOrderDeleteHoldings: read('classpath:thunderjet/mod-orders/reusable/unopen-order-delete-holdings.feature'),
     deleteInstance: read('classpath:thunderjet/mod-orders/reusable/delete-instance.feature'),
     closeOrder: read('classpath:thunderjet/mod-orders/reusable/close-order.feature'),
     cancelOrder: read('classpath:thunderjet/mod-orders/reusable/cancel-order.feature'),
     deleteOrder: read('classpath:thunderjet/mod-orders/reusable/delete-order.feature'),
     getOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/get-order-line.feature'),
     createOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line.feature'),
+    createElectronicOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/create-electronic-order-line.feature'),
     createOrderLineWithInstance: karate.read('classpath:thunderjet/mod-orders/reusable/create-order-line-with-instance.feature'),
     changeOrderLineInstanceConnection: karate.read('classpath:thunderjet/mod-orders/reusable/change-order-line-instance-connection.feature'),
     updateOrderLine: karate.read('classpath:thunderjet/mod-orders/reusable/update-order-line.feature'),
@@ -133,6 +134,9 @@ function fn() {
     payInvoice: read('classpath:thunderjet/mod-invoice/reusable/pay-invoice.feature'),
     cancelInvoice: read('classpath:thunderjet/mod-invoice/reusable/cancel-invoice.feature'),
     verifyInvoiceLine: read('classpath:thunderjet/mod-invoice/reusable/verify-invoice-line.feature'),
+
+    // cross-module
+    createInvoiceLineFromPoLine: read('classpath:thunderjet/cross-modules/reusable/create-invoice-line-from-po-line.feature'),
 
     // organizations
     createAcqUnit: karate.read('classpath:thunderjet/mod-organizations/reusable/create-acq-unit.feature'),

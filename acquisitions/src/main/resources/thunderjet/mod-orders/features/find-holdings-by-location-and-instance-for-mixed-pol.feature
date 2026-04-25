@@ -25,21 +25,11 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
 
   Scenario: Create finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
   Scenario: Create first order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId1)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId1)' }
 
   Scenario: Create first mixed order line
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')
@@ -56,17 +46,7 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     * def poLineNumber = createdLine.createdLine
 
   Scenario: Open the first order
-    Given path 'orders/composite-orders', orderId1
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId1
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId1)' }
 
   Scenario: Check inventory and order items after open first order
     * print 'Get the instanceId and holdingId from the po line'
@@ -89,17 +69,7 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     And match $.totalRecords == 2
 
   Scenario: Create second order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId2)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId2)' }
 
   Scenario: Create second mixed order line
     * print 'Get the instanceId'
@@ -123,17 +93,7 @@ Feature: find-holdings-by-location-and-instance-for-mixed-pol
     * def poLineNumber = createdLine.createdLine
 
   Scenario: Open the second order
-    Given path 'orders/composite-orders', orderId2
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId2
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId2)' }
 
   Scenario: Check inventory and order items after open second order
     * print 'Get the instanceId and holdingId from the po line'

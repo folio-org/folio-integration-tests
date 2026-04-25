@@ -9,7 +9,7 @@ Feature: Scenarios that are primarily focused around getting list contents
 
 
   Scenario: Get contents of a list, ensure different results for different offsets
-    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list-request.json')
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * listRequest.fqlQuery = '{\"$and\": [{\"users.username\" : {\"$regex\": \"^integration_test_user\"}}]}'
     * def postCall = call postList
     * def listId = postCall.listId

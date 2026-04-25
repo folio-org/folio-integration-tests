@@ -1,6 +1,5 @@
 # For MODORDERS-1226
-@parallel=false
-Feature: Open Orders with PoLines
+Feature: Open Orders with and without PoLines
 
   Background:
     * print karate.info.scenarioName
@@ -19,12 +18,12 @@ Feature: Open Orders with PoLines
     * def budgetId = call uuid
 
     * configure headers = headersAdmin
-    * def v = callonce createFund { id: '#(fundId)' }
-    * def v = callonce createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
     * configure headers = headersUser
 
   @Positive
-  Scenario: Open Orders with PoLines
+  Scenario: Open Order with PoLines
     * def orderId = call uuid
 
     * print '1. Create composite order'
@@ -40,7 +39,7 @@ Feature: Open Orders with PoLines
     * def v = call openOrder { orderId: '#(orderId)' }
 
   @Negative
-  Scenario: Open Orders with PoLines - Throw Exception
+  Scenario: Open Order without PoLines - Throw Exception
     * def orderId = call uuid
 
     * print '1. Create composite order'
@@ -64,4 +63,3 @@ Feature: Open Orders with PoLines
     And match each $.errors[*].message == 'Composite order is missing poLines for Open operations'
     And match $.errors[*].paremeters == []
     And match $.total_records == 1
-

@@ -1,7 +1,7 @@
 Feature: Test quickMARC holdings records
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * def okapitokenUser = okapitoken
 
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
@@ -51,33 +51,23 @@ Feature: Test quickMARC holdings records
     #Create record
     * def record = read(samplePath + 'parsed-records/holdings.json')
     * set record._actionType = 'create'
+    * match record.fields[?(@.tag=='035')].content == ["$a Test 035 tag"]
+    * def field003 = {"tag": "003", "indicators": [ "\\", "\\" ], "content": "$a test 003 field"}
+    * record.fields.push(field003)
 
     Given path 'records-editor/records'
     And headers headersUser
     And request record
     When method POST
     Then status 201
-    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
-    And def jobExecutionId = response.jobExecutionId
-
-    #Check status
-    Given path 'records-editor/records/status'
-    And param qmRecordId = response.qmRecordId
-    And headers headersUser
-    And retry until response.status == 'CREATED' || response.status == 'ERROR'
-    When method GET
-    Then status 200
-    Then match response.status != 'ERROR'
     And def recordId = response.externalId
+    Then match response.fields[?(@.tag=='003')] == []
+    Then match response.fields[?(@.tag=='035')].content == ["$a Test 035 tag"]
 
     #Check srs creation
-    Given path 'source-storage/source-records'
-    And param recordType = 'MARC_HOLDING'
-    And param snapshotId = jobExecutionId
-    And headers headersUser
-    When method get
-    Then status 200
-    And match response.totalRecords != 0
+    * def srsRecord = call read('setup/setup.feature@GetSRSRecord') {recordId: '#(recordId)', idType: 'HOLDINGS'}
+    * match srsRecord.response.deleted == false
+    * match srsRecord.response.state == 'ACTUAL'
 
     #Check inventory creation
     Given path 'holdings-storage/holdings', recordId
@@ -103,25 +93,15 @@ Feature: Test quickMARC holdings records
     When method GET
     Then status 200
     And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='004')]")[0]
-    Then match tag.content == instanceHrid
+    And match tag.content == instanceHrid
 
     #Should contains a 008 tag
-    Given path 'records-editor/records'
-    And param externalId = recordId
-    And headers headersUser
-    When method GET
-    Then status 200
     And match response.fields[?(@.tag=='008')].content != null
 
     #Should contains a valid 852 location code
-    Given path 'records-editor/records'
-    And param externalId = recordId
-    And headers headersUser
-    When method GET
-    Then status 200
     And def tag = karate.jsonPath(response, "$.fields[?(@.tag=='852')]")[0]
-    Then match tag.content != null
-    Then match tag.content contains "$b permanentLocationId $h Test 852h tag"
+    And match tag.content != null
+    And match tag.content contains "$b permanentLocationId $h Test 852h tag"
 
   Scenario: Edit quick-marc record tags
     Given path 'records-editor/records'
@@ -293,7 +273,7 @@ Feature: Test quickMARC holdings records
   #   ================= negative test cases =================
 
   Scenario: Quick-marc record contains invalid 004 and not linked to instance record HRID
-    * def expectedMessage = "The 004 tag of the Holdings doesn't has a link to the Bibliographic record"
+    * def expectedMessage = "Failed to map marc-holdings record with parsedRecordId null: No instance found for HRID: wrongHrid in tenant: " + testTenant
     * def holdings = read(samplePath + 'parsed-records/holdings.json')
     * set holdings.fields[?(@.tag=='004')].content = 'wrongHrid'
     * set holdings._actionType = 'create'
@@ -302,16 +282,8 @@ Feature: Test quickMARC holdings records
     And headers headersUser
     And request holdings
     When method POST
-    Then status 201
-    And retry until response.status != 'IN_PROGRESS'
-
-    Given path 'records-editor/records/status'
-    And param qmRecordId = response.qmRecordId
-    And headers headersUser
-    When method GET
-    Then status 200
-    Then match response.status == 'ERROR'
-    Then match response.errorMessage == expectedMessage
+    Then status 422
+    Then match response.message == expectedMessage
 
   Scenario: Attempt to create a duplicate 004
     Given path 'records-editor/records'

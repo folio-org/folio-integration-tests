@@ -2,9 +2,10 @@
 Feature: Create instance type
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createInstanceType
+  Scenario: Create instance type
     Given path 'instance-types'
     And request
     """

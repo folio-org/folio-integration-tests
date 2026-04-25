@@ -32,7 +32,7 @@ Feature: Budget expense classes
     * def newAllowableExpenditure = 111.11
 
 
-    * call createFund { 'id': '#(fundId)'}
+    * def v = call createFund { id: '#(fundId)' }
 
     Given path '/finance-storage/budgets'
     And request

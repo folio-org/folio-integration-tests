@@ -1,6 +1,7 @@
 Feature: Reusable function to init circulation request
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   @CreateCirculationRequest

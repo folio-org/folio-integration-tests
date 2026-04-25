@@ -18,11 +18,11 @@ Feature: Open orders in member tenant, share instance in one case
     * callonce variablesCentral
     * callonce variablesUniversity
 
-    * def fiscalYearId = callonce uuid
-    * def ledgerId = callonce uuid
-    * def fundId = callonce uuid
-    * def budgetId = callonce uuid
-    * def vendorId = callonce uuid
+    * def fiscalYearId = callonce uuid { n: 1 }
+    * def ledgerId = callonce uuid { n: 2 }
+    * def fundId = callonce uuid { n: 3 }
+    * def budgetId = callonce uuid { n: 4 }
+    * def vendorId = callonce uuid { n: 5 }
 
     * def currentYear = call getCurrentYear
     * def codePrefix = call random_string
@@ -102,7 +102,7 @@ Feature: Open orders in member tenant, share instance in one case
     When method GET
 
     # 4. Unopen order with delete holdings
-    * def v = call unopenOrderDeleteHoldings { "orderId": "#(orderId)" }
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
 
     # 5. Delete instance to avoid the instance being used by the next test
     * configure headers = headersCentral

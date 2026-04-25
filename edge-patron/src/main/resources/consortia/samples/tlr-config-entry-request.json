@@ -1,0 +1,9 @@
+{
+  "id": "91c754c3-33b4-492c-83ba-bd7426e56021",
+  "name": "TLR",
+  "value": {
+    "titleLevelRequestsFeatureEnabled": true,
+    "createTitleLevelRequestsByDefault": false,
+    "tlrHoldShouldFollowCirculationRules": false
+  }
+}

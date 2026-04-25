@@ -25,7 +25,7 @@ Feature: Make transfer transaction and verify budget updates
 
   Scenario Outline: Setup ledger
     * def ledgerId = <ledgerId>
-    * call createLedger { 'id': '#(ledgerId)', restrictExpenditures: false, restrictEncumbrance: false }
+    * def v = call createLedger { id: '#(ledgerId)', restrictExpenditures: false, restrictEncumbrance: false }
 
     Examples:
       | ledgerId       |
@@ -36,10 +36,10 @@ Feature: Make transfer transaction and verify budget updates
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def amount = <amount>
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)'}
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
 
     * def budgetId = <budgetId>
-    * call createBudget { 'id': '#(budgetId)', 'fundId':'#(fundId)', 'allocated': '#(amount)'}
+    * def v = call createBudget { id: '#(budgetId)', fundId:'#(fundId)', allocated: '#(amount)' }
     Examples:
       | fundId       | budgetId       | ledgerId       | amount |
       | fundIdFirst  | budgetIdFirst  | ledgerIdFirst  | 1000   |
@@ -85,7 +85,7 @@ Feature: Make transfer transaction and verify budget updates
       | ledgerIdFirst  | 1500      | 1500      | 0            | 0           |
       | ledgerIdSecond | 200       | 200       | 0            | 0           |
 
-  Scenario: Verfiy transfering money from first budget to other budget
+  Scenario: Verify transfering money from first budget to other budget
     * print '## Transfer money from first budget to second with negative number which is allowed'
     * def transferId = call uuid
     Given path 'finance/transactions/batch-all-or-nothing'

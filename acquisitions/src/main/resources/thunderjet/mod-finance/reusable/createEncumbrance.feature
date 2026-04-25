@@ -1,6 +1,7 @@
 Feature: Create an encumbrance
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Create an encumbrance

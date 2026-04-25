@@ -27,7 +27,7 @@ Feature: Testing Lending Flow
     And request createDCBTransactionRequest
     When method POST
     Then status 404
-    And match $.errors[0].message == 'Unable to find existing item with id ' + itemIdNotExisting + ' and barcode ' + itemBarcode + '.'
+    And match $.errors[0].message == 'Unable to find existing item.'
     And match $.errors[0].code == 'NOT_FOUND_ERROR'
 
   Scenario: Validation. Patron group should be validated at the time of user creation.

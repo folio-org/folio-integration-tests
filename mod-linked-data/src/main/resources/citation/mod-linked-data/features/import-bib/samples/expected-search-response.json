@@ -1,5 +1,4 @@
 {
-  "id": "#notnull",
   "titles": [
     {
       "value": "Silent storms,",
@@ -44,27 +43,27 @@
   ],
   "contributors": [
     {
-      "name": "Edgell, David L.",
+      "name": "Edgell, David L., Sr., David Lee, 1938",
       "type": "Person",
       "isCreator": true
     },
     {
-      "name": "Edward",
+      "name": "VI, Edward, King of England, 1537-1553",
       "type": "Person",
       "isCreator": false
     },
     {
-      "name": "Rinehart family",
+      "name": "Rinehart family, Rinehart, Family Rinehart",
       "type": "Family",
       "isCreator": false
     },
     {
-      "name": "Horror Writers Association",
+      "name": "Horror Writers Association, Ann Radcliffe Academic, Long Beach, Calif.), 2017 :",
       "type": "Organization",
       "isCreator": false
     },
     {
-      "name": "International Business Engineering Conference",
+      "name": "International Business Engineering Conference, 2018, Legian, Bali, Indonesia",
       "type": "Meeting",
       "isCreator": false
     }
@@ -80,7 +79,7 @@
     }
   ],
   "subjects": [
-    "Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin -- Drama -- Parodies, imitations, etc",
+    "Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin -- Parodies, imitations, etc -- Drama",
     "Capitalists and financiers",
     "Man-woman relationships",
     "Securities industry",
@@ -89,7 +88,6 @@
   ],
   "instances": [
     {
-      "id": "-4554144337332897516",
       "titles": [
         {
           "value": "Silent storms,",

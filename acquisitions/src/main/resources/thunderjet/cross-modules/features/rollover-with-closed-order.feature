@@ -15,8 +15,6 @@ Feature: Rollover with closed order
 
     * callonce variables
 
-    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
-
 
   Scenario: Rollover with closed order
     * def series = call random_string
@@ -57,7 +55,7 @@ Feature: Rollover with closed order
 
   # Open and close the order
     * def v = call openOrder { orderId: #(orderId) }
-    * def v = call closeOrderRemoveLines { orderId: #(orderId) }
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
   ## For MODORDERS-904
   ## Remove encumbrance from specific po line
@@ -77,7 +75,6 @@ Feature: Rollover with closed order
     Then status 204
   ## get updated po line with empty encumbrance
     Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
-    And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
     * def emptyEncumbrancePoLineUpdated = response
@@ -155,7 +152,6 @@ Feature: Rollover with closed order
   ## Check po line with empty encumbrance hasn't been modified after rollover
     * configure headers = headersAdmin
     Given path '/orders-storage/po-lines', emptyEncumbrancePoLineId
-    And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
     And match response.metadata.updatedDate == emptyEncumbrancePoLineUpdated.metadata.updatedDate

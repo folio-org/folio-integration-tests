@@ -3,9 +3,10 @@ Feature: Update pieces statuses in batch
   # parameters: pieceIds, receivingStatus
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: updatePiecesBatchStatus
+  Scenario: Update pieces statuses in batch
     Given path 'orders/pieces-batch/status'
     And request
       """

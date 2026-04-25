@@ -130,7 +130,7 @@ Feature: Setup quickMARC
   @CreateSnapshot
   Scenario: Create snapshot
     Given path 'source-storage/snapshots'
-    And request { 'jobExecutionId':'#(snapshotId)', 'status':'PARSING_IN_PROGRESS' }
+    And request { 'jobExecutionId':'#(snapshotId)', 'status':'COMMITTED', 'processingStartedDate': '#(new Date().toISOString())' }
     And headers headersUser
     When method POST
     Then status 201
@@ -181,8 +181,8 @@ Feature: Setup quickMARC
     And def record = response
 
     * def linkContent = ' $0 ' + authorityNaturalId1 + ' $9 ' + linkedAuthorityId1
-    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(linkedAuthorityId1),"authorityNaturalId": #(authorityNaturalId1, "linkingRuleId": 1} }
-    * def tag600 = {"tag": "600", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"], "linkDetails":{ "authorityId": #(linkedAuthorityId1),"authorityNaturalId": #(authorityNaturalId1), "linkingRuleId": 8} }
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(linkedAuthorityId1),"authorityNaturalId": #(authorityNaturalId1, "linkingRuleId": 1, "status": "NEW"} }
+    * def tag600 = {"tag": "600", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"], "linkDetails":{ "authorityId": #(linkedAuthorityId1),"authorityNaturalId": #(authorityNaturalId1), "linkingRuleId": 8, "status": "NEW"} }
 
     * record.fields = record.fields.filter(field => field.tag != "100")
     * record.fields.push(tag100)
@@ -194,6 +194,12 @@ Feature: Setup quickMARC
     And request record
     When method PUT
     Then status 202
+
+    Given path 'links/instances', instanceId
+    And headers headersUser
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
 
     * setSystemProperty('authorityNaturalId1', authorityNaturalId1)
     * setSystemProperty('authorityNaturalId2', authorityNaturalId2)
@@ -324,30 +330,24 @@ Feature: Setup quickMARC
   Scenario: Create quickMARC Bib record
     * def recordPayload = read(samplePath + 'parsed-records/marc-bib-record.json')
     * set recordPayload._actionType = 'create'
+    * set recordPayload.externalHrid = hrid
+    * def field001 =
+    """
+    { "tag": "001", "content": "#(hrid)" }
+    """
+    * recordPayload.fields.push(field001)
     Given path 'records-editor/records'
     And headers headersUser
     And request recordPayload
     When method POST
     Then status 201
-    And assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
-    And match $.qmRecordId == '#uuid'
-    And match $.jobExecutionId == '#uuid'
-
-    Given path 'records-editor/records'
-    And headers headersUser
-    And request recordPayload
-    When method POST
-    Then status 201
-
-    * def recordId = response.qmRecordId
-
-    Given path 'records-editor/records/status'
-    And headers headersUser
-    And param qmRecordId = recordId
-    And retry until response.status == 'CREATED' || response.status == 'ERROR'
-    When method GET
-    Then status 200
     And def recordId = response.externalId
+     
+     #Check srs creation
+    * def srsRecord = call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetSRSRecord') {recordId: '#(recordId)', idType: 'INSTANCE'}
+    * match srsRecord.response.deleted == false
+    * match srsRecord.response.state == 'ACTUAL'
+
     * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetRecordById') {recordId: '#(recordId)'}
 
   @Ignore #Util scenario
@@ -355,33 +355,23 @@ Feature: Setup quickMARC
   Scenario: Create quickMARC Holding record
     * def record = read(samplePath + 'parsed-records/marc-holding-record.json')
     * set record._actionType = 'create'
+    * def field001 =
+    """
+    { "tag": "001", "content": "#(hrid)" }
+    """
+    * record.fields.push(field001)
 
     Given path 'records-editor/records'
     And headers headersUser
     And request record
     When method POST
     Then status 201
-    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
-    And def jobExecutionId = response.jobExecutionId
-
-      #Check status
-    Given path 'records-editor/records/status'
-    And param qmRecordId = response.qmRecordId
-    And headers headersUser
-    And retry until response.status == 'CREATED' || response.status == 'ERROR'
-    When method GET
-    Then status 200
-    Then match response.status != 'ERROR'
     And def recordId = response.externalId
 
       #Check srs creation
-    Given path 'source-storage/source-records'
-    And param recordType = 'MARC_HOLDING'
-    And param snapshotId = jobExecutionId
-    And headers headersUser
-    When method get
-    Then status 200
-    And match response.totalRecords != 0
+    * def srsRecord = call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetSRSRecord') {recordId: '#(recordId)', idType: 'HOLDINGS'}
+    * match srsRecord.response.deleted == false
+    * match srsRecord.response.state == 'ACTUAL'
 
       #Check holding creation
     Given path 'holdings-storage/holdings', recordId
@@ -401,27 +391,12 @@ Feature: Setup quickMARC
     And request record
     When method POST
     Then status 201
-    Then assert response.status == 'NEW' || response.status == 'IN_PROGRESS'
-    And def jobExecutionId = response.jobExecutionId
-
-      #Check status
-    Given path 'records-editor/records/status'
-    And param qmRecordId = response.qmRecordId
-    And headers headersUser
-    And retry until response.status == 'CREATED' || response.status == 'ERROR'
-    When method GET
-    Then status 200
-    Then match response.status != 'ERROR'
     And def recordId = response.externalId
 
       #Check srs creation
-    Given path 'source-storage/source-records'
-    And param recordType = 'MARC_AUTHORITY'
-    And param snapshotId = jobExecutionId
-    And headers headersUser
-    When method get
-    Then status 200
-    And match response.totalRecords != 0
+    * def srsRecord = call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetSRSRecord') {recordId: '#(recordId)', idType: 'AUTHORITY'}
+    * match srsRecord.response.deleted == false
+    * match srsRecord.response.state == 'ACTUAL'
 
       #Check authority creation
     Given path 'authority-storage/authorities', recordId

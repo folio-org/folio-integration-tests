@@ -9,11 +9,6 @@
     {
       "authorityId":null,
       "alternativeTitleTypeId":"#notnull",
-      "alternativeTitle":"Code général des impôts (1999)"
-    },
-    {
-      "authorityId":null,
-      "alternativeTitleTypeId":"#notnull",
       "alternativeTitle":"Variant title of the instance variant sub title 2024 2 part 2"
     },
     {
@@ -33,7 +28,7 @@
     { "value": "ISSN Value", "identifierTypeId": "#notnull" },
     { "value": "IAN value IAN Qualifier", "identifierTypeId": "#notnull" },
     { "value": "Other ID value Other ID qualifier", "identifierTypeId": "#notnull" },
-    { "value": "(ld) -136473835849927448", "identifierTypeId": "#notnull" }
+    { "value": "(ld) -5739366067178503712", "identifierTypeId": "#notnull" }
   ],
   "classifications": [
     { "classificationNumber": "Lib-Congress-number Lib-Congress-number-item", "classificationTypeId": "#notnull" },

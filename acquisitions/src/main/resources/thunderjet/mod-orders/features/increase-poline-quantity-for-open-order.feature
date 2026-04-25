@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Verify updating poLine location restricted after open order
 
   Background:
@@ -10,59 +9,32 @@ Feature: Verify updating poLine location restricted after open order
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
-    # load global variables
     * callonce variables
 
-    * def orderId = callonce uuid1
-    * def poLineId = callonce uuid2
-    * def locationId = callonce uuid3
-    * def holdingIdForUpdate = callonce uuid4
 
-  Scenario: Create composite order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+  Scenario: Verify updating poLine location restricted after open order
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def locationId = call uuid
+    * def holdingIdForUpdate = call uuid
 
-  Scenario: Create order line
-    Given path 'orders/order-lines'
+    # 1. Create composite order
+    * def v = call createOrder { id: '#(orderId)' }
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
+    # 2. Create order line
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(globalFundId)' }
 
-    And request orderLine
-    When method POST
-    Then status 201
+    # 3. Open order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario: Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: Verify that pieces has been created for poLine
+    # 4. Verify that pieces has been created for poLine
     Given path 'orders-storage/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
     And match $.totalRecords == 1
 
-  Scenario: get poline and increase the quantity
+    # 5. get poline and increase the quantity
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -77,7 +49,7 @@ Feature: Verify updating poLine location restricted after open order
     Then status 400
     And match $.errors contains deep {code: 'locationCannotBeModifiedAfterOpen'}
 
-  Scenario: get poline and update location
+    # 6. get poline and update location
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -91,20 +63,9 @@ Feature: Verify updating poLine location restricted after open order
     Then status 400
     And match $.errors contains deep {code: 'locationCannotBeModifiedAfterOpen'}
 
-  Scenario: Verify that pieces has not been increase for poLine
+    # 7. Verify that pieces has not been increase for poLine
     Given path 'orders-storage/pieces'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
     And match $.totalRecords == 1
-
-  Scenario: delete poline
-    Given path 'orders/order-lines', poLineId
-    When method DELETE
-    Then status 204
-
-  Scenario: delete composite orders
-    Given path 'orders/composite-orders', orderId
-    When method DELETE
-    Then status 204
-

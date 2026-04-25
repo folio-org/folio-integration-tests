@@ -462,3 +462,14 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     When method DELETE
     Then status 200
+
+  Scenario: Verify order creation errors are propagated accordingly to the response
+    * def order = read('classpath:samples/mod-gobi/po-listed-electronic-monograph.xml')
+    * set order/PurchaseOrder/Order/ListedElectronicMonograph/OrderDetail/ListPrice/Amount = "-12"
+    Given path '/gobi/orders'
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And request order
+    When method POST
+    Then status 422
+    And match /Response/Error/Code == 'costUnitPriceElectronicInvalid'
+    And match /Response/Error/Message == "Cost's list unit price for Electronic resource(s) is invalid"

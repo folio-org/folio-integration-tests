@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Reopen an order creates encumbrances
 
   Background:
@@ -15,37 +14,32 @@ Feature: Reopen an order creates encumbrances
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
 
-    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
+  Scenario: Reopen an order creates encumbrances
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
-
-  Scenario: Prepare finances
+    # 1. Prepare finances
     * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId) }
     * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
 
-
-  Scenario: Create an order
+    # 2. Create an order
+    * configure headers = headersUser
     * def v = call createOrder { id: #(orderId) }
 
-
-  Scenario: Create an order line
+    # 3. Create an order line
     * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId) }
 
-
-  Scenario: Open the order
+    # 4. Open the order
     * def v = call openOrder { orderId: #(orderId) }
 
+    # 5. Close the order
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
-  Scenario: Close the order
-    * def v = call closeOrderRemoveLines { orderId: #(orderId) }
-
-
-  Scenario: Check the encumbrance after closing the order
+    # 6. Check the encumbrance after closing the order
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
@@ -57,8 +51,8 @@ Feature: Reopen an order creates encumbrances
     And assert transaction.encumbrance.initialAmountEncumbered == 1.0
     And assert transaction.encumbrance.status == 'Released'
 
-
-  Scenario: Remove the encumbrance link in the order line and delete the encumbrance
+    # 7. Remove the encumbrance link in the order line and delete the encumbrance
+    * configure headers = headersUser
     Given path 'orders-storage/po-lines', poLineId
     When method GET
     Then status 200
@@ -83,12 +77,11 @@ Feature: Reopen an order creates encumbrances
     When method POST
     Then status 204
 
-
-  Scenario: Reopen the order
+    # 8. Reopen the order
+    * configure headers = headersUser
     * def v = call openOrder { orderId: #(orderId) }
 
-
-  Scenario: Check that the encumbrance was created and that the encumbrance link was added to the order line
+    # 9. Check that the encumbrance was created and that the encumbrance link was added to the order line
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId

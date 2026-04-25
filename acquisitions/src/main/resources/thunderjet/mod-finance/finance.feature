@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-finance integration tests
 
   Background:
@@ -48,11 +47,8 @@ Feature: mod-finance integration tests
   Scenario: Update budget
     * call read('features/budget-update.feature')
 
-  Scenario: Test when creating budget add expense classes if them provided by user
-    * call read('features/create-planned-budget-without-expense-classes-and-current-budget.feature')
-
-  Scenario: Test when creating budget add expense classes if them provided by user
-    * call read('features/create-planned-budget-without-expense-classes-when-there-is-no-current-budget.feature')
+  Scenario: Create a planned budget
+    * call read('features/create-planned-budget.feature')
 
   Scenario: Test API current budget for fund
     * call read('features/current-budget-for-fund.feature')
@@ -120,9 +116,3 @@ Feature: mod-finance integration tests
 
   Scenario: Get funds where filter is provided should take into account acquisition units
     * call read('features/acq-units/verify-get-funds-with-query-where-user-has-units.feature')
-
-  Scenario: Test creating budget add expense classes from previous budget automatically
-    * call read('features/when-creating-budget-add-expense-classes-from-previous-budget-automatically.feature')
-
-  Scenario: Test when creating budget add expense classes if them provided by user
-    * call read('features/when-creating-budget-add-expense-classes-if-them-provided-by-user.feature')

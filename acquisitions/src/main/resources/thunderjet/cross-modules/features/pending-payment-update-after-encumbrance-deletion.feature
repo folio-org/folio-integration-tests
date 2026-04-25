@@ -22,8 +22,8 @@ Feature: Pending payment update after encumbrance deletion
     * def invoiceLineId = call uuid
 
     * print "Create finances"
-    * call createFund { id: "#(fundId)" }
-    * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
 
     * print "Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }
@@ -98,8 +98,8 @@ Feature: Pending payment update after encumbrance deletion
     * def invoiceLineId = call uuid
 
     * print "Create finances"
-    * call createFund { id: "#(fundId)" }
-    * call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
+    * def v = call createFund { id: "#(fundId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 10000, fundId: "#(fundId)", status: "Active" }
 
     * print "Create an order and line"
     * def v = call createOrder { id: "#(orderId)" }

@@ -1,5 +1,4 @@
 # created for MODORDERS-619
-@parallel=false
 Feature: Retrieve titles with honor of acquisition units
 
   Background:
@@ -16,20 +15,21 @@ Feature: Retrieve titles with honor of acquisition units
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-    * def acqUnitId = callonce uuid5
-    * def acqUnitMembershipId = callonce uuid6
 
-  Scenario: Create a fund and budget
+  Scenario: Retrieve titles with honor of acquisition units
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def acqUnitId = call uuid
+    * def acqUnitMembershipId = call uuid
+
+    # 1. Create a fund and budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}] }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: [{expenseClassId: '#(globalPrnExpenseClassId)',status: 'Active'}] }
 
-
-  Scenario: Create acq unit
+    # 2. Create acq unit
     * configure headers = headersAdmin
     Given path 'acquisitions-units/units'
     And request
@@ -46,7 +46,7 @@ Feature: Retrieve titles with honor of acquisition units
     When method POST
     Then status 201
 
-  Scenario: Create acq unit membership
+    # 3. Create acq unit membership
     * configure headers = headersAdmin
     * def res = callonce getUserIdByUsername { user: '#(testUser)' }
     * def userId = res.userId
@@ -62,70 +62,34 @@ Feature: Retrieve titles with honor of acquisition units
     When method POST
     Then status 201
 
+    # 4. Create a composite order
+    * configure headers = headersUser
+    * def acqUnitIds = ['#(acqUnitId)']
+    * def v = call createOrder { id: '#(orderId)', acqUnitIds: '#(acqUnitIds)' }
 
-  Scenario: Create a composite order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time',
-      "acqUnitIds": ['#(acqUnitId)']
-    }
-    """
-    When method POST
-    Then status 201
+    # 5. Create an order line
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
+    # 6. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario: Create an order line
-    Given path 'orders/order-lines'
-
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
-
-  Scenario: Retrieve title having acq units membership
+    # 7. Retrieve title having acq units membership
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-
     And match $.totalRecords == 1
 
-
-  Scenario: Remove acq unit membership
+    # 8. Remove acq unit membership
     * configure headers = headersAdmin
     Given path 'acquisitions-units/memberships', acqUnitMembershipId
     When method DELETE
     Then status 204
 
-  Scenario: Retrieve title without acq units membership
+    # 9. Retrieve title without acq units membership
+    * configure headers = headersUser
     Given path 'orders/titles'
     And param query = 'poLineId==' + poLineId
     When method GET
     Then status 200
-
     And match $.totalRecords == 0
-
-
-

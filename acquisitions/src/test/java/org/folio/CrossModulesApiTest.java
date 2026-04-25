@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.shared.SharedCrossModulesTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
@@ -7,15 +8,16 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-@Order(6)
+@Order(7)
 @FolioTest(team = "thunderjet", module = "cross-modules")
-public class CrossModulesApiTest extends TestBaseEureka {
+public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/cross-modules/features/";
   private static final String TEST_TENANT = "testcross";
@@ -77,7 +79,10 @@ public class CrossModulesApiTest extends TestBaseEureka {
     FEATURE_53("unopen-order-and-add-addition-pol-and-check-encumbrances", true),
     FEATURE_54("unopen-order-simple-case", true),
     FEATURE_55("update-encumbrance-links-with-fiscal-year", true),
-    FEATURE_56("update_fund_in_poline_when_invoice_approved", true);
+    FEATURE_56("update_fund_in_poline_when_invoice_approved", true),
+    FEATURE_57("rollover-multi-ledger", true),
+    FEATURE_58("rollover-many-orders-and-lines", false),
+    FEATURE_59("approve-invoice-with-different-fund-than-order", false);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -101,19 +106,22 @@ public class CrossModulesApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void crossModuleApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     SharedCrossModulesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
-  public void crossModuleApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     SharedCrossModulesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
@@ -452,4 +460,25 @@ public class CrossModulesApiTest extends TestBaseEureka {
   void updateFundInPoLineWhenInvoiceApproved() {
     runFeatureTest(Feature.FEATURE_56.getFileName());
   }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void rolloverMultiLedger() {
+    runFeatureTest(Feature.FEATURE_57.getFileName());
+  }
+
+  @Test
+  // disabled because it is very long
+  @Disabled
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void rolloverManyOrdersAndLines() {
+    runFeatureTest(Feature.FEATURE_58.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void approveInvoiceWithDifferentFundThanOrder() {
+    runFeatureTest(Feature.FEATURE_59.getFileName());
+  }
+
 }

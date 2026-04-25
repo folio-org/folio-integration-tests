@@ -1,6 +1,7 @@
 Feature: Create a pending payment
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Create a pending payment

@@ -1,5 +1,4 @@
 # For MODORDERS-859
-@parallel=false
 Feature: Encumbrance released when order closes
 
   Background:
@@ -16,44 +15,29 @@ Feature: Encumbrance released when order closes
 
     * callonce variables
 
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
+  Scenario: Encumbrance released when order closes
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
-
-  Scenario: Prepare finances
+    # 1. Prepare finances
     * configure headers = headersAdmin
-    * def v = call createFund { id: #(fundId) }
-    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 100 }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 100 }
 
+    # 2. Create an order
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario: Create an order
-    * def v = callonce createOrder { id: #(orderId) }
+    # 3. Create an order line with Payment Not Required
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', paymentStatus: 'Payment Not Required' }
 
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario: Create an order line with Payment Not Required
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.paymentStatus = 'Payment Not Required'
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open the order
-    * def v = callonce openOrder { orderId: "#(orderId)" }
-
-
-  Scenario: Receive the piece
+    # 5. Receive the piece
     # Get the id of piece created when the order was opened
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
@@ -88,15 +72,13 @@ Feature: Encumbrance released when order closes
     And match $.receivingResults[0].processedSuccessfully == 1
     * call pause 500
 
-
-  Scenario: Check the order was closed
+    # 6. Check the order was closed
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
     And match $.workflowStatus == 'Closed'
 
-
-  Scenario: Check the encumbrance was released
+    # 7. Check the encumbrance was released
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId + ' and encumbrance.status==Released'

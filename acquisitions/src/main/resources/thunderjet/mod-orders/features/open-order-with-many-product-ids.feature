@@ -26,8 +26,8 @@ Feature: Open order with many product IDs
 
     # 1: Create fund and budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
     * configure headers = headersUser
 
     # 2. Create an Instance with 400 product IDs

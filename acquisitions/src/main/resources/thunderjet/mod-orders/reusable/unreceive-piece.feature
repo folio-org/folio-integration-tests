@@ -2,7 +2,8 @@
 Feature: Unreceive piece
   # parameters: pieceId
 
-  Background: unreceivePiece
+  Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Unreceive piece

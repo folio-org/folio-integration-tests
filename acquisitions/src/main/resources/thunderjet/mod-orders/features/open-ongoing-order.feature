@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Open ongoing order
 
   Background:
@@ -15,26 +14,19 @@ Feature: Open ongoing order
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
 
-    * def orderId = callonce uuid3
-    * def orderLineIdOne = callonce uuid4
+  Scenario: Open ongoing order
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
-  Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
+    # 1. Prepare finances
     * configure headers = headersAdmin
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 10000 }
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000 }
-
-    Examples:
-      | fundId | budgetId |
-      | fundId | budgetId |
-
-  Scenario: check budget after create
-    * configure headers = headersAdmin
+    # 2. check budget after creation
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET
@@ -48,63 +40,19 @@ Feature: Open ongoing order
     And match budget.awaitingPayment == 0
     And match budget.unavailable == 0
 
-  Scenario: Create orders
+    # 3. Create order
+    * configure headers = headersUser
+    * def ongoing = { interval : 123, isSubscription : true, renewalDate : "2022-05-08T00:00:00.000+00:00" }
+    * def v = call createOrder { id: '#(orderId)', orderType: 'Ongoing', ongoing: '#(ongoing)' }
 
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'Ongoing',
-      "ongoing" : {
-        "interval" : 123,
-        "isSubscription" : true,
-        "renewalDate" : "2022-05-08T00:00:00.000+00:00"
-      }
-    }
-    """
-    When method POST
-    Then status 201
+    # 4. Create order line
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 100 }
 
-  Scenario Outline: Create order lines for <orderLineId> and <fundId>
-    * def orderId = <orderId>
-    * def poLineId = <orderLineId>
+    # 5. Open order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = <amount>
-    * set orderLine.fundDistribution[0].fundId = <fundId>
-
-    And request orderLine
-    When method POST
-    Then status 201
-
-    Examples:
-      | orderId | orderLineId    | fundId | amount |
-      | orderId | orderLineIdOne | fundId | 100    |
-
-  Scenario: Open order
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: Check order line status
-    # ============= get order to open ===================
-    Given path 'orders/order-lines', orderLineIdOne
+    # 6. Check order line status
+    Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
 

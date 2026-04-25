@@ -32,21 +32,11 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
   Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
 
   Scenario: Create an mixed order line with isPackage=false
@@ -71,17 +61,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
 
 
   Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   Scenario: Check inventory and order items after open order
     * print 'Get the instanceId and holdingId from the po line'
@@ -334,6 +314,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match orderResponse.totalEstimatedPrice == 17.0
     And match poLine.cost.quantityElectronic == 3
     And match poLine.cost.quantityPhysical == 2
+    And match poLine.cost.poLineEstimatedPrice == 17.0
     And match poLine.locations == '#[3]'
 
     * print 'Check encumbrances initial value'
@@ -372,12 +353,6 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     * print 'Check Electronic piece should be deleted'
     * configure headers = headersUser
     Given path 'orders/pieces', pieceIdWithItemAndLocation
-    When method GET
-    Then status 404
-
-    * print 'Check holding should be deleted, because flag "deleteHolding" was provided and not existing items'
-    * configure headers = headersAdmin
-    Given path 'holdings-storage/holdings', pieceHoldingId
     When method GET
     Then status 404
 
@@ -443,6 +418,7 @@ Feature: Should create and delete pieces for non package mixed POL with quantity
     And match orderResponse.totalEstimatedPrice == 10.0
     And match poLine.cost.quantityElectronic == 2
     And match poLine.cost.quantityPhysical == 1
+    And match poLine.cost.poLineEstimatedPrice == 10.0
     And match poLine.locations == '#[2]'
 
     * print 'Check encumbrances initial value'

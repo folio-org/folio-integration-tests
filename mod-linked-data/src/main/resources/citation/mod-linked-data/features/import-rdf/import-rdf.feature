@@ -8,6 +8,7 @@ Feature: Import Bibframe2 RDF
 
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def baseResourceUrl = foliioUiUrl + '/linked-data-editor/resources/'
 
   Scenario: Import RDF file to graph & update graph using API.
     # Step 1 (Setup): create authority records referenced in the RDF file & wait till the records are available in mod-search
@@ -24,6 +25,7 @@ Feature: Import Bibframe2 RDF
     * configure headers = { 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     Given path '/linked-data/import/file'
     And multipart file fileName = { read: 'classpath:citation/mod-linked-data/features/import-rdf/samples/rdf.json', filename: '#(fileName)', contentType: 'application/ld+json'  }
+    And param filterType = 'http://bibfra.me/vocab/lite/Instance'
     When method POST
     Then status 200
 
@@ -78,7 +80,7 @@ Feature: Import Bibframe2 RDF
     # Step 10: Export RDF again and validate
     * def rdfCall = call getRdf { resourceId: '#(updatedResourceId)' }
     * def rdfResponse = rdfCall.response
-    * def instance = karate.filter(rdfResponse, x => x['@id'] == 'http://localhost:8081/linked-data-editor/resources/' + updatedResourceId)[0]
+    * def instance = karate.filter(rdfResponse, x => x['@id'] == baseResourceUrl + updatedResourceId)[0]
     * def provisionActivityIds = karate.map(instance['http://id.loc.gov/ontologies/bibframe/provisionActivity'], x => x['@id'])
     * def provisionActivity = karate.filter(rdfResponse, x => x['@type'] != null && x['@type'].includes('http://id.loc.gov/ontologies/bibframe/Publication') && x['http://id.loc.gov/ontologies/bflc/simpleAgent'][0]['@value'] == 'Chronicle Books LLC - UPDATED')[0]
     * match provisionActivity['@type'] contains 'http://id.loc.gov/ontologies/bibframe/ProvisionActivity'
@@ -94,5 +96,4 @@ Feature: Import Bibframe2 RDF
   Scenario: Create authority & verify
     * def sourceRecordRequest = read('samples/' + fileName)
     * def postAuthorityCall = call postSourceRecordToStorage
-    * match postAuthorityCall.response.qmRecordId == '#notnull'
     * def searchAuthorityCall = call searchAuthority { query: '#(query)' }

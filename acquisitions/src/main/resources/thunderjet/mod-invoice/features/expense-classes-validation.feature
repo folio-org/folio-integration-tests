@@ -34,24 +34,10 @@ Feature: Expense classes validation upon invoice approval
     * def prevYear = parseInt(currentYear) - 1
 
   Scenario Outline: Create fiscal year for <code>
-
-    * def fiscalYearId = <id>
     * def code = <code>
 
     * configure headers = headersAdmin
-    Given path 'finance/fiscal-years'
-    And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + code)',
-      "code": '#(codePrefix + code)',
-      "periodStart": '#(code + "-01-01T00:00:00Z")',
-      "periodEnd": '#(code + "-12-30T23:59:59Z")'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createFiscalYear { id: '#(<id>)', code: '#(codePrefix + code)', periodStart: '#(code + "-01-01T00:00:00Z")', periodEnd: '#(code + "-12-30T23:59:59Z")' }
 
     Examples:
       | id          | code        |
@@ -59,47 +45,12 @@ Feature: Expense classes validation upon invoice approval
       | prevFyId    | prevYear    |
 
   Scenario: Create ledger
-
     * configure headers = headersAdmin
-    Given path 'finance/ledgers'
-    And request
-    """
-    {
-      "id": '#(ledgerId)',
-      "name": '#(ledgerId)',
-      "code": '#(ledgerId)',
-      "ledgerStatus": 'Active',
-      "fiscalYearOneId": '#(prevFyId)',
-      "restrictEncumbrance": false,
-      "restrictExpenditures": false
-    }
-    """
-    When method POST
-    Then status 201
-
+    * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(prevFyId)', restrictEncumbrance: false, restrictExpenditures: false }
 
   Scenario Outline: Create fund <id>
-    * def fundId = <id>
-
     * configure headers = headersAdmin
-    Given path 'finance/funds'
-    And request
-    """
-    {
-      "fund": {
-        "id": "#(fundId)",
-        "code": "#(fundId)",
-        "description": "Fund for orders API Tests",
-        "externalAccountNo": "1111111111111111111111111",
-        "fundStatus": "Active",
-        "ledgerId": "#(ledgerId)",
-        "name": "Fund for API Tests"
-      }
-
-     }
-    """
-    When method POST
-    Then status 201
+    * def v = call createFund { id: '#(<id>)', ledgerId: '#(ledgerId)' }
 
     Examples:
     | id                       |
@@ -107,28 +58,9 @@ Feature: Expense classes validation upon invoice approval
     | previouslyAssignedFundId |
 
   Scenario Outline: Create budget for <fundId>, <fiscalYearId>, <status>
-    * def budgetId = <id>
-    * def fundId = <fundId>
-    * def fiscalYearId = <fiscalYearId>
-    * def status = <status>
     * configure headers = headersAdmin
-    Given path 'finance/budgets'
-    And request
-    """
-    {
-      "id": "#(budgetId)",
-      "budgetStatus": "Active",
-      "fundId": "#(fundId)",
-      "name": "#(budgetId)",
-      "fiscalYearId": "#(fiscalYearId)",
-      "budgetStatus": "#(status)",
-      "allowableExpenditure": 100,
-      "allowableEncumbrance": 100,
-      "allocated": 10000
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createBudget { id: '#(<id>)', fundId: '#(<fundId>)', budgetStatus: "#(<status>)", fiscalYearId: '#(<fiscalYearId>)', allocated: 10000 }
+
     Examples:
     | id                         | fundId                   | fiscalYearId | status     |
     | currentWithClassesBudgetId | currentlyAssignedFundId  | currentFyId  | 'Active'   |

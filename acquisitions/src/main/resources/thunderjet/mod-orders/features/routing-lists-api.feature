@@ -20,14 +20,14 @@ Feature: Test routing list API
     * def rListId = callonce uuid4
     * def rListUserId = callonce uuid5
 
-    * def listName = call random_string
+    * def listName = callonce random_string
     * def rListSample = read('classpath:samples/mod-orders/routingLists/a1d13648-347b-4ac9-8c2f-5bc47248b87e.json')
     * set rListSample.id = rListId;
     * set rListSample.poLineId = poLineId;
     * set rListSample.name = listName;
 
-    * callonce createOrder { id: #(orderId) }
-    * callonce createOrderLine { id: #(poLineId), orderId: #(orderId) }
+    * def v = callonce createOrder { id: '#(orderId)' }
+    * def v = callonce createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
 
   @Positive
@@ -145,7 +145,7 @@ Feature: Test routing list API
     # Create POL with invalid order format
     * def orderId2 = callonce uuid7
     * def poLineId2 = callonce uuid8
-    * call createOrder { id: #(orderId2) }
+    * def v = call createOrder { id: #(orderId2) }
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-electronic-line.json')
     * set orderLine.id = poLineId2

@@ -33,22 +33,11 @@ Feature: Check needReEncumber flag populated correctly
   Scenario: prepare finances for fund with <fundId> and budget with <budgetId>
     * configure headers = headersAdmin
     * def v = call createLedger { 'id': '#(ledgerId)' }
-    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(ledgerId)' }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
 
   Scenario: Create order
-
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
   Scenario: Create order line
     Given path 'orders/order-lines'

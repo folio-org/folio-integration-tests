@@ -4,6 +4,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,7 @@ public class ModDCBTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:volaris/mod-dcb/features/";
 
   public ModDCBTest() {
-    super(
-        new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH))
-    );
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
   @Test
@@ -83,6 +82,32 @@ public class ModDCBTest extends TestBaseEureka {
 
   @Test
   void testBorrowingFlowChainOfResponsibility() {  runFeatureTest("borrowing-flow-chain-of-responsibility.feature"); }
+
+    @Test
+    void testRefreshDcbShadowLocations() { runFeatureTest("refresh-dcb-shadow-locations.feature"); }
+
+    @Test
+    void testShadowLocationsCreatedViaApi() { runFeatureTest("shadow-locations-created-via-api.feature"); }
+
+    @Test
+    void testEcsShadowLocationsNotDisplayed() { runFeatureTest("ecs-shadow-locations-not-displayed.feature"); }
+
+    @Test
+  void testExpirationLendingFlow() { runFeatureTest("expiration-lending-flow.feature"); }
+
+  @Test
+  void testExpirationBorrowerFlow() { runFeatureTest("expiration-borrower-flow.feature"); }
+
+  @Test
+  void testExpirationPickupFlow() { runFeatureTest("expiration-pickup-flow.feature"); }
+
+  @Test
+  void testExpirationBorrowingPickupFlow() { runFeatureTest("expiration-borrowing-pickup-flow.feature"); }
+
+  @Test
+  void testBorrowingPickupUpdateWithPatronNotice() {
+    runFeatureTest("borrowing-pickup-update-with-patron-notice.feature");
+  }
 
   @BeforeAll
   public void setup() {

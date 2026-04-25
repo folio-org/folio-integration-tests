@@ -1,15 +1,15 @@
 @ignore
 Feature: checkEndpoint
-  # parameters: endpoint, offset, limit, jsonKey
+  # parameters: endpoint, offset, limit, jsonKey, type (optional)
 
   Background:
     * url edgeUrl
     * configure headers = { "Accept": "application/json" }
-    * karate.log("checkEndpoint:: Endpoint =", endpoint, "Label =", label, "offset =", offset, "limit =", limit, "jsonKey =", jsonKey)
+    * karate.log("checkEndpoint:: Endpoint =", endpoint, "Label =", label, "offset =", offset, "limit =", limit, "jsonKey =", jsonKey, "type =", type)
 
   Scenario: checkEndpoint
     And path endpoint
-    And param type = "COMMON"
+    And param type = type
     And param apiKey = apiKey
     And param offset = offset
     And param limit = limit

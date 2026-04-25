@@ -23,14 +23,14 @@ Feature: Budget can not be deleted if have other than allocation transactions
     * def toAllocationId = callonce uuid6
 
   Scenario: Create ledger
-    * call createLedger { 'id': '#(ledgerId)'}
+    * def v = call createLedger { id: '#(ledgerId)' }
 
   Scenario Outline: Create funds and budget <budgetId> for <fundId>
     * def fundId = <fundId>
     * def ledgerId = <ledgerId>
     * def budgetId = <budgetId>
-    * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
   Examples:
     | fundId                      | budgetId                  | ledgerId |
     | fundIdWithFromAllocation    | budgetIdFromAllocation    | ledgerId |

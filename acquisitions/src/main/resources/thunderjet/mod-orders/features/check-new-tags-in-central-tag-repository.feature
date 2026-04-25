@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Check new tags created in central tag repository
 
   Background:
@@ -15,11 +14,11 @@ Feature: Check new tags created in central tag repository
 
     * callonce variables
 
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-
 
   Scenario: Check new tags created in central tag list
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
     # ============= create new composite order ===================
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -34,6 +33,7 @@ Feature: Check new tags created in central tag repository
       ]
     }
     """
+
     Given path 'orders/composite-orders'
     And request
     """

@@ -1419,6 +1419,64 @@ Feature: Requests tests
     When method DELETE
     Then status 204
 
+  Scenario: Search requests by item barcode, title, request id, and requester barcode fragment
+    * def groupId = call uuid1
+    * def requesterId1 = call uuid1
+    * def requesterId2 = call uuid1
+    * def requesterBarcode1 = 'requester-12345'
+    * def requesterBarcode2 = 'requester-98765'
+    * def targetItemId = call uuid1
+    * def otherItemId = call uuid1
+    * def targetItemBarcode = 'FAT-23874-ITEM-1'
+    * def otherItemBarcode = 'FAT-23874-ITEM-2'
+    * def targetRequestId = call uuid1
+    * def otherRequestId = call uuid1
+    * def targetTitle = 'Long'
+    * def requestType = 'Page'
+    * def requestLevel = 'Item'
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId1), extUserBarcode: #(requesterBarcode1), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId2), extUserBarcode: #(requesterBarcode2), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(targetItemId), extItemBarcode: #(targetItemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(otherItemId), extItemBarcode: #(otherItemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(targetRequestId), itemId: #(targetItemId), requesterId: #(requesterId1), extRequestType: #(requestType), extRequestLevel: #(requestLevel), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(otherRequestId), itemId: #(otherItemId), requesterId: #(requesterId2), extRequestType: #(requestType), extRequestLevel: #(requestLevel), extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    Given path 'circulation', 'requests'
+    And param query = '((id=="' + targetItemBarcode + '" or requesterId=="' + targetItemBarcode + '" or requester.barcode=="' + targetItemBarcode + '*" or instance.title="' + targetItemBarcode + '*" or instanceId="' + targetItemBarcode + '*" or item.barcode="' + targetItemBarcode + '*" or itemId=="' + targetItemBarcode + '" or itemIsbn=="' + targetItemBarcode + '" or searchIndex.callNumberComponents.callNumber=="' + targetItemBarcode + '*" or fullCallNumberIndex=="' + targetItemBarcode + '*")) sortby requestDate'
+    And param limit = 100
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == targetRequestId
+    And match $.requests[0].item.barcode == targetItemBarcode
+
+    Given path 'circulation', 'requests'
+    And param query = '((id=="' + targetRequestId + '" or requesterId=="' + targetRequestId + '" or requester.barcode=="' + targetRequestId + '*" or instance.title="' + targetRequestId + '*" or instanceId="' + targetRequestId + '*" or item.barcode="' + targetRequestId + '*" or itemId=="' + targetRequestId + '" or itemIsbn=="' + targetRequestId + '" or searchIndex.callNumberComponents.callNumber=="' + targetRequestId + '*" or fullCallNumberIndex=="' + targetRequestId + '*")) sortby requestDate'
+    And param limit = 100
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == targetRequestId
+
+    Given path 'circulation', 'requests'
+    And param query = '((id=="' + requesterBarcode1 + '" or requesterId=="' + requesterBarcode1 + '" or requester.barcode=="' + requesterBarcode1 + '*" or instance.title="' + requesterBarcode1 + '*" or instanceId="' + requesterBarcode1 + '*" or item.barcode="' + requesterBarcode1 + '*" or itemId=="' + requesterBarcode1 + '" or itemIsbn=="' + requesterBarcode1 + '" or searchIndex.callNumberComponents.callNumber=="' + requesterBarcode1 + '*" or fullCallNumberIndex=="' + requesterBarcode1 + '*")) sortby requestDate'
+    And param limit = 100
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == targetRequestId
+    And match $.requests[0].requester.barcode == requesterBarcode1
+
+    Given path 'circulation', 'requests'
+    And param query = '((id=="' + targetTitle + '" or requesterId=="' + targetTitle + '" or requester.barcode=="' + targetTitle + '*" or instance.title="' + targetTitle + '*" or instanceId="' + targetTitle + '*" or item.barcode="' + targetTitle + '*" or itemId=="' + targetTitle + '" or itemIsbn=="' + targetTitle + '" or searchIndex.callNumberComponents.callNumber=="' + targetTitle + '*" or fullCallNumberIndex=="' + targetTitle + '*")) sortby requestDate'
+    And param limit = 100
+    When method GET
+    Then status 200
+    And match response.requests[*].id contains targetRequestId
+    And match response.requests[*].id contains otherRequestId
+
   Scenario: Test request sorting by service point name, shelving order
     * def holdingsRecordId1 = call uuid1
     * def callNumber1 = 'FAT5356CN2'
@@ -1830,6 +1888,7 @@ Feature: Requests tests
     When method PUT
     Then status 204
 
+  @C409462
   Scenario: If service point is deleted or becomes not pickup location, it should be removed from policies allowed service points
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = headersUser

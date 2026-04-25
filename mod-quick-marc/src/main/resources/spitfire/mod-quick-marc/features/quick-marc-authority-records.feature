@@ -233,3 +233,21 @@ Feature: Test quickMARC authority records
     When method GET
     Then status 200
     And match response.personalName == "Johnson"
+
+  Scenario: Create QuickMARC authority record without modifying 003 and 035 fields
+    * def samplePath = 'classpath:spitfire/mod-quick-marc/features/setup/samples/'
+    * def record = read(samplePath + 'parsed-records/marc-authority-record.json')
+    * set record._actionType = 'create'
+    * match record.fields[?(@.tag=='003')].content == ["DLC"]
+    * def field035 = { "tag": "035", "indicators": [ "0", "0" ], "content": "$a (OCoLC)ocn000064758", "isProtected":false }
+    * record.fields.push(field035)
+
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request record
+    When method POST
+    Then status 201
+    * def marcAuthorityId = response.externalId
+    * match marcAuthorityId != null
+    * match response.fields[?(@.tag=='003')].content == ["DLC"]
+    * match response.fields[?(@.tag=='035')].content == ["$a (OCoLC)ocn000064758"]

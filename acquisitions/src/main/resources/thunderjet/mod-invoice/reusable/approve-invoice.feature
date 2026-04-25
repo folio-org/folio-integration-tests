@@ -3,6 +3,7 @@ Feature: Approve invoice
   # parameters: invoiceId
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Approve invoice

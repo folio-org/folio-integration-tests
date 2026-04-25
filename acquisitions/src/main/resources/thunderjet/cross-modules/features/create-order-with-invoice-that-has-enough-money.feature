@@ -35,8 +35,8 @@ Feature: Create order with invoice that has enough money
     * def presentExpenseClasses = [{'expenseClassId': '#(globalElecExpenseClassId)'}, {'expenseClassId': '#(globalPrnExpenseClassId)'}]
     * def statusExpenseClasses = <statusExpenseClasses>
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000, 'statusExpenseClasses': #(statusExpenseClasses)}
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)'}
+    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000, 'statusExpenseClasses': #(statusExpenseClasses)}
 
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
@@ -56,39 +56,21 @@ Feature: Create order with invoice that has enough money
       | fundId                   | budgetId                   | emptyExpenseClasses   |
       | fundWithExpenseClassesId | budgetWithExpenseClassesId | presentExpenseClasses |
 
-  Scenario: Create orders
-
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+  Scenario: Create order
+    * def v = call createOrder { id: '#(orderId)' }
 
   Scenario Outline: Create order lines for <orderLineId> and <fundId>
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
+    * def amount = <amount>
 
     * def fundDistribution = { 'fundId': #(fundId), 'distributionType': 'percentage', 'value': 100}
     * def fundDistributionElectronic = { 'fundId': #(fundWithExpenseClassesId), 'distributionType': 'percentage', 'value': 50, 'expenseClassId': #(globalElecExpenseClassId)}
     * def fundDistributionPrint = { 'fundId': #(fundWithExpenseClassesId), 'distributionType': 'percentage', 'value': 50, 'expenseClassId': #(globalPrnExpenseClassId)}
 
-    Given path 'orders/order-lines'
+    * def fundDistributions = <fundDistributions>
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = <amount>
-    * set orderLine.fundDistribution = <fundDistributions>
-
-    And request orderLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: '#(amount)', fundDistribution: '#(fundDistributions)' }
 
     Examples:
       | orderId | orderLineId                   | fundDistributions                                          | amount |
@@ -97,19 +79,7 @@ Feature: Create order with invoice that has enough money
       | orderId | orderLineIdWithExpenseClasses | [#(fundDistributionElectronic), #(fundDistributionPrint)]  | 1000   |
 
   Scenario: Open order
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   Scenario Outline: check budget after open order
     * def fundId = <fundId>
@@ -172,23 +142,9 @@ Feature: Create order with invoice that has enough money
     * def fd = response.fundDistribution
     * def lineAmount = response.cost.listUnitPrice
 
-    # ============= Create lines ===================
+    # ============= Create invoice line ===================
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundDistributions: '#(fd)', total: '#(lineAmount)' }
 
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-        "id": "#(invoiceLineId)",
-        "invoiceId": "#(invoiceId)",
-        "invoiceLineStatus": "Open",
-        "fundDistributions": #(fd),
-        "subTotal": #(lineAmount),
-        "description": "test",
-        "quantity": "1"
-    }
-    """
-    When method POST
-    Then status 201
     Examples:
       | orderLineId                   | invoiceLineId                   |
       | orderLineIdOne                | invoiceLineIdOne                |
@@ -196,17 +152,7 @@ Feature: Create order with invoice that has enough money
       | orderLineIdWithExpenseClasses | invoiceLineIdWithExpenseClasses |
 
   Scenario: approve invoice
-    # ============= approve invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario Outline: check budget amounts
     * def fundId = <fundId>
@@ -238,17 +184,7 @@ Feature: Create order with invoice that has enough money
     And match $.transactions == '#[4]'
 
   Scenario: pay invoice
-    # ============= pay invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Paid"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario Outline: check budget amounts after pay
     * def fundId = <fundId>

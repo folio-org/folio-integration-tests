@@ -4,6 +4,7 @@ Feature: Get order line title id
   # returns: titleId
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Get order line title id

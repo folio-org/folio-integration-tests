@@ -1,4 +1,4 @@
-# For MODORDERS-1167
+# For MODORDERS-1167, MODORDERS-1343, MODORDERS-1359 and MODORDERS-1414
 Feature: Open and unopen order
 
   Background:
@@ -24,8 +24,8 @@ Feature: Open and unopen order
 
     * print '1. Create a fund and budget'
     * configure headers = headersAdmin
-    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [ { 'expenseClassId': '#(globalPrnExpenseClassId)', 'status': 'Active' } ] }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: [ { expenseClassId: '#(globalPrnExpenseClassId)', status: 'Active' } ] }
 
     * print '2. Create a composite one-time order'
     * configure headers = headersUser
@@ -134,7 +134,7 @@ Feature: Open and unopen order
     Then status 200
 
     # 5. Unopen the second order and delete holdings
-    * def v = call unopenOrderDeleteHoldings { orderId: '#(orderId2)' }
+    * def v = call unopenOrder { orderId: '#(orderId2)', deleteHoldings: true }
 
     # 6 Verify that the holding used by the first order line is not deleted
     * configure headers = headersAdmin
@@ -183,3 +183,86 @@ Feature: Open and unopen order
     When method GET
     Then status 200
     And match response.encumbrance.status == 'Unreleased'
+
+  # For MODORDERS-1414
+  @Positive
+  Scenario: Open and unopen order with P/E mix, 2 locations, 1 quantity for each
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    * print '1. Create a fund and budget'
+    * configure headers = headersAdmin
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * configure headers = headersUser
+
+    * print '2. Create a one-time order'
+    * def v = call createOrder { id: '#(orderId)' }
+
+    * print '3. Create an order line with a P/E mix'
+    * table locations
+      | locationId         | quantity | quantityPhysical | quantityElectronic |
+      | globalLocationsId  | 1        | 1                | 0                  |
+      | globalLocationsId2 | 1        | 0                | 1                  |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', orderFormat: 'P/E Mix', quantityElectronic: 1, listUnitPriceElectronic: 1, createInventory: 'Instance, Holding, Item', eresourceCreateInventory: 'Instance, Holding', locations: '#(locations)' }
+
+    * print '4. Open the order'
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    * print '5. Get the instance id'
+    * call getOrderLine { poLineId: '#(poLineId)' }
+    * def instanceId = poLine.instanceId
+
+    * print '5. Unopen the order with deleteHoldings=true'
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
+
+    * print '6. Check the holdings were deleted'
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 0
+
+  # For MODORDERS-1414
+  @Positive
+  Scenario: Open and unopen order with P/E mix, 1 location, 2 quantity for each
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    * print '1. Create a fund and budget'
+    * configure headers = headersAdmin
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * configure headers = headersUser
+
+    * print '2. Create a one-time order'
+    * def v = call createOrder { id: '#(orderId)' }
+
+    * print '3. Create an order line with a P/E mix'
+    * table locations
+      | locationId         | quantity | quantityPhysical | quantityElectronic |
+      | globalLocationsId  | 1        | 2                | 2                  |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', orderFormat: 'P/E Mix', quantity: 2, quantityElectronic: 2, listUnitPriceElectronic: 1, createInventory: 'Instance, Holding, Item', eresourceCreateInventory: 'Instance, Holding', locations: '#(locations)' }
+
+    * print '4. Open the order'
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    * print '5. Get the instance id'
+    * call getOrderLine { poLineId: '#(poLineId)' }
+    * def instanceId = poLine.instanceId
+
+    * print '5. Unopen the order with deleteHoldings=true'
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
+
+    * print '6. Check the holdings were deleted'
+    * configure headers = headersAdmin
+    Given path 'holdings-storage/holdings'
+    And param query = 'instanceId==' + instanceId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 0

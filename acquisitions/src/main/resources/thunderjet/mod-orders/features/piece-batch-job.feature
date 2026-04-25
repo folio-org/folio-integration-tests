@@ -17,8 +17,6 @@ Feature: Piece batch job testing
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
     * def orderId1 = callonce uuid3
@@ -38,8 +36,8 @@ Feature: Piece batch job testing
 
   Scenario: Create finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)', status: 'Active' }
 
   Scenario Outline: Create 6 orders
     * def orderId = <orderId>
@@ -55,20 +53,9 @@ Feature: Piece batch job testing
     | orderId6 |
 
   Scenario Outline: Create 6 order lines
-    * print "Create 6 order lines"
-
-    * copy poLine = orderLineTemplate
-    * set poLine.id = <poLineId>
-    * set poLine.purchaseOrderId = <orderId>
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.cost.listUnitPrice = 10
-    * set poLine.claimingActive = true
-    * set poLine.claimingInterval = 1
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def orderId = <orderId>
+    * def poLineId = <poLineId>
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, claimingActive: true, claimingInterval: 1 }
 
     Examples:
     | orderId  | poLineId  |

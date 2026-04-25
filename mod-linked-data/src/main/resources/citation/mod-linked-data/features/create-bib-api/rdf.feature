@@ -5,7 +5,7 @@ Feature: Derived Bibframe2 RDF
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
-    * def baseResourceUrl = 'http://localhost:8081/linked-data-editor/resources/'
+    * def baseResourceUrl = foliioUiUrl + '/linked-data-editor/resources/'
 
   Scenario: Validate Bibframe2 RDF
     * def rdfCall = call getRdf { resourceId:  '#(instanceId)' }

@@ -110,22 +110,8 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * def iLine16 = callonce uuid79
 
   Scenario Outline: prepare fiscal year with <fiscalYearId> for rollover
-    * def fiscalYearId = <fiscalYearId>
     * def code = <code>
-
-    Given path 'finance/fiscal-years'
-    And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + code)',
-      "code": '#(codePrefix + code)',
-      "periodStart": '#(code + "-01-01T00:00:00Z")',
-      "periodEnd": '#(code + "-12-30T23:59:59Z")'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createFiscalYear { id: '#(<fiscalYearId>)', code: '#(codePrefix + code)', periodStart: '#(code + "-01-01T00:00:00Z")', periodEnd: '#(code + "-12-30T23:59:59Z")' }
 
     Examples:
       | fiscalYearId     | code     |
@@ -133,21 +119,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
       | toFiscalYearId   | toYear   |
 
   Scenario Outline: prepare ledger with <ledgerId> for rollover
-    * def ledgerId = <ledgerId>
-
-    Given path 'finance/ledgers'
-    And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(fromFiscalYearId)"
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createLedger { id: '#(<ledgerId>)', fiscalYearId: '#(fromFiscalYearId)' }
 
     Examples:
       | ledgerId         |
@@ -501,17 +473,7 @@ Feature: Ledger fiscal year rollover pol and system currencies are different
     * configure headers = headersAdmin
 
     * def orderId = <orderId>
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = response
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     Examples:
       | orderId  |

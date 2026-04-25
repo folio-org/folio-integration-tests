@@ -43,9 +43,9 @@ Feature: linking-records tests
 
     # retrieve instance record
     Given path '/instance-storage/instances', instanceId
+    And retry until response.contributors.some(x => x.name == 'Updated')
     When method GET
     Then status 200
-    And match response.contributors[*].name contains 'Updated'
 
   @Positive
   Scenario: Update linking authority 010 - should update $0 bib subfield

@@ -2,9 +2,10 @@
 Feature: Create library
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createLibrary
+  Scenario: Create library
     Given path 'location-units/libraries'
     And request
     """

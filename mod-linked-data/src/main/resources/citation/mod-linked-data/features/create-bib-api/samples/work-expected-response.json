@@ -1,5 +1,5 @@
 {
-  "id": "8184917527973833538",
+  "id": "7208009198915731977",
   "profileId": 2,
   "http://bibfra.me/vocab/library/title": [
     {
@@ -197,9 +197,12 @@
   ],
   "http://bibfra.me/vocab/library/content": [
     {
-      "id": "-8147146195166577135",
+      "id": "2784831315844563980",
       "http://bibfra.me/vocab/library/code": [
         "cri"
+      ],
+      "http://bibfra.me/vocab/library/source": [
+        "rdacontent"
       ],
       "http://bibfra.me/vocab/library/term": [
         "cartographic image"
@@ -245,32 +248,22 @@
   ],
   "http://bibfra.me/vocab/scholar/dissertation": [
     {
-      "id": "6843069100405495370",
-      "http://bibfra.me/vocab/lite/label": [
+      "id": "-428321923555880672",
+      "http://bibfra.me/vocab/lite/note": [
         "label"
       ],
       "http://bibfra.me/vocab/library/degree": [
         "degree"
       ],
-      "http://bibfra.me/vocab/library/dissertationYear": [
+      "http://bibfra.me/vocab/lite/date": [
         "dissertation year"
       ],
-      "http://bibfra.me/vocab/library/dissertationNote": [
+      "http://bibfra.me/vocab/library/miscInfo": [
         "dissertation note"
       ],
       "http://bibfra.me/vocab/library/dissertationID": [
         "dissertation id"
       ]
-    }
-  ],
-  "_hubs": [
-    {
-      "_relation": "http://bibfra.me/vocab/lite/expressionOf",
-      "_hub": {
-        "id": "#notnull",
-        "http://bibfra.me/vocab/lite/label": [ "Code général des impôts (1999)" ],
-        "http://bibfra.me/vocab/lite/link": [ "http://id.loc.gov/resources/hubs/d8d7c870-7f49-929a-62a9-15054beb2a68" ]
-      }
     }
   ]
 }

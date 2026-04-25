@@ -13,46 +13,60 @@ Feature: mod-quick-marc integration tests
       | 'mod-inventory'             |
       | 'mod-inventory-storage'     |
       | 'mod-entities-links'        |
+      | 'mod-users'                 |
       | 'mod-record-specifications' |
       | 'mod-search'                |
 
     * table userPermissions
-      | name                                                        |
-      | 'search.authorities.collection.get'            |
-      | 'instance-authority-links.instances.collection.get'         |
-      | 'inventory-storage.authorities.item.delete'                 |
-      | 'inventory-storage.authorities.item.get'                    |
-      | 'inventory-storage.authorities.item.post'                   |
-      | 'inventory-storage.authority-source-files.item.post'        |
-      | 'inventory-storage.holdings.item.get'                       |
-      | 'inventory-storage.holdings.item.post'                      |
-      | 'inventory-storage.holdings-sources.item.post'              |
-      | 'inventory-storage.holdings-types.item.post'                |
-      | 'inventory-storage.instance-types.item.post'                |
-      | 'inventory-storage.instances.item.get'                      |
-      | 'inventory-storage.instances.item.post'                     |
-      | 'inventory-storage.location-units.campuses.item.post'       |
-      | 'inventory-storage.location-units.institutions.item.post'   |
-      | 'inventory-storage.location-units.libraries.item.post'      |
-      | 'inventory-storage.locations.item.post'                     |
-      | 'marc-records-editor.item.get'                              |
-      | 'marc-records-editor.item.post'                             |
-      | 'marc-records-editor.item.put'                              |
-      | 'marc-records-editor.status.item.get'                       |
-      | 'marc-records-editor.validate.post'                         |
-      | 'source-storage.records.collection.get'                     |
-      | 'source-storage.records.post'                               |
-      | 'source-storage.records.formatted.item.get'                 |
-      | 'source-storage.snapshots.post'                             |
-      | 'source-storage.source-records.collection.get'              |
-      | 'source-storage.source-records.item.get'                    |
-      | 'specification-storage.field.indicators.item.post'          |
-      | 'specification-storage.field.subfields.item.post'           |
-      | 'specification-storage.indicator.indicator-codes.item.post' |
-      | 'specification-storage.specification.fields.item.post'      |
-      | 'specification-storage.specifications.item.get'             |
-      | 'specification-storage.subfields.item.put'                  |
-      | 'specification-storage.specification.rules.item.patch'      |
-
+      | name                                                                     |
+      | 'user-tenants.collection.get'                                            |
+      | 'mapping-metadata.type.item.get'                                         |
+      | 'search.authorities.collection.get'                                      |
+      | 'instance-authority-links.instances.collection.get'                      |
+      | 'inventory-storage.authorities.item.delete'                              |
+      | 'inventory-storage.authorities.item.get'                                 |
+      | 'inventory-storage.authorities.item.post'                                |
+      | 'inventory-storage.authority-source-files.item.post'                     |
+      | 'inventory-storage.holdings.item.get'                                    |
+      | 'inventory-storage.holdings.item.post'                                   |
+      | 'inventory-storage.holdings-sources.item.post'                           |
+      | 'inventory-storage.holdings-types.item.post'                             |
+      | 'inventory-storage.instance-types.item.post'                             |
+      | 'inventory-storage.instances.item.get'                                   |
+      | 'inventory-storage.instances.item.post'                                  |
+      | 'inventory-storage.instances.item.put'                                   |
+      | 'inventory-storage.instances.collection.get'                             |
+      | 'inventory-storage.instances.preceding-succeeding-titles.collection.put' |
+      | 'inventory-storage.holdings.item.put'                                    |
+      | 'inventory-storage.authorities.item.put'                                 |
+      | 'inventory-storage.location-units.campuses.item.post'                    |
+      | 'inventory-storage.location-units.institutions.item.post'                |
+      | 'inventory-storage.location-units.libraries.item.post'                   |
+      | 'inventory-storage.locations.item.post'                                  |
+      | 'marc-records-editor.item.get'                                           |
+      | 'marc-records-editor.item.post'                                          |
+      | 'marc-records-editor.item.put'                                           |
+      | 'marc-records-editor.status.item.get'                                    |
+      | 'marc-records-editor.validate.post'                                      |
+      | 'source-storage.records.collection.get'                                  |
+      | 'source-storage.records.post'                                            |
+      | 'source-storage.records.put'                                             |
+      | 'source-storage.records.item.get'                                        |
+      | 'source-storage.records.formatted.item.get'                              |
+      | 'source-storage.records.generation.item.put'                             |
+      | 'source-storage.snapshots.post'                                          |
+      | 'source-storage.snapshots.post'                                          |
+      | 'source-storage.source-records.collection.get'                           |
+      | 'source-storage.source-records.item.get'                                 |
+      | 'specification-storage.field.indicators.item.post'                       |
+      | 'specification-storage.field.subfields.item.post'                        |
+      | 'specification-storage.indicator.indicator-codes.item.post'              |
+      | 'specification-storage.specification.fields.item.post'                   |
+      | 'specification-storage.specifications.item.get'                          |
+      | 'specification-storage.subfields.item.put'                               |
+      | 'specification-storage.specification.rules.item.patch'                   |
+      | 'specification-storage.specifications.collection.get'                    |
+      | 'authorities.config.groups.settings.collection.get'                      |
+      | 'authorities.config.groups.settings.authorities.collection.get'          |
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

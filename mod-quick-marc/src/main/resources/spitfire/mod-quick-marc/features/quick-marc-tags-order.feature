@@ -6,7 +6,7 @@ Feature: Test MARC records tags order
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
 
   Scenario: Check marc bib tags order
-    * def marcBib = call read('setup/setup.feature@CreateMarcBibRecord')
+    * def marcBib = call read('setup/setup.feature@CreateMarcBibRecord') { hrid: '393894' }
     * def record = marcBib.response
     * def marcBibId = record.externalId
     * def createdFields = record.fields
@@ -40,14 +40,14 @@ Feature: Test MARC records tags order
     And match payloadFields[25].tag == "006"
     And match payloadFields[26].tag == "007"
     And match payloadFields[27].tag == "008"
-    # Verify that '001' and '005' tags are at 28 and 29 indexes; they will be moved to the top of the tag list
-    And match payloadFields[28].tag == "001"
-    And match payloadFields[29].tag == "005"
-    And match payloadFields[30].tag == "905"
+    # Verify that '001' and '005' tags are at 28 and 34 indexes; they will be moved to the top of the tag list
+    And match payloadFields[28].tag == "005"
+    And match payloadFields[29].tag == "905"
+    And match payloadFields[30].tag == "948"
     And match payloadFields[31].tag == "948"
     And match payloadFields[32].tag == "948"
     And match payloadFields[33].tag == "948"
-    And match payloadFields[34].tag == "948"
+    And match payloadFields[34].tag == "001"
 
     # check created fields tag order. The '001' and '005' tags should be at the top of the list
     And match createdFields[0].tag == "001"
@@ -188,7 +188,7 @@ Feature: Test MARC records tags order
     And match fields[34].tag == "001"
 
   Scenario: Check marc holding tags order
-    * def marcHolding = call read('setup/setup.feature@CreateHoldingRecord')
+    * def marcHolding = call read('setup/setup.feature@CreateHoldingRecord') { hrid: '393895' }
     * def record = marcHolding.response
     * def marcHoldingId = record.externalId
     * def createdFields = record.fields
@@ -201,14 +201,12 @@ Feature: Test MARC records tags order
     And match payloadFields[4].tag == "004"
     And match payloadFields[5].tag == "866"
     And match payloadFields[6].tag == "868"
-    # Verify that '999' tag is at 7 index, it will be moved to the end of the tag list
-    And match payloadFields[7].tag == "999"
-    # Verify that '001' and '005' tags are at 8 and 10 indexes, they will be moved to the top of the tag list
-    And match payloadFields[8].tag == "005"
-    And match payloadFields[9].tag == "008"
-    And match payloadFields[10].tag == "001"
+    # Verify that '001' and '005' tags are at 9 and 7 indexes, they will be moved to the top of the tag list
+    And match payloadFields[7].tag == "005"
+    And match payloadFields[8].tag == "008"
+    And match payloadFields[9].tag == "001"
 
-    # check created fields tag order. The '001' and '005' tags should be moved at the top of the list,'999' tag should be moved to the end of the list
+    # check created fields tag order. The '001' and '005' tags should be moved at the top of the list,'999' tag should be at end of the list
     And match createdFields[0].tag == "001"
     And match createdFields[1].tag == "005"
     And match createdFields[2].tag == "014"
@@ -284,15 +282,13 @@ Feature: Test MARC records tags order
     And match payloadFields[3].tag == "551"
     And match payloadFields[4].tag == "670"
     And match payloadFields[5].tag == "670"
-    # Verify that '999' tag is at 6 index, it will be moved to the end of the tag list
-    And match payloadFields[6].tag == "999"
-    # Verify that '001' and '005' tags are at 7 and 10 indexes, they will be moved to the top of the tag list
-    And match payloadFields[7].tag == "001"
-    And match payloadFields[8].tag == "003"
-    And match payloadFields[9].tag == "008"
-    And match payloadFields[10].tag == "005"
+    # Verify that '001' and '005' tags are at 6 and 9 indexes, they will be moved to the top of the tag list
+    And match payloadFields[6].tag == "001"
+    And match payloadFields[7].tag == "003"
+    And match payloadFields[8].tag == "008"
+    And match payloadFields[9].tag == "005"
 
-    # check created fields tag order. The '001' and '005' tags should be moved at the top of the list,'999' tag should be moved to the end of the list
+    # check created fields tag order. The '001' and '005' tags should be moved at the top of the list,'999' tag should be at the end of the list
     And match createdFields[0].tag == "001"
     And match createdFields[1].tag == "005"
     And match createdFields[2].tag == "010"

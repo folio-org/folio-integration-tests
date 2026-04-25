@@ -60,7 +60,8 @@ Feature: Entity types
     And match $.name == 'simple_location'
     And match $.labelAlias == 'Locations'
     And match $.columns == '#present'
-    Given path 'entity-types/' + locationsEntityTypeId + '/columns/name/values'
+    Given path 'entity-types/' + locationsEntityTypeId + '/field-values'
+    And param field = 'name'
     And param apikey = apikey
     When method GET
     Then status 200

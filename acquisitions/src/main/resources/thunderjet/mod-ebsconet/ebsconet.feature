@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-ebsconet integration tests
 
   Background:
@@ -22,7 +21,7 @@ Feature: mod-ebsconet integration tests
     * call read('features/cancel-order-lines-with-ebsconet.feature')
 
   Scenario: Close Order With Order Line
-    * call read('features/close-order-with-order-line')
+    * call read('features/close-order-with-order-line.feature')
 
   Scenario: Get Ebsconet Order Line
     * call read('features/get-ebsconet-order-line.feature')

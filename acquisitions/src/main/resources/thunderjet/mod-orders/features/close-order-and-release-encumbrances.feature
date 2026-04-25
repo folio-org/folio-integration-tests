@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Close order and release encumbrances
 
   Background:
@@ -15,27 +14,20 @@ Feature: Close order and release encumbrances
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
 
-    * def orderId = callonce uuid3
-    * def orderLineIdOne = callonce uuid4
-    * def orderLineIdTwo = callonce uuid5
+  Scenario: Close order and release encumbrances
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def orderLineIdOne = call uuid
+    * def orderLineIdTwo = call uuid
 
-  Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
-
+    # 1. Prepare finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000 }
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000 }
 
-    Examples:
-      | fundId | budgetId |
-      | fundId | budgetId |
-
-  Scenario: check budget after create
-    * configure headers = headersAdmin
+    # 2. Check budget after creation
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
     When method GET
@@ -49,57 +41,21 @@ Feature: Close order and release encumbrances
     And match budget.awaitingPayment == 0
     And match budget.unavailable == 0
 
-  Scenario: Create orders
+    # 3. Create order
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(orderId)' }
 
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # 4. Create order lines
+    * table poLines
+    | poLineId       | listUnitPrice |
+    | orderLineIdOne | 4500          |
+    | orderLineIdTwo | 5500          |
+    * def v = call createOrderLine poLines
 
-  Scenario Outline: Create order lines for <orderLineId> and <fundId>
-    * def orderId = <orderId>
-    * def poLineId = <orderLineId>
+    # 5. Open order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = <amount>
-    * set orderLine.fundDistribution[0].fundId = <fundId>
-
-    And request orderLine
-    When method POST
-    Then status 201
-
-    Examples:
-      | orderId | orderLineId    | fundId | amount |
-      | orderId | orderLineIdOne | fundId | 4500   |
-      | orderId | orderLineIdTwo | fundId | 5500   |
-
-  Scenario: Open order
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: check budget after open order
+    # 6. Check budget after opening order
     * configure headers = headersAdmin
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId
@@ -114,22 +70,11 @@ Feature: Close order and release encumbrances
     And match budget.awaitingPayment == 0
     And match budget.unavailable == 10000
 
-  Scenario: Close order and release encumbrances
-    # ============= get order to close ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
+    # 7. Close order and release encumbrances
+    * configure headers = headersUser
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Closed"
-
-    # ============= update order to close ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: check budget after close order
+    # 8. Check budget after closing order
     * configure headers = headersAdmin
     Given path '/finance/budgets'
     And param query = 'fundId==' + fundId

@@ -76,8 +76,8 @@ Feature: Test operations affecting pieces with different po line options
     * print 'Create finances'
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)' }
     * configure headers = headersUser
 
     # When an instance is connected to the po line
@@ -89,17 +89,7 @@ Feature: Test operations affecting pieces with different po line options
     * if (locations == 'holdingLocation') karate.call('../reusable/create-holdings.feature', { holdingId: initialHoldingId, instanceId: initialInstanceId, locationId: locationId })
 
     * print 'Create an order'
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     * print 'Create an order line'
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-mixed-order-line.json')
@@ -119,15 +109,7 @@ Feature: Test operations affecting pieces with different po line options
     Then status 201
 
     * print 'Open the order'
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     * print 'Get the instanceId and holdingId from the po line'
     Given path 'orders/order-lines', poLineId
@@ -300,15 +282,7 @@ Feature: Test operations affecting pieces with different po line options
 
 
     * print 'Unopen the order'
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Pending'
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call unopenOrder { orderId: '#(orderId)' }
 
     * print 'Check order line after unopen'
     Given path 'orders/order-lines', poLineId
@@ -330,15 +304,7 @@ Feature: Test operations affecting pieces with different po line options
 
     * print 'Reopen the order'
     * configure headers = headersUser
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def order = $
-    * set order.workflowStatus = 'Open'
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     * print 'Check order line after reopen'
     Given path 'orders/order-lines', poLineId

@@ -3,7 +3,8 @@ Feature: init data for consortia
   Background:
     * url baseUrl
     * configure readTimeout = 300000
-    * configure retry = { count: 20, interval: 10000 }
+    # max polling time: ~10 minutes (40 retries x 15s)
+    * configure retry = { count: 40, interval: 15000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true'  }
 
   @PostTenant
@@ -56,35 +57,7 @@ Feature: init data for consortia
   @DeleteEntitlement
   Scenario: delete entitlements in tenant
     * configure abortedStepsShouldPass = true
-    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
-    * def keycloakMasterToken = keycloakResponse.response.access_token
-    * print "---destroy entitlement---"
-    Given path 'entitlements'
-    And param query = 'tenantId==' + testTenantId
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    When method GET
-    * def totalAmount = response.totalRecords
-    * if(totalAmount < 1) karate.abort()
-
-    Given path 'entitlements'
-    And param query = 'tenantId==' + testTenantId
-    And param limit = totalAmount
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    When method GET
-
-    * def applicationIds = karate.map(response.entitlements, x => x.applicationId)
-    * if(applicationIds.length < 1) karate.abort()
-    * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
-
-    # Increase socket timeout for this specific DELETE request
-    * configure readTimeout = 600000
-
-    Given path 'entitlements'
-    And param purge = true
-    And request entitlementTamplate
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    When method DELETE
-    Then status 200
+    * call read('classpath:common/eureka/destroy-data.feature@destroyEntitlement') { testTenantId: '#(testTenantId)' }
 
     # Reset timeout to default after the operation
     * configure readTimeout = 30000

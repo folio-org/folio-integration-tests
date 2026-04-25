@@ -3,9 +3,10 @@ Feature: Create piece with holding id or location id
   # Parameters: id, poLineId, titleId, holdingId?, locationId?, useLocationId?, receivingTenantId?, format?, sequenceNumber?, createItem?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createPieceWithHoldingOrLocation
+  Scenario: Create piece with holding id or location id
     * def id = karate.get('id')
     * def poLineId = karate.get('poLineId')
     * def titleId = karate.get('titleId')

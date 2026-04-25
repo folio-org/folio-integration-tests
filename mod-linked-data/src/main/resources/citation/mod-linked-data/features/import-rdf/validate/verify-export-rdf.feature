@@ -4,17 +4,18 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * url baseUrl
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * def baseResourceUrl = foliioUiUrl + '/linked-data-editor/resources/'
 
   Scenario: Validate Instance
     * def rdfCall = call getRdf
     * def rdfResponse = rdfCall.response
-    * def instance = karate.filter(rdfResponse, x => x['@id'] == 'http://localhost:8081/linked-data-editor/resources/' + resourceId)[0]
+    * def instance = karate.filter(rdfResponse, x => x['@id'] == baseResourceUrl + resourceId)[0]
     * match instance['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Instance'
     * match instance['http://id.loc.gov/ontologies/bibframe/dimensions'][0]['@value'] == '19 cm'
     * match instance['http://id.loc.gov/ontologies/bibframe/responsibilityStatement'][0]['@value'] == 'by Jack & Holman Wang'
 
     * def workId = instance['http://id.loc.gov/ontologies/bibframe/instanceOf'][0]['@id']
-    * def workResourceId = workId.replace('http://localhost:8081/linked-data-editor/resources/', '').trim()
+    * def workResourceId = workId.replace(baseResourceUrl, '').trim()
     * def work = karate.filter(rdfResponse, x => x['@id'] == workId)[0]
     * match work['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Work'
     * match work['@type'] contains 'http://id.loc.gov/ontologies/bibframe/Monograph'

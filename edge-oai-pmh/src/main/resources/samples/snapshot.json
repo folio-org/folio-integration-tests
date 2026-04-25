@@ -1,0 +1,11 @@
+{
+  "jobExecutionId": "#(snapshotId)",
+  "status": "NEW",
+  "processingStartedDate": "2020-04-29T05:25:03+0000",
+  "metadata" : {
+    "createdDate" : "2020-03-19T16:43:00.436+0000",
+    "createdByUserId" : "4547e8af-638a-4595-8af8-4d396d6a9f7a",
+    "updatedDate" : "2020-04-29T05:25:03+0000",
+    "updatedByUserId" : "4547e8af-638a-4595-8af8-4d396d6a9f7a"
+  }
+}

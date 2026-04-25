@@ -1,0 +1,9 @@
+{
+  "name": "Organization List",
+  "description": "Organization List",
+  "entityTypeId": "e0ea4212-4023-458a-adce-8003ff6c5d9e",
+  "fqlQuery": "{\"$and\": [{\"organization.name\" : {\"$eq\": \"1234\"}}]}",
+  "isActive": "true",
+  "isPrivate": "false"
+}
+

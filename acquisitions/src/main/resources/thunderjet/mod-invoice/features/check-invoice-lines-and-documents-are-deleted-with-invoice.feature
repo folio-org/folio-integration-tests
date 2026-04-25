@@ -11,34 +11,21 @@ Feature: Check invoice lines and documents are deleted with invoice
 
     * callonce variables
 
-    # prepare sample data
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
     * def documentPayload = read('classpath:samples/mod-invoice/documents/sample-pdf.json')
 
-    # initialize common invoice data
-    * def invoiceId = callonce uuid1
-    * def invoiceLineId = callonce uuid2
-    * def documentId = callonce uuid3
 
   Scenario: Create an invoice, add a line and a document, delete the invoice, and check the line and document are gone
-    # ============= create the invoice ===================
-    * set invoicePayload.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoicePayload
-    When method POST
-    Then status 201
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
+    * def documentId = call uuid
 
-    # ============= create the invoice line ===================
-    * set invoiceLinePayload.id = invoiceLineId
-    * set invoiceLinePayload.invoiceId = invoiceId
-    * remove invoiceLinePayload.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLinePayload
-    When method POST
-    Then status 201
+    # 1. Create the invoice
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
-    # ============= create the invoice document ================
+    # 2. Create the invoice line
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundId: '#(globalFundId)', total: 100 }
+
+    # 3. Create the invoice document
     * set documentPayload.documentMetadata.id = documentId
     * set documentPayload.documentMetadata.invoiceId = invoiceId
     * configure headers = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)'  }
@@ -47,27 +34,27 @@ Feature: Check invoice lines and documents are deleted with invoice
     When method POST
     Then status 201
 
-    # ============= get the invoice line ===================
+    # 4. Get the invoice line
     Given path 'invoice/invoice-lines', invoiceLineId
     When method GET
     Then status 200
 
-    # ============= get the document ===================
+    # 5. Get the document
     Given path 'invoice/invoices', invoiceId, 'documents', documentId
     When method GET
     Then status 200
 
-    # ============= delete the invoice ===================
+    # 6. Delete the invoice
     Given path 'invoice/invoices', invoiceId
     When method DELETE
     Then status 204
 
-    # ============= verify the invoice line was deleted ===================
+    # 7. Verify the invoice line was deleted
     Given path 'invoice/invoice-lines', invoiceLineId
     When method GET
     Then status 404
 
-    # ============= verify the document was deleted ===================
+    # 8. Verify the document was deleted
     Given path 'invoice/invoices', invoiceId, 'documents', documentId
     When method GET
     Then status 404

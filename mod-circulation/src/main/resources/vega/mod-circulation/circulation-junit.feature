@@ -40,6 +40,11 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.request-policies.item.post'               |
       | 'circulation-storage.request-batch.item.post'                  |
       | 'circulation-storage.requests.collection.get'                  |
+      | 'circulation.settings.collection.get'                          |
+      | 'circulation.settings.item.get'                                |
+      | 'circulation.settings.item.put'                                |
+      | 'circulation.settings.item.post'                               |
+      | 'circulation.settings.item.delete'                             |
       | 'circulation.check-in-by-barcode.post'                         |
       | 'circulation.check-out-by-barcode.post'                        |
       | 'circulation.loans.claim-item-returned.post'                   |

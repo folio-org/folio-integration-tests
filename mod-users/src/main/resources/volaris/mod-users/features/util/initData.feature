@@ -76,7 +76,7 @@ Feature: init data for mod-users
       }
     """
 
-    Given path '/users/settings/entries'
+    Given path '/user/settings'
     And request createSettingRequest
     When method POST
     * if (responseStatus == 400) karate.match(response, 'value already exists in table settings: profile_picture_config')

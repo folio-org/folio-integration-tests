@@ -1,5 +1,4 @@
 # For MODORDERS-862
-@parallel=false
 Feature: Receive 20 pieces
 
   Background:
@@ -18,42 +17,29 @@ Feature: Receive 20 pieces
 
     * def receivePiece = read('classpath:thunderjet/mod-orders/reusable/receive-piece.feature')
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-
-
-  Scenario: Create finances
-    * configure headers = headersAdmin
-    * def v = call createFund { 'id': '#(fundId)' }
-    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
-
-
-  Scenario: Create an order
-    * def v = callonce createOrder { id: #(orderId) }
-
-
-  Scenario: Create an order line with isPackage
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.isPackage = true
-    * set poLine.checkinItems = true
-    * set poLine.physical.createInventory = 'Instance, Holding, Item'
-    * set poLine.fundDistribution[0].fundId = fundId
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open the order
-    * def v = callonce openOrder { orderId: "#(orderId)" }
-
 
   Scenario: Receive 20 pieces
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    # 1. Create finances
+    * configure headers = headersAdmin
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
+
+    # 2. Create an order
+    * configure headers = headersUser
+    * def v = call createOrder { id: #(orderId) }
+
+    # 3. Create an order line with isPackage
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, checkinItems: true }
+
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    # 5. Receive 20 pieces
     * def createTitleParameters = []
     * def createPieceParameters = []
     * def receivePieceParameters = []
@@ -74,8 +60,7 @@ function() {
     * def v = call createPiece createPieceParameters
     * def v = call receivePiece receivePieceParameters
 
-
-  Scenario: Check number of pieces and receivingStatus
+    # 6. Check number of pieces and receivingStatus
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
     And param limit = 30

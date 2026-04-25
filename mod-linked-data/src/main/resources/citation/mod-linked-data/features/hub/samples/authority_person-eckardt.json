@@ -1,0 +1,62 @@
+{
+  "externalId": "00000000-0000-0000-0000-000000000000",
+  "leader": "00000nz\\\\a2200000o\\\\4500",
+  "fields": [
+    {
+      "tag": "001",
+      "content": "no98031922"
+    },
+    {
+      "tag": "008",
+      "content": {
+        "Undef_18": "\\\\\\\\\\\\\\\\\\\\",
+        "Undef_30": "\\",
+        "Undef_34": "\\\\\\\\",
+        "Geo Subd": "\\",
+        "Roman": "\\",
+        "Lang": "\\",
+        "Kind rec": "\\",
+        "Cat Rules": "\\",
+        "SH Sys": "\\",
+        "Series": "\\",
+        "Numb Series": "\\",
+        "Main use": "\\",
+        "Subj use": "\\",
+        "Series use": "\\",
+        "Type Subd": "\\",
+        "Govt Ag": "\\",
+        "RefEval": "\\",
+        "RecUpd": "\\",
+        "Pers Name": "\\",
+        "Level Est": "\\",
+        "Mod Rec": "\\",
+        "Source": "\\"
+      }
+    },
+    {
+      "tag": "100",
+      "content": "$a Eckardt, Jason, $d 1971-",
+      "indicators": [
+        "\\",
+        "\\"
+      ]
+    },
+    {
+      "tag": "010",
+      "content": "$a no 98031922 ",
+      "indicators": [
+        "\\",
+        "\\"
+      ]
+    }
+  ],
+  "parsedRecordDtoId": "00000000-0000-0000-0000-000000000000",
+  "relatedRecordVersion": 1,
+  "marcFormat": "AUTHORITY",
+  "suppressDiscovery": false,
+  "updateInfo": {
+    "recordState": "NEW"
+  },
+  "_actionType": "create",
+  "parsedRecordId": "268ccc7b-d220-4274-9a65-149691f49038"
+}

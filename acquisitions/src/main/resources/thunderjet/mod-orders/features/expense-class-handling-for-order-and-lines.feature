@@ -34,8 +34,8 @@ Feature: Handling of expense classes for order and order lines
     * def budgetId = <budgetId>
     * configure headers = headersAdmin
 
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 99999999 }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 99999999 }
 
     Examples:
       | fundId                        | budgetId                         |
@@ -70,17 +70,7 @@ Feature: Handling of expense classes for order and order lines
 
     * def orderId = <orderId>
 
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     Examples:
       | orderId                          |
@@ -92,18 +82,8 @@ Feature: Handling of expense classes for order and order lines
   Scenario Outline: Create order lines for <orderLineId> and <fundId> with existing expense class
     * def orderId = <orderId>
     * def poLineId = <orderLineId>
-
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.fundDistribution[0].fundId = <fundId>
-    * set orderLine.fundDistribution[0].expenseClassId = globalPrnExpenseClassId
-
-    And request orderLine
-    When method POST
-    Then status 201
+    * def fundId = <fundId>
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', expenseClassId: '#(globalPrnExpenseClassId)' }
 
     Examples:
       | orderId                          | orderLineId                          | fundId                        |
@@ -135,19 +115,7 @@ Feature: Handling of expense classes for order and order lines
 
 
   Scenario: Open order with active Expense class
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderWithActiveExpenseClass
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderWithActiveExpenseClass
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderWithActiveExpenseClass)' }
 
   Scenario: Open order with inactive Expense class
     # ============= get order to open ===================

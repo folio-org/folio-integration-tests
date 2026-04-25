@@ -9,6 +9,24 @@ function fn() {
   var testTenant ="testoaipmh";
   var testTenantId = karate.properties['testTenantId'];
 
+  // generate names for consortia tenants
+  var randomNumbers = karate.properties['randomNumbers'] ? karate.properties['randomNumbers'] : '1234567890';
+
+  var centralTenant = 'testconsortium';
+  var centralTenantId = karate.properties['centralTenantId'];
+  var universityTenant = 'testuniversity';
+  var universityTenantId = karate.properties['universityTenantId'];
+  var collegeTenant = 'testcollege';
+  var collegeTenantId = karate.properties['collegeTenantId'];
+
+  var consortiaAdminUserId = karate.properties['consortiaAdminUserId'];
+  var centralUser1Id = karate.properties['centralUserId'];
+  var universityUser1Id = karate.properties['universityUserId'];
+  var collegeUser1Id = karate.properties['collegeUserId'];
+
+  // define consortiumId
+  var consortiumId = karate.properties['consortiumId'];
+
   var config = {
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9701',
@@ -19,10 +37,28 @@ function fn() {
     kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
 
     apikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9',
+    consortiumApikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0Y29uc29ydGl1bSIsInUiOiJ0ZXN0X2VkZ2VfYWRtaW4ifQ==',
+    universityApikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0dW5pdmVyc2l0eSIsInUiOiJ0ZXN0X2VkZ2VfYWRtaW4ifQ==',
+    collegeApikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0Y29sbGVnZSIsInUiOiJ0ZXN0X2VkZ2VfYWRtaW4ifQ==',
     testTenant: 'testoaipmh',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
     testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+
+    // define consortia users and tenants
+    centralTenant: centralTenant,
+    centralTenantId: centralTenantId ? centralTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    universityTenant: universityTenant,
+    universityTenantId: universityTenantId ? universityTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    collegeTenant: collegeTenant,
+    collegeTenantId: collegeTenantId ? collegeTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    consortiumId: consortiumId,
+
+    consortiaAdmin: { id: consortiaAdminUserId, username: 'test_edge_admin', password: 'admin', tenant: centralTenant},
+    universityUser1: { id: universityUser1Id, username: 'test_edge_admin', password: 'admin', tenant: universityTenant},
+    collegeUser1: { id: collegeUser1Id, username: 'test_edge_admin', password: 'admin', tenant: collegeTenant},
+    // shadow user
+    centralUser1: { id: centralUser1Id, username: 'centralUser', password: 'central_user_password', tenant: centralTenant},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -59,6 +95,10 @@ function fn() {
     pause: function(millis) {
       var Thread = Java.type('java.lang.Thread');
       Thread.sleep(millis);
+    },
+
+    replaceCharAtIndex: function(str, index, replacement) {
+      return str.substring(0, index) + replacement + str.substring(index + replacement.length);
     }
 
   };

@@ -33,8 +33,8 @@ Feature: Check opening an order links to the right instance based on the identif
 
     # Create Fund And Budget
     * configure headers = headersAdmin
-    * def v = call createFund { 'id': '#(fundId)' }
-    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 10000 }
     * configure headers = headersUser
 
   @Positive

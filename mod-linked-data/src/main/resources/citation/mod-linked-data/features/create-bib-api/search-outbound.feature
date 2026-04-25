@@ -39,18 +39,3 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
       | classificationType == "ddc"                                     | Search by classification type                 |
       | classificationNumber == "Dewey-number"                          | Search by classification number               |
       | classificationAdditionalNumber == "Lib-Congress-number-item"    | Search by classification additional number    |
-
-  @C983155
-  Scenario Outline: Should Index Hubs in mod-search.
-    * def query = '<query>'
-    * def searchCall = call searchLinkedDataHub
-    * match searchCall.response.totalRecords == 1
-
-    * match searchCall.response.content[0].label == 'Code général des impôts (1999)'
-    * match searchCall.response.content[0].id != null
-    * match searchCall.response.content[0].originalId == 'd8d7c870-7f49-929a-62a9-15054beb2a68'
-
-    Examples:
-      | query                                                     |
-      | label = "Code général des impôts (1999)"                  |
-      | originalId = "d8d7c870-7f49-929a-62a9-15054beb2a68"       |

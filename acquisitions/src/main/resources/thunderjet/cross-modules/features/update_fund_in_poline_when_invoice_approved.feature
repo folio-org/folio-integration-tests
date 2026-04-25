@@ -1,5 +1,4 @@
 # For MODORDERS-803
-@parallel=false
 Feature: Should fail updating fund in poLine when related invoice is approved
 
   Background:
@@ -12,114 +11,48 @@ Feature: Should fail updating fund in poLine when related invoice is approved
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
-    * def fundId1 = callonce uuid1
-    * def fundId2 = callonce uuid2
-    * def budgetId1 = callonce uuid3
-    * def budgetId2 = callonce uuid4
-    * def orderId = callonce uuid5
-    * def poLineId = callonce uuid6
-    * def invoiceId = callonce uuid7
-    * def invoiceLineId = callonce uuid8
+  Scenario: Should fail updating fund in poLine when related invoice is approved
+    * def fundId1 = call uuid
+    * def fundId2 = call uuid
+    * def budgetId1 = call uuid
+    * def budgetId2 = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
 
-  Scenario Outline: Prepare finances
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    # 1. Prepare finances
+    * table funds
+      | id      |
+      | fundId1 |
+      | fundId2 |
+    * def v = call createFund funds
+    * table budgets
+      | id        | fundId  | allocated |
+      | budgetId1 | fundId1 | 1000      |
+      | budgetId2 | fundId2 | 1000      |
+    * def v = call createBudget budgets
 
-    Examples:
-      | fundId  | budgetId  |
-      | fundId1 | budgetId1 |
-      | fundId2 | budgetId2 |
+    # 2. Create an order
+    * def v = call createOrder { id: '#(orderId)' }
 
+    # 3. Create a po line
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId1)', paymentStatus: 'Awaiting Payment', receiptStatus: 'Partially Received' }
 
-  Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario: Create a po line
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId1
-    * set poLine.fundDistribution[0].code = fundId1
-    * set poLine.paymentStatus = 'Awaiting Payment'
-    * set poLine.receiptStatus = 'Partially Received'
+    # 5. Create an invoice
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    # 6. Create an invoice line linked to the po line
+    * def v = call createInvoiceLineFromPoLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId1)', total: 10 }
 
-  Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
+    # 7. Approve the invoice
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
-
-  Scenario: Create an invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
-
-  Scenario: Create a invoice line
-    * print "Get the encumbrance id"
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLine = $
-    * def encumbranceId = poLine.fundDistribution[0].encumbrance
-
-    * print "Add an invoice line linked to the po line"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId1
-    * set invoiceLine.fundDistributions[0].encumbrance = encumbranceId
-    * set invoiceLine.total = 10
-    * set invoiceLine.subTotal = 10
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
-
-  Scenario: Approve the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
-
-  Scenario: Check the budget
+    # 8. Check the budget
     Given path 'finance/budgets', budgetId1
     When method GET
     Then status 200
@@ -130,7 +63,7 @@ Feature: Should fail updating fund in poLine when related invoice is approved
     And match $.cashBalance == 1000
     And match $.encumbered == 0
 
-  Scenario: Trying update fundId in poLine
+    # 9. Try to update fundId in poLine
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200

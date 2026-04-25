@@ -3,9 +3,10 @@ Feature: Create order line
   # parameters: id, orderId, fundId
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createOrderLine
+  Scenario: Create order line
     * def poLine = read('classpath:samples/mod-orders/orderLines/order-line-audit.json')
     * set poLine.id = id
     * set poLine.purchaseOrderId = orderId

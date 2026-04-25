@@ -1,4 +1,4 @@
-# created for MODORDERS-982
+# For MODORDERS-982
 @parallel=false
 Feature: Independent acquisitions unit for ordering and receiving
 
@@ -8,17 +8,17 @@ Feature: Independent acquisitions unit for ordering and receiving
 
     * def testUser2 = { tenant: '#(testTenant)', name: 'test-user-2', password: 'test' }
     * table user2Permissions
-      | name                                           |
-      | 'orders.acquisitions-units-assignments.assign' |
-      | 'orders.acquisitions-units-assignments.manage' |
-      | 'orders.item.get'                              |
-      | 'orders.item.put'                              |
-      | 'orders.titles.collection.get'                 |
-      | 'orders.titles.item.get'                       |
-      | 'orders.titles.item.post'                      |
-      | 'orders.titles.item.put'                       |
-      | 'titles.acquisitions-units-assignments.assign' |
-      | 'titles.acquisitions-units-assignments.manage' |
+      | name                                                   |
+      | 'orders.acquisitions-units-assignments.create.execute' |
+      | 'orders.acquisitions-units-assignments.manage.execute' |
+      | 'orders.item.get'                                      |
+      | 'orders.item.put'                                      |
+      | 'orders.titles.collection.get'                         |
+      | 'orders.titles.item.get'                               |
+      | 'orders.titles.item.post'                              |
+      | 'orders.titles.item.put'                               |
+      | 'titles.acquisitions-units-assignments.create.execute' |
+      | 'titles.acquisitions-units-assignments.manage.execute' |
     * def v = callonce createAdditionalUser { testUser: '#(testUser2)',  userPermissions: '#(user2Permissions)' }
 
     * callonce login testAdmin
@@ -138,8 +138,8 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 2. Create a fund and budget
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * callonce createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000, 'statusExpenseClasses': [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}] }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000, statusExpenseClasses: [{'expenseClassId': '#(globalPrnExpenseClassId)','status': 'Active'}] }
 
   ## Acq units inheritance from Order checks
   Scenario: Create Order with acqUnit1, Create PO Line, check that acqUnit1 was inherited from Order to Title
@@ -173,27 +173,10 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 3. Create an order line 'poLineId1'
-    Given path 'orders/order-lines'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId1
-    * set poLine.purchaseOrderId = orderId1
-    * set poLine.fundDistribution[0].fundId = fundId
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(fundId)' }
 
     # 4. Open the order
-    Given path 'orders/composite-orders', orderId1
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId1
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId1)' }
 
     # 5. Check that acqUnt 'acqUnitId1' was inherited from Order to Title
     Given path 'orders/titles'
@@ -371,18 +354,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 2. Create package order-line for order
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId2
-    * set poLine.purchaseOrderId = orderId2
-    * set poLine.isPackage = true
-    * set poLine.checkinItems = true
-    * set poLine.physical.createInventory = 'Instance, Holding, Item'
-    * set poLine.fundDistribution[0].fundId = fundId
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId2)', fundId: '#(fundId)', isPackage: true, checkinItems: true }
 
     # 3. Create Title for this package order with acqUnit2, check that this POST Title operation is forbidden
     Given path 'orders/titles'
@@ -503,27 +475,10 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 2. Create an order line
-    Given path 'orders/order-lines'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId3
-    * set poLine.purchaseOrderId = orderId3
-    * set poLine.fundDistribution[0].fundId = fundId
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId3)', orderId: '#(orderId3)', fundId: '#(fundId)' }
 
     # 3. Open the order
-    Given path 'orders/composite-orders', orderId3
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId3
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId3)' }
 
     # 4. Receive the piece
     # 4.1 Get the id of piece created when the order was opened
@@ -648,27 +603,10 @@ Feature: Independent acquisitions unit for ordering and receiving
     Then status 201
 
     # 3. Create an order line 'poLineId4'
-    Given path 'orders/order-lines'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId4
-    * set poLine.purchaseOrderId = orderId4
-    * set poLine.fundDistribution[0].fundId = fundId
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId4)', orderId: '#(orderId4)', fundId: '#(fundId)' }
 
     # 4. Open the order
-    Given path 'orders/composite-orders', orderId4
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId4
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId4)' }
 
     # 5. Receive the piece
     * print 'Receive the piece'

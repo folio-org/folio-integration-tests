@@ -2,9 +2,10 @@
 Feature: Update Item Ownership
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: updateItemOwnership
+  Scenario: Update Item Ownership
     Given path 'inventory/items/update-ownership'
     And request
     """

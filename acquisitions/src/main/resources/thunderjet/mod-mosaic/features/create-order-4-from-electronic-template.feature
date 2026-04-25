@@ -1,3 +1,4 @@
+@parallel=false
 Feature: Create Order From Electronic Template
 
   Background:
@@ -22,8 +23,8 @@ Feature: Create Order From Electronic Template
 
     # 1. Create Funds and Budgets
     * configure headers = headersAdmin
-    * call createFund { "id": "#(fundId)", "ledgerId": "#(globalLedgerWithRestrictionsId)" }
-    * call createBudget { "id": "#(budgetId)", "allocated": 1000, "fundId": "#(fundId)", "status": "Active" }
+    * def v = call createFund { id: "#(fundId)", ledgerId: "#(globalLedgerWithRestrictionsId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 1000, fundId: "#(fundId)", status: "Active" }
 
     # 2. Create an Order Template
     * def orderTemplate = read("classpath:samples/mod-mosaic/electronic-order-template.json")
@@ -56,4 +57,51 @@ Feature: Create Order From Electronic Template
 
     # 5. Check Order Line
     * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "TestOverride", listUnitPriceElectronic: 49.99, quantityElectronic: 1 }
+    * def v = call checkOrderLine assertOrderPoLine
+
+  @Positive
+  Scenario: Create Order From Electronic Template (Quantity Populated From Template)
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderTemplateId = call uuid
+    * def templateName = "Template" + orderTemplateId
+
+    # 1. Create Funds and Budgets
+    * configure headers = headersAdmin
+    * def v = call createFund { id: "#(fundId)", ledgerId: "#(globalLedgerWithRestrictionsId)" }
+    * def v = call createBudget { id: "#(budgetId)", allocated: 1000, fundId: "#(fundId)", status: "Active" }
+
+    # 2. Create an Order Template
+    * def orderTemplate = read("classpath:samples/mod-mosaic/electronic-order-template.json")
+    Given path "/orders/order-templates"
+    And request orderTemplate
+    When method POST
+    Then status 201
+
+    # 3. Create Mosaic Order Without Specifying Quantity Electronic
+    * configure headers = headersUser
+    Given path "/mosaic/orders"
+    And request
+      """
+      {
+        "orderTemplateId": "#(orderTemplateId)",
+        "orderData": {
+          "workflowStatus": "Open",
+          "title": "Advanced Database Systems",
+          "listUnitPriceElectronic": 88.88
+        }
+      }
+      """
+    When method POST
+    Then status 201
+    * def poLineNumber = $
+    * def delimiter = poLineNumber.lastIndexOf("-")
+    * def poNumber = poLineNumber.substr(0, delimiter)
+
+    # 4. Check Order
+    * configure headers = headersAdmin
+    * def v = call checkOrder { poNumber: "#(poNumber)", orderTemplateId: "#(orderTemplateId)", workflowStatus: "Open" }
+
+    # 5. Check Order Line
+    * def assertOrderPoLine = { poLineNumber: "#(poLineNumber)", titleOrPackage: "Advanced Database Systems", listUnitPriceElectronic: 88.88, quantityElectronic: 1, paymentStatus: "Awaiting Payment", receiptStatus: "Awaiting Receipt" }
     * def v = call checkOrderLine assertOrderPoLine

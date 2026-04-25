@@ -20,6 +20,9 @@ Feature: cross-module integration tests
   Scenario: Approve an invoice using different fiscal years
     * call read('features/approve-invoice-using-different-fiscal-years.feature')
 
+  Scenario: Approve invoice with different fund than order
+    * call read('features/approve-invoice-with-different-fund-than-order.feature')
+
   Scenario: Approve invoice with negative line
     * call read('features/approve-invoice-with-negative-line.feature')
 
@@ -35,7 +38,7 @@ Feature: cross-module integration tests
   Scenario: Cancel invoice and unrelease 2 encumbrances
     * call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')
 
-  Scenario: Cancel invoice
+  Scenario: Cancel an invoice linked to an order
     * call read('features/cancel-invoice-linked-to-order.feature')
 
   Scenario: Cancel an invoice with an Encumbrance
@@ -272,3 +275,59 @@ Feature: cross-module integration tests
   Scenario: Encumbrance Released After Expense Class Change In POL And Invoice With Paid Invoice
     * call read('features/encumbrance-released-after-expense-class-change-in-pol-and-invoice-with-paid-invoice.feature')
 
+  Scenario: Rollover orders using different ledgers
+    * call read('features/rollover-multi-ledger.feature')
+
+  #  Scenario: Rollover many orders and lines (disabled because it is very long)
+  #    * call read('features/rollover-many-orders-and-lines.feature')
+
+  Scenario: Total Expended Amount Calculation When Order Has No Encumbrances
+    * call read('features/total-expended-no-encumbrances.feature')
+
+  Scenario: Total Expended Amount Calculation With Paid Invoices From Different Fiscal Years
+    * call read('features/total-expended-different-fiscal-years.feature')
+
+  Scenario: Total Expended Amount Calculation With No Encumbrances And No Related Paid Invoices
+    * call read('features/total-expended-no-paid-invoices.feature')
+
+  Scenario: Total Expended Amount Calculation With Different Fund Distributions
+    * call read('features/total-expended-different-fund-distributions.feature')
+
+  Scenario: Total Expended Amount Calculation With Fund Distribution And Encumbrance
+    * call read('features/total-expended-with-fund-distribution-and-encumbrance.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice When Other Paid Invoices Exist Release False
+    * call read('features/encumbrance-after-canceling-paid-invoice-with-other-paid-invoices-release-false.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice When Other Approved Invoices Exist Release False
+    * call read('features/encumbrance-after-canceling-approved-invoice-with-other-approved-invoices-release-false.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling A Paid Invoice Release False When Another Paid Invoice Release True Exists
+    * call read('features/encumbrance-after-canceling-paid-invoice-with-mixed-release-settings.feature')
+
+  Scenario: Encumbrance Is Calculated Correctly After Canceling An Approved Invoice Release False When Another Approved Invoice Release True Exists
+    * call read('features/encumbrance-after-canceling-approved-invoice-with-mixed-release-settings.feature')
+
+  Scenario: Correct financial summary values when approved and paid amounts exceed available amount
+    * call read('features/budget-summary-when-amounts-exceed-available.feature')
+
+  Scenario: Budget Summary When Encumbered Approved And Paid Exceed Available Amount
+    * call read('features/budget-summary-encumbered-approved-paid-exceed-available.feature')
+
+  Scenario: Budget Summary When Decrease Allocation Exceeds Available Amount
+    * call read('features/budget-summary-transfer-decreases-below-available.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Fund Distributions Related To Two Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-two-ledgers-with-multi-fund-pol.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Fund Distributions Related To Three Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-three-ledgers-with-expense-classes-twice.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Different Fund Distributions Related To Three Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-three-ledgers-with-different-fund-distributions.feature')
+
+  Scenario: Rollover Based On Expended When Credit Invoice Exists
+    * call read('features/rollover-based-on-expended-with-credit-invoice.feature')
+
+  Scenario: Over Encumbrance Is Calculated Correctly For Fiscal Year Ledger And Group
+    * call read('features/over-encumbrance-for-fy-ledger-and-group.feature')

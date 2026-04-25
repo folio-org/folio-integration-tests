@@ -24,7 +24,7 @@ Feature: Cancel an invoice
 
     * print "1. Create finances"
     * configure headers = headersAdmin
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
     * print "2. Create an invoice"
@@ -101,7 +101,7 @@ Feature: Cancel an invoice
 
     * print "1. Create finances"
     * configure headers = headersAdmin
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
     * print "2. Create an invoice"

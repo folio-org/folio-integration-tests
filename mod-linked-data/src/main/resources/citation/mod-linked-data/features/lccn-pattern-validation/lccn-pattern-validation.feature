@@ -19,17 +19,20 @@ Feature: LCCN pattern validation
     * def ruleId = karate.filter(getRulesCall.response.rules, function (rule) { return rule.code === "invalidLccnSubfieldValue" })[0].id
     * call patchRule { specificationId: '#(specificationId)', ruleId: '#(ruleId)', isEnabled: true }
 
-    # Step 2: Create a work
+    # Step 2: Clear caches to ensure validation is applied before resource creation
+    * call deleteCache
+
+    # Step 3: Create a work
     * configure headers = testUserHeaders
     * def workRequest = read('samples/work-request.json')
     * def postWorkCall = call postResource { resourceRequest: '#(workRequest)' }
     * def workId = postWorkCall.response.resource['http://bibfra.me/vocab/lite/Work'].id
 
-    # Step 3: Create valid instance
+    # Step 4: Create valid instance
     * def validInstanceRequest = read('samples/valid-instance-request.json')
     * call postResource { resourceRequest: '#(validInstanceRequest)' }
 
-    # Step 4: Fail to create invalid instance
+    # Step 5: Fail to create invalid instance
     * def invalidInstanceRequest = read('samples/invalid-instance-request.json')
     Given path 'linked-data/resource'
     And request invalidInstanceRequest
@@ -37,10 +40,13 @@ Feature: LCCN pattern validation
     Then status 400
     And match $.errors[0].code == "lccn_does_not_match_pattern"
 
-    # Step 5: Disable validation
+    # Step 6: Disable validation
     * configure headers = testAdminHeaders
     * call patchRule { specificationId: '#(specificationId)', ruleId: '#(ruleId)', isEnabled: false }
 
-    # Step 6: Create invalid instance
+    # Step 7: Clear caches before next resource creation
+    * call deleteCache
+
+    # Step 8: Create invalid instance
     * configure headers = testUserHeaders
     * call postResource { resourceRequest: '#(invalidInstanceRequest)' }

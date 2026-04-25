@@ -16,7 +16,6 @@ Feature: Check vendor address included with batch voucher
 
     # prepare sample data
     * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
     # initialize common invoice data
     * def vendorId = callonce uuid1
@@ -69,27 +68,10 @@ Feature: Check vendor address included with batch voucher
     Then status 201
 
     # ============= create the invoice line ===================
-    * set invoiceLinePayload.id = invoiceLineId
-    * set invoiceLinePayload.invoiceId = invoiceId
-    * remove invoiceLinePayload.fundDistributions[0].expenseClassId
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundId: '#(globalFundId)', total: 100 }
 
-    Given path 'invoice/invoice-lines'
-    And request invoiceLinePayload
-    When method POST
-    Then status 201
-
-    # ============= get invoice to approve ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoiceBody = $
-    * set invoiceBody.status = "Approved"
-
-    # ============= put approved invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    And request invoiceBody
-    When method PUT
-    Then status 204
+    # ============= approve invoice ===================
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # ============= create batch export configuration ===================
     Given path 'batch-voucher/export-configurations'

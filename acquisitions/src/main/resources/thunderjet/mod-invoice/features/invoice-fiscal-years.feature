@@ -17,10 +17,6 @@ Feature: Invoice fiscal years
     * callonce variables
     * def currentYear = callonce getCurrentYear
 
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-    * def createInvoice = read('classpath:thunderjet/mod-invoice/reusable/create-invoice.feature')
-    * def createInvoiceLine = read('classpath:thunderjet/mod-invoice/reusable/create-invoice-line.feature')
-
     * def pastFiscalYearId1 = callonce uuid1
     * def pastFiscalYearId2 = callonce uuid2
     * def pastFiscalYearId3 = callonce uuid3

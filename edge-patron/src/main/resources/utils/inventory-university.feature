@@ -87,3 +87,12 @@ Feature: Global inventory
       | universityHoldingId2 | universityInstanceId | universityLocationsId | universityHoldingsSourceId |
       | universityHoldingId3 | universityInstanceId | universityLocationsId | universityHoldingsSourceId |
     * def v = call createHolding holdings
+
+  Scenario: Create items
+    * table items
+      | id                | holdingId            | barcode                | materialTypeId               |  permanentLoanTypeId   | permanentLocationId   |
+      | universityItemId1 | universityHoldingId1 | universityItemBarcode1 | universityMaterialTypeIdPhys |  universityLoanTypeId  | universityLocationsId |
+      | universityItemId2 | universityHoldingId1 | universityItemBarcode2 | universityMaterialTypeIdPhys |  universityLoanTypeId  | universityLocationsId |
+      | universityItemId3 | universityHoldingId1 | universityItemBarcode3 | universityMaterialTypeIdPhys |  universityLoanTypeId  | universityLocationsId |
+
+    * def v = call createItem items

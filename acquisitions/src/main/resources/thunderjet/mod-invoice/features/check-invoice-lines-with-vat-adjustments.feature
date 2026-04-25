@@ -72,9 +72,9 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 4. Check invoices and invoice lines before approval
     * table invoicesExpected
-      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status |
-      | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | 28.04         | 1.96            | 30.0      | 'Open' |
-      | invoiceId2 | 5.88             | 84.12    | 90.0  | 3            | 28.04         | 1.96            | 30.0      | 'Open' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustmentsTotal | lineAdjustments  | lineTotal | status |
+      | invoiceId1 | 0.00             | 30.00    | 30.0  | 1            | 30.00         | 0.00                 | [1.96]           | 30.0      | 'Open' |
+      | invoiceId2 | 0.00             | 90.00    | 90.0  | 3            | 30.00         | 0.00                 | [1.96,1.96,1.97] | 30.0      | 'Open' |
     * def v = call checkInvoicesWithAppliedTopAdjustment invoicesExpected
     * def v = call checkInvoiceLinesWithAppliedTopAdjustment invoicesExpected
 
@@ -85,9 +85,9 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 6. Recheck invoices and invoice lines to verify that the adjustment calculation was unaffected
     * table invoicesExpected
-      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status |
-      | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | 28.04         | 1.96            | 30.0      | 'Open' |
-      | invoiceId2 | 3.92             | 56.08    | 60.0  | 2            | 28.04         | 1.96            | 30.0      | 'Open' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustmentsTotal | lineAdjustments | lineTotal | status |
+      | invoiceId1 | 0.00             | 30.00    | 30.0  | 1            | 30.00         | 0.00                 | [1.96]          | 30.0      | 'Open' |
+      | invoiceId2 | 0.00             | 60.00    | 60.0  | 2            | 30.00         | 0.00                 | [1.96,1.96]     | 30.0      | 'Open' |
     * def v = call checkInvoicesWithAppliedTopAdjustment invoicesExpected
     * def v = call checkInvoiceLinesWithAppliedTopAdjustment invoicesExpected
 
@@ -96,9 +96,9 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 8. Check invoices and invoice lines after approval
     * table invoicesExpected
-      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustments | lineTotal | status     |
-      | invoiceId1 | 1.96             | 28.04    | 30    | 1            | 28.04         | 1.96            | 30.0      | 'Approved' |
-      | invoiceId2 | 3.92             | 56.08    | 60    | 2            | 28.04         | 1.96            | 30.0      | 'Approved' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals | lineAdjustmentsTotal | lineAdjustments | lineTotal | status     |
+      | invoiceId1 | 0.00             | 30.00    | 30    | 1            | 30.00         | 0.00                 | [1.96]          | 30.0      | 'Approved' |
+      | invoiceId2 | 0.00             | 60.00    | 60    | 2            | 30.00         | 0.00                 | [1.96,1.96]     | 30.0      | 'Approved' |
     * def v = call checkInvoicesWithAppliedTopAdjustment invoicesExpected
     * def v = call checkInvoiceLinesWithAppliedTopAdjustment invoicesExpected
 
@@ -152,9 +152,9 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 4. Check invoices and invoice lines before approval
     * table invoicesExpected
-      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals       | lineAdjustments | lineTotal | status |
-      | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | [28.04]             | [1.96]          | 30.0      | 'Open' |
-      | invoiceId2 | 3.92             | 86.08    | 90.0  | 3            | [28.04,28.04,30.0]  | [1.96,1.96,0.0] | 30.0      | 'Open' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals       | lineAdjustmentsTotal | lineAdjustments  | lineTotal | status |
+      | invoiceId1 | 0.00             | 30.00    | 30.0  | 1            | [30.00]             | 0.00                 | [7.0]            | 30.0      | 'Open' |
+      | invoiceId2 | 0.00             | 90.00    | 90.0  | 3            | [30.00,30.00,30.0]  | 0.00                 | [7.0,7.0]        | 30.0      | 'Open' |
     * def v = call checkInvoicesWithNoAppliedTopAdjustment invoicesExpected
     * def v = call checkInvoiceLinesWithAppliedIndividualAdjustment invoicesExpected
 
@@ -165,9 +165,9 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 6. Recheck invoices and invoice lines to verify that the adjustment calculation was unaffected
     * table invoicesExpected
-      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals  | lineAdjustments | lineTotal | status |
-      | invoiceId1 | 1.96             | 28.04    | 30.0  | 1            | [28.04]        | [1.96]          | 30.0      | 'Open' |
-      | invoiceId2 | 1.96             | 58.04    | 60.0  | 2            | [28.04,30.0]   | [1.96,0.0]      | 30.0      | 'Open' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals  | lineAdjustmentsTotal | lineAdjustments | lineTotal | status |
+      | invoiceId1 | 0.00             | 30.00    | 30.0  | 1            | [30.00]        | 0.00                 | [7.0]           | 30.0      | 'Open' |
+      | invoiceId2 | 0.00             | 60.00    | 60.0  | 2            | [30.00,30.0]   | 0.00                 | [7.0]           | 30.0      | 'Open' |
     * def v = call checkInvoicesWithNoAppliedTopAdjustment invoicesExpected
     * def v = call checkInvoiceLinesWithAppliedIndividualAdjustment invoicesExpected
 
@@ -176,8 +176,8 @@ Feature: Check invoice lines with VAT adjustments
 
     ### 8. Check invoices and invoice lines after approval
     * table invoicesExpected
-      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals  | lineAdjustments | lineTotal | status     |
-      | invoiceId1 | 1.96             | 28.04    | 30    | 1            | [28.04]        | [1.96]          | 30.0      | 'Approved' |
-      | invoiceId2 | 1.96             | 58.04    | 60    | 2            | [28.04,30.0]   | [1.96,0.0]      | 30.0      | 'Approved' |
+      | id         | adjustmentsTotal | subTotal | total | invoiceLines | lineSubTotals  | lineAdjustmentsTotal | lineAdjustments | lineTotal | status     |
+      | invoiceId1 | 0.00             | 30.00    | 30    | 1            | [30.00]        | 0.00                 | [7.0]           | 30.0      | 'Approved' |
+      | invoiceId2 | 0.00             | 60.00    | 60    | 2            | [30.00,30.00]  | 0.00                 | [7.0]           | 30.0      | 'Approved' |
     * def v = call checkInvoicesWithNoAppliedTopAdjustment invoicesExpected
     * def v = call checkInvoiceLinesWithAppliedIndividualAdjustment invoicesExpected

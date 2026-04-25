@@ -6,7 +6,7 @@ public class SharedCrossModulesTenant extends BaseSharedTenant {
 
   private static final String INIT_FEATURE_PATH = "classpath:thunderjet/cross-modules/init-cross-modules.feature";
   private static final String SHARED_TENANT_FILE = "target/shared-crossmodules-tenant.properties";
-  private static final String LAST_CLASS_NAME = "org.folio.CrossModulesCriticalPathApiTest";
+  private static final String LAST_CLASS_NAME = "org.folio.CrossModulesExtendedApiTest";
 
   private SharedCrossModulesTenant() {
   }

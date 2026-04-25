@@ -141,21 +141,21 @@ Feature: Test quickMARC
 
   Scenario: Create bib record
     * def quickMarcJson =
-    """
-    {
+      """
+      {
         "externalId": "00000000-0000-0000-0000-000000000000",
         "leader": "00000naa\\a2200000uu\\4500",
         "parsedRecordDtoId": "00000000-0000-0000-0000-000000000000",
         "marcFormat": "BIBLIOGRAPHIC",
         "suppressDiscovery": false,
         "updateInfo": {
-            "recordState": "NEW"
+          "recordState": "NEW"
         },
         "_actionType": "create",
         "parsedRecordId": "00000000-0000-0000-0000-000000000000",
         "fields": [{"tag": "008","id": "91d9fe1e-a0a5-441a-abf8-7e99076a5ee5","content": {"Type": "a","BLvl": "a","DtSt": "|","Date1": "\\\\\\\\","Date2": "\\\\\\\\","Ctry": "\\\\\\","Ills": ["\\","\\","\\","\\"],"Audn": "\\","Form": "\\","Cont": ["\\","\\","\\","\\"],"GPub": "\\","Conf": "|","Fest": "|","Indx": "|","LitF": "|","Biog": "\\","Lang": "\\\\\\","MRec": "\\","Srce": "\\"}}]
-    }
-    """
+      }
+      """
     * def standardRequiredField = { "tag": "245", "indicators": [ "0", "0" ], "content": "$a Standard required field $1 local subfield $7 st rep 1 $2 loc rep 1 $7 st rep 2 $2 loc rep 2", "isProtected":false }
     * def localRequiredField = { "tag": "249", "indicators": [ "0", "0" ], "content": "$a Local required", "isProtected":false }
     * def undefinedField = { "tag": "666", "indicators": [ "0", "0" ], "content": "$a Undefined field", "isProtected":false }
@@ -181,6 +181,18 @@ Feature: Test quickMARC
     And request quickMarcJson
     When method POST
     Then status 201
+    * def id = response.externalId
+
+    #Check srs creation
+    * def srsRecord = call read('setup/setup.feature@GetSRSRecord') {recordId: '#(id)', idType: 'INSTANCE'}
+    * match srsRecord.response.deleted == false
+    * match srsRecord.response.state == 'ACTUAL'
+
+    #Check inventory creation
+    Given path '/instance-storage/instances', id
+    And headers headersUser
+    When method GET
+    Then status 200
 
   #   ================= negative test cases =================
   Scenario: Record not found for retrieving
@@ -252,21 +264,21 @@ Feature: Test quickMARC
 
   Scenario: Record specification violation
     * def quickMarcJson =
-    """
-    {
+      """
+      {
         "externalId": "00000000-0000-0000-0000-000000000000",
         "leader": "00000naa\\a2200000uu\\4500",
         "parsedRecordDtoId": "00000000-0000-0000-0000-000000000000",
         "marcFormat": "BIBLIOGRAPHIC",
         "suppressDiscovery": false,
         "updateInfo": {
-            "recordState": "NEW"
+          "recordState": "NEW"
         },
         "_actionType": "create",
         "parsedRecordId": "00000000-0000-0000-0000-000000000000",
         "fields": [{"tag": "008","id": "91d9fe1e-a0a5-441a-abf8-7e99076a5ee5","content": {"Type": "a","BLvl": "a","DtSt": "|","Date1": "\\\\\\\\","Date2": "\\\\\\\\","Ctry": "\\\\\\","Ills": ["\\","\\","\\","\\"],"Audn": "\\","Form": "\\","Cont": ["\\","\\","\\","\\"],"GPub": "\\","Conf": "|","Fest": "|","Indx": "|","LitF": "|","Biog": "\\","Lang": "\\\\\\","MRec": "\\","Srce": "\\"}}]
-    }
-    """
+      }
+      """
     * def standardRequiredField = { "tag": "245", "indicators": [ "0", "0" ], "content": "$7 rep subfield", "isProtected":false }
     * def localRequiredField = { "tag": "249", "indicators": [ "0", "0" ], "content": "$a Local required", "isProtected":false }
     * def localField = { "tag": "248", "indicators": [ "a", "b" ], "content": "$b rep subfield", "isProtected":false }
@@ -309,3 +321,100 @@ Feature: Test quickMARC
     Then match each response.issues[*].definitionType == "field"
     Then match response.issues[*].tag contains only ["245[0]", "249[0]"]
     Then match response.issues[*].message contains only ["Field 245 is required.", "Field 249 is required."]
+
+  Scenario: Normalize 035 and remove 003 when creating a MARC-BIB record
+    * def quickMarcJson =
+      """
+      {
+        "externalId": "00000000-0000-0000-0000-000000000000",
+        "leader": "00000naa\\a2200000uu\\4500",
+        "parsedRecordDtoId": "00000000-0000-0000-0000-000000000000",
+        "marcFormat": "BIBLIOGRAPHIC",
+        "suppressDiscovery": false,
+        "updateInfo": {
+          "recordState": "NEW"
+        },
+        "_actionType": "create",
+        "parsedRecordId": "00000000-0000-0000-0000-000000000000",
+        "fields": [{"tag": "008","id": "91d9fe1e-a0a5-441a-abf8-7e99076a5ee5","content": {"Type": "a","BLvl": "a","DtSt": "|","Date1": "\\\\\\\\","Date2": "\\\\\\\\","Ctry": "\\\\\\","Ills": ["\\","\\","\\","\\"],"Audn": "\\","Form": "\\","Cont": ["\\","\\","\\","\\"],"GPub": "\\","Conf": "|","Fest": "|","Indx": "|","LitF": "|","Biog": "\\","Lang": "\\\\\\","MRec": "\\","Srce": "\\"}},
+          {"tag": "001", "content": "hrid0000111"},
+          {"tag": "003", "content": "test 003 field"}]
+      }
+      """
+    * def field035 = { "tag": "035", "indicators": [ "0", "0" ], "content": "$a (OCoLC)ocn000064758", "isProtected":false }
+    * def standardRequiredField = { "tag": "245", "indicators": [ "0", "0" ], "content": "$1 rep subfield $a rep subfield", "isProtected":false }
+    * def localRequiredField = { "tag": "249", "indicators": [ "0", "0" ], "content": "$a Local required", "isProtected":false }
+
+    * quickMarcJson.fields.push(field035, standardRequiredField, localRequiredField)
+
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request quickMarcJson
+    When method POST
+    Then status 201
+    Then match response.fields[?(@.tag=='003')] == []
+    Then match response.fields[?(@.tag=='035')].content == ["$a (OCoLC)64758"]
+
+  Scenario: Verify 035 and 003 remain unchanged when updating a MARC-BIB record.Check optimistic locking on update.
+    * def quickMarcJson =
+      """
+      {
+        "externalId": "00000000-0000-0000-0000-000000000000",
+        "leader": "00000nab\\a2200000uu\\4500",
+        "parsedRecordDtoId": "00000000-0000-0000-0000-000000000000",
+        "marcFormat": "BIBLIOGRAPHIC",
+        "suppressDiscovery": false,
+        "updateInfo": {
+          "recordState": "NEW"
+        },
+        "_actionType": "create",
+        "parsedRecordId": "00000000-0000-0000-0000-000000000000",
+        "fields": [{"tag": "008","id": "91d9fe1e-a0a5-441a-abf8-7e99076a5ee5","content": {"Type": "a","BLvl": "a","DtSt": "|","Date1": "\\\\\\\\","Date2": "\\\\\\\\","Ctry": "\\\\\\","Ills": ["\\","\\","\\","\\"],"Audn": "\\","Form": "\\","Cont": ["\\","\\","\\","\\"],"GPub": "\\","Conf": "|","Fest": "|","Indx": "|","LitF": "|","Biog": "\\","Lang": "\\\\\\","MRec": "\\","Srce": "\\"}},
+          {"tag": "001", "content": "hrid0000222"}]
+      }
+      """
+    * def standardRequiredField = { "tag": "245", "indicators": [ "0", "0" ], "content": "$1 rep subfield $a rep subfield", "isProtected":false }
+    * def localRequiredField = { "tag": "249", "indicators": [ "0", "0" ], "content": "$a Local required", "isProtected":false }
+    * quickMarcJson.fields.push(standardRequiredField, localRequiredField)
+
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request quickMarcJson
+    When method POST
+    Then status 201
+    * def id = response.externalId
+
+    Given path 'records-editor/records'
+    And param externalId = id
+    And headers headersUser
+    When method GET
+    Then status 200
+    And def quickMarcRecord = response
+    * set quickMarcRecord._actionType = 'edit'
+    * def field003 = {"tag": "003", "content": "$a test 003 field"}
+    * def field035 = { "tag": "035", "indicators": [ "0", "0" ], "content": "$a (OCoLC)ocn000064758", "isProtected":false }
+    * quickMarcRecord.fields.push(field003, field035)
+
+    Given path 'records-editor/records', response.parsedRecordId
+    And headers headersUser
+    And request quickMarcRecord
+    When method PUT
+    Then status 202
+
+    Given path 'records-editor/records'
+    And param externalId = id
+    And headers headersUser
+    When method GET
+    Then status 200
+    Then match response.fields[?(@.tag=='003')].content == ["$a test 003 field"]
+    Then match response.fields[?(@.tag=='035')].content == ["$a (OCoLC)ocn000064758"]
+
+    # Simulate optimistic locking failure by sending the same update again without retrieving the record (version is not updated)
+    * def expectedMessage = "Cannot update record " + quickMarcRecord.parsedRecordId + " because it has been changed (optimistic locking): Stored _version is 1, _version of request is 0"
+
+    Given path 'records-editor/records', quickMarcRecord.parsedRecordId
+    And headers headersUser
+    And request quickMarcRecord
+    When method PUT
+    Then status 409
+    Then match response.message == expectedMessage

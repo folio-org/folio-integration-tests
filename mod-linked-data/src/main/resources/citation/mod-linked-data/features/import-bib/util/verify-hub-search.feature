@@ -11,5 +11,5 @@ Feature: Hub Search
 
     Examples:
       | query                                        | expectedLabel                                                            |
-      | label = "Dracontius, Blossius Aemilius"      | Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin |
-      | label = "Medea"                              | Dracontius, Blossius Aemilius. active 5th century. Medea. German & Latin |
+      | label = "Dracontius, Blossius Aemilius"      | Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin |
+      | label = "Medea"                              | Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin |

@@ -2,6 +2,7 @@
 Feature: Create an instance
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Create instance

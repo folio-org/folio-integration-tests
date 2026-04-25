@@ -1,5 +1,4 @@
 # For MODORDERS-638
-@parallel=false
 Feature: Pay invoice with new expense class
 
   Background:
@@ -12,134 +11,51 @@ Feature: Pay invoice with new expense class
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-    * def invoiceId = callonce uuid5
-    * def invoiceLineId = callonce uuid6
+  Scenario: Pay invoice with new expense class
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId = call uuid
+    * def invoiceLineId = call uuid
 
+    # 1. Create finances
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
 
-  Scenario: Create finances
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
+    # 2. Create an order
+    * def v = call createOrder { id: '#(orderId)' }
 
+    # 3. Create an order line without using an expense class
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10 }
 
-  Scenario: Create an order
-    * print "Create an order"
+    # 4. Open the order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
-
-
-  Scenario: Create an order line without using an expense class
-    * print "Create an order line without using an expense class"
-
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.cost.listUnitPrice = 10
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open the order
-    * print "Open the order"
-
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-
-  Scenario: Add an expense class to the budget
-    * print "Add an expense class to the budget"
-
+    # 5. Add an expense class to the budget
     Given path 'finance/budgets', budgetId
     When method GET
     Then status 200
     * def budget = $
 
-    * set budget.statusExpenseClasses = [{'expenseClassId': '#(globalElecExpenseClassId)'}]
+    * set budget.statusExpenseClasses = [ { expenseClassId: '#(globalElecExpenseClassId)' } ]
 
     Given path 'finance/budgets', budgetId
     And request budget
     When method PUT
     Then status 204
 
+    # 6. Create an invoice
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
-  Scenario: Create an invoice
-    * print "Create an invoice"
+    # 7. Add an invoice line with the expense class
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', total: 10 }
 
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
+    # 8. Approve the invoice
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
-
-
-  Scenario: Add an invoice line with the expense class
-    * print "Add an invoice line with the expense class"
-
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0].fundId = fundId
-    * set invoiceLine.total = 10
-    * set invoiceLine.subTotal = 10
-
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Approve the invoice
-    * print "Approve the invoice"
-
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-
-    * def invoice = $
-    * set invoice.status = 'Approved'
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
-
-
-  Scenario: Add the expense class to the order line
-    * print "Add the expense class to the order line"
-
+    # 9. Add the expense class to the order line
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -152,18 +68,5 @@ Feature: Pay invoice with new expense class
     When method PUT
     Then status 204
 
-
-  Scenario: Pay the invoice
-    * print "Pay the invoice"
-
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-
-    * def invoice = $
-    * set invoice.status = 'Paid'
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    # 10. Pay the invoice
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }

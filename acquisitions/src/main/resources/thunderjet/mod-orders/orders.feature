@@ -1,4 +1,3 @@
-@parallel=false
 Feature: mod-orders integration tests
 
   Background:
@@ -18,8 +17,14 @@ Feature: mod-orders integration tests
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
+  Scenario: Add piece to cancelled order
+    * call read('features/add-piece-to-cancelled-order.feature')
+
   Scenario: Auto populate fund code if it missed
     * call read("features/auto-populate-fund-code.feature")
+
+  Scenario: Batch create pieces updates encumbrance
+    * call read('features/batch-create-pieces-updates-encumbrance.feature')
 
   Scenario: Verify Bind Piece feature
     * call read('features/bind-piece.feature')
@@ -142,6 +147,9 @@ Feature: mod-orders integration tests
   Scenario: Move Item and Holding to update order data
     * call read('features/move-item-and-holding-to-update-order-data.feature')
 
+  Scenario: No side effect with failed piece operation
+    * call read('features/no-side-effect-with-failed-piece-operation.feature')
+
   Scenario: Open and unopen order
     * call read('features/open-and-unopen-order.feature')
 
@@ -229,6 +237,9 @@ Feature: mod-orders integration tests
   Scenario: Piece status transitions
     * call read('features/piece-status-transitions.feature')
 
+  Scenario: Piece status transitions claiming
+    * call read('features/piece-status-transitions-claiming.feature')
+
   Scenario: PoLine change instance connection
     * call read('features/poline_change_instance_connection.feature')
 
@@ -297,3 +308,21 @@ Feature: mod-orders integration tests
 
   Scenario: Validate fund distribution for zero price
     * call read('features/validate-fund-distribution-for-zero-price.feature')
+
+  Scenario: Open order with invalid material type rollback
+    * call read('features/open-order-with-invalid-material-type-rollback.feature')
+
+  Scenario: Receive pieces and delete empty holding
+    * call read('features/receive-pieces-delete-empty-holding.feature')
+
+  Scenario: Unopen order deletes only empty holding for two locations
+    * call read('features/unopen-order-delete-empty-holding-two-locs.feature')
+
+  Scenario: Unopen order with 2 independent POLs deletes only empty holding
+    * call read('features/unopen-order-delete-empty-holding-two-pols.feature')
+
+  Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
+    * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
+
+  Scenario: Update PO lines when an order is cancelled
+    * call read('features/update-po-lines-when-order-cancelled.feature')

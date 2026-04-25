@@ -1,0 +1,18 @@
+{
+  "requests": [
+    {
+      "itemId": "#(itemId1)",
+      "pickUpLocationId": "#(servicePointId)"
+    },
+    {
+      "itemId": "#(itemId2)",
+      "pickUpLocationId": "#(servicePointId)"
+    },
+    {
+      "itemId": "#(itemId3)",
+      "pickUpLocationId": "#(servicePointId)"
+    }
+  ],
+  "patronComments": "ecs batch request patron comments"
+}
+

@@ -3,6 +3,7 @@ Feature: Close order
   # parameters: orderId
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Close order
@@ -11,6 +12,7 @@ Feature: Close order
     Then status 200
     * def order = response
     * set order.workflowStatus = 'Closed'
+    * remove order.poLines
 
     Given path 'orders/composite-orders', orderId
     And request order

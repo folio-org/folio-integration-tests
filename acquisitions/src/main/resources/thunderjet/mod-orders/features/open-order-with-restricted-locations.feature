@@ -27,8 +27,8 @@ Feature: Open ongoing order
     * def budgetId = <budgetId>
     * configure headers = headersAdmin
 
-    * call createRestrictedFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 10000 }
+    * def v = call createRestrictedFund { id: '#(fundId)', ledgerId: '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 10000 }
 
     Examples:
       | fundId | budgetId |

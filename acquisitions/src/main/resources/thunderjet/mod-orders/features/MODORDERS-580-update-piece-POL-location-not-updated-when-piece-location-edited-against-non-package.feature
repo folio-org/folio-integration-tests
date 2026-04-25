@@ -1,5 +1,4 @@
 # For MODORDERS-580
-@parallel=false
 Feature: Should update location in the POL if change Location to a different holding on that instance for piece
 
   Background:
@@ -16,37 +15,27 @@ Feature: Should update location in the POL if change Location to a different hol
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-    * def poLineTitleId = callonce uuid5
+
+  Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def poLineTitleId = call uuid
     * def initialHoldingId = globalHoldingId1
     * def holdingToPiece2 = globalHoldingId2
     * def initialInstanceId = globalInstanceId1
 
-  Scenario: Create finances
-    # this is needed for instance if a previous test does a rollover which changes the global fund
+    # 1. Create finances
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
+    # 2. Create order
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario: Should update location in the POL if change Location to a different holding on that instance for piece
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
-
-
-  * print 'Create an physical order line with isPackage=false and 2 items'
+    # 3. Create a physical order line with isPackage=false and 2 items
     * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set poLine.id = poLineId
     * set poLine.purchaseOrderId = orderId
@@ -65,29 +54,17 @@ Feature: Should update location in the POL if change Location to a different hol
     * def poLineNumber = createdLine.createdLine
     And match $.instanceId == initialInstanceId
 
+    # 4. Open the order with 2 items
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  * print 'Open the order with 2 items'
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  * print 'Check inventory and order items after open order'
-    * print 'Get the instanceId and holdingId from the po line'
+    # 5. Get the instanceId and holdingId from the po line
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * def poLineInstanceId = response.instanceId
     * def poLineHoldingId = response.locations[0].holdingId
 
-    * print 'Check items'
+    # 6. Check items
     * configure headers = headersAdmin
     Given path 'inventory/items'
     And param query = 'purchaseOrderLineIdentifier==' + poLineId
@@ -103,7 +80,7 @@ Feature: Should update location in the POL if change Location to a different hol
     And assert physicalItemAfterOpenOrder2.holdingsRecordId == poLineHoldingId
     And assert physicalItemAfterOpenOrder2.status.name == 'On order'
 
-    * print 'Check if pieces were created when the order was opened'
+    # 7. Check if pieces were created when the order was opened
     * configure headers = headersUser
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
@@ -119,15 +96,14 @@ Feature: Should update location in the POL if change Location to a different hol
     And assert physicalPieceAfterOpenOrder2.receivingStatus == 'Expected'
     And assert physicalPieceAfterOpenOrder2.holdingId == poLineHoldingId
 
-    * print 'Check holdings'
+    # 8. Check holdings
     * configure headers = headersAdmin
     Given path 'holdings-storage/holdings', poLineHoldingId
     When method GET
     Then status 200
     And assert response.id == poLineHoldingId
 
-
-    * print 'Update Physical piece without holding deletion and update location with another holding from same instance'
+    # 9. Update Physical piece without holding deletion and update location with another holding from same instance
     * configure headers = headersUser
     Given path 'orders/pieces', physicalPieceAfterOpenOrder2.id
     * set physicalPieceAfterOpenOrder2.holdingId = holdingToPiece2
@@ -145,20 +121,20 @@ Feature: Should update location in the POL if change Location to a different hol
     And assert physicalPieceAfterUpdate1.receivingStatus == 'Expected'
     And assert physicalPieceAfterUpdate2.receivingStatus == 'Expected'
 
-    * print 'Check physical item should be updated'
+    # 10. Check physical item should be updated
     * configure headers = headersAdmin
     Given path 'inventory/items', physicalPieceAfterUpdate2.itemId
     When method GET
     Then status 200
     And match $.holdingsRecordId == holdingToPiece2
 
-    * print 'Check holding should not be deleted, because flag "deleteHolding" was not provided and exist item'
+    # 11. Check holding should not be deleted, because flag "deleteHolding" was not provided and exist item
     Given path 'holdings-storage/holdings', initialHoldingId
     When method GET
     Then status 200
     And assert response.id == initialHoldingId
 
-    * print 'Check order and transaction after Physical piece update'
+    # 12. Check order and transaction after Physical piece update
     * configure headers = headersUser
     Given path 'orders/composite-orders', orderId
     When method GET
@@ -177,8 +153,7 @@ Feature: Should update location in the POL if change Location to a different hol
     And match physicalLocationAfterUpdate2.quantityPhysical == 1
     And match physicalLocationAfterUpdate2.quantityElectronic == '#notpresent'
 
-
-    * print 'Check encumbrances initial value'
+    # 13. Check encumbrances initial value
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId

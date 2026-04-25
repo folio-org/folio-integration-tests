@@ -15,6 +15,7 @@ Feature: Rollover with no settings
 
   @Positive
   Scenario: Rollover with no settings
+    * def codePrefix = callonce random_string
     * def fromYear = call getCurrentYear
     * def toYear = parseInt(fromYear) + 1
     * def fiscalYearId1 = call uuid
@@ -41,11 +42,11 @@ Feature: Rollover with no settings
     ### 1. Create fiscal years and associated ledgers
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: '#(fiscalYearId1)', code: 'TESTFYA0012', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: 'TESTFYA' }
+    * def v = call createFiscalYear { id: '#(fiscalYearId1)', code: '#(codePrefix + "0001")', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: '#(codePrefix)' }
 
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: '#(fiscalYearId2)', code: 'TESTFYA0013', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: 'TESTFYA' }
+    * def v = call createFiscalYear { id: '#(fiscalYearId2)', code: '#(codePrefix + "0002")', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: '#(codePrefix)' }
     * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId1)' }
 
     ### 2. Create fund and budgets

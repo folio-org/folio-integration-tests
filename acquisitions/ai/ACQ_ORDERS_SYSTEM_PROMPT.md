@@ -80,6 +80,36 @@ Feature: Order Lifecycle Management
 
 ## Test Patterns & Best Practices
 
+### 0. ⚠️ CRITICAL: Feature File Naming Convention ⚠️
+**NEVER create long feature file names - they cause Karate report generation failures and Windows path issues!**
+
+- **Maximum recommended length:** 80-90 characters for the entire filename
+- **Common mistake:** Using full TestRail case titles as filenames (TOO LONG)
+- **Consequences of long names:**
+  - Karate HTML reports generate 404 errors (report links break)
+  - Windows path limit (260 characters) exceeded during git checkout
+  - CI/CD pipeline failures
+  - Team members unable to clone/checkout repository
+
+**❌ BAD Examples (TOO LONG):**
+```
+order-encumbrance-calculated-correctly-after-canceling-paid-invoice-when-other-paid-invoices-exist-release-false.feature (130 chars)
+order-workflow-status-updated-correctly-after-receiving-pieces-when-multiple-locations-configured.feature (107 chars)
+```
+
+**✅ GOOD Examples (CONCISE):**
+```
+order-encumbrance-after-canceling-paid-invoice-with-other-invoices.feature (75 chars)
+order-workflow-status-after-receiving-pieces-multiple-locations.feature (72 chars)
+```
+
+**Best Practices for Naming:**
+- Remove redundant words: "calculated-correctly", "when", "exists", "updated-correctly"
+- Use abbreviations where clear: "with" instead of "when-another", "after" instead of "after-canceling"
+- Focus on key differentiators: the actual test scenario, not implementation details
+- Keep scenario titles descriptive in the .feature file content, but keep filenames short
+- Think about URL lengths: Karate report URLs include the full file path
+
 ### 1. TestRail Integration
 - **Bugfest-Only Requirement**: TestRail case references are only required when Java methods are stored in `*Smoke*.java`, `*Extended*.java`, or `*CriticalPath*.java` files
 - **TestRail Case Format**: Include Jira ticket and TestRail case references in comments: `# For FAT-21333, https://foliotest.testrail.io/index.php?/cases/view/354277`
@@ -335,6 +365,36 @@ Then status 204
 - **Fund/Budget**: Required for all order operations
 - **Encumbrances**: Verify transaction creation on order open
 - **Expense Classes**: Electronic, Physical, Other classifications
+
+### 8. ⚠️ CRITICAL: TestRail Bracket Notation - Transaction Amounts ⚠️
+**NEVER interpret brackets in TestRail as negative numbers!**
+
+When TestRail case steps show transaction amounts in brackets like **($100.00)** or **(amount)**, this is a **visual UI convention only** to indicate that the budget will be reduced. The actual transaction amount field should **always be positive**.
+
+**❌ WRONG Interpretation:**
+```javascript
+// TestRail shows: "Amount" - ($100.00)
+transaction.amount == -100.00  // ❌ WRONG! Never use negative
+```
+
+**✅ CORRECT Interpretation:**
+```javascript
+// TestRail shows: "Amount" - ($100.00)  
+transaction.amount == 100.00  // ✅ CORRECT! Always positive
+```
+
+**Examples from TestRail:**
+- **"Amount" - ($10.00)** → `transaction.amount == 10.00`
+- **"Amount" - ($100.00)** → `transaction.amount == 100.00`
+- **"Awaiting payment" = ($20.00)** → `amountAwaitingPayment == 20.00` (absolute value)
+
+**Why brackets are used in TestRail:**
+- Visual indicator for QA testers that this amount reduces available budget
+- UI convention from accounting software (debit/credit notation)
+- Does NOT represent negative values in API responses
+- All transaction amounts in FOLIO APIs are stored as positive values
+
+**Rule:** When you see brackets in TestRail expected results, treat them as **absolute positive values**. The system internally tracks whether the transaction increases or decreases budget through other fields (transaction type, source/destination funds, etc.), not through negative amounts.
 
 ## Common Reusable Features
 

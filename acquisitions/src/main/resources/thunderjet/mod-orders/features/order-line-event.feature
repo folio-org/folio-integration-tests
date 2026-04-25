@@ -1,5 +1,4 @@
 # For MODAUD-145
-@parallel=false
 Feature: mod audit order_line events
 
   Background:
@@ -15,19 +14,21 @@ Feature: mod audit order_line events
     * configure headers = headersUser
 
     * callonce variables
-    * def orderId = callonce uuid
-    * def poLineId1 = callonce uuid
-    * def fundId = callonce uuid
-    * def budgetId = callonce uuid
 
     * configure retry = { count: 10, interval: 5000 }
 
-  Scenario: Create Order and OrderLines
-    * callonce createOrder { id: #(orderId) }
-    * callonce createOrderLine { id: #(poLineId1), orderId: #(orderId), fundId: #(fundId) }
 
+  Scenario: mod audit order_line events
+    * def orderId = call uuid
+    * def poLineId1 = call uuid
+    * def fundId = call uuid
+    * def budgetId = call uuid
 
-  Scenario: Check event saved in audit
+    # 1. Create Order and OrderLines
+    * def v = call createOrder { id: #(orderId) }
+    * def v = call createOrderLine { id: #(poLineId1), orderId: #(orderId), fundId: #(fundId) }
+
+    # 2. Check event saved in audit
     * configure headers = headersAdmin
     Given path 'audit-data/acquisition/order-line/', poLineId1
     And retry until response.totalItems == 1
@@ -37,19 +38,12 @@ Feature: mod audit order_line events
     And match response.orderLineAuditEvents[0].orderLineId == poLineId1
     And match response.orderLineAuditEvents[0].action == "Create"
 
-  Scenario: PUT orderLine
-    Given path 'orders/order-lines', poLineId1
-    When method GET
-    Then status 200
+    # 3. PUT orderLine
+    * configure headers = headersUser
+    * def v = call updateOrderLine { id: '#(poLineId1)' }
+    * configure headers = headersUser
 
-    * def orderLineResponse = $
-
-    Given path 'orders/order-lines', poLineId1
-    And request orderLineResponse
-    When method PUT
-    Then status 204
-
-  Scenario: Check 2 events saved in audit
+    # 4. Check 2 events saved in audit
     * configure headers = headersAdmin
     Given path 'audit-data/acquisition/order-line/', poLineId1
     And retry until response.totalItems == 2
@@ -58,4 +52,3 @@ Feature: mod audit order_line events
 
     And match response.orderLineAuditEvents[0].orderLineId == poLineId1
     And match response.totalItems == 2
-

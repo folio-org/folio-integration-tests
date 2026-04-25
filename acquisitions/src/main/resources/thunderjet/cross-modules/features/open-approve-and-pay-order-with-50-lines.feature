@@ -26,13 +26,12 @@ Feature: Approve and pay order with 50 lines
     * def poLineUuid = 'f91b86d6-e2e5-4d0c-bffd-7beb1d56ce'
     * def invoiceLineUuid = '0c2a0074-43e3-4dcf-b3a8-978124ea20'
 
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
 
     * configure readTimeout = 60000
 
   Scenario: Prepare finances
-    * call createFund { id: #(fundId), code: #(fundId), ledgerId: #(globalLedgerId) }
-    * call createBudget { id: #(budgetId), fundId: #(fundId), fiscalYearId: #(globalFiscalYearId), allocated: 1000, status: 'Active' }
+    * def v = call createFund { id: #(fundId), code: #(fundId), ledgerId: #(globalLedgerId) }
+    * def v = call createBudget { id: #(budgetId), fundId: #(fundId), fiscalYearId: #(globalFiscalYearId), allocated: 1000, status: 'Active' }
 
 
   Scenario: Create an order
@@ -59,12 +58,7 @@ Feature: Approve and pay order with 50 lines
 
 
   Scenario: Create an invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
 
   Scenario: Create 50 invoiceLines for 50 poLines
@@ -86,31 +80,15 @@ Feature: Approve and pay order with 50 lines
       }
       """
     * eval createParameterArray()
-    * call createInvoiceLine lineParameters
+    * def v = call createInvoiceLine lineParameters
 
 
   Scenario: Approve the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
 
   Scenario: Pay the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Paid'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
 
   Scenario: Verify payed invoice

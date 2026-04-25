@@ -28,8 +28,8 @@ Feature: Open order without creating holdings
 
     * print 'Create a fund and a budget'
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10, fundId: '#(fundId)' }
 
     * print 'Create a new location'
     Given path 'locations'
@@ -54,17 +54,7 @@ Feature: Open order without creating holdings
 
     * print 'Create an order'
     * configure headers = headersUser
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     * print 'Create an order line'
     * def poLine = read('classpath:samples/mod-orders/orderLines/' + poLineTypeToFile[<poLineType>])
@@ -81,17 +71,7 @@ Feature: Open order without creating holdings
     Then status 201
 
     * print 'Open the order'
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     * print 'Check the order line'
     Given path 'orders/order-lines', poLineId

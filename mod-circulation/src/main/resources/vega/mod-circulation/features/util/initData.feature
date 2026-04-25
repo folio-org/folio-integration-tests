@@ -549,17 +549,17 @@ Feature: init data for mod-circulation
 
   @PostTlrConfig
   Scenario: create TLR configuration entry
-    * def tlrConfigValue = read('classpath:vega/mod-circulation/features/samples/tlr-config.json')
+    * def tlrConfigValue = {}
     * tlrConfigValue.titleLevelRequestsFeatureEnabled = karate.get('extTitleLevelRequestsFeatureEnabled', true)
-    * tlrConfigValue.tlrHoldShouldFollowCirculationRules = karate.get('extTlrHoldShouldFollowCirculationRules', false)
     * tlrConfigValue.createTitleLevelRequestsByDefault = karate.get('extCreateTitleLevelRequestsByDefault', false)
-    * tlrConfigValue.confirmationPatronNoticeTemplateId = karate.get('extConfirmationPatronNoticeTemplateId', null)
     * tlrConfigValue.cancellationPatronNoticeTemplateId = karate.get('extCancellationPatronNoticeTemplateId', null)
+    * tlrConfigValue.tlrHoldShouldFollowCirculationRules = karate.get('extTlrHoldShouldFollowCirculationRules', false)
     * tlrConfigValue.expirationPatronNoticeTemplateId = karate.get('extExpirationPatronNoticeTemplateId', null)
+    * tlrConfigValue.confirmationPatronNoticeTemplateId = karate.get('extConfirmationPatronNoticeTemplateId', null)
 
     * def tlrConfigEntry = read('classpath:vega/mod-circulation/features/samples/tlr-config-entry-request.json')
-    * tlrConfigEntry.value = karate.toString(tlrConfigValue)
-    Given path 'configurations/entries'
+    * tlrConfigEntry.value = tlrConfigValue
+    Given path 'circulation/settings'
     And request tlrConfigEntry
     When method POST
     Then status 201
@@ -567,7 +567,7 @@ Feature: init data for mod-circulation
   @DeleteTlrConfig
   Scenario: delete TLR configuration entry
     * def tlrConfig = read('classpath:vega/mod-circulation/features/samples/tlr-config-entry-request.json')
-    Given path 'configurations', 'entries', tlrConfig.id
+    Given path 'circulation', 'settings', tlrConfig.id
     When method DELETE
     Then status 204
 
