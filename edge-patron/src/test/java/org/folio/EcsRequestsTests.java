@@ -23,15 +23,20 @@ class EcsRequestsTests extends TestBaseEureka {
     runFeature("classpath:consortia/init-consortia.feature");
   }
 
-  @AfterAll
-  void tearDown() {
-    runFeature("classpath:consortia/destroy-data.feature");
-  }
+//  @AfterAll
+//  void tearDown() {
+//    runFeature("classpath:consortia/destroy-data.feature");
+//  }
 
   @Test
   void ecsRequestsTest() {
     runFeatureTest("ecs-requests.feature");
   }
+
+//  @Test
+//  void batchEcsRequestsTest() {
+//    runFeatureTest("batch-ecs-requests.feature");
+//  }
 
   @Override
   public void runHook() {

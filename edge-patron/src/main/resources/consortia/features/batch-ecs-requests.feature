@@ -4,13 +4,18 @@ Feature: ECS Batch Request creation
   Background:
     * url baseUrl
 
+    # Create tenants and users, initialize base data
+    * callonce read('classpath:consortia/init-consortia.feature')
+    # Initialize batch-specific data
+    * callonce read('classpath:consortia/init-batch-consortia.feature')
+
+    # Wipe data afterwards
+    * configure afterFeature = function() { karate.call('classpath:consortia/destroy-data.feature'); }
+
     * call eurekaLogin { username: '#(centralUser.username)', password: '#(centralUser.password)', tenant: '#(centralTenantName)' }
     * def headersConsortia = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': '*/*' }
 
     * configure headers = headersConsortia
-
-    * callonce variablesCentral
-    * callonce variablesUniversity
 
   Scenario: Create batch ECS request
     And path 'users', centralUserId
