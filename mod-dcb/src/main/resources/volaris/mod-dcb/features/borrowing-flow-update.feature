@@ -130,7 +130,8 @@ Feature: Borrowing Flow Scenarios
     * def pollConfig2 = { expectedRecords: 2, path: '#(newPathStatus)', apikey: '#(key)', baseUrl: '#(baseUrlNew)', startDate: '#(startDate)' }
 
     Given def pollResult2 = call read("classpath:volaris/mod-dcb/reusable/poll-transaction-statuses.feature@PollTransactionStatuses") { config: '#(pollConfig2)' }
-    Then def response2 = pollResult2.response
-    And match response2.transactions contains { id: '#(txnId)', status: 'CREATED' }
-    And match response2.transactions contains { id: '#(txnId)', status: 'CANCELLED' }
+    Then def response = pollResult2.response
+    And match response.totalRecords == 2
+    And match response.transactions[*].status contains only [ 'CREATED', 'CANCELLED' ]
+    And match each response.transactions[*].id == txnId
 

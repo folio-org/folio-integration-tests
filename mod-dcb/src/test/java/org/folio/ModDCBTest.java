@@ -35,10 +35,10 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("borrowing-flow.feature");
   }
 
-    @Test
-    void testBorrowingFlowUpdate() {
-        runFeatureTest("borrowing-flow-update.feature");
-    }
+  @Test
+  void testBorrowingFlowUpdate() {
+      runFeatureTest("borrowing-flow-update.feature");
+  }
 
   @Test
   void testRefreshShadowLocations() {
@@ -82,6 +82,7 @@ public class ModDCBTest extends TestBaseEureka {
   void testCancelCirculationForPickUpFlowRequest() {
     runFeatureTest("cancelling-flow-for-pickup-flow.feature");
   }
+
   @Test
   void testLendingFlowChainOfResponsibility() {  runFeatureTest("lending-flow-chain-of-responsibility.feature"); }
 
