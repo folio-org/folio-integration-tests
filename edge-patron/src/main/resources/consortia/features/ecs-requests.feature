@@ -200,10 +200,8 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * print 'DEBUG: okapitoken:', okapitoken
     * print 'DEBUG: ilrUserId:', ilrUserId
     * print 'DEBUG: itemId:', itemId
-    # Define freshHeadersCentral with consortium headers for consortium-level requests
-    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     # Print user-tenants for this token and tenant
-    * configure headers = freshHeadersCentral
+    * configure headers = headersCentralConsortium
     Given path 'user-tenants'
     When method GET
     Then status 200
@@ -216,22 +214,23 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     Then status 200
     * print 'DEBUG: user-tenants by tenantId:', response
 
-    * print 'DEBUG: headers before allowed-service-points:', freshHeadersCentral
-    # Extra debug and wait before allowed-service-points call
     * print 'DEBUG: ilrUserId:', ilrUserId
     * print 'DEBUG: itemId:', itemId
 
-    # Now make the allowed-service-points call with debug output using consortium headers
-    * configure headers = freshHeadersCentral
+    # Retry until mod-search indexes the item (async Kafka indexing after item creation)
+    * configure headers = headersCentralConsortium
+    * configure retry = { count: 20, interval: 15000 }
     Given path 'patron/account', ilrUserId, 'item', itemId, 'allowed-service-points'
+    And retry until response.allowedServicePoints && response.allowedServicePoints.length > 0
     When method GET
     * print 'DEBUG: allowed-service-points response status:', responseStatus
     * print 'DEBUG: allowed-service-points response:', response
     Then status 200
     * def allowedServicePoints = response.allowedServicePoints
 
-    # Find Central Service point in the response by matching centralServicePointsId
+    # Find Central Service point — central tenant patron picks up at Central Service point
     * def matched = karate.filter(allowedServicePoints, function(x){ return x.id == centralServicePointsId })
+    * if (matched.length == 0) karate.fail('ILR: centralServicePointsId (' + centralServicePointsId + ') not found in allowedServicePoints: ' + karate.toJson(allowedServicePoints))
     * def ilrServicePointId = matched[0].id
     * print 'DEBUG: ilrServicePointId:', ilrServicePointId
 
@@ -350,9 +349,11 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * def v = call createItem tlrItemData
 
     # Get allowed service points for TLR instance hold (kept for debug/visibility)
-    * def freshHeadersCentral = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenantName)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
-    * configure headers = freshHeadersCentral
+    # Retry until mod-search indexes the item (async Kafka indexing after item creation)
+    * configure headers = headersCentralConsortium
+    * configure retry = { count: 20, interval: 15000 }
     Given path 'patron/account', tlrUserId, 'instance', instanceId, 'allowed-service-points'
+    And retry until response.allowedServicePoints && response.allowedServicePoints.length > 0
     When method GET
     * print 'DEBUG: TLR allowed-service-points response status:', responseStatus
     * print 'DEBUG: TLR allowed-service-points response:', response
@@ -360,8 +361,9 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     * def allowedServicePoints = response.allowedServicePoints
     * print 'DEBUG: allowedServicePoints:', allowedServicePoints
 
-    # Find Central Service point in the response by matching centralServicePointsId
+    # Find Central Service point — central tenant patron picks up at Central Service point
     * def matched = karate.filter(allowedServicePoints, function(x){ return x.id == centralServicePointsId })
+    * if (matched.length == 0) karate.fail('TLR: centralServicePointsId (' + centralServicePointsId + ') not found in allowedServicePoints: ' + karate.toJson(allowedServicePoints))
     * def tlrServicePointId = matched[0].id
     * print 'DEBUG: tlrServicePointId:', tlrServicePointId
 
