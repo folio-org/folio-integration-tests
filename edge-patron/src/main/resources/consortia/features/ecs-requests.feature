@@ -34,7 +34,7 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
 
     # Login as central tenant admin
     * call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
-    * call read('classpath:consortia/headers.feature')
+    * call read('classpath:consortia/init-consortia-headers.feature')
     * configure headers = headersCentral
 
     # Verify consortium is properly configured
