@@ -35,6 +35,11 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("borrowing-flow.feature");
   }
 
+    @Test
+    void testBorrowingFlowUpdate() {
+        runFeatureTest("borrowing-flow-update.feature");
+    }
+
   @Test
   void testRefreshShadowLocations() {
     runFeatureTest("refresh-shadow-locations.feature");
