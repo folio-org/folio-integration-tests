@@ -5,7 +5,7 @@ Feature: Verify Linked Data Graph
     * def instanceResourceId = instanceResourceIdCall.response.id
     * def subgraphCall = call getResourceGraph { resourceId: '#(instanceResourceId)' }
     * def instanceSubgraph = subgraphCall.response
-    * def workSubgraph = instanceSubgraph.outgoingEdges.filter(x => x.predicate == 'INSTANTIATES')[0].target
+    * def workSubgraph = resolveSubgraphIfId(instanceSubgraph.outgoingEdges.filter(x => x.predicate == 'INSTANTIATES')[0].target)
 
   @C446125
   Scenario: Verify Creator of Work in graph (MARC 100)
@@ -59,9 +59,10 @@ Feature: Verify Linked Data Graph
   @C535522
   Scenario: Verify extent (MARC 300)
     * def extentEdge = instanceSubgraph.outgoingEdges.filter(x => x.predicate == 'EXTENT')[0]
-    * match extentEdge.target.label == '2 volumes'
-    * match extentEdge.target.doc == { "http://bibfra.me/vocab/lite/label": ["2 volumes"], "http://bibfra.me/vocab/library/materialsSpecified": ["book"] }
-    * match extentEdge.target.types == ['EXTENT']
+    * def extentTarget = resolveSubgraphIfId(extentEdge.target)
+    * match extentTarget.label == '2 volumes'
+    * match extentTarget.doc == { "http://bibfra.me/vocab/lite/label": ["2 volumes"], "http://bibfra.me/vocab/library/materialsSpecified": ["book"] }
+    * match extentTarget.types == ['EXTENT']
 
   @C476844
   Scenario: Verify statement of responsibility (MARC 245 $c)
@@ -81,8 +82,8 @@ Feature: Verify Linked Data Graph
   @C958464
   Scenario: Verify Hub created from MARC 600
     # 1. Find the SUBJECT edge with the expected label
-    * def subjectEdgeMarc600 = workSubgraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT' && x.target.label == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin -- Parodies, imitations, etc -- Drama')[0]
-    * def subjectMarc600 = subjectEdgeMarc600.target
+    * def subjectEdgeMarc600 = workSubgraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT' && resolveSubgraphIfId(x.target).label == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin -- Parodies, imitations, etc -- Drama')[0]
+    * def subjectMarc600 = resolveSubgraphIfId(subjectEdgeMarc600.target)
 
     # Verify subject label and doc
     * match subjectMarc600.label == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin -- Parodies, imitations, etc -- Drama'
@@ -95,13 +96,13 @@ Feature: Verify Linked Data Graph
     * match subjectMarc600.types contains 'HUB'
 
     # Verify SUB_FOCUS edges
-    * def subFocusLabelsMarc600 = subjectMarc600.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS').map(x => x.target.label)
+    * def subFocusLabelsMarc600 = subjectMarc600.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS').map(x => resolveSubgraphIfId(x.target).label)
     * match subFocusLabelsMarc600 contains 'Drama'
     * match subFocusLabelsMarc600 contains 'Parodies, imitations, etc'
 
     # Verify FOCUS edge
     * def focusEdgeMarc600 = subjectMarc600.outgoingEdges.filter(x => x.predicate == 'FOCUS')[0]
-    * def focusMarc600 = focusEdgeMarc600.target
+    * def focusMarc600 = resolveSubgraphIfId(focusEdgeMarc600.target)
     * match focusMarc600.label == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin'
     * match focusMarc600.doc['http://bibfra.me/vocab/lite/label'][0] == 'Dracontius, Blossius Aemilius, active 5th century. Medea. German & Latin'
     * match focusMarc600.doc['http://bibfra.me/vocab/lite/language'][0] == 'German & Latin'
@@ -109,14 +110,14 @@ Feature: Verify Linked Data Graph
 
     # Verify TITLE edge from FOCUS
     * def titleEdgeMarc600 = focusMarc600.outgoingEdges.filter(x => x.predicate == 'TITLE')[0]
-    * def titleMarc600 = titleEdgeMarc600.target
+    * def titleMarc600 = resolveSubgraphIfId(titleEdgeMarc600.target)
     * match titleMarc600.label == 'Medea'
     * match titleMarc600.doc['http://bibfra.me/vocab/library/mainTitle'][0] == 'Medea'
     * match titleMarc600.types contains 'TITLE'
 
     # Verify CREATOR edge from FOCUS
     * def creatorEdgeMarc600 = focusMarc600.outgoingEdges.filter(x => x.predicate == 'CREATOR')[0]
-    * def creatorMarc600 = creatorEdgeMarc600.target
+    * def creatorMarc600 = resolveSubgraphIfId(creatorEdgeMarc600.target)
     * match creatorMarc600.label == 'Dracontius, Blossius Aemilius, active 5th century'
     * match creatorMarc600.doc['http://bibfra.me/vocab/lite/name'][0] == 'Dracontius, Blossius Aemilius'
     * match creatorMarc600.doc['http://bibfra.me/vocab/lite/date'][0] == 'active 5th century'

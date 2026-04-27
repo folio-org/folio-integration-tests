@@ -32,17 +32,18 @@ Feature: Import authority into graph
       assertTrue(subgraph.outgoingEdges && subgraph.outgoingEdges.length > 0, 'No outgoing edges found');
       identifiers.forEach((identifier, idx) => {
         var outgoing = subgraph.outgoingEdges.find(edge => {
-          var types = edge.target.types || [];
+          var target = resolveSubgraphIfId(edge.target);
+          var types = target.types || [];
           return edge.predicate == 'MAP' && types.includes('IDENTIFIER') && types.includes(identifier.identifierType) && types.length === 2;
         });
-        validateResource(outgoing.target, identifier.identifierDoc, identifier.identifierLabel);
+        validateResource(resolveSubgraphIfId(outgoing.target), identifier.identifierDoc, identifier.identifierLabel);
       });
       return true;
     }
     """
 
   @ignore
-  @validateAuthortiySubgraph
+  @validateAuthoritySubgraph
   Scenario: Common authority subgraph validation
     * def params = __arg
     * configure headers = testAdminHeaders

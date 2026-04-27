@@ -17,8 +17,14 @@ Feature: mod-orders integration tests
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
+  Scenario: Add piece to cancelled order
+    * call read('features/add-piece-to-cancelled-order.feature')
+
   Scenario: Auto populate fund code if it missed
     * call read("features/auto-populate-fund-code.feature")
+
+  Scenario: Batch create pieces updates encumbrance
+    * call read('features/batch-create-pieces-updates-encumbrance.feature')
 
   Scenario: Verify Bind Piece feature
     * call read('features/bind-piece.feature')
@@ -140,6 +146,9 @@ Feature: mod-orders integration tests
 
   Scenario: Move Item and Holding to update order data
     * call read('features/move-item-and-holding-to-update-order-data.feature')
+
+  Scenario: No side effect with failed piece operation
+    * call read('features/no-side-effect-with-failed-piece-operation.feature')
 
   Scenario: Open and unopen order
     * call read('features/open-and-unopen-order.feature')
@@ -315,5 +324,5 @@ Feature: mod-orders integration tests
   Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
     * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
 
-  Scenario: Add piece to cancelled ongoing order
-    * call read('features/add-piece-to-cancelled-ongoing-order.feature')
+  Scenario: Update PO lines when an order is cancelled
+    * call read('features/update-po-lines-when-order-cancelled.feature')
