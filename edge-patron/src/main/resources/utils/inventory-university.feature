@@ -56,8 +56,9 @@ Feature: Global inventory
 
   Scenario: Create service points
     * table servicePoints
-      | id                        | name                          | code   | discoveryDisplayName          |
-      | universityServicePointsId | 'University Service point'    | 'UTPS' | 'University Service point'    |
+      | id                        | name                          | code  | discoveryDisplayName          |
+      | universityServicePointsId | 'University Service point'    | 'UPS' | 'University Service point'    |
+      | centralServicePointsId    | 'Central Service point'       | 'TPS' | 'Central Service point'       |
     * def v = call createServicePoint servicePoints
 
   Scenario: Create holdings sources
@@ -69,7 +70,7 @@ Feature: Global inventory
   Scenario: Create locations
     * table locations
       | id                     | code   | institutionId                         | campusId                          | libraryId                          | servicePointId            |
-      | universityLocationsId  | 'LOC1' | universityLocationUnitsInstitutionsId | universityLocationUnitsCampusesId | universityLocationUnitsLibrariesId | universityServicePointsId |
+      | universityLocationsId  | 'LOC1' | universityLocationUnitsInstitutionsId | universityLocationUnitsCampusesId | universityLocationUnitsLibrariesId | centralServicePointsId    |
       | universityLocationsId2 | 'LOC2' | universityLocationUnitsInstitutionsId | universityLocationUnitsCampusesId | universityLocationUnitsLibrariesId | universityServicePointsId |
     * def v = call createLocation locations
 
