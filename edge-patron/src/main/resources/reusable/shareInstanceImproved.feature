@@ -28,7 +28,7 @@ Feature: Share Instance Improved
     * print 'Successfully posted instance sharing request, ID:', sharingInstanceId
 
     # Verify status is 'COMPLETE' with more robust error handling
-    * configure retry = { count: 60, interval: 15000 }
+    * configure retry = { count: 10, interval: 15000 }
     * print 'Starting to poll for sharing status, will retry up to 60 times with 15 second intervals'
 
     Given path 'consortia', consortiumId, 'sharing/instances'
