@@ -33,6 +33,7 @@ Feature: mod-dcb integration tests
       | 'circulation-storage.patron-notice-policies.item.post'            |
       | 'circulation-storage.request-policies.item.post'                  |
       | 'circulation-storage.requests.collection.get'                     |
+      | 'circulation-storage.requests.item.get'                           |
       | 'circulation.check-in-by-barcode.post'                            |
       | 'circulation.check-out-by-barcode.post'                           |
       | 'circulation.requests.item.get'                                   |

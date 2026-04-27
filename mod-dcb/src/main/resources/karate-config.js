@@ -119,9 +119,16 @@ function fn() {
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'dev') {
     config.checkDepsDuringModInstall = 'false';
-    config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
-    config.kcClientId = 'supersecret';
-    config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
+    config.baseUrl = 'https://folio-edev-volaris-2nd-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-volaris-2nd-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
+    config.kcClientId = 'folio-backend-admin-client';
+    config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
+    config.admin = {
+      tenant: 'diku',
+      name: 'diku_admin',
+      password: 'admin'
+    }
   }
 
   return config;
