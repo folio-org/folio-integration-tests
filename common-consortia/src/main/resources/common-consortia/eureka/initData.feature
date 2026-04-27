@@ -59,9 +59,6 @@ Feature: init data for consortia
     * configure abortedStepsShouldPass = true
     * call read('classpath:common/eureka/destroy-data.feature@destroyEntitlement') { testTenantId: '#(testTenantId)' }
 
-    # Reset timeout to default after the operation
-    * configure readTimeout = 30000
-
   @PostAdmin
   Scenario: Create an admin with credentials, and add all existing permissions of enabled modules
     # create an admin
