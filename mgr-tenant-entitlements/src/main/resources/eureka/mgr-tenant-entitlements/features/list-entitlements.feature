@@ -5,6 +5,7 @@ Feature: list entitlements
     * def keycloakResponse = callonce read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
     * def masterToken = keycloakResponse.response.access_token
 
+  @Positive
   Scenario: verify entitlements endpoint is reachable
     Given path 'entitlements'
     And header Authorization = 'Bearer ' + masterToken

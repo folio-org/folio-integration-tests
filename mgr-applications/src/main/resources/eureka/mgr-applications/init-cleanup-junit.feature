@@ -15,6 +15,6 @@ Feature: initialize isolated mgr-applications cleanup test data
 
   Scenario: prepare isolated tenant and entitlement for cleanup test
     * call read('classpath:common/eureka/setup-users.feature@createTenant')
-    And call read('classpath:common/eureka/setup-users.feature@createEntitlement')
+    * call read('classpath:common/eureka/setup-users.feature@createEntitlement')
     * call read('classpath:eureka/mgr-applications/features/helpers.feature@loginAdmin')
     * call read('classpath:eureka/mgr-applications/features/helpers.feature@grantMgrApplicationsPermissions')

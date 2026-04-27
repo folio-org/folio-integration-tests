@@ -3,6 +3,7 @@ Feature: verify login
   Background:
     * url baseUrl
 
+  @Positive
   Scenario: verify login-with-expiry returns a valid token
     Given path 'authn/login-with-expiry'
     And header Content-Type = 'application/json'

@@ -5,6 +5,7 @@ Feature: list roles
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
 
+  @Positive
   Scenario: verify roles endpoint is reachable
     Given path 'roles'
     When method get

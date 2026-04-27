@@ -4,6 +4,7 @@ Feature: cleanup removes unentitled application and its Kong service
     * url baseUrl
     * configure readTimeout = 3000000
 
+  @Positive
   Scenario: cleanup removes unentitled application and cleans up Kong service and route
     * call read('classpath:eureka/mgr-applications/features/helpers.feature@loginAdmin')
     * def adminToken = okapitoken
@@ -56,8 +57,7 @@ Feature: cleanup removes unentitled application and its Kong service
       }
       """
 
-    * call read('classpath:eureka/mgr-applications/features/helpers.feature@createModuleDiscovery')
-      { moduleId: '#(syntheticModuleId)', discoveryRequest: '#(discoveryRequest)' }
+    * call read('classpath:eureka/mgr-applications/features/helpers.feature@createModuleDiscovery') { moduleId: '#(syntheticModuleId)', discoveryRequest: '#(discoveryRequest)' }
 
     # wait for Kong to register the service before running cleanup
     * configure retry = { count: 20, interval: 3000 }

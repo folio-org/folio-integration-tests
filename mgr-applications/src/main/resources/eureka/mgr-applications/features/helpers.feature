@@ -1,3 +1,4 @@
+@ignore
 Feature: helper methods for mgr-applications cleanup test
 
   Background:
