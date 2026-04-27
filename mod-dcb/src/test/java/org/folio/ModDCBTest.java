@@ -109,6 +109,11 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("borrowing-pickup-update-with-patron-notice.feature");
   }
 
+  @Test
+  void testLenderUpdateItemValidation() {
+    runFeatureTest("lender-update-item-validation.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
