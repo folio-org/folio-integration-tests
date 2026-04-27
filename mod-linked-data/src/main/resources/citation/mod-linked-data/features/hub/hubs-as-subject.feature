@@ -59,7 +59,7 @@ Feature: Create Work connected to Hubs as subjects via API
     * def owenSubjectId = owenSubject.id
     * def owenSubjectGraphCall = call getResourceGraph { resourceId: '#(owenSubjectId)' }
     * def owenSubjectGraph = owenSubjectGraphCall.response
-    * def focusEdgeToHub1 = owenSubjectGraph.outgoingEdges.filter(x => x.predicate && x.predicate.toLowerCase() == 'focus' && ('' + x.target.id) == ('' + hub1Id))[0]
+    * def focusEdgeToHub1 = owenSubjectGraph.outgoingEdges.filter(x => x.predicate && x.predicate.toLowerCase() == 'focus' && ('' + resolveSubgraphIfId(x.target).id) == ('' + hub1Id))[0]
     * match focusEdgeToHub1 != null
 
     * def hubGraphCall = call getResourceGraph { resourceId: '#(hub1Id)' }
@@ -70,7 +70,7 @@ Feature: Create Work connected to Hubs as subjects via API
 
     * def creatorEdge = hubGraph.outgoingEdges.filter(x => x.predicate == 'CREATOR')[0]
     * match creatorEdge != null
-    * def creatorTarget = creatorEdge.target
+    * def creatorTarget = resolveSubgraphIfId(creatorEdge.target)
     * match creatorTarget.label == 'Owen, Jerry, 1944-'
     * match creatorTarget.types contains 'PERSON'
     * match creatorTarget.doc['http://bibfra.me/vocab/lite/name'][0] == 'Owen, Jerry, 1944-'
@@ -78,7 +78,7 @@ Feature: Create Work connected to Hubs as subjects via API
 
     * def titleEdge = hubGraph.outgoingEdges.filter(x => x.predicate == 'TITLE')[0]
     * match titleEdge != null
-    * def titleTarget = titleEdge.target
+    * def titleTarget = resolveSubgraphIfId(titleEdge.target)
     * match titleTarget.label == 'Works'
     * match titleTarget.types contains 'TITLE'
     * match titleTarget.doc['http://bibfra.me/vocab/library/mainTitle'][0] == 'Works'

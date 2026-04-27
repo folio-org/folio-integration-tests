@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.shared.SharedOrdersTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 @Order(3)
 @FolioTest(team = "thunderjet", module = "mod-orders")
-class OrdersApiTest extends TestBaseEureka {
+class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-orders/features/";
   private static final String TEST_TENANT = "testorders";
@@ -110,7 +111,9 @@ class OrdersApiTest extends TestBaseEureka {
     FEATURE_85("auto-populate-fund-code", true),
     FEATURE_86("holding-detail", true),
     FEATURE_87("piece-item-synchronization", true),
-    FEATURE_88("open-order-with-invalid-material-type-rollback", true);
+    FEATURE_88("open-order-with-invalid-material-type-rollback", true),
+    FEATURE_89("no-side-effect-with-failed-piece-operation", true),
+    FEATURE_90("batch-create-pieces-updates-encumbrance", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -134,19 +137,22 @@ class OrdersApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  void ordersApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     SharedOrdersTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
-  void ordersApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
@@ -678,5 +684,17 @@ class OrdersApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void openOrderWithInvalidMaterialTypeRollback() {
     runFeatureTest(Feature.FEATURE_88.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void noSideEffectWithFailedPieceOperation() {
+    runFeatureTest(Feature.FEATURE_89.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void batchCreatePiecesUpdatesEncumbrance() {
+    runFeatureTest(Feature.FEATURE_90.getFileName());
   }
 }

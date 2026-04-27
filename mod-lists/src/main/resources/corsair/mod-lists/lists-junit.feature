@@ -23,6 +23,8 @@ Feature: mod-lists integration tests
       | 'circulation.loans.collection.get'                              |
       | 'departments.collection.get'                                    |
       | 'finance.exchange-rate.item.get'                                |
+      | 'fqm.entityTypes.collection.get'                                |
+      | 'fqm.entityTypes.item.columnValues.get'                         |
       | 'fqm.entityTypes.item.get'                                      |
       | 'inventory-storage.alternative-title-types.collection.get'      |
       | 'inventory-storage.call-number-types.collection.get'            |
@@ -41,6 +43,7 @@ Feature: mod-lists integration tests
       | 'inventory-storage.instance-types.item.post'                    |
       | 'inventory-storage.instances.item.get'                          |
       | 'inventory-storage.instances.item.post'                         |
+      | 'inventory-storage.item-damaged-statuses.collection.get'        |
       | 'inventory-storage.item-note-types.collection.get'              |
       | 'inventory-storage.items.item.get'                              |
       | 'inventory-storage.items.item.post'                             |
@@ -57,7 +60,9 @@ Feature: mod-lists integration tests
       | 'inventory-storage.nature-of-content-terms.collection.get'      |
       | 'inventory-storage.service-points.collection.get'               |
       | 'inventory-storage.statistical-code-types.collection.get'       |
+      | 'inventory-storage.statistical-code-types.item.post'            |
       | 'inventory-storage.statistical-codes.collection.get'            |
+      | 'inventory-storage.statistical-codes.item.post'                 |
       | 'lists.collection.get'                                          |
       | 'lists.collection.post'                                         |
       | 'lists.item.contents.get'                                       |

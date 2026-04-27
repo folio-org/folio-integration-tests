@@ -1,6 +1,7 @@
 package org.folio;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.folio.shared.AcquisitionsTest;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @Order(14)
 @FolioTest(team = "thunderjet", module = "ebsconet")
-public class EbsconetApiTest extends TestBaseEureka {
+public class EbsconetApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-ebsconet/features/";
   private static final String TEST_TENANT = "testebsconet";
@@ -53,21 +54,24 @@ public class EbsconetApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void ebsconetApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-ebsconet/init-ebsconet.feature");
   }
 
   @AfterAll
-  public void ebsconetApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
