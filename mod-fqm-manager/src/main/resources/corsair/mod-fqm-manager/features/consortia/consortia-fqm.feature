@@ -2,7 +2,6 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Background:
     * url baseUrl
-    * callonce login admin
     * configure readTimeout = 600000
 
     * table modules
