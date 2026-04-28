@@ -1419,6 +1419,7 @@ Feature: Requests tests
     When method DELETE
     Then status 204
 
+  @C539
   Scenario: Search requests by item barcode, title, request id, and requester barcode fragment
     * def groupId = call uuid1
     * def requesterId1 = call uuid1
