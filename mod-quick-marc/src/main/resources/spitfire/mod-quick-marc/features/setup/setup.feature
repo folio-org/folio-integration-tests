@@ -406,6 +406,17 @@ Feature: Setup quickMARC
     * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@GetRecordById') {recordId: '#(recordId)'}
 
   @Ignore #Util scenario
+  @CreateMarcAuthorityRecordNew
+  Scenario: Create quickMARC Authority record
+    * def record = read(samplePath + 'parsed-records/marc-authority-record-new.json')
+    
+    Given path 'records-editor/records'
+    And headers headersUser
+    And request record
+    When method POST
+    Then status 201
+
+  @Ignore #Util scenario
   @GetRecordById
   Scenario: Get quickMARC record by id
     Given path 'records-editor/records'
@@ -431,3 +442,11 @@ Feature: Setup quickMARC
     And headers headersUser
     When method GET
     Then status 200
+
+  @Ignore #Util scenario
+  @DeleteAuthority
+  Scenario: delete authority by id
+    Given path 'authority-storage/authorities', authorityId
+    And headers headersUser
+    When method DELETE
+    Then status 204

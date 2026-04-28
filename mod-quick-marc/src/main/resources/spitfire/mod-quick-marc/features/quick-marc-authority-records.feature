@@ -251,3 +251,50 @@ Feature: Test quickMARC authority records
     * match marcAuthorityId != null
     * match response.fields[?(@.tag=='003')].content == ["DLC"]
     * match response.fields[?(@.tag=='035')].content == ["$a (OCoLC)ocn000064758"]
+
+  Scenario: LDR position 05 replaced with ""d"" when ""MARC Authority"" record deleted
+    # reusable validator
+    * def validate999 =
+      """
+      function(fields, recordId, matchedId) {
+        var f999 = fields.find(x => x['999']);
+        var data = f999['999'];
+        karate.match(data.ind1, 'f');
+        karate.match(data.ind2, 'f');
+        var subI = data.subfields.find(x => x.i);
+        var subS = data.subfields.find(x => x.s);
+        karate.match(subI.i, recordId);
+        karate.match(subS.s, matchedId);
+      }
+      """
+    #  create new quickMARC authority record
+    * def parsedRecordId = uuid()
+    * def result = call read('setup/setup.feature@CreateMarcAuthorityRecordNew') {naturalId: 'n123', parsedReordId: '#(parsedRecordId)'}
+    * def recordId = result.response.externalId
+
+    # Get srs record and verify the LDR position 05 is "n" after the quickMARC record is created.
+    * def srsRecord = call read('setup/setup.feature@GetSRSRecord') {recordId: '#(recordId)', idType: 'AUTHORITY'}
+    * match srsRecord.response.deleted == false
+    * match srsRecord.response.state == 'ACTUAL'
+    * def content = srsRecord.response.parsedRecord.content
+    * def leader = content.leader
+    * match leader[5] == 'n'
+    * def matchedId = srsRecord.response.matchedId
+    * eval validate999(content.fields, recordId, matchedId)
+
+    #  Delete the quickMARC authority record
+    * call read('setup/setup.feature@DeleteAuthority') {authorityId: '#(recordId)'}
+
+    # Get srs record and verify the LDR position 05 is "d" after the quickMARC record is deleted.
+    Given path 'source-storage/records', recordId, 'formatted'
+    And param idType = 'AUTHORITY'
+    And headers headersUser
+    And retry until response.deleted == true
+    When method GET
+    Then status 200
+    * match response.state == 'DELETED'
+    * match response.leaderRecordStatus == "d"
+    * def content = response.parsedRecord.content
+    * def leader = content.leader
+    * match leader[5] == "d"
+    * eval validate999(content.fields, recordId, matchedId)
