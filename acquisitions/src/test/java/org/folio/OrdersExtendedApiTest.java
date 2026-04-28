@@ -35,7 +35,9 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     // moved from OrdersCriticalPathApiTest (TestRail group = Extended)
     FEATURE_8("unopen-order-delete-empty-holding-two-locs", true),
     FEATURE_9("unopen-order-delete-empty-holding-two-pols", true),
-    FEATURE_10("unopen-order-delete-empty-holding-mixed-pols", true);
+    FEATURE_10("unopen-order-delete-empty-holding-mixed-pols", true),
+    FEATURE_11("pe-mix-change-instance-connection-create-new-delete-holdings", true),
+    FEATURE_12("pe-mix-synchronized-change-instance-connection-create-new-delete-holdings", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -150,5 +152,19 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void unopenOrderDeleteEmptyHoldingMixedPols() {
     runFeatureTest(Feature.FEATURE_10.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784423) P/E Mix Change Instance Connection Create New Holdings Delete Abandoned Holdings")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void peMixChangeInstanceConnectionCreateNewDeleteHoldings() {
+    runFeatureTest(Feature.FEATURE_11.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784425) P/E Mix Synchronized Change Instance Connection Create New Holdings Delete Abandoned Holdings")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void peMixSynchronizedChangeInstanceConnectionCreateNewDeleteHoldings() {
+    runFeatureTest(Feature.FEATURE_12.getFileName());
   }
 }
