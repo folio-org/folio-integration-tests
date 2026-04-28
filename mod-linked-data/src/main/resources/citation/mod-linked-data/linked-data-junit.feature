@@ -38,6 +38,7 @@ Feature: mod-linked-data integration tests
       | 'linked-data.hub.preview.get'                                  |
       | 'linked-data.hub.import.post'                                  |
       | 'linked-data.profiles.item.get'                                |
+      | 'linked-data.profiles.metadata.get'                            |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
