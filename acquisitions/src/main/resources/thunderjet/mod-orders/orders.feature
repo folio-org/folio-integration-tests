@@ -326,3 +326,9 @@ Feature: mod-orders integration tests
 
   Scenario: Update PO lines when an order is cancelled
     * call read('features/update-po-lines-when-order-cancelled.feature')
+
+  Scenario: P/E Mix change instance connection create new holdings and delete abandoned holdings
+    * call read('features/pe-mix-change-instance-connection-create-new-delete-holdings.feature')
+
+  Scenario: P/E Mix synchronized change instance connection create new holdings and delete abandoned holdings
+    * call read('features/pe-mix-synchronized-change-instance-connection-create-new-delete-holdings.feature')
