@@ -7,7 +7,6 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -23,15 +22,18 @@ class EcsRequestsTests extends TestBaseEureka {
     runFeature("classpath:consortia/init-consortia.feature");
   }
 
-  @AfterAll
-  void tearDown() {
-    runFeature("classpath:consortia/destroy-data.feature");
-  }
-
   @Test
   void ecsRequestsTest() {
     runFeatureTest("ecs-requests.feature");
   }
+
+  // Batch ECS request test is intentionally disabled:
+  // - It requires additional batch-specific initialization (see `consortia/init-batch-consortia.feature`).
+  // - Re-enable once the environment/data dependencies are stable and the feature is verified.
+  //  @Test
+  //  void batchEcsRequestsTest() {
+  //    runFeatureTest("batch-ecs-requests.feature");
+  //  }
 
   @Override
   public void runHook() {
