@@ -1,6 +1,5 @@
 #mvn build
 target/
-.worktrees/
 #eclipse
 .project
 .settings/
