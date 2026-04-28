@@ -1,4 +1,4 @@
-Feature: Get Profile by ID
+Feature: Get profile by id
 
   Background:
     * url baseUrl

@@ -108,4 +108,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void getProfileMetadataByResourceType() {
     runFeatureTest("profiles/get-profile-metadata-by-resource-type.feature");
   }
+
+  @Test
+  void preferredProfile() {
+    runFeatureTest("profiles/preferred-profile.feature");
+  }
 }

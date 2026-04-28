@@ -1,4 +1,4 @@
-Feature: Get Profile Metadata by Resource Type
+Feature: Get profile metadata by resource type
 
   Background:
     * url baseUrl

@@ -39,6 +39,9 @@ Feature: mod-linked-data integration tests
       | 'linked-data.hub.import.post'                                  |
       | 'linked-data.profiles.item.get'                                |
       | 'linked-data.profiles.metadata.get'                            |
+      | 'linked-data.profiles.preferred.get'                           |
+      | 'linked-data.profiles.preferred.post'                          |
+      | 'linked-data.profiles.preferred.delete'                        |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
