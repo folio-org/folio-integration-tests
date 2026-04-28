@@ -11,4 +11,4 @@ Feature: verify login
     And request { username: '#(testUser.name)', password: '#(testUser.password)' }
     When method post
     Then status 201
-    And match responseCookies.folioAccessToken != '#notpresent'
+    And match responseCookies.folioAccessToken == '#present'
