@@ -5,11 +5,10 @@ Feature: Get Profile by ID
 
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    * configure headers = testUserHeaders
 
   @Positive
   Scenario: Get profile by id 2 and verify Profile:Work entry
-    * configure headers = testUserHeaders
-
     Given path 'linked-data/profile/2'
     When method GET
     Then status 200
@@ -24,8 +23,6 @@ Feature: Get Profile by ID
 
   @Positive
   Scenario: Get profile by id 3 and verify Profile:Instance entry
-    * configure headers = testUserHeaders
-
     Given path 'linked-data/profile/3'
     When method GET
     Then status 200
@@ -40,8 +37,6 @@ Feature: Get Profile by ID
 
   @Positive
   Scenario: Get profile by id 4 and verify Profile:Instance entry
-    * configure headers = testUserHeaders
-
     Given path 'linked-data/profile/4'
     When method GET
     Then status 200
@@ -56,8 +51,6 @@ Feature: Get Profile by ID
 
   @Positive
   Scenario: Get profile by id 5 and verify Profile:Instance entry
-    * configure headers = testUserHeaders
-
     Given path 'linked-data/profile/5'
     When method GET
     Then status 200
@@ -72,8 +65,6 @@ Feature: Get Profile by ID
 
   @Positive
   Scenario: Get profile by id 6 and verify Profile:Work entry
-    * configure headers = testUserHeaders
-
     Given path 'linked-data/profile/6'
     When method GET
     Then status 200
