@@ -15,16 +15,16 @@ Feature: Tenant object in mod-consortia
     # post a tenant with isCentral=true ('central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
+    And request { id: '#(centralTenant)', code: 'ABC', name: 'Consortium', isCentral: true }
     When method POST
     Then status 201
-    And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted: false }
+    And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Consortium', isCentral: true, isDeleted: false }
 
     # get tenants of the consortium (after posting 'central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
     Then status 200
-    And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted: false }], totalRecords: 1 }
+    And match response == { tenants: [{ id: '#(centralTenant)', code: 'ABC', name: 'Consortium', isCentral: true, isDeleted: false }], totalRecords: 1 }
 
     # verify that 'consortia_configuration' in 'central' tenant has record for 'central' tenant
     Given path 'consortia-configuration'
@@ -50,10 +50,10 @@ Feature: Tenant object in mod-consortia
     # create 'university' tenant
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenant', isCentral: false }
     When method POST
     Then status 201
-    And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted: false }
+    And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenant', isCentral: false, isDeleted: false }
 
     # get tenants by consortiumId - should get two tenants
     Given path 'consortia', consortiumId, 'tenants'
@@ -77,3 +77,36 @@ Feature: Tenant object in mod-consortia
     Then status 200
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
+
+  @Positive
+  Scenario: Do POST a second non-central tenant, GET list of tenant(s) (isCentral = false)
+    # create 'college' tenant
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(collegeTenant)', code: 'QWE', name: 'College tenant', isCentral: false }
+    When method POST
+    Then status 201
+    And match response == { id: '#(collegeTenant)', code: 'QWE', name: 'College tenant', isCentral: false, isDeleted: false }
+
+    # get tenants by consortiumId - should get three tenants
+    Given path 'consortia', consortiumId, 'tenants'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 3
+
+    # verify that 'consortia_configuration' in 'college' tenant has record for 'central' tenant
+    Given path 'consortia-configuration'
+    And header x-okapi-tenant = collegeTenant
+    When method GET
+    Then status 200
+    And match response.centralTenantId == centralTenant
+
+    # verify 'dummy_user' has been saved in 'user_tenant' table in 'college_mod_users'
+    * call login collegeUser1
+    Given path 'user-tenants'
+    And param query = 'username=dummy_user'
+    And headers {'x-okapi-tenant':'#(tenant)', 'x-okapi-token':'#(okapitoken)'}
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.userTenants[0].tenantId == collegeTenant
