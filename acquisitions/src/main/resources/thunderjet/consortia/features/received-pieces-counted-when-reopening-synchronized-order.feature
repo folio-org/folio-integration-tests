@@ -1,4 +1,4 @@
-# For: MODORDERS-1241
+# For MODORDERS-1241
 Feature: Received pieces are counted when reopening previously unopened synchronized order
 
   Background:
@@ -55,15 +55,18 @@ Feature: Received pieces are counted when reopening previously unopened synchron
     * def v = call receivePieceWithHolding { pieceId: '#(pieceToReceiveId)', poLineId: '#(poLineId)', holdingId: '#(pieceHoldingId)', tenantId: '#(universityTenantName)' }
 
     # 6. Verify the piece moved to Received status, and the other one stays Expected
+    * def hasReceivedAndExpectedPiece =
+    """
+    function() {
+      var res = karate.get('response');
+      return res.totalRecords == 2
+        && res.pieces.some(p => p.receivingStatus == 'Received')
+        && res.pieces.some(p => p.receivingStatus == 'Expected');
+    }
+    """
     Given path 'orders/pieces'
-    And param query = 'poLineId==' + poLineId + ' and receivingStatus==Received'
-    And retry until response.totalRecords == 1
-    When method GET
-    Then status 200
-
-    Given path 'orders/pieces'
-    And param query = 'poLineId==' + poLineId + ' and receivingStatus==Expected'
-    And retry until response.totalRecords == 1
+    And param query = 'poLineId==' + poLineId
+    And retry until hasReceivedAndExpectedPiece()
     When method GET
     Then status 200
 
@@ -83,11 +86,9 @@ Feature: Received pieces are counted when reopening previously unopened synchron
     # 10. Verify total pieces match POL quantity (2): 1 already-received + 1 newly-created expected
     Given path 'orders/pieces'
     And param query = 'poLineId==' + poLineId
-    And retry until response.totalRecords == 2
+    And retry until hasReceivedAndExpectedPiece()
     When method GET
     Then status 200
-    And match response.pieces[*].receivingStatus contains 'Received'
-    And match response.pieces[*].receivingStatus contains 'Expected'
 
     # 11. Verify number of items in Member-1 tenant matches POL quantity (2)
     * configure headers = headersUni
