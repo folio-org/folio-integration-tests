@@ -98,4 +98,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void hubAsSubjectOfWork() {
     runFeatureTest("hub/hubs-as-subject.feature");
   }
+
+  @Test
+  void getProfileById() {
+    runFeatureTest("profiles/get-profile-by-id.feature");
+  }
 }
