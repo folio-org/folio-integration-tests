@@ -915,14 +915,12 @@ Feature: Cancel an invoice linked to an order
     * print "9. Pay the invoice"
     * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
-    * call pause 100
-
     # 10. Check the order was closed automatically
     * print "10. Check the order was closed automatically"
     Given path 'orders/composite-orders', orderId
+    And retry until response.workflowStatus == 'Closed'
     When method GET
     Then status 200
-    And match $.workflowStatus == 'Closed'
 
     # 11. Check the encumbrance before cancelling
     * print "11. Check the encumbrance before cancelling"

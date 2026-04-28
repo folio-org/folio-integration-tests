@@ -25,11 +25,11 @@ Feature: Helper for "close-order-when-fully-paid-and-received"
     # 4. Close order if initialWorkflowStatus is Closed
     * if (initialWorkflowStatus == 'Closed') karate.call('classpath:thunderjet/mod-orders/reusable/close-order.feature', { orderId: orderId })
 
-    # 5. Check order's initial workflow status
+    # 5. Wait for order's initial workflow status
     Given path 'orders/composite-orders', orderId
+    And retry until response.workflowStatus == initialWorkflowStatus
     When method GET
     Then status 200
-    And match response.workflowStatus == initialWorkflowStatus
 
     # 6. Check po line initial statuses have not changed
     Given path '/orders/order-lines', poLineId

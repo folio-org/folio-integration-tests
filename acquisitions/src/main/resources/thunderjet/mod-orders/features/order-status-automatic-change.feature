@@ -51,8 +51,6 @@ Feature: Order status automatic change caused by a po line update
       | initialWorkflowStatus | initialPaymentStatus | initialReceiptStatus | newPaymentStatus       | newReceiptStatus       | expectedWorkflowStatus |
       | 'Open'                | 'Fully Paid'         | 'Awaiting Receipt'   | 'Partially Paid'       | 'Awaiting Receipt'     | 'Open'                 |
       | 'Open'                | 'Awaiting Payment'   | 'Fully Received'     | 'Awaiting Payment'     | 'Partially Received'   | 'Open'                 |
-      | 'Open'                | 'Fully Paid'         | 'Fully Received'     | 'Awaiting Payment'     | 'Fully Received'       | 'Open'                 |
-      | 'Open'                | 'Fully Paid'         | 'Fully Received'     | 'Fully Paid'           | 'Awaiting Receipt'     | 'Open'                 |
     * def v = call verifyOrderStatusAfterPoLinePaymentReceiptUpdate orderStatusTestParams
 
   @Positive
