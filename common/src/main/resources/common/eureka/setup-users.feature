@@ -51,7 +51,8 @@ Feature: prepare data for api test
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
-    * def clientId = response.filter(x => x.clientId == 'sidecar-module-access-client')[0].id
+    * def m2mClientId = karate.get('m2mClientId', 'sidecar-module-access-client')
+    * def clientId = response.filter(x => x.clientId == m2mClientId)[0].id
 
     Given url baseKeycloakUrl
     And path 'admin', 'realms', testTenant, 'clients', clientId, 'client-secret'
@@ -64,7 +65,7 @@ Feature: prepare data for api test
     And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
     And header Content-Type = 'application/x-www-form-urlencoded'
     And form field grant_type = 'client_credentials'
-    And form field client_id = 'sidecar-module-access-client'
+    And form field client_id = m2mClientId
     And form field client_secret = sidecarSecret
     And form field scope = 'email openid'
     When method post
