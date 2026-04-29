@@ -3,6 +3,7 @@ Feature: Tenant object in mod-consortia
   Background:
     * url baseUrl
     * call login consortiaAdmin
+    * configure retry = { count: 20, interval: 15000 }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
   @Positive
   Scenario: Do POST a tenant, GET list of tenant(s) (isCentral = true)
@@ -14,11 +15,21 @@ Feature: Tenant object in mod-consortia
 
     # post a tenant with isCentral=true ('central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = consortiaAdmin.id
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Consortium', isCentral: true }
     When method POST
     Then status 201
     And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Consortium', isCentral: true, isDeleted: false }
+
+    # get tenant details for 'central' tenant and wait for setup to complete
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == centralTenant
+    And match response.code == 'ABC'
+    And match response.name == 'Consortium'
+    And match response.isCentral == true
+    And match response.isDeleted == false
 
     # get tenants of the consortium (after posting 'central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
@@ -55,6 +66,17 @@ Feature: Tenant object in mod-consortia
     Then status 201
     And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenant', isCentral: false, isDeleted: false }
 
+    # get tenant details for 'university' tenant and wait for setup to complete
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == universityTenant
+    And match response.code == 'XYZ'
+    And match response.name == 'University tenant'
+    And match response.isCentral == false
+    And match response.isDeleted == false
+
     # get tenants by consortiumId - should get two tenants
     Given path 'consortia', consortiumId, 'tenants'
     When method GET
@@ -89,6 +111,17 @@ Feature: Tenant object in mod-consortia
     When method POST
     Then status 201
     And match response == { id: '#(collegeTenant)', code: 'QWE', name: 'College tenant', isCentral: false, isDeleted: false }
+
+    # get tenant details for 'college' tenant and wait for setup to complete
+    Given path 'consortia', consortiumId, 'tenants', collegeTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == collegeTenant
+    And match response.code == 'QWE'
+    And match response.name == 'College tenant'
+    And match response.isCentral == false
+    And match response.isDeleted == false
 
     # get tenants by consortiumId - should get three tenants
     Given path 'consortia', consortiumId, 'tenants'
