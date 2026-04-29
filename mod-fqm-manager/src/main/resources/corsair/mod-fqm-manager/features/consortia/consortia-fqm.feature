@@ -17,6 +17,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-circulation-storage'   |
       | 'mod-finance'               |
       | 'mod-search'                |
+      | 'mod-source-record-storage' |
       | 'folio-custom-fields'       |
       | 'mod-fqm-manager'           |
       | 'mod-finance-storage'       |
@@ -33,6 +34,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | name                                                               |
       | 'consortia.all'                                                    |
       | 'inventory.instances.item.get'                                     |
+      | 'inventory.instances.item.post'                                    |
       | 'fqm.entityTypes.collection.get'                                   |
       | 'fqm.entityTypes.item.get'                                         |
       | 'fqm.entityTypes.install.post'                                     |
@@ -83,6 +85,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.subject-types.collection.get'                   |
       | 'inventory-storage.nature-of-content-terms.collection.get'         |
       | 'proxiesfor.collection.get'                                        |
+      | 'source-storage.records.collection.get'                            |
       | 'patron-blocks.automated-patron-blocks.collection.get'             |
       | 'tags.collection.get'                                              |
 
@@ -118,9 +121,18 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Scenario: Consortium api tests
     * call read('consortium.feature')
-
+#
   Scenario: Tenant api tests
     * call read('tenant.feature')
+
+  Scenario: Ensure FQM entity types are initialized for all consortia tenants
+    * call read('fqm_entity_type_setup.feature@InstallFqmEntityTypesForTenant') { tenant: '#(centralTenant)', user: '#(consortiaAdmin)' }
+    * call read('fqm_entity_type_setup.feature@InstallFqmEntityTypesForTenant') { tenant: '#(universityTenant)', user: '#(universityUser1)' }
+    * call read('fqm_entity_type_setup.feature@InstallFqmEntityTypesForTenant') { tenant: '#(collegeTenant)', user: '#(collegeUser1)' }
+
+  Scenario: Ensure consortia admin can run FQM queries from member tenants
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { tenant: '#(universityTenant)', user: '#(consortiaAdmin)', userPermissions: '#(userPermissions)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { tenant: '#(collegeTenant)', user: '#(consortiaAdmin)', userPermissions: '#(userPermissions)' }
 
   Scenario: Cross Tenant
     * call read('cross_tenant_et.feature')
@@ -128,8 +140,23 @@ Feature: mod-consortia and mod-fqm-manager integration tests
   Scenario: Cross Tenant Instance Query
     * call read('cross_tenant_instance_query.feature')
 
+  Scenario: Cross Tenant Holdings Query
+    * call read('cross_tenant_holdings_query.feature')
+
   Scenario: Cross Tenant Item Query
     * call read('cross_tenant_item_query.feature')
+
+  Scenario: [Instances with MARC bibliographic] [Central tenant] Cross-tenant searching for instances that have MARC bibliographic data is enabled
+    * call read('cross_tenant_marc_bibliographic_instance_query.feature')
+
+  Scenario: Member tenant instance query returns central shared and member local instances
+    * call read('member_instance_query.feature')
+
+  Scenario: Member tenant holdings query returns local holdings and holdings for shared central instances
+    * call read('member_holdings_query.feature')
+
+  Scenario: [Instances with MARC bibliographic] [Member tenant] Cross-tenant searching for instances that have MARC bibliographic data is enabled
+    * call read('member_marc_bibliographic_instance_query.feature')
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantUuid)'}

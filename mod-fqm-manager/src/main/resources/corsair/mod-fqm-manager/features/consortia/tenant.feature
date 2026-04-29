@@ -3,7 +3,9 @@ Feature: Tenant object in mod-consortia
   Background:
     * url baseUrl
     * call login consortiaAdmin
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
+    * configure retry = { count: 3, interval: 20000 }
+    * def centralHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * configure headers = centralHeaders
   @Positive
   Scenario: Do POST a tenant, GET list of tenant(s) (isCentral = true)
     # get tenants of the consortium (before posting any tenant)
@@ -14,11 +16,18 @@ Feature: Tenant object in mod-consortia
 
     # post a tenant with isCentral=true ('central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
-    And param adminUserId = consortiaAdmin.id
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted: false }
+
+    # wait until central tenant setup is complete before creating member tenants
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == centralTenant
 
     # get tenants of the consortium (after posting 'central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
@@ -51,9 +60,17 @@ Feature: Tenant object in mod-consortia
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
     And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted: false }
+
+    # wait until university tenant setup is complete before using consortium-side tenant data
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == universityTenant
 
     # get tenants by consortiumId - should get two tenants
     Given path 'consortia', consortiumId, 'tenants'
@@ -62,8 +79,8 @@ Feature: Tenant object in mod-consortia
     And match response.totalRecords == 2
 
     # verify that 'consortia_configuration' in 'university' tenant has record for 'central' tenant
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
     Given path 'consortia-configuration'
-    And header x-okapi-tenant = universityTenant
     When method GET
     Then status 200
     And match response.centralTenantId == centralTenant
@@ -84,9 +101,17 @@ Feature: Tenant object in mod-consortia
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
     And request { id: '#(collegeTenant)', code: 'QWE', name: 'College tenant', isCentral: false }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(collegeTenant)', code: 'QWE', name: 'College tenant', isCentral: false, isDeleted: false }
+
+    # wait until college tenant setup is complete before using consortium-side tenant data
+    Given path 'consortia', consortiumId, 'tenants', collegeTenant
+    And retry until response.setupStatus == 'COMPLETED'
+    When method GET
+    Then status 200
+    And match response.id == collegeTenant
 
     # get tenants by consortiumId - should get three tenants
     Given path 'consortia', consortiumId, 'tenants'
@@ -95,8 +120,8 @@ Feature: Tenant object in mod-consortia
     And match response.totalRecords == 3
 
     # verify that 'consortia_configuration' in 'college' tenant has record for 'central' tenant
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
     Given path 'consortia-configuration'
-    And header x-okapi-tenant = collegeTenant
     When method GET
     Then status 200
     And match response.centralTenantId == centralTenant
