@@ -78,6 +78,8 @@ Feature: Tenant object in mod-consortia
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == universityTenant
 
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { tenant: '#(universityTenant)', user: '#(consortiaAdmin)', userPermissions: '#(userPermissions)' }
+
   @Positive
   Scenario: Do POST a second non-central tenant, GET list of tenant(s) (isCentral = false)
     # create 'college' tenant
@@ -110,3 +112,5 @@ Feature: Tenant object in mod-consortia
     Then status 200
     And match response.totalRecords == 1
     And match response.userTenants[0].tenantId == collegeTenant
+
+    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { tenant: '#(collegeTenant)', user: '#(consortiaAdmin)', userPermissions: '#(userPermissions)' }

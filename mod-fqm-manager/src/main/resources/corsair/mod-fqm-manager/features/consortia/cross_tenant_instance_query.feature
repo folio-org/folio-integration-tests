@@ -9,26 +9,6 @@ Feature: Cross-tenant instance queries in mod-fqm-manager
 
   @Positive
   Scenario: From the central tenant, cross-tenant queries include all tenant affiliations
-    # Wait for the central admin's shadow users to exist, then grant them the same FQM/inventory permissions.
-    * call login universityUser1
-    Given path 'users'
-    And param query = 'id==' + consortiaAdmin.id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And retry until response.totalRecords == 1
-    When method GET
-    Then status 200
-
-    * call login collegeUser1
-    Given path 'users'
-    And param query = 'id==' + consortiaAdmin.id
-    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And retry until response.totalRecords == 1
-    When method GET
-    Then status 200
-
-    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { tenant: '#(universityTenant)', user: '#(consortiaAdmin)', userPermissions: '#(userPermissions)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@PutCaps') { tenant: '#(collegeTenant)', user: '#(consortiaAdmin)', userPermissions: '#(userPermissions)' }
-
     * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 

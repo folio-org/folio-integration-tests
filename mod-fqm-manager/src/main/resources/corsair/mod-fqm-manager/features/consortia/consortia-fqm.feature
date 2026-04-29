@@ -32,7 +32,11 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'consortia.all'                                                    |
       | 'inventory.instances.item.get'                                     |
       | 'fqm.entityTypes.collection.get'                                   |
+      | 'fqm.entityTypes.install.post'                                     |
+      | 'fqm.entityTypes.item.columnValues.get'                            |
       | 'fqm.entityTypes.item.get'                                         |
+      | 'fqm.materializedViews.post'                                       |
+      | 'fqm.query.all'                                                    |
       | 'fqm.query.async.post'                                             |
       | 'fqm.query.async.results.get'                                      |
       | 'fqm.query.async.results.query.get'                                |
@@ -49,6 +53,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.instance-statuses.collection.get'               |
       | 'inventory-storage.instance-formats.collection.get'                |
       | 'inventory-storage.instance-types.collection.get'                  |
+      | 'inventory-storage.instance-types.item.get'                        |
       | 'inventory-storage.instance-types.item.post'                       |
       | 'inventory-storage.instances.item.get'                             |
       | 'inventory-storage.instances.item.post'                            |
@@ -64,12 +69,14 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.locations.item.post'                            |
       | 'inventory-storage.material-types.collection.get'                  |
       | 'inventory-storage.material-types.item.post'                       |
+      | 'inventory-storage.modes-of-issuance.collection.get'               |
       | 'inventory-storage.service-points.collection.get'                  |
       | 'inventory-storage.statistical-code-types.collection.get'          |
       | 'inventory-storage.statistical-codes.collection.get'               |
       | 'user-tenants.collection.get'                                      |
       | 'user-tenants.item.post'                                           |
       | 'users.collection.get'                                             |
+      | 'users.item.get'                                                   |
       | 'users-bl.transactions.get'                                        |
       | 'inventory-storage.instance-note-types.collection.get'             |
       | 'inventory-storage.holdings-note-types.collection.get'             |
@@ -115,6 +122,9 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Scenario: Tenant api tests
     * call read('tenant.feature')
+
+  Scenario: Reinstall FQM entity types for cross-tenant tests
+    * call read('install_fqm_entity_types.feature')
 
   Scenario: Cross Tenant
     * call read('cross_tenant_et.feature')
