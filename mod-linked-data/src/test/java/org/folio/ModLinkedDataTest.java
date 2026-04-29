@@ -113,4 +113,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void preferredProfile() {
     runFeatureTest("profiles/preferred-profile.feature");
   }
+
+  @Test
+  void profileSettings() {
+    runFeatureTest("profiles/profile-settings.feature");
+  }
 }

@@ -42,6 +42,8 @@ Feature: mod-linked-data integration tests
       | 'linked-data.profiles.preferred.get'                           |
       | 'linked-data.profiles.preferred.post'                          |
       | 'linked-data.profiles.preferred.delete'                        |
+      | 'linked-data.profiles.settings.get'                            |
+      | 'linked-data.profiles.settings.post'                           |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
