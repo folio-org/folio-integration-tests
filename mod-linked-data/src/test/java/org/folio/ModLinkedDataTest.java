@@ -118,4 +118,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void profileSettings() {
     runFeatureTest("profiles/profile-settings.feature");
   }
+
+  @Test
+  void authorityAssignmentCheck() {
+    runFeatureTest("authority-assignment-check/authority-assignment-check.feature");
+  }
 }

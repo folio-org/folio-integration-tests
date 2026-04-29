@@ -1,0 +1,11 @@
+{
+  "fields": [
+    {
+      "100": {
+        "subfields": [ { "a": "authority assignment test" } ],
+        "ind1": "3",
+        "ind2": " "
+      }
+    }
+  ]
+}
