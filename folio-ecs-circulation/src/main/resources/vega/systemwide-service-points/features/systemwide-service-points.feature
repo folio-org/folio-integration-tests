@@ -104,10 +104,9 @@ Feature: systemwide-service-points tests
     When method POST
     Then status 201
 
-    * eval java.lang.Thread.sleep(10000)
-
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    * configure retry = { count: 20, interval: 500 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
     When method GET
@@ -116,6 +115,7 @@ Feature: systemwide-service-points tests
 
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    * configure retry = { count: 20, interval: 500 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
     When method GET
