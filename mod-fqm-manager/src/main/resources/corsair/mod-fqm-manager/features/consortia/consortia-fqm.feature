@@ -11,6 +11,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-permissions'           |
       | 'mod-users'                 |
       | 'mod-users-bl'              |
+      | 'folio-custom-fields'       |
       | 'mod-consortia'             |
       | 'mod-inventory-storage'     |
       | 'mod-circulation'           |
