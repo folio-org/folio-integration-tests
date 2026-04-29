@@ -37,7 +37,8 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_9("unopen-order-delete-empty-holding-two-pols", true),
     FEATURE_10("unopen-order-delete-empty-holding-mixed-pols", true),
     FEATURE_11("pe-mix-change-instance-connection-create-new-delete-holdings", true),
-    FEATURE_12("pe-mix-synchronized-change-instance-connection-create-new-delete-holdings", true);
+    FEATURE_12("pe-mix-synchronized-change-instance-connection-create-new-delete-holdings", true),
+    FEATURE_13("physical-change-instance-connection-find-create-delete-holdings", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -167,4 +168,12 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   void peMixSynchronizedChangeInstanceConnectionCreateNewDeleteHoldings() {
     runFeatureTest(Feature.FEATURE_12.getFileName());
   }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784421) Change instance connection for physical order with independent workflow (\"Find or create new\") when piece is received in a new location (\"Delete holdings\")")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void physicalChangeInstanceConnectionFindCreateDeleteHoldings() {
+    runFeatureTest(Feature.FEATURE_13.getFileName());
+  }
+
 }
