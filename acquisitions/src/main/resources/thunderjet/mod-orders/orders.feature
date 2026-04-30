@@ -72,9 +72,6 @@ Feature: mod-orders integration tests
   Scenario: Close order including lines
     * call read('features/close-order-including-lines.feature')
 
-  Scenario: Close order when fully paid and received
-    * call read('features/close-order-when-fully-paid-and-received.feature')
-
   Scenario: Create fives pieces for an open order
     * call read('features/create-five-pieces.feature')
 
@@ -188,6 +185,9 @@ Feature: mod-orders integration tests
 
   Scenario: Open order with restricted locations
     * call read('features/open-order-with-restricted-locations.feature')
+
+  Scenario: Order status automatic change caused by a po line update
+    * call read('features/order-status-automatic-change.feature')
 
   Scenario: Should open order with polines having the same fund distributions
     * call read('features/open-order-with-the-same-fund-distributions.feature')
