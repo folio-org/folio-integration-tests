@@ -16,7 +16,8 @@ Feature: Order status automatic change caused by a po line update
     * callonce variables
 
     * def verifyOrderStatusAfterPoLinePaymentReceiptUpdate = read('classpath:thunderjet/mod-orders/helpers/helper-order-status-automatic-change.feature@VerifyOrderStatusAfterPoLinePaymentReceiptUpdate')
-    
+    * def verifyOrderStatusAfterReceivingChange = read('classpath:thunderjet/mod-orders/helpers/helper-order-status-automatic-change.feature@VerifyOrderStatusAfterReceivingChange')
+
   @Positive
   Scenario: Closed order should not be reopened when a line status is changed to final
     * table orderStatusTestParams
@@ -62,3 +63,46 @@ Feature: Order status automatic change caused by a po line update
       | 'Open'                | 'Payment Not Required' | 'Awaiting Receipt'     | 'Payment Not Required' | 'Fully Received'       | 'Closed'               |
       | 'Open'                | 'Awaiting Payment'     | 'Receipt Not Required' | 'Fully Paid'           | 'Receipt Not Required' | 'Closed'               |
     * def v = call verifyOrderStatusAfterPoLinePaymentReceiptUpdate orderStatusTestParams
+
+
+  @Positive
+  Scenario: Closed order should not be reopened when a piece is received
+    * table orderStatusTestParams
+      | initialWorkflowStatus | initialPaymentStatus   | initialReceiptStatus | newReceiptStatus | expectedWorkflowStatus |
+      | 'Closed'              | 'Awaiting Payment'     | 'Awaiting Receipt'   | 'Fully Received' | 'Closed'               |
+      | 'Closed'              | 'Fully Paid'           | 'Awaiting Receipt'   | 'Fully Received' | 'Closed'               |
+      | 'Closed'              | 'Payment Not Required' | 'Awaiting Receipt'   | 'Fully Received' | 'Closed'               |
+      | 'Closed'              | 'Fully Paid'           | 'Partially Received' | 'Fully Received' | 'Closed'               |
+    * def v = call verifyOrderStatusAfterReceivingChange orderStatusTestParams
+
+  @Positive
+  Scenario: Closed order should not be reopened when the payment status is non-final and a piece is unreceived
+    * table orderStatusTestParams
+      | initialWorkflowStatus | initialPaymentStatus | initialReceiptStatus | newPaymentStatus   | newReceiptStatus   | expectedWorkflowStatus |
+      | 'Closed'              | 'Awaiting Payment'   | 'Fully Received'     | 'Awaiting Payment' | 'Awaiting Receipt' | 'Closed'               |
+      | 'Closed'              | 'Partially Paid'     | 'Fully Received'     | 'Awaiting Payment' | 'Awaiting Receipt' | 'Closed'               |
+    * def v = call verifyOrderStatusAfterReceivingChange orderStatusTestParams
+
+  @Positive
+  Scenario: Closed order should be reopened when line statuses are final and a piece is unreceived
+    * table orderStatusTestParams
+      | initialWorkflowStatus | initialPaymentStatus   | initialReceiptStatus | newReceiptStatus       | expectedWorkflowStatus |
+      | 'Closed'              | 'Fully Paid'           | 'Fully Received'     | 'Awaiting Receipt'     | 'Open'                 |
+      | 'Closed'              | 'Payment Not Required' | 'Fully Received'     | 'Awaiting Receipt'     | 'Open'                 |
+    * def v = call verifyOrderStatusAfterReceivingChange orderStatusTestParams
+
+  @Positive
+  Scenario: Open order should not be closed when the payment status is non-final and a piece is received
+    * table orderStatusTestParams
+      | initialWorkflowStatus | initialPaymentStatus | initialReceiptStatus | newReceiptStatus | expectedWorkflowStatus |
+      | 'Open'                | 'Awaiting Payment'   | 'Awaiting Receipt'   | 'Fully Received' | 'Open'                 |
+      | 'Open'                | 'Partially Paid'     | 'Awaiting Receipt'   | 'Fully Received' | 'Open'                 |
+    * def v = call verifyOrderStatusAfterReceivingChange orderStatusTestParams
+
+  @Positive
+  Scenario: Open order should be closed when the payment status is final and a piece is received
+    * table orderStatusTestParams
+      | initialWorkflowStatus | initialPaymentStatus   | initialReceiptStatus   | newReceiptStatus       | expectedWorkflowStatus |
+      | 'Open'                | 'Fully Paid'           | 'Awaiting Receipt'     | 'Fully Received'       | 'Closed'               |
+      | 'Open'                | 'Payment Not Required' | 'Awaiting Receipt'     | 'Fully Received'       | 'Closed'               |
+    * def v = call verifyOrderStatusAfterReceivingChange orderStatusTestParams
