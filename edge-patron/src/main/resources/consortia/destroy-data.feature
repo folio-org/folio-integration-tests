@@ -11,5 +11,5 @@ Feature: Destroy data of consortia orders tests
 
 
   Scenario: Destroy Central and University tenants
-    * call deleteTenantAndEntitlement { tenantId: '#(universityTenantId)' }
-    * call deleteTenantAndEntitlement { tenantId: '#(centralTenantId)' }
+    * call deleteTenantAndEntitlement { tenantId: '#(universityTenantUuid)' }
+    * call deleteTenantAndEntitlement { tenantId: '#(centralTenantUuid)' }

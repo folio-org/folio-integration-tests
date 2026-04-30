@@ -97,6 +97,13 @@
     <module>common-consortia</module>
     <module>mod-linked-data</module>
     <module>data-import-large-scale-tests</module>
+    <module>mgr-applications</module>
+    <module>mgr-tenants</module>
+    <module>mgr-tenant-entitlements</module>
+    <module>mod-users-keycloak</module>
+    <module>mod-login-keycloak</module>
+    <module>mod-roles-keycloak</module>
+    <module>mod-scheduler</module>
   </modules>
 
   <build>

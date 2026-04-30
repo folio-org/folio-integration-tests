@@ -27,7 +27,9 @@ Feature: init data for consortia
     * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
-    * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    # add centralTenantId to tenant parameters if present. It is required for mod-search consortium-specific setup
+    * def centralTenantIdValue = karate.get('centralTenantId')
+    * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords + (centralTenantIdValue ? ',centralTenantId=' + centralTenantIdValue : '')
     Given url baseUrl
     Given path 'entitlements'
     And param tenantParameters = tenantParameters

@@ -18,6 +18,10 @@ Feature: mod-dcb integration tests
       | 'mod-feesfines'             |
       | 'mod-circulation-item'      |
       | 'mod-dcb'                   |
+      | 'mod-notify'                |
+      | 'mod-template-engine'       |
+      | 'mod-sender'                |
+      | 'mod-email'                 |
 
     * table adminAdditionalPermissions
       | name                                                              |
@@ -29,12 +33,14 @@ Feature: mod-dcb integration tests
       | 'circulation-storage.patron-notice-policies.item.post'            |
       | 'circulation-storage.request-policies.item.post'                  |
       | 'circulation-storage.requests.collection.get'                     |
+      | 'circulation-storage.requests.item.get'                           |
       | 'circulation.check-in-by-barcode.post'                            |
       | 'circulation.check-out-by-barcode.post'                           |
       | 'circulation.requests.item.get'                                   |
       | 'circulation.requests.item.put'                                   |
       | 'circulation.rules.put'                                           |
       | 'dcb.transactions.collection.get'                                 |
+      | 'circulation.rules.get'                                           |
       | 'dcb.transactions.item.put'                                       |
       | 'dcb.transactions.post'                                           |
       | 'dcb.transactions.status.get'                                     |
@@ -74,6 +80,9 @@ Feature: mod-dcb integration tests
       | 'consortium-search.campuses.collection.get'                       |
       | 'consortium-search.libraries.collection.get'                      |
       | 'consortium-search.institutions.collection.get'                   |
+      | 'templates.item.post'                                             |
+      | 'email.message.collection.get'                                    |
+      | 'patron-notice.post'                                              |
 
 
     * table userPermissions

@@ -35,7 +35,12 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     // moved from OrdersCriticalPathApiTest (TestRail group = Extended)
     FEATURE_8("unopen-order-delete-empty-holding-two-locs", true),
     FEATURE_9("unopen-order-delete-empty-holding-two-pols", true),
-    FEATURE_10("unopen-order-delete-empty-holding-mixed-pols", true);
+    FEATURE_10("unopen-order-delete-empty-holding-mixed-pols", true),
+    FEATURE_11("pe-mix-change-instance-connection-create-new-delete-holdings", true),
+    FEATURE_12("pe-mix-synchronized-change-instance-connection-create-new-delete-holdings", true),
+    FEATURE_13("physical-change-instance-connection-find-create-delete-holdings", true),
+    FEATURE_14("pe-mix-change-instance-connection-create-new-keep-holdings", true),
+    FEATURE_15("pe-mix-synchronized-change-instance-connection-create-new-keep-holdings", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -150,5 +155,40 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void unopenOrderDeleteEmptyHoldingMixedPols() {
     runFeatureTest(Feature.FEATURE_10.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784423) P/E Mix Change Instance Connection Create New Holdings Delete Abandoned Holdings")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void peMixChangeInstanceConnectionCreateNewDeleteHoldings() {
+    runFeatureTest(Feature.FEATURE_11.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784425) P/E Mix Synchronized Change Instance Connection Create New Holdings Delete Abandoned Holdings")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void peMixSynchronizedChangeInstanceConnectionCreateNewDeleteHoldings() {
+    runFeatureTest(Feature.FEATURE_12.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784421) Change instance connection for physical order with independent workflow (\"Find or create new\") when piece is received in a new location (\"Delete holdings\")")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void physicalChangeInstanceConnectionFindCreateDeleteHoldings() {
+    runFeatureTest(Feature.FEATURE_13.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784422) P/E Mix Change Instance Connection Create New Holdings Keep Abandoned Holdings")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void peMixChangeInstanceConnectionCreateNewKeepHoldings() {
+    runFeatureTest(Feature.FEATURE_14.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784424) P/E Mix Synchronized Change Instance Connection Create New Holdings Keep Abandoned Holdings")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void peMixSynchronizedChangeInstanceConnectionCreateNewKeepHoldings() {
+    runFeatureTest(Feature.FEATURE_15.getFileName());
   }
 }

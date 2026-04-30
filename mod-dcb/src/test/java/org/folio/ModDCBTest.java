@@ -36,6 +36,11 @@ public class ModDCBTest extends TestBaseEureka {
   }
 
   @Test
+  void testBorrowingFlowUpdate() {
+      runFeatureTest("borrowing-flow-update.feature");
+  }
+
+  @Test
   void testRefreshShadowLocations() {
     runFeatureTest("refresh-shadow-locations.feature");
   }
@@ -77,22 +82,23 @@ public class ModDCBTest extends TestBaseEureka {
   void testCancelCirculationForPickUpFlowRequest() {
     runFeatureTest("cancelling-flow-for-pickup-flow.feature");
   }
+
   @Test
   void testLendingFlowChainOfResponsibility() {  runFeatureTest("lending-flow-chain-of-responsibility.feature"); }
 
   @Test
   void testBorrowingFlowChainOfResponsibility() {  runFeatureTest("borrowing-flow-chain-of-responsibility.feature"); }
 
-    @Test
-    void testRefreshDcbShadowLocations() { runFeatureTest("refresh-dcb-shadow-locations.feature"); }
+  @Test
+  void testRefreshDcbShadowLocations() { runFeatureTest("refresh-dcb-shadow-locations.feature"); }
 
-    @Test
-    void testShadowLocationsCreatedViaApi() { runFeatureTest("shadow-locations-created-via-api.feature"); }
+  @Test
+  void testShadowLocationsCreatedViaApi() { runFeatureTest("shadow-locations-created-via-api.feature"); }
 
-    @Test
-    void testEcsShadowLocationsNotDisplayed() { runFeatureTest("ecs-shadow-locations-not-displayed.feature"); }
+  @Test
+  void testEcsShadowLocationsNotDisplayed() { runFeatureTest("ecs-shadow-locations-not-displayed.feature"); }
 
-    @Test
+  @Test
   void testExpirationLendingFlow() { runFeatureTest("expiration-lending-flow.feature"); }
 
   @Test
@@ -103,6 +109,26 @@ public class ModDCBTest extends TestBaseEureka {
 
   @Test
   void testExpirationBorrowingPickupFlow() { runFeatureTest("expiration-borrowing-pickup-flow.feature"); }
+
+  @Test
+  void testBorrowingPickupUpdateWithPatronNotice() {
+    runFeatureTest("borrowing-pickup-update-with-patron-notice.feature");
+  }
+
+  @Test
+  void testLenderUpdateItemValidation() {
+    runFeatureTest("lender-update-item-validation.feature");
+  }
+
+  @Test
+  void testBorrowerUpdateItemFields() {
+    runFeatureTest("borrower-update-item-fields.feature");
+  }
+
+  @Test
+  void testBorrowerUpdateStatusRestriction() {
+    runFeatureTest("borrower-update-status-restriction.feature");
+  }
 
   @BeforeAll
   public void setup() {
