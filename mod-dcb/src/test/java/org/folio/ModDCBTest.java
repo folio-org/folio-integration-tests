@@ -120,6 +120,11 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("lender-update-item-validation.feature");
   }
 
+  @Test
+  void testBorrowerUpdateItemFields() {
+    runFeatureTest("borrower-update-item-fields.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
