@@ -2,23 +2,20 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Background:
     * url baseUrl
+    * callonce login admin
     * configure readTimeout = 600000
 
     * table modules
       | name                        |
-      | 'okapi'                     |
       | 'mod-login'                 |
       | 'mod-inventory'             |
       | 'mod-permissions'           |
       | 'mod-users'                 |
       | 'mod-users-bl'              |
-      | 'folio-custom-fields'       |
       | 'mod-consortia'             |
       | 'mod-inventory-storage'     |
-      | 'mod-pubsub'                |
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
-      | 'mod-source-record-manager' |
       | 'mod-finance'               |
       | 'mod-fqm-manager'           |
       | 'mod-finance-storage'       |
@@ -26,7 +23,6 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
-      | 'mod-entities-links'        |
       | 'mod-patron-blocks'         |
       | 'mod-tags'                  |
 
@@ -38,13 +34,9 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory.instances.item.get'                                     |
       | 'fqm.entityTypes.collection.get'                                   |
       | 'fqm.entityTypes.install.post'                                     |
-      | 'fqm.entityTypes.item.columnValues.get'                            |
       | 'fqm.entityTypes.item.get'                                         |
-      | 'fqm.materializedViews.post'                                       |
-      | 'fqm.query.all'                                                    |
       | 'fqm.query.async.post'                                             |
       | 'fqm.query.async.results.get'                                      |
-      | 'fqm.query.async.results.query.get'                                |
       | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
@@ -58,7 +50,6 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.instance-statuses.collection.get'               |
       | 'inventory-storage.instance-formats.collection.get'                |
       | 'inventory-storage.instance-types.collection.get'                  |
-      | 'inventory-storage.instance-types.item.get'                        |
       | 'inventory-storage.instance-types.item.post'                       |
       | 'inventory-storage.instances.item.get'                             |
       | 'inventory-storage.instances.item.post'                            |
@@ -74,14 +65,12 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'inventory-storage.locations.item.post'                            |
       | 'inventory-storage.material-types.collection.get'                  |
       | 'inventory-storage.material-types.item.post'                       |
-      | 'inventory-storage.modes-of-issuance.collection.get'               |
       | 'inventory-storage.service-points.collection.get'                  |
       | 'inventory-storage.statistical-code-types.collection.get'          |
       | 'inventory-storage.statistical-codes.collection.get'               |
       | 'user-tenants.collection.get'                                      |
       | 'user-tenants.item.post'                                           |
       | 'users.collection.get'                                             |
-      | 'users.item.get'                                                   |
       | 'users-bl.transactions.get'                                        |
       | 'inventory-storage.instance-note-types.collection.get'             |
       | 'inventory-storage.holdings-note-types.collection.get'             |
@@ -100,13 +89,11 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
     # generate test tenants' names
     * def random = callonce randomMillis
-    * def centralTenantUuid = uuid()
+    * def centralTenantId = uuid()
     * def centralTenant = 'central' + random
-    # InstallApplications passes centralTenantId to module tenant init; it must be the FOLIO tenant id, not the application-manager UUID.
-    * def centralTenantId = centralTenant
-    * def universityTenantUuid = uuid()
+    * def universityTenantId = uuid()
     * def universityTenant = 'university' + random
-    * def collegeTenantUuid = uuid()
+    * def collegeTenantId = uuid()
     * def collegeTenant = 'college' + random
 
     # define users
@@ -120,9 +107,9 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantUuid)', user: '#(universityUser1)'}
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantUuid)', user: '#(collegeUser1)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)'}
 
   Scenario: Consortium api tests
     * call read('consortium.feature')
@@ -139,7 +126,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
   Scenario: Cross Tenant Instance Query
     * call read('cross_tenant_instance_query.feature')
 
-  Scenario: Destroy created ['college', 'university', 'central'] tenants
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(collegeTenantUuid)'}
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantUuid)'}
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantUuid)'}
+  Scenario: Destroy created ['central', 'university', 'college'] tenants
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(collegeTenantId)'}

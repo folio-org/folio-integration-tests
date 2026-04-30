@@ -97,9 +97,9 @@ Feature: Cross-tenant instance queries in mod-fqm-manager
       }
       """
 
-    And match queriedInstances contains deep { "instance.id": '#(centralSharedFolioInstanceId)', "instance.title": 'FQM ECS shared FOLIO instance', "instance.source": 'FOLIO', "instance.shared": 'Shared', "instance.tenant_id": '#(centralTenant)', "instance.tenant_name": 'Consortium' }
-    And match queriedInstances contains deep { "instance.id": '#(centralSharedMarcInstanceId)', "instance.title": 'FQM ECS shared MARC instance', "instance.source": 'MARC', "instance.shared": 'Shared', "instance.tenant_id": '#(centralTenant)', "instance.tenant_name": 'Consortium' }
-    And match queriedInstances contains deep { "instance.id": '#(universityLocalInstanceId)', "instance.title": 'FQM ECS local FOLIO instance', "instance.source": 'FOLIO', "instance.shared": 'Local', "instance.tenant_id": '#(universityTenant)', "instance.tenant_name": 'University tenant' }
+    And match queriedInstances contains deep { "instance.id": '#(centralSharedFolioInstanceId)', "instance.title": 'FQM ECS shared FOLIO instance', "instance.source": 'FOLIO', "instance.shared": 'Shared', "instance.tenant_id": '#(centralTenant)', "instance.tenant_name": 'Central tenants name' }
+    And match queriedInstances contains deep { "instance.id": '#(centralSharedMarcInstanceId)', "instance.title": 'FQM ECS shared MARC instance', "instance.source": 'MARC', "instance.shared": 'Shared', "instance.tenant_id": '#(centralTenant)', "instance.tenant_name": 'Central tenants name' }
+    And match queriedInstances contains deep { "instance.id": '#(universityLocalInstanceId)', "instance.title": 'FQM ECS local FOLIO instance', "instance.source": 'FOLIO', "instance.shared": 'Local', "instance.tenant_id": '#(universityTenant)', "instance.tenant_name": 'University tenants name' }
     And match queriedInstances contains deep { "instance.id": '#(collegeLocalInstanceId)', "instance.title": 'FQM ECS local MARC instance', "instance.source": 'MARC', "instance.shared": 'Local', "instance.tenant_id": '#(collegeTenant)', "instance.tenant_name": 'College tenant' }
 
     * def sharedValues = columnValues(queriedInstances, 'instance.shared')
