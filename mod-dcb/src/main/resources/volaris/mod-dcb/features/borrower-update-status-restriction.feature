@@ -29,7 +29,6 @@ Feature: Borrower Update Status Restriction
     * def newPathTxn = proxyCall == true ? proxyPath + orgPathTxn : orgPathTxn
     * def newPathTxnStatus = newPathTxn + '/status'
 
-    # Step 1: Create DCB transaction with role = BORROWER
     * def createReq = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
     * createReq.item.id = txnItemId
     * createReq.item.barcode = itemBarcode627
@@ -49,17 +48,14 @@ Feature: Borrower Update Status Restriction
     And match $.item.barcode == itemBarcode627
     And match $.patron.id == patronId31
 
-    # update body reused for each non-CREATED status restriction check
     * def updateReq = { item: { barcode: '#(newBarcode)', materialType: '#(materialTypeName)', lendingLibraryCode: 'NEW-LIB' } }
 
-    # Step 2: Update status to OPEN
     Given path newPathTxnStatus
     And param apikey = key
     And request { status: 'OPEN' }
     When method PUT
     Then status 200
 
-    # Step 3: Try to update transaction details from OPEN — expect 400
     Given path newPathTxn
     And param apikey = key
     And request updateReq
@@ -70,14 +66,12 @@ Feature: Borrower Update Status Restriction
     And match $.errors[0].code == 'VALIDATION_ERROR'
     And match $.errors[0].parameters == []
 
-    # Step 4: Update status to AWAITING_PICKUP
     Given path newPathTxnStatus
     And param apikey = key
     And request { status: 'AWAITING_PICKUP' }
     When method PUT
     Then status 200
 
-    # Step 5: Try to update transaction details from AWAITING_PICKUP — expect 400
     Given path newPathTxn
     And param apikey = key
     And request updateReq
@@ -88,14 +82,12 @@ Feature: Borrower Update Status Restriction
     And match $.errors[0].code == 'VALIDATION_ERROR'
     And match $.errors[0].parameters == []
 
-    # Step 6: Update status to ITEM_CHECKED_OUT
     Given path newPathTxnStatus
     And param apikey = key
     And request { status: 'ITEM_CHECKED_OUT' }
     When method PUT
     Then status 200
 
-    # Step 7: Try to update transaction details from ITEM_CHECKED_OUT — expect 400
     Given path newPathTxn
     And param apikey = key
     And request updateReq
@@ -106,14 +98,12 @@ Feature: Borrower Update Status Restriction
     And match $.errors[0].code == 'VALIDATION_ERROR'
     And match $.errors[0].parameters == []
 
-    # Step 8: Update status to ITEM_CHECKED_IN
     Given path newPathTxnStatus
     And param apikey = key
     And request { status: 'ITEM_CHECKED_IN' }
     When method PUT
     Then status 200
 
-    # Step 9: Try to update transaction details from ITEM_CHECKED_IN — expect 400
     Given path newPathTxn
     And param apikey = key
     And request updateReq
@@ -124,14 +114,12 @@ Feature: Borrower Update Status Restriction
     And match $.errors[0].code == 'VALIDATION_ERROR'
     And match $.errors[0].parameters == []
 
-    # Step 10: Update status to CLOSED
     Given path newPathTxnStatus
     And param apikey = key
     And request { status: 'CLOSED' }
     When method PUT
     Then status 200
 
-    # Step 11: Try to update transaction details from CLOSED — expect 400
     Given path newPathTxn
     And param apikey = key
     And request updateReq
@@ -142,7 +130,6 @@ Feature: Borrower Update Status Restriction
     And match $.errors[0].code == 'VALIDATION_ERROR'
     And match $.errors[0].parameters == []
 
-    # Step 12: Verify transaction status log contains all status changes
     * def orgPathStatus = '/transactions/status'
     * def newPathStatus = proxyCall == true ? proxyPath + orgPathStatus : orgPathStatus
     * def pollConfig = { expectedRecords: 5, path: '#(newPathStatus)', apikey: '#(key)', baseUrl: '#(baseUrlNew)', startDate: '#(startDate)' }
