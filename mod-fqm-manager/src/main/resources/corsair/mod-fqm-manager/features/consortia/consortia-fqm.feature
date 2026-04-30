@@ -33,7 +33,6 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'consortia.all'                                                    |
       | 'inventory.instances.item.get'                                     |
       | 'fqm.entityTypes.collection.get'                                   |
-      | 'fqm.entityTypes.install.post'                                     |
       | 'fqm.entityTypes.item.get'                                         |
       | 'fqm.query.async.post'                                             |
       | 'fqm.query.async.results.get'                                      |
@@ -116,9 +115,6 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Scenario: Tenant api tests
     * call read('tenant.feature')
-
-  Scenario: Reinstall FQM entity types for cross-tenant tests
-    * call read('install_fqm_entity_types.feature')
 
   Scenario: Cross Tenant
     * call read('cross_tenant_et.feature')
