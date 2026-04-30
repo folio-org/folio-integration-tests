@@ -45,6 +45,7 @@ Feature: mod-linked-data integration tests
       | 'linked-data.profiles.settings.get'                            |
       | 'linked-data.profiles.settings.post'                           |
       | 'linked-data.authority-assignment-check.post'                  |
+      | 'linked-data.vocabularies.item.get'                            |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |

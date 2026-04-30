@@ -123,4 +123,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void authorityAssignmentCheck() {
     runFeatureTest("authority-assignment-check/authority-assignment-check.feature");
   }
+
+  @Test
+  void getVocabularyByName() {
+    runFeatureTest("vocabulary/vocabulary.feature");
+  }
 }
