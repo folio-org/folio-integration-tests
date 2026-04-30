@@ -43,6 +43,7 @@
   <modules>
     <module>common</module>
     <module>acquisitions</module>
+    <module>folio-ecs-circulation</module>
     <module>mod-ldp</module>
     <module>mod-oai-pmh</module>
     <module>mod-quick-marc</module>

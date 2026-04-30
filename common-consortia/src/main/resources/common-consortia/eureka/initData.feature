@@ -221,6 +221,7 @@ Feature: init data for consortia
 
   @Login
   Scenario: Login a user, then if successful set latest value for 'okapitoken'
+    * configure cookies = null
     Given path 'authn/login'
     And header x-okapi-tenant = tenant
     And request { username: '#(username)', password: '#(password)' }
