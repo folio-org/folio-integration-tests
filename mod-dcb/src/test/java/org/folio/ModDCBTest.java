@@ -130,6 +130,11 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("borrower-update-status-restriction.feature");
   }
 
+  @Test
+  void testPickupFlowUpdate() {
+    runFeatureTest("pickup-flow-update.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
