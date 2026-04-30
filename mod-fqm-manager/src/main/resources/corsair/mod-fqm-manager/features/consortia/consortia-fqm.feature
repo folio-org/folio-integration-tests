@@ -6,6 +6,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
     * table modules
       | name                        |
+      | 'okapi'                     |
       | 'mod-login'                 |
       | 'mod-inventory'             |
       | 'mod-permissions'           |
@@ -14,8 +15,10 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'folio-custom-fields'       |
       | 'mod-consortia'             |
       | 'mod-inventory-storage'     |
+      | 'mod-pubsub'                |
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
+      | 'mod-source-record-manager' |
       | 'mod-finance'               |
       | 'mod-fqm-manager'           |
       | 'mod-finance-storage'       |
@@ -23,6 +26,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-orders-storage'        |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
+      | 'mod-entities-links'        |
       | 'mod-patron-blocks'         |
       | 'mod-tags'                  |
 
@@ -96,11 +100,13 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
     # generate test tenants' names
     * def random = callonce randomMillis
-    * def centralTenantId = uuid()
+    * def centralTenantUuid = uuid()
     * def centralTenant = 'central' + random
-    * def universityTenantId = uuid()
+    # InstallApplications passes centralTenantId to module tenant init; it must be the FOLIO tenant id, not the application-manager UUID.
+    * def centralTenantId = centralTenant
+    * def universityTenantUuid = uuid()
     * def universityTenant = 'university' + random
-    * def collegeTenantId = uuid()
+    * def collegeTenantUuid = uuid()
     * def collegeTenant = 'college' + random
 
     # define users
@@ -114,9 +120,9 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantUuid)', user: '#(universityUser1)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantUuid)', user: '#(collegeUser1)'}
 
   Scenario: Consortium api tests
     * call read('consortium.feature')
@@ -134,6 +140,6 @@ Feature: mod-consortia and mod-fqm-manager integration tests
     * call read('cross_tenant_instance_query.feature')
 
   Scenario: Destroy created ['college', 'university', 'central'] tenants
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(collegeTenantId)'}
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(collegeTenantUuid)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantUuid)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantUuid)'}
