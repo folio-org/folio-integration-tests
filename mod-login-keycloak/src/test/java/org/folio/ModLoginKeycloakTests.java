@@ -35,4 +35,34 @@ class ModLoginKeycloakTests extends TestBaseEureka {
   void verifyLogin() {
     runFeatureTest("verify-login");
   }
+
+  @Test
+  void verifyLoginWithExpiry() {
+    runFeatureTest("verify-login-with-expiry");
+  }
+
+  @Test
+  void verifyLogout() {
+    runFeatureTest("verify-logout");
+  }
+
+  @Test
+  void verifyLogoutAll() {
+    runFeatureTest("verify-logout-all");
+  }
+
+  @Test
+  void verifyRefresh() {
+    runFeatureTest("verify-refresh-token");
+  }
+
+  @Test
+  void verifyResetPassword() {
+    runFeatureTest("verify-reset-password");
+  }
+
+  @Test
+  void verifyCredentials() {
+    runFeatureTest("verify-credentials");
+  }
 }
