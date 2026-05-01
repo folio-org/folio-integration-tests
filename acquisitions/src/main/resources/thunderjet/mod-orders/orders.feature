@@ -41,6 +41,9 @@ Feature: mod-orders integration tests
   Scenario: Change location when receiving a piece
     * call read('features/change-location-when-receiving-piece.feature')
 
+  Scenario: Change piece status from Unreceivable to Expected for ongoing order with two pieces
+    * call read('features/change-piece-status-unreceivable-to-expected-ongoing-order.feature')
+
   Scenario: Change Order Instance Connection
     * call read('features/change-order-instance-connection.feature')
 
