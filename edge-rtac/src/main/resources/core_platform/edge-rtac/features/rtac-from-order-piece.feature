@@ -38,7 +38,7 @@ Feature: rtac from order piece tests
     * def fundId = callonce random_uuid
     * def budgetId = callonce random_uuid
     * call createFund { 'id': '#(fundId)'}
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)'}
+    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'fiscalYearId': 'ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2' }
 
     # create order
     * def orderId = callonce random_uuid
