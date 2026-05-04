@@ -25,6 +25,12 @@ Feature: CRUD operations on a resource
     Then status 200
     * def response = $
 
+  @deleteResource
+  Scenario: Delete a resource
+    Given path 'linked-data/resource/' + id
+    When method DELETE
+    Then status 204
+
   @getResourceSupportCheck
   Scenario: Identify if instance can be imported
     Given path '/linked-data/inventory-instance/' + inventoryId + '/import-supported'

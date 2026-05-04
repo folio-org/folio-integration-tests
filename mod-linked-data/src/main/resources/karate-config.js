@@ -38,6 +38,7 @@ function fn() {
     getResourceIdFromInventoryId: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceIdFromInventoryId'),
     postResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postResource'),
     putResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putResource'),
+    deleteResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@deleteResource'),
     postSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
     putSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putSourceRecordToStorage'),
     searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),

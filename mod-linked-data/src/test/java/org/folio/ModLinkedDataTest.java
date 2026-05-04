@@ -128,4 +128,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void getVocabularyByName() {
     runFeatureTest("vocabulary/vocabulary.feature");
   }
+
+  @Test
+  void graphCleaning() {
+    runFeatureTest("graph-cleaning/graph-cleaning.feature");
+  }
 }
