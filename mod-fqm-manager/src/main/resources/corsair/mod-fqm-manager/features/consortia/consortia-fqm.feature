@@ -34,6 +34,7 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'consortia.all'                                                    |
       | 'inventory.instances.item.get'                                     |
       | 'fqm.entityTypes.collection.get'                                   |
+      | 'fqm.entityTypes.item.columnValues.get'                            |
       | 'fqm.entityTypes.item.get'                                         |
       | 'fqm.entityTypes.install.post'                                     |
       | 'fqm.query.async.post'                                             |
@@ -127,6 +128,9 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Scenario: Cross Tenant Instance Query
     * call read('cross_tenant_instance_query.feature')
+
+  Scenario: Cross Tenant Holdings Effective Location Values
+    * call read('cross_tenant_holdings_effective_location_values.feature')
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantUuid)'}
