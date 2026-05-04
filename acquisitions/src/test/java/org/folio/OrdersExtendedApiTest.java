@@ -41,7 +41,10 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_13("physical-change-instance-connection-find-create-delete-holdings", true),
     FEATURE_14("pe-mix-change-instance-connection-create-new-keep-holdings", true),
     FEATURE_15("pe-mix-synchronized-change-instance-connection-create-new-keep-holdings", true),
-    FEATURE_16("change-piece-status-unreceivable-to-expected-ongoing-order", true);
+    FEATURE_16("change-piece-status-unreceivable-to-expected-ongoing-order", true),
+    FEATURE_17("item-under-holdings-after-instance-connection-change-find-or-create", true),
+    FEATURE_18("item-under-holdings-after-instance-connection-change-move", true),
+    FEATURE_19("item-under-holdings-after-instance-connection-change-create-new", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -198,5 +201,26 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void changePieceStatusUnreceivableToExpectedOngoingOrder() {
     runFeatureTest(Feature.FEATURE_16.getFileName(), THREAD_COUNT);
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C358535) Item Appears Under Holdings After Instance Connection Change With Holding Setting Find Or Create")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void itemAppearsUnderHoldingsAfterInstanceConnectionChangeFindOrCreate() {
+    runFeatureTest(Feature.FEATURE_17.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C358533) Item Appears Under Holdings After Instance Connection Change With Holding Setting Move")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void itemAppearsUnderHoldingsAfterInstanceConnectionChangeMove() {
+    runFeatureTest(Feature.FEATURE_18.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C358536) Item Appears Under Holdings After Instance Connection Change With Holding Setting Create New")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void itemAppearsUnderHoldingsAfterInstanceConnectionChangeCreateNew() {
+    runFeatureTest(Feature.FEATURE_19.getFileName());
   }
 }
