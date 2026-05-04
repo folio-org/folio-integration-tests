@@ -6,9 +6,6 @@ Feature: Create holdings data with effective location details
 
   @Positive
   Scenario: Create holdings, location, and library data for one tenant
-    * call login user
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenantId)', 'Accept': 'application/json' }
-
     * def institutionId = uuid()
     * def campusId = uuid()
     * def libraryId = uuid()

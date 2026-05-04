@@ -18,9 +18,15 @@ Feature: Cross-tenant holdings effective location values in mod-fqm-manager
     And match response.columns[*].name contains resultFields
 
     * def createHoldingsData = read('create_holdings_effective_location_data.feature')
-    * def centralData = call createHoldingsData { user: '#(consortiaAdmin)', tenantId: '#(centralTenant)', label: 'Central', codeSuffix: 'CEN', runId: '#(random)' }
-    * def universityData = call createHoldingsData { user: '#(universityUser1)', tenantId: '#(universityTenant)', label: 'University', codeSuffix: 'UNI', runId: '#(random)' }
-    * def collegeData = call createHoldingsData { user: '#(collegeUser1)', tenantId: '#(collegeTenant)', label: 'College', codeSuffix: 'COL', runId: '#(random)' }
+    * def centralData = call createHoldingsData { label: 'Central', codeSuffix: 'CEN', runId: '#(random)' }
+
+    * call login universityUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
+    * def universityData = call createHoldingsData { label: 'University', codeSuffix: 'UNI', runId: '#(random)' }
+
+    * call login collegeUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': 'application/json' }
+    * def collegeData = call createHoldingsData { label: 'College', codeSuffix: 'COL', runId: '#(random)' }
 
     * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
