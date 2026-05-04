@@ -27,7 +27,8 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.bib.put'                                |
       | 'linked-data.resources.bib.delete'                             |
       | 'linked-data.resources.bib.marc.get'                           |
-      | 'linked-data.resources.reindex.post'                           |
+      | 'linked-data.batch.reindex.full.post'                          |
+      | 'linked-data.batch.reindex.incremental.post'                   |
       | 'linked-data.resources.graph.get'                              |
       | 'linked-data.resources.rdf.get'                                |
       | 'linked-data.resources.bib.id.get'                             |
@@ -73,6 +74,7 @@ Feature: mod-linked-data integration tests
       | 'source-storage.records.formatted.item.get'                           |
       | 'linked-data.admin.caches.delete'                                     |
       | 'base-url.item.put'                                                   |
+      | 'search.index.inventory.reindex.post'                                 |
 
     * table linkedDataBulkImportPermissions
       | name                                                       |

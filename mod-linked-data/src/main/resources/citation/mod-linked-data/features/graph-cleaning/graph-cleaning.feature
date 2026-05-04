@@ -2,7 +2,6 @@ Feature: Graph cleaning removes orphaned sub-resources from the linked-data grap
 
   Background:
     * url baseUrl
-    * configure retry = { count: 20, interval: 5000 }
     * call login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders

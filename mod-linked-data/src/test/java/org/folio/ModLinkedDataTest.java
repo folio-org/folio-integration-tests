@@ -133,4 +133,9 @@ class ModLinkedDataTest extends TestBaseEureka {
   void graphCleaning() {
     runFeatureTest("graph-cleaning/graph-cleaning.feature");
   }
+
+  @Test
+  void reindex() {
+    runFeatureTest("reindex/reindex.feature");
+  }
 }
