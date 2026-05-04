@@ -45,6 +45,7 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_17("item-under-holdings-after-instance-connection-change-find-or-create", true),
     FEATURE_18("item-under-holdings-after-instance-connection-change-move", true),
     FEATURE_19("item-under-holdings-after-instance-connection-change-create-new", true);
+
     private final String fileName;
     private final boolean isEnabled;
 
