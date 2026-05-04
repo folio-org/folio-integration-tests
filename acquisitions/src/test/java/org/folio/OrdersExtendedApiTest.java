@@ -44,7 +44,8 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_16("change-piece-status-unreceivable-to-expected-ongoing-order", true),
     FEATURE_17("item-under-holdings-after-instance-connection-change-find-or-create", true),
     FEATURE_18("item-under-holdings-after-instance-connection-change-move", true),
-    FEATURE_19("item-under-holdings-after-instance-connection-change-create-new", true);
+    FEATURE_19("item-under-holdings-after-instance-connection-change-create-new", true),
+    FEATURE_20("pe-mix-change-instance-connection-find-create-delete-holdings", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -222,5 +223,12 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void itemAppearsUnderHoldingsAfterInstanceConnectionChangeCreateNew() {
     runFeatureTest(Feature.FEATURE_19.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C784414) Item appears under new holding after instance connection change with holding setting \"Find or create new\" for P/E mix order with Independent workflow")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void peMixChangeInstanceConnectionFindCreateDeleteHoldings() {
+    runFeatureTest(Feature.FEATURE_20.getFileName());
   }
 }
