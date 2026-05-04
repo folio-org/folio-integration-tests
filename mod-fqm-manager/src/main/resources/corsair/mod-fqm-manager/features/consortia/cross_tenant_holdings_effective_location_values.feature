@@ -86,7 +86,7 @@ Feature: Cross-tenant holdings effective location values in mod-fqm-manager
     Then status 200
     * def effectiveLocationLabels = labels(response.content)
     * def queriedEffectiveLocationNames = distinctColumnValues(queriedHoldings, 'effective_location.name')
-    * def expectedEffectiveLocationNames = [centralData.locationName, universityData.locationName, collegeData.locationName]
+    * def expectedEffectiveLocationNames = ['#(centralData.locationName)', '#(universityData.locationName)', '#(collegeData.locationName)']
     * match effectiveLocationLabels contains queriedEffectiveLocationNames
     * match effectiveLocationLabels contains expectedEffectiveLocationNames
 
@@ -97,6 +97,6 @@ Feature: Cross-tenant holdings effective location values in mod-fqm-manager
     Then status 200
     * def effectiveLibraryLabels = labels(response.content)
     * def queriedEffectiveLibraryNames = distinctColumnValues(queriedHoldings, 'effective_library.name')
-    * def expectedEffectiveLibraryNames = [centralData.libraryName, universityData.libraryName, collegeData.libraryName]
+    * def expectedEffectiveLibraryNames = ['#(centralData.libraryName)', '#(universityData.libraryName)', '#(collegeData.libraryName)']
     * match effectiveLibraryLabels contains queriedEffectiveLibraryNames
     * match effectiveLibraryLabels contains expectedEffectiveLibraryNames
