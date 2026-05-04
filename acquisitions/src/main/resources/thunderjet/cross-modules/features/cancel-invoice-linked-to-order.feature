@@ -78,6 +78,7 @@ Feature: Cancel an invoice linked to an order
 
     * print "Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+    * call pause 1200
 
     * print "Check the invoice line status after cancelling"
     Given path 'invoice/invoice-lines', invoiceLineId
@@ -205,6 +206,7 @@ Feature: Cancel an invoice linked to an order
 
     * print "Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+    * call pause 1200
 
     * print "Check the invoice lines status after cancelling"
     Given path 'invoice/invoice-lines', invoiceLineId1
@@ -336,6 +338,7 @@ Feature: Cancel an invoice linked to an order
 
     * print "Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+    * call pause 1200
 
     * print "Check the invoice line status after cancelling"
     Given path 'invoice/invoice-lines', invoiceLineId
@@ -444,6 +447,7 @@ Feature: Cancel an invoice linked to an order
 
     * print "Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+    * call pause 1200
 
     * print "Check the invoice line status after cancelling"
     Given path 'invoice/invoice-lines', invoiceLineId
@@ -571,6 +575,7 @@ Feature: Cancel an invoice linked to an order
     # 12. Cancel the invoice
     * print "12. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+    * call pause 1200
 
     # 13. Check the invoice line status after cancelling
     * print "13. Check the invoice line status after cancelling"
@@ -680,6 +685,7 @@ Feature: Cancel an invoice linked to an order
 
     * print "Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+    * call pause 1200
 
     * print "Check the invoice line status after cancelling"
     Given path 'invoice/invoice-lines', invoiceLineId
@@ -936,6 +942,7 @@ Feature: Cancel an invoice linked to an order
     # 12. Cancel the invoice
     * print "12. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+    * call pause 1200
 
     # 13. Check the encumbrance was unreleased
     * print "13. Check the encumbrance was unreleased"

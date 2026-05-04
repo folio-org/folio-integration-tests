@@ -53,6 +53,7 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "9. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+    * call pause 1200
 
     * print "10. Check the encumbrance"
     Given path 'finance/transactions'
@@ -105,6 +106,7 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "9. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+    * call pause 1200
 
     * print "10. Check the encumbrance"
     Given path 'finance/transactions'
@@ -161,6 +163,7 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "10. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+    * call pause 1200
 
     * print "11. Check the encumbrance"
     Given path 'finance/transactions'
@@ -217,6 +220,7 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "10. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+    * call pause 1200
 
     * print "11. Check the encumbrance"
     Given path 'finance/transactions'
@@ -270,6 +274,7 @@ Feature: Cancel an invoice with an Encumbrance
 
     * print "9. Cancel the invoice"
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+    * call pause 1200
 
     * print "10. Check the encumbrance"
     Given path 'finance/transactions'

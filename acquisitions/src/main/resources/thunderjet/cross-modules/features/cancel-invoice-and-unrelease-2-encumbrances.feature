@@ -74,6 +74,7 @@ Feature: Cancel invoice and unrelease 2 encumbrances
 
     # 11. Cancel the invoice
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+    * call pause 1200
 
     # 12. Check encumbrances after cancelling the invoice
     Given path '/finance/transactions'
