@@ -40,7 +40,8 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_12("pe-mix-synchronized-change-instance-connection-create-new-delete-holdings", true),
     FEATURE_13("physical-change-instance-connection-find-create-delete-holdings", true),
     FEATURE_14("pe-mix-change-instance-connection-create-new-keep-holdings", true),
-    FEATURE_15("pe-mix-synchronized-change-instance-connection-create-new-keep-holdings", true);
+    FEATURE_15("pe-mix-synchronized-change-instance-connection-create-new-keep-holdings", true),
+    FEATURE_16("change-piece-status-unreceivable-to-expected-ongoing-order", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -190,5 +191,12 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void peMixSynchronizedChangeInstanceConnectionCreateNewKeepHoldings() {
     runFeatureTest(Feature.FEATURE_15.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C430268) Change piece status from 'Unreceivable' to 'Expected' for ongoing order with two pieces")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void changePieceStatusUnreceivableToExpectedOngoingOrder() {
+    runFeatureTest(Feature.FEATURE_16.getFileName(), THREAD_COUNT);
   }
 }
