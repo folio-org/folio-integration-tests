@@ -72,7 +72,7 @@
       "mod-inventory-storage",
       "mod-search"
     ],
-    "slackChannel": "#spitfire-backend"
+    "slackChannel": "#spitfire-notify"
   },
   {
     "team": "Thunderjet",
@@ -103,6 +103,7 @@
   {
     "team": "Vega",
     "modules": [
+      "folio-ecs-circulation",
       "mod-feesfines",
       "mod-patron-blocks",
       "mod-circulation",
