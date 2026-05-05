@@ -71,11 +71,26 @@ Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fiel
     * def meetingNameTypeId   = karate.jsonPath(response.contributorNameTypes, "$[?(@.name=='Meeting name')].id")[0]
 
     # ============================================================================
-    # Expected per-record contributors (layered: name + nameType + primary + count)
-    # Names reflect mod-inventory's trailing-punctuation normalization.
-    # contributorTypeId/Text are deliberately NOT asserted deeply (mod-srm relator
-    # mapping is not deterministic across releases). Per-row schema only enforces
-    # presence/types of those fields. The deterministic deep check lives on SRS.
+    # Lookup: contributor type ids for all relator-mapped types referenced in TestRail
+    # expectations across the 3 records (used for deep contributorTypeId assertions).
+    # ============================================================================
+    Given path 'contributor-types'
+    And headers headersUser
+    And param query = 'name==("Author" or "Writer of introduction" or "Writer of accompanying material" or "Writer of added lyrics" or "Artist" or "Court governed" or "Court reporter" or "Contestant-appellant" or "Contestant" or "Contestee" or "Contestee-appellee" or "Dancer" or "Dedicator")'
+    And param limit = 100
+    When method GET
+    Then status 200
+    * def typeIdByName = {}
+    * eval response.contributorTypes.forEach(function(t){ typeIdByName[t.name] = t.id })
+    * match karate.sizeOf(karate.keysOf(typeIdByName)) == 13
+
+    # ============================================================================
+    # Expected per-record contributors (layered: name + nameType + primary + count
+    # + contributorTypeId + contributorTypeText). Values are taken from TestRail
+    # case C365638 expectations (Steps 6, 11, 16). Any drift between TestRail wording
+    # and mod-inventory's actual normalization will surface here as a CI failure.
+    # MODSOURMAN-837 mapping rule: $4 wins over $e; if $e matches a contributorType
+    # name it maps to contributorTypeId; otherwise $e -> contributorTypeText.
     # ============================================================================
 
     * def personalId  = personalNameTypeId
@@ -100,6 +115,24 @@ Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fiel
           '#(personalId)',  '#(corporateId)', '#(corporateId)',
           '#(personalId)'
         ],
+        typeIdsInOrder: [
+          '#(typeIdByName.Author)',
+          null,
+          '#(typeIdByName["Writer of introduction"])',
+          '#(typeIdByName["Writer of accompanying material"])',
+          null,
+          '#(typeIdByName["Writer of added lyrics"])',
+          '#(typeIdByName.Artist)'
+        ],
+        typeTextsInOrder: [
+          null,
+          'writer of foreword.',
+          null,
+          null,
+          'writer',
+          null,
+          null
+        ],
         primaryName: 'Chin, Staceyann, 1972-'
       }
       """
@@ -117,6 +150,20 @@ Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fiel
         ],
         nameTypeIdsInOrder: [
           '#(corporateId)','#(corporateId)','#(corporateId)','#(corporateId)','#(corporateId)'
+        ],
+        typeIdsInOrder: [
+          '#(typeIdByName["Court governed"])',
+          null,
+          '#(typeIdByName["Court reporter"])',
+          null,
+          null
+        ],
+        typeTextsInOrder: [
+          null,
+          'court',
+          null,
+          null,
+          'correctort'
         ],
         primaryName: 'Oklahoma. Dept. of Highways'
       }
@@ -138,6 +185,18 @@ Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fiel
         nameTypeIdsInOrder: [
           '#(meetingId)','#(personalId)','#(personalId)',
           '#(meetingId)','#(meetingId)','#(meetingId)','#(meetingId)'
+        ],
+        typeIdsInOrder: [
+          '#(typeIdByName["Contestant-appellant"])',
+          '#(typeIdByName["Court governed"])',
+          '#(typeIdByName.Contestant)',
+          '#(typeIdByName.Contestee)',
+          '#(typeIdByName["Contestee-appellee"])',
+          '#(typeIdByName.Dancer)',
+          '#(typeIdByName.Dedicator)'
+        ],
+        typeTextsInOrder: [
+          null, null, null, null, null, null, null
         ],
         primaryName: 'International Conference on Business History (17th : 1990)'
       }
@@ -193,19 +252,27 @@ Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fiel
     # Steps 4, 6, 7: For each created instance, verify Inventory contributors and
     # SRS MARC source via REST. Per-record verification delegated to @verifyEntry
     # (Karate sub-scenario) so any failed `match` fails the run (fail-fast).
-    #   Step 4 (UI: "Created" -> Inventory pane) -> GET /inventory/instances?query=hrid==
-    #   Step 6 -> assertions on response.instances[0].contributors
+    #   Step 4 (UI: "Created" link -> Inventory pane) -> GET /inventory/instances/{instanceId}
+    #     (entries[i] order pinned via sourceRecordOrder; Nth .mrc record ->
+    #      entriesSorted[i].relatedInstanceInfo.idList[0])
+    #   Step 6 -> assertions on response.contributors (deep: contributorTypeId + contributorTypeText)
     #   Step 7 (UI: Actions -> View source)      -> GET /source-storage/records/{id}/formatted
     #   Step 8 (UI: close MARC view): no REST equivalent, no backend state change.
     # ============================================================================
     * def selfFeature = 'classpath:folijet/data-import/features/marc-records/marc-bibs/create/FAT-21038.feature'
 
+    # Pin entry order to MARC source order so the Nth .mrc record always maps to
+    # expectedByOrder[N]. The metadata-provider returns entries with order=asc by
+    # default, but sourceRecordOrder is the authoritative per-entry index.
+    * def entriesSorted = karate.sort(entries, function(x){ return parseInt(x.sourceRecordOrder) })
+    * match entriesSorted[*].sourceRecordOrder == [ '0', '1', '2' ]
+
     * eval
       """
-      for (var i = 0; i < entries.length; i++) {
+      for (var i = 0; i < entriesSorted.length; i++) {
         karate.call(selfFeature + '@verifyEntry', {
           idx: i,
-          entry: entries[i],
+          entry: entriesSorted[i],
           expected: expectedByOrder[i],
           expectedSource: expectedSourceByOrder[i]
         });
@@ -216,18 +283,20 @@ Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fiel
 
   @verifyEntry @ignore
   Scenario: Verify one created record (inventory contributors + SRS source 1xx/7xx)
-    * print '=== Verifying record #' + (idx + 1) + ' (hrid=' + entry.relatedInstanceInfo.hridList[0] + ') ==='
+    * def instanceId = entry.relatedInstanceInfo.idList[0]
     * def hrid       = entry.relatedInstanceInfo.hridList[0]
     * def sourceId   = entry.sourceRecordId
+    * print '=== Verifying record #' + (idx + 1) + ' (instanceId=' + instanceId + ', hrid=' + hrid + ') ==='
 
     # --- Step 4 + 6: Inventory instance contributors (layered assertions) ---
-    Given path 'inventory/instances'
+    # Step 4 (UI: "Created" link) -> direct UUID GET (faithful to UI navigation).
+    Given path 'inventory/instances', instanceId
     And headers headersUser
-    And param query = 'hrid==' + hrid
     When method GET
     Then status 200
-    And match response.totalRecords == 1
-    * def contribs = response.instances[0].contributors
+    And match response.id == instanceId
+    And match response.hrid == hrid
+    * def contribs = response.contributors
 
     # Count
     * def actualCount = karate.sizeOf(contribs)
@@ -258,6 +327,14 @@ Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fiel
     * def primaryNames = karate.jsonPath(contribs, "$[?(@.primary==true)].name")
     * def expectedPrimaryName = expected.primaryName
     * match primaryNames == [ '#(expectedPrimaryName)' ]
+
+    # contributorTypeId per row (MODSOURMAN-837 mapping rule verification)
+    * def actualTypeIds = karate.jsonPath(contribs, '$[*].contributorTypeId')
+    * match actualTypeIds == expected.typeIdsInOrder
+
+    # contributorTypeText per row (Free text)
+    * def actualTypeTexts = karate.jsonPath(contribs, '$[*].contributorTypeText')
+    * match actualTypeTexts == expected.typeTextsInOrder
 
     # --- Step 7: SRS MARC source - deep subfield assertion on 1xx/7xx fields ---
     Given path 'source-storage/records', sourceId, 'formatted'
