@@ -63,6 +63,7 @@ function fn() {
     getSpecifications: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getSpecifications'),
     getRules: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getRules'),
     patchRule: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@patchRule'),
+    assertReindexJobCompleted: karate.read('classpath:citation/mod-linked-data/features/util/crud-batch.feature@assertReindexJobCompleted'),
 
     // define global functions
     uuid: function () {

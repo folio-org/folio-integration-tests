@@ -9,7 +9,7 @@ Feature: Reindex resources in linked-data search index
     * configure headers = testUserHeaders
 
   @Positive
-  Scenario: Incremental reindex skips already-indexed work; full reindex restores search indexing
+  Scenario: Incremental reindex skips already-indexed work; full reindex with resourceType=WORK restores search indexing
     # Step 1: Create a Work resource
     * def workRequest = read('samples/work-request.json')
     * def postWorkCall = call postResource { resourceRequest: '#(workRequest)' }
@@ -34,22 +34,15 @@ Feature: Reindex resources in linked-data search index
     Then status 200
     * configure headers = testUserHeaders
 
-    # Step 4: Run incremental reindex - skips resources where index_date is already set in DB
+    # Step 4: Run incremental reindex for WORK - skips resources where index_date is already set in DB
     Given path 'linked-data/reindex/incremental'
+    And param resourceType = 'WORK'
     When method POST
     Then status 200
     * def jobExecutionId = response
 
     # Step 5: Poll batch job status until terminal state
-    Given path 'linked-data/batch/status'
-    And param jobExecutionId = jobExecutionId
-    And retry until response.status == 'COMPLETED' || response.status == 'FAILED'
-    When method GET
-    Then status 200
-    * if (response.status == 'FAILED') karate.fail('Incremental reindex job failed. jobExecutionId=' + jobExecutionId)
-    * match response.status == 'COMPLETED'
-    * match response.jobName == 'reindexJob'
-    * match response.reindexType == 'INCREMENTAL'
+    * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'INCREMENTAL' }
 
     # Step 6: Verify work is still NOT searchable - incremental skipped it because index_date was set
     Given path 'search/linked-data/works'
@@ -60,22 +53,15 @@ Feature: Reindex resources in linked-data search index
     Then status 200
     * match response.totalRecords == 0
 
-    # Step 7: Run full reindex - drops index and re-indexes all resources regardless of index_date
+    # Step 7: Run full reindex for WORK
     Given path 'linked-data/reindex/full'
+    And param resourceType = 'WORK'
     When method POST
     Then status 200
     * def jobExecutionId = response
 
     # Step 8: Poll batch job status until terminal state
-    Given path 'linked-data/batch/status'
-    And param jobExecutionId = jobExecutionId
-    And retry until response.status == 'COMPLETED' || response.status == 'FAILED'
-    When method GET
-    Then status 200
-    * if (response.status == 'FAILED') karate.fail('Full reindex job failed. jobExecutionId=' + jobExecutionId)
-    * match response.status == 'COMPLETED'
-    * match response.jobName == 'reindexJob'
-    * match response.reindexType == 'FULL'
+    * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'FULL' }
 
     # Step 9: Verify the work is searchable again after full reindex
     Given path 'search/linked-data/works'
@@ -114,15 +100,7 @@ Feature: Reindex resources in linked-data search index
     * def jobExecutionId = response
 
     # Step 5: Poll batch job status until terminal state
-    Given path 'linked-data/batch/status'
-    And param jobExecutionId = jobExecutionId
-    And retry until response.status == 'COMPLETED' || response.status == 'FAILED'
-    When method GET
-    Then status 200
-    * if (response.status == 'FAILED') karate.fail('Incremental reindex (HUB) job failed. jobExecutionId=' + jobExecutionId)
-    * match response.status == 'COMPLETED'
-    * match response.jobName == 'reindexJob'
-    * match response.reindexType == 'INCREMENTAL'
+    * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'INCREMENTAL' }
 
     # Step 6: Verify hub is still NOT searchable - incremental skipped it because index_date was set
     Given path 'search/linked-data/hubs'
@@ -133,7 +111,7 @@ Feature: Reindex resources in linked-data search index
     Then status 200
     * match response.totalRecords == 0
 
-    # Step 7: Run full reindex for HUB - drops index and re-indexes all hubs regardless of index_date
+    # Step 7: Run full reindex for HUB
     Given path 'linked-data/reindex/full'
     And param resourceType = 'HUB'
     When method POST
@@ -141,15 +119,7 @@ Feature: Reindex resources in linked-data search index
     * def jobExecutionId = response
 
     # Step 8: Poll batch job status until terminal state
-    Given path 'linked-data/batch/status'
-    And param jobExecutionId = jobExecutionId
-    And retry until response.status == 'COMPLETED' || response.status == 'FAILED'
-    When method GET
-    Then status 200
-    * if (response.status == 'FAILED') karate.fail('Full reindex (HUB) job failed. jobExecutionId=' + jobExecutionId)
-    * match response.status == 'COMPLETED'
-    * match response.jobName == 'reindexJob'
-    * match response.reindexType == 'FULL'
+    * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'FULL' }
 
     # Step 9: Verify the hub is searchable again after full reindex
     * def searchHubResult = call searchLinkedDataHub
