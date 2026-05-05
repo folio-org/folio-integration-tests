@@ -77,17 +77,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.userTenants[0].isPrimary == false
 
     # 6. verify shadow 'consortiaAdmin' of 'universityTenant' has capability-sets
-    * def tenant = universityTenant
-    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def okapitoken = karate.get('okapitoken')
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-    Given path '/users/capability-sets'
-    And param query = 'userId=' + consortiaAdminId
-    And param limit = 1
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And retry until response.totalRecords > 0
-    When method GET
-    Then status 200
+    * call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capability-sets.feature') { tenant: '#(universityTenant)', userId: '#(consortiaAdminId)' }
 
     # For 'collegeTenant':
     # 7. shadow 'consortiaAdmin' has been saved in 'college_mod_users.users'
@@ -119,17 +109,7 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.userTenants[0].isPrimary == false
 
     # 9. verify shadow 'consortiaAdmin' of 'collegeTenant' has capability-sets
-    * def tenant = collegeTenant
-    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def okapitoken = karate.get('okapitoken')
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-    Given path '/users/capability-sets'
-    And param query = 'userId=' + consortiaAdminId
-    And param limit = 1
-    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And retry until response.totalRecords > 0
-    When method GET
-    Then status 200
+    * call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capability-sets.feature') { tenant: '#(collegeTenant)', userId: '#(consortiaAdminId)' }
 
   Scenario: Add capabilities of real 'consortiaAdmin' to all shadow 'consortiaAdmin':
     * call putCaps { tenant: '#(universityTenant)', user: '#(consortiaAdmin)', userPermissions: '#(mainUserPerms)' }
