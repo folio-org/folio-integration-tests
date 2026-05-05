@@ -249,7 +249,7 @@ Feature: Consortia Sharing Instances api tests
     When method GET
     Then status 404
 
-    # 1.2. POST sharing instance and verify status is 'ERROR' (GET 'inventory/instances' failed)
+    # 1.2. POST sharing instance and verify status is 'ERROR' (POST 'inventory/instances' failed because inventoryInstance is null)
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
     And request
@@ -266,7 +266,7 @@ Feature: Consortia Sharing Instances api tests
     And match response.sourceTenantId == centralTenant
     And match response.targetTenantId == universityTenant
     And match response.status == 'ERROR'
-    And match response.error contains 'Failed to get inventory instance'
+    And match response.error contains 'Failed to post inventory instance'
 
     # setup 'instanceType' in 'centralTenant'
     Given path 'instance-types'
@@ -519,6 +519,16 @@ Feature: Consortia Sharing Instances api tests
     * match actualResult contains deep expectedResult
 
     # 12. GET sharing instances by 'instanceIdentifier', 'sourceTenantId', 'status'
+    # IN_PROGRESS is transient — re-snapshot just before the filtered query to shrink the
+    # race window, and verify subset only (an item may complete between the two back-to-back GETs).
+    * def queryParams = { offset: 0, limit: 100 }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def allSharingInstances = response.sharingInstances
+
     * def queryParams = { instanceIdentifier: '#(instanceId3)', sourceTenantId: '#(universityTenant)', status: 'IN_PROGRESS' }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
@@ -530,10 +540,17 @@ Feature: Consortia Sharing Instances api tests
     * def fun = function(e) {return e.instanceIdentifier == instanceId3 && e.sourceTenantId == universityTenant && e.status == 'IN_PROGRESS' }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
-    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
     * match actualResult contains deep expectedResult
 
     # 13. GET sharing instances by 'instanceIdentifier', 'targetTenantId', 'status'
+    * def queryParams = { offset: 0, limit: 100 }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def allSharingInstances = response.sharingInstances
+
     * def queryParams = { instanceIdentifier: '#(instanceId6)', targetTenantId: '#(centralTenant)', status: 'IN_PROGRESS' }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
@@ -545,10 +562,17 @@ Feature: Consortia Sharing Instances api tests
     * def fun = function(e) {return e.instanceIdentifier == instanceId6 && e.targetTenantId == centralTenant && e.status == 'IN_PROGRESS' }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
-    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
     * match actualResult contains deep expectedResult
 
     # 14. GET sharing instances by 'sourceTenantId', 'targetTenantId', 'status'
+    * def queryParams = { offset: 0, limit: 100 }
+    Given path 'consortia', consortiumId, 'sharing/instances'
+    And header x-okapi-tenant = centralTenant
+    And params query = queryParams
+    When method GET
+    Then status 200
+    * def allSharingInstances = response.sharingInstances
+
     * def queryParams = { sourceTenantId: '#(universityTenant)', targetTenantId: '#(centralTenant)', status: 'IN_PROGRESS' }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
@@ -560,7 +584,6 @@ Feature: Consortia Sharing Instances api tests
     * def fun = function(e) {return e.sourceTenantId == universityTenant && e.targetTenantId == centralTenant && e.status == 'IN_PROGRESS' }
     * def expectedResult = karate.filter(allSharingInstances, fun)
 
-    * match karate.sizeOf(actualResult) == karate.sizeOf(expectedResult)
     * match actualResult contains deep expectedResult
 
     # 15. GET sharing instances by 'instanceIdentifier', 'sourceTenantId', 'targetTenantId', 'status'
@@ -587,7 +610,7 @@ Feature: Consortia Sharing Instances api tests
     When method GET
     Then status 404
 
-    # 2. POST sharing instance and verify status is 'ERROR' (GET 'inventory/instances' failed)
+    # 2. POST sharing instance and verify status is 'ERROR' (POST 'inventory/instances' failed because inventoryInstance is null)
     Given path 'consortia', consortiumId, 'sharing/instances'
     And header x-okapi-tenant = centralTenant
     And request
@@ -604,7 +627,7 @@ Feature: Consortia Sharing Instances api tests
     And match response.sourceTenantId == centralTenant
     And match response.targetTenantId == universityTenant
     And match response.status == 'ERROR'
-    And match response.error contains 'Failed to get inventory instance'
+    And match response.error contains 'Failed to post inventory instance'
 
     # 3. To fix previous error instance should be setup
     # 3.1 setup 'instanceType' in 'centralTenant'

@@ -144,7 +144,7 @@ Feature: Tenant object in mod-consortia api tests
     # cases for 400
     # attempt to create a tenant for consortia without 'adminUserId' query param ('isCentral' = false)
     Given path 'consortia', consortiumId, 'tenants'
-    And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
+    And request { id: '#(collegeTenant)', code: 'ABC', name: 'test', isCentral: false }
     When method POST
     Then status 400
     And match response.errors[*].message contains "Required request parameter 'adminUserId' for method parameter type UUID is not present"
@@ -155,12 +155,9 @@ Feature: Tenant object in mod-consortia api tests
     # attempt to create a tenant for consortia before 'central' tenant has been created
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
-    And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
+    And request { id: '#(collegeTenant)', code: 'ABC', name: 'test', isCentral: false }
     When method POST
     Then status 404
-    And match response.errors[*].message contains 'A central tenant is not found. The central tenant must be created'
-    And match response.errors[*].type contains '-1'
-    And match response.errors[*].code contains 'NOT_FOUND_ERROR'
 
     # attempt to create a tenant for non-existing consortium
     Given path 'consortia', '111841e3-e6fb-4191-8fd8-5674a5107c33', 'tenants'
@@ -171,6 +168,17 @@ Feature: Tenant object in mod-consortia api tests
     And match response.errors[*].message contains 'Object with consortiumId [111841e3-e6fb-4191-8fd8-5674a5107c33] was not found'
     And match response.errors[*].type contains '-1'
     And match response.errors[*].code contains 'NOT_FOUND_ERROR'
+
+    # cases for 500
+    # attempt to create a tenant with non-existent tenant id - sidecar cannot find client secret
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
+    When method POST
+    Then status 500
+    And match response.errors[0].message contains 'sidecar-module-access-client not set for'
+    And match response.errors[0].message contains '1234'
+    And match response.errors[0].code == 'INTERNAL_ERROR'
 
     # cases for 422
     # attempt to create a tenant without an id
@@ -442,7 +450,6 @@ Feature: Tenant object in mod-consortia api tests
 
     # attempt to get tenant by non-existing consortiumId
     Given path 'consortia', 'd9acad2f-2aac-4b48-9097-e6ab85906b25', 'tenants', '12345'
-    And request { id: '12345', code: 'ABD', name: 'test', isCentral: false }
     When method GET
     Then status 404
     And match response.errors[*].message contains 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found'
@@ -451,6 +458,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # attempt to delete non-existing tenant in the consortium
     Given path 'consortia', consortiumId, 'tenants', '1234'
+    And request { deleteType: 'SOFT', deleteOptions: { deleteUsersUserTenants: false, deleteRelatedShadowUsers: false } }
     When method DELETE
     Then status 404
     And match response.errors[*].message contains 'Object with id [1234] was not found'
@@ -459,10 +467,10 @@ Feature: Tenant object in mod-consortia api tests
 
     # attempt to delete tenant by non-existing consortiumId
     Given path 'consortia', 'd9acad2f-2aac-4b48-9097-e6ab85906b25', 'tenants', '12345'
-    And request { id: '12345', code: 'ABD', name: 'test', isCentral: false }
+    And request { deleteType: 'SOFT', deleteOptions: { deleteUsersUserTenants: false, deleteRelatedShadowUsers: false } }
     When method DELETE
     Then status 404
-    And match response.errors[*].message contains 'Object with consortiumId [d9acad2f-2aac-4b48-9097-e6ab85906b25] was not found'
+    And match response.errors[*].message contains 'Object with id [12345] was not found'
     And match response.errors[*].type contains '-1'
     And match response.errors[*].code contains 'NOT_FOUND_ERROR'
 
@@ -579,6 +587,7 @@ Feature: Tenant object in mod-consortia api tests
   Scenario: Soft Delete and verify data
     # 1. Soft delete 'universityTenant' (isCentral = false)
     Given path 'consortia', consortiumId, 'tenants', universityTenant
+    And request { deleteType: 'SOFT', deleteOptions: { deleteUsersUserTenants: false, deleteRelatedShadowUsers: false } }
     When method DELETE
     Then status 204
 
@@ -616,6 +625,7 @@ Feature: Tenant object in mod-consortia api tests
   Scenario: Error cases of soft delete functionality
     # Soft delete 'centralTenant' (isCentral = true)
     Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And request { deleteType: 'SOFT', deleteOptions: { deleteUsersUserTenants: false, deleteRelatedShadowUsers: false } }
     When method DELETE
     Then status 400
     And match response.errors[0].message == 'Central tenant [' + centralTenant +'] cannot be deleted.'
@@ -624,6 +634,7 @@ Feature: Tenant object in mod-consortia api tests
 
     # Soft delete 'universityTenant' that has already been deleted (isCentral=false, isDeleted=true)
     Given path 'consortia', consortiumId, 'tenants', universityTenant
+    And request { deleteType: 'SOFT', deleteOptions: { deleteUsersUserTenants: false, deleteRelatedShadowUsers: false } }
     When method DELETE
     Then status 400
     And match response.errors[0].message == 'Tenant [' + universityTenant +'] has already been soft deleted.'

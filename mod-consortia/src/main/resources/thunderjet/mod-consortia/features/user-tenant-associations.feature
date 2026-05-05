@@ -8,7 +8,7 @@ Feature: Consortia User Tenant associations api tests
 
   Scenario: Create a user called 'centralUser1' in 'centralTenant' and verify there are following records:
     # create user called 'centralUser1' in 'centralTenant'
-    * call read('classpath:common-consortia/initData.feature@PostUser') centralUser1
+    * call read('classpath:common-consortia/eureka/initData.feature@PostUser') { tenant: '#(centralTenant)', user: '#(centralUser1)' }
 
     # 1. 'centralUser1' has been saved in 'users' table in 'central_mod_users'
 
@@ -65,15 +65,13 @@ Feature: Consortia User Tenant associations api tests
     And match response.users[0].id == centralUser1.id
     And match response.users[0].active == true
 
-    # 2. shadow 'centralUser1' has empty permissions (in 'universityTenant')
-    Given path 'perms/users'
-    And param query = 'userId=' + shadowCentralUser1Id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
+    # 2. shadow 'centralUser1' has empty capabilities (in 'universityTenant')
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(universityTenant)', userId: '#(shadowCentralUser1Id)' }
+    * match caps.response.totalRecords == 0
 
-    And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == []
+    # re-login as consortiaAdmin after system token overwrites okapitoken
+    * call login consortiaAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': 'application/json' }
 
     # DELETE non-primary affiliation for 'centralUser1' (for 'universityTenant')
     * def queryParams = { userId: '#(shadowCentralUser1Id)', tenantId: '#(universityTenant)' }
@@ -135,19 +133,32 @@ Feature: Consortia User Tenant associations api tests
 
     * def shadowCentralUser1Username = userTenants[0].username
 
-    # 1. add non-empty permission to shadow 'centralUser1'
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { id: '#(shadowCentralUser1Id)', tenant: '#(universityTenant)', desiredPermissions: ['consortia.all']}
+    # 1. add non-empty capabilities to shadow 'centralUser1'
+    * table shadowUserPermissions
+      | name                                                  |
+      | 'users.item.get'                                      |
+      | 'users.item.post'                                     |
+      | 'users.collection.get'                                |
+      | 'user-tenants.collection.get'                         |
+      | 'inventory-storage.instance-types.item.post'          |
+      | 'inventory-storage.instance-types.item.get'           |
+      | 'inventory.instances.item.post'                       |
+      | 'inventory.instances.item.get'                        |
+      | 'inventory.instances.item.delete'                     |
+      | 'departments.item.post'                               |
+      | 'departments.item.get'                                |
+      | 'usergroups.item.post'                                |
+      | 'usergroups.item.get'                                 |
+    * call putCaps { tenant: '#(universityTenant)', user: { id: '#(shadowCentralUser1Id)' }, userPermissions: '#(shadowUserPermissions)' }
 
-    # 2. get updated permissions of shadow 'centralUser1'
-    Given path 'perms/users'
-    And param query = 'userId=' + shadowCentralUser1Id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
+    # 2. get updated capabilities of shadow 'centralUser1'
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(universityTenant)', userId: '#(shadowCentralUser1Id)' }
+    * match caps.response.totalRecords != 0
+    * def updatedNonEmptyCapabilitiesOfShadowCentralUser1 = caps.response.userCapabilities
 
-    And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions != []
-    * def updatedNonEmptyPermissionsOfShadowCentralUser1 = response.permissionUsers[0].permissions
+    # re-login as consortiaAdmin after system token overwrites okapitoken
+    * call login consortiaAdmin
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Authtoken-Refresh-Cache': 'true', 'Accept': 'application/json' }
 
     # DELETE non-primary affiliation for 'centralUser1' (for 'universityTenant')
     * def queryParams = { userId: '#(shadowCentralUser1Id)', tenantId: '#(universityTenant)' }
@@ -168,15 +179,9 @@ Feature: Consortia User Tenant associations api tests
     And match response.tenantId == universityTenant
     And match response.isPrimary == false
 
-    # 3. verify that permissions of shadow 'centralUser1' after re-POST is not changes
-    Given path 'perms/users'
-    And param query = 'userId=' + shadowCentralUser1Id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == updatedNonEmptyPermissionsOfShadowCentralUser1
+    # 3. verify that capabilities of shadow 'centralUser1' after re-POST is not changed
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(universityTenant)', userId: '#(shadowCentralUser1Id)' }
+    * match caps.response.userCapabilities == updatedNonEmptyCapabilitiesOfShadowCentralUser1
 
   # We have 'centralUser1' in 'centralTenant' and shadow 'centralUser1' in 'universityTenant'
   Scenario: If we DELETE real user all records related to this user should be deleted (con-9):
@@ -219,7 +224,7 @@ Feature: Consortia User Tenant associations api tests
 
   Scenario: Create a user called 'universityUser2' in 'universityTenant' and verify there are following records (con-10):
     # create user called 'universityUser2' in 'universityTenant'
-    * call read('classpath:common-consortia/initData.feature@PostUser') universityUser2
+    * call read('classpath:common-consortia/eureka/initData.feature@PostUser') { tenant: '#(universityTenant)', user: '#(universityUser2)' }
 
     # 1. 'universityUser2' has been saved in 'users' table in 'university_mod_users'
     Given path 'users'
@@ -280,15 +285,9 @@ Feature: Consortia User Tenant associations api tests
     And match userTenants[0].username contains universityUser2.username
     And match userTenants[0].isPrimary == false
 
-    # 6. shadow 'universityUser2' has empty permissions (in 'centralTenant')
-    Given path 'perms/users'
-    And param query = 'userId=' + universityUser2.id
-    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == []
+    # 6. shadow 'universityUser2' has empty capabilities (in 'centralTenant')
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(centralTenant)', userId: '#(universityUser2.id)' }
+    * match caps.response.totalRecords == 0
 
   # We have 'universityUser2' in 'universityTenant' and shadow 'universityUser2' in 'centralTenant'
   Scenario: If we DELETE real user all records related to this user should be deleted (con-11):
@@ -383,15 +382,9 @@ Feature: Consortia User Tenant associations api tests
     And match response.userTenants[0].userId == shadowUniversityUser1Id
     And match response.userTenants[0].isPrimary == false
 
-    # 6. shadow 'universityUser1' has empty permissions (in 'centralTenant')
-    Given path 'perms/users'
-    And param query = 'userId=' + shadowUniversityUser1Id
-    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    And match response.totalRecords == 1
-    And match response.permissionUsers[0].permissions == []
+    # 6. shadow 'universityUser1' has empty capabilities (in 'centralTenant')
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(centralTenant)', userId: '#(shadowUniversityUser1Id)' }
+    * match caps.response.totalRecords == 0
 
   @Positive
   Scenario: Create and verify all details of shadow user
@@ -501,6 +494,8 @@ Feature: Consortia User Tenant associations api tests
 
     # 2. Soft delete 'universityTenant' (isCentral = false)
     Given path 'consortia', consortiumId, 'tenants', universityTenant
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
+    And request { deleteType: 'SOFT', deleteOptions: { deleteUsersUserTenants: false, deleteRelatedShadowUsers: false } }
     When method DELETE
     Then status 204
 
@@ -516,7 +511,7 @@ Feature: Consortia User Tenant associations api tests
     * def queryParams = { username: '#(universityUser1.username)', tenantId: '#(universityTenant)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
-    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(   okapitoken)'}
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 404
 
@@ -532,6 +527,7 @@ Feature: Consortia User Tenant associations api tests
     #     previous code or name can be used to re-add tenant (name 'University tenants name 2' is already used by itself as soft deleted tenant)
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
+    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
     And request { id: '#(universityTenant)', code: 'FOL', name: 'University tenants name 2', isCentral: false }
     When method POST
     Then status 201
