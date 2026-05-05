@@ -1,4 +1,4 @@
-Feature: Batch job operations
+Feature: Reindex job execution result
 
   Background:
     * url baseUrl

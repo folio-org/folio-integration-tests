@@ -63,7 +63,7 @@ function fn() {
     getSpecifications: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getSpecifications'),
     getRules: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getRules'),
     patchRule: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@patchRule'),
-    assertReindexJobCompleted: karate.read('classpath:citation/mod-linked-data/features/util/crud-batch.feature@assertReindexJobCompleted'),
+    assertReindexJobCompleted: karate.read('classpath:citation/mod-linked-data/features/util/reindex-job-status.feature@assertReindexJobCompleted'),
     dropSearchIndex: karate.read('classpath:citation/mod-linked-data/features/util/search-index.feature@dropSearchIndex'),
 
     // define global functions

@@ -4,7 +4,6 @@ Feature: Setup for reindex tests - creates Work and Hub resources once
     * url baseUrl
     * def workRequest = read('samples/work-request.json')
     * def postWorkCall = call postResource { resourceRequest: '#(workRequest)' }
-    * def workId = postWorkCall.response.resource['http://bibfra.me/vocab/lite/Work'].id
     * def workQuery = 'title all "Reindex test work"'
     Given path 'search/linked-data/works'
     And param query = workQuery

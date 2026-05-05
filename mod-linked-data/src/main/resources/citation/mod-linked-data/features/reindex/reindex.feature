@@ -9,7 +9,6 @@ Feature: Reindex resources in linked-data search index
     * configure headers = testUserHeaders
 
     * def setup = callonce read('setup.feature')
-    * def workId = setup.workId
     * def workQuery = setup.workQuery
     * def hubQuery = setup.hubQuery
 
