@@ -28,10 +28,7 @@ Feature: Reindex resources in linked-data search index
 
     # Step 3: Drop the linked-data-work search index to simulate a stale/missing index
     * configure headers = testAdminHeaders
-    Given path 'search/index/inventory/reindex'
-    And request { recreateIndex: true, resourceName: 'linked-data-work' }
-    When method POST
-    Then status 200
+    * call dropSearchIndex { resourceName: 'linked-data-work' }
     * configure headers = testUserHeaders
 
     # Step 4: Run incremental reindex for WORK - skips resources where index_date is already set in DB
@@ -86,10 +83,7 @@ Feature: Reindex resources in linked-data search index
 
     # Step 3: Drop the linked-data-hub search index to simulate a stale/missing index
     * configure headers = testAdminHeaders
-    Given path 'search/index/inventory/reindex'
-    And request { recreateIndex: true, resourceName: 'linked-data-hub' }
-    When method POST
-    Then status 200
+    * call dropSearchIndex { resourceName: 'linked-data-hub' }
     * configure headers = testUserHeaders
 
     # Step 4: Run incremental reindex for HUB - skips resources where index_date is already set in DB
