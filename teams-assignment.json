@@ -103,6 +103,7 @@
   {
     "team": "Vega",
     "modules": [
+      "folio-ecs-circulation",
       "mod-feesfines",
       "mod-patron-blocks",
       "mod-circulation",

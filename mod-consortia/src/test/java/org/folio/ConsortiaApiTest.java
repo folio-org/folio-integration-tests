@@ -1,19 +1,16 @@
 package org.folio;
 
-import org.folio.test.TestBase;
+import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "thunderjet", module = "mod-consortia")
-@Deprecated(forRemoval = true)
-@Disabled
-class ConsortiaApiTest extends TestBase {
+@FolioTest(team = "thunderjet", module = "mod-consortia-keycloak")
+class ConsortiaApiTest extends TestBaseEureka {
 
     // Default module settings :
-    private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-consortia/features/";
+    private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-consortia/";
 
     public ConsortiaApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
