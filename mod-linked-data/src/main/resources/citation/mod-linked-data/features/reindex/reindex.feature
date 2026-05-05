@@ -8,61 +8,50 @@ Feature: Reindex resources in linked-data search index
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
+    * def setup = callonce read('setup.feature')
+    * def workId = setup.workId
+    * def workQuery = setup.workQuery
+    * def hubQuery = setup.hubQuery
+
   @Positive
   Scenario: Incremental reindex skips already-indexed work; full reindex with resourceType=WORK restores search indexing
-    # Step 1: Create a Work resource
-    * def workRequest = read('samples/work-request.json')
-    * def postWorkCall = call postResource { resourceRequest: '#(workRequest)' }
-    * def workId = postWorkCall.response.resource['http://bibfra.me/vocab/lite/Work'].id
-
-    # Step 2: Verify the work is initially searchable (index_date is set in DB after creation)
-    * def query = 'title all "Reindex test work"'
-    Given path 'search/linked-data/works'
-    And param query = query
-    And param limit = 10
-    And param offset = 0
-    And retry until response.totalRecords > 0
-    When method GET
-    Then status 200
-    * match response.totalRecords == 1
-
-    # Step 3: Drop the linked-data-work search index to simulate a stale/missing index
+    # Step 1: Drop the linked-data-work search index to simulate a stale/missing index
     * configure headers = testAdminHeaders
     * call dropSearchIndex { resourceName: 'linked-data-work' }
     * configure headers = testUserHeaders
 
-    # Step 4: Run incremental reindex for WORK - skips resources where index_date is already set in DB
+    # Step 2: Run incremental reindex for WORK - skips resources where index_date is already set in DB
     Given path 'linked-data/reindex/incremental'
     And param resourceType = 'WORK'
     When method POST
     Then status 200
     * def jobExecutionId = response
 
-    # Step 5: Poll batch job status until terminal state
+    # Step 3: Poll batch job status until terminal state
     * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'INCREMENTAL' }
 
-    # Step 6: Verify work is still NOT searchable - incremental skipped it because index_date was set
+    # Step 4: Verify work is still NOT searchable - incremental skipped it because index_date was set
     Given path 'search/linked-data/works'
-    And param query = query
+    And param query = workQuery
     And param limit = 10
     And param offset = 0
     When method GET
     Then status 200
     * match response.totalRecords == 0
 
-    # Step 7: Run full reindex for WORK
+    # Step 5: Run full reindex for WORK
     Given path 'linked-data/reindex/full'
     And param resourceType = 'WORK'
     When method POST
     Then status 200
     * def jobExecutionId = response
 
-    # Step 8: Poll batch job status until terminal state
+    # Step 6: Poll batch job status until terminal state
     * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'FULL' }
 
-    # Step 9: Verify the work is searchable again after full reindex
+    # Step 7: Verify the work is searchable again after full reindex
     Given path 'search/linked-data/works'
-    And param query = query
+    And param query = workQuery
     And param limit = 10
     And param offset = 0
     And retry until response.totalRecords > 0
@@ -72,49 +61,98 @@ Feature: Reindex resources in linked-data search index
 
   @Positive
   Scenario: Incremental reindex skips already-indexed hub; full reindex with resourceType=HUB restores search indexing
-    # Step 1: Import a Hub resource
-    * def hubUri = 'https://id.loc.gov/resources/hubs/0f11341f-5bb5-9e64-110f-6bb4782fc615.json'
-    * call importHub { hubUri: '#(hubUri)' }
-
-    # Step 2: Verify the hub is initially searchable (index_date is set in DB after import)
-    * def query = 'label="Eckardt, Jason, 1971-. Pulse-echo"'
-    * def searchHubResult = call searchLinkedDataHub
-    * match searchHubResult.response.totalRecords == 1
-
-    # Step 3: Drop the linked-data-hub search index to simulate a stale/missing index
+    # Step 1: Drop the linked-data-hub search index to simulate a stale/missing index
     * configure headers = testAdminHeaders
     * call dropSearchIndex { resourceName: 'linked-data-hub' }
     * configure headers = testUserHeaders
 
-    # Step 4: Run incremental reindex for HUB - skips resources where index_date is already set in DB
+    # Step 2: Run incremental reindex for HUB - skips resources where index_date is already set in DB
     Given path 'linked-data/reindex/incremental'
     And param resourceType = 'HUB'
     When method POST
     Then status 200
     * def jobExecutionId = response
 
-    # Step 5: Poll batch job status until terminal state
+    # Step 3: Poll batch job status until terminal state
     * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'INCREMENTAL' }
 
-    # Step 6: Verify hub is still NOT searchable - incremental skipped it because index_date was set
+    # Step 4: Verify hub is still NOT searchable - incremental skipped it because index_date was set
     Given path 'search/linked-data/hubs'
-    And param query = query
+    And param query = hubQuery
     And param limit = 10
     And param offset = 0
     When method GET
     Then status 200
     * match response.totalRecords == 0
 
-    # Step 7: Run full reindex for HUB
+    # Step 5: Run full reindex for HUB
     Given path 'linked-data/reindex/full'
     And param resourceType = 'HUB'
     When method POST
     Then status 200
     * def jobExecutionId = response
 
-    # Step 8: Poll batch job status until terminal state
+    # Step 6: Poll batch job status until terminal state
     * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'FULL' }
 
-    # Step 9: Verify the hub is searchable again after full reindex
-    * def searchHubResult = call searchLinkedDataHub
-    * match searchHubResult.response.totalRecords == 1
+    # Step 7: Verify the hub is searchable again after full reindex
+    * def query = hubQuery
+    * call searchLinkedDataHub
+
+  @Positive
+  Scenario: Incremental reindex skips all already-indexed resources; full reindex without resourceType restores all search indexing
+    # Step 1: Drop both search indexes to simulate a stale/missing state
+    * configure headers = testAdminHeaders
+    * call dropSearchIndex { resourceName: 'linked-data-work' }
+    * call dropSearchIndex { resourceName: 'linked-data-hub' }
+    * configure headers = testUserHeaders
+
+    # Step 2: Run incremental reindex without resourceType - skips all already-indexed resources
+    Given path 'linked-data/reindex/incremental'
+    When method POST
+    Then status 200
+    * def jobExecutionId = response
+
+    # Step 3: Poll batch job status until terminal state
+    * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'INCREMENTAL' }
+
+    # Step 4: Verify work is still NOT searchable
+    Given path 'search/linked-data/works'
+    And param query = workQuery
+    And param limit = 10
+    And param offset = 0
+    When method GET
+    Then status 200
+    * match response.totalRecords == 0
+
+    # Step 5: Verify hub is still NOT searchable
+    Given path 'search/linked-data/hubs'
+    And param query = hubQuery
+    And param limit = 10
+    And param offset = 0
+    When method GET
+    Then status 200
+    * match response.totalRecords == 0
+
+    # Step 6: Run full reindex without resourceType - reindexes all resource types
+    Given path 'linked-data/reindex/full'
+    When method POST
+    Then status 200
+    * def jobExecutionId = response
+
+    # Step 7: Poll batch job status until terminal state
+    * call assertReindexJobCompleted { jobExecutionId: '#(jobExecutionId)', expectedReindexType: 'FULL' }
+
+    # Step 8: Verify work is searchable again
+    Given path 'search/linked-data/works'
+    And param query = workQuery
+    And param limit = 10
+    And param offset = 0
+    And retry until response.totalRecords > 0
+    When method GET
+    Then status 200
+    * match response.totalRecords == 1
+
+    # Step 9: Verify hub is searchable again
+    * def query = hubQuery
+    * call searchLinkedDataHub
