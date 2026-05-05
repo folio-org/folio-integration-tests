@@ -79,8 +79,6 @@ Feature: Get profile by id
 
   @Positive
   Scenario: Get profile by id 7 and verify Profile:Hub entry
-    * configure headers = testUserHeaders
-
     Given path 'linked-data/profile/7'
     When method GET
     Then status 200

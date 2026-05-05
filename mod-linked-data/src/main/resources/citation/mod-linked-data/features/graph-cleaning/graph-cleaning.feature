@@ -17,6 +17,11 @@ Feature: Graph cleaning removes orphaned sub-resources from the linked-data grap
     # Step 2: Delete the Work - its sub-nodes lose all incoming edges and become orphaned
     * call deleteResource { id: '#(workId)' }
 
+    # Step 3: Verify the title sub-node still exists before graph cleaning
+    Given path 'linked-data/resource/' + titleNodeId
+    When method GET
+    Then status 200
+
     # Step 4: Trigger the graph cleaning batch job
     Given path 'linked-data/graphCleaning'
     When method POST
