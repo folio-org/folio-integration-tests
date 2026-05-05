@@ -59,7 +59,7 @@ Feature: Consortia Sharing Settings api tests
     """
     When method POST
     Then status 400
-    And match $.errors[*].message contains "Mismatch id in payload with settingId"
+    And match $.errors[*].message contains "Mismatch ID in payload with ID"
     And match $.errors[*].type contains '-1'
     And match $.errors[*].code contains 'VALIDATION_ERROR'
 

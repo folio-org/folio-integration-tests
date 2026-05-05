@@ -1,19 +1,21 @@
-Feature: mod-consortia integration tests
+@parallel=false
+Feature: mod-consortia-keycloak integration tests
 
-  # Please refer to the following document to see test cases for 'mod-consortia':
+  # Please refer to the following document to see test cases for 'mod-consortia-keycloak':
   # https://wiki.folio.org/display/FOLIJET/Consortia+cases+covered+with+Karate+tests
 
   Background:
     * url baseUrl
     * configure readTimeout = 600000
-    * call login admin
+    * configure connectTimeout = 600000
 
-    * table requiredModules
+    * table modules
       | name                        |
       | 'mod-permissions'           |
-      | 'okapi'                     |
+      | 'mod-settings'              |
+      | 'mod-configuration'         |
+      | 'mod-login-keycloak'        |
       | 'mod-users'                 |
-      | 'mod-login'                 |
       | 'mod-inventory-storage'     |
       | 'mod-pubsub'                |
       | 'mod-circulation-storage'   |
@@ -21,9 +23,14 @@ Feature: mod-consortia integration tests
       | 'mod-entities-links'        |
       | 'mod-inventory'             |
       | 'folio-custom-fields'       |
+      | 'mod-feesfines'             |
 
     # generate names for tenants
     * def random = callonce randomMillis
+    * def uuids = callonce uuids 4
+    * def centralTenantId = uuids[0]
+    * def universityTenantId = uuids[1]
+    * def collegeTenantId = uuids[2]
     * def centralTenant = 'central' + random
     * def universityTenant = 'university' + random
     * def collegeTenant = 'college' + random
@@ -51,7 +58,7 @@ Feature: mod-consortia integration tests
     * def patronUserToUpdateId = callonce uuid11
 
     # define consortium
-    * def consortiumId = callonce uuid12
+    * def consortiumId = uuids[3]
 
     # define main users
     * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
@@ -73,25 +80,50 @@ Feature: mod-consortia integration tests
     * def patronUserToUpdate = { id: '#(patronUserToUpdateId)', username: 'patron_user_to_update', password: 'patron_user_to_update_password', type: 'patron', tenant: '#(collegeTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
 
     # define custom login
-    * def login = read('classpath:common-consortia/initData.feature@Login')
+    * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
+
+    # capabilities granted to main users and to shadow consortiaAdmin
+    # (consortia.* and tags.* perms are attached by @SetupTenant — list only the rest here).
+    * table mainUserPerms
+      | name                                         |
+      | 'users.item.post'                            |
+      | 'users.item.get'                             |
+      | 'users.item.put'                             |
+      | 'users.item.delete'                          |
+      | 'users.collection.get'                       |
+      | 'user-tenants.collection.get'                |
+      | 'departments.item.post'                      |
+      | 'departments.item.get'                       |
+      | 'departments.item.put'                       |
+      | 'departments.item.delete'                    |
+      | 'departments.collection.get'                 |
+      | 'usergroups.item.post'                       |
+      | 'usergroups.item.get'                        |
+      | 'usergroups.item.put'                        |
+      | 'usergroups.item.delete'                     |
+      | 'usergroups.collection.get'                  |
+      | 'inventory-storage.instance-types.item.post' |
+      | 'inventory-storage.instance-types.item.get'  |
+      | 'inventory.instances.item.post'              |
+      | 'inventory.instances.item.get'               |
+      | 'inventory.instances.item.delete'            |
+      | 'login.item.post'                            |
+
+    # reusable features
+    * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
+    * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
+    * def deleteTenantAndEntitlement = read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement')
 
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', admin: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', admin: '#(universityUser1)'}
-    * call read('classpath:common-consortia/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', admin: '#(collegeUser1)'}
+    * call setupTenant { tenantId: '#(centralTenantId)', tenant: '#(centralTenant)', user: '#(consortiaAdmin)' }
+    * call setupTenant { tenantId: '#(universityTenantId)', tenant: '#(universityTenant)', user: '#(universityUser1)' }
+    * call setupTenant { tenantId: '#(collegeTenantId)', tenant: '#(collegeTenant)', user: '#(collegeUser1)' }
 
-    # create users in all tenants
-    * call read('classpath:common-consortia/create-users.feature@CreateUsers')
+    # attach capabilities to the local admins in each tenant
+    * call putCaps { tenant: '#(centralTenant)', user: '#(consortiaAdmin)', userPermissions: '#(mainUserPerms)' }
+    * call putCaps { tenant: '#(universityTenant)', user: '#(universityUser1)', userPermissions: '#(mainUserPerms)' }
+    * call putCaps { tenant: '#(collegeTenant)', user: '#(collegeUser1)', userPermissions: '#(mainUserPerms)' }
 
-    # add 'consortia.all' (for consortia management) and 'tags.all' (for publish coordinator tests) permissions to main users
-    * call login consortiaAdmin
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
-
-    * call login universityUser1
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
-
-    * call login collegeUser1
-    * call read('classpath:common-consortia/initData.feature@PutPermissions') { desiredPermissions: ['consortia.all', 'tags.all']}
 
   Scenario: Consortium api tests
     * call read('features/consortium.feature')
@@ -101,9 +133,6 @@ Feature: mod-consortia integration tests
 
   Scenario: verify and setup 'consortiaAdmin' for all tenants
     * call read('features/consortia-admin-verification-and-setup.feature')
-
-  Scenario: verify 'consortia-system-user' in all tenants
-    * call read('features/consortia-system-users-verification.feature')
 
   Scenario: User-Tenant associations api tests
     * call read('features/user-tenant-associations.feature')
@@ -130,6 +159,6 @@ Feature: mod-consortia integration tests
     * call read('features/sharing-patron-groups-setting.feature')
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(universityTenant)'}
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(collegeTenant)'}
-    * call read('classpath:common-consortia/initData.feature@DeleteTenant') { tenant: '#(centralTenant)'}
+    * call deleteTenantAndEntitlement { tenantId: '#(universityTenantId)' }
+    * call deleteTenantAndEntitlement { tenantId: '#(collegeTenantId)' }
+    * call deleteTenantAndEntitlement { tenantId: '#(centralTenantId)' }
