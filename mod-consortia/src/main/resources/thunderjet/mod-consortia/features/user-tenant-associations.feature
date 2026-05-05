@@ -66,16 +66,8 @@ Feature: Consortia User Tenant associations api tests
     And match response.users[0].active == true
 
     # 2. shadow 'centralUser1' has empty capabilities (in 'universityTenant')
-    * def tenant = universityTenant
-    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def okapitoken = karate.get('okapitoken')
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-    Given path '/users/capabilities'
-    And param query = 'userId=' + shadowCentralUser1Id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(universityTenant)', userId: '#(shadowCentralUser1Id)' }
+    * match caps.response.totalRecords == 0
 
     # re-login as consortiaAdmin after system token overwrites okapitoken
     * call login consortiaAdmin
@@ -160,17 +152,9 @@ Feature: Consortia User Tenant associations api tests
     * call putCaps { tenant: '#(universityTenant)', user: { id: '#(shadowCentralUser1Id)' }, userPermissions: '#(shadowUserPermissions)' }
 
     # 2. get updated capabilities of shadow 'centralUser1'
-    * def tenant = universityTenant
-    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def okapitoken = karate.get('okapitoken')
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-    Given path '/users/capabilities'
-    And param query = 'userId=' + shadowCentralUser1Id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords != 0
-    * def updatedNonEmptyCapabilitiesOfShadowCentralUser1 = response.userCapabilities
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(universityTenant)', userId: '#(shadowCentralUser1Id)' }
+    * match caps.response.totalRecords != 0
+    * def updatedNonEmptyCapabilitiesOfShadowCentralUser1 = caps.response.userCapabilities
 
     # re-login as consortiaAdmin after system token overwrites okapitoken
     * call login consortiaAdmin
@@ -196,16 +180,8 @@ Feature: Consortia User Tenant associations api tests
     And match response.isPrimary == false
 
     # 3. verify that capabilities of shadow 'centralUser1' after re-POST is not changed
-    * def tenant = universityTenant
-    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def okapitoken = karate.get('okapitoken')
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-    Given path '/users/capabilities'
-    And param query = 'userId=' + shadowCentralUser1Id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.userCapabilities == updatedNonEmptyCapabilitiesOfShadowCentralUser1
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(universityTenant)', userId: '#(shadowCentralUser1Id)' }
+    * match caps.response.userCapabilities == updatedNonEmptyCapabilitiesOfShadowCentralUser1
 
   # We have 'centralUser1' in 'centralTenant' and shadow 'centralUser1' in 'universityTenant'
   Scenario: If we DELETE real user all records related to this user should be deleted (con-9):
@@ -310,16 +286,8 @@ Feature: Consortia User Tenant associations api tests
     And match userTenants[0].isPrimary == false
 
     # 6. shadow 'universityUser2' has empty capabilities (in 'centralTenant')
-    * def tenant = centralTenant
-    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def okapitoken = karate.get('okapitoken')
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-    Given path '/users/capabilities'
-    And param query = 'userId=' + universityUser2.id
-    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(centralTenant)', userId: '#(universityUser2.id)' }
+    * match caps.response.totalRecords == 0
 
   # We have 'universityUser2' in 'universityTenant' and shadow 'universityUser2' in 'centralTenant'
   Scenario: If we DELETE real user all records related to this user should be deleted (con-11):
@@ -415,16 +383,8 @@ Feature: Consortia User Tenant associations api tests
     And match response.userTenants[0].isPrimary == false
 
     # 6. shadow 'universityUser1' has empty capabilities (in 'centralTenant')
-    * def tenant = centralTenant
-    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
-    * def okapitoken = karate.get('okapitoken')
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-    Given path '/users/capabilities'
-    And param query = 'userId=' + shadowUniversityUser1Id
-    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
+    * def caps = call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capabilities.feature') { tenant: '#(centralTenant)', userId: '#(shadowUniversityUser1Id)' }
+    * match caps.response.totalRecords == 0
 
   @Positive
   Scenario: Create and verify all details of shadow user
