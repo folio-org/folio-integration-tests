@@ -132,6 +132,10 @@ function fn() {
       password: 'admin'
     };
     config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org';
+  } else if (env === 'edev-folijet') {
+    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org';
+    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
   } else if (env == 'dev') {
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';

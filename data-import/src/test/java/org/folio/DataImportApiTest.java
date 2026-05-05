@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @FolioTest(team = "folijet", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DataImportApiTest extends TestBaseEureka {
+
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 
     public DataImportApiTest() {
@@ -22,6 +23,12 @@ class DataImportApiTest extends TestBaseEureka {
     @Test
     void dataImportMappingRuleChange() {
         feature("classpath:folijet/data-import/FAT-1117.feature")
+                .run();
+    }
+
+    @Test
+    void fat21038Contributors() {
+        feature("classpath:folijet/data-import/features/marc-records/marc-bibs/create/FAT-21038.feature")
                 .run();
     }
 
