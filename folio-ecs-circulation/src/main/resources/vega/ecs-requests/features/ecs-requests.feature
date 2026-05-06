@@ -100,24 +100,12 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
       | 'consortia.sharing-instances.item.post'           |
       | 'consortia.sharing-instances.collection.get'      |
 
-    * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken') { tenant: '#(universityTenant)' }
     * def shadowConsortiaAdmin = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
     * configure cookies = null
     * call putCaps { tenant: '#(universityTenant)', user: '#(shadowConsortiaAdmin)' }
 
-    * def sidecarToken = karate.get('okapitoken')
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(sidecarToken)', 'x-okapi-tenant': '#(universityTenant)' }
-    Given path 'capability-sets'
-    And param query = '(applicationId="app-requests-ecs*")'
-    And param limit = 50
-    When method GET
-    Then match [200, 404] contains responseStatus
-    * print 'DEBUG: all app-requests-ecs capability sets:', (responseStatus == 200 ? response : 'none')
-    * def allEcsSets = (responseStatus == 200 && response.capabilitySets) ? response.capabilitySets : []
-    * def bffCapSetIds = allEcsSets.filter(function(s){ return s.name && s.name.indexOf('circulation-bff_requests') >= 0 && s.name.indexOf('allowed') < 0 }).map(function(s){ return s.id })
-    * print 'DEBUG: circulation-bff requests capability sets (university):', bffCapSetIds
-    * if (bffCapSetIds.length > 0) karate.call(true, 'classpath:common-consortia/eureka/assign-capability-sets.feature', { tenant: universityTenant, userId: consortiaAdmin.id, capabilitySetIds: bffCapSetIds, okapitoken: sidecarToken })
-
+    # Re-login as consortia_admin to restore the central tenant okapitoken
+    # (putCaps calls getAuthorizationToken for universityTenant, overwriting okapitoken)
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
