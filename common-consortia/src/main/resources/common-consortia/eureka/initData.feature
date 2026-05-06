@@ -27,7 +27,9 @@ Feature: init data for consortia
     * call read('classpath:common/eureka/application.feature@applicationSearch')
     * def entitlementTamplate = read('classpath:common/eureka/samples/entitlement-entity.json')
     * def loadReferenceRecords = karate.get('tenantParams', {'loadReferenceData': false}).loadReferenceData
-    * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords
+    # add centralTenantId to tenant parameters if present. It is required for mod-search consortium-specific setup
+    * def centralTenantIdValue = karate.get('centralTenantId')
+    * def tenantParameters = 'loadSample=false,loadReference=' + loadReferenceRecords + (centralTenantIdValue ? ',centralTenantId=' + centralTenantIdValue : '')
     Given url baseUrl
     Given path 'entitlements'
     And param tenantParameters = tenantParameters
@@ -77,8 +79,8 @@ Feature: init data for consortia
           firstName: 'admin first name',
           lastName: 'admin last name',
           preferredContactTypeId: '002',
-          phone: '#(phone)',
-          mobilePhone: '#(mobilePhone)'
+          phone: '#(user.phone)',
+          mobilePhone: '#(user.mobilePhone)'
         }
       }
       """
@@ -118,6 +120,9 @@ Feature: init data for consortia
 
   @PostUser
   Scenario: Crate a user with credentials
+    # save caller's okapitoken so getAuthorizationToken's karate.set leak does not clobber it
+    * def callerOkapitoken = karate.get('okapitoken', null)
+
     # create a user
     * call read('classpath:common-consortia/eureka/keycloak.feature@getAuthorizationToken')
     * def okapitoken = karate.get('okapitoken')
@@ -131,12 +136,14 @@ Feature: init data for consortia
         active:  true,
         barcode: '#(uuid())',
         externalSystemId: '#(uuid())',
-        type: 'staff',
+        type: '#(user.type)',
         personal: {
           email: 'user@gmail.com',
           firstName: 'user first name',
           lastName: 'user last name',
-          preferredContactTypeId: '002'
+          preferredContactTypeId: '002',
+          phone: '#(user.phone)',
+          mobilePhone: '#(user.mobilePhone)'
         }
       }
       """
@@ -149,6 +156,9 @@ Feature: init data for consortia
     And request {username: '#(user.username)', password :'#(user.password)', userId: '#(user.id)'}
     When method POST
     Then status 201
+
+    # restore caller's okapitoken so the caller does not need to re-login
+    * if (callerOkapitoken != null) karate.set('okapitoken', callerOkapitoken)
 
   @PutCaps
   Scenario: Put additional caps to the user
@@ -169,7 +179,7 @@ Feature: init data for consortia
           var missingPermissions = []
           for (let i = 0; i < permissions.length; i += chunkSize) {
             var permissionsBatch = userPermissions.slice(i, i + chunkSize);
-            var result = karate.call('classpath:common-consortia/eureka/capabilities.feature', {userPermissions: permissionsBatch});
+            var result = karate.call('classpath:common-consortia/eureka/capabilities.feature@getCapabilities', {userPermissions: permissionsBatch});
             var foundCapabilities = result.response.capabilities;
 
             // Track which permissions were found
@@ -219,6 +229,7 @@ Feature: init data for consortia
 
   @Login
   Scenario: Login a user, then if successful set latest value for 'okapitoken'
+    * configure cookies = null
     Given path 'authn/login'
     And header x-okapi-tenant = tenant
     And request { username: '#(username)', password: '#(password)' }

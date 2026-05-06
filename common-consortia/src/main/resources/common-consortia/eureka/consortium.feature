@@ -2,7 +2,7 @@ Feature: Consortium object in api tests
 
   Background:
     * url baseUrl
-    * configure retry = { count: 20, interval: 40000 }
+    * configure retry = { count: 10, interval: 10000 }
     * configure headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
   @SetupConsortia

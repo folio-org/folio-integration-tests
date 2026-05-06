@@ -30,6 +30,7 @@ Feature: mod-notes integration tests
       | 'source-storage.records.item.get'                    |
       | 'source-storage.records.post'                        |
       | 'source-storage.snapshots.post'                      |
+      | 'source-storage.records.formatted.item.get'          |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')

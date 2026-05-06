@@ -2,7 +2,7 @@
 Feature: Create order line
   # parameters: id, orderId, fundId?, listUnitPrice?, listUnitPriceElectronic?, isPackage?, titleOrPackage?, paymentStatus?,
   # receiptStatus?, locations?, orderFormat?, quantity?, quantityElectronic?, checkinItems?, createInventory?, eresourceCreateInventory?,
-  # fundDistribution?, claimingActive?, claimingInterval?, suppressInstanceFromDiscovery?, productIds?, currency?, exchangeRate?
+  # eresourceMaterialType?, fundDistribution?, claimingActive?, claimingInterval?, suppressInstanceFromDiscovery?, productIds?, currency?, exchangeRate?
 
   Background:
     * print karate.info.scenarioName
@@ -37,6 +37,7 @@ Feature: Create order line
     * def productIds = karate.get("productIds", poLine.details.productIds)
     * def currency = karate.get("currency", null)
     * def exchangeRate = karate.get("exchangeRate", null)
+    * def eresourceMaterialType = karate.get("eresourceMaterialType", null)
 
     * set poLine.id = id
     * set poLine.purchaseOrderId = orderId
@@ -59,6 +60,7 @@ Feature: Create order line
     * set poLine.checkinItems = checkinItems
     * set poLine.physical.createInventory = createInventory
     * set poLine.eresource.createInventory = eresourceCreateInventory
+    * if (eresourceMaterialType != null) poLine.eresource.materialType = eresourceMaterialType
     * set poLine.fundDistribution = fundDistribution
     * set poLine.claimingActive = claimingActive
     * set poLine.claimingInterval = claimingInterval

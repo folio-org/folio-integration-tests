@@ -72,7 +72,7 @@
       "mod-inventory-storage",
       "mod-search"
     ],
-    "slackChannel": "#spitfire-backend"
+    "slackChannel": "#spitfire-notify"
   },
   {
     "team": "Thunderjet",
@@ -103,6 +103,7 @@
   {
     "team": "Vega",
     "modules": [
+      "folio-ecs-circulation",
       "mod-feesfines",
       "mod-patron-blocks",
       "mod-circulation",
@@ -144,5 +145,18 @@
       "mod-linked-data"
     ],
     "slackChannel": "#citation-dev"
+  },
+  {
+    "team": "Eureka",
+    "modules": [
+      "mgr-applications",
+      "mgr-tenants",
+      "mgr-tenant-entitlements",
+      "mod-users-keycloak",
+      "mod-roles-keycloak",
+      "mod-login-keycloak",
+      "mod-scheduler"
+    ],
+    "slackChannel": "#folio-eureka-support"
   }
 ]
