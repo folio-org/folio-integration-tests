@@ -2,7 +2,6 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
   Background:
     * url baseUrl
-    * callonce login admin
     * configure readTimeout = 600000
 
     * table modules
@@ -17,6 +16,8 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
       | 'mod-finance'               |
+      | 'mod-search'                |
+      | 'folio-custom-fields'       |
       | 'mod-fqm-manager'           |
       | 'mod-finance-storage'       |
       | 'mod-orders'                |
@@ -33,6 +34,11 @@ Feature: mod-consortia and mod-fqm-manager integration tests
       | 'consortia.all'                                                    |
       | 'inventory.instances.item.get'                                     |
       | 'fqm.entityTypes.collection.get'                                   |
+      | 'fqm.entityTypes.item.get'                                         |
+      | 'fqm.entityTypes.install.post'                                     |
+      | 'fqm.query.async.post'                                             |
+      | 'fqm.query.async.results.get'                                      |
+      | 'fqm.query.async.results.query.get'                                |
       | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
       | 'inventory-storage.classification-types.collection.get'            |
@@ -85,23 +91,30 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
     # generate test tenants' names
     * def random = callonce randomMillis
-    * def centralTenantId = uuid()
+    * def centralTenantUuid = uuid()
     * def centralTenant = 'central' + random
-    * def universityTenantId = uuid()
+    # InstallApplications forwards centralTenantId as a module tenant parameter; FQM expects the tenant/schema name.
+    * def centralTenantId = centralTenant
+    * karate.set('centralTenantId', centralTenantId)
+    * def universityTenantUuid = uuid()
     * def universityTenant = 'university' + random
+    * def collegeTenantUuid = uuid()
+    * def collegeTenant = 'college' + random
 
     # define users
     * def consortiaAdminId = '122b3d2b-4788-4f1e-9117-56daa91cb75d'
     * def consortiaAdmin = { id: '#(consortiaAdminId)', name: 'consortia_admin', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
 
     * def universityUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521413', username: 'university_user1', name: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
+    * def collegeUser1 = { id: '9d45643a-2d50-4f85-bfb0-71e6f62c7a45', username: 'college_user1', name: 'college_user1', password: 'college_user1_password', tenant: '#(collegeTenant)'}
 
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
-  Scenario: Create ['central', 'university'] tenants and set up admins
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
+  Scenario: Create ['central', 'university', 'college'] tenants and set up admins
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantUuid)', user: '#(universityUser1)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantUuid)', user: '#(collegeUser1)'}
 
   Scenario: Consortium api tests
     * call read('consortium.feature')
@@ -112,6 +125,10 @@ Feature: mod-consortia and mod-fqm-manager integration tests
   Scenario: Cross Tenant
     * call read('cross_tenant_et.feature')
 
-  Scenario: Destroy created ['university', 'central'] tenants
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}
+  Scenario: Cross Tenant Instance Query
+    * call read('cross_tenant_instance_query.feature')
+
+  Scenario: Destroy created ['central', 'university', 'college'] tenants
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantUuid)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantUuid)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(collegeTenantUuid)'}

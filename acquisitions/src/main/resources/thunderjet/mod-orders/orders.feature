@@ -345,6 +345,9 @@ Feature: mod-orders integration tests
   Scenario: P/E Mix synchronized change instance connection create new holdings and keep abandoned holdings
     * call read('features/pe-mix-synchronized-change-instance-connection-create-new-keep-holdings.feature')
 
+  Scenario: P/E Mix independent change instance connection find or create new and delete holdings after receiving piece in new location
+    * call read('features/pe-mix-change-instance-connection-find-create-delete-holdings.feature')
+
   Scenario: Item Appears Under Holdings After Instance Connection Change With Holding Setting Find Or Create
     * call read('features/item-under-holdings-after-instance-connection-change-find-or-create.feature')
 

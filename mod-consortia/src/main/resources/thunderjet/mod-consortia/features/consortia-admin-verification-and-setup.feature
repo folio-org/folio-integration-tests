@@ -76,16 +76,8 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.userTenants[0].tenantId == universityTenant
     And match response.userTenants[0].isPrimary == false
 
-    # 6. verify shadow 'consortiaAdmin' of 'universityTenant' has required permissions
-    * call login universityUser1
-    Given path 'perms/users'
-    And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    And match response.permissionUsers[0].userId == consortiaAdminId
-    And match response.permissionUsers[0].permissions == ['ui-users.perms.edit']
+    # 6. verify shadow 'consortiaAdmin' of 'universityTenant' has capability-sets
+    * call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capability-sets.feature') { tenant: '#(universityTenant)', userId: '#(consortiaAdminId)' }
 
     # For 'collegeTenant':
     # 7. shadow 'consortiaAdmin' has been saved in 'college_mod_users.users'
@@ -116,65 +108,10 @@ Feature: verify records for real/shadow 'consortiaAdmin' and make him consortia 
     And match response.userTenants[0].tenantId == collegeTenant
     And match response.userTenants[0].isPrimary == false
 
-    # 9. verify shadow 'consortiaAdmin' of 'collegeTenant' has required permissions
-    * call login collegeUser1
-    Given path 'perms/users'
-    And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    And match response.permissionUsers[0].userId == consortiaAdminId
-    And match response.permissionUsers[0].permissions == ['ui-users.perms.edit']
+    # 9. verify shadow 'consortiaAdmin' of 'collegeTenant' has capability-sets
+    * call read('classpath:thunderjet/mod-consortia/features/reusable/get-user-capability-sets.feature') { tenant: '#(collegeTenant)', userId: '#(consortiaAdminId)' }
 
-  Scenario: Add permissions of real 'consortiaAdmin' to all shadow 'consortiaAdmin':
-    * call login consortiaAdmin
+  Scenario: Add capabilities of real 'consortiaAdmin' to all shadow 'consortiaAdmin':
+    * call putCaps { tenant: '#(universityTenant)', user: '#(consortiaAdmin)', userPermissions: '#(mainUserPerms)' }
 
-    # get permissions of 'consortiaAdmin'
-    Given path 'perms/users'
-    And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    * def newPermissions = $.permissionUsers[0].permissions
-
-    # For 'universityTenant':
-    # get permissions of shadow 'consortiaAdmin' of 'universityTenant'
-    Given path 'perms/users'
-    And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    # add required permissions to shadow 'consortiaAdmin' of 'universityTenant'
-    * def permissionEntry = $.permissionUsers[0]
-    * def updatedPermissions = karate.append(newPermissions, permissionEntry.permissions)
-    And set permissionEntry.permissions = updatedPermissions
-
-    # update permissions of shadow 'consortiaAdmin' of 'universityTenant'
-    Given path 'perms/users', permissionEntry.id
-    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And request permissionEntry
-    When method PUT
-    Then status 200
-
-    # For 'collegeTenant':
-    # get permissions of shadow 'consortiaAdmin' of 'collegeTenant'
-    Given path 'perms/users'
-    And param query = 'userId=' + consortiaAdminId
-    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
-    When method GET
-    Then status 200
-
-    # add required permissions to shadow 'consortiaAdmin' of 'collegeTenant'
-    * def permissionEntry = $.permissionUsers[0]
-    * def updatedPermissions = karate.append(newPermissions, permissionEntry.permissions)
-    And set permissionEntry.permissions = updatedPermissions
-
-    # update permissions of shadow 'consortiaAdmin' of 'collegeTenant'
-    Given path 'perms/users', permissionEntry.id
-    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And request permissionEntry
-    When method PUT
-    Then status 200
+    * call putCaps { tenant: '#(collegeTenant)', user: '#(consortiaAdmin)', userPermissions: '#(mainUserPerms)' }

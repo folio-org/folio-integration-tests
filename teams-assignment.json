@@ -72,7 +72,7 @@
       "mod-inventory-storage",
       "mod-search"
     ],
-    "slackChannel": "#spitfire-backend"
+    "slackChannel": "#spitfire-notify"
   },
   {
     "team": "Thunderjet",
