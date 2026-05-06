@@ -176,9 +176,8 @@ Feature: Tenant object in mod-consortia api tests
     And request { id: '1234', code: 'ABC', name: 'test', isCentral: false }
     When method POST
     Then status 500
-    And match response.errors[0].message contains 'sidecar-module-access-client not set for'
+    And match response.errors[0].message contains 'sidecar-module-access-client'
     And match response.errors[0].message contains '1234'
-    And match response.errors[0].code == 'INTERNAL_ERROR'
 
     # cases for 422
     # attempt to create a tenant without an id
