@@ -48,7 +48,8 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     FEATURE_21("fund-distribution-can-be-changed-after-rollover-when-re-encumber-not-active", true),
     // moved from CrossModulesCriticalPathApiTest (TestRail group = Extended)
     FEATURE_22("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice-release-false", true),
-    FEATURE_23("over-encumbrance-for-fy-ledger-and-group", true);
+    FEATURE_23("over-encumbrance-for-fy-ledger-and-group", true),
+    FEATURE_24("open-order-when-balance-close-to-encumbered-available", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -254,5 +255,12 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void overEncumbranceCalculatedCorrectlyForFiscalYearLedgerAndGroup() {
     runFeatureTest(Feature.FEATURE_23.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C449361) Order Can Be Opened When Balance Is Close To The Encumbered Available Balance")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void openOrderWhenBalanceCloseToEncumberedAvailable() {
+    runFeatureTest(Feature.FEATURE_24.getFileName());
   }
 }
