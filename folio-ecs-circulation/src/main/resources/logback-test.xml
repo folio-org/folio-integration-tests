@@ -25,10 +25,7 @@
     <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
-    </root>
-
-    <root level="debug">
-        <appender-ref ref="RP" />
+        <appender-ref ref="RP"/>
     </root>
 
 </configuration>
