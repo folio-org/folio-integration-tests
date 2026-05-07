@@ -1,4 +1,3 @@
-@C365638
 Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fields
 
   # All steps in this scenario are performed via REST.
@@ -13,6 +12,7 @@ Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fiel
     * call read('classpath:folijet/data-import/global/auth.feature')
     * call read('classpath:folijet/data-import/global/common-functions.feature')
 
+  @C365638
   Scenario: FAT-21038 Verify mapping of contributors from MARC 1xx/7xx fields (Personal/Corporate/Meeting names with relator terms and codes)
 
     # ============================================================================
