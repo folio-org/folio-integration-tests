@@ -106,8 +106,6 @@ Feature: Cross-tenant holdings queries in mod-fqm-manager
     * def headersUniversity = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
     * configure headers = headersUniversity
 
-    # The shared FQM setup verifies entity types once before the query scenarios run.
-
     Given path 'entity-types', holdingsEntityTypeId
     And retry until responseStatus == 200
     When method GET

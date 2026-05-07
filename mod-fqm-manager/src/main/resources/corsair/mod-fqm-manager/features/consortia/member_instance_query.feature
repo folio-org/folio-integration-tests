@@ -31,8 +31,6 @@ Feature: Query member tenant instances in ECS
     Then status 201
 
     * configure headers = headersUniversity
-    # The shared FQM setup verifies entity types once before the query scenarios run.
-
     Given path 'entity-types', instanceEntityTypeId
     And retry until responseStatus == 200
     When method GET
