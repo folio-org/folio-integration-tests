@@ -18,11 +18,7 @@ Feature: Cross-tenant item queries in mod-fqm-manager
     Then status 200
     And match response.columns[*].name contains resultFields
 
-    # Cross-tenant execution flattens the item entity type in each affiliated tenant.
     * def itemQueryHelpers = 'classpath:corsair/mod-fqm-manager/features/consortia/cross_tenant_item_query_helpers.feature'
-    * call read(itemQueryHelpers + '@InstallEntityTypes') ({ tenant: centralTenant, user: consortiaAdmin, itemEntityTypeId: itemEntityTypeId })
-    * call read(itemQueryHelpers + '@InstallEntityTypes') ({ tenant: universityTenant, user: universityUser1, itemEntityTypeId: itemEntityTypeId })
-    * call read(itemQueryHelpers + '@InstallEntityTypes') ({ tenant: collegeTenant, user: collegeUser1, itemEntityTypeId: itemEntityTypeId })
 
     * def centralRef = call read(itemQueryHelpers + '@CreateReferenceData') ({ tenant: centralTenant, user: consortiaAdmin, codePrefix: 'cen' })
     * def universityRef = call read(itemQueryHelpers + '@CreateReferenceData') ({ tenant: universityTenant, user: universityUser1, codePrefix: 'uni' })
