@@ -128,6 +128,9 @@ Feature: mod-consortia and mod-fqm-manager integration tests
   Scenario: Cross Tenant Instance Query
     * call read('cross_tenant_instance_query.feature')
 
+  Scenario: Cross Tenant Item Query
+    * call read('cross_tenant_item_query.feature')
+
   Scenario: Destroy created ['central', 'university', 'college'] tenants
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantUuid)'}
     * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantUuid)'}
