@@ -18,9 +18,6 @@ Feature: mod-login-keycloak integration tests setup
       | 'login.item.post'                     |
       | 'login.item.delete'                   |
       | 'login.password.validate'             |
-      | 'login.password-reset-action.post'    |
-      | 'login.password-reset-action.get'     |
-      | 'login.password-reset.post'           |
       | 'login.credentials-existence.get'     |
       | 'auth.token.post'                     |
       | 'auth.refreshtoken.post'              |
