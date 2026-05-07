@@ -121,6 +121,7 @@ Feature: Lender Virtual Patron Group Update
     Then status 201
     And match $.status == 'CREATED'
     And match $.patron.id == virtualPatronId
+    And match $.patron.group == secondGroupName
 
     * url baseUrl
     Given path 'users', virtualPatronId
