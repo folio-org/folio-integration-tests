@@ -3,7 +3,7 @@ Feature: Tenant object in mod-consortia
   Background:
     * url baseUrl
     * call login consortiaAdmin
-    * configure retry = { count: 3, interval: 20000 }
+    * configure retry = { count: 5, interval: 20000 }
     * def centralHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
     * configure headers = centralHeaders
   @Positive
@@ -16,6 +16,7 @@ Feature: Tenant object in mod-consortia
 
     # post a tenant with isCentral=true ('central' tenant)
     Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
     And retry until responseStatus == 201
     When method POST

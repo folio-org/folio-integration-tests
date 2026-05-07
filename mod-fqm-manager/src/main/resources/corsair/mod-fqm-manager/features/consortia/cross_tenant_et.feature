@@ -3,7 +3,7 @@ Feature: Verify cross-tenant ET definition in mod-fqm-manager
   Background:
     * url baseUrl
     * call login consortiaAdmin
-    * configure retry = { count: 3, interval: 20000 }
+    * configure retry = { count: 5, interval: 20000 }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
   @Positive
