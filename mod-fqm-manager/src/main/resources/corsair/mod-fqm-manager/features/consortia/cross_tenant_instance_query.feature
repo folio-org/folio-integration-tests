@@ -18,26 +18,6 @@ Feature: Cross-tenant instance queries in mod-fqm-manager
     Then status 200
     And match response.columns[*].name contains resultFields
 
-    # Cross-tenant execution flattens the entity type in each affiliated tenant, so the member tenants need it too.
-    # The shared FQM setup verifies these once before the query scenarios run.
-    * call login universityUser1
-    * configure retry = { count: 3, interval: 15000 }
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json' }
-
-    Given path 'entity-types', instanceEntityTypeId
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-
-    * call login collegeUser1
-    * configure retry = { count: 3, interval: 15000 }
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': 'application/json' }
-
-    Given path 'entity-types', instanceEntityTypeId
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-
     * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
