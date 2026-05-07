@@ -98,4 +98,44 @@ class ModLinkedDataTest extends TestBaseEureka {
   void hubAsSubjectOfWork() {
     runFeatureTest("hub/hubs-as-subject.feature");
   }
+
+  @Test
+  void getProfileById() {
+    runFeatureTest("profiles/get-profile-by-id.feature");
+  }
+
+  @Test
+  void getProfileMetadataByResourceType() {
+    runFeatureTest("profiles/get-profile-metadata-by-resource-type.feature");
+  }
+
+  @Test
+  void preferredProfile() {
+    runFeatureTest("profiles/preferred-profile.feature");
+  }
+
+  @Test
+  void profileSettings() {
+    runFeatureTest("profiles/profile-settings.feature");
+  }
+
+  @Test
+  void authorityAssignmentCheck() {
+    runFeatureTest("authority-assignment-check/authority-assignment-check.feature");
+  }
+
+  @Test
+  void getVocabularyByName() {
+    runFeatureTest("vocabulary/vocabulary.feature");
+  }
+
+  @Test
+  void graphCleaning() {
+    runFeatureTest("graph-cleaning/graph-cleaning.feature");
+  }
+
+  @Test
+  void reindex() {
+    runFeatureTest("reindex/reindex.feature");
+  }
 }
