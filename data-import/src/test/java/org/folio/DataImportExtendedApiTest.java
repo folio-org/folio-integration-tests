@@ -4,6 +4,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.*;
 
 @FolioTest(team = "folijet", module = "data-import")
@@ -13,7 +14,7 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 
     public DataImportExtendedApiTest() {
-        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
     }
 
     @Test
