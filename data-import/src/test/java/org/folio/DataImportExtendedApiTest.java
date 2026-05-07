@@ -4,38 +4,21 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 
 @FolioTest(team = "folijet", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class DataImportApiTest extends TestBaseEureka {
+public class DataImportExtendedApiTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 
-    public DataImportApiTest() {
+    public DataImportExtendedApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
     }
 
     @Test
-    void dataImportMappingRuleChange() {
-        feature("classpath:folijet/data-import/FAT-1117.feature")
-                .run();
-    }
-
-    @Test
-    void dataImportModCopyCat() {
-        feature("classpath:folijet/data-import/mod-copycat.feature")
-                .run();
-    }
-
-    @Test
-    void dataImportTest() {
-        feature("classpath:folijet/data-import/features/")
-                .threadCount(3)
+    void fat21038Contributors() {
+        feature("classpath:folijet/data-import/features/marc-records/marc-bibs/create/FAT-21038.feature")
                 .run();
     }
 
@@ -59,4 +42,5 @@ class DataImportApiTest extends TestBaseEureka {
                     .run();
         }
     }
+
 }

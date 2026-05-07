@@ -1,3 +1,4 @@
+@C365638
 Feature: FAT-21038 Verify revision to relator term/code handling for 1xx7xx fields
 
   # All steps in this scenario are performed via REST.
