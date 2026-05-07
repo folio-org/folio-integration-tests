@@ -20,7 +20,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
   @C773214
   Scenario: Create BORROWING-PICKUP transaction with selfBorrowing and verify full status lifecycle
 
-    # Precondition: create an item in Available status in inventory
     * def itemEntityRequest = read('classpath:volaris/mod-dcb/features/samples/item/item-entity-request.json')
     * itemEntityRequest.id = sbItemId
     * itemEntityRequest.barcode = sbItemBarcode
@@ -33,7 +32,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
     When method POST
     Then status 201
 
-    # Step 1: Create DCB transaction with BORROWING-PICKUP role and selfBorrowing=true
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     * def createDCBTransactionRequest = read('classpath:volaris/mod-dcb/features/samples/transaction/create-dcb-transaction.json')
@@ -58,7 +56,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
     And match $.item.barcode == sbItemBarcode
     And match $.patron.id == patronId31
 
-    # Step 2: Verify transaction status is CREATED
     * def orgPathStatus = '/transactions/' + sbTransactionId + '/status'
     * def newPathStatus = proxyCall == true ? proxyPath+orgPathStatus : orgPathStatus
     Given path newPathStatus
@@ -68,7 +65,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
     And match $.status == 'CREATED'
     And match $.role == 'BORROWING-PICKUP'
 
-    # Step 3: Check in item at pickup service point
     * url baseUrl
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
@@ -85,7 +81,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
     Then status 200
     And match $.status.name == 'Awaiting pickup'
 
-    # Step 4: Verify transaction status is AWAITING_PICKUP
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     Given path newPathStatus
@@ -94,7 +89,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
     When method GET
     Then status 200
 
-    # Step 5: Check out item to patron
     * url baseUrl
     * def checkOutByBarcodeId = call uuid1
     * def checkOutByBarcodeEntityRequest = read('classpath:volaris/mod-dcb/features/samples/check-out/check-out-by-barcode-entity-request.json')
@@ -112,7 +106,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
     Then status 200
     And match $.status.name == 'Checked out'
 
-    # Step 6: Verify transaction status is ITEM_CHECKED_OUT
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     Given path newPathStatus
@@ -121,7 +114,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
     When method GET
     Then status 200
 
-    # Step 7: Check in item at home service point
     * url baseUrl
     * def intCheckInDate = call read('classpath:volaris/mod-dcb/features/util/get-time-now-function.js')
     * def checkInRequest = read('classpath:volaris/mod-dcb/features/samples/check-in/check-in-by-barcode-entity-request.json')
@@ -138,7 +130,6 @@ Feature: Testing Borrowing-Pickup Self-Borrowing Flow
     Then status 200
     And match $.status.name == 'Available'
 
-    # Step 8: Verify transaction status is CLOSED
     * def baseUrlNew = proxyCall == true ? edgeUrl : baseUrl
     * url baseUrlNew
     Given path newPathStatus
