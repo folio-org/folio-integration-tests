@@ -135,6 +135,11 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("pickup-flow-update.feature");
   }
 
+  @Test
+  void testBorrowingPickupSelfBorrowing() {
+    runFeatureTest("borrowing-pickup-self-borrowing.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
