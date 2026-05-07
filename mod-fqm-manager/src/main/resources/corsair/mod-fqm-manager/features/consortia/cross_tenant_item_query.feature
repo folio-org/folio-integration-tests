@@ -8,7 +8,7 @@ Feature: Cross-tenant item queries in mod-fqm-manager
     * def resultFields = ['items.id', 'items.created_date', 'items.tenant_id', 'holdings.tenant_id', 'instances.tenant_id', 'instances.shared', 'instances.source']
 
   @Positive @C552521
-  Scenario: From the central tenant, item queries return local and shared-instance items from all affiliated tenants
+  Scenario: [Items] [Central tenant] Query returns items for local and shared instances from all tenants
     * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 

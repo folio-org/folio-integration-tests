@@ -8,7 +8,7 @@ Feature: Query member tenant holdings in ECS
     * def resultFields = ['holdings.id', 'holdings.instance_id', 'holdings.tenant_id', 'holdings.tenant_name', 'instance.title']
 
   @Positive
-  Scenario: Member tenant holdings query returns local holdings and holdings for shared central instances
+  Scenario: [Holdings] [Member tenant] Query returns local holdings and holdings for shared instances
     * def instanceTypeId = uuid()
     * def holdingsSourceId = uuid()
     * def sharedInstanceId = uuid()

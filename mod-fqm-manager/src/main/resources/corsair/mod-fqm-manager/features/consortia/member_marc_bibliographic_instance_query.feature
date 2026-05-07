@@ -7,7 +7,7 @@ Feature: Query member tenant instances with MARC bibliographic in ECS
     * def resultFields = ['instance.id', 'instance.title', 'instance.tenant_id', 'instance.shared']
 
   @Positive
-  Scenario: [Instances with MARC bibliographic] [Member tenant] Cross-tenant searching for instances that have MARC bibliographic data is enabled
+  Scenario: [Instances with MARC bibliographic] [Member tenant] Query returns local and shared instances
     * def instanceTypeId = uuid()
     * def sharedInstanceId = uuid()
     * def memberInstanceId = uuid()

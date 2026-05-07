@@ -8,7 +8,7 @@ Feature: Cross-tenant instance queries in mod-fqm-manager
     * def resultFields = ['instance.id', 'instance.title', 'instance.source', 'instance.shared', 'instance.tenant_id', 'instance.tenant_name']
 
   @Positive
-  Scenario: From the central tenant, cross-tenant queries include all tenant affiliations
+  Scenario: [Instances] [Central tenant] Query returns instances from central and member tenants
     * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 

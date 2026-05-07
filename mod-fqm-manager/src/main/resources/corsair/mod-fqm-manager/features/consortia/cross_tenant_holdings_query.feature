@@ -8,7 +8,7 @@ Feature: Cross-tenant holdings queries in mod-fqm-manager
     * def resultFields = ['holdings.id', 'holdings.instance_id', 'holdings.tenant_id', 'holdings.tenant_name', 'instance.title']
 
   @Positive
-  Scenario: From the central tenant, holdings queries include holdings for local and shared instances
+  Scenario: [Holdings] [Central tenant] Query returns holdings for local and shared instances from all tenants
     * def instanceTypeId = uuid()
     * def holdingsSourceId = uuid()
     * def centralInstitutionId = uuid()

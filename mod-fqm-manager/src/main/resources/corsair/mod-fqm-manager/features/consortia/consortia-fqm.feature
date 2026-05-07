@@ -137,25 +137,25 @@ Feature: mod-consortia and mod-fqm-manager integration tests
   Scenario: Cross Tenant
     * call read('cross_tenant_et.feature')
 
-  Scenario: Cross Tenant Instance Query
+  Scenario: [Instances] [Central tenant] Query returns instances from central and member tenants
     * call read('cross_tenant_instance_query.feature')
 
-  Scenario: Cross Tenant Holdings Query
+  Scenario: [Holdings] [Central tenant] Query returns holdings for local and shared instances from all tenants
     * call read('cross_tenant_holdings_query.feature')
 
-  Scenario: Cross Tenant Item Query
+  Scenario: [Items] [Central tenant] Query returns items for local and shared instances from all tenants
     * call read('cross_tenant_item_query.feature')
 
-  Scenario: [Instances with MARC bibliographic] [Central tenant] Cross-tenant searching for instances that have MARC bibliographic data is enabled
+  Scenario: [Instances with MARC bibliographic] [Central tenant] Query returns instances from central and member tenants
     * call read('cross_tenant_marc_bibliographic_instance_query.feature')
 
-  Scenario: Member tenant instance query returns central shared and member local instances
+  Scenario: [Instances] [Member tenant] Query returns local and shared instances
     * call read('member_instance_query.feature')
 
-  Scenario: Member tenant holdings query returns local holdings and holdings for shared central instances
+  Scenario: [Holdings] [Member tenant] Query returns local holdings and holdings for shared instances
     * call read('member_holdings_query.feature')
 
-  Scenario: [Instances with MARC bibliographic] [Member tenant] Cross-tenant searching for instances that have MARC bibliographic data is enabled
+  Scenario: [Instances with MARC bibliographic] [Member tenant] Query returns local and shared instances
     * call read('member_marc_bibliographic_instance_query.feature')
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
