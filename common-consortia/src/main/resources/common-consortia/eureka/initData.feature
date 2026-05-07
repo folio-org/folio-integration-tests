@@ -182,16 +182,16 @@ Feature: init data for consortia
             var result = karate.call('classpath:common-consortia/eureka/capabilities.feature@getCapabilities', {userPermissions: permissionsBatch});
             var foundCapabilities = result.response.capabilities;
 
-          // Track which permissions were found
+            // Track which permissions were found
             for (let j = 0; j < foundCapabilities.length; j++) {
               permissionsFound.push(foundCapabilities[j].permission);
             }
 
-          // Add capability IDs
+            // Add capability IDs
             capabilityIds = capabilityIds.concat(foundCapabilities.map(x => x.id));
           }
 
-        // Find missing permissions
+          // Find missing permissions
           missingPermissions = permissions.filter(p => !permissionsFound.includes(p));
 
           karate.log('capabilityIds: # #', capabilityIds.length, capabilityIds);
