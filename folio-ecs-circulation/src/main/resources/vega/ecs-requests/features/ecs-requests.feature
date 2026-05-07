@@ -76,6 +76,13 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * eval karate.set('centralTenantId', centralTenant)
 
   Scenario: create and initialize central and university tenants
+    # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
+    # Uses abortedStepsShouldPass so this is a no-op when the tenants don't exist yet.
+    * configure abortedStepsShouldPass = true
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantUuid)' }
+    * configure abortedStepsShouldPass = false
+
     * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
 
