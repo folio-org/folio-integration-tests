@@ -49,7 +49,8 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     // moved from CrossModulesCriticalPathApiTest (TestRail group = Extended)
     FEATURE_22("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice-release-false", true),
     FEATURE_23("over-encumbrance-for-fy-ledger-and-group", true),
-    FEATURE_24("open-order-when-balance-close-to-encumbered-available", true);
+    FEATURE_24("open-order-when-balance-close-to-encumbered-available", true),
+    FEATURE_25("expense-class-percent-expended-when-budget-over-expended", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -262,5 +263,12 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void openOrderWhenBalanceCloseToEncumberedAvailable() {
     runFeatureTest(Feature.FEATURE_24.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C496115) Expense Class Percent Of Total Expended Calculated Correctly When Budget Over Expended")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void expenseClassPercentExpendedWhenBudgetOverExpended() {
+    runFeatureTest(Feature.FEATURE_25.getFileName());
   }
 }
