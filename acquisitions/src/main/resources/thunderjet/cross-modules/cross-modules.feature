@@ -334,3 +334,6 @@ Feature: cross-module integration tests
 
   Scenario: Order can be opened when balance is close to the encumbered available balance
     * call read('features/open-order-when-balance-close-to-encumbered-available.feature')
+
+  Scenario: Expense Class Percent Of Total Expended Calculated Correctly When Budget Over Expended
+    * call read('features/expense-class-percent-expended-when-budget-over-expended.feature')
