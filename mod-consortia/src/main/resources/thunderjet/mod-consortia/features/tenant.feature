@@ -245,8 +245,11 @@ Feature: Tenant object in mod-consortia api tests
     And match response.totalRecords == 0
 
     # post 'centralTenant' (isCentral = true)
+    # retry on transient 5xx — env-side system-user provisioning can lag briefly after entitlement
+    # (custom field needs system user be created before adding tenant)
     Given path 'consortia', consortiumId, 'tenants'
     And request { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(centralTenant)', code: 'ABC', name: 'Central tenants name', isCentral: true, isDeleted: false }
@@ -477,9 +480,12 @@ Feature: Tenant object in mod-consortia api tests
   # This is for registering 'universityTenant'
   Scenario: Do POST a non-central tenant (isCentral = false), GET list of tenant(s), check value of 'setupStatus'
     # post 'universityTenant' (isCentral = false)
+    # retry on transient 5xx — env-side system-user provisioning can lag briefly after entitlement
+    # (custom field needs system user be created before adding tenant)
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
     And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name', isCentral: false, isDeleted: false }
@@ -531,9 +537,12 @@ Feature: Tenant object in mod-consortia api tests
   # This is for registering 'collegeTenant'
   Scenario: Do POST a non-central tenant (isCentral = false), GET list of tenant(s), check value of 'setupStatus'
     # post 'collegeTenant' (isCentral = false)
+    # retry on transient 5xx — env-side system-user provisioning can lag briefly after entitlement
+    # (custom field needs system user be created before adding tenant)
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
     And request { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(collegeTenant)', code: 'QWE', name: 'College tenants name', isCentral: false, isDeleted: false }
@@ -664,9 +673,12 @@ Feature: Tenant object in mod-consortia api tests
   Scenario: Re-Add soft deleted tenant.
     # 1.  re-post 'universityTenant' (isCentral = false) it should be re-enabled
     #     previous code or name can be used to re-add tenant (code 'XYZ' is already used by itself as soft deleted tenant)
+    # retry on transient 5xx — env-side system-user provisioning can lag briefly after entitlement
+    # (custom field needs system user be created before adding tenant)
     Given path 'consortia', consortiumId, 'tenants'
     And param adminUserId = consortiaAdmin.id
     And request { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name 2', isCentral: false }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(universityTenant)', code: 'XYZ', name: 'University tenants name 2', isCentral: false, isDeleted:false }
