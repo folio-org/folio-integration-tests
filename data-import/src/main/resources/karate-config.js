@@ -125,13 +125,13 @@ function fn() {
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
     config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
-    config.prototypeTenant = 'consortium';
-    config.admin = {
-      tenant: 'consortium',
-      name: 'consortium_admin',
-      password: 'admin'
-    };
     config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org';
+    config.prototypeTenant = 'consortium';
+    config.admin = {tenant: 'consortium', name: 'consortium_admin', password: 'admin'};
+  } else if (env === 'edev-folijet') {
+    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org';
+    config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
   } else if (env == 'dev') {
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';
