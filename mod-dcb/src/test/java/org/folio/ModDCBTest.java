@@ -136,6 +136,11 @@ public class ModDCBTest extends TestBaseEureka {
   }
 
   @Test
+  void testBorrowingPickupSelfBorrowing() {
+    runFeatureTest("borrowing-pickup-self-borrowing.feature");
+  }
+
+  @Test
   void testLenderPatronGroupUpdate() {
     runFeatureTest("lender-patron-group-update.feature");
   }
