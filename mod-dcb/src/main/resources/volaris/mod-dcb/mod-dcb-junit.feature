@@ -69,6 +69,7 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.service-points.item.post'                      |
       | 'inventory-storage.service-points.item.put'                       |
       | 'inventory.instances.item.post'                                   |
+      | 'inventory.items.item.get'                                        |
       | 'inventory.items.item.post'                                       |
       | 'lost-item-fees-policies.item.post'                               |
       | 'overdue-fines-policies.item.post'                                |
@@ -94,6 +95,7 @@ Feature: mod-dcb integration tests
       | 'usergroups.item.post'                                            |
       | 'inventory-storage.service-points.item.post'                      |
       | 'inventory-storage.items.item.get'                                |
+      | 'inventory.items.item.get'                                        |
       | 'inventory.items.item.post'                                       |
       | 'inventory.instances.item.post'                                   |
       | 'inventory-storage.instance-types.item.post'                      |
