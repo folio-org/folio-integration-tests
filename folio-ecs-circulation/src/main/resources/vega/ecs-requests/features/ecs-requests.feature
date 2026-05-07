@@ -65,6 +65,8 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
     * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
     * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
+    * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
+    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature')
 
     # Fixed UUIDs for inventory entities shared across scenarios
     * callonce read('classpath:vega/ecs-requests/ecs-requests-variables.feature')
@@ -85,20 +87,21 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * call setupTenantForConsortia { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'CON' }
     * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
 
+    # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant requests
     * table userPermissions
-      | name                                              |
-      | 'circulation.requests.item.post'                  |
-      | 'circulation.requests.item.get'                   |
+      | name                                                  |
+      | 'circulation.requests.item.post'                      |
+      | 'circulation.requests.item.get'                       |
       | 'circulation-bff.requests.allowed-service-points.get' |
-      | 'circulation-bff.requests.post'                   |
-      | 'inventory.instances.item.get'                    |
-      | 'inventory.items.item.get'                        |
-      | 'inventory-storage.holdings.item.get'             |
-      | 'user-tenants.collection.get'                     |
-      | 'consortia.user-tenants.collection.get'           |
-      | 'consortia.user-tenants.item.post'                |
-      | 'consortia.sharing-instances.item.post'           |
-      | 'consortia.sharing-instances.collection.get'      |
+      | 'circulation-bff.requests.post'                       |
+      | 'inventory.instances.item.get'                        |
+      | 'inventory.items.item.get'                            |
+      | 'inventory-storage.holdings.item.get'                 |
+      | 'user-tenants.collection.get'                         |
+      | 'consortia.user-tenants.collection.get'               |
+      | 'consortia.user-tenants.item.post'                    |
+      | 'consortia.sharing-instances.item.post'               |
+      | 'consortia.sharing-instances.collection.get'          |
 
     * def shadowConsortiaAdmin = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
     * configure cookies = null
@@ -109,7 +112,7 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
-    # Wait for consortium registration to propagate through Kafka (mod-search creates consortium index asynchronously)
+    # Wait for consortium registration to propagate through Kafka
     * configure retry = { count: 20, interval: 30000 }
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     Given path 'user-tenants'
@@ -117,7 +120,6 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     And retry until responseStatus == 200
     When method GET
     Then status 200
-    * print 'DEBUG: consortium propagated, user-tenants response:', response
 
   Scenario: initialize mod-search indices for central tenant
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
@@ -128,7 +130,6 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     And request {}
     When method POST
     Then status 200
-    * print 'DEBUG: mod-search reindex triggered for central tenant'
 
   Scenario: setup inventory data in central tenant
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
@@ -155,17 +156,17 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     Then status 201
 
     Given path 'instance-types'
-    And request { id: '#(ecsInstanceTypeId)', name: 'ECS Instance Type Central', code: 'ECSI-CT', source: 'local' }
+    And request { id: '#(ecsInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
     When method POST
     Then status 201
 
     Given path 'loan-types'
-    And request { id: '#(ecsLoanTypeId)', name: 'ECS Loan Type Central' }
+    And request { id: '#(ecsLoanTypeId)', name: 'ECS Loan Type' }
     When method POST
     Then status 201
 
     Given path 'material-types'
-    And request { id: '#(ecsMaterialTypeId)', name: 'ECS Material Type Central' }
+    And request { id: '#(ecsMaterialTypeId)', name: 'ECS Material Type' }
     When method POST
     Then status 201
 
@@ -216,17 +217,17 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     Then status 201
 
     Given path 'instance-types'
-    And request { id: '#(uniInstanceTypeId)', name: 'ECS Instance Type University', code: 'ECSI-UT', source: 'local' }
+    And request { id: '#(uniInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
     When method POST
     Then status 201
 
     Given path 'loan-types'
-    And request { id: '#(uniLoanTypeId)', name: 'ECS Loan Type University' }
+    And request { id: '#(uniLoanTypeId)', name: 'ECS Loan Type' }
     When method POST
     Then status 201
 
     Given path 'material-types'
-    And request { id: '#(uniMaterialTypeId)', name: 'ECS Material Type University' }
+    And request { id: '#(uniMaterialTypeId)', name: 'ECS Material Type' }
     When method POST
     Then status 201
 
@@ -263,263 +264,37 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     When method PUT
     Then status 204
 
-    # Central tenant circulation policies
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
-    * def centralLoanPolicyId = uuid()
-    Given path 'loan-policy-storage/loan-policies'
-    And request
-      """
-      {
-        "id": "#(centralLoanPolicyId)",
-        "name": "ECS Loan Policy Central",
-        "loanable": true,
-        "loansPolicy": {
-          "profileId": "Rolling",
-          "period": { "duration": 1, "intervalId": "Months" },
-          "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE"
-        },
-        "renewable": true,
-        "renewalsPolicy": {
-          "unlimited": false,
-          "numberAllowed": 3,
-          "renewFromId": "CURRENT_DUE_DATE",
-          "differentPeriod": false
-        }
-      }
-      """
-    When method POST
-    Then status 201
+    * call setupCirculationPolicies { tenant: '#(centralTenant)', okapitoken: '#(okapitoken)', policyLabel: 'Central' }
 
-    * def centralLostItemFeePolicyId = uuid()
-    Given path 'lost-item-fees-policies'
-    And request
-      """
-      {
-        "id": "#(centralLostItemFeePolicyId)",
-        "name": "ECS Lost Item Fee Policy Central",
-        "itemAgedLostOverdue": { "duration": 1, "intervalId": "Months" },
-        "patronBilledAfterAgedLost": { "duration": 1, "intervalId": "Months" },
-        "lostItemChargeFeeFine": { "duration": 6, "intervalId": "Months" },
-        "chargeAmountItem": { "amount": 0.00, "chargeType": "actualCost" },
-        "lostItemProcessingFee": 0.00,
-        "chargeAmountItemPatron": true,
-        "chargeAmountItemSystem": true,
-        "lostItemReturned": "Charge",
-        "replacedLostItemProcessingFee": true,
-        "replacementProcessingFee": 0.00,
-        "replacementAllowed": true
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def centralOverdueFinePolicyId = uuid()
-    Given path 'overdue-fines-policies'
-    And request
-      """
-      {
-        "id": "#(centralOverdueFinePolicyId)",
-        "name": "ECS Overdue Fine Policy Central",
-        "overdueFine": { "quantity": 0.00, "intervalId": "hour" },
-        "overdueRecallFine": { "quantity": 0.00, "intervalId": "hour" },
-        "gracePeriodRecall": false,
-        "maxOverdueFine": 0.00,
-        "forgiveOverdueFine": false,
-        "maxOverdueRecallFine": 0.00
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def centralPatronNoticePolicyId = uuid()
-    Given path 'patron-notice-policy-storage/patron-notice-policies'
-    And request
-      """
-      {
-        "id": "#(centralPatronNoticePolicyId)",
-        "name": "ECS Patron Notice Policy Central",
-        "active": false,
-        "loanNotices": [],
-        "feeFineNotices": [],
-        "requestNotices": []
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def centralRequestPolicyId = uuid()
-    Given path 'request-policy-storage/request-policies'
-    And request
-      """
-      {
-        "id": "#(centralRequestPolicyId)",
-        "name": "ECS Request Policy Central",
-        "requestTypes": ["Hold", "Page", "Recall"]
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def centralRules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + centralLoanPolicyId + ' o ' + centralOverdueFinePolicyId + ' i ' + centralLostItemFeePolicyId + ' r ' + centralRequestPolicyId + ' n ' + centralPatronNoticePolicyId
-    Given path 'circulation-rules-storage'
-    And request { "rulesAsText": "#(centralRules)" }
-    When method PUT
-    Then status 204
-
-    # Enable TLR for central tenant
-    * def centralTlrSettingsId = uuid()
-    Given path 'circulation/settings'
-    And request { id: '#(centralTlrSettingsId)', name: 'TLR', value: { titleLevelRequestsFeatureEnabled: true, tlrHoldShouldFollowCirculationRules: false, createTitleLevelRequestsByDefault: false } }
-    When method POST
-    Then match [201, 422] contains responseStatus
-
-    # University tenant circulation policies
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-
-    * def uniLoanPolicyId = uuid()
-    Given path 'loan-policy-storage/loan-policies'
-    And request
-      """
-      {
-        "id": "#(uniLoanPolicyId)",
-        "name": "ECS Loan Policy University",
-        "loanable": true,
-        "loansPolicy": {
-          "profileId": "Rolling",
-          "period": { "duration": 1, "intervalId": "Months" },
-          "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE"
-        },
-        "renewable": true,
-        "renewalsPolicy": {
-          "unlimited": false,
-          "numberAllowed": 3,
-          "renewFromId": "CURRENT_DUE_DATE",
-          "differentPeriod": false
-        }
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def uniLostItemFeePolicyId = uuid()
-    Given path 'lost-item-fees-policies'
-    And request
-      """
-      {
-        "id": "#(uniLostItemFeePolicyId)",
-        "name": "ECS Lost Item Fee Policy University",
-        "itemAgedLostOverdue": { "duration": 1, "intervalId": "Months" },
-        "patronBilledAfterAgedLost": { "duration": 1, "intervalId": "Months" },
-        "lostItemChargeFeeFine": { "duration": 6, "intervalId": "Months" },
-        "chargeAmountItem": { "amount": 0.00, "chargeType": "actualCost" },
-        "lostItemProcessingFee": 0.00,
-        "chargeAmountItemPatron": true,
-        "chargeAmountItemSystem": true,
-        "lostItemReturned": "Charge",
-        "replacedLostItemProcessingFee": true,
-        "replacementProcessingFee": 0.00,
-        "replacementAllowed": true
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def uniOverdueFinePolicyId = uuid()
-    Given path 'overdue-fines-policies'
-    And request
-      """
-      {
-        "id": "#(uniOverdueFinePolicyId)",
-        "name": "ECS Overdue Fine Policy University",
-        "overdueFine": { "quantity": 0.00, "intervalId": "hour" },
-        "overdueRecallFine": { "quantity": 0.00, "intervalId": "hour" },
-        "gracePeriodRecall": false,
-        "maxOverdueFine": 0.00,
-        "forgiveOverdueFine": false,
-        "maxOverdueRecallFine": 0.00
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def uniPatronNoticePolicyId = uuid()
-    Given path 'patron-notice-policy-storage/patron-notice-policies'
-    And request
-      """
-      {
-        "id": "#(uniPatronNoticePolicyId)",
-        "name": "ECS Patron Notice Policy University",
-        "active": false,
-        "loanNotices": [],
-        "feeFineNotices": [],
-        "requestNotices": []
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def uniRequestPolicyId = uuid()
-    Given path 'request-policy-storage/request-policies'
-    And request
-      """
-      {
-        "id": "#(uniRequestPolicyId)",
-        "name": "ECS Request Policy University",
-        "requestTypes": ["Hold", "Page", "Recall"]
-      }
-      """
-    When method POST
-    Then status 201
-
-    * def uniRules = 'priority: t, s, c, b, a, m, g fallback-policy: l ' + uniLoanPolicyId + ' o ' + uniOverdueFinePolicyId + ' i ' + uniLostItemFeePolicyId + ' r ' + uniRequestPolicyId + ' n ' + uniPatronNoticePolicyId
-    Given path 'circulation-rules-storage'
-    And request { "rulesAsText": "#(uniRules)" }
-    When method PUT
-    Then status 204
-
-    # Enable TLR for university tenant
-    * def uniTlrSettingsId = uuid()
-    Given path 'circulation/settings'
-    And request { id: '#(uniTlrSettingsId)', name: 'TLR', value: { titleLevelRequestsFeatureEnabled: true, tlrHoldShouldFollowCirculationRules: false, createTitleLevelRequestsByDefault: false } }
-    When method POST
-    Then match [201, 422] contains responseStatus
+    * call setupCirculationPolicies { tenant: '#(universityTenant)', okapitoken: '#(universityLogin.okapitoken)', policyLabel: 'University' }
 
   Scenario: create ILR ECS request via mod-circulation-bff
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
     * def headersCentral = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
-    * def headersCentralConsortium = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
 
-    # Create user group and user in central tenant
+    # Create user group and patron user in central tenant
     * configure headers = headersCentral
-    * def ilrGroupId = uuid()
-    * def ilrGroup = 'ecs-ilr-grp-' + randomMillis()
+    * def groupId = uuid()
     Given path 'groups'
-    And request { id: '#(ilrGroupId)', group: '#(ilrGroup)', desc: 'ECS ILR test group', expirationOffsetInDays: '60' }
+    And request { id: '#(groupId)', group: '#("ecs-ilr-grp-" + randomMillis())', desc: 'ECS ILR test group', expirationOffsetInDays: '60' }
     When method POST
     Then status 201
 
-    * def ilrUserId = uuid()
-    * def ilrBarcode = 'ECS-ILR-' + randomMillis()
-    * def ilrUsername = ilrBarcode
+    * def userId = uuid()
+    * def userBarcode = 'ECS-ILR-' + randomMillis()
     Given path 'users'
     And request
       """
       {
-        "id": "#(ilrUserId)",
-        "username": "#(ilrUsername)",
-        "barcode": "#(ilrBarcode)",
+        "id": "#(userId)",
+        "username": "#(userBarcode)",
+        "barcode": "#(userBarcode)",
         "active": true,
         "type": "patron",
-        "patronGroup": "#(ilrGroupId)",
-        "personal": {
-          "lastName": "ECSTest",
-          "firstName": "ILRUser",
-          "email": "ecs-ilr@test.com",
-          "preferredContactTypeId": "002",
-          "addresses": []
-        },
+        "patronGroup": "#(groupId)",
+        "personal": { "lastName": "ECSTest", "firstName": "ILRUser", "email": "ecs-ilr@test.com", "preferredContactTypeId": "002", "addresses": [] },
         "departments": [],
         "expirationDate": "2028-12-31T23:59:59.000+00:00"
       }
@@ -527,154 +302,55 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     When method POST
     Then status 201
 
-    # Retrieve created user for building the requester object
-    Given path 'users', ilrUserId
+    Given path 'users', userId
     When method GET
     Then status 200
-    * def ilrRequester = response
+    * def requester = response
 
-    # Switch to university tenant for instance/holding/item creation
+    # Create inventory in university tenant and share instance to central
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
-    * def headersUniversity = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-    * configure headers = headersUniversity
+    * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'ECS ILR Test Instance' }
+    * def inventory = call setupInventory inventoryParams
 
-    # Create instance in university tenant
-    * def ilrInstanceId = uuid()
-    * def ilrInstanceHrid = 'in' + randomMillis()
-    Given path 'inventory/instances'
-    And request
-      """
-      {
-        "id": "#(ilrInstanceId)",
-        "title": "ECS ILR Test Instance",
-        "instanceTypeId": "#(uniInstanceTypeId)",
-        "source": "FOLIO",
-        "hrid": "#(ilrInstanceHrid)"
-      }
-      """
-    When method POST
-    Then status 201
-
-    # Share instance from university to central tenant
-    * def ilrSharingId = uuid()
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true' }
-    Given path 'consortia', consortiumId, 'sharing/instances'
-    And request
-      """
-      {
-        "id": "#(ilrSharingId)",
-        "instanceIdentifier": "#(ilrInstanceId)",
-        "sourceTenantId": "#(universityTenant)",
-        "targetTenantId": "#(centralTenant)"
-      }
-      """
-    When method POST
-    Then status 201
-    And match response.instanceIdentifier == ilrInstanceId
-
-    # Wait for sharing to complete
-    * configure retry = { count: 20, interval: 30000 }
-    Given path 'consortia', consortiumId, 'sharing/instances'
-    And param instanceIdentifier = ilrInstanceId
-    And param sourceTenantId = universityTenant
-    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
-    When method GET
-    Then status 200
-    And match response.sharingInstances[0].status == 'COMPLETE'
-    * print 'DEBUG: instance sharing completed for ILR scenario'
-
-    # Wait for Kafka to fully propagate source change (edge-patron pattern: sleep + verify CONSORTIUM-FOLIO)
-    * java.lang.Thread.sleep(5000)
-    * configure headers = headersUniversity
-    Given path 'inventory/instances', ilrInstanceId
-    When method GET
-    Then status 200
-    And match response.source == 'CONSORTIUM-FOLIO'
-    * print 'DEBUG: ILR instance source confirmed as CONSORTIUM-FOLIO'
-
-    # Create holding in university tenant
-    * def ilrHoldingId = uuid()
-    Given path 'holdings-storage/holdings'
-    And request
-      """
-      {
-        "id": "#(ilrHoldingId)",
-        "instanceId": "#(ilrInstanceId)",
-        "permanentLocationId": "#(uniLocationId)",
-        "sourceId": "#(uniHoldingsSourceId)"
-      }
-      """
-    When method POST
-    Then status 201
-
-    # Create item in university tenant
-    * def ilrItemId = uuid()
-    * def ilrItemBarcode = 'ECS-ILR-ITEM-' + randomMillis()
-    Given path 'inventory/items'
-    And request
-      """
-      {
-        "id": "#(ilrItemId)",
-        "holdingsRecordId": "#(ilrHoldingId)",
-        "barcode": "#(ilrItemBarcode)",
-        "status": { "name": "Available" },
-        "materialType": { "id": "#(uniMaterialTypeId)" },
-        "permanentLoanType": { "id": "#(uniLoanTypeId)" },
-        "permanentLocation": { "id": "#(uniLocationId)" }
-      }
-      """
-    When method POST
-    Then status 201
-
+    # Wait until item is visible via allowed-service-points (confirms mod-search indexing)
     * configure headers = headersCentral
     * configure retry = { count: 20, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
-    And param requesterId = ilrUserId
+    And param requesterId = userId
     And param operation = 'create'
-    And param itemId = ilrItemId
+    And param itemId = inventory.itemId
     And retry until responseStatus == 200 && response && karate.sizeOf(response) > 0
     When method GET
-    * print 'DEBUG: ILR allowed-service-points response:', response
     Then status 200
-    * def allowedServicePoints = response
-
-    * def allSpIds = []
-    * def collectIds = function(arr) { arr.forEach(function(sp){ allSpIds.push(sp.id) }) }
-    * if (allowedServicePoints.Page) collectIds(allowedServicePoints.Page)
-    * if (allowedServicePoints.Hold) collectIds(allowedServicePoints.Hold)
-    * if (allowedServicePoints.Recall) collectIds(allowedServicePoints.Recall)
-    * if (!allSpIds.includes(ecsServicePointId)) karate.fail('ILR: ecsServicePointId (' + ecsServicePointId + ') not found in allowedServicePoints: ' + karate.toJson(allowedServicePoints))
-    * print 'DEBUG: ILR ecsServicePointId confirmed in allowedServicePoints'
+    * def allowedSpIds = response.Page ? response.Page.map(function(sp){ return sp.id }) : []
+    * if (!allowedSpIds.includes(ecsServicePointId)) karate.fail('ILR: ecsServicePointId not found in allowed service points: ' + karate.toJson(response))
 
     # Create ILR ECS request via mod-circulation-bff
-    * def ilrRequestId = uuid()
-    * def ilrRequestDate = java.time.Instant.now().toString()
     Given path 'circulation-bff/requests'
-    And headers headersCentralConsortium
+    And headers { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     And request
       """
       {
-        "id": "#(ilrRequestId)",
+        "id": "#(uuid())",
         "requestType": "Page",
         "requestLevel": "Item",
-        "requestDate": "#(ilrRequestDate)",
+        "requestDate": "#(java.time.Instant.now().toString())",
         "fulfillmentPreference": "Hold Shelf",
-        "instanceId": "#(ilrInstanceId)",
-        "holdingsRecordId": "#(ilrHoldingId)",
-        "itemId": "#(ilrItemId)",
-        "item": { "barcode": "#(ilrItemBarcode)" },
-        "requesterId": "#(ilrUserId)",
-        "requester": "#(ilrRequester)",
+        "instanceId": "#(inventory.instanceId)",
+        "holdingsRecordId": "#(inventory.holdingId)",
+        "itemId": "#(inventory.itemId)",
+        "item": { "barcode": "#(inventory.itemBarcode)" },
+        "requesterId": "#(userId)",
+        "requester": "#(requester)",
         "pickupServicePointId": "#(ecsServicePointId)"
       }
       """
     When method POST
     Then status 201
-    * print 'DEBUG: ILR ECS request response:', response
     And match response.requestLevel == 'Item'
-    And match response.itemId == ilrItemId
-    And match response.instanceId == ilrInstanceId
-    And match response.requesterId == ilrUserId
+    And match response.itemId == inventory.itemId
+    And match response.instanceId == inventory.instanceId
+    And match response.requesterId == userId
     And match response.pickupServicePointId == ecsServicePointId
     And match response.status == 'Open - Not yet filled'
 
@@ -682,37 +358,28 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
     * def headersCentral = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
-    * def headersCentralConsortium = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
 
-    # Create user group and user in central tenant
+    # Create user group and patron user in central tenant
     * configure headers = headersCentral
-    * def tlrGroupId = uuid()
-    * def tlrGroup = 'ecs-tlr-grp-' + randomMillis()
+    * def groupId = uuid()
     Given path 'groups'
-    And request { id: '#(tlrGroupId)', group: '#(tlrGroup)', desc: 'ECS TLR test group', expirationOffsetInDays: '60' }
+    And request { id: '#(groupId)', group: '#("ecs-tlr-grp-" + randomMillis())', desc: 'ECS TLR test group', expirationOffsetInDays: '60' }
     When method POST
     Then status 201
 
-    * def tlrUserId = uuid()
-    * def tlrBarcode = 'ECS-TLR-' + randomMillis()
-    * def tlrUsername = tlrBarcode
+    * def userId = uuid()
+    * def userBarcode = 'ECS-TLR-' + randomMillis()
     Given path 'users'
     And request
       """
       {
-        "id": "#(tlrUserId)",
-        "username": "#(tlrUsername)",
-        "barcode": "#(tlrBarcode)",
+        "id": "#(userId)",
+        "username": "#(userBarcode)",
+        "barcode": "#(userBarcode)",
         "active": true,
         "type": "patron",
-        "patronGroup": "#(tlrGroupId)",
-        "personal": {
-          "lastName": "ECSTest",
-          "firstName": "TLRUser",
-          "email": "ecs-tlr@test.com",
-          "preferredContactTypeId": "002",
-          "addresses": []
-        },
+        "patronGroup": "#(groupId)",
+        "personal": { "lastName": "ECSTest", "firstName": "TLRUser", "email": "ecs-tlr@test.com", "preferredContactTypeId": "002", "addresses": [] },
         "departments": [],
         "expirationDate": "2028-12-31T23:59:59.000+00:00"
       }
@@ -720,151 +387,50 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     When method POST
     Then status 201
 
-    # Retrieve created user for building the requester object
-    Given path 'users', tlrUserId
+    Given path 'users', userId
     When method GET
     Then status 200
-    * def tlrRequester = response
+    * def requester = response
 
-    # Switch to university tenant for instance/holding/item creation
+    # Create inventory in university tenant and share instance to central
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
-    * def headersUniversity = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-    * configure headers = headersUniversity
+    * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'ECS TLR Test Instance' }
+    * def inventory = call setupInventory inventoryParams
 
-    # Create instance in university tenant
-    * def tlrInstanceId = uuid()
-    * def tlrInstanceHrid = 'in' + randomMillis()
-    Given path 'inventory/instances'
-    And request
-      """
-      {
-        "id": "#(tlrInstanceId)",
-        "title": "ECS TLR Test Instance",
-        "instanceTypeId": "#(uniInstanceTypeId)",
-        "source": "FOLIO",
-        "hrid": "#(tlrInstanceHrid)"
-      }
-      """
-    When method POST
-    Then status 201
-
-    # Share instance from university to central tenant
-    * def tlrSharingId = uuid()
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true' }
-    Given path 'consortia', consortiumId, 'sharing/instances'
-    And request
-      """
-      {
-        "id": "#(tlrSharingId)",
-        "instanceIdentifier": "#(tlrInstanceId)",
-        "sourceTenantId": "#(universityTenant)",
-        "targetTenantId": "#(centralTenant)"
-      }
-      """
-    When method POST
-    Then status 201
-    And match response.instanceIdentifier == tlrInstanceId
-
-    # Wait for sharing to complete
-    * configure retry = { count: 20, interval: 30000 }
-    Given path 'consortia', consortiumId, 'sharing/instances'
-    And param instanceIdentifier = tlrInstanceId
-    And param sourceTenantId = universityTenant
-    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
-    When method GET
-    Then status 200
-    And match response.sharingInstances[0].status == 'COMPLETE'
-    * print 'DEBUG: instance sharing completed for TLR scenario'
-
-    # Wait for Kafka to fully propagate source change (edge-patron pattern: sleep + verify CONSORTIUM-FOLIO)
-    * java.lang.Thread.sleep(5000)
-    * configure headers = headersUniversity
-    Given path 'inventory/instances', tlrInstanceId
-    When method GET
-    Then status 200
-    And match response.source == 'CONSORTIUM-FOLIO'
-    * print 'DEBUG: TLR instance source confirmed as CONSORTIUM-FOLIO'
-
-    # Create holding in university tenant
-    * def tlrHoldingId = uuid()
-    Given path 'holdings-storage/holdings'
-    And request
-      """
-      {
-        "id": "#(tlrHoldingId)",
-        "instanceId": "#(tlrInstanceId)",
-        "permanentLocationId": "#(uniLocationId)",
-        "sourceId": "#(uniHoldingsSourceId)"
-      }
-      """
-    When method POST
-    Then status 201
-
-    # Create item in university tenant
-    * def tlrItemId = uuid()
-    * def tlrItemBarcode = 'ECS-TLR-ITEM-' + randomMillis()
-    Given path 'inventory/items'
-    And request
-      """
-      {
-        "id": "#(tlrItemId)",
-        "holdingsRecordId": "#(tlrHoldingId)",
-        "barcode": "#(tlrItemBarcode)",
-        "status": { "name": "Available" },
-        "materialType": { "id": "#(uniMaterialTypeId)" },
-        "permanentLoanType": { "id": "#(uniLoanTypeId)" },
-        "permanentLocation": { "id": "#(uniLocationId)" }
-      }
-      """
-    When method POST
-    Then status 201
-
-    # Wait for mod-search to index the instance (retry via circulation-bff allowed-service-points using instanceId)
+    # Wait until instance is indexed by mod-search (confirms cross-tenant visibility)
     * configure headers = headersCentral
     * configure retry = { count: 20, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
-    And param requesterId = tlrUserId
+    And param requesterId = userId
     And param operation = 'create'
-    And param instanceId = tlrInstanceId
+    And param instanceId = inventory.instanceId
     And retry until responseStatus == 200 && response && karate.sizeOf(response) > 0
     When method GET
-    * print 'DEBUG: TLR allowed-service-points response:', response
     Then status 200
-    * def allowedServicePoints = response
-
-    # Verify the ECS central service point is among allowed ones (response is a map by request type)
-    * def allSpIds = []
-    * def collectIds = function(arr) { arr.forEach(function(sp){ allSpIds.push(sp.id) }) }
-    * if (allowedServicePoints.Page) collectIds(allowedServicePoints.Page)
-    * if (allowedServicePoints.Hold) collectIds(allowedServicePoints.Hold)
-    * if (allowedServicePoints.Recall) collectIds(allowedServicePoints.Recall)
-    * if (!allSpIds.includes(ecsServicePointId)) karate.fail('TLR: ecsServicePointId (' + ecsServicePointId + ') not found in allowedServicePoints: ' + karate.toJson(allowedServicePoints))
-    * print 'DEBUG: TLR ecsServicePointId confirmed in allowedServicePoints'
+    * def allowedSpIds = response.Page ? response.Page.map(function(sp){ return sp.id }) : []
+    * if (!allowedSpIds.includes(ecsServicePointId)) karate.fail('TLR: ecsServicePointId not found in allowed service points: ' + karate.toJson(response))
 
     # Create TLR ECS request via mod-circulation-bff
-    * def tlrRequestId = uuid()
-    * def tlrRequestDate = java.time.Instant.now().toString()
     Given path 'circulation-bff/requests'
-    And headers headersCentralConsortium
+    And headers { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     And request
       """
       {
-        "id": "#(tlrRequestId)",
+        "id": "#(uuid())",
         "requestType": "Page",
         "requestLevel": "Title",
-        "requestDate": "#(tlrRequestDate)",
+        "requestDate": "#(java.time.Instant.now().toString())",
         "fulfillmentPreference": "Hold Shelf",
-        "instanceId": "#(tlrInstanceId)",
-        "requesterId": "#(tlrUserId)",
-        "requester": "#(tlrRequester)",
+        "instanceId": "#(inventory.instanceId)",
+        "requesterId": "#(userId)",
+        "requester": "#(requester)",
         "pickupServicePointId": "#(ecsServicePointId)"
       }
       """
     When method POST
     Then status 201
-    * print 'DEBUG: TLR ECS request response:', response
     And match response.requestLevel == 'Title'
-    And match response.instanceId == tlrInstanceId
-    And match response.requesterId == tlrUserId
+    And match response.instanceId == inventory.instanceId
+    And match response.requesterId == userId
     And match response.pickupServicePointId == ecsServicePointId
     And match response.status == 'Open - Not yet filled'
