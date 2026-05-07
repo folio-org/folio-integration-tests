@@ -29,9 +29,6 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                     .reportDir(timestampedReportDir())
                     .run();
         }
-        feature("classpath:folijet/data-import/global/create-marc-records.feature")
-                .reportDir(timestampedReportDir())
-                .run();
     }
 
     @AfterAll
