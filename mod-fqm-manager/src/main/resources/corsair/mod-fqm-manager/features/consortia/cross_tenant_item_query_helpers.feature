@@ -5,20 +5,6 @@ Feature: Cross-tenant item query helpers
     * configure readTimeout = 600000
     * configure retry = { count: 20, interval: 15000 }
 
-  @ignore @InstallEntityTypes
-  Scenario: Install entity types in a tenant
-    * call login user
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'application/json' }
-
-    Given path 'entity-types', 'install'
-    When method POST
-    Then status 204
-
-    Given path 'entity-types', itemEntityTypeId
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-
   @ignore @CreateReferenceData
   Scenario: Create inventory reference data for item query tests
     * call login user

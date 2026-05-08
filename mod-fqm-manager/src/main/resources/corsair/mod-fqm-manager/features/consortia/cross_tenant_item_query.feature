@@ -8,7 +8,7 @@ Feature: Cross-tenant item queries in mod-fqm-manager
     * def resultFields = ['items.id', 'items.created_date', 'items.tenant_id', 'holdings.tenant_id', 'instances.tenant_id', 'instances.shared', 'instances.source']
 
   @Positive @C552521
-  Scenario: From the central tenant, item queries return local and shared-instance items from all affiliated tenants
+  Scenario: [Items] [Central tenant] Query returns items for local and shared instances from all tenants
     * call login consortiaAdmin
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': 'application/json' }
 
@@ -18,11 +18,7 @@ Feature: Cross-tenant item queries in mod-fqm-manager
     Then status 200
     And match response.columns[*].name contains resultFields
 
-    # Cross-tenant execution flattens the item entity type in each affiliated tenant.
     * def itemQueryHelpers = 'classpath:corsair/mod-fqm-manager/features/consortia/cross_tenant_item_query_helpers.feature'
-    * call read(itemQueryHelpers + '@InstallEntityTypes') ({ tenant: centralTenant, user: consortiaAdmin, itemEntityTypeId: itemEntityTypeId })
-    * call read(itemQueryHelpers + '@InstallEntityTypes') ({ tenant: universityTenant, user: universityUser1, itemEntityTypeId: itemEntityTypeId })
-    * call read(itemQueryHelpers + '@InstallEntityTypes') ({ tenant: collegeTenant, user: collegeUser1, itemEntityTypeId: itemEntityTypeId })
 
     * def centralRef = call read(itemQueryHelpers + '@CreateReferenceData') ({ tenant: centralTenant, user: consortiaAdmin, codePrefix: 'cen' })
     * def universityRef = call read(itemQueryHelpers + '@CreateReferenceData') ({ tenant: universityTenant, user: universityUser1, codePrefix: 'uni' })
