@@ -7,7 +7,7 @@ Feature: Cross-tenant holdings queries in mod-fqm-manager
     * def holdingsEntityTypeId = '8418e512-feac-4a6a-a56d-9006aab31e33'
     * def resultFields = ['holdings.id', 'holdings.instance_id', 'holdings.tenant_id', 'holdings.tenant_name', 'instance.title']
 
-  @Positive
+  @Positive @C543848
   Scenario: [Holdings] [Central tenant] Query returns holdings for local and shared instances from all tenants
     * def instanceTypeId = uuid()
     * def holdingsSourceId = uuid()

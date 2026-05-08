@@ -6,7 +6,7 @@ Feature: Query member tenant instances in ECS
     * def instanceEntityTypeId = '6b08439b-4f8e-4468-8046-ea620f5cfb74'
     * def resultFields = ['instance.id', 'instance.title', 'instance.tenant_id', 'instance.shared']
 
-  @Positive
+  @Positive @C506690
   Scenario: [Instances] [Member tenant] Query returns local and shared instances
     * def instanceTypeId = uuid()
     * def sharedInstanceId = uuid()

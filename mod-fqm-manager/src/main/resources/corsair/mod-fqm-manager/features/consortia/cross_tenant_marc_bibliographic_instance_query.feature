@@ -7,7 +7,7 @@ Feature: Cross-tenant instance queries with MARC bibliographic in mod-fqm-manage
     * def instanceMarcBibliographicEntityTypeId = 'bce8ea43-1271-54ca-99ad-aa185e8b5b1b'
     * def resultFields = ['instance.id', 'instance.title', 'instance.source', 'instance.shared', 'instance.tenant_id', 'instance.tenant_name']
 
-  @Positive
+  @Positive @C1312674
   Scenario: [Instances with MARC bibliographic] [Central tenant] Query returns instances from central and member tenants
     * def instanceTypeId = uuid()
     * def centralInstanceId = uuid()
