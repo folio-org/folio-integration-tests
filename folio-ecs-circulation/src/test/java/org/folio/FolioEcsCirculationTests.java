@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 class FolioEcsCirculationTests extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH = "classpath:vega/systemwide-service-points/features/";
+  private static final String ECS_REQUESTS_BASE_PATH = "classpath:vega/ecs-requests/features/";
 
   public FolioEcsCirculationTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -33,10 +34,16 @@ class FolioEcsCirculationTests extends TestBaseEureka {
   @AfterAll
   public void tearDown() {
     runFeature("classpath:vega/systemwide-service-points/destroy-consortia.feature");
+    runFeature("classpath:vega/ecs-requests/destroy-ecs-requests.feature");
   }
 
   @Test
   void folioEcsCirculationTests() {
     runFeatureTest("systemwide-service-points");
+  }
+
+  @Test
+  void ecsRequestsTests() {
+    runFeature(ECS_REQUESTS_BASE_PATH + "ecs-requests.feature");
   }
 }
