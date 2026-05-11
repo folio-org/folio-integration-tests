@@ -1,4 +1,4 @@
-# For MODINVOICE-270, MODFISTO-273, MODFISTO-284, MODINVOICE-360, MODINVOICE-446, MODFISTO-475 and MODORDERS-1439
+# For MODINVOICE-270, MODFISTO-273, MODFISTO-284, MODINVOICE-360, MODINVOICE-446, MODFISTO-475, MODORDERS-1439, MODINVOICE-628
 Feature: Cancel an invoice linked to an order
 
   Background:
@@ -961,3 +961,69 @@ Feature: Cancel an invoice linked to an order
     When method GET
     Then status 200
     And match $.workflowStatus == 'Open'
+
+
+  Scenario: Cancel an approved invoice with releaseEncumbrance=true when there is another invoice with releaseEncumbrance=false
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+    * def invoiceId1 = call uuid
+    * def invoiceLineId1 = call uuid
+    * def invoiceId2 = call uuid
+    * def invoiceLineId2 = call uuid
+
+    * print "Create finances"
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
+
+    * print "Create an order and line"
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10 }
+
+    * print "Open the order"
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    * print "Create 2 invoices"
+    * def v = call createInvoice { id: '#(invoiceId1)' }
+    * def v = call createInvoice { id: '#(invoiceId2)' }
+
+    * print "Get the encumbrance id"
+    Given path 'orders/order-lines', poLineId
+    When method GET
+    Then status 200
+    * def poLine = $
+    * def encumbranceId = poLine.fundDistribution[0].encumbrance
+
+    * print "Add an invoice line 1 linked to the po line, releaseEncumbrance=true"
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId1)', invoiceId: '#(invoiceId1)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(encumbranceId)', total: 6, releaseEncumbrance: true }
+
+    * print "Add an invoice line 2 linked to the po line, releaseEncumbrance=false"
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId2)', invoiceId: '#(invoiceId2)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(encumbranceId)', total: 4, releaseEncumbrance: false }
+
+    * print "Approve the invoices"
+    * def v = call approveInvoice { invoiceId: '#(invoiceId1)' }
+    * def v = call approveInvoice { invoiceId: '#(invoiceId2)' }
+
+    * print "Check the encumbrance before cancelling"
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    And match $.amount == 0
+    And match $.encumbrance.initialAmountEncumbered == 10
+    And match $.encumbrance.amountAwaitingPayment == 10
+    And match $.encumbrance.amountExpended == 0
+    And match $.encumbrance.status == 'Released'
+
+    * print "Cancel invoice 1"
+    * def v = call cancelInvoice { invoiceId: '#(invoiceId1)' }
+    * call pause 1200
+
+    * print "Check the encumbrance is unreleased after cancelling"
+    Given path 'finance/transactions', encumbranceId
+    When method GET
+    Then status 200
+    And match $.encumbrance.status == 'Unreleased'
+    And match $.amount == 6
+    And match $.encumbrance.initialAmountEncumbered == 10
+    And match $.encumbrance.amountAwaitingPayment == 4
