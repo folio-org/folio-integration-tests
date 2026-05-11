@@ -30,7 +30,12 @@ Feature: Read operations on capabilities
     # Resolve a known capability by permission name and capture its identifier.
     * def capabilityPermission = 'role-capabilities.collection.get'
     * def capabilityName = 'role-capabilities_collection.view'
-    * def capability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/capabilities-helper.feature@getCapabilityByPermission', { capabilityPermission: capabilityPermission }).capability
+    Given path 'capabilities'
+    And param query = 'permission=="' + capabilityPermission + '"'
+    When method get
+    Then status 200
+    And match response.capabilities == '#[1]'
+    * def capability = response.capabilities[0]
     * def capabilityId = capability.id
 
     # Read the capability directly by ID and verify the values.

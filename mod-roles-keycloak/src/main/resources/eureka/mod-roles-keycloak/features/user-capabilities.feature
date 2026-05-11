@@ -7,15 +7,16 @@ Feature: CRUD operations on user capabilities
 
   @Positive
   Scenario: assign, list, update, and delete user capabilities
-    # Resolve several known capabilities so the test can use a baseline assignment
+    # Resolve several known capabilities
     * def baselineCapabilityPermission = 'role-capabilities.collection.delete'
     * def firstCapabilityPermission = 'role-capabilities.collection.post'
     * def secondCapabilityPermission = 'role-capabilities.collection.put'
     * def thirdCapabilityPermission = 'roles.collection.get'
-    * def baselineCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/capabilities-helper.feature@getCapabilityByPermission', { capabilityPermission: baselineCapabilityPermission }).capability
-    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/capabilities-helper.feature@getCapabilityByPermission', { capabilityPermission: firstCapabilityPermission }).capability
-    * def secondCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/capabilities-helper.feature@getCapabilityByPermission', { capabilityPermission: secondCapabilityPermission }).capability
-    * def thirdCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/capabilities-helper.feature@getCapabilityByPermission', { capabilityPermission: thirdCapabilityPermission }).capability
+
+    * def baselineCapability = karate.call('@getCapabilityByPermission', { capabilityPermission: baselineCapabilityPermission }).capability
+    * def firstCapability = karate.call('@getCapabilityByPermission', { capabilityPermission: firstCapabilityPermission }).capability
+    * def secondCapability = karate.call('@getCapabilityByPermission', { capabilityPermission: secondCapabilityPermission }).capability
+    * def thirdCapability = karate.call('@getCapabilityByPermission', { capabilityPermission: thirdCapabilityPermission }).capability
 
     # Create a user, with a baseline permission
     * def subjectUserName = 'user-capabilities-user-' + nowMillis()
@@ -116,3 +117,12 @@ Feature: CRUD operations on user capabilities
     Then status 200
     And match response.userId == subjectUserId
     And match response.permissions == []
+
+  @ignore @getCapabilityByPermission
+  Scenario: getCapabilityByPermission
+    Given path 'capabilities'
+    And param query = 'permission=="' + capabilityPermission + '"'
+    When method get
+    Then status 200
+    And match response.capabilities == '#[1]'
+    * def capability = response.capabilities[0]
