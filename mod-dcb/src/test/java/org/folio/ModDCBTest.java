@@ -140,6 +140,16 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("borrowing-pickup-self-borrowing.feature");
   }
 
+  @Test
+  void testLenderPatronGroupUpdate() {
+    runFeatureTest("lender-patron-group-update.feature");
+  }
+
+  @Test
+  void testPickupPatronGroupUpdate() {
+    runFeatureTest("pickup-patron-group-update.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");

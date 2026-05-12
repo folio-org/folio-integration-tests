@@ -53,3 +53,16 @@ Feature: Query migration and versioning
     And match response.fields == []
     And match response.warnings[0].description == 'Record type drv_loan_status is no longer available. You may be able to use simple_loans instead. For reference, your original query was {"loan_status":{"$ne":"zz"}}.'
     And match response.warnings[0].type == 'REMOVED_ENTITY'
+
+  Scenario: Migrate V19 queries with $regex operators to $starts_with and $contains
+    * def migrateRequest = { entityTypeId: 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf' , fqlQuery: '{\"$and\":[{\"users.username\":{\"$regex\":\"^integration_test\"}},{\"users.username\":{\"$regex\":\"test_user\"}}],\"_version\":\"19\"}', fields : '[\"users.username\"]'}
+    Given path 'fqm', 'migrate'
+    And request migrateRequest
+    When method POST
+    Then status 200
+    And match response.entityTypeId == 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
+    # ignore _version content, just make sure it's present
+    * def testQueryMigrated = function(x) { const q = JSON.parse(x); const _version = q._version; delete q._version; return JSON.stringify(q) === JSON.stringify({"$and":[{"users.username":{"$starts_with":"integration_test"}},{"users.username":{"$contains":"test_user"}}]}) && /\d+/.test(_version); }
+    * assert testQueryMigrated(response.fqlQuery)
+    And match response.fields == ['["users.username"]']
+    And match response.warnings == []
