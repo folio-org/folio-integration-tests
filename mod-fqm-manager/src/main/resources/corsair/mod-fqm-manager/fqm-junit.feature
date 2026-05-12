@@ -132,9 +132,11 @@ Feature: mod-fqm-manager integration tests
       | 'orders-storage.custom-fields.collection.get'                      |
       | 'orders-storage.custom-fields.collection.put'                      |
       | 'orders-storage.pieces.collection.get'                             |
+      | 'orders-storage.pieces.item.post'                                  |
       | 'orders-storage.po-lines.item.post'                                |
       | 'orders-storage.purchase-orders.item.post'                         |
       | 'orders-storage.titles.collection.get'                             |
+      | 'orders-storage.titles.item.post'                                  |
       | 'orders.acquisition-methods.collection.get'                        |
       | 'orders.item.get'                                                  |
       | 'orders.po-lines.item.get'                                         |
