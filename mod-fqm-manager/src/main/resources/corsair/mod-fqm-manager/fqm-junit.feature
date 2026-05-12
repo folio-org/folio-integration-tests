@@ -76,6 +76,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.authority-source-files.collection.get'          |
       | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
+      | 'inventory-storage.call-number-types.item.post'                    |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
       | 'inventory-storage.contributor-types.collection.get'               |

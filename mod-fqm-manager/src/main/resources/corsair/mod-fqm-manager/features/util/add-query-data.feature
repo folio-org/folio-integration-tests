@@ -117,9 +117,18 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add a call number type
+    * def callNumberTypeId = '512173a7-bd09-490e-b773-17d83f2b63fe'
+    * def callNumberTypeName = 'LC Modified'
+    * def callNumberTypeRequest = {id: '#(callNumberTypeId)', name: '#(callNumberTypeName)', source: 'folio'}
+    Given path '/call-number-types'
+    And request callNumberTypeRequest
+    When method POST
+    Then status 201
+
     # Add holdings
     * def holdingsId = call uuid1
-    * def holdingsRequest = {id: '#(holdingsId)', instanceId: '#(instanceId)', permanentLocationId:  '#(permanentLocationId)', sourceId: '#(holdingsSourceId)'}
+    * def holdingsRequest = {id: '#(holdingsId)', instanceId: '#(instanceId)', permanentLocationId:  '#(permanentLocationId)', sourceId: '#(holdingsSourceId)', callNumberTypeId: '#(callNumberTypeId)'}
     Given path '/holdings-storage/holdings'
     And request holdingsRequest
     When method POST
