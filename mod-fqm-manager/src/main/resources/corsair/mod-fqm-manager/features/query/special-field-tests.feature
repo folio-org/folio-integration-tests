@@ -45,6 +45,12 @@ Feature: Query special fields
     And match $.content[0]["instance.languages"] == ['English','French']
 
   Scenario: Verify that holdings call number type is queryable
+    Given path 'entity-types', holdingsEntityTypeId
+    When method GET
+    Then status 200
+    * def callNumberTypeColumn = karate.filter(response.columns, function(column) { return column.name == 'holdings.call_number_type' })[0]
+    And match callNumberTypeColumn.queryable == true
+
     * def fqlQuery = '{\"holdings.call_number_type\":{\"$in\":[\"' + callNumberTypeId + '\"]}}'
     * def queryRequest = { entityTypeId: '#(holdingsEntityTypeId)', fqlQuery: '#(fqlQuery)', fields: ['holdings.id', 'holdings.call_number_type'] }
     * def queryCall = call postQuery
