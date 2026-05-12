@@ -20,9 +20,9 @@ Feature: CRUD operations on user capability sets
     And match response.capabilities == '#[1]'
     * def baselineCapability = response.capabilities[0]
 
-    * def firstCapabilitySet = karate.call('@getCapabilitySetByPermission', { capabilitySetPermission: firstCapabilitySetPermission })
-    * def secondCapabilitySet = karate.call('@getCapabilitySetByPermission', { capabilitySetPermission: secondCapabilitySetPermission })
-    * def thirdCapabilitySet = karate.call('@getCapabilitySetByPermission', { capabilitySetPermission: thirdCapabilitySetPermission })
+    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: firstCapabilitySetPermission })
+    * def secondCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: secondCapabilitySetPermission })
+    * def thirdCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: thirdCapabilitySetPermission })
 
     * def firstAndThirdPermissions = firstCapabilitySet.permissions.concat(thirdCapabilitySet.permissions)
     * def secondOnlyPermissions = karate.filter(secondCapabilitySet.permissions, x => firstAndThirdPermissions.indexOf(x) == -1)
@@ -163,19 +163,3 @@ Feature: CRUD operations on user capability sets
     Then status 200
     And match response.userId == subjectUserId
     And match response.permissions == ['#(baselineCapabilityPermission)']
-
-  @ignore @getCapabilitySetByPermission
-  Scenario: getCapabilitySetByPermission
-    Given path 'capability-sets'
-    And param query = 'permission=="' + capabilitySetPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilitySets == '#[1]'
-    * def capabilitySet = response.capabilitySets[0]
-    Given path 'capability-sets', capabilitySet.id, 'capabilities'
-    When method get
-    Then status 200
-    And match response.capabilities == '#array'
-    * def capabilities = response.capabilities
-    * def permissions = capabilities.map(capability => capability.permission)
-    * def capabilityIds = capabilities.map(capability => capability.id)
