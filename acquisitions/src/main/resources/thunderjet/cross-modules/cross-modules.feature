@@ -337,3 +337,6 @@ Feature: cross-module integration tests
 
   Scenario: Expense Class Percent Of Total Expended Calculated Correctly When Budget Over Expended
     * call read('features/expense-class-percent-expended-when-budget-over-expended.feature')
+
+  Scenario: Rollover Settings Applying To Encumbrances With No Encumbrance Rollover Options Active
+    * call read('features/rollover-settings-no-encumbrances.feature')
