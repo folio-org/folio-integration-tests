@@ -44,6 +44,7 @@ Feature: Query special fields
     Then status 200
     And match $.content[0]["instance.languages"] == ['English','French']
 
+  @C1045962
   Scenario: Verify that holdings call number type is queryable
     Given path 'entity-types', holdingsEntityTypeId
     When method GET
