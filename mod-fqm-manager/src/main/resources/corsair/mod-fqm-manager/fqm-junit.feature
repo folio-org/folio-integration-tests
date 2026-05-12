@@ -1,3 +1,4 @@
+@FqmManagerSetup
 Feature: mod-fqm-manager integration tests
 
   Background:
@@ -123,6 +124,8 @@ Feature: mod-fqm-manager integration tests
       | 'lost-item-fees-policies.collection.get'                           |
       | 'manual-block-templates.collection.get'                            |
       | 'manualblocks.collection.get'                                      |
+      | 'orders-storage.custom-fields.collection.get'                      |
+      | 'orders-storage.custom-fields.collection.put'                      |
       | 'orders-storage.pieces.collection.get'                             |
       | 'orders-storage.po-lines.item.post'                                |
       | 'orders-storage.purchase-orders.item.post'                         |

@@ -29,7 +29,7 @@ public class ModFqmManagerTest extends TestBaseEureka {
 
     @AfterAll
     public void tearDown() {
-        runFeature("classpath:common/eureka/destroy-data.feature");
+        runFeature("classpath:corsair/mod-fqm-manager/fqm-destroy-data.feature");
     }
 
     static List<Arguments> features() {
