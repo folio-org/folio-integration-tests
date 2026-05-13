@@ -57,6 +57,11 @@ class ModRolesKeycloakTests extends TestBaseEureka {
   }
 
   @Test
+  void userRoles() {
+    runFeatureTest("user-roles");
+  }
+
+  @Test
   void roleCapabilities() {
     runFeatureTest("role-capabilities");
   }
