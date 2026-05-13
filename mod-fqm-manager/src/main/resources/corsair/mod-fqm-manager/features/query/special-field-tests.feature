@@ -6,6 +6,7 @@ Feature: Query special fields
     * def userEntityTypeId = 'ddc93926-d15a-4a45-9d9c-93eadc3d9bbf'
     * def instanceEntityTypeId = '6b08439b-4f8e-4468-8046-ea620f5cfb74'
     * def holdingsEntityTypeId = '8418e512-feac-4a6a-a56d-9006aab31e33'
+    * def receivingPiecesEntityTypeId = 'a344dd36-cd35-4723-8905-3fc3f1baef26'
     * def callNumberTypeId = '512173a7-bd09-490e-b773-17d83f2b63fe'
 
   Scenario: Run a query on user preferred contact type
@@ -62,3 +63,21 @@ Feature: Query special fields
     When method GET
     Then status 200
     And match $.content contains deep {"holdings.call_number_type": "LC Modified"}
+
+  @C987718
+  Scenario: Verify that 'Receiving pieces - Holdings permanent location' is queryable
+    Given path 'entity-types', receivingPiecesEntityTypeId
+    When method GET
+    Then status 200
+    * def holdingsPermanentLocationNameColumn = karate.filter(response.columns, function(column) { return column.name == 'holdings_permanent_location.name' })[0]
+    And match holdingsPermanentLocationNameColumn.queryable == true
+
+    * def queryRequest = { entityTypeId: '#(receivingPiecesEntityTypeId)', fqlQuery: '{\"holdings_permanent_location.name\":{\"$in\":[\"Location 1\"]}}', fields: ['pieces.id', 'holdings_permanent_location.name'] }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query', queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {"holdings_permanent_location.name": "Location 1"}

@@ -386,7 +386,7 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
-     #Add Purchase Order Line
+    # Add Purchase Order Line
     * def purchaseOrderLineId = call uuid1
     * def cost = {"additionalCost": 4.99, "currency": "USD", "discount": 10, "discountType": "percentage", "exchangeRate": 1.12, "listUnitPriceElectronic": 24.99, "quantityElectronic": 2, "poLineEstimatedPrice": 49.97}
     * def acquisitionMethod = call uuid1
@@ -405,8 +405,24 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
-     #Add Organizations
-    * def  organizationsId  = call uuid1
+    # Add Title
+    * def titleId = call uuid1
+    * def titleRequest = {id: '#(titleId)', title: 'FQM receiving piece title', poLineId: '#(purchaseOrderLineId)', instanceId: '#(instanceId)'}
+    Given path '/orders-storage/titles'
+    And request titleRequest
+    When method POST
+    Then status 201
+
+    # Add Piece
+    * def pieceId = call uuid1
+    * def pieceRequest = {id: '#(pieceId)', format: 'Physical', poLineId: '#(purchaseOrderLineId)', titleId: '#(titleId)', holdingId: '#(holdingsId)', receivingStatus: 'Expected'}
+    Given path '/orders-storage/pieces'
+    And request pieceRequest
+    When method POST
+    Then status 201
+
+    # Add Organizations
+    * def organizationsId = call uuid1
     * def organizationsRequest = {id: '#(organizationsId)', name: "test organization", status: "Active", code: "test"}
     Given path '/organizations-storage/organizations'
     And request organizationsRequest
