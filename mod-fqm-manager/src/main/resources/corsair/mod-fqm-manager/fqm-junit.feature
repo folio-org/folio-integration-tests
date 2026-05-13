@@ -46,10 +46,13 @@ Feature: mod-fqm-manager integration tests
       | 'finance.exchange-rate.item.get'                                   |
       | 'finance.expense-classes.collection.get'                           |
       | 'finance.fiscal-years.collection.get'                              |
+      | 'finance.fiscal-years.item.post'                                   |
       | 'finance.fund-types.collection.get'                                |
       | 'finance.funds.collection.get'                                     |
+      | 'finance.funds.item.post'                                          |
       | 'finance.groups.collection.get'                                    |
       | 'finance.ledgers.collection.get'                                   |
+      | 'finance.ledgers.item.post'                                        |
       | 'finance.transactions.collection.get'                              |
       | 'fqm.entityTypes.collection.get'                                   |
       | 'fqm.entityTypes.custom.available-joins.collection.post'           |
@@ -97,6 +100,8 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.instance-types.item.post'                       |
       | 'inventory-storage.instances.item.get'                             |
       | 'inventory-storage.instances.item.post'                            |
+      | 'inventory-storage.item-damaged-statuses.collection.get'           |
+      | 'inventory-storage.item-damaged-statuses.item.post'                |
       | 'inventory-storage.item-note-types.collection.get'                 |
       | 'inventory-storage.items.item.get'                                 |
       | 'inventory-storage.items.item.post'                                |

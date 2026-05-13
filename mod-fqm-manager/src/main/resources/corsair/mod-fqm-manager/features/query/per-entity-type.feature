@@ -9,6 +9,7 @@ Feature: Query each entity type
     * def holdingsEntityTypeId = '8418e512-feac-4a6a-a56d-9006aab31e33'
     * def instanceEntityTypeId = '6b08439b-4f8e-4468-8046-ea620f5cfb74'
     * def organizationsEntityTypeId = 'e0ea4212-4023-458a-adce-8003ff6c5d9e'
+    * def itemDamagedStatusId = 'c1312672-0000-4000-8000-000000000001'
     * def fqmPoCheckboxFieldName = 'po._custom_field_83195700-0000-4000-8000-000000000001'
     * def fqmPoMultiSelectFieldName = 'po._custom_field_83195700-0000-4000-8000-000000000002'
     * def fqmPoSingleSelectFieldName = 'po._custom_field_83195700-0000-4000-8000-000000000003'
@@ -40,6 +41,31 @@ Feature: Query each entity type
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
+  @Positive @C1312672
+  Scenario: Verify item condition data is available and queryable
+    * def conditionResultFields = ['items.id', 'items.missing_pieces', 'items.missing_pieces_date', 'items.number_of_missing_pieces', 'items.item_damaged_status', 'items.item_damaged_status_date']
+
+    Given path 'entity-types', itemEntityTypeId
+    When method GET
+    Then status 200
+    And match response.columns[*].name contains conditionResultFields
+
+    * def fqlQuery = '{\"$and\":[{\"items.missing_pieces\":{\"$starts_with\":\"Piece\"}},{\"items.missing_pieces_date\":{\"$eq\":\"2026-04-19\"}},{\"items.number_of_missing_pieces\":{\"$ne\":\"200\"}},{\"items.item_damaged_status\":{\"$in\":[\"' + itemDamagedStatusId + '\"]}},{\"items.item_damaged_status_date\":{\"$eq\":\"2026-04-19\"}}]}'
+    * configure retry = { count: 24, interval: 5000 }
+    Given path 'query'
+    And params { entityTypeId: '#(itemEntityTypeId)', query: '#(fqlQuery)', fields: '#(conditionResultFields)' }
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords == 1
+    * def conditionRow = response.content[0]
+    * match conditionRow["items.missing_pieces"] == 'Piece 1 - test'
+    * match conditionRow["items.missing_pieces_date"] == '2026-04-19'
+    * assert parseInt(conditionRow["items.number_of_missing_pieces"]) == 100
+    * match conditionRow["items.item_damaged_status"] == 'Damaged'
+    * match conditionRow["items.item_damaged_status_date"] == '2026-04-19'
+
   Scenario: Run a query on the instance entity type
     * def queryRequest = { entityTypeId: '#(instanceEntityTypeId)' , fqlQuery: '{\"$and\":[{\"instance.id\":{\"$nin\":[\"c8a2b47a-51f3-493b-9f9e-aaeb38ad804e\"]}}]}' }
     * def queryCall = call postQuery
@@ -63,6 +89,21 @@ Feature: Query each entity type
     And match $.content contains deep {"pol.fund_distribution": '#(fundDistribution)'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
+
+  @C844854
+  Scenario: Query purchase order lines by fund distribution details
+    * def fields = ['pol.fund_distribution']
+    * def fqlQuery = '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$in\":[\"CANHIST\", \"EXCH-SUBN\", \"MISCHIST\"]}},{\"pol.fund_distribution[*]->fund_name\":{\"$eq\":\"History Misc\"}},{\"pol.fund_distribution[*]->distribution_type\":{\"$nin\":[\"amount\"]}}]}'
+    * def expectedFundDistribution = '[{"code": "CANHIST", "value": 30.0, "fundId": "c8448540-0000-4000-8000-000000000003", "fund_name": "Canadian History", "distributionType": "percentage", "expense_class_name": null}, {"code": "EXCH-SUBN", "value": 30.0, "fundId": "c8448540-0000-4000-8000-000000000004", "fund_name": "Exchanges", "distributionType": "percentage", "expense_class_name": null}, {"code": "MISCHIST", "value": 40.0, "fundId": "c8448540-0000-4000-8000-000000000005", "fund_name": "History Misc", "distributionType": "percentage", "expense_class_name": null}]'
+    * configure retry = { count: 24, interval: 5000 }
+    Given path 'query'
+    And params { entityTypeId: '#(purchaseOrderLinesEntityTypeId)', query: '#(fqlQuery)', fields: '#(fields)' }
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords == 1
+    And match response.content[0]['pol.fund_distribution'] == expectedFundDistribution
 
   @C831957
   Scenario: Verify label aliases are displayed for inherited purchase order custom fields

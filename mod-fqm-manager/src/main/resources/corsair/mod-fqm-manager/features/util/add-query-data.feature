@@ -109,6 +109,41 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add finance data for purchase order line fund distributions
+    * def fqmFiscalYearId = 'c8448540-0000-4000-8000-000000000001'
+    * def fqmLedgerId = 'c8448540-0000-4000-8000-000000000002'
+    * def canadianHistoryFundId = 'c8448540-0000-4000-8000-000000000003'
+    * def exchangesFundId = 'c8448540-0000-4000-8000-000000000004'
+    * def historyMiscFundId = 'c8448540-0000-4000-8000-000000000005'
+
+    * def fiscalYearRequest = { id: '#(fqmFiscalYearId)', name: 'FQM Fiscal Year 2026', code: 'FQM2026', description: 'FQM query test fiscal year', periodStart: '2026-01-01T00:00:00Z', periodEnd: '2026-12-31T23:59:59Z', series: 'FQM' }
+    Given path 'finance/fiscal-years'
+    And request fiscalYearRequest
+    When method POST
+    Then status 201
+
+    * def ledgerRequest = { id: '#(fqmLedgerId)', name: 'FQM fund distribution ledger', code: 'FQMFD', fiscalYearOneId: '#(fqmFiscalYearId)', ledgerStatus: 'Active', restrictEncumbrance: false, restrictExpenditures: false }
+    Given path 'finance/ledgers'
+    And request ledgerRequest
+    When method POST
+    Then status 201
+
+    * def canadianHistoryFundRequest = { fund: { id: '#(canadianHistoryFundId)', code: 'CANHIST', description: '', externalAccountNo: 'FQM-CANHIST', fundStatus: 'Active', ledgerId: '#(fqmLedgerId)', name: 'Canadian History' } }
+    * def exchangesFundRequest = { fund: { id: '#(exchangesFundId)', code: 'EXCH-SUBN', description: '', externalAccountNo: 'FQM-EXCH-SUBN', fundStatus: 'Active', ledgerId: '#(fqmLedgerId)', name: 'Exchanges' } }
+    * def historyMiscFundRequest = { fund: { id: '#(historyMiscFundId)', code: 'MISCHIST', description: '', externalAccountNo: 'FQM-MISCHIST', fundStatus: 'Active', ledgerId: '#(fqmLedgerId)', name: 'History Misc' } }
+    Given path 'finance/funds'
+    And request canadianHistoryFundRequest
+    When method POST
+    Then status 201
+    Given path 'finance/funds'
+    And request exchangesFundRequest
+    When method POST
+    Then status 201
+    Given path 'finance/funds'
+    And request historyMiscFundRequest
+    When method POST
+    Then status 201
+
     # Add a holdings source
     * def holdingsSourceId = call uuid1
     * def holdingsRecordRequest = {id: '#(holdingsSourceId)', name: 'test source', source: 'local'}
@@ -142,6 +177,14 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add item damaged status
+    * def itemDamagedStatusId = 'c1312672-0000-4000-8000-000000000001'
+    * def itemDamagedStatusRequest = {id: '#(itemDamagedStatusId)', name: 'Damaged', source: 'local'}
+    Given path '/item-damaged-statuses'
+    And request itemDamagedStatusRequest
+    When method POST
+    Then status 201
+
     # Add material type
     * def materialTypeId = '2ee721ab-70e5-49a6-8b09-1af0217ea3fc'
     * def materialTypeRequest = {id: '#(materialTypeId)', name: 'book'}
@@ -152,7 +195,7 @@ Feature: Add FQM query data
 
     # Add item
     * def itemId = call uuid1
-    * def itemRequest = {id: '#(itemId)', holdingsRecordId: '#(holdingsId)', status:  {name: 'Checked out'}, permanentLoanTypeId: '#(loanTypeId)', materialTypeId: '#(materialTypeId)'}
+    * def itemRequest = {id: '#(itemId)', holdingsRecordId: '#(holdingsId)', status:  {name: 'Checked out'}, permanentLoanTypeId: '#(loanTypeId)', materialTypeId: '#(materialTypeId)', numberOfMissingPieces: '100', missingPieces: 'Piece 1 - test', missingPiecesDate: '2026-04-19', itemDamagedStatusId: '#(itemDamagedStatusId)', itemDamagedStatusDate: '2026-04-19'}
     Given path '/item-storage/items'
     And request itemRequest
     When method POST
@@ -352,6 +395,15 @@ Feature: Add FQM query data
     Given path '/orders-storage/po-lines'
     And request purchaseOrderLineRequest
     When method POST
+
+    # Add Purchase Order Line with multiple fund distributions
+    * def purchaseOrderLineWithFundDistributionsId = 'c8448540-0000-4000-8000-000000000006'
+    * def fundDistributions = [{ code: 'CANHIST', value: 30.0, fundId: '#(canadianHistoryFundId)', distributionType: 'percentage' }, { code: 'EXCH-SUBN', value: 30.0, fundId: '#(exchangesFundId)', distributionType: 'percentage' }, { code: 'MISCHIST', value: 40.0, fundId: '#(historyMiscFundId)', distributionType: 'percentage' }]
+    * def purchaseOrderLineWithFundDistributionsRequest = {id: '#(purchaseOrderLineWithFundDistributionsId)', orderFormat:'P/E Mix' ,source:'User', purchaseOrderId:'#(orderId)', titleOrPackage: 'Purchase order line with fund distributions', paymentStatus: 'Pending', fundDistribution : '#(fundDistributions)', cost: '#(cost)', acquisitionMethod: '#(acquisitionMethod)'}
+    Given path '/orders-storage/po-lines'
+    And request purchaseOrderLineWithFundDistributionsRequest
+    When method POST
+    Then status 201
 
      #Add Organizations
     * def  organizationsId  = call uuid1

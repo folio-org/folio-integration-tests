@@ -24,28 +24,31 @@ Feature: CRUD operations on role capabilities
     Then status 201
     And match response.id == '#uuid'
     * def roleId = response.id
+    * def generatedPolicyName = 'Policy for role: ' + roleId
 
-    # Discover several capabilities so the test can mix IDs and names.
-    Given path 'capabilities'
-    And param limit = 3
+    # Resolve known capabilities so the test can mix IDs and names and assert policy creation.
+    * def firstCapabilityPermission = 'role-capabilities.collection.post'
+    * def secondCapabilityPermission = 'role-capabilities.collection.get'
+    * def thirdCapabilityPermission = 'role-capabilities.collection.put'
+    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: firstCapabilityPermission }).capability
+    * def secondCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: secondCapabilityPermission }).capability
+    * def thirdCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: thirdCapabilityPermission }).capability
+
+    # A role policy is created lazily, only when capabilities are assigned to the role.
+    Given path 'policies'
+    And param query = 'name=="' + generatedPolicyName + '"'
     When method get
     Then status 200
-    And match response.capabilities == '#array'
-    And assert response.capabilities.length >= 3
-    * def firstCapabilityId = response.capabilities[0].id
-    * def firstCapabilityName = response.capabilities[0].name
-    * def secondCapabilityId = response.capabilities[1].id
-    * def secondCapabilityName = response.capabilities[1].name
-    * def thirdCapabilityId = response.capabilities[2].id
-    * def thirdCapabilityName = response.capabilities[2].name
+    And match response.totalRecords == 0
+    And match response.policies == []
 
     # Link two capabilities in one request: one by ID and one by name.
     * def assignRoleCapabilitiesRequest =
       """
       {
         "roleId": "#(roleId)",
-        "capabilityIds": ["#(firstCapabilityId)"],
-        "capabilityNames": ["#(secondCapabilityName)"]
+        "capabilityIds": ["#(firstCapability.id)"],
+        "capabilityNames": ["#(secondCapability.name)"]
       }
       """
     Given path 'roles', 'capabilities'
@@ -54,8 +57,30 @@ Feature: CRUD operations on role capabilities
     Then status 201
     And match response.totalRecords == 2
     And match response.roleCapabilities[*].roleId contains roleId
-    And match response.roleCapabilities[*].capabilityId contains firstCapabilityId
-    And match response.roleCapabilities[*].capabilityId contains secondCapabilityId
+    And match response.roleCapabilities[*].capabilityId contains firstCapability.id
+    And match response.roleCapabilities[*].capabilityId contains secondCapability.id
+
+    # Verify that assigning capabilities also creates a role policy.
+    Given path 'policies'
+    And param query = 'name=="' + generatedPolicyName + '"'
+    When method get
+    Then status 200
+    And match response.totalRecords == 1
+    And match response.policies == '#[1]'
+    And match response.policies[0] contains deep
+      """
+      {
+        name: '#(generatedPolicyName)',
+        description: '#("System generated policy for role: " + roleId)',
+        type: 'ROLE',
+        source: 'SYSTEM',
+        rolePolicy: {
+          roles: [
+            { id: '#(roleId)' }
+          ]
+        }
+      }
+      """
 
     # Verify that the capabilities were added to the role.
     Given path 'roles', 'capabilities'
@@ -63,24 +88,22 @@ Feature: CRUD operations on role capabilities
     When method get
     Then status 200
     And match response.roleCapabilities[*].roleId contains roleId
-    And match response.roleCapabilities[*].capabilityId contains firstCapabilityId
-    And match response.roleCapabilities[*].capabilityId contains secondCapabilityId
+    And match response.roleCapabilities[*].capabilityId contains firstCapability.id
+    And match response.roleCapabilities[*].capabilityId contains secondCapability.id
 
     Given path 'roles', roleId, 'capabilities'
     When method get
     Then status 200
     And match response.totalRecords == 2
-    And match response.capabilities[*].id contains firstCapabilityId
-    And match response.capabilities[*].id contains secondCapabilityId
-    And match response.capabilities[*].name contains firstCapabilityName
-    And match response.capabilities[*].name contains secondCapabilityName
+    And match response.capabilities contains deep { id: '#(firstCapability.id)', name: '#(firstCapability.name)' }
+    And match response.capabilities contains deep { id: '#(secondCapability.id)', name: '#(secondCapability.name)' }
 
     # Update the linked set to keep one capability and replace the other.
     * def updateRoleCapabilitiesRequest =
       """
       {
-        "capabilityIds": ["#(firstCapabilityId)"],
-        "capabilityNames": ["#(thirdCapabilityName)"]
+        "capabilityIds": ["#(firstCapability.id)"],
+        "capabilityNames": ["#(thirdCapability.name)"]
       }
       """
     Given path 'roles', roleId, 'capabilities'
@@ -92,10 +115,8 @@ Feature: CRUD operations on role capabilities
     When method get
     Then status 200
     And match response.totalRecords == 2
-    And match response.capabilities[*].id contains firstCapabilityId
-    And match response.capabilities[*].id contains thirdCapabilityId
-    And match response.capabilities[*].name contains firstCapabilityName
-    And match response.capabilities[*].name contains thirdCapabilityName
+    And match response.capabilities contains deep { id: '#(firstCapability.id)', name: '#(firstCapability.name)' }
+    And match response.capabilities contains deep { id: '#(thirdCapability.id)', name: '#(thirdCapability.name)' }
 
     # Remove all role-capability links and delete the test role.
     Given path 'roles', roleId, 'capabilities'
@@ -111,3 +132,16 @@ Feature: CRUD operations on role capabilities
     Given path 'roles', roleId
     When method delete
     Then status 204
+
+    # Deleting the role should also clean up the generated policy.
+    Given path 'roles', roleId
+    When method get
+    Then status 404
+    And match response.errors == '#array'
+
+    Given path 'policies'
+    And param query = 'name=="' + generatedPolicyName + '"'
+    When method get
+    Then status 200
+    And match response.totalRecords == 0
+    And match response.policies == []
