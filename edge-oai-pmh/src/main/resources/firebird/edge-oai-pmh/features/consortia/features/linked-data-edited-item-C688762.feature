@@ -1,5 +1,5 @@
 @C688762
-Feature: Edited items of LINKED_DATA instance
+Feature: Edited items of shared LINKED_DATA instance
 
   Background:
     * url baseUrl
@@ -10,6 +10,7 @@ Feature: Edited items of LINKED_DATA instance
 
     * call login universityUser1
     * def headersUniversity = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * def headersUniversityTextPlain = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': 'text/plain', 'Authtoken-Refresh-Cache': 'true' }
 
     * call login collegeUser1
     * def headersCollege = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
@@ -22,7 +23,11 @@ Feature: Edited items of LINKED_DATA instance
     * configure headers = headersConsortia
 
     Given def instance = call read(utilsPath + '@CreateLdInstance') { testTenant: '#(centralTenant)' }
-    And def instanceId = instance.instanceId
+    And def instanceId = instance.inventoryId
+    And def srsId = instance.srsId
+    And def linkedDataId = instance.linkedDataId
+
+    * pause(5000)
 
     # share created instance
     * def sharingId = uuid()
@@ -91,17 +96,6 @@ Feature: Edited items of LINKED_DATA instance
     * def item = call read(utilsPath+'@CreateSimpleItem') { holdingsId: '#(holdingsId)', testTenant: '#(universityTenant)'  }
     * def itemId = item.id
 
-    # check created data
-    Given path 'inventory/instances', instanceId
-    When method GET
-    Then status 200
-    Given path 'holdings-storage/holdings', holdingsId
-    When method GET
-    Then status 200
-    Given path 'inventory/items', itemId
-    When method GET
-    Then status 200
-
     # OAI-PMH settings - Source record storage, Deleted records support
     * def behaviorPayload = read('classpath:samples/behavior.json')
     * set behaviorPayload.configValue.suppressedRecordsProcessing = 'true'
@@ -148,8 +142,11 @@ Feature: Edited items of LINKED_DATA instance
     And param until = until
     When method GET
     Then status 200
+    And match response//error/@code == 'noRecordsMatch'
 
     * url baseUrl
+    * configure headers = headersUniversity
+
     * def from = isoDate()
 
     # edit item
@@ -159,6 +156,7 @@ Feature: Edited items of LINKED_DATA instance
     * def itemBody = response
     * eval itemBody['discoverySuppress'] = true
 
+    * configure headers = headersUniversityTextPlain
     Given path 'item-storage/items', itemId
     And request itemBody
     When method PUT
@@ -178,310 +176,117 @@ Feature: Edited items of LINKED_DATA instance
     And param until = until
     When method GET
     Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='t'] == '0'
 
-#    # Set instance 1 for deleteion
-#    Given path 'inventory/instances/' + instanceId1 + '/mark-deleted'
-#    When method DELETE
-#    Then status 204
-#
-#    # Check deleted instance
-#    Given path 'inventory/instances/' + instanceId1
-#    When method GET
-#    Then status 200
-#    And match response.discoverySuppress == true
-#    And match response.deleted == true
-#    And match response.staffSuppress == true
-#
-#    # Switch to member tenant, edit instance 2 to set for deletion
-#    * configure headers = headersUniversity
-#    Given path 'inventory/instances/' + instanceId2
-#    When method GET
-#    Then status 200
-#    * def instanceBody = response
-#    * eval instanceBody['deleted'] = true
-#    * eval instanceBody['staffSuppress'] = true
-#    * eval instanceBody['discoverySuppress'] = true
-#
-#    Given path 'inventory/instances/' + instanceId2
-#    And request instanceBody
-#    When method PUT
-#    Then status 204
-#
-#    * pause(5000)
-#
-#    # Check deleted instance
-#    Given path 'inventory/instances/' + instanceId2
-#    When method GET
-#    Then status 200
-#    And match response.discoverySuppress == true
-#    And match response.deleted == true
-#    And match response.staffSuppress == true
-#
-#    # Set local instance 3 for deleteion
-#    Given path 'inventory/instances/' + instanceId3 + '/mark-deleted'
-#    When method DELETE
-#    Then status 204
-#
-#    # Check deleted instance
-#    Given path 'inventory/instances/' + instanceId3
-#    When method GET
-#    Then status 200
-#    And match response.discoverySuppress == true
-#    And match response.deleted == true
-#    And match response.staffSuppress == true
-#
-#    * def until = isoDate()
-#
-#    # OAI-PMH settings - source Inventory, Deleted records support
-#    * def behaviorPayload = read('classpath:samples/behavior.json')
-#    * set behaviorPayload.configValue.suppressedRecordsProcessing = 'true'
-#    * set behaviorPayload.configValue.deletedRecordsSupport = 'persistent'
-#    * set behaviorPayload.configValue.recordsSource = 'Inventory'
-#    * set behaviorPayload.configValue.errorsProcessing = '200'
-#
-#    # save settings for central tenant
-#    Given path 'oai-pmh/configuration-settings'
-#    When method GET
-#    Then status 200
-#    * def behaviorId = get[0] response.configurationSettings[?(@.configName=='behavior')].id
-#
-#    Given path 'oai-pmh/configuration-settings', behaviorId
-#    And request behaviorPayload
-#    When method PUT
-#    Then status 204
-#
-#    # save settings for university tenant
-#    * configure headers = headersUniversity
-#    Given path 'oai-pmh/configuration-settings'
-#    When method GET
-#    Then status 200
-#
-#    * def behaviorId = get[0] response.configurationSettings[?(@.configName=='behavior')].id
-#    Given path 'oai-pmh/configuration-settings', behaviorId
-#    And request behaviorPayload
-#    When method PUT
-#    Then status 204
-#
-#    * def identifier1 = 'oai:folio.org:' + universityTenant + '/' + instanceId1
-#    * def identifier2 = 'oai:folio.org:' + universityTenant + '/' + instanceId2
-#    * def identifier3 = 'oai:folio.org:' + universityTenant + '/' + instanceId3
-#
-#    * url edgeUrl
-#    * configure headers = { 'Accept': 'text/xml' }
-#
-#    # Send single tenant harvest requests - GetRecord
-#    # Instance 1
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'GetRecord'
-#    And param identifier = identifier1
-#    When method GET
-#    Then status 200
-#    And match response//header/identifier == identifier1
-#    And match response//header/@status == 'deleted'
-#
-#    # Instance 2
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'GetRecord'
-#    And param identifier = identifier2
-#    When method GET
-#    Then status 200
-#    And match response//header/identifier == identifier2
-#    And match response//header/@status == 'deleted'
-#
-#    # Instance 3
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'GetRecord'
-#    And param identifier = identifier3
-#    When method GET
-#    Then status 200
-#    And match response//header/identifier == identifier3
-#    And match response//header/@status == 'deleted'
-#
-#    # Send single tenant harvest requests - ListRecords
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'ListRecords'
-#    And param from = from
-#    And param until = until
-#    When method GET
-#    Then status 200
-#    # verify identifiers
-#    * def ids = karate.xmlPath(response, '//header/identifier')
-#    * match ids contains identifier1
-#    * match ids contains identifier2
-#    * match ids contains identifier3
-#    # verify all headers have status="deleted"
-#    * def statuses = karate.xmlPath(response, '//header/@status')
-#    * match statuses == ['deleted', 'deleted', 'deleted']
-#
-#    # Send single tenant harvest requests - ListIdentifiers
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'ListIdentifiers'
-#    And param from = from
-#    And param until = until
-#    When method GET
-#    Then status 200
-#    # verify identifiers
-#    * def ids = karate.xmlPath(response, '//header/identifier')
-#    * match ids contains identifier1
-#    * match ids contains identifier2
-#    * match ids contains identifier3
-#    # verify all headers have status="deleted"
-#    * def statuses = karate.xmlPath(response, '//header/@status')
-#    * match statuses == ['deleted', 'deleted', 'deleted']
-#
-#    # Send cross-tenant harvest requests - ListRecords
-#    Given path 'oai/records'
-#    And param apikey = consortiumApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'ListRecords'
-#    And param from = from
-#    And param until = until
-#    When method GET
-#    Then status 200
-#    # verify identifiers
-#    * def ids = karate.xmlPath(response, '//header/identifier')
-#    * match ids contains identifier1
-#    * match ids contains identifier2
-#    * match ids contains identifier3
-#    # verify all headers have status="deleted"
-#    * def statuses = karate.xmlPath(response, '//header/@status')
-#    * match statuses == ['deleted', 'deleted', 'deleted']
-#
-#    # Send cross-tenant harvest requests - ListIdentifiers
-#    Given path 'oai/records'
-#    And param apikey = consortiumApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'ListIdentifiers'
-#    And param from = from
-#    And param until = until
-#    When method GET
-#    Then status 200
-#    # verify identifiers
-#    * def ids = karate.xmlPath(response, '//header/identifier')
-#    * match ids contains identifier1
-#    * match ids contains identifier2
-#    * match ids contains identifier3
-#    # verify all headers have status="deleted"
-#    * def statuses = karate.xmlPath(response, '//header/@status')
-#    * match statuses == ['deleted', 'deleted', 'deleted']
-#
-#    * url baseUrl
-#
-#    # Disable deleted records support
-#    * def behaviorPayload = read('classpath:samples/behavior.json')
-#    * set behaviorPayload.configValue.suppressedRecordsProcessing = 'true'
-#    * set behaviorPayload.configValue.deletedRecordsSupport = 'no'
-#    * set behaviorPayload.configValue.recordsSource = 'Inventory'
-#    * set behaviorPayload.configValue.errorsProcessing = '200'
-#
-#    # save settings for central tenant
-#    * configure headers = headersConsortia
-#    Given path 'oai-pmh/configuration-settings'
-#    When method GET
-#    Then status 200
-#    * def behaviorId = get[0] response.configurationSettings[?(@.configName=='behavior')].id
-#
-#    Given path 'oai-pmh/configuration-settings', behaviorId
-#    And request behaviorPayload
-#    When method PUT
-#    Then status 204
-#
-#    # save settings for university tenant
-#    * configure headers = headersUniversity
-#    Given path 'oai-pmh/configuration-settings'
-#    When method GET
-#    Then status 200
-#
-#    * def behaviorId = get[0] response.configurationSettings[?(@.configName=='behavior')].id
-#    Given path 'oai-pmh/configuration-settings', behaviorId
-#    And request behaviorPayload
-#    When method PUT
-#    Then status 204
-#
-#    * url edgeUrl
-#    * configure headers = { 'Accept': 'text/xml' }
-#
-#    # Send single tenant harvest requests - GetRecord
-#    # Instance 1
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'GetRecord'
-#    And param identifier = identifier1
-#    When method GET
-#    Then status 200
-#    And match response//error/@code == 'idDoesNotExist'
-#
-#    # Instance 2
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'GetRecord'
-#    And param identifier = identifier2
-#    When method GET
-#    Then status 200
-#    And match response//error/@code == 'idDoesNotExist'
-#
-#    # Instance 3
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'GetRecord'
-#    And param identifier = identifier3
-#    When method GET
-#    Then status 200
-#    And match response//error/@code == 'idDoesNotExist'
-#
-#    # Send single tenant harvest requests - ListRecords
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'ListRecords'
-#    And param from = from
-#    And param until = until
-#    When method GET
-#    Then status 200
-#    And match response//error/@code == 'noRecordsMatch'
-#
-#    # Send single tenant harvest requests - ListIdentifiers
-#    Given path 'oai/records'
-#    And param apikey = universityApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'ListIdentifiers'
-#    And param from = from
-#    And param until = until
-#    When method GET
-#    Then status 200
-#    And match response//error/@code == 'noRecordsMatch'
-#
-#    # Send cross-tenant harvest requests - ListRecords
-#    Given path 'oai/records'
-#    And param apikey = consortiumApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'ListRecords'
-#    And param from = from
-#    And param until = until
-#    When method GET
-#    Then status 200
-#    And match response//error/@code == 'noRecordsMatch'
-#
-#    # Send cross-tenant harvest requests - ListIdentifiers
-#    Given path 'oai/records'
-#    And param apikey = consortiumApikey
-#    And param metadataPrefix = 'marc21_withholdings'
-#    And param verb = 'ListIdentifiers'
-#    And param from = from
-#    And param until = until
-#    When method GET
-#    Then status 200
-#    And match response//error/@code == 'noRecordsMatch'
+    # Send cross-tenant harvest request
+    Given path 'oai/records'
+    And param apikey = consortiumApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = from
+    And param until = until
+    When method GET
+    Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='t'] == '0'
+
+    # Change OAI-PMH record source to 'Inventory' and save settings
+    * set behaviorPayload.configValue.recordsSource = 'Inventory'
+
+    * url baseUrl
+
+    * configure headers = headersConsortia
+    Given path 'oai-pmh/configuration-settings', centralBehaviorId
+    And request behaviorPayload
+    When method PUT
+    Then status 204
+
+    * configure headers = headersUniversity
+    Given path 'oai-pmh/configuration-settings', universityBehaviorId
+    And request behaviorPayload
+    When method PUT
+    Then status 204
+
+    * url edgeUrl
+    * configure headers = { 'Accept': 'text/xml' }
+
+    # Send single tenant harvest request
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = from
+    And param until = until
+    When method GET
+    Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='t'] == '0'
+
+    # Send cross-tenant harvest request
+    Given path 'oai/records'
+    And param apikey = consortiumApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = from
+    And param until = until
+    When method GET
+    Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='t'] == '0'
+
+    # Change OAI-PMH record source to 'Source record storage and Inventory' and save settings
+    * set behaviorPayload.configValue.recordsSource = 'Source record storage and Inventory'
+
+    * url baseUrl
+
+    * configure headers = headersConsortia
+    Given path 'oai-pmh/configuration-settings', centralBehaviorId
+    And request behaviorPayload
+    When method PUT
+    Then status 204
+
+    * configure headers = headersUniversity
+    Given path 'oai-pmh/configuration-settings', universityBehaviorId
+    And request behaviorPayload
+    When method PUT
+    Then status 204
+
+    * url edgeUrl
+    * configure headers = { 'Accept': 'text/xml' }
+
+    # Send single tenant harvest request
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = from
+    And param until = until
+    When method GET
+    Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='t'] == '0'
+
+    # Send cross-tenant harvest request
+    Given path 'oai/records'
+    And param apikey = consortiumApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'ListRecords'
+    And param from = from
+    And param until = until
+    When method GET
+    Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='t'] == '0'

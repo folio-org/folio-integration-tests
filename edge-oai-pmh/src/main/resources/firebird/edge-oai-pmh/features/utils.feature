@@ -102,4 +102,6 @@ Feature: inventory
     And request instanceRequest
     When method POST
     Then status 200
-    * def instanceId = response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.inventoryId
+    * def linkedDataId = response.resource['http://bibfra.me/vocab/lite/Instance'].id
+    * def inventoryId = response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.inventoryId
+    * def srsId = response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.srsId
