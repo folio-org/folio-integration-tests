@@ -32,7 +32,12 @@ class ModUsersKeycloakTests extends TestBaseEureka {
   }
 
   @Test
-  void readUsers() {
-    runFeatureTest("read-users");
+  void users() {
+    runFeatureTest("users");
+  }
+
+  @Test
+  void authUsers() {
+    runFeatureTest("auth-users");
   }
 }
