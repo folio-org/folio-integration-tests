@@ -50,7 +50,9 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     FEATURE_22("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice-release-false", true),
     FEATURE_23("over-encumbrance-for-fy-ledger-and-group", true),
     FEATURE_24("open-order-when-balance-close-to-encumbered-available", true),
-    FEATURE_25("expense-class-percent-expended-when-budget-over-expended", true);
+    FEATURE_25("expense-class-percent-expended-when-budget-over-expended", true),
+    FEATURE_26("rollover-settings-no-encumbrances", true),
+    FEATURE_27("unreleased-encumbrance-rolled-over-to-next-fiscal-year", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -270,5 +272,19 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void expenseClassPercentExpendedWhenBudgetOverExpended() {
     runFeatureTest(Feature.FEATURE_25.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C356411) Rollover Settings Applying To Encumbrances With No Encumbrance Rollover Options Active")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void rolloverSettingsNoEncumbrances() {
+    runFeatureTest(Feature.FEATURE_26.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C436938) Unreleased Encumbrance Is Rolled Over To The Next Fiscal Year")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void unreleasedEncumbranceRolledOverToNextFiscalYear() {
+    runFeatureTest(Feature.FEATURE_27.getFileName());
   }
 }

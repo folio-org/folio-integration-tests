@@ -5,20 +5,6 @@ Feature: Cross-tenant item query helpers
     * configure readTimeout = 600000
     * configure retry = { count: 20, interval: 15000 }
 
-  @ignore @InstallEntityTypes
-  Scenario: Install entity types in a tenant
-    * call login user
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'application/json' }
-
-    Given path 'entity-types', 'install'
-    When method POST
-    Then status 204
-
-    Given path 'entity-types', itemEntityTypeId
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-
   @ignore @CreateReferenceData
   Scenario: Create inventory reference data for item query tests
     * call login user
@@ -87,19 +73,23 @@ Feature: Cross-tenant item query helpers
     * call login user
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)', 'Accept': 'application/json' }
 
-    * def instanceRequest = ({ id: instanceId, title: instanceTitle, source: instanceSource, instanceTypeId: refData.instanceTypeId })
+    * def instanceHrid = 'fqminst' + instanceId.substring(0, 8) + instanceId.substring(9, 13)
+    * def holdingHrid = 'fqmhold' + holdingId.substring(0, 8) + holdingId.substring(9, 13)
+    * def itemHrid = 'fqmitem' + itemId.substring(0, 8) + itemId.substring(9, 13)
+
+    * def instanceRequest = ({ id: instanceId, hrid: instanceHrid, title: instanceTitle, source: instanceSource, instanceTypeId: refData.instanceTypeId })
     Given path 'instance-storage', 'instances'
     And request instanceRequest
     When method POST
     Then status 201
 
-    * def holdingRequest = ({ id: holdingId, instanceId: instanceId, permanentLocationId: refData.locationId, sourceId: refData.holdingsSourceId })
+    * def holdingRequest = ({ id: holdingId, hrid: holdingHrid, instanceId: instanceId, permanentLocationId: refData.locationId, sourceId: refData.holdingsSourceId })
     Given path 'holdings-storage', 'holdings'
     And request holdingRequest
     When method POST
     Then status 201
 
-    * def itemRequest = ({ id: itemId, holdingsRecordId: holdingId, barcode: barcode, status: { name: 'Available' }, permanentLoanTypeId: refData.loanTypeId, materialTypeId: refData.materialTypeId })
+    * def itemRequest = ({ id: itemId, hrid: itemHrid, holdingsRecordId: holdingId, barcode: barcode, status: { name: 'Available' }, permanentLoanTypeId: refData.loanTypeId, materialTypeId: refData.materialTypeId })
     Given path 'item-storage', 'items'
     And request itemRequest
     When method POST

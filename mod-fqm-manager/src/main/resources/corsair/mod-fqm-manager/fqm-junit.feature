@@ -1,3 +1,4 @@
+@FqmManagerSetup
 Feature: mod-fqm-manager integration tests
 
   Background:
@@ -76,6 +77,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.authority-source-files.collection.get'          |
       | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
+      | 'inventory-storage.call-number-types.item.post'                    |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
       | 'inventory-storage.contributor-types.collection.get'               |
@@ -122,6 +124,8 @@ Feature: mod-fqm-manager integration tests
       | 'lost-item-fees-policies.collection.get'                           |
       | 'manual-block-templates.collection.get'                            |
       | 'manualblocks.collection.get'                                      |
+      | 'orders-storage.custom-fields.collection.get'                      |
+      | 'orders-storage.custom-fields.collection.put'                      |
       | 'orders-storage.pieces.collection.get'                             |
       | 'orders-storage.po-lines.item.post'                                |
       | 'orders-storage.purchase-orders.item.post'                         |

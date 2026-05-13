@@ -117,9 +117,18 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add a call number type
+    * def callNumberTypeId = '512173a7-bd09-490e-b773-17d83f2b63fe'
+    * def callNumberTypeName = 'LC Modified'
+    * def callNumberTypeRequest = {id: '#(callNumberTypeId)', name: '#(callNumberTypeName)', source: 'folio'}
+    Given path '/call-number-types'
+    And request callNumberTypeRequest
+    When method POST
+    Then status 201
+
     # Add holdings
     * def holdingsId = call uuid1
-    * def holdingsRequest = {id: '#(holdingsId)', instanceId: '#(instanceId)', permanentLocationId:  '#(permanentLocationId)', sourceId: '#(holdingsSourceId)'}
+    * def holdingsRequest = {id: '#(holdingsId)', instanceId: '#(instanceId)', permanentLocationId:  '#(permanentLocationId)', sourceId: '#(holdingsSourceId)', callNumberTypeId: '#(callNumberTypeId)'}
     Given path '/holdings-storage/holdings'
     And request holdingsRequest
     When method POST
@@ -157,11 +166,180 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add purchase order custom fields
+    * def fqmPoCheckboxCustomFieldId = '83195700-0000-4000-8000-000000000001'
+    * def fqmPoMultiSelectCustomFieldId = '83195700-0000-4000-8000-000000000002'
+    * def fqmPoSingleSelectCustomFieldId = '83195700-0000-4000-8000-000000000003'
+    * def fqmPoTextAreaCustomFieldId = '83195700-0000-4000-8000-000000000004'
+    * def fqmPoTextFieldCustomFieldId = '83195700-0000-4000-8000-000000000005'
+    * def fqmPoCheckboxRefId = 'fqmCheckbox'
+    * def fqmPoMultiSelectRefId = 'fqmMultiSelect'
+    * def fqmPoSingleSelectRefId = 'fqmSingleSelect'
+    * def fqmPoTextAreaRefId = 'fqmTextArea'
+    * def fqmPoTextFieldRefId = 'fqmTextField'
+
+    # Custom fields use the generic /custom-fields endpoint routed by x-okapi-module-id.
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': '#("Bearer " + keycloakMasterToken)' }
+    Given path 'applications'
+    When method GET
+    Then status 200
+    * def totalApplications = response.totalRecords
+    Given path 'applications'
+    And param limit = totalApplications
+    When method GET
+    Then status 200
+    * def ordersStorageModules = response.applicationDescriptors.flatMap(app => app.modules || []).filter(module => module.name == 'mod-orders-storage')
+    * assert ordersStorageModules.length > 0
+    * def ordersStorageModuleId = ordersStorageModules[0].id
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
+    * def fqmPoCheckboxCustomField =
+      """
+      {
+        "id": "#(fqmPoCheckboxCustomFieldId)",
+        "name": "FQM - checkbox",
+        "type": "SINGLE_CHECKBOX",
+        "order": 1,
+        "refId": "#(fqmPoCheckboxRefId)",
+        "visible": true,
+        "required": false,
+        "isRepeatable": false,
+        "helpText": "",
+        "entityType": "purchase_order",
+        "checkboxField": {
+          "default": false
+        }
+      }
+      """
+
+    * def fqmPoMultiSelectCustomField =
+      """
+      {
+        "id": "#(fqmPoMultiSelectCustomFieldId)",
+        "name": "FQM - multi select",
+        "type": "MULTI_SELECT_DROPDOWN",
+        "order": 2,
+        "refId": "#(fqmPoMultiSelectRefId)",
+        "visible": true,
+        "required": false,
+        "isRepeatable": false,
+        "helpText": "",
+        "entityType": "purchase_order",
+        "selectField": {
+          "multiSelect": true,
+          "options": {
+            "values": [
+              {
+                "id": "opt_0",
+                "value": "FQM - multi select1",
+                "default": true
+              },
+              {
+                "id": "opt_1",
+                "value": "FQM - multi select2",
+                "default": false
+              }
+            ],
+            "sortingOrder": "CUSTOM"
+          }
+        }
+      }
+      """
+
+    * def fqmPoSingleSelectCustomField =
+      """
+      {
+        "id": "#(fqmPoSingleSelectCustomFieldId)",
+        "name": "FQM - single select",
+        "type": "SINGLE_SELECT_DROPDOWN",
+        "order": 3,
+        "refId": "#(fqmPoSingleSelectRefId)",
+        "visible": true,
+        "required": false,
+        "isRepeatable": false,
+        "helpText": "",
+        "entityType": "purchase_order",
+        "selectField": {
+          "multiSelect": false,
+          "options": {
+            "values": [
+              {
+                "id": "opt_0",
+                "value": "FQM - single select1",
+                "default": false
+              },
+              {
+                "id": "opt_1",
+                "value": "FQM - single select2",
+                "default": true
+              }
+            ],
+            "sortingOrder": "CUSTOM"
+          }
+        }
+      }
+      """
+
+    * def fqmPoTextAreaCustomField =
+      """
+      {
+        "id": "#(fqmPoTextAreaCustomFieldId)",
+        "name": "FQM - text area",
+        "type": "TEXTBOX_LONG",
+        "order": 4,
+        "refId": "#(fqmPoTextAreaRefId)",
+        "visible": true,
+        "required": false,
+        "isRepeatable": false,
+        "helpText": "",
+        "entityType": "purchase_order"
+      }
+      """
+
+    * def fqmPoTextFieldCustomField =
+      """
+      {
+        "id": "#(fqmPoTextFieldCustomFieldId)",
+        "name": "FQM - text field",
+        "type": "TEXTBOX_SHORT",
+        "order": 5,
+        "refId": "#(fqmPoTextFieldRefId)",
+        "visible": true,
+        "required": false,
+        "isRepeatable": false,
+        "helpText": "",
+        "entityType": "purchase_order"
+      }
+      """
+    * def fqmPoCustomFields = []
+    * set fqmPoCustomFields[0] = fqmPoCheckboxCustomField
+    * set fqmPoCustomFields[1] = fqmPoMultiSelectCustomField
+    * set fqmPoCustomFields[2] = fqmPoSingleSelectCustomField
+    * set fqmPoCustomFields[3] = fqmPoTextAreaCustomField
+    * set fqmPoCustomFields[4] = fqmPoTextFieldCustomField
+    Given path '/custom-fields'
+    And header x-okapi-module-id = ordersStorageModuleId
+    And request { customFields: '#(fqmPoCustomFields)', entityType: 'purchase_order' }
+    When method PUT
+    Then assert responseStatus == 200 || responseStatus == 204
+
+    * configure retry = { count: 60, interval: 5000 }
+    Given path '/custom-fields'
+    And header x-okapi-module-id = ordersStorageModuleId
+    And param limit = 100
+    And retry until response.customFields && response.customFields.some(field => field.refId == fqmPoMultiSelectRefId)
+    When method GET
+    Then status 200
+
     # Add purchase order
     * def orderId = call uuid1
-    * def orderRequest = {id: '#(orderId)', metadata: {createdDate: '2018-08-19T00:00:00.000+0000'}}
+    * def orderCustomFields = { fqmCheckbox: true, fqmMultiSelect: ['opt_0'], fqmSingleSelect: 'opt_1', fqmTextArea: 'FQM test for text area', fqmTextField: 'FQM test for text field' }
+    * def orderRequest = {id: '#(orderId)', metadata: {createdDate: '2018-08-19T00:00:00.000+0000'}, customFields: '#(orderCustomFields)'}
     Given path '/orders-storage/purchase-orders'
     And request orderRequest
+    And retry until responseStatus == 201
     When method POST
     Then status 201
 
