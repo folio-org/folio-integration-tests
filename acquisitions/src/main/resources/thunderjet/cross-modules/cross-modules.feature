@@ -340,3 +340,6 @@ Feature: cross-module integration tests
 
   Scenario: Rollover Settings Applying To Encumbrances With No Encumbrance Rollover Options Active
     * call read('features/rollover-settings-no-encumbrances.feature')
+
+  Scenario: Unreleased Encumbrance Is Rolled Over To The Next Fiscal Year
+    * call read('features/unreleased-encumbrance-rolled-over-to-next-fiscal-year.feature')
