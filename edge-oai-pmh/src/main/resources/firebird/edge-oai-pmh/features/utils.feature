@@ -56,6 +56,15 @@ Feature: inventory
     And def id = response.id
     And def effectiveLocationId = response.effectiveLocation.id
 
+  @CreateSimpleItem
+  Scenario: Create Item
+    Given path 'item-storage/items'
+    And request read(samplesPath + 'simple_item.json')
+    When method POST
+    Then status 201
+
+    And def id = response.id
+
   @CreateSnapshot
   Scenario: Create Snapshot
     * def snapshotId = uuid()
@@ -78,3 +87,21 @@ Feature: inventory
     When method POST
     Then status 201
     And def id = response.id
+
+  @CreateLdInstance
+  Scenario: Create LINKED_DATA instance
+    * def workRequest = read(samplesPath + 'work-request.json')
+    Given path 'linked-data','resource'
+    And request workRequest
+    When method POST
+    Then status 200
+    And def workId = response.resource['http://bibfra.me/vocab/lite/Work'].id
+
+    * def instanceRequest = read(samplesPath + 'instance-request.json')
+    Given path 'linked-data','resource'
+    And request instanceRequest
+    When method POST
+    Then status 200
+    * def linkedDataId = response.resource['http://bibfra.me/vocab/lite/Instance'].id
+    * def inventoryId = response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.inventoryId
+    * def srsId = response.resource['http://bibfra.me/vocab/lite/Instance'].folioMetadata.srsId

@@ -114,3 +114,30 @@ Feature: create reference data
     """
     When method POST
     Then status 201
+
+  Scenario: create loan type
+    Given path 'loan-types'
+    And request
+      """
+      {
+        "id":"2b94c631-fca9-4892-a730-03ee529ffe27",
+        "name":"Can circulate",
+        "source": "folio"
+      }
+      """
+    When method POST
+    Then status 201
+
+  Scenario: create material type
+    Given path 'material-types'
+    And request
+      """
+      {
+        "id":"1a54b431-2e4f-452d-9cae-9cee66c9a892",
+        "name":"book",
+        "source":"folio"
+      }
+
+      """
+    When method POST
+    Then status 201
