@@ -64,7 +64,7 @@ Feature: Read operations on capability sets
     # Verify each child capability matches the direct capability-by-id response.
     * karate.forEach(childCapabilities, childCapability => karate.call('classpath:eureka/mod-roles-keycloak/features/capability-sets.feature@verifyChildCapabilityById', { childCapability: childCapability }))
 
-  @ignore
+  @ignore @verifyChildCapabilityById
   Scenario: verifyChildCapabilityById
     * def expectedCapability = childCapability
     Given path 'capabilities', expectedCapability.id
