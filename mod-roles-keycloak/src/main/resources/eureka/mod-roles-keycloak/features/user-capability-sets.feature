@@ -20,9 +20,9 @@ Feature: CRUD operations on user capability sets
     And match response.capabilities == '#[1]'
     * def baselineCapability = response.capabilities[0]
 
-    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: firstCapabilitySetPermission })
-    * def secondCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: secondCapabilitySetPermission })
-    * def thirdCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: thirdCapabilitySetPermission })
+    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: firstCapabilitySetPermission }))
+    * def secondCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: secondCapabilitySetPermission }))
+    * def thirdCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: thirdCapabilitySetPermission }))
 
     * def firstAndThirdPermissions = firstCapabilitySet.permissions.concat(thirdCapabilitySet.permissions)
     * def secondOnlyPermissions = karate.filter(secondCapabilitySet.permissions, x => firstAndThirdPermissions.indexOf(x) == -1)
@@ -34,24 +34,9 @@ Feature: CRUD operations on user capability sets
 
     # Create a user with one baseline permission.
     * def subjectUserName = 'user-capability-sets-user-' + nowMillis()
-    * def subjectUser =
-      """
-      {
-        "tenant": "#(testTenant)",
-        "name": "#(subjectUserName)",
-        "password": "test"
-      }
-      """
-    * def subjectUserPermissions =
-      """
-      [
-        { "name": "#(baselineCapabilityPermission)" }
-      ]
-      """
-    * configure headers = null
-    * def createUserResult = call read('classpath:common/eureka/create-additional-user.feature') { testUser: #(subjectUser), userPermissions: #(subjectUserPermissions) }
+    * def subjectUserPermissions = ([{ name: baselineCapabilityPermission }])
+    * def createUserResult = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/user-helpers.feature@createAdditionalUser', ({ userName: subjectUserName, userPermissions: subjectUserPermissions }))
     * def subjectUserId = createUserResult.userId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
 
     # Assign two capability sets to the user.
     * def assignUserCapabilitySetsRequest = ({ userId: subjectUserId, capabilitySetIds: [firstCapabilitySet.capabilitySet.id, secondCapabilitySet.capabilitySet.id] })
@@ -167,7 +152,7 @@ Feature: CRUD operations on user capability sets
   @Negative
   Scenario: updating capability sets for a non-existing user returns 404
     * def firstCapabilitySetPermission = 'role-capability-sets.all'
-    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: firstCapabilitySetPermission })
+    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: firstCapabilitySetPermission }))
     * def missingUserId = uuid()
     * def updateUserCapabilitySetsRequest = ({ capabilitySetIds: [firstCapabilitySet.capabilitySet.id] })
     Given path 'users', missingUserId, 'capability-sets'

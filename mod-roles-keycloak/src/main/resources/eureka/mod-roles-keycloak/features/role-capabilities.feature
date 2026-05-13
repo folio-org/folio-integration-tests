@@ -9,30 +9,16 @@ Feature: CRUD operations on role capabilities
   Scenario: assign, list, update, and delete role capabilities
     # Create a role that will be used for capability linking.
     * def roleName = 'karate-role-capabilities-' + nowMillis()
-    * def createRoleRequest =
-      """
-      {
-        "name": "#(roleName)",
-        "description": "Role for role capability Karate tests",
-        "type": "REGULAR"
-      }
-      """
-
-    Given path 'roles'
-    And request createRoleRequest
-    When method post
-    Then status 201
-    And match response.id == '#uuid'
-    * def roleId = response.id
+    * def roleId = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/role-helpers.feature@createRole', ({ roleName: roleName, roleDescription: 'Role for role capability Karate tests', roleType: 'REGULAR' })).roleId
     * def generatedPolicyName = 'Policy for role: ' + roleId
 
     # Resolve known capabilities so the test can mix IDs and names and assert policy creation.
     * def firstCapabilityPermission = 'role-capabilities.collection.post'
     * def secondCapabilityPermission = 'role-capabilities.collection.get'
     * def thirdCapabilityPermission = 'role-capabilities.collection.put'
-    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: firstCapabilityPermission }).capability
-    * def secondCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: secondCapabilityPermission }).capability
-    * def thirdCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: thirdCapabilityPermission }).capability
+    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: firstCapabilityPermission })).capability
+    * def secondCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: secondCapabilityPermission })).capability
+    * def thirdCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: thirdCapabilityPermission })).capability
 
     # A role policy is created lazily, only when capabilities are assigned to the role.
     Given path 'policies'
@@ -165,7 +151,7 @@ Feature: CRUD operations on role capabilities
   @Negative
   Scenario: updating capabilities for a non-existing role returns 404
     * def firstCapabilityPermission = 'role-capabilities.collection.post'
-    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: firstCapabilityPermission }).capability
+    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: firstCapabilityPermission })).capability
     * def missingRoleId = uuid()
     * def updateRoleCapabilitiesRequest = ({ capabilityIds: [firstCapability.id] })
     Given path 'roles', missingRoleId, 'capabilities'

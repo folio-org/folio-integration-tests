@@ -9,21 +9,7 @@ Feature: User permissions reflect role capability changes
   Scenario: user permissions reflect updated role capabilities
     # Create a role.
     * def roleName = 'karate-role-capability-user-permissions-' + nowMillis()
-    * def createRoleRequest =
-      """
-      {
-        "name": "#(roleName)",
-        "description": "Role for user permission refresh Karate tests",
-        "type": "REGULAR"
-      }
-      """
-
-    Given path 'roles'
-    And request createRoleRequest
-    When method post
-    Then status 201
-    And match response.id == '#uuid'
-    * def roleId = response.id
+    * def roleId = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/role-helpers.feature@createRole', ({ roleName: roleName, roleDescription: 'Role for user permission refresh Karate tests', roleType: 'REGULAR' })).roleId
 
     # Resolve the capabilities corresponding to the predefined permission names.
     * def firstCapabilityPermission = 'role-capabilities.collection.post'
@@ -66,24 +52,9 @@ Feature: User permissions reflect role capability changes
 
     # Create a user with one baseline permission.
     * def subjectUserName = 'role-capability-permissions-user-' + nowMillis()
-    * def subjectUser =
-      """
-      {
-        "tenant": "#(testTenant)",
-        "name": "#(subjectUserName)",
-        "password": "test"
-      }
-      """
-    * def subjectUserPermissions =
-      """
-      [
-        { "name": "#(baselineCapabilityPermission)" }
-      ]
-      """
-    * configure headers = null
-    * def createUserResult = call read('classpath:common/eureka/create-additional-user.feature') { testUser: #(subjectUser), userPermissions: #(subjectUserPermissions) }
+    * def subjectUserPermissions = ([{ name: baselineCapabilityPermission }])
+    * def createUserResult = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/user-helpers.feature@createAdditionalUser', ({ userName: subjectUserName, userPermissions: subjectUserPermissions }))
     * def subjectUserId = createUserResult.userId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
 
     # Assign the role to the new user.
     * def assignUserRoleRequest =

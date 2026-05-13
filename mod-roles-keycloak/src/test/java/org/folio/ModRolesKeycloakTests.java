@@ -62,6 +62,11 @@ class ModRolesKeycloakTests extends TestBaseEureka {
   }
 
   @Test
+  void userDeletionCleanup() {
+    runFeatureTest("user-deletion-cleanup");
+  }
+
+  @Test
   void roleCapabilities() {
     runFeatureTest("role-capabilities");
   }

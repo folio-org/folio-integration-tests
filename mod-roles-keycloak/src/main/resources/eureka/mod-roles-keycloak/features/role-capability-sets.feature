@@ -9,30 +9,16 @@ Feature: CRUD operations on role capability sets
   Scenario: assign, list, update, and delete role capability sets
     # Create a role that will be used for capability-set linking.
     * def roleName = 'karate-role-capability-sets-' + nowMillis()
-    * def createRoleRequest =
-      """
-      {
-        "name": "#(roleName)",
-        "description": "Role for role capability set Karate tests",
-        "type": "REGULAR"
-      }
-      """
-
-    Given path 'roles'
-    And request createRoleRequest
-    When method post
-    Then status 201
-    And match response.id == '#uuid'
-    * def roleId = response.id
+    * def roleId = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/role-helpers.feature@createRole', ({ roleName: roleName, roleDescription: 'Role for role capability set Karate tests', roleType: 'REGULAR' })).roleId
     * def generatedPolicyName = 'Policy for role: ' + roleId
 
     # Resolve known capability sets and remember child capabilities for validation.
     * def firstCapabilitySetPermission = 'role-capability-sets.all'
     * def secondCapabilitySetPermission = 'user-capabilities.all'
     * def thirdCapabilitySetPermission = 'user-capability-sets.all'
-    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: firstCapabilitySetPermission })
-    * def secondCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: secondCapabilitySetPermission })
-    * def thirdCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: thirdCapabilitySetPermission })
+    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: firstCapabilitySetPermission }))
+    * def secondCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: secondCapabilitySetPermission }))
+    * def thirdCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: thirdCapabilitySetPermission }))
     * assert firstCapabilitySet.capabilityIds.length > 0
     * assert secondCapabilitySet.capabilityIds.length > 0
 
@@ -175,7 +161,7 @@ Feature: CRUD operations on role capability sets
   @Negative
   Scenario: updating capability sets for a non-existing role returns 404
     * def firstCapabilitySetPermission = 'role-capability-sets.all'
-    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: firstCapabilitySetPermission })
+    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: firstCapabilitySetPermission }))
     * def missingRoleId = uuid()
     * def updateRoleCapabilitySetsRequest = ({ capabilitySetIds: [firstCapabilitySet.capabilitySet.id] })
     Given path 'roles', missingRoleId, 'capability-sets'
