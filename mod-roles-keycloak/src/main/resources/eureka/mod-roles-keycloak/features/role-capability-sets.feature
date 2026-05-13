@@ -155,3 +155,31 @@ Feature: CRUD operations on role capability sets
     Then status 200
     And match response.totalRecords == 0
     And match response.policies == []
+
+  @Negative
+  Scenario: assigning role capability sets with unknown names returns 400
+    * def roleId = uuid()
+    * def assignRoleCapabilitySetsRequest =
+      """
+      {
+        "roleId": "#(roleId)",
+        "capabilitySetNames": ["boo_item.create"]
+      }
+      """
+    Given path 'roles', 'capability-sets'
+    And request assignRoleCapabilitySetsRequest
+    When method post
+    Then status 400
+    And match response.errors == '#array'
+
+  @Negative
+  Scenario: updating capability sets for a non-existing role returns 404
+    * def firstCapabilitySetPermission = 'role-capability-sets.all'
+    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: firstCapabilitySetPermission })
+    * def missingRoleId = uuid()
+    * def updateRoleCapabilitySetsRequest = ({ capabilitySetIds: [firstCapabilitySet.capabilitySet.id] })
+    Given path 'roles', missingRoleId, 'capability-sets'
+    And request updateRoleCapabilitySetsRequest
+    When method put
+    Then status 404
+    And match response.errors == '#array'

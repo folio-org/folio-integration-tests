@@ -109,3 +109,12 @@ Feature: CRUD operations on roles
     Given path 'roles', secondBatchRoleId
     When method delete
     Then status 204
+
+  @Negative
+  Scenario: get a role by a non-existing id
+    * def missingRoleId = uuid()
+
+    Given path 'roles', missingRoleId
+    When method get
+    Then status 404
+    And match response.errors == '#array'

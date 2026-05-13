@@ -163,3 +163,15 @@ Feature: CRUD operations on user capability sets
     Then status 200
     And match response.userId == subjectUserId
     And match response.permissions == ['#(baselineCapabilityPermission)']
+
+  @Negative
+  Scenario: updating capability sets for a non-existing user returns 404
+    * def firstCapabilitySetPermission = 'role-capability-sets.all'
+    * def firstCapabilitySet = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', { capabilitySetPermission: firstCapabilitySetPermission })
+    * def missingUserId = uuid()
+    * def updateUserCapabilitySetsRequest = ({ capabilitySetIds: [firstCapabilitySet.capabilitySet.id] })
+    Given path 'users', missingUserId, 'capability-sets'
+    And request updateUserCapabilitySetsRequest
+    When method put
+    Then status 404
+    And match response.errors == '#array'

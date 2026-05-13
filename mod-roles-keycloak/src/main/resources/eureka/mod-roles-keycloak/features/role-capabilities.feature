@@ -145,3 +145,31 @@ Feature: CRUD operations on role capabilities
     Then status 200
     And match response.totalRecords == 0
     And match response.policies == []
+
+  @Negative
+  Scenario: assigning role capabilities with unknown names returns 400
+    * def roleId = uuid()
+    * def assignRoleCapabilitiesRequest =
+      """
+      {
+        "roleId": "#(roleId)",
+        "capabilityNames": ["boo_item.create"]
+      }
+      """
+    Given path 'roles', 'capabilities'
+    And request assignRoleCapabilitiesRequest
+    When method post
+    Then status 400
+    And match response.errors == '#array'
+
+  @Negative
+  Scenario: updating capabilities for a non-existing role returns 404
+    * def firstCapabilityPermission = 'role-capabilities.collection.post'
+    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: firstCapabilityPermission }).capability
+    * def missingRoleId = uuid()
+    * def updateRoleCapabilitiesRequest = ({ capabilityIds: [firstCapability.id] })
+    Given path 'roles', missingRoleId, 'capabilities'
+    And request updateRoleCapabilitiesRequest
+    When method put
+    Then status 404
+    And match response.errors == '#array'
