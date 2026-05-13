@@ -46,10 +46,13 @@ Feature: mod-fqm-manager integration tests
       | 'finance.exchange-rate.item.get'                                   |
       | 'finance.expense-classes.collection.get'                           |
       | 'finance.fiscal-years.collection.get'                              |
+      | 'finance.fiscal-years.item.post'                                   |
       | 'finance.fund-types.collection.get'                                |
       | 'finance.funds.collection.get'                                     |
+      | 'finance.funds.item.post'                                          |
       | 'finance.groups.collection.get'                                    |
       | 'finance.ledgers.collection.get'                                   |
+      | 'finance.ledgers.item.post'                                        |
       | 'finance.transactions.collection.get'                              |
       | 'fqm.entityTypes.collection.get'                                   |
       | 'fqm.entityTypes.custom.available-joins.collection.post'           |

@@ -90,6 +90,21 @@ Feature: Query each entity type
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
+  @C844854
+  Scenario: Query purchase order lines by fund distribution details
+    * def fields = ['pol.fund_distribution']
+    * def fqlQuery = '{\"$and\":[{\"pol.fund_distribution[*]->code\":{\"$in\":[\"CANHIST\", \"EXCH-SUBN\", \"MISCHIST\"]}},{\"pol.fund_distribution[*]->fund_name\":{\"$eq\":\"History Misc\"}},{\"pol.fund_distribution[*]->distribution_type\":{\"$nin\":[\"amount\"]}}]}'
+    * def expectedFundDistribution = '[{"code": "CANHIST", "value": 30.0, "fundId": "c8448540-0000-4000-8000-000000000003", "fund_name": "Canadian History", "distributionType": "percentage", "expense_class_name": null}, {"code": "EXCH-SUBN", "value": 30.0, "fundId": "c8448540-0000-4000-8000-000000000004", "fund_name": "Exchanges", "distributionType": "percentage", "expense_class_name": null}, {"code": "MISCHIST", "value": 40.0, "fundId": "c8448540-0000-4000-8000-000000000005", "fund_name": "History Misc", "distributionType": "percentage", "expense_class_name": null}]'
+    * configure retry = { count: 24, interval: 5000 }
+    Given path 'query'
+    And params { entityTypeId: '#(purchaseOrderLinesEntityTypeId)', query: '#(fqlQuery)', fields: '#(fields)' }
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords == 1
+    And match response.content[0]['pol.fund_distribution'] == expectedFundDistribution
+
   @C831957
   Scenario: Verify label aliases are displayed for inherited purchase order custom fields
     * configure retry = { count: 90, interval: 5000 }
