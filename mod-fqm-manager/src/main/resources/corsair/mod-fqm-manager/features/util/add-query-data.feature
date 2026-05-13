@@ -142,6 +142,14 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add item damaged status
+    * def itemDamagedStatusId = 'c1312672-0000-4000-8000-000000000001'
+    * def itemDamagedStatusRequest = {id: '#(itemDamagedStatusId)', name: 'Damaged', source: 'local'}
+    Given path '/item-damaged-statuses'
+    And request itemDamagedStatusRequest
+    When method POST
+    Then status 201
+
     # Add material type
     * def materialTypeId = '2ee721ab-70e5-49a6-8b09-1af0217ea3fc'
     * def materialTypeRequest = {id: '#(materialTypeId)', name: 'book'}
@@ -152,7 +160,7 @@ Feature: Add FQM query data
 
     # Add item
     * def itemId = call uuid1
-    * def itemRequest = {id: '#(itemId)', holdingsRecordId: '#(holdingsId)', status:  {name: 'Checked out'}, permanentLoanTypeId: '#(loanTypeId)', materialTypeId: '#(materialTypeId)'}
+    * def itemRequest = {id: '#(itemId)', holdingsRecordId: '#(holdingsId)', status:  {name: 'Checked out'}, permanentLoanTypeId: '#(loanTypeId)', materialTypeId: '#(materialTypeId)', numberOfMissingPieces: '100', missingPieces: 'Piece 1 - test', missingPiecesDate: '2026-04-19', itemDamagedStatusId: '#(itemDamagedStatusId)', itemDamagedStatusDate: '2026-04-19'}
     Given path '/item-storage/items'
     And request itemRequest
     When method POST
