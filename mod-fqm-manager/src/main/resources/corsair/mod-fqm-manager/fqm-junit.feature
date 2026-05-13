@@ -97,6 +97,8 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.instance-types.item.post'                       |
       | 'inventory-storage.instances.item.get'                             |
       | 'inventory-storage.instances.item.post'                            |
+      | 'inventory-storage.item-damaged-statuses.collection.get'           |
+      | 'inventory-storage.item-damaged-statuses.item.post'                |
       | 'inventory-storage.item-note-types.collection.get'                 |
       | 'inventory-storage.items.item.get'                                 |
       | 'inventory-storage.items.item.post'                                |
