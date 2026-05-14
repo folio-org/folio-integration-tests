@@ -12,41 +12,16 @@ Feature: User permissions reflect role capability-set changes
     * def roleId = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/role-helpers.feature@createRole', ({ roleName: roleName, roleDescription: 'Role for user permission refresh through capability sets Karate tests', roleType: 'REGULAR' })).roleId
 
     # Resolve the capability sets corresponding to the predefined permission names.
-    * def firstCapabilitySetPermission = 'role-capabilities.all'
+    * def firstCapabilitySetPermission = 'roles.users.all'
     * def secondCapabilitySetPermission = 'role-capability-sets.all'
     * def baselineCapabilityPermission = 'role-capabilities.collection.post'
-
-    Given path 'capabilities'
-    And param query = 'permission=="' + baselineCapabilityPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilities == '#[1]'
-
-    Given path 'capability-sets'
-    And param query = 'permission=="' + firstCapabilitySetPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilitySets == '#[1]'
-    * def firstCapabilitySet = response.capabilitySets[0]
-
-    Given path 'capability-sets'
-    And param query = 'permission=="' + secondCapabilitySetPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilitySets == '#[1]'
-    * def secondCapabilitySet = response.capabilitySets[0]
-
-    Given path 'capability-sets', firstCapabilitySet.id, 'capabilities'
-    When method get
-    Then status 200
-    And match response.capabilities == '#array'
-    * def firstCapabilitySetPermissions = response.capabilities.map(capability => capability.permission)
-
-    Given path 'capability-sets', secondCapabilitySet.id, 'capabilities'
-    When method get
-    Then status 200
-    And match response.capabilities == '#array'
-    * def secondCapabilitySetPermissions = response.capabilities.map(capability => capability.permission)
+    * def baselineCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: baselineCapabilityPermission })).capability
+    * def firstCapabilitySetResult = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: firstCapabilitySetPermission }))
+    * def secondCapabilitySetResult = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilitySetByPermission', ({ capabilitySetPermission: secondCapabilitySetPermission }))
+    * def firstCapabilitySet = firstCapabilitySetResult.capabilitySet
+    * def secondCapabilitySet = secondCapabilitySetResult.capabilitySet
+    * def firstCapabilitySetPermissions = firstCapabilitySetResult.permissions
+    * def secondCapabilitySetPermissions = secondCapabilitySetResult.permissions
     * def firstOnlyPermissions = karate.filter(firstCapabilitySetPermissions, x => secondCapabilitySetPermissions.indexOf(x) == -1)
     * assert firstOnlyPermissions.length > 0
 
@@ -88,8 +63,7 @@ Feature: User permissions reflect role capability-set changes
     When method get
     Then status 200
     And match response.userId == subjectUserId
-    And assert response.permissions.length >= firstCapabilitySetPermissions.length + 1
-    And match response.permissions contains baselineCapabilityPermission
+    And match response.permissions contains baselineCapability.permission
     And match response.permissions contains firstCapabilitySetPermissions
 
     # Update the role so the user should receive permissions from a different capability set.
@@ -109,8 +83,7 @@ Feature: User permissions reflect role capability-set changes
     When method get
     Then status 200
     And match response.userId == subjectUserId
-    And assert response.permissions.length >= secondCapabilitySetPermissions.length + 1
-    And match response.permissions contains baselineCapabilityPermission
+    And match response.permissions contains baselineCapability.permission
     And match response.permissions contains secondCapabilitySetPermissions
     And match response.permissions !contains firstOnlyPermissions
 

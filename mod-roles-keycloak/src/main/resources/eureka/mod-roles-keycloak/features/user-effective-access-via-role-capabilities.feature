@@ -15,26 +15,9 @@ Feature: User permissions reflect role capability changes
     * def firstCapabilityPermission = 'role-capabilities.collection.post'
     * def secondCapabilityPermission = 'role-capabilities.collection.get'
     * def baselineCapabilityPermission = 'role-capabilities.collection.put'
-
-    Given path 'capabilities'
-    And param query = 'permission=="' + firstCapabilityPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilities == '#[1]'
-    * def firstCapability = response.capabilities[0]
-
-    Given path 'capabilities'
-    And param query = 'permission=="' + secondCapabilityPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilities == '#[1]'
-    * def secondCapability = response.capabilities[0]
-
-    Given path 'capabilities'
-    And param query = 'permission=="' + baselineCapabilityPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilities == '#[1]'
+    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: firstCapabilityPermission })).capability
+    * def secondCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: secondCapabilityPermission })).capability
+    * def baselineCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: baselineCapabilityPermission })).capability
 
     # Assign the initial capability to the role.
     * def assignRoleCapabilitiesRequest =
@@ -74,10 +57,17 @@ Feature: User permissions reflect role capability changes
     When method get
     Then status 200
     And match response.userId == subjectUserId
-    And assert response.permissions.length >= 2
-    And match response.permissions contains baselineCapabilityPermission
+    And match response.permissions contains baselineCapability.permission
     And match response.permissions contains firstCapabilityPermission
     And assert response.permissions.indexOf(secondCapabilityPermission) == -1
+
+    # Verify filtering by a permission the user does not have returns an empty permission list.
+    Given path 'permissions', 'users', subjectUserId
+    And param desiredPermissions = secondCapabilityPermission
+    When method get
+    Then status 200
+    And match response.userId == subjectUserId
+    And match response.permissions == '#[]'
 
     # Update the role so the user should receive a different permission.
     * def updateRoleCapabilitiesRequest =
@@ -96,8 +86,7 @@ Feature: User permissions reflect role capability changes
     When method get
     Then status 200
     And match response.userId == subjectUserId
-    And assert response.permissions.length >= 2
-    And match response.permissions contains baselineCapabilityPermission
+    And match response.permissions contains baselineCapability.permission
     And match response.permissions contains secondCapabilityPermission
     And assert response.permissions.indexOf(firstCapabilityPermission) == -1
 

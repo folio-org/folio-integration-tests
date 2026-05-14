@@ -6,7 +6,7 @@ Feature: User effective access resolution
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
 
   @Positive
-  Scenario: user capabilities and effective permissions reflect supported assignment paths
+  Scenario: user capabilities and effective permissions reflect the assigned capabilites, capability sets & roles
     # Access paths covered by this scenario:
     # user -> capability
     # user -> capability set -> capabilities
