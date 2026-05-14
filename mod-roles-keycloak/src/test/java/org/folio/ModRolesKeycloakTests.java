@@ -67,6 +67,11 @@ class ModRolesKeycloakTests extends TestBaseEureka {
   }
 
   @Test
+  void userEffectiveAccess() {
+    runFeatureTest("user-effective-access");
+  }
+
+  @Test
   void roleCapabilities() {
     runFeatureTest("role-capabilities");
   }
@@ -74,6 +79,11 @@ class ModRolesKeycloakTests extends TestBaseEureka {
   @Test
   void roleCapabilitySets() {
     runFeatureTest("role-capability-sets");
+  }
+
+  @Test
+  void roleEffectiveAccess() {
+    runFeatureTest("role-effective-access");
   }
 
   @Test
