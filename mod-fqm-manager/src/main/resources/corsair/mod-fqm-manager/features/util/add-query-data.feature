@@ -421,13 +421,13 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
-    # Add Title
-    * def titleId = call uuid1
-    * def titleRequest = {id: '#(titleId)', title: 'FQM receiving piece title', poLineId: '#(purchaseOrderLineId)', instanceId: '#(instanceId)'}
+    # Get Title created with purchase order line
     Given path '/orders-storage/titles'
-    And request titleRequest
-    When method POST
-    Then status 201
+    And param query = 'poLineId==' + purchaseOrderLineId
+    And retry until response.titles && response.titles.length == 1
+    When method GET
+    Then status 200
+    * def titleId = response.titles[0].id
 
     # Add Piece
     * def pieceId = call uuid1
