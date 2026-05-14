@@ -81,3 +81,26 @@ Feature: Query special fields
     When method GET
     Then status 200
     And match $.content contains deep {"holdings_permanent_location.name": "Location 1"}
+
+  @C773209
+  Scenario: Verify that instance identifier type is queryable
+    Given path 'entity-types', instanceEntityTypeId
+    When method GET
+    Then status 200
+    * def identifierColumn = karate.filter(response.columns, function(column) { return column.name == 'instance.identifiers' })[0]
+    * def identifierTypeColumn = karate.filter(identifierColumn.dataType.itemDataType.properties, function(property) { return property.name == 'identifier_type_name' })[0]
+    And match identifierTypeColumn.queryable == true
+
+    * def fqlQuery = "{\"$and\":[{\"instance.identifiers[*]->identifier_type_name\":{\"$in\":[\"3187432f-9434-40a8-8782-35a111a1491e\",\"7f907515-a1bf-4513-8a38-92e1a07c539d\"]}},{\"instance.title\":{\"$eq\":\"Corsair's new instance\"}}]}"
+    * configure retry = { count: 24, interval: 5000 }
+    Given path 'query'
+    And params { entityTypeId: '#(instanceEntityTypeId)', query: '#(fqlQuery)', fields: ['instance.title', 'instance.identifiers'] }
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * assert parseInt(response.totalRecords) == 1
+    And match response.content[0]['instance.title'] == "Corsair's new instance"
+    And match response.content[0]['instance.identifiers'] contains 'ASIN'
+    And match response.content[0]['instance.identifiers'] contains 'ASIN - test1'
+    And match response.content[0]['instance.identifiers'] contains 'BNB'
+    And match response.content[0]['instance.identifiers'] contains 'BNB - test1'

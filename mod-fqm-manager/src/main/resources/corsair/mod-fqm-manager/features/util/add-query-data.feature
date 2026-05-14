@@ -76,6 +76,22 @@ Feature: Add FQM query data
     When method GET
     Then status 200
 
+    # Add instance with identifiers
+    * def instanceWithIdentifiersId = 'c7732090-0000-4000-8000-000000000003'
+    * def instanceIdentifiers = [{ value: 'ASIN - test1', identifierTypeId: '7f907515-a1bf-4513-8a38-92e1a07c539d' }, { value: 'BNB - test1', identifierTypeId: '3187432f-9434-40a8-8782-35a111a1491e' }]
+    * def instanceWithIdentifiersRequest = {id: '#(instanceWithIdentifiersId)', title: "Corsair's new instance", source: 'Local', instanceTypeId: '#(instanceTypeId)', identifiers: '#(instanceIdentifiers)'}
+    Given path '/instance-storage/instances'
+    And request instanceWithIdentifiersRequest
+    When method POST
+    Then status 201
+
+    # Wait until instance with identifiers is indexed
+    Given path '/search/instances'
+    And param query = 'cql.allRecords=1'
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
+
     # Add institution
     * def institutionId = call uuid1
     * def institutionRequest = {id: '#(institutionId)', name: 'Main Institution', code: 'MI'}
@@ -405,13 +421,13 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
-    # Add Title
-    * def titleId = call uuid1
-    * def titleRequest = {id: '#(titleId)', title: 'FQM receiving piece title', poLineId: '#(purchaseOrderLineId)', instanceId: '#(instanceId)'}
+    # Get Title created with purchase order line
     Given path '/orders-storage/titles'
-    And request titleRequest
-    When method POST
-    Then status 201
+    And param query = 'poLineId==' + purchaseOrderLineId
+    And retry until response.titles && response.titles.length == 1
+    When method GET
+    Then status 200
+    * def titleId = response.titles[0].id
 
     # Add Piece
     * def pieceId = call uuid1
