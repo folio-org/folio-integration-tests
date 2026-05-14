@@ -162,6 +162,11 @@ public class ModOaiPmhTests extends TestBaseEureka {
   }
 
     @Test
+    void oaiPmhGetRecordDeletedItemsWithholdingsC375984() {
+        runFeatureTest("oaipmh-getrecord-deleted-items-withholdings-C375984");
+    }
+
+    @Test
     void verifyDcbInstanceHoldings() {
         runFeatureTest("oaipmh-dcb");
     }
