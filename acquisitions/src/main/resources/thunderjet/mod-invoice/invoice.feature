@@ -80,6 +80,9 @@ Feature: mod-invoice integration tests
   Scenario: Checking that voucher lines are created taking into account the expense classes
     * call read('features/create-voucher-lines-honor-expense-classes.feature')
 
+  Scenario: Delete line and check next line number
+    * call read('features/delete-line-check-next-line-number.feature')
+
   Scenario: Edit subscription dates after invoice is paid
     * call read('features/edit-subscription-dates-after-invoice-paid.feature')
 
