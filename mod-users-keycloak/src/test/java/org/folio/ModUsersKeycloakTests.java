@@ -40,4 +40,9 @@ class ModUsersKeycloakTests extends TestBaseEureka {
   void authUsers() {
     runFeatureTest("auth-users");
   }
+
+  @Test
+  void passwordReset() {
+    runFeatureTest("password-reset");
+  }
 }

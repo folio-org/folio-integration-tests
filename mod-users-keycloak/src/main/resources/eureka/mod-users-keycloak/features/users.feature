@@ -57,6 +57,11 @@ Feature: users
     Then status 201
     * def createdUser = response
 
+    # Verify the create call provisioned the Keycloak auth user.
+    Given path 'users-keycloak', 'auth-users', userId
+    When method get
+    Then status 204
+
     # Update a couple of fields and verify they are persisted.
     * def updatedUsername = createdUsername + '-updated'
     * set createdUser.username = updatedUsername
@@ -112,6 +117,11 @@ Feature: users
     Then status 204
 
     Given path 'users-keycloak', 'users', userId
+    When method get
+    Then status 404
+
+    # Verify that user is deleted from keycloak
+    Given path 'users-keycloak', 'auth-users', userId
     When method get
     Then status 404
 
