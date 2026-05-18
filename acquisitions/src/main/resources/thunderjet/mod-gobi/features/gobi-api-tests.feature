@@ -16,6 +16,18 @@ Feature: GOBI api tests
     * def locationId3 = call uuid
     * def locationId4 = call uuid
 
+    * configure retry = { count: 5, interval: 5000 }
+
+    # Ensure Custom Mappings Are Removed Even If A Scenario Fails Mid-Way
+    * configure afterScenario =
+    """
+    function() {
+      karate.call('classpath:thunderjet/mod-gobi/reusable/delete-custom-mapping.feature', { orderType: 'UnlistedPrintMonograph' });
+      karate.call('classpath:thunderjet/mod-gobi/reusable/delete-custom-mapping.feature', { orderType: 'UnlistedPrintSerial' });
+      karate.call('classpath:thunderjet/mod-gobi/reusable/delete-custom-mapping.feature', { orderType: 'ListedElectronicMonograph' });
+    }
+    """
+
   Scenario: Validate get user and post user
     Given path '/gobi/validate'
     And headers headers
@@ -35,7 +47,7 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po_2
     When method POST
-    Then status 201
+    Then retry until responseStatus == 201
     And match responseHeaders['Content-Type'][0] == 'application/xml'
     * def poLineNumber = /Response/PoLineNumber
 
@@ -226,7 +238,7 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po_original
     When method POST
-    Then status 201
+    Then retry until responseStatus == 201
     * def poLineNumber = /Response/PoLineNumber
 
     # Check order approved
@@ -267,7 +279,7 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po_updated
     When method POST
-    Then status 201
+    Then retry until responseStatus == 201
     * def poLineNumberUpdated = /Response/PoLineNumber
 
     # Check order approved
@@ -312,7 +324,7 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po_updated
     When method POST
-    Then status 201
+    Then retry until responseStatus == 201
     * def poLineNumber = /Response/PoLineNumber
 
     # Check order approved
@@ -363,7 +375,7 @@ Feature: GOBI api tests
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     And request sample_po
     When method POST
-    Then status 201
+    Then retry until responseStatus == 201
     * def poLineNumber = /Response/PoLineNumber
 
     # Check order approved

@@ -1,0 +1,59 @@
+<PurchaseOrder>
+  <CustomerDetail>
+    <BaseAccount>6373</BaseAccount>
+    <SubAccount>637320</SubAccount>
+  </CustomerDetail>
+  <Order>
+    <ListedElectronicMonograph>
+      <collection>
+        <record>
+          <leader>00000nam a2200000u  4500</leader>
+          <controlfield tag="001">90102269179</controlfield>
+          <controlfield tag="003">NhCcYBP</controlfield>
+          <controlfield tag="005">20250904102522.0</controlfield>
+          <controlfield tag="008">250904t20192019xx ||||||||||||||   eng d</controlfield>
+          <datafield tag="020" ind1=" " ind2=" ">
+            <subfield code="a">9789813275607</subfield>
+            <subfield code="c">188.4</subfield>
+          </datafield>
+          <datafield tag="035" ind1=" " ind2=" ">
+            <subfield code="a">(OCoLC)1061304753</subfield>
+          </datafield>
+          <datafield tag="245" ind1="0" ind2="0">
+            <subfield code="a">ESSENTIALS OF OPHTHALMOLOGY: FOR MEDICAL SCHOOL AND BEYOND</subfield>
+          </datafield>
+          <datafield tag="260" ind1=" " ind2=" ">
+            <subfield code="a">SINGAPORE</subfield>
+            <subfield code="b">WORLD SCIENTIFIC</subfield>
+            <subfield code="c">2019</subfield>
+          </datafield>
+          <datafield tag="490" ind1="0" ind2=" ">
+            <subfield code="a">NUHS TEXTBOOK SERIES.</subfield>
+          </datafield>
+        </record>
+      </collection>
+      <OrderDetail>
+        <BatchPONumber>08142025</BatchPONumber>
+        <FundCode>USHIST</FundCode>
+        <Quantity>1</Quantity>
+        <YBPOrderKey>901022691796</YBPOrderKey>
+        <OrderPlaced>2025-08-14T11:44:08</OrderPlaced>
+        <Initials>RLA</Initials>
+        <ListPrice>
+          <Amount>188.4</Amount>
+          <Currency>USD</Currency>
+        </ListPrice>
+        <NetPrice>
+          <Amount>188.4</Amount>
+          <Currency>USD</Currency>
+        </NetPrice>
+        <PurchaseOption>
+          <VendorPOCode>EBS</VendorPOCode>
+          <Code>UU</Code>
+          <Description>EBSCOhost - Unlimited User</Description>
+          <VendorCode>EBSUU</VendorCode>
+        </PurchaseOption>
+      </OrderDetail>
+    </ListedElectronicMonograph>
+  </Order>
+</PurchaseOrder>
