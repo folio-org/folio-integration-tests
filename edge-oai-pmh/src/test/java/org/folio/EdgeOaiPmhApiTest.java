@@ -27,28 +27,58 @@ public class EdgeOaiPmhApiTest extends TestBaseEureka {
         runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
+//    @Test
+//    public void test() {
+//        runFeatureTest("edge-oai-pmh.feature");
+//    }
+//
+//    @Test
+//    public void test1() {
+//        runFeatureTest("instance-suppressed-with-discovery-flag-C193960.feature");
+//    }
+//
+//    @Test
+//    public void test2() {
+//        runFeatureTest("holdings-item-suppressed-with-discovery-flag-C193961.feature");
+//    }
+//
+//    @Test
+//    public void test3() {
+//        runFeatureTest("skip-suppressed-records-C193912.feature");
+//    }
+//
+//    @Test
+//    public void test4() {
+//        runFeatureTest("skip-suppressed-holdings-items.feature");
+//    }
+
     @Test
-    public void test() {
-        runFeatureTest("edge-oai-pmh.feature");
+    public void test5() {
+        runFeatureTest("ld-instance-add-holdings-C667569.feature");
     }
 
     @Test
-    public void test1() {
-        runFeatureTest("instance-suppressed-with-discovery-flag-C193960.feature");
+    public void test6() {
+        runFeatureTest("ld-instance-delete-holdings-C667577.feature");
     }
 
     @Test
-    public void test2() {
-        runFeatureTest("holdings-item-suppressed-with-discovery-flag-C193961.feature");
+    public void test7() {
+        runFeatureTest("ld-instance-add-item-C667572.feature");
     }
 
     @Test
-    public void test3() {
-        runFeatureTest("skip-suppressed-records-C193912.feature");
+    public void test8() {
+        runFeatureTest("ld-instance-edit-item-C667575.feature");
     }
 
     @Test
-    public void test4() {
-        runFeatureTest("skip-suppressed-holdings-items.feature");
+    public void test9() {
+        runFeatureTest("ld-instance-delete-item-C667576.feature");
+    }
+
+    @Test
+    public void test10() {
+        runFeatureTest("ld-instance-edit-holdings-C667574.feature");
     }
 }

@@ -31,6 +31,7 @@ Feature: mod-audit integration tests
       | 'oai-pmh.request-metadata.suppressed-from-discovery-instances.collection.get' |
       | 'inventory-storage.electronic-access-relationships.item.post'                 |
       | 'inventory-storage.holdings.item.post'                                        |
+      | 'inventory-storage.holdings.item.delete'                                      |
       | 'inventory-storage.instances.item.post'                                       |
       | 'inventory-storage.items.item.post'                                           |
       | 'source-storage.snapshots.post'                                               |
@@ -73,7 +74,6 @@ Feature: mod-audit integration tests
       | 'inventory.instances.item.delete'                                             |
       | 'converter-storage.field-protection-settings.collection.get'                  |
 
-    * def testTenant = 'testoaipmh'
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
 
 
