@@ -18,16 +18,6 @@ Feature: GOBI api tests
 
     * configure retry = { count: 5, interval: 5000 }
 
-    # Ensure Custom Mappings Are Removed Even If A Scenario Fails Mid-Way
-    * configure afterScenario =
-    """
-    function() {
-      karate.call('classpath:thunderjet/mod-gobi/reusable/delete-custom-mapping.feature', { orderType: 'UnlistedPrintMonograph' });
-      karate.call('classpath:thunderjet/mod-gobi/reusable/delete-custom-mapping.feature', { orderType: 'UnlistedPrintSerial' });
-      karate.call('classpath:thunderjet/mod-gobi/reusable/delete-custom-mapping.feature', { orderType: 'ListedElectronicMonograph' });
-    }
-    """
-
   Scenario: Validate get user and post user
     Given path '/gobi/validate'
     And headers headers
