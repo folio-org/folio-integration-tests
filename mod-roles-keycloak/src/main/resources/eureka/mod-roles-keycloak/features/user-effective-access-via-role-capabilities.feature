@@ -9,46 +9,15 @@ Feature: User permissions reflect role capability changes
   Scenario: user permissions reflect updated role capabilities
     # Create a role.
     * def roleName = 'karate-role-capability-user-permissions-' + nowMillis()
-    * def createRoleRequest =
-      """
-      {
-        "name": "#(roleName)",
-        "description": "Role for user permission refresh Karate tests",
-        "type": "REGULAR"
-      }
-      """
-
-    Given path 'roles'
-    And request createRoleRequest
-    When method post
-    Then status 201
-    And match response.id == '#uuid'
-    * def roleId = response.id
+    * def roleId = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/role-helpers.feature@createRole', ({ roleName: roleName, roleDescription: 'Role for user permission refresh Karate tests', roleType: 'REGULAR' })).roleId
 
     # Resolve the capabilities corresponding to the predefined permission names.
     * def firstCapabilityPermission = 'role-capabilities.collection.post'
     * def secondCapabilityPermission = 'role-capabilities.collection.get'
     * def baselineCapabilityPermission = 'role-capabilities.collection.put'
-
-    Given path 'capabilities'
-    And param query = 'permission=="' + firstCapabilityPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilities == '#[1]'
-    * def firstCapability = response.capabilities[0]
-
-    Given path 'capabilities'
-    And param query = 'permission=="' + secondCapabilityPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilities == '#[1]'
-    * def secondCapability = response.capabilities[0]
-
-    Given path 'capabilities'
-    And param query = 'permission=="' + baselineCapabilityPermission + '"'
-    When method get
-    Then status 200
-    And match response.capabilities == '#[1]'
+    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: firstCapabilityPermission })).capability
+    * def secondCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: secondCapabilityPermission })).capability
+    * def baselineCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: baselineCapabilityPermission })).capability
 
     # Assign the initial capability to the role.
     * def assignRoleCapabilitiesRequest =
@@ -66,24 +35,9 @@ Feature: User permissions reflect role capability changes
 
     # Create a user with one baseline permission.
     * def subjectUserName = 'role-capability-permissions-user-' + nowMillis()
-    * def subjectUser =
-      """
-      {
-        "tenant": "#(testTenant)",
-        "name": "#(subjectUserName)",
-        "password": "test"
-      }
-      """
-    * def subjectUserPermissions =
-      """
-      [
-        { "name": "#(baselineCapabilityPermission)" }
-      ]
-      """
-    * configure headers = null
-    * def createUserResult = call read('classpath:common/eureka/create-additional-user.feature') { testUser: #(subjectUser), userPermissions: #(subjectUserPermissions) }
+    * def subjectUserPermissions = ([{ name: baselineCapabilityPermission }])
+    * def createUserResult = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/user-helpers.feature@createAdditionalUser', ({ userName: subjectUserName, userPermissions: subjectUserPermissions }))
     * def subjectUserId = createUserResult.userId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
 
     # Assign the role to the new user.
     * def assignUserRoleRequest =
@@ -103,10 +57,17 @@ Feature: User permissions reflect role capability changes
     When method get
     Then status 200
     And match response.userId == subjectUserId
-    And assert response.permissions.length >= 2
-    And match response.permissions contains baselineCapabilityPermission
+    And match response.permissions contains baselineCapability.permission
     And match response.permissions contains firstCapabilityPermission
     And assert response.permissions.indexOf(secondCapabilityPermission) == -1
+
+    # Verify filtering by a permission the user does not have returns an empty permission list.
+    Given path 'permissions', 'users', subjectUserId
+    And param desiredPermissions = secondCapabilityPermission
+    When method get
+    Then status 200
+    And match response.userId == subjectUserId
+    And match response.permissions == '#[]'
 
     # Update the role so the user should receive a different permission.
     * def updateRoleCapabilitiesRequest =
@@ -125,8 +86,7 @@ Feature: User permissions reflect role capability changes
     When method get
     Then status 200
     And match response.userId == subjectUserId
-    And assert response.permissions.length >= 2
-    And match response.permissions contains baselineCapabilityPermission
+    And match response.permissions contains baselineCapability.permission
     And match response.permissions contains secondCapabilityPermission
     And assert response.permissions.indexOf(firstCapabilityPermission) == -1
 

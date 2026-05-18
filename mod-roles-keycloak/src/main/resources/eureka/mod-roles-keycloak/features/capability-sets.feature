@@ -64,6 +64,15 @@ Feature: Read operations on capability sets
     # Verify each child capability matches the direct capability-by-id response.
     * karate.forEach(childCapabilities, childCapability => karate.call('classpath:eureka/mod-roles-keycloak/features/capability-sets.feature@verifyChildCapabilityById', { childCapability: childCapability }))
 
+  @Negative
+  Scenario: get a capability set by a non-existing id
+    * def missingCapabilitySetId = uuid()
+
+    Given path 'capability-sets', missingCapabilitySetId
+    When method get
+    Then status 404
+    And match response.errors == '#array'
+
   @ignore @verifyChildCapabilityById
   Scenario: verifyChildCapabilityById
     * def expectedCapability = childCapability

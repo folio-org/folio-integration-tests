@@ -167,6 +167,11 @@ public class ModOaiPmhTests extends TestBaseEureka {
     }
 
     @Test
+    void oaiPmhListRecordsDeletedEditedMarcFolio() {
+        runFeatureTest("oaipmh-listrecords-deleted-edited-marc-folio-C926147");
+    }
+
+    @Test
     void verifyDcbInstanceHoldings() {
         runFeatureTest("oaipmh-dcb");
     }

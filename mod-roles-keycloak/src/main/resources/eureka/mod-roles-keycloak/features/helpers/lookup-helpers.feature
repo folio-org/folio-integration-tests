@@ -15,6 +15,7 @@ Feature: Shared lookup helpers for mod-roles-keycloak Karate tests
 
   @ignore @getCapabilitySetByPermission
   Scenario: getCapabilitySetByPermission
+    * def resolvedIncludeDummy = karate.get('includeDummy') == true
     Given path 'capability-sets'
     And param query = 'permission=="' + capabilitySetPermission + '"'
     When method get
@@ -22,6 +23,7 @@ Feature: Shared lookup helpers for mod-roles-keycloak Karate tests
     And match response.capabilitySets == '#[1]'
     * def capabilitySet = response.capabilitySets[0]
     Given path 'capability-sets', capabilitySet.id, 'capabilities'
+    And param includeDummy = resolvedIncludeDummy
     When method get
     Then status 200
     And match response.capabilities == '#array'

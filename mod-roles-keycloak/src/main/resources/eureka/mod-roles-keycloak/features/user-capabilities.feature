@@ -13,31 +13,36 @@ Feature: CRUD operations on user capabilities
     * def secondCapabilityPermission = 'role-capabilities.collection.put'
     * def thirdCapabilityPermission = 'roles.collection.get'
 
-    * def baselineCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: baselineCapabilityPermission }).capability
-    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: firstCapabilityPermission }).capability
-    * def secondCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: secondCapabilityPermission }).capability
-    * def thirdCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', { capabilityPermission: thirdCapabilityPermission }).capability
+    * def baselineCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: baselineCapabilityPermission })).capability
+    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: firstCapabilityPermission })).capability
+    * def secondCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: secondCapabilityPermission })).capability
+    * def thirdCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: thirdCapabilityPermission })).capability
 
-    # Create a user, with a baseline permission
+    # Create a user with a baseline permission.
     * def subjectUserName = 'user-capabilities-user-' + nowMillis()
-    * def subjectUser =
+    * def subjectUserPermissions = ([{ name: baselineCapabilityPermission }])
+    * def createUserResult = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/user-helpers.feature@createAdditionalUser', ({ userName: subjectUserName, userPermissions: subjectUserPermissions }))
+    * def subjectUserId = createUserResult.userId
+
+    # Assigning direct capabilities to the user creates a USER policy.
+    * def generatedPolicyName = 'Policy for user: ' + subjectUserId
+    Given path 'policies'
+    And param query = 'name=="' + generatedPolicyName + '"'
+    When method get
+    Then status 200
+    And match response.policies == '#[1]'
+    And match response.policies[0] contains deep
       """
       {
-        "tenant": "#(testTenant)",
-        "name": "#(subjectUserName)",
-        "password": "test"
+        name: '#(generatedPolicyName)',
+        description: '#("System generated policy for user: " + subjectUserId)',
+        type: 'USER',
+        source: 'SYSTEM',
+        userPolicy: {
+          users: ['#(subjectUserId)']
+        }
       }
       """
-    * def subjectUserPermissions =
-      """
-      [
-        { "name": "#(baselineCapabilityPermission)" }
-      ]
-      """
-    * configure headers = null
-    * def createUserResult = call read('classpath:common/eureka/create-additional-user.feature') { testUser: #(subjectUser), userPermissions: #(subjectUserPermissions) }
-    * def subjectUserId = createUserResult.userId
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
 
     # Assign two capabilities to the user.
     * def assignUserCapabilitiesRequest = ({ userId: subjectUserId, capabilityIds: [firstCapability.id, secondCapability.id] })
@@ -117,3 +122,15 @@ Feature: CRUD operations on user capabilities
     Then status 200
     And match response.userId == subjectUserId
     And match response.permissions == []
+
+  @Negative
+  Scenario: updating capabilities for a non-existing user returns 404
+    * def firstCapabilityPermission = 'role-capabilities.collection.post'
+    * def firstCapability = karate.call('classpath:eureka/mod-roles-keycloak/features/helpers/lookup-helpers.feature@getCapabilityByPermission', ({ capabilityPermission: firstCapabilityPermission })).capability
+    * def missingUserId = uuid()
+    * def updateUserCapabilitiesRequest = ({ capabilityIds: [firstCapability.id] })
+    Given path 'users', missingUserId, 'capabilities'
+    And request updateUserCapabilitiesRequest
+    When method put
+    Then status 404
+    And match response.errors == '#array'
