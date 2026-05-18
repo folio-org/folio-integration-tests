@@ -31,3 +31,15 @@ Feature: mod-gobi integration tests
 
   Scenario: Verify tenant address lookup populates billTo on order
     * call read('features/verify-tenant-address-lookup.feature')
+
+  Scenario: Receipt not required sets receiving workflow to Independent for Pending order
+    * call read('features/receipt-not-required-pending-order-independent-workflow.feature')
+
+  Scenario: Receipt not required sets receiving workflow to Independent for Open order
+    * call read('features/receipt-not-required-open-order-independent-workflow.feature')
+
+  Scenario: Order without location fails when Inventory interaction requires holdings
+    * call read('features/order-without-location-fails-when-holdings-required.feature')
+
+  Scenario: Order can be created without configured locations in the system
+    * call read('features/order-without-configured-locations.feature')

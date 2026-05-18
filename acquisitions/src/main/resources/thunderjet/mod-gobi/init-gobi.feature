@@ -70,6 +70,9 @@ Feature: Initialize mod-gobi integration tests
       | 'inventory.instances.item.post'                               |
       | 'organizations.organizations.item.post'                       |
       | 'orders.item.delete'                                          |
+      | 'orders-storage.settings.collection.get'                      |
+      | 'orders-storage.settings.item.post'                           |
+      | 'orders-storage.settings.item.put'                            |
       | 'tenant-addresses.item.post'                                  |
       | 'tenant-addresses.item.delete'                                |
 
