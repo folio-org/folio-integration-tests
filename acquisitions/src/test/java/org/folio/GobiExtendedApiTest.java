@@ -28,7 +28,8 @@ class GobiExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_1("receipt-not-required-pending-order-independent-workflow", true),
     FEATURE_2("receipt-not-required-open-order-independent-workflow", true),
     FEATURE_3("order-without-location-fails-when-holdings-required", true),
-    FEATURE_4("order-without-configured-locations", true);
+    FEATURE_4("order-without-configured-locations", true),
+    FEATURE_5("tenant-id-not-populated-on-non-ecs", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -99,5 +100,12 @@ class GobiExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void orderWithoutConfiguredLocations() {
     runFeatureTest(Feature.FEATURE_4.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) TenantId Is Not Populated By mod-gobi On Non-ECS Environment")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void tenantIdNotPopulatedOnNonEcs() {
+    runFeatureTest(Feature.FEATURE_5.getFileName());
   }
 }
