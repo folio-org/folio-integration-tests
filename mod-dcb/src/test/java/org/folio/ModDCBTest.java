@@ -150,6 +150,11 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("pickup-patron-group-update.feature");
   }
 
+  @Test
+  void testLenderServicePointHoldShelf() {
+    runFeatureTest("lender-service-point-hold-shelf.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
