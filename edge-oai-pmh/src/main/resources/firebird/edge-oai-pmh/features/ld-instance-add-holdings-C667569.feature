@@ -34,7 +34,7 @@ Feature: Add holdings to LINKED_DATA instance
     And def srsId = instance.srsId
     And def linkedDataId = instance.linkedDataId
 
-    * pause(5000)
+    * pause(10000)
 
     * def from = isoDate()
     * def until = isoDate()

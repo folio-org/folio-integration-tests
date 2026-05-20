@@ -11,6 +11,7 @@ Feature: mod-audit integration tests
       | 'mod-oai-pmh'                            |
       | 'mod-quick-marc'                         |
       | 'mod-di-converter-storage'               |
+      | 'mod-linked-data'                        |
 
     * table userPermissions
       | name                                     |
@@ -73,6 +74,7 @@ Feature: mod-audit integration tests
       | 'source-storage.snapshots.delete'                                             |
       | 'inventory.instances.item.delete'                                             |
       | 'converter-storage.field-protection-settings.collection.get'                  |
+      | 'linked-data.resources.bib.post'                                              |
 
     * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
 
