@@ -43,6 +43,8 @@ Feature: Initialize mod-gobi integration tests
       | 'inventory-storage.instances.item.get'      |
       | 'orders.collection.get'                     |
       | 'orders.po-lines.collection.get'            |
+      | 'orders.po-lines.item.get'                  |
+      | 'orders.po-lines.item.put'                  |
 
     # testAdmin is only used to initialize global data
     * table adminPermissions
