@@ -239,5 +239,4 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   void openOrderWithResolutionPoLineStatuses() {
     runFeatureTest(Feature.FEATURE_21.getFileName());
   }
-
 }
