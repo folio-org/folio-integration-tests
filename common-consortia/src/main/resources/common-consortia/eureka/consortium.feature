@@ -26,6 +26,7 @@ Feature: Consortium object in api tests
     And param adminUserId = consortiaAdmin.id
     And headers {'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)'}
     And request { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)', isDeleted: false }
