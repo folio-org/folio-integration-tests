@@ -67,6 +67,7 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
     * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
     * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature')
+    * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
 
     # Fixed UUIDs for inventory entities shared across scenarios
     * callonce read('classpath:vega/ecs-requests/ecs-requests-variables.feature')
@@ -76,6 +77,11 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * eval karate.set('centralTenantId', centralTenant)
 
   Scenario: create and initialize central and university tenants
+    # Extend Keycloak access-token lifespan to 2 hours so tokens never expire
+    # during long async waits (mod-search indexing, service-point replication, etc.)
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(centralTenant)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(universityTenant)' }
+
     # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
     # Uses abortedStepsShouldPass so this is a no-op when the tenants don't exist yet.
     * configure abortedStepsShouldPass = true
@@ -319,8 +325,8 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'ECS ILR Test Instance' }
     * def inventory = call setupInventory inventoryParams
 
-    # configure headers with a token-refreshing function so every retry attempt gets a fresh token
-    * configure headers = makeHeadersFn(consortiaAdmin, centralTenant)
+    # Wait until item is visible via allowed-service-points (confirms mod-search indexing and ECS propagation)
+    * configure headers = headersCentral
     * configure retry = { count: 20, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
@@ -330,9 +336,6 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     When method GET
     Then status 200
 
-    # Restore static headers with a fresh token for the request creation POST
-    * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
-    * def okapitoken = centralLogin.okapitoken
 
     # Create ILR ECS request via mod-circulation-bff
     Given path 'circulation-bff/requests'
@@ -406,8 +409,8 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'ECS TLR Test Instance' }
     * def inventory = call setupInventory inventoryParams
 
-    # configure headers with a token-refreshing function so every retry attempt gets a fresh token
-    * configure headers = makeHeadersFn(consortiaAdmin, centralTenant)
+    # Wait until instance is indexed by mod-search (confirms cross-tenant visibility and ECS propagation)
+    * configure headers = headersCentral
     * configure retry = { count: 20, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
@@ -417,9 +420,6 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     When method GET
     Then status 200
 
-    # Restore static headers with a fresh token for the request creation POST
-    * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
-    * def okapitoken = centralLogin.okapitoken
 
     # Create TLR ECS request via mod-circulation-bff
     Given path 'circulation-bff/requests'

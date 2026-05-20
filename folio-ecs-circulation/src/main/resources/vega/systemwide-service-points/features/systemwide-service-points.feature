@@ -29,8 +29,14 @@ Feature: systemwide-service-points tests
     * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
     * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
     * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
+    * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
 
   Scenario: create and initialize consortium, college, and university tenants
+    # Extend the Keycloak access-token lifespan to 2 hours so tokens never expire
+    # during the long async waits (service-point replication, mod-search indexing, etc.)
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(centralTenant)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(collegeTenant)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(universityTenant)' }
     * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)' }
     * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
@@ -63,8 +69,8 @@ Feature: systemwide-service-points tests
     When method POST
     Then status 201
 
-    # configure headers with a token-refreshing function so every retry attempt gets a fresh token
-    * configure headers = makeHeadersFn(collegeUser1, collegeTenant)
+    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
     * configure retry = { count: 40, interval: 15000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
@@ -74,7 +80,8 @@ Feature: systemwide-service-points tests
     And match response.servicepoints[0].id == servicePointId
     And match response.servicepoints[0].name == servicePointName
 
-    * configure headers = makeHeadersFn(universityUser1, universityTenant)
+    * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
     * configure retry = { count: 40, interval: 15000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
