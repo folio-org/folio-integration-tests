@@ -63,8 +63,8 @@ Feature: systemwide-service-points tests
     When method POST
     Then status 201
 
-    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+    # configure headers with a token-refreshing function so every retry attempt gets a fresh token
+    * configure headers = makeHeadersFn(collegeUser1, collegeTenant)
     * configure retry = { count: 40, interval: 15000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
@@ -74,8 +74,7 @@ Feature: systemwide-service-points tests
     And match response.servicepoints[0].id == servicePointId
     And match response.servicepoints[0].name == servicePointName
 
-    * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    * configure headers = makeHeadersFn(universityUser1, universityTenant)
     * configure retry = { count: 40, interval: 15000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'

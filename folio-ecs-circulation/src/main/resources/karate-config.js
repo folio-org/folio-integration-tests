@@ -82,6 +82,22 @@ function fn() {
       for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
+    },
+
+    // Returns a zero-arg function suitable for `configure headers`.
+    // Karate calls it before every request (including each retry attempt), so the
+    // Keycloak token is refreshed automatically and never expires during long waits.
+    makeHeadersFn: function(user, tenantName) {
+      return function() {
+        var lr = karate.call('classpath:common-consortia/eureka/initData.feature@Login',
+          { username: user.username, password: user.password, tenant: tenantName });
+        return {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'x-okapi-tenant': tenantName,
+          'x-okapi-token': lr.okapitoken
+        };
+      };
     }
   };
 
