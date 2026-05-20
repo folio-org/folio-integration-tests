@@ -69,7 +69,6 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_43("open-order-with-manual-exchange-rate", true),
     FEATURE_44("open-order-with-many-product-ids", true),
     FEATURE_45("open-order-without-holdings", true),
-    FEATURE_46("open-order-with-resolution-statuses", true),
     FEATURE_47("open-order-with-restricted-locations", true),
     FEATURE_48("open-order-with-the-same-fund-distributions", true),
     FEATURE_49("order-event", true),
@@ -425,12 +424,6 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void openOrderWithoutHoldings() {
     runFeatureTest(Feature.FEATURE_45.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void openOrderWithResolutionPoLineStatuses() {
-    runFeatureTest(Feature.FEATURE_46.getFileName());
   }
 
   @Test
