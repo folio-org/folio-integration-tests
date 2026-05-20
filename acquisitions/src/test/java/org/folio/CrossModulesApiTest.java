@@ -51,7 +51,6 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
     FEATURE_25("create-order-and-invoice-with-odd-penny", true),
     FEATURE_26("create-order-with-invoice-that-has-enough-money", true),
     FEATURE_27("delete-encumbrance", true),
-    FEATURE_28("invoice-encumbrance-update-without-acquisition-unit", true),
     FEATURE_29("ledger-fiscal-year-rollover", true),
     FEATURE_30("ledger-fiscal-year-rollover-cash-balance", true),
     FEATURE_31("link-invoice-line-to-po-line", true),
@@ -285,12 +284,6 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void deleteEncumbrance() {
     runFeatureTest(Feature.FEATURE_27.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void invoiceEncumbranceUpdateWithoutAcquisitionUnit() {
-    runFeatureTest(Feature.FEATURE_28.getFileName());
   }
 
   @Test

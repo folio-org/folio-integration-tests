@@ -16,6 +16,8 @@ Feature: Invoice encumbrance update without acquisition unit
     * callonce variables
 
 
+  @C451627
+  @Positive
   Scenario: Invoice encumbrance update without acquisition unit
     * def fundId = call uuid
     * def budgetId = call uuid
