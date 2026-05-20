@@ -90,6 +90,7 @@ Feature: inventory
 
   @CreateLdInstance
   Scenario: Create LINKED_DATA instance
+    * def workTitle = 'Work' + uuid()
     * def workRequest = read(samplesPath + 'work-request.json')
     Given path 'linked-data','resource'
     And request workRequest
@@ -97,6 +98,7 @@ Feature: inventory
     Then status 200
     And def workId = response.resource['http://bibfra.me/vocab/lite/Work'].id
 
+    * def instanceTitle = 'Title' + uuid()
     * def instanceRequest = read(samplesPath + 'instance-request.json')
     Given path 'linked-data','resource'
     And request instanceRequest

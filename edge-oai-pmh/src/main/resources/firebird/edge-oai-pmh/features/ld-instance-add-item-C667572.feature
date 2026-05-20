@@ -44,6 +44,7 @@ Feature: Add item to LINKED_DATA instance
     * def until = isoDate()
 
     * url edgeUrl
+    * configure headers = { 'Accept': 'text/xml' }
 
     # Send harvest request
     Given path 'oai/records'
@@ -57,6 +58,7 @@ Feature: Add item to LINKED_DATA instance
     And match response//error/@code == 'noRecordsMatch'
 
     * url baseUrl
+    * configure headers = defaultHeaders
     * def from = isoDate()
 
     # Add item
@@ -66,6 +68,7 @@ Feature: Add item to LINKED_DATA instance
     * def until = isoDate()
 
     * url edgeUrl
+    * configure headers = { 'Accept': 'text/xml' }
 
     # Send harvest request
     Given path 'oai/records'
@@ -83,6 +86,7 @@ Feature: Add item to LINKED_DATA instance
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='t'] == '0'
 
     * url baseUrl
+    * configure headers = defaultHeaders
     # Change OAI-PMH record source to 'Inventory' and save settings
     * set behaviorPayload.configValue.recordsSource = 'Inventory'
 
@@ -92,6 +96,7 @@ Feature: Add item to LINKED_DATA instance
     Then status 204
 
     * url edgeUrl
+    * configure headers = { 'Accept': 'text/xml' }
 
     # Send harvest request
     Given path 'oai/records'
@@ -109,6 +114,7 @@ Feature: Add item to LINKED_DATA instance
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='952']/*[local-name()='subfield'][@code='t'] == '0'
 
     * url baseUrl
+    * configure headers = defaultHeaders
     # Change OAI-PMH record source to 'Source record storage and Inventory' and save settings
     * set behaviorPayload.configValue.recordsSource = 'Source record storage and Inventory'
 
@@ -118,6 +124,7 @@ Feature: Add item to LINKED_DATA instance
     Then status 204
 
     * url edgeUrl
+    * configure headers = { 'Accept': 'text/xml' }
 
     # Send harvest request
     Given path 'oai/records'
