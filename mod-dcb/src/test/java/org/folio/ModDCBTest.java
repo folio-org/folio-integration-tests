@@ -151,6 +151,11 @@ public class ModDCBTest extends TestBaseEureka {
   }
 
   @Test
+  void testLenderServicePointHoldShelf() {
+    runFeatureTest("lender-service-point-hold-shelf.feature");
+  }
+
+  @Test
   void testLendingFlowVariousStatuses() {
     runFeatureTest("lending-flow-various-statuses.feature");
   }
