@@ -57,11 +57,14 @@ class DataImportApiTest extends TestBaseEureka {
     @AfterAll
     public void teardown() {
         if (shouldCreateTenant()) {
-            System.clearProperty(TEST_TENANT.getValue());
-            System.clearProperty(TEST_TENANT_ID.getValue());
-            feature("classpath:common/eureka/destroy-data.feature")
-                    .reportDir(timestampedReportDir())
-                    .run();
+            try {
+                feature("classpath:common/eureka/destroy-data.feature")
+                        .reportDir(timestampedReportDir())
+                        .run();
+            } finally {
+                System.clearProperty(TEST_TENANT.getValue());
+                System.clearProperty(TEST_TENANT_ID.getValue());
+            }
         }
     }
 }
