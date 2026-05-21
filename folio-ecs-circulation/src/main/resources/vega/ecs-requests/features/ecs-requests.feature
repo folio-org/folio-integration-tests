@@ -77,11 +77,6 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * eval karate.set('centralTenantId', centralTenant)
 
   Scenario: create and initialize central and university tenants
-    # Extend Keycloak access-token lifespan to 2 hours so tokens never expire
-    # during long async waits (mod-search indexing, service-point replication, etc.)
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(centralTenant)' }
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(universityTenant)' }
-
     # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
     # Uses abortedStepsShouldPass so this is a no-op when the tenants don't exist yet.
     * configure abortedStepsShouldPass = true
@@ -91,6 +86,10 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
 
     * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
+
+    # Extend the Keycloak access-token lifespan to 2 hours AFTER tenant setup so the realms exist.
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(centralTenant)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(universityTenant)' }
 
   Scenario: create consortium and register central and university tenants
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
@@ -226,6 +225,13 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
 
     Given path 'service-points'
     And request { id: '#(uniServicePointId)', name: 'ECS University Service Point', code: 'ECS-SP-U', discoveryDisplayName: 'ECS University Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    When method POST
+    Then status 201
+
+    # Also create the central service point in the university tenant so it is available
+    # as a pickup location without relying on cross-tenant Kafka replication.
+    Given path 'service-points'
+    And request { id: '#(ecsServicePointId)', name: 'ECS Central Service Point', code: 'ECS-SP-C', discoveryDisplayName: 'ECS Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
     When method POST
     Then status 201
 

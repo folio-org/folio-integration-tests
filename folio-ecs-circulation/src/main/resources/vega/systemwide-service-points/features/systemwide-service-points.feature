@@ -32,14 +32,15 @@ Feature: systemwide-service-points tests
     * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
 
   Scenario: create and initialize consortium, college, and university tenants
-    # Extend the Keycloak access-token lifespan to 2 hours so tokens never expire
-    # during the long async waits (service-point replication, mod-search indexing, etc.)
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(centralTenant)' }
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(collegeTenant)' }
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(universityTenant)' }
     * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)' }
     * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
+
+    # Extend the Keycloak access-token lifespan to 2 hours AFTER tenant setup so the realms exist.
+    # This prevents token expiry during long async waits (service-point replication, etc.)
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(centralTenant)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(collegeTenant)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(universityTenant)' }
 
   Scenario: create consortium and register consortium, college, and university tenants
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
