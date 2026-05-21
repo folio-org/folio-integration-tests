@@ -28,20 +28,20 @@ Feature: An Open Order With POL And Funds Distribution Can Be Unopened
     * def orderId = call uuid
     * def poLineId = call uuid
 
-    # Precondition: An Order Without PO Lines Exists In "Pending" Status For An Active Vendor With "Approved" Checked
+    # 1. An Order Without PO Lines Exists In "Pending" Status For An Active Vendor With "Approved" Checked
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time' }
 
-    # Step 1. Go To The Order Details Pane - Order Details Are Displayed (Pending, No PO Lines)
+    # 2. Go To The Order Details Pane - Order Details Are Displayed (Pending, No PO Lines)
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
     And match response.workflowStatus == 'Pending'
     And match response.poLines == '#[0]'
 
-    # Steps 2-3. Add PO Line To The Order And Fill In All Required Fields With Valid Values (Including Fund Distribution)
+    # 3. Add PO Line To The Order And Fill In All Required Fields With Valid Values (Including Fund Distribution)
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
 
-    # Step 4. Click "Save & Open Order" - Order Moved To "Open" Status With POL Successfully Created
+    # 4. Click "Save & Open Order" - Order Moved To "Open" Status With POL Successfully Created
     * def v = call openOrder { orderId: '#(orderId)' }
 
     Given path 'orders/composite-orders', orderId
@@ -57,7 +57,7 @@ Feature: An Open Order With POL And Funds Distribution Can Be Unopened
     And match response.fundDistribution == '#[1]'
     And match response.fundDistribution[0].fundId == fundId
 
-    # Step 5. Unopen The Order (Confirm With "Delete Items") - Order Moved Back To "Pending" Status
+    # 5. Unopen The Order (Confirm With "Delete Items") - Order Moved Back To "Pending" Status
     * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
 
     Given path 'orders/composite-orders', orderId
