@@ -1,4 +1,4 @@
-# For MODORDERS-1073
+# For MODORDERS-1073, https://foliotest.testrail.io/index.php?/cases/view/451627
 Feature: Invoice encumbrance update without acquisition unit
 
   Background:
@@ -16,6 +16,8 @@ Feature: Invoice encumbrance update without acquisition unit
     * callonce variables
 
 
+  @C451627
+  @Positive
   Scenario: Invoice encumbrance update without acquisition unit
     * def fundId = call uuid
     * def budgetId = call uuid

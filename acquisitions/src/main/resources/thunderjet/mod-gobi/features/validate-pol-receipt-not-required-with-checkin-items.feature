@@ -14,6 +14,14 @@ Feature: Validate POL receipt status with checkin items
     * def mapping = read('classpath:samples/mod-gobi/unlisted-print-monograph-receipt-checkin-validation.json')
     * def po = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
 
+    # Ensure Custom Mapping Is Removed Even If A Scenario Fails Mid-Way (Scenarios Share The Mapping, So Cleanup Runs Per Feature)
+    * configure afterFeature =
+    """
+    function() {
+      karate.call('classpath:thunderjet/mod-gobi/reusable/delete-custom-mapping.feature', { orderType: 'UnlistedPrintMonograph' });
+    }
+    """
+
   @Negative
   Scenario: Send order with receipt not required and checkin items false
     Given path '/gobi/orders/custom-mappings'
