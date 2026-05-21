@@ -5,7 +5,7 @@
         {
           "http://bibfra.me/vocab/library/Title": {
             "http://bibfra.me/vocab/library/mainTitle": [
-              "Sample Title"
+              "#(instanceTitle)"
             ]
           }
         }
