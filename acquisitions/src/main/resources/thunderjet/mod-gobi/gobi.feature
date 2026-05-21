@@ -43,3 +43,6 @@ Feature: mod-gobi integration tests
 
   Scenario: Order can be created without configured locations in the system
     * call read('features/order-without-configured-locations.feature')
+
+  Scenario: TenantId is not populated by mod-gobi on non-ECS environment
+    * call read('features/tenant-id-not-populated-on-non-ecs.feature')
