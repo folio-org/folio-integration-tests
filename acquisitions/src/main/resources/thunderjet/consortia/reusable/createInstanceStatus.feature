@@ -2,9 +2,10 @@
 Feature: Create instance status
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createInstanceStatus
+  Scenario: Create instance status
     Given path 'instance-statuses'
     And request
     """

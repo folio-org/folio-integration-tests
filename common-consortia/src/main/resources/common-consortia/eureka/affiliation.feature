@@ -2,7 +2,7 @@ Feature: Create affilitaion in api tests
 
   Background:
     * url baseUrl
-    * configure retry = { count: 20, interval: 40000 }
+    * configure retry = { count: 10, interval: 40000 }
 
   @AddAffiliation
   Scenario:

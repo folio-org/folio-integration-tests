@@ -3,6 +3,7 @@ Feature: Receive piece with Holding ID
   # parameters: pieceId, poLineId, holdingId
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Receive piece with Holding ID

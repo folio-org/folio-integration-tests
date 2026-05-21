@@ -1,5 +1,4 @@
-@parallel=false
-Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
+Feature: Unopen order and add addition POL and 1 Fund. Also verify encumbrances
 
   Background:
     * print karate.info.scenarioName
@@ -11,158 +10,76 @@ Feature: UnOpen order and add addition POL and 1 Fund. Also verify encumbrances
 
     * callonce variables
 
-    * def orderId = callonce uuid1
-    * def orderLineIdOne = callonce uuid2
-    * def unOpenOrderLineId = callonce uuid3
 
+  Scenario: Unopen order and add addition POL and 1 Fund. Also verify encumbrances
 
-  Scenario: Create orders
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId1 = call uuid
+    * def poLineId2 = call uuid
 
+    # 1. Create order
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario Outline: Create order lines for <orderLineId>
-    * def orderId = <orderId>
-    * def poLineId = <orderLineId>
-   Given path 'orders/order-lines'
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    And request orderLine
-    When method POST
-    Then status 201
+    # 2. Create order line
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId)', fundId: '#(globalFundId)' }
 
-    Examples:
-      | orderId | orderLineId    |
-      | orderId | orderLineIdOne |
+    # 3. Open order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-
-  Scenario: Open order
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-
-  Scenario: Check that order status Open in encumbrance after Open order
+    # 4. Check that order status Open in encumbrance after Open order
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     Then status 200
-    * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+orderLineIdOne+"')]")[0]
+    * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+poLineId1+"')]")[0]
     And match transaction.amount == 1.0
     And match transaction.currency == 'USD'
     And match transaction.encumbrance.initialAmountEncumbered == 1.0
     And match transaction.encumbrance.status == 'Unreleased'
     And match transaction.encumbrance.orderStatus == 'Open'
 
+    # 5. UnOpen order
+    * def v = call unopenOrder { orderId: '#(orderId)' }
 
-  Scenario: UnOpen order
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Pending"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-
-  Scenario: Check order workflow status is Pending after UnOpen
-    # ============= get order to open ===================
+    # 6. Check order workflow status is Pending after Unopen
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
     * def orderResponse = $
     And match orderResponse.workflowStatus == "Pending"
 
-
-  Scenario: Check that order status Pending in encumbrance after UnOpen order
+    # 7. Check that order status Pending in encumbrance after UnOpen order
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     Then status 200
-    * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+orderLineIdOne+"')]")[0]
+    * def transaction = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+poLineId1+"')]")[0]
     And match transaction.amount == 0
     And match transaction.currency == 'USD'
     And match transaction.encumbrance.initialAmountEncumbered == 0
     And match transaction.encumbrance.status == 'Pending'
     And match transaction.encumbrance.orderStatus == 'Pending'
 
+    # 8. Create order line after Unopen order
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId)', fundId: '#(globalFundId)' }
 
-  Scenario Outline: Create order lines after UnOpen order for <unOpenOrderLineId>
-    * def orderId = <orderId>
-    * def poLineId = <unOpenOrderLineId>
-    Given path 'orders/order-lines'
+    # 9. Reopen order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-
-    And request orderLine
-    When method POST
-    Then status 201
-
-    Examples:
-      | orderId | unOpenOrderLineId |
-      | orderId | unOpenOrderLineId |
-
-
-  Scenario: ReOpen order
-    # ============= get order to open ===================
+    # 10. Check order after Reopen
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
+    And match $.workflowStatus == "Open"
 
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-
-  Scenario: Check order after ReOpen
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-
-  Scenario: Check that order status Open in encumbrance after ReOpen order
+    # 11. Check that order status Open in encumbrance after Reopen order
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId
     When method GET
     Then status 200
-    * def encumbrance1 = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+orderLineIdOne+"')]")[0]
-    * def encumbrance2 = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+unOpenOrderLineId+"')]")[0]
+    * def encumbrance1 = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+poLineId1+"')]")[0]
+    * def encumbrance2 = karate.jsonPath(response, "$.transactions[?(@.encumbrance.sourcePoLineId=='"+poLineId2+"')]")[0]
     And match encumbrance1.amount == 1.0
     And match encumbrance1.currency == 'USD'
     And match encumbrance1.encumbrance.initialAmountEncumbered == 1.0

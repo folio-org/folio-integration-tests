@@ -37,13 +37,13 @@ Feature: Unreceive a piece and check the order line
 
     * print '2. Create an order'
     * configure headers = headersUser
-    * def v = callonce createOrder { id: '#(orderId)' }
+    * def v = call createOrder { id: '#(orderId)' }
 
     * print '3. Create a package order line'
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true }
 
     * print '4. Open the order'
-    * def v = callonce openOrder { orderId: "#(orderId)" }
+    * def v = call openOrder { orderId: "#(orderId)" }
 
     * print '5. Create 2 titles and pieces'
     * def v = call createTitle { titleId: "#(titleId1)", poLineId: "#(poLineId)" }

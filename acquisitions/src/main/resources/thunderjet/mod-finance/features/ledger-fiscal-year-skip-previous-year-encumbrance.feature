@@ -49,22 +49,8 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
     * def updatedSecondFiscalYearStart = callonce getCurrentDate
 
   Scenario Outline: prepare fiscal year with <fiscalYearId> for rollover
-    * def fiscalYearId = <fiscalYearId>
     * def code = <code>
-
-    Given path 'finance/fiscal-years'
-    And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + code)',
-      "code": '#(codePrefix + code)',
-      "periodStart": '#(code + "-01-01T00:00:00Z")',
-      "periodEnd": '#(code + "-12-30T23:59:59Z")'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createFiscalYear { id: '#(<fiscalYearId>)', code: '#(codePrefix + code)', periodStart: '#(code + "-01-01T00:00:00Z")', periodEnd: '#(code + "-12-30T23:59:59Z")' }
 
     Examples:
       | fiscalYearId  | code     |
@@ -72,26 +58,8 @@ Feature: Ledger fiscal year sequential rollovers (skip previous year encumbrance
       | fiscalYearId2 | toYear   |
       | fiscalYearId3 | toYear2  |
 
-  Scenario Outline: prepare ledger with <ledgerId> for rollover
-    * def ledgerId = <ledgerId>
-
-    Given path 'finance/ledgers'
-    And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(fiscalYearId1)"
-    }
-    """
-    When method POST
-    Then status 201
-
-    Examples:
-      | ledgerId        |
-      | rolloverLedger1 |
+  Scenario: prepare ledger for rollover
+    * def v = call createLedger { id: '#(rolloverLedger1)', fiscalYearId: '#(fiscalYearId1)' }
 
   Scenario Outline: prepare fund types with <fundTypeId>, <name> for rollover
     * def fundTypeId = <fundTypeId>

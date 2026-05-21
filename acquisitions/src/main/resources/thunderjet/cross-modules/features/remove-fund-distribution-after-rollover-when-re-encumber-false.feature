@@ -49,7 +49,7 @@ Feature: Remove fund distribution after rollover from open order with re-encumbe
 
 
   Scenario: Create an order
-    * def v = callonce createOrder { id: #(orderId), orderType: 'One-Time', reEncumber: false }
+    * def v = call createOrder { id: #(orderId), orderType: 'One-Time', reEncumber: false }
 
 
   Scenario: Create an order line

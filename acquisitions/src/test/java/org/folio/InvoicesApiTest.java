@@ -1,5 +1,6 @@
 package org.folio;
 
+import org.folio.shared.AcquisitionsTest;
 import org.folio.shared.SharedInvoicesTenant;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
@@ -13,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-@Order(10)
+@Order(11)
 @FolioTest(team = "thunderjet", module = "mod-invoice")
-public class InvoicesApiTest extends TestBaseEureka {
+public class InvoicesApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   private static final String TEST_BASE_PATH = "classpath:thunderjet/mod-invoice/features/";
   private static final String TEST_TENANT = "testinvoice";
@@ -55,7 +56,8 @@ public class InvoicesApiTest extends TestBaseEureka {
     FEATURE_31("should_populate_vendor_address_on_get_voucher_by_id", true),
     FEATURE_32("voucher-numbers", true),
     FEATURE_33("voucher-with-lines-using-same-external-account", true),
-    FEATURE_34("fund-code-auto-populate-invoice-lines", true);
+    FEATURE_34("fund-code-auto-populate-invoice-lines", true),
+    FEATURE_35("delete-line-check-next-line-number", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -79,19 +81,22 @@ public class InvoicesApiTest extends TestBaseEureka {
   }
 
   @BeforeAll
-  public void invoicesApiTestBeforeAll() {
+  @Override
+  public void beforeAll() {
     SharedInvoicesTenant.initializeTenant(TEST_TENANT, this.getClass(), this::runFeature);
   }
 
   @AfterAll
-  public void invoicesApiTestAfterAll() {
+  @Override
+  public void afterAll() {
     SharedInvoicesTenant.cleanupTenant(this.getClass(), this::runFeature);
   }
 
   @Test
+  @Override
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void runFeatures() {
+  public void runFeatures() {
     runFeatures(Feature.values(), THREAD_COUNT, null);
   }
 
@@ -297,5 +302,11 @@ public class InvoicesApiTest extends TestBaseEureka {
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void fundCodeAutoPopulateInvoiceLines() {
     runFeatureTest(Feature.FEATURE_34.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void deleteLineCheckNextLineNumber() {
+    runFeatureTest(Feature.FEATURE_35.getFileName());
   }
 }

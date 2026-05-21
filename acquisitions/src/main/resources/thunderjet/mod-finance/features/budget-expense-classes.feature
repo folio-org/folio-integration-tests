@@ -24,7 +24,7 @@ Feature: Budget expense classes
 
   Scenario Outline: prepare finances for fund with <fundId>
     * def fundId = <fundId>
-    * def v = call createFund { 'id': '#(fundId)'}
+    * def v = call createFund { id: '#(fundId)' }
 
     Examples:
       | fundId                                           |

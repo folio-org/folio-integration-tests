@@ -30,8 +30,6 @@ Feature: Group and ledger transfers after rollover
     * def groupId = callonce uuid14
     * def rolloverId = callonce uuid15
 
-    * def createFiscalYear = read('classpath:thunderjet/mod-finance/reusable/createFiscalYear.feature')
-
 
   Scenario: Create fiscal years and associated ledgers
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'

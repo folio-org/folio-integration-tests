@@ -1,6 +1,7 @@
 Feature: Create a payment
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Create a payment

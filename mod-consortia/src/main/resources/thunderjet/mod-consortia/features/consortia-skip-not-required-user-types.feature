@@ -25,7 +25,7 @@ Feature: Consortia Skip not required user types api tests
     And match response.errors[0].type == '-1'
     And match response.errors[0].code == 'NOT_FOUND_ERROR'
 
-    # 2. verify there is no 'patron' type user in 'user_tenant' table in 'central_mod_consortia' for
+    # 2. verify there is no 'patron' type user in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { userId: '#(userPatron)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
@@ -36,7 +36,7 @@ Feature: Consortia Skip not required user types api tests
     And match response.errors[0].type == '-1'
     And match response.errors[0].code == 'NOT_FOUND_ERROR'
 
-    # 3. verify there is no 'dcb' type user in 'user_tenant' table in 'central_mod_consortia' for
+    # 3. verify there is no 'dcb' type user in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { userId: '#(userDbc)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
@@ -47,15 +47,18 @@ Feature: Consortia Skip not required user types api tests
     And match response.errors[0].type == '-1'
     And match response.errors[0].code == 'NOT_FOUND_ERROR'
 
-    # 4. verify there is 'staff' type user in 'user_tenant' table in 'central_mod_consortia' for
+    # 4. verify there is no 'system' type user in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { userId: '#(userSystem)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
     And headers {'x-okapi-tenant':'#(centralTenant)', 'x-okapi-token':'#(okapitoken)'}
-    And retry until responseStatus == 200
+    And retry until responseStatus == 404
     When method GET
+    And match response.errors[0].message == 'Object with userId [' + userSystem +'] was not found'
+    And match response.errors[0].type == '-1'
+    And match response.errors[0].code == 'NOT_FOUND_ERROR'
 
-    # 5. verify there is 'system' type user in 'user_tenant' table in 'central_mod_consortia' for
+    # 5. verify there is 'staff' type user in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { userId: '#(userStaff)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
@@ -63,7 +66,7 @@ Feature: Consortia Skip not required user types api tests
     And retry until responseStatus == 200
     When method GET
 
-    # 6. verify there is user without type in 'user_tenant' table in 'central_mod_consortia' for
+    # 6. verify there is user without type in 'user_tenant' table in 'central_mod_consortia'
     * def queryParams = { userId: '#(userWithoutType)' }
     Given path 'consortia', consortiumId, 'user-tenants'
     And params query = queryParams
@@ -73,7 +76,7 @@ Feature: Consortia Skip not required user types api tests
 
   Scenario: Create a user called 'shadowUser' in 'universityTenant' and verify that this user not processed by consortia pipeline:
     # create new user called 'shadowUser' with type = 'shadow' in 'universityTenant'
-    * call read('classpath:common-consortia/initData.feature@PostUser') shadowUser
+    * call read('classpath:common-consortia/eureka/initData.feature@PostUser') { tenant: '#(universityTenant)', user: '#(shadowUser)' }
 
     # 1. verify there is no record in 'user_tenant' table in 'central_mod_users' for 'shadowUser'
     * def queryParams = { userId: '#(shadowUser.id)' }
@@ -97,7 +100,7 @@ Feature: Consortia Skip not required user types api tests
 
   Scenario: Create a user called 'patronUser' in 'collegeTenant' and verify that this user not processed by consortia pipeline:
     # create new user called 'patronUser' with type = 'patron' in 'collegeTenant'
-    * call read('classpath:common-consortia/initData.feature@PostUser') patronUser
+    * call read('classpath:common-consortia/eureka/initData.feature@PostUser') { tenant: '#(collegeTenant)', user: '#(patronUser)' }
 
     # 1. verify there is no record in 'user_tenant' table in 'central_mod_users' for 'patronUser'
     * def queryParams = { userId: '#(patronUser.id)' }

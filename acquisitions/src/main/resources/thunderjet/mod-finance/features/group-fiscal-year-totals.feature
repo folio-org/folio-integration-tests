@@ -50,7 +50,7 @@ Feature: Group fiscal year totals
     * def fundId = <fundId>
     * def budgetId = <budgetId>
     * def groupId = <groupId>
-    * call createFund { 'id': '#(fundId)', 'ledgerId': #(globalLedgerId) }
+    * def v = call createFund { id: '#(fundId)' }
 
     Given path 'finance-storage/budgets'
     And request

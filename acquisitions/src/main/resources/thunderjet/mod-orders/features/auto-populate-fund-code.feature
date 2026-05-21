@@ -27,15 +27,15 @@ Feature: Auto-populate fundCode in PO line fund distribution
   Scenario: Create order with PO line fund distribution missing fundCode, expect it to be auto-populated
     # 1. Create finance data with admin headers
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)', code: '#(fundCode)' }
-    * call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
+    * def v = call createFund { id: '#(fundId)', code: '#(fundCode)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
     # 2. Create a pending order with line without fundCode
     * configure headers = headersUser
-    * call createOrder { id: '#(orderId)' }
+    * def v = call createOrder { id: '#(orderId)' }
 
     * def fundDistribution = [{ fundId: '#(fundId)', distributionType: 'percentage', value: 100 }]
-    * call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundDistribution: #(fundDistribution) }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundDistribution: #(fundDistribution) }
 
     # 3. Verify that fundCode is not populated in pending order
     Given path 'orders/order-lines', poLineId
@@ -45,7 +45,7 @@ Feature: Auto-populate fundCode in PO line fund distribution
     * match fundDistPending.fundCode == '#notpresent'
 
     # 4. Open order and verify that fundCode is auto-populated
-    * call openOrder { orderId: '#(orderId)' }
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     Given path 'orders/order-lines', poLineId
     When method GET
@@ -59,17 +59,17 @@ Feature: Auto-populate fundCode in PO line fund distribution
 
     # 1. Create finance data with admin headers
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)', code: '#(fundCode)' }
-    * call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
+    * def v = call createFund { id: '#(fundId)', code: '#(fundCode)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
     # 2. Create pending order with order line where fund code is not provided
     * configure headers = headersUser
-    * call createOrder { id: '#(orderId)' }
+    * def v = call createOrder { id: '#(orderId)' }
     * def fundDistribution = [{ fundId: '#(fundId)', code: '#(incorrectFundCode)', distributionType: 'percentage', value: 100 }]
-    * call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundDistribution: #(fundDistribution) }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundDistribution: '#(fundDistribution)' }
 
     # 3. Verify that fundCode is now populated with correct value from fund
-    * call openOrder { orderId: '#(orderId)' }
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     Given path 'orders/order-lines', poLineId
     When method GET
@@ -81,8 +81,8 @@ Feature: Auto-populate fundCode in PO line fund distribution
   Scenario: Create and open order in single operation, expect fundCode to be auto-populated
     # 1. Create finance data with admin headers
     * configure headers = headersAdmin
-    * call createFund { id: '#(fundId)', code: '#(fundCode)' }
-    * call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
+    * def v = call createFund { id: '#(fundId)', code: '#(fundCode)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
     # 2. Create open order with single operation without fund code populated
     * configure headers = headersUser

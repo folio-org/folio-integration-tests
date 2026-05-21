@@ -1,7 +1,8 @@
 @ignore
-Feature: Collection of different verifcation of invoice line
+Feature: Collection of different verification of invoice line
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   @Ignore @VerifyInvoiceLine

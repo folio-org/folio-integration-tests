@@ -24,8 +24,8 @@ Feature: Open order with many locations from different tenants
   Scenario: Prepare data: create fund and budget, and locations
     * def locationsCode = 'LOC'
 
-    * def v = call createFund { 'id': '#(fundId)' }
-    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 100 }
 
     # Create 25 locations in central tenant
     * def centralLocations = []
@@ -181,7 +181,7 @@ Feature: Open order with many locations from different tenants
     * def poLineUuid = '5ee65782-ab71-4e07-9561-c400e3004a'
 
     ## 1. Create order
-    * def v = call createOrder { id: '#(orderId)'}
+    * def v = call createOrder { id: '#(orderId)' }
 
     ## 2. Create 10 order lines with 5 locations for each line
     * def locations = []

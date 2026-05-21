@@ -98,7 +98,7 @@ Feature: Unopen Order With 2 Independent POLs Deletes Only Empty Holding
 
     # 6. Unopen Order - Click "Delete Holding" In The Modal
     * print '6. Unopen Order - Click "Delete Holding" In The Modal'
-    * def v = call unopenOrderDeleteHoldings { orderId: '#(orderId)' }
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
 
     # 7. Verify Order Workflow Status Is "Pending"
     * print '7. Verify Order Workflow Status Is "Pending"'

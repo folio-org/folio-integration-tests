@@ -3,9 +3,10 @@ Feature: Create order
   # parameters: id, vendor?, orderType?, ongoing?, reEncumber?, acqUnitIds?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createOrder
+  Scenario: Create order
     * def vendor = karate.get('vendor', globalVendorId)
     * def orderType = karate.get('orderType', 'One-Time')
     * def ongoing = karate.get('ongoing', null)

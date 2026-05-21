@@ -18,8 +18,8 @@ Feature: check-holding-instance-creation-with-createInventory-options
 
     ## Prepare finances
     * configure headers = headersAdmin
-    * callonce createFund { 'id': '#(fundId)' }
-    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = callonce createFund { id: '#(fundId)' }
+    * def v = callonce createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
     * configure headers = headersUser
 
   @Positive
@@ -27,9 +27,9 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def orderId = call uuid
     * def poLineId = call uuid
     
-    * def v = call createOrder { id: #(orderId), orderType: 'One-Time', vendor: '#(globalVendorId)'}
-    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), createInventory: 'None'}
-    * def v = call openOrder { id: #(orderId)}
+    * def v = call createOrder { id: #(orderId), orderType: 'One-Time', vendor: '#(globalVendorId)' }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), createInventory: 'None' }
+    * def v = call openOrder { id: #(orderId) }
 
     # Verify instance is not being created
     Given path 'orders/order-lines', poLineId
@@ -42,9 +42,9 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def orderId = call uuid
     * def poLineId = call uuid
     
-    * def v = call createOrder { id: #(orderId), orderType: 'One-Time', vendor: '#(globalVendorId)'}
-    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), createInventory: 'Instance'}
-    * def v = call openOrder { id: #(orderId)}
+    * def v = call createOrder { id: #(orderId), orderType: 'One-Time', vendor: '#(globalVendorId)' }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), createInventory: 'Instance' }
+    * def v = call openOrder { id: #(orderId) }
 
     # Verify holding is not being created
     Given path 'orders/order-lines', poLineId
@@ -65,9 +65,9 @@ Feature: check-holding-instance-creation-with-createInventory-options
     * def orderId = call uuid
     * def poLineId = call uuid
     
-    * def v = call createOrder { id: #(orderId), orderType: 'One-Time', vendor: '#(globalVendorId)'}
-    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), createInventory: 'Instance, Holding, Item'}
-    * def v = call openOrder { id: #(orderId)}
+    * def v = call createOrder { id: #(orderId), orderType: 'One-Time', vendor: '#(globalVendorId)' }
+    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId), createInventory: 'Instance, Holding, Item' }
+    * def v = call openOrder { id: #(orderId) }
 
     # Verify instance, holding, item creation
     Given path 'orders/order-lines', poLineId

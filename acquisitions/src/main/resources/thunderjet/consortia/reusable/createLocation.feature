@@ -2,9 +2,10 @@
 Feature: Create location
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createLocation
+  Scenario: Create location
     Given path 'locations'
     And request
     """

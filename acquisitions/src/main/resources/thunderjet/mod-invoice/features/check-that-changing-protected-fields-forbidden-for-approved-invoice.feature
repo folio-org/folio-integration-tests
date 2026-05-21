@@ -55,16 +55,7 @@ Feature: Checking that it is impossible to pay for the invoice if no voucher for
     And match $.total == 10.02
 
   Scenario: Approve invoice with lock total which equal to calculated total
-  Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+  * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Currency change for approved invoice is forbidden
     Given path 'invoice/invoices', invoiceId

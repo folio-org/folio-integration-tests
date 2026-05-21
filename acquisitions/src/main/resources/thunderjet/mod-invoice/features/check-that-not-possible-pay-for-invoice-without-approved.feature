@@ -139,15 +139,7 @@ Feature: Check that it is not impossible to pay for the invoice without approved
     Then status 201
 
     # ============= approve the invoice ===================
-    Given path 'invoice/invoices', cancelledInvoiceId
-    When method GET
-    Then status 200
-    * def invoiceBody = $
-    * set invoiceBody.status = "Approved"
-    Given path 'invoice/invoices', cancelledInvoiceId
-    And request invoiceBody
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(cancelledInvoiceId)' }
 
     # ============= get invoice to cancel ===================
     Given path 'invoice/invoices', cancelledInvoiceId

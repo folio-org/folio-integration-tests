@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Verify once order is opened or poline is updated, encumbrance inherit poline's tags
 
   Background:
@@ -15,25 +14,17 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
 
     * callonce variables
 
-    * def orderId = callonce uuid1
-    * def poLineId = callonce uuid2
-
     * configure retry = { count: 4, interval: 1000 }
 
-  Scenario: Create composite order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
 
-  Scenario: Create order line
+  Scenario: Verify once order is opened or poline is updated, encumbrance inherit poline's tags
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    # 1. Create composite order
+    * def v = call createOrder { id: '#(orderId)' }
+
+    # 2. Create order line
     Given path 'orders/order-lines'
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
@@ -47,20 +38,10 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
     When method POST
     Then status 201
 
-  Scenario: Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
+    # 3. Open order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: Verify created encumbrance
+    # 4. Verify created encumbrance
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePoLineId==' + poLineId
@@ -68,28 +49,19 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
     Then status 200
     And match response.transactions[0].tags.tagList == [ "created" ]
 
-  Scenario: Update order line
+    # 5. Update order line
+    * configure headers = headersUser
     Given path 'orders/order-lines', poLineId
     When method get
     Then status 200
 
     * def orderLine = $
     * set orderLine.cost.listUnitPrice = 10
-    * set orderLine.fundDistribution =
-    """
-    [
-      {
-        "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a696",
-        "distributionType": "percentage",
-        "value": 90.0
-      },
-      {
-        "fundId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a698",
-        "distributionType": "percentage",
-        "value": 10.0
-      }
-    ]
-    """
+    * table fundDistribution
+    | fundId        | distributionType | value |
+    | globalFundId  | 'percentage'     | 90.0  |
+    | globalFundId2 | 'percentage'     | 10.0  |
+    * set orderLine.fundDistribution = fundDistribution
     * set orderLine.tags.tagList = [ "updated" ]
 
     Given path 'orders/order-lines', poLineId
@@ -97,7 +69,7 @@ Feature: Verify once order is opened or poline is updated, encumbrance inherit p
     When method put
     Then status 204
 
-  Scenario: Verify updated encumbrances
+    # 6. Verify updated encumbrances
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePoLineId==' + poLineId

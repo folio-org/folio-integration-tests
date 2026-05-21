@@ -77,6 +77,11 @@ public class ModOaiPmhTests extends TestBaseEureka {
     }
 
     @Test
+    void oaiPmhGetRecordMarcDeletedBySrsLeaderSrsInvTests() {
+        runFeatureTest("oaipmh-getrecord-deleted-srs-leader-past-C375977");
+    }
+
+    @Test
     void oaiPmhGetRecordFolioDeletedInvTests() {
         runFeatureTest("oaipmh-getrecord-deleted-C729198");
     }
@@ -131,12 +136,42 @@ public class ModOaiPmhTests extends TestBaseEureka {
         runFeatureTest("oaiPmhListRecordsC397334");
     }
 
-    @Test
-    void verifyBehaviorConfigurationC375138() {
-        runFeatureTest("verifyBehaviorConfigurationC375138");
-    }
+  @Test
+  void oaiPmhGetRecord856ComponentParts() {
+      runFeatureTest("oaiPmhGetRecord856ComponentParts-C388528");
+  }
 
   @Test
+  void oaiPmhHoldingsIllPolicy() {
+      runFeatureTest("oaiPmhHoldingsIllPolicy-C423498");
+  }
+
+  @Test
+  void oaiPmhHoldingsIllPolicyInventory() {
+      runFeatureTest("oaiPmhHoldingsIllPolicyInventory-C423535");
+  }
+
+  @Test
+  void oaiPmhListRecords856SourceStorage() {
+      runFeatureTest("oaiPmhListRecords856SourceStorage-C388516");
+  }
+
+  @Test
+  void verifyBehaviorConfigurationC375138() {
+      runFeatureTest("verifyBehaviorConfigurationC375138");
+  }
+
+    @Test
+    void oaiPmhGetRecordDeletedItemsWithholdingsC375984() {
+        runFeatureTest("oaipmh-getrecord-deleted-items-withholdings-C375984");
+    }
+
+    @Test
+    void oaiPmhListRecordsDeletedEditedMarcFolio() {
+        runFeatureTest("oaipmh-listrecords-deleted-edited-marc-folio-C926147");
+    }
+
+    @Test
     void verifyDcbInstanceHoldings() {
         runFeatureTest("oaipmh-dcb");
     }

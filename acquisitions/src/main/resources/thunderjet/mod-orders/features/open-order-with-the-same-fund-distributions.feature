@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Should open order with polines having the same fund distributions
 
   Background:
@@ -15,20 +14,19 @@ Feature: Should open order with polines having the same fund distributions
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
 
-    * def orderId = callonce uuid3
-    * def orderLineIdOne = callonce uuid4
-    * def orderLineIdTwo = callonce uuid5
+  Scenario: Should open order with polines having the same fund distributions
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def orderLineIdOne = call uuid
+    * def orderLineIdTwo = call uuid
+    * def budgetExpenseClassId = call uuid
 
-    * def budgetExpenseClassId = callonce uuid6
-
-  Scenario: prepare finances for fund with
+    # prepare finances
     * configure headers = headersAdmin
-
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 9999 }
 
     # prepare expense class
     Given path '/finance-storage/budget-expense-classes'
@@ -45,17 +43,7 @@ Feature: Should open order with polines having the same fund distributions
 
     # Open order with polines having the same fund distributions
     * configure headers = headersUser
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
     * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
     * set orderLine.purchaseOrderId = orderId
@@ -82,16 +70,5 @@ Feature: Should open order with polines having the same fund distributions
     When method POST
     Then status 201
 
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    # open order
+    * def v = call openOrder { orderId: '#(orderId)' }

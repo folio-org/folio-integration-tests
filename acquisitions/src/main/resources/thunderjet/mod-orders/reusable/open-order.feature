@@ -2,7 +2,8 @@
 Feature: Open order
   # parameters: orderId
 
-  Background: openOrder
+  Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Open order

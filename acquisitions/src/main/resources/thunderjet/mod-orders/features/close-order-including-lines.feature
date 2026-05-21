@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Close order including lines
 
   Background:
@@ -15,31 +14,29 @@ Feature: Close order including lines
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
 
+  Scenario: Close order including lines
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
-  Scenario: Prepare finances
+    # 1. Prepare finances
     * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId) }
     * def v = call createBudget { id: #(budgetId), fundId: #(fundId), allocated: 100 }
 
-
-  Scenario: Create an order
+    # 2. Create an order
+    * configure headers = headersUser
     * def v = call createOrder { id: #(orderId) }
 
-
-  Scenario: Create an order line
+    # 3. Create an order line
     * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId) }
 
-
-  Scenario: Open the order
+    # 4. Open the order
     * def v = call openOrder { orderId: #(orderId) }
 
-
-  Scenario: Close the order without removing the lines
+    # 5. Close the order without removing the lines
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -52,15 +49,13 @@ Feature: Close order including lines
     When method PUT
     Then status 204
 
-
-  Scenario: Check the order was closed
+    # 6. Check the order was closed
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
     And match $.workflowStatus == 'Closed'
 
-
-  Scenario: Check the encumbrance after closing the order
+    # 7. Check the encumbrance after closing the order
     * configure headers = headersAdmin
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance and encumbrance.sourcePurchaseOrderId==' + orderId

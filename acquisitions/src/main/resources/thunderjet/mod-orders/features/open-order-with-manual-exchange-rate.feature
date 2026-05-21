@@ -23,72 +23,27 @@ Feature: Open order with manual exchange rate
     * def orderLineIdTwo = callonce uuid5
     * def orderLineIdThree = callonce uuid6
 
-  Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
+  Scenario: prepare finances
     * configure headers = headersAdmin
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 9999 }
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
+  Scenario: Create order
+    * def v = call createOrder { id: '#(orderId)' }
 
-    Examples:
-      | fundId | budgetId |
-      | fundId | budgetId |
-
-  Scenario: Create orders
-
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
-
-  Scenario Outline: Create order lines for <orderLineId> and <fundId>
-    * def orderId = <orderId>
-    * def poLineId = <orderLineId>
-
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = <amount>
-    * set orderLine.cost.currency = <currency>
-    * set orderLine.cost.exchangeRate = <exchangeRate>
-    * set orderLine.fundDistribution[0].fundId = <fundId>
-
-    And request orderLine
-    When method POST
-    Then status 201
+  Scenario Outline: Create order lines
+    * def v = call createOrderLine { id: '#(<orderLineId>)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: '#(<amount>)', currency: "#(<currency>)", exchangeRate: '#(<exchangeRate>)' }
 
     Examples:
-      | orderId | orderLineId      | fundId | exchangeRate | amount | currency |
-      | orderId | orderLineIdOne   | fundId | 2.0          | 1      | 'EUR'    |
-      | orderId | orderLineIdTwo   | fundId | 3.0          | 2      | 'RUB'    |
-      | orderId | orderLineIdThree | fundId | null         | 4      | 'USD'    |
+      | orderLineId      | exchangeRate | amount | currency |
+      | orderLineIdOne   | 2.0          | 1      | 'EUR'    |
+      | orderLineIdTwo   | 3.0          | 2      | 'RUB'    |
+      | orderLineIdThree | null         | 4      | 'USD'    |
 
   Scenario: Open order
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario Outline: get encumbrances transaction
+  Scenario Outline: Check encumbrances transaction
     * configure headers = headersAdmin
     * def poLineId = <orderLineId>
 
@@ -105,6 +60,3 @@ Feature: Open order with manual exchange rate
       | orderLineIdOne   | 2.0    | 'USD'    |
       | orderLineIdTwo   | 6.0    | 'USD'    |
       | orderLineIdThree | 4.0    | 'USD'    |
-
-
-

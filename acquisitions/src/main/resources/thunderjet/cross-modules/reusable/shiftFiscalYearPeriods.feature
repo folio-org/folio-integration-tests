@@ -7,6 +7,7 @@ Feature: Shift fiscal year periods to make FY1 past and FY2 current
   # - Updates fiscal year codes/names if series is provided
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Shift fiscal year periods

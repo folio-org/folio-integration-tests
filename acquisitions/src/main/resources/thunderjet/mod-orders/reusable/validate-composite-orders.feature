@@ -3,9 +3,10 @@ Feature: Validate composite orders
   # parameters: id, workflowStatus, titleOrPackage, paymentStatus, receiptStatus
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: validateCompositeOrders
+  Scenario: Validate composite orders
     Given path 'orders/composite-orders', id
     When method GET
     Then status 200

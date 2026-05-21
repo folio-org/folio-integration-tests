@@ -2,9 +2,10 @@
 Feature: Create instance
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createInstance
+  Scenario: Create instance
     * def identifiers = karate.get('identifiers', [])
 
     Given path 'inventory/instances'

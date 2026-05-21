@@ -68,16 +68,7 @@ Feature: Check approve and pay invoice with 0$ amount
 
         # ============= approve invoice ===================
   Scenario: Approve created invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Verify get invoice by id - invoice move to Approved status and total = 0$
     Given path 'invoice/invoices', invoiceId
@@ -89,16 +80,7 @@ Feature: Check approve and pay invoice with 0$ amount
     And match $.total == 0.0
 
   Scenario: Pay for the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = 'Paid'
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Verify payed invoice
     Given path 'invoice/invoices', invoiceId

@@ -28,17 +28,17 @@ Feature: Update order lines for an open order in parallel
     * def poLineId5 = callonce uuid8
 
     * configure headers = headersAdmin
-    * callonce createFund { 'id': '#(fundId)' }
-    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = callonce createFund { 'id': '#(fundId)' }
+    * def v = callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
 
     * configure headers = headersUser
-    * callonce createOrder { id: "#(orderId)" }
-    * callonce createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce createOrderLine { id: "#(poLineId3)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce createOrderLine { id: "#(poLineId4)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce createOrderLine { id: "#(poLineId5)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce openOrder { orderId: "#(orderId)" }
+    * def v = callonce createOrder { id: "#(orderId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId3)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId4)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId5)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce openOrder { orderId: "#(orderId)" }
 
 
   Scenario Outline: Update line <lineNumber>

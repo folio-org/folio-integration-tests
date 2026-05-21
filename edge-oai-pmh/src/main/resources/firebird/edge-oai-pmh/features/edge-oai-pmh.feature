@@ -271,8 +271,8 @@ Feature: edge-oai-pmh features
     When method GET
     Then status 200
     * def instance = response
-    * instance.fields[3].indicators[0] = '2'
-    * instance.fields[3].indicators[1] = '3'
+    * instance.fields[4].indicators[0] = '2'
+    * instance.fields[4].indicators[1] = '3'
     * set instance._actionType = 'edit'
     * set instance $.relatedRecordVersion = version
     * set instance.externalHrid = 'inst000000000145'

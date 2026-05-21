@@ -38,22 +38,8 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
     * def reEncumberLine = callonce uuid84
 
   Scenario Outline: prepare fiscal year with <fiscalYearId> for rollover
-    * def fiscalYearId = <fiscalYearId>
     * def code = <code>
-
-    Given path 'finance/fiscal-years'
-    And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + code)',
-      "code": '#(codePrefix + code)',
-      "periodStart": '#(code + "-01-01T00:00:00Z")',
-      "periodEnd": '#(code + "-12-30T23:59:59Z")'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createFiscalYear { id: '#(<fiscalYearId>)', code: '#(codePrefix + code)', periodStart: '#(code + "-01-01T00:00:00Z")', periodEnd: '#(code + "-12-30T23:59:59Z")' }
 
     Examples:
       | fiscalYearId     | code     |
@@ -61,26 +47,8 @@ Feature: Ledger fiscal year rollover when "Close all current budgets" flag is tr
       | toFiscalYearId   | toYear   |
 
 
-  Scenario Outline: prepare ledger with <ledgerId> for rollover
-    * def ledgerId = <ledgerId>
-
-    Given path 'finance/ledgers'
-    And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(fromFiscalYearId)"
-    }
-    """
-    When method POST
-    Then status 201
-
-    Examples:
-      | ledgerId         |
-      | rolloverLedger   |
+  Scenario: prepare ledger for rollover
+    * def v = call createLedger { id: '#(rolloverLedger)', fiscalYearId: '#(fromFiscalYearId)' }
 
 
   Scenario Outline: prepare fund types with <fundTypeId>, <name> for rollover

@@ -2,7 +2,7 @@ Feature: Consortium object in api tests
 
   Background:
     * url baseUrl
-    * configure retry = { count: 20, interval: 40000 }
+    * configure retry = { count: 10, interval: 10000 }
     * configure headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
   @SetupConsortia
@@ -26,6 +26,7 @@ Feature: Consortium object in api tests
     And param adminUserId = consortiaAdmin.id
     And headers {'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)'}
     And request { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)' }
+    And retry until responseStatus == 201
     When method POST
     Then status 201
     And match response == { id: '#(tenant)', code: '#(code)', name: '#(name)', isCentral: '#(isCentral)', isDeleted: false }

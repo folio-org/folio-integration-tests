@@ -2,7 +2,8 @@
 Feature: Cancel order
   # parameters: orderId
 
-  Background: cancelOrder
+  Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Cancel order

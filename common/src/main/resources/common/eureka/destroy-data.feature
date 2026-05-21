@@ -35,6 +35,7 @@ Feature: destroy data for tenant
     And param async = true
     And request entitlementTemplate
     And header Authorization = 'Bearer ' + keycloakMasterToken
+    And header X-Okapi-Token = keycloakMasterToken
     When method DELETE
     Then status 200
     * def flowId = response.flowId

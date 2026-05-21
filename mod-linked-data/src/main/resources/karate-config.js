@@ -38,6 +38,7 @@ function fn() {
     getResourceIdFromInventoryId: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceIdFromInventoryId'),
     postResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postResource'),
     putResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putResource'),
+    deleteResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@deleteResource'),
     postSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
     putSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putSourceRecordToStorage'),
     searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
@@ -62,6 +63,8 @@ function fn() {
     getSpecifications: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getSpecifications'),
     getRules: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getRules'),
     patchRule: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@patchRule'),
+    assertReindexJobCompleted: karate.read('classpath:citation/mod-linked-data/features/util/reindex-job-status.feature@assertReindexJobCompleted'),
+    dropSearchIndex: karate.read('classpath:citation/mod-linked-data/features/util/search-index.feature@dropSearchIndex'),
 
     // define global functions
     uuid: function () {
@@ -137,7 +140,7 @@ function fn() {
     config.kcClientSecret = '${clientSecret}'
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
-  } else if (env === 'rancher') {
+  } else if (env === 'edev') {
     config.baseUrl = 'https://folio-edev-citation-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-edev-citation-keycloak.ci.folio.org';
   } else if (env != null && env.match(/^ec2-\d+/)) {

@@ -1,5 +1,4 @@
 # For MODINVOICE-474
-@parallel=false
 Feature: Update encumbrance links with fiscal year
 
   Background:
@@ -12,24 +11,27 @@ Feature: Update encumbrance links with fiscal year
 
     * callonce variables
 
+    * def codePrefix = callonce random_string
     * def currentYear = callonce getCurrentYear
+    * def pastYear = currentYear - 1
     * def currentStart = currentYear + '-01-01T00:00:00Z'
     * def currentEnd = currentYear + '-12-30T23:59:59Z'
-    * def pastFiscalYearId = callonce uuid1
-    * def currentFiscalYearId = callonce uuid2
-    * def ledgerId = callonce uuid3
-    * def fundId = callonce uuid4
-    * def pastBudgetId = callonce uuid5
-    * def currentBudgetId = callonce uuid6
+    * def pastStart = pastYear + '-01-01T00:00:00Z'
+    * def pastEnd = pastYear + '-12-30T23:59:59Z'
+    * def pastFiscalYearId = callonce uuid { n: 1 }
+    * def currentFiscalYearId = callonce uuid { n: 2 }
+    * def ledgerId = callonce uuid { n: 3 }
+    * def fundId = callonce uuid { n: 4 }
+    * def pastBudgetId = callonce uuid { n: 5 }
+    * def currentBudgetId = callonce uuid { n: 6 }
 
-
-  Scenario: Create finances
-    * def v = call createFiscalYear { id: #(pastFiscalYearId), code: 'INVTEST2020', periodStart: '2020-01-01T00:00:00Z', periodEnd: '2020-12-30T23:59:59Z', series: 'INVTEST' }
-    * def v = call createFiscalYear { id: #(currentFiscalYearId), code: #('INVTEST' + currentYear), periodStart: #(currentStart), periodEnd: #(currentEnd), series: 'INVTEST' }
-    * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(pastFiscalYearId), restrictEncumbrance: false, restrictExpenditures: false }
-    * def v = call createFund { 'id': '#(fundId)', ledgerId: #(ledgerId) }
-    * def v = call createBudget { 'id': '#(pastBudgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active', fiscalYearId: #(pastFiscalYearId) }
-    * def v = call createBudget { 'id': '#(currentBudgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active', fiscalYearId: #(currentFiscalYearId) }
+    # Create finances
+    * def v = callonce createFiscalYear { id: '#(pastFiscalYearId)', code: '#(codePrefix + pastYear)', periodStart: '#(pastStart)', periodEnd: '#(pastEnd)', series: '#(codePrefix)' }
+    * def v = callonce createFiscalYear { id: '#(currentFiscalYearId)', code: '#(codePrefix + currentYear)', periodStart: '#(currentStart)', periodEnd: '#(currentEnd)', series: '#(codePrefix)' }
+    * def v = callonce createLedger { id: '#(ledgerId)', fiscalYearId: '#(pastFiscalYearId)', restrictEncumbrance: false, restrictExpenditures: false }
+    * def v = callonce createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
+    * def v = callonce createBudget { id: '#(pastBudgetId)', allocated: 100, fundId: '#(fundId)', status: 'Active', fiscalYearId: '#(pastFiscalYearId)' }
+    * def v = callonce createBudget { id: '#(currentBudgetId)', allocated: 100, fundId: '#(fundId)', status: 'Active', fiscalYearId: '#(currentFiscalYearId)' }
 
 
   Scenario: Using invoice in past fiscal year, create an invoice line, encumbrance link is changed to past fiscal year
@@ -39,28 +41,28 @@ Feature: Update encumbrance links with fiscal year
     * def invoiceLineId = call uuid
     * def pastEncumbranceId = call uuid
 
-    * print "Create the order and order line"
-    * def v = call createOrder { id: #(orderId) }
-    * def v = call createOrderLine { id: #(poLineId), orderId: #(orderId), fundId: #(fundId) }
-    * def v = call openOrder { orderId: #(orderId) }
+    # 1. Create the order and order line
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)' }
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    * print "Get the current encumbrance id"
+    # 2. Get the current encumbrance id
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
     * def poLine = $
     * def currentEncumbranceId = poLine.fundDistribution[0].encumbrance
 
-    * print "Create the past encumbrance"
-    * def v = call createTransaction { id: #(pastEncumbranceId), transactionType: 'Encumbrance', fiscalYearId: #(pastFiscalYearId), fundId: #(fundId), amount: 10.0, orderId: #(orderId), poLineId: #(poLineId) }
+    # 3. Create the past encumbrance
+    * def v = call createTransaction { id: '#(pastEncumbranceId)', transactionType: 'Encumbrance', fiscalYearId: '#(pastFiscalYearId)', fundId: '#(fundId)', amount: 10.0, orderId: '#(orderId)', poLineId: '#(poLineId)' }
 
-    * print "Create an invoice in the past fiscal year"
-    * def v = call createInvoice { id: #(invoiceId), fiscalYearId: #(pastFiscalYearId) }
+    # 4. Create an invoice in the past fiscal year
+    * def v = call createInvoice { id: '#(invoiceId)', fiscalYearId: '#(pastFiscalYearId)' }
 
-    * print "Add an invoice line linked to a po line, using the encumbrance in the current fiscal year"
-    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId), invoiceId: #(invoiceId), poLineId: #(poLineId), fundId: #(fundId), encumbranceId: #(currentEncumbranceId), total: 10 }
+    # 5. Add an invoice line linked to a po line, using the encumbrance in the current fiscal year
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(currentEncumbranceId)', total: 10 }
 
-    * print "Check the encumbrance link was changed to use the past fiscal year encumbrance"
+    # 6. Check the encumbrance link was changed to use the past fiscal year encumbrance
     Given path 'invoice/invoice-lines', invoiceLineId
     When method GET
     Then status 200
@@ -76,13 +78,13 @@ Feature: Update encumbrance links with fiscal year
     * def invoiceLineId2 = call uuid
     * def pastEncumbranceId = call uuid
 
-    * print "Create the order and order lines"
-    * def v = call createOrder { id: #(orderId) }
-    * def v = call createOrderLine { id: #(poLineId1), orderId: #(orderId), fundId: #(fundId) }
-    * def v = call createOrderLine { id: #(poLineId2), orderId: #(orderId), fundId: #(fundId) }
-    * def v = call openOrder { orderId: #(orderId) }
+    # 1. Create the order and order lines
+    * def v = call createOrder { id: '#(orderId)' }
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId)', fundId: '#(fundId)' }
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId)', fundId: '#(fundId)' }
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-    * print "Get the current encumbrance ids"
+    # 2. Get the current encumbrance ids
     Given path 'orders/order-lines', poLineId1
     When method GET
     Then status 200
@@ -94,17 +96,17 @@ Feature: Update encumbrance links with fiscal year
     * def poLine = $
     * def currentEncumbranceId2 = poLine.fundDistribution[0].encumbrance
 
-    * print "Create one past encumbrance"
-    * def v = call createTransaction { id: #(pastEncumbranceId), transactionType: 'Encumbrance', fiscalYearId: #(pastFiscalYearId), fundId: #(fundId), amount: 10.0, orderId: #(orderId), poLineId: #(poLineId1) }
+    # 3. Create one past encumbrance
+    * def v = call createTransaction { id: '#(pastEncumbranceId)', transactionType: 'Encumbrance', fiscalYearId: '#(pastFiscalYearId)', fundId: '#(fundId)', amount: 10.0, orderId: '#(orderId)', poLineId: '#(poLineId1)' }
 
     * print "Create an invoice in the current fiscal year"
-    * def v = call createInvoice { id: #(invoiceId) }
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     * print "Add invoice lines linked to the po lines, using the encumbrances in the current fiscal year"
-    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId1), invoiceId: #(invoiceId), poLineId: #(poLineId1), fundId: #(fundId), encumbranceId: #(currentEncumbranceId1), total: 10 }
-    * def v = call createInvoiceLine { invoiceLineId: #(invoiceLineId2), invoiceId: #(invoiceId), poLineId: #(poLineId2), fundId: #(fundId), encumbranceId: #(currentEncumbranceId2), total: 10 }
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId1)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId1)', fundId: '#(fundId)', encumbranceId: '#(currentEncumbranceId1)', total: 10 }
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId2)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId2)', fundId: '#(fundId)', encumbranceId: '#(currentEncumbranceId2)', total: 10 }
 
-    * print "Change the invoice to use the past fiscal year"
+    # 4. Change the invoice to use the past fiscal year
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -115,7 +117,7 @@ Feature: Update encumbrance links with fiscal year
     When method PUT
     Then status 204
 
-    * print "Check the encumbrance links were changed to use the past fiscal year encumbrances"
+    # 5. Check the encumbrance links were changed to use the past fiscal year encumbrances
     Given path 'invoice/invoice-lines', invoiceLineId1
     When method GET
     Then status 200
@@ -125,7 +127,7 @@ Feature: Update encumbrance links with fiscal year
     Then status 200
     And match $.fundDistributions[0].encumbrance == '#notpresent'
 
-    * print "Change the invoice to use the current fiscal year"
+    # 6. Change the invoice to use the current fiscal year
     Given path 'invoice/invoices', invoiceId
     When method GET
     Then status 200
@@ -136,7 +138,7 @@ Feature: Update encumbrance links with fiscal year
     When method PUT
     Then status 204
 
-    * print "Check the encumbrance links were changed to use the current fiscal year encumbrances"
+    # 7. Check the encumbrance links were changed to use the current fiscal year encumbrances
     Given path 'invoice/invoice-lines', invoiceLineId1
     When method GET
     Then status 200
@@ -145,4 +147,3 @@ Feature: Update encumbrance links with fiscal year
     When method GET
     Then status 200
     And match $.fundDistributions[0].encumbrance == currentEncumbranceId2
-

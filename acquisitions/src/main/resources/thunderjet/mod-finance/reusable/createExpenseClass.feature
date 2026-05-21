@@ -1,9 +1,10 @@
 Feature: Create expense class
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createExpenseClass
+  Scenario: Create expense class
     Given path 'finance/expense-classes'
     And request
     """

@@ -30,56 +30,20 @@ Feature: Receive piece against package POL
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
 
   Scenario: Create an order
-    * print "Create an order"
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
 
   Scenario: Create an order line with isPackage
-    * print "Create an order line with isPackage"
-
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.isPackage = true
-    * set poLine.checkinItems = true
-    * set poLine.physical.createInventory = 'Instance, Holding, Item'
-    * set poLine.fundDistribution[0].fundId = fundId
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', isPackage: true, checkinItems: true }
 
 
   Scenario: Open the order
-    * print "Open the order"
-
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # Check the order line does not have an instanceId
     Given path 'orders/order-lines', poLineId
@@ -97,7 +61,6 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create title 1
-    * print "Create title 1"
 
     Given path 'orders/titles'
     And request
@@ -113,7 +76,6 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create piece 1 for title 1
-    * print "Create piece 1 for title 1"
 
     Given path 'orders/pieces'
     And request
@@ -131,7 +93,6 @@ Feature: Receive piece against package POL
 
 
   Scenario: Receive piece 1
-    * print "Receive piece 1"
 
     Given path 'orders/check-in'
     And request
@@ -190,7 +151,6 @@ Feature: Receive piece against package POL
     And match $.displayOnHolding == false
 
   Scenario: Create title 2
-    * print "Create title 2"
 
     Given path 'orders/titles'
     And request
@@ -206,7 +166,6 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create piece 2 for title 2
-    * print "Create piece 2 for title 2"
 
     Given path 'orders/pieces'
     And request
@@ -224,7 +183,6 @@ Feature: Receive piece against package POL
 
 
   Scenario: Create piece 3 for title 2
-    * print "Create piece 3 for title 2"
 
     Given path 'orders/pieces'
     And request
@@ -242,7 +200,6 @@ Feature: Receive piece against package POL
 
 
   Scenario: Receive piece 2
-    * print "Receive piece 2"
 
     Given path 'orders/check-in'
     And request
@@ -285,7 +242,6 @@ Feature: Receive piece against package POL
     And match $.supplement == true
 
   Scenario: Receive piece 3
-    * print "Receive piece 3"
 
     Given path 'orders/check-in'
     And request
@@ -328,7 +284,6 @@ Feature: Receive piece against package POL
     And match $.supplement == true
 
   Scenario: Unreceive pieces 2 and 3
-    * print "Unreceive pieces 2 and 3"
 
     Given path 'orders/receive'
     And request

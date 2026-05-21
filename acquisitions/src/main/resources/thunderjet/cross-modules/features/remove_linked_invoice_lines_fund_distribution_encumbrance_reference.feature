@@ -42,6 +42,7 @@ Feature: Remove linked invoice lines fund distribution encumbrance reference whe
     # 1. Create an order
     * def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time', ongoing: null }
 
+    # 2. Create an order line
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId1)', fundCode: '#(fundId1)', paymentStatus: 'Awaiting Payment', receiptStatus: 'Partially Received' }
 
     # 3. Open the order
@@ -50,17 +51,8 @@ Feature: Remove linked invoice lines fund distribution encumbrance reference whe
     # 4. Create an invoice
     * def v = call createInvoice { id: '#(invoiceId)' }
 
-    # 5. Create an invoice line
-    # Get the encumbrance id
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLine = $
-    * def encumbranceId = poLine.fundDistribution[0].encumbrance
-
-    # Create the invoice line
-    * def invoiceLine = { id: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId1)', fundCode: '#(fundId1)', encumbrance: '#(encumbranceId)', total: 1, subTotal: 1 }
-    * def v = call createInvoiceLine invoiceLine
+    # 5. Create an invoice line linked to the po line
+    * def v = call createInvoiceLineFromPoLine { id: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId1)', total: 1 }
 
     # 6. Update fundId in poLine
     Given path 'orders/order-lines', poLineId

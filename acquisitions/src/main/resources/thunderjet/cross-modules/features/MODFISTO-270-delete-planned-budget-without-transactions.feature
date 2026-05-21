@@ -1,5 +1,4 @@
 # For MODFISTO-270
-@parallel=false
 Feature: Planned budgets without transactions should be deleted
 
   Background:
@@ -12,75 +11,39 @@ Feature: Planned budgets without transactions should be deleted
 
     * callonce variables
 
-    * def ledgerId = callonce uuid1
 
-    * def currentFundId = callonce uuid2
-    * def currentBudgetId = callonce uuid3
-    * def plannedBudgetId = callonce uuid4
+  Scenario: Planned budgets without transactions should be deleted
+    * def currentFundId = call uuid
+    * def currentBudgetId = call uuid
+    * def plannedBudgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
 
-    * def orderId = callonce uuid5
-    * def poLineId = callonce uuid6
+    # 1. Create funds and current and planned budget
+    * def v = call createFund { id: '#(currentFundId)', ledgerId: '#(globalLedgerId)' }
+    * def v = call createBudget { id: '#(currentBudgetId)', allocated: 1000, fundId: '#(currentFundId)' }
+    * def v = call createBudget  { id: '#(plannedBudgetId)', budgetStatus: 'Planned', allocated: 1000, fundId: '#(currentFundId)', fiscalYearId: '#(globalPlannedFiscalYearId)' }
 
-  Scenario: Create ledger
-    * call createLedger { 'id': '#(ledgerId)' }
+    # 2. Create order
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario: Create funds and current and planned budget
-    * call createFund { 'id': '#(currentFundId)'}
-    * call createBudget { 'id': '#(currentBudgetId)', 'allocated': 1000, 'fundId': '#(currentFundId)'}
-    * print "Create planned budget"
-    * call createBudget  {'id': '#(plannedBudgetId)', 'budgetStatus': 'Planned', 'allocated': 1000, 'fundId': '#(currentFundId)', "fiscalYearId":"#(globalPlannedFiscalYearId)"}
+    # 3. Create order line
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(currentFundId)', listUnitPrice: 100 }
 
-  Scenario: Create order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # 4. Open order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario: Create order line
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = 100
-    * set orderLine.fundDistribution[0].fundId = currentFundId
-
-    And request orderLine
-    When method POST
-    Then status 201
-
-  Scenario: Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: Verify that planned budget without transaction can be deleted
+    # 5. Verify that planned budget without transaction can be deleted
     Given path 'finance/budgets', plannedBudgetId
     When method DELETE
     Then status 204
 
-
-  Scenario: Verify planned budget was deleted
+    # 6. Verify planned budget was deleted
     Given path 'finance/budgets', plannedBudgetId
     When method GET
     Then status 404
 
-  Scenario: Verify that current budget with transaction can't be deleted
+    # 7. Verify that current budget with transaction can't be deleted
     Given path 'finance/budgets', currentBudgetId
     When method DELETE
     Then status 400

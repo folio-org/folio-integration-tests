@@ -80,22 +80,8 @@ Feature: Check re-encumber works correctly
 
 
   Scenario Outline: prepare finances for fiscal year with <fiscalYearId> for re-encumber
-    * def fiscalYearId = <fiscalYearId>
     * def code = <code>
-
-    Given path 'finance/fiscal-years'
-    And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + code)',
-      "code": '#(codePrefix + code)',
-      "periodStart": '#(code + "-01-01T00:00:00Z")',
-      "periodEnd": '#(code + "-12-30T23:59:59Z")'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createFiscalYear { id: '#(<fiscalYearId>)', code: '#(codePrefix + code)', periodStart: '#(code + "-01-01T00:00:00Z")', periodEnd: '#(code + "-12-30T23:59:59Z")' }
 
     Examples:
       | fiscalYearId     | code     |
@@ -103,22 +89,7 @@ Feature: Check re-encumber works correctly
       | toFiscalYearId   | toYear   |
 
   Scenario Outline: prepare finances for ledger with <ledgerId> for re-encumber
-    * def ledgerId = <ledgerId>
-
-    Given path 'finance/ledgers'
-    And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(fromFiscalYearId)",
-      "restrictEncumbrance": <restrictEncumbrance>
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createLedger { id: '#(<ledgerId>)', fiscalYearId: '#(fromFiscalYearId)', restrictEncumbrance: '#(<restrictEncumbrance>)' }
 
     Examples:
       | ledgerId                           | restrictEncumbrance |

@@ -28,20 +28,7 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
 
   Scenario Outline: prepare finances for ledger with <ledgerId>
     * def ledgerId = <ledgerId>
-
-    Given path 'finance/ledgers'
-    And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(globalFiscalYearId)"
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(globalFiscalYearId)' }
 
     Examples:
       | ledgerId             |
@@ -53,15 +40,15 @@ Feature: Verify calculation of the Ledger totals for the fiscal year
     * def fundId = <fundId>
     * def budgetId = <budgetId>
     * def ledgerId = <ledgerId>
-    * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
     Given path 'finance-storage/budgets'
     And request
     """
     {
-      "id": "#(id)",
+      "id": "#(budgetId)",
       "budgetStatus": "Active",
       "fundId": "#(fundId)",
-      "name": "#(id)",
+      "name": "#(budgetId)",
       "fiscalYearId":"#(globalFiscalYearId)",
       "initialAllocation": 0.0,
       "allocationTo": 0.0,

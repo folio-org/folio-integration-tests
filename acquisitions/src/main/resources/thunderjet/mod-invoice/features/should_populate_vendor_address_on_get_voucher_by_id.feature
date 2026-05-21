@@ -16,7 +16,6 @@ Feature: Should populate vendor address when retrieve voucher by id
     * callonce variables
 
     # prepare sample data
-    * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
 
     # initialize common invoice data
     * def twoAddressesVendor = callonce uuid1
@@ -110,18 +109,8 @@ Feature: Should populate vendor address when retrieve voucher by id
     Then status 201
 
 
-    # ============= get invoice to approve ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoiceBody = $
-    * set invoiceBody.status = "Approved"
-
-    # ============= put approved invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    And request invoiceBody
-    When method PUT
-    Then status 204
+    # ============= approve invoice ===================
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     Examples:
 

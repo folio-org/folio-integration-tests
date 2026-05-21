@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.function.Consumer;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,15 +31,15 @@ public abstract class BaseSharedTenant {
   }
 
   protected static boolean initializeTenant(TenantConfig config, TenantContext context) {
-    if (isIndividualRunMode()) {
-      var uniqueTenant = config.tenantPrefix() + RandomUtils.nextLong();
-      var uniqueTenantId = UUID.randomUUID().toString();
-      System.setProperty(TEST_TENANT, uniqueTenant);
-      System.setProperty(TEST_TENANT_ID, uniqueTenantId);
-      logger.info("initializeTenant:: Created unique individual tenant{} for {}", uniqueTenant, context.ownerClass().getSimpleName());
+    if (SharedTenantOptions.isIndividualRunMode()) {
+      var tenant = SharedTenantOptions.getTenant(config.tenantPrefix());
+      System.setProperty(TEST_TENANT, tenant.name());
+      System.setProperty(TEST_TENANT_ID, tenant.id());
+      logger.info("initializeTenant:: Initialized unique individual tenant {} for {}", tenant.name(), context.ownerClass().getSimpleName());
       try {
-        context.featureRunner().accept(config.initFeaturePath());
-
+        if (!tenant.destroy()) {
+          context.featureRunner().accept(config.initFeaturePath());
+        }
         return true;
       } catch (Exception e) {
         logger.error("initializeTenant:: Failed to initialize individual tenant: {}", e.getMessage(), e);
@@ -64,7 +62,11 @@ public abstract class BaseSharedTenant {
   }
 
   protected static void cleanupTenant(TenantConfig config, TenantContext context, String lastClassName) {
-    if (isIndividualRunMode()) {
+    if (SharedTenantOptions.isIgnoreCleanup()) {
+      logger.info("cleanupTenant:: Ignoring cleanup for tenant for {}", context.ownerClass().getSimpleName());
+      return;
+    }
+    if (SharedTenantOptions.isIndividualRunMode()) {
       try {
         logger.info("cleanupTenant:: Cleaning up individual tenant for {}", context.ownerClass().getSimpleName());
         context.featureRunner().accept(DESTROY_FEATURE_PATH);
@@ -92,21 +94,6 @@ public abstract class BaseSharedTenant {
     }
   }
 
-
-  private static boolean isIndividualRunMode() {
-    // To run tests in efficient "shared pool and tenant" mode -Dtest.mode=no-shared-pool VM option should NOT be set
-    // because this mode is enabled by default for the nightly Karate CI runs. We can mimic the CI behavior locally
-    // by setting -Dkarate.env=dev-shared. But if you explicitly want "shared pool and tenant" activity to be disabled
-    // do NOT use either -Dtest.mode=no-shared-pool OR -Dkarate.env=dev-shared
-    var disableSharedPoolAndTenantWithNoSharedPool = "no-shared-pool".equals(System.getProperty("test.mode"));
-
-    // To run tests individually without "shared pool and tenant" mode set -Dkarate.env=dev VM option
-    // to run the tests the "old-school way" locally with newly created thread pools and tenant per feature
-    var disableSharedPoolAndTenantWithKarateEnv = "dev".equals(System.getProperty("karate.env"));
-
-    return disableSharedPoolAndTenantWithNoSharedPool || disableSharedPoolAndTenantWithKarateEnv;
-  }
-
   private static boolean getOrCreateSharedTenant(String tenantPrefix, Class<?> ownerClass, String tenantFilePath) {
     synchronized (FILE_LOCK) {
       try {
@@ -125,13 +112,12 @@ public abstract class BaseSharedTenant {
           }
         }
 
-        var newTenant = tenantPrefix + RandomUtils.nextLong();
-        var newTenantId = UUID.randomUUID().toString();
+        var tenant = SharedTenantOptions.getTenant(tenantPrefix);
         var ownerName = ownerClass.getSimpleName();
-        saveTenantProperties(tenantFile, newTenant, newTenantId, ownerName);
-        System.setProperty(TEST_TENANT, newTenant);
-        System.setProperty(TEST_TENANT_ID, newTenantId);
-        logger.info("getOrCreateSharedTenant:: Created shared tenant {} by {}", newTenant, ownerName);
+        saveTenantProperties(tenantFile, tenant.name(), tenant.id(), ownerName);
+        System.setProperty(TEST_TENANT, tenant.name());
+        System.setProperty(TEST_TENANT_ID, tenant.id());
+        logger.info("getOrCreateSharedTenant:: Created shared tenant {} by {}", tenant.name(), ownerName);
 
         return true;
       } catch (Exception e) {

@@ -1,5 +1,4 @@
 # For MODORDERS-658, MODORDERS-927
-@parallel=false
 Feature: Get and put a composite order
 
   Background:
@@ -18,44 +17,35 @@ Feature: Get and put a composite order
 
     * def isbn = "9780552142359"
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
-    * def orderId = callonce uuid3
-    * def poLineId = callonce uuid4
-
-    * def createOrder = read('classpath:thunderjet/mod-orders/reusable/create-order.feature')
-    * def openOrder = read('classpath:thunderjet/mod-orders/reusable/open-order.feature')
 
 
-  Scenario: Create finances
+  Scenario: Get and put a composite order
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def poLineId = call uuid
+
+    # 1. Create finances
     * configure headers = headersAdmin
     * def v = call createFund { id: #(fundId) }
     * def v = call createBudget { id: #(budgetId), allocated: 1000, fundId: #(fundId) }
 
-
-  Scenario: Create the order
+    # 2. Create the order
+    * configure headers = headersUser
     * def v = call createOrder { id: #(orderId) }
 
+    # 3. Create an order line with a product id
+    * table productIds
+      | productId       | productIdType                          |
+      | '15934409'      | '439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef' |
+      | '3787301917'    | globalISBNIdentifierTypeId             |
+      | '9783787301911' | globalISBNIdentifierTypeId             |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', productIds: '#(productIds)' }
 
-  Scenario: Create an order line with a product id
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.details.productIds = [ { productId: "15934409", productIdType: "439bfbae-75bc-4f74-9fc7-b2a2d47ce3ef" }, { productId: "3787301917", productIdType: "#(globalISBNIdentifierTypeId)" }, { productId: "9783787301911", productIdType: "#(globalISBNIdentifierTypeId)" } ]
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
-
-
-  Scenario: Open the order
+    # 4. Open the order
     * def v = call openOrder { orderId: "#(orderId)" }
 
-
-  Scenario: Re-add the product ids with order storage
+    # 5. Re-add the product ids with order storage
     Given path 'orders-storage/po-lines', poLineId
     When method GET
     Then status 200
@@ -70,8 +60,7 @@ Feature: Get and put a composite order
     When method PUT
     Then status 204
 
-
-  Scenario: Get and put the order line without changing it
+    # 6. Get and put the order line without changing it
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -83,7 +72,7 @@ Feature: Get and put a composite order
     When method PUT
     Then status 204
 
-  Scenario: Verify product identifiers after update POL
+    # 7. Verify product identifiers after updating the POL
     Given path 'orders/order-lines', poLineId
     When method GET
     Then status 200
@@ -102,4 +91,3 @@ Feature: Get and put a composite order
     And match $.details.productIds[3].productId == '12345'
     And match $.details.productIds[3].productIdType == '#(globalISBNIdentifierTypeId)'
     And match $.details.productIds[3].qualifier == '#notpresent'
-

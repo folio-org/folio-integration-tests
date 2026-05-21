@@ -17,8 +17,14 @@ Feature: mod-orders integration tests
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
+  Scenario: Add piece to cancelled order
+    * call read('features/add-piece-to-cancelled-order.feature')
+
   Scenario: Auto populate fund code if it missed
     * call read("features/auto-populate-fund-code.feature")
+
+  Scenario: Batch create pieces updates encumbrance
+    * call read('features/batch-create-pieces-updates-encumbrance.feature')
 
   Scenario: Verify Bind Piece feature
     * call read('features/bind-piece.feature')
@@ -34,6 +40,9 @@ Feature: mod-orders integration tests
 
   Scenario: Change location when receiving a piece
     * call read('features/change-location-when-receiving-piece.feature')
+
+  Scenario: Change piece status from Unreceivable to Expected for ongoing order with two pieces
+    * call read('features/change-piece-status-unreceivable-to-expected-ongoing-order.feature')
 
   Scenario: Change Order Instance Connection
     * call read('features/change-order-instance-connection.feature')
@@ -140,6 +149,9 @@ Feature: mod-orders integration tests
 
   Scenario: Move Item and Holding to update order data
     * call read('features/move-item-and-holding-to-update-order-data.feature')
+
+  Scenario: No side effect with failed piece operation
+    * call read('features/no-side-effect-with-failed-piece-operation.feature')
 
   Scenario: Open and unopen order
     * call read('features/open-and-unopen-order.feature')
@@ -314,3 +326,36 @@ Feature: mod-orders integration tests
 
   Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
     * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
+
+  Scenario: Update PO lines when an order is cancelled
+    * call read('features/update-po-lines-when-order-cancelled.feature')
+
+  Scenario: P/E Mix change instance connection create new holdings and delete abandoned holdings
+    * call read('features/pe-mix-change-instance-connection-create-new-delete-holdings.feature')
+
+  Scenario: P/E Mix synchronized change instance connection create new holdings and delete abandoned holdings
+    * call read('features/pe-mix-synchronized-change-instance-connection-create-new-delete-holdings.feature')
+
+  Scenario: Physical independent change instance connection find or create new and delete holdings after receiving piece in new location
+    * call read('features/physical-change-instance-connection-find-create-delete-holdings.feature')
+
+  Scenario: P/E Mix change instance connection create new holdings and keep abandoned holdings
+    * call read('features/pe-mix-change-instance-connection-create-new-keep-holdings.feature')
+
+  Scenario: P/E Mix synchronized change instance connection create new holdings and keep abandoned holdings
+    * call read('features/pe-mix-synchronized-change-instance-connection-create-new-keep-holdings.feature')
+
+  Scenario: P/E Mix independent change instance connection find or create new and delete holdings after receiving piece in new location
+    * call read('features/pe-mix-change-instance-connection-find-create-delete-holdings.feature')
+
+  Scenario: Item Appears Under Holdings After Instance Connection Change With Holding Setting Find Or Create
+    * call read('features/item-under-holdings-after-instance-connection-change-find-or-create.feature')
+
+  Scenario: Item Appears Under Holdings After Instance Connection Change With Holding Setting Move
+    * call read('features/item-under-holdings-after-instance-connection-change-move.feature')
+
+  Scenario: Item Appears Under Holdings After Instance Connection Change With Holding Setting Create New
+    * call read('features/item-under-holdings-after-instance-connection-change-create-new.feature')
+
+  Scenario: An Open Order With POL And Funds Distribution Can Be Unopened
+    * call read('features/unopen-open-order-with-pol-and-fund-distribution.feature')

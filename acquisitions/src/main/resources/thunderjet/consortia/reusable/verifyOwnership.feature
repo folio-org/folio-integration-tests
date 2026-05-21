@@ -2,9 +2,10 @@
 Feature: Verify that Holding and Item are updated with the new ownership
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: verifyOwnership
+  Scenario: Verify that Holding and Item are updated with the new ownership
     Given path 'holdings-storage/holdings'
     And param query = 'instanceId==' + instanceId
     When method GET

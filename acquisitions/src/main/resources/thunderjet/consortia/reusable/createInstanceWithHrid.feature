@@ -1,10 +1,11 @@
 @ignore
-Feature: Create instance
+Feature: Create instance with hrid
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createInstanceWithHrid
+  Scenario: Create instance with hrid
     Given path 'inventory/instances'
     And request
       """

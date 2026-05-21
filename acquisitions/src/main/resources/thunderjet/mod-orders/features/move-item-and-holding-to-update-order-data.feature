@@ -35,7 +35,7 @@ Feature: Move Item and Holding to update order data
     # Finance: budget, fund
     * def fundId = call uuid
     * def budgetId = call uuid
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)' }
 
     # Orders: order, poline, piece
@@ -94,7 +94,7 @@ Feature: Move Item and Holding to update order data
     Then status 200
 
     # 5. Unopen orders with delete holdings
-    * def v = call unopenOrderDeleteHoldings { "orderId": "#(orderId)" }
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
 
     # 6. Delete instance to avoid the instance being used by the next test
     * def v = call deleteInstance { "id": "#(instanceId)" }
@@ -119,7 +119,7 @@ Feature: Move Item and Holding to update order data
     # Finance: budget, fund
     * def fundId = call uuid
     * def budgetId = call uuid
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)' }
 
     # Orders: order, poline, piece
@@ -180,7 +180,7 @@ Feature: Move Item and Holding to update order data
     Then status 200
 
     # 5. Unopen orders with delete holdings
-    * def v = call unopenOrderDeleteHoldings { "orderId": "#(orderId)" }
+    * def v = call unopenOrder { orderId: '#(orderId)', deleteHoldings: true }
 
     # 6. Delete instance to avoid the instance being used by the next test
     * def v = call deleteInstance { "id": "#(instanceId)" }

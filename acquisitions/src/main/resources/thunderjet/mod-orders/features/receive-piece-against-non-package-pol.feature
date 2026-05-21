@@ -27,22 +27,12 @@ Feature: Receive piece against non-package POL
   Scenario: Create finances
     # this is needed for instance if a previous test does a rollover which changes the global fund
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
 
 
   Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
 
   Scenario: Create an order line with isPackage=false
@@ -61,17 +51,7 @@ Feature: Receive piece against non-package POL
 
 
   Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # Check the order line now has an instanceId
     Given path 'orders/order-lines', poLineId

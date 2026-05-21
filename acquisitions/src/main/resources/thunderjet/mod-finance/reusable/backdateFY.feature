@@ -1,6 +1,7 @@
 Feature: backdateFY
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Change the FY with given id to use a period in the previous year

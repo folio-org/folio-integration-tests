@@ -28,8 +28,8 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
   @Positive
   Scenario: Prepare data: create fund and budget
-    * def v = call createFund { 'id': '#(fundId)' }
-    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 100, 'fundId': '#(fundId)', 'status': 'Active' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 100, status: 'Active' }
 
     # Verify budgets in 'centralTenant' with fundId
     Given path '/finance/budgets'
@@ -66,16 +66,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 201
 
     # 2. Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-    Given path 'orders/composite-orders', orderId
-    And param deleteHoldings = false
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # 3. Check instance in poLine after opening order
     Given path 'orders/order-lines', poLineId
@@ -119,16 +110,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
 
     # 6. Close Order
     * configure headers = headersCentral
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Closed"
-    # Update Order to close
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
     # 7. Reopen order with deleteHoldings = true
     Given path 'orders/composite-orders', orderId
@@ -200,17 +182,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 201
 
     # 2. Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # 3. Verify Instance, Holding, Item in 'centralTenant'
     # 3.1 Check the order line have an instanceId 'centralInstanceId1'
@@ -286,17 +258,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 201
 
     # 5. Open order
-    Given path 'orders/composite-orders', orderId2
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    Given path 'orders/composite-orders', orderId2
-    And param deleteHoldings = false
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId2)' }
 
     # 6 Check the order line have an instanceId 'centralInstanceId1'
     Given path 'orders/order-lines', poLineId2
@@ -401,15 +363,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 201
 
     # 2. Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # 3. Verify Instance, Holding, Item in 'centralTenant'
     # 3.1 Check the order line have an instanceId 'centralInstanceId1'
@@ -565,15 +519,7 @@ Feature: Open order with member tenant location and verify instance, holding, an
     Then status 201
 
     # 2. Open order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # 3. Verify Instance, Holding, Item in 'centralTenant'
     # 3.1 Check the order line have an instanceId 'centralInstanceId1'

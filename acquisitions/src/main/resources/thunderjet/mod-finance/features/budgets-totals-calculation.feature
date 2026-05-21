@@ -39,43 +39,18 @@ Feature: Should tests budget total amounts calculation
     * def year = callonce getCurrentYear
 
   Scenario: prepare fiscal year
-
-    Given path 'finance/fiscal-years'
-    And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + year)',
-      "code": '#(codePrefix + year)',
-      "periodStart": '#(year + "-01-01T00:00:00Z")',
-      "periodEnd": '#(year + "-12-30T23:59:59Z")'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createFiscalYear { id: '#(fiscalYearId)', code: '#(codePrefix + year)', periodStart: '#(year + "-01-01T00:00:00Z")', periodEnd: '#(year + "-12-30T23:59:59Z")' }
 
 
   Scenario: prepare finances for ledger
-    Given path 'finance/ledgers'
-    And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(globalFiscalYearId)"
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(globalFiscalYearId)' }
 
 
   Scenario Outline: prepare finances for fund and budget with <fundId>, <budgetId>
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
+    * def v = call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
     Given path 'finance-storage/budgets'
     And request
     """

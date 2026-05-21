@@ -1,4 +1,7 @@
-# For MODORDSTOR-354
+# For MODORDSTOR-354,
+# https://foliotest.testrail.io/index.php?/cases/view/436738,
+# https://foliotest.testrail.io/index.php?/cases/view/436793,
+# https://foliotest.testrail.io/index.php?/cases/view/436794
 Feature: Piece status transitions claiming
 
   Background:
@@ -26,13 +29,9 @@ Feature: Piece status transitions claiming
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)', 'status': 'Active' }
     * configure headers = headersUser
 
-
-  # ============================================================
-  # C436738: Piece status has not been changed if "Expected receipt date" wasn't specified
-  # https://foliotest.testrail.io/index.php?/cases/view/436738
-  # ============================================================
   @C436738
   @Positive
+  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/436738
   Scenario: Verify Piece Status Not Changed Without Expected Receipt Date
     * def orderId = call uuid
     * def poLineId = call uuid
@@ -71,13 +70,9 @@ Feature: Piece status transitions claiming
     And match $.totalRecords == 1
     And match $.items[0].status.name == 'On order'
 
-
-  # ============================================================
-  # C436793: Piece status is set to "Late" after "Claim sent" date passed
-  # https://foliotest.testrail.io/index.php?/cases/view/436793
-  # ============================================================
   @C436793
   @Positive
+  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/436793
   Scenario: Verify Piece Status Changed To Late After Claim Sent Date Passed
     * def orderId = call uuid
     * def poLineId = call uuid
@@ -142,14 +137,9 @@ Feature: Piece status transitions claiming
     And match $.totalRecords == 1
     And match $.items[0].status.name == 'On order'
 
-
-  # ============================================================
-  # C436794: Piece status is changed to "Late" after "Delay claim" date is passed,
-  # even when "Claiming interval" has not expired yet
-  # https://foliotest.testrail.io/index.php?/cases/view/436794
-  # ============================================================
   @C436794
   @Positive
+  # TestRail: https://foliotest.testrail.io/index.php?/cases/view/436794
   Scenario: Verify Piece Status Changed To Late After Delay Claim Date Passed
     * def orderId = call uuid
     * def poLineId = call uuid

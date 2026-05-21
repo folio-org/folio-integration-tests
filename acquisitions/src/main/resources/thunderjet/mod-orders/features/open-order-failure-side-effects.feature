@@ -24,45 +24,20 @@ Feature: Open order failure side effects
 
 
   Scenario: Create a fund without a budget
-    * print 'Create a fund without a budget'
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerWithRestrictionsId)' }
     # no budget creation yet, to make open order fail
 
 
   Scenario: Create an order
-    * print 'Create an order'
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
 
   Scenario: Create an order line
-    * print 'Create an order line'
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.cost.listUnitPrice = 10
-    * set poLine.cost.poLineEstimatedPrice = 10
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.titleOrPackage = titleOrPackage
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, titleOrPackage: '#(titleOrPackage)' }
 
 
   Scenario: Try to open the order
-    * print 'Try to open the order'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -101,11 +76,10 @@ Feature: Open order failure side effects
 
   Scenario: Create a budget with insufficient allocation
     * configure headers = headersAdmin
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)' }
+    * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 5, 'fundId': '#(fundId)' }
 
 
   Scenario: Try to open the order again
-    * print 'Try to open the order again'
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200

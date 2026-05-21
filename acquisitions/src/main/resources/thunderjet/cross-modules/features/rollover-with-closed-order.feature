@@ -15,8 +15,6 @@ Feature: Rollover with closed order
 
     * callonce variables
 
-    * def closeOrderRemoveLines = read('classpath:thunderjet/mod-orders/reusable/close-order-remove-lines.feature')
-
 
   Scenario: Rollover with closed order
     * def series = call random_string
@@ -57,7 +55,7 @@ Feature: Rollover with closed order
 
   # Open and close the order
     * def v = call openOrder { orderId: #(orderId) }
-    * def v = call closeOrderRemoveLines { orderId: #(orderId) }
+    * def v = call closeOrder { orderId: '#(orderId)' }
 
   ## For MODORDERS-904
   ## Remove encumbrance from specific po line

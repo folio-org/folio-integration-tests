@@ -11,8 +11,6 @@ Feature: Cancel an invoice linked to an order
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-
 
   Scenario: Cancel an approved invoice
     * def fundId = call uuid
@@ -23,7 +21,7 @@ Feature: Cancel an invoice linked to an order
     * def invoiceLineId = call uuid
 
     * print "Create finances"
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
     * print "Create an order and line"
@@ -135,7 +133,7 @@ Feature: Cancel an invoice linked to an order
     * def invoiceLineId2 = call uuid
 
     * print "Create finances"
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
     * print "Create an order and line"
@@ -387,24 +385,14 @@ Feature: Cancel an invoice linked to an order
     * def invoiceLineId = call uuid
 
     * print "Create finances"
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
     * print "Create an order"
     * def v = call createOrder { id: #(orderId) }
 
     * print "Create an order line, with 'Payment Not Required'"
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.cost.listUnitPrice = 10
-    * set poLine.paymentStatus = 'Payment Not Required'
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, paymentStatus: 'Payment Not Required' }
 
     * print "Open the order"
     * def v = call openOrder { orderId: #(orderId) }
@@ -634,7 +622,7 @@ Feature: Cancel an invoice linked to an order
     * def invoiceLineId = call uuid
 
     * print "Create finances"
-    * def v = call createFund { 'id': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
     * def v = call createBudget { 'id': '#(budgetId)', 'allocated': 1000, 'fundId': '#(fundId)', 'status': 'Active' }
 
     * print "Create order and line"

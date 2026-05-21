@@ -35,16 +35,16 @@ Feature: Create pieces for an open order in parallel
     * def getOrderLineTitleId = read('classpath:thunderjet/mod-orders/reusable/get-order-line-title-id.feature')
 
     * configure headers = headersAdmin
-    * callonce createFund { 'id': '#(fundId)' }
-    * callonce createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = callonce createFund { id: '#(fundId)' }
+    * def v = callonce createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
     * configure headers = headersUser
-    * callonce createOrder { id: "#(orderId)" }
-    * callonce createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce createOrderLine { id: "#(poLineId3)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce createOrderLine { id: "#(poLineId4)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce createOrderLine { id: "#(poLineId5)", orderId: "#(orderId)", fundId: "#(fundId)" }
-    * callonce openOrder { orderId: "#(orderId)" }
+    * def v = callonce createOrder { id: "#(orderId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId1)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId2)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId3)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId4)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce createOrderLine { id: "#(poLineId5)", orderId: "#(orderId)", fundId: "#(fundId)" }
+    * def v = callonce openOrder { orderId: "#(orderId)" }
     * callonce getOrderLineTitleId { poLineId: "#(poLineId1)" }
     * def titleId1 = titleId
     * callonce getOrderLineTitleId { poLineId: "#(poLineId2)" }
@@ -59,7 +59,7 @@ Feature: Create pieces for an open order in parallel
   Scenario: Create pieces and check budget
     # it would be nice to put the contents of parallel-create-piece-2 here and use karate.afterFeature() to check the budget,
     # but errors are not reported with this method, so we have to use an additional feature file
-    * call read('classpath:thunderjet/mod-orders/features/parallel-create-piece-2.feature')
+    * def v = call read('classpath:thunderjet/mod-orders/features/parallel-create-piece-2.feature')
 
     * configure headers = headersAdmin
     Given path '/finance/budgets'

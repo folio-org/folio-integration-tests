@@ -2,6 +2,7 @@ Feature: Claim Pieces
   # parameters: claimingPieceIds, claimingInterval
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: claimPieces

@@ -3,9 +3,10 @@ Feature: Update order
   # parameters: id, vendor?, orderType?, ongoing?, reEncumber?, acqUnitIds?, workflowStatus?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createOrder
+  Scenario: Update order
     Given path 'orders/composite-orders', id
     When method GET
     Then status 200

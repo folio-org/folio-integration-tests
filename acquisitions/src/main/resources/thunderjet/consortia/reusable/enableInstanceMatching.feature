@@ -2,9 +2,10 @@
 Feature: Enable Instance Matching
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: enableInstanceMatching
+  Scenario: Enable Instance Matching
     Given path 'orders-storage/settings'
     And param query = 'key==disableInstanceMatching'
     When method GET

@@ -31,9 +31,9 @@ Feature: Import Bibframe2 RDF - Verify graph
   Scenario: Validate HRID and created Date
     * def instanceGraphCall = call getResourceGraph
     * def instanceGraph = instanceGraphCall.response
-    * def workGraph = instanceGraph.outgoingEdges.filter(x => x.predicate == 'INSTANTIATES')[0].target
+    * def workGraph = resolveSubgraphIfId(instanceGraph.outgoingEdges.filter(x => x.predicate == 'INSTANTIATES')[0].target)
 
-    * def adminMetadataId = instanceGraph.outgoingEdges.filter(x => x.predicate == 'ADMIN_METADATA')[0].target.id
+    * def adminMetadataId = resolveSubgraphIfId(instanceGraph.outgoingEdges.filter(x => x.predicate == 'ADMIN_METADATA')[0].target).id
     * def adminMetadataGraphCall = call getResourceGraph { resourceId:  '#(adminMetadataId)' }
     * def adminMetadataGraph = adminMetadataGraphCall.response
     * retry until karate.exists(adminMetadataGraph.doc['http://bibfra.me/vocab/library/controlNumber']) == true
@@ -43,7 +43,7 @@ Feature: Import Bibframe2 RDF - Verify graph
 
   @C805751
   Scenario: Validate subjects of Work
-    * def subjectGraphs = workGraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT').map(x => x.target)
+    * def subjectGraphs = workGraph.outgoingEdges.filter(x => x.predicate == 'SUBJECT').map(x => resolveSubgraphIfId(x.target))
 
     # Validate Middle East subject
     * def middleEastDoc = { 'http://bibfra.me/vocab/lite/name': ['Middle East'], 'http://bibfra.me/vocab/lite/label': ['Middle East'] }
@@ -100,8 +100,8 @@ Feature: Import Bibframe2 RDF - Verify graph
     * eval validateSubjectGraph(subjectGraphs, 'Private flying -- Accidents -- United States -- Periodicals', conceptDoc, 'TOPIC', focusDoc, null)
     * def subject = subjectGraphs.filter(x => x.label == 'Private flying -- Accidents -- United States -- Periodicals')[0]
     * match subject.folioMetadata.inventoryId == '#notnull'
-    * def subjectLccnDoc = subject.outgoingEdges.filter(x => x.predicate == 'MAP').map(x => x.target.doc)
-    * def subFocusLabels = subject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS').map(x => x.target.label)
+    * def subjectLccnDoc = subject.outgoingEdges.filter(x => x.predicate == 'MAP').map(x => resolveSubgraphIfId(x.target).doc)
+    * def subFocusLabels = subject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS').map(x => resolveSubgraphIfId(x.target).label)
     * match subFocusLabels contains 'Accidents'
     * match subFocusLabels contains 'Periodicals'
     * match subFocusLabels contains 'United States'
@@ -124,31 +124,31 @@ Feature: Import Bibframe2 RDF - Verify graph
     * eval validateSubjectGraph(subjectGraphs, dyesSubject.label, dyesDoc, 'TOPIC', dyesFocusDoc, dyesLccn)
 
     # Validate 'Textile fibers' subfocus
-    * def textileFibersEdge = dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && x.target.label == 'Textile fibers')[0]
-    * match textileFibersEdge.target.doc == { "http://bibfra.me/vocab/lite/name": ["Textile fibers"], "http://bibfra.me/vocab/lite/label": ["Textile fibers"] }
-    * match textileFibersEdge.target.types contains 'TOPIC'
+    * def textileFibersTarget = resolveSubgraphIfId(dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && resolveSubgraphIfId(x.target).label == 'Textile fibers')[0].target)
+    * match textileFibersTarget.doc == { "http://bibfra.me/vocab/lite/name": ["Textile fibers"], "http://bibfra.me/vocab/lite/label": ["Textile fibers"] }
+    * match textileFibersTarget.types contains 'TOPIC'
 
     # Validate  '19th century' subfocus
-    * def nineteenthCenturyEdge = dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && x.target.label == '19th century')[0]
-    * match nineteenthCenturyEdge.target.doc == { "http://bibfra.me/vocab/lite/name": ["19th century"], "http://bibfra.me/vocab/lite/label": ["19th century"] }
-    * match nineteenthCenturyEdge.target.types contains 'TEMPORAL'
+    * def nineteenthCenturyTarget = resolveSubgraphIfId(dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && resolveSubgraphIfId(x.target).label == '19th century')[0].target)
+    * match nineteenthCenturyTarget.doc == { "http://bibfra.me/vocab/lite/name": ["19th century"], "http://bibfra.me/vocab/lite/label": ["19th century"] }
+    * match nineteenthCenturyTarget.types contains 'TEMPORAL'
 
     # Validate 'Exhibitions' subfocus
-    * def exhibitionsEdge = dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && x.target.label == 'Exhibitions')[0]
-    * match exhibitionsEdge.target.doc == { "http://bibfra.me/vocab/lite/name": ["Exhibitions"], "http://bibfra.me/vocab/lite/label": ["Exhibitions"] }
-    * match exhibitionsEdge.target.types contains 'FORM'
+    * def exhibitionsTarget = resolveSubgraphIfId(dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && resolveSubgraphIfId(x.target).label == 'Exhibitions')[0].target)
+    * match exhibitionsTarget.doc == { "http://bibfra.me/vocab/lite/name": ["Exhibitions"], "http://bibfra.me/vocab/lite/label": ["Exhibitions"] }
+    * match exhibitionsTarget.types contains 'FORM'
 
     # Validate 'History' subfocus
-    * def historyEdge = dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && x.target.label == 'History')[0]
-    * match historyEdge.target.doc == { "http://bibfra.me/vocab/lite/name": ["History"], "http://bibfra.me/vocab/lite/label": ["History"] }
-    * match historyEdge.target.types contains 'TOPIC'
+    * def historyTarget = resolveSubgraphIfId(dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && resolveSubgraphIfId(x.target).label == 'History')[0].target)
+    * match historyTarget.doc == { "http://bibfra.me/vocab/lite/name": ["History"], "http://bibfra.me/vocab/lite/label": ["History"] }
+    * match historyTarget.types contains 'TOPIC'
 
     # Validate 'Japan' subfocus
-    * def japanEdge = dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && x.target.label == 'Japan')[0]
-    * match japanEdge.target.doc == { "http://bibfra.me/vocab/lite/name": ["Japan"], "http://bibfra.me/vocab/lite/label": ["Japan"] }
-    * match japanEdge.target.types contains 'PLACE'
+    * def japanTarget = resolveSubgraphIfId(dyesSubject.outgoingEdges.filter(x => x.predicate == 'SUB_FOCUS' && resolveSubgraphIfId(x.target).label == 'Japan')[0].target)
+    * match japanTarget.doc == { "http://bibfra.me/vocab/lite/name": ["Japan"], "http://bibfra.me/vocab/lite/label": ["Japan"] }
+    * match japanTarget.types contains 'PLACE'
     # Validate Japan's connection to FAST authority record
-    * def fastEdge = japanEdge.target.outgoingEdges.filter(x => x.predicate == 'MAP' && x.target.label == 'fst01204082')[0]
-    * match fastEdge.target.doc == { "http://bibfra.me/vocab/lite/link": ["http://id.worldcat.org/fast/fst01204082"], "http://bibfra.me/vocab/lite/name": ["fst01204082"], "http://bibfra.me/vocab/lite/label": ["fst01204082"] }
-    * match fastEdge.target.types contains 'ID_FAST'
-    * match fastEdge.target.types contains 'IDENTIFIER'
+    * def fastTarget = resolveSubgraphIfId(japanTarget.outgoingEdges.filter(x => x.predicate == 'MAP' && resolveSubgraphIfId(x.target).label == 'fst01204082')[0].target)
+    * match fastTarget.doc == { "http://bibfra.me/vocab/lite/link": ["http://id.worldcat.org/fast/fst01204082"], "http://bibfra.me/vocab/lite/name": ["fst01204082"], "http://bibfra.me/vocab/lite/label": ["fst01204082"] }
+    * match fastTarget.types contains 'ID_FAST'
+    * match fastTarget.types contains 'IDENTIFIER'

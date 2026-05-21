@@ -27,40 +27,11 @@ Feature: Fiscal year totals
     * def year = callonce getCurrentYear
 
 
+  Scenario: Create fiscal year
+    * def v = call createFiscalYear { id: '#(fiscalYearId)', code: '#(codePrefix + year)', periodStart: '#(year + "-01-01T00:00:00Z")', periodEnd: '#(year + "-12-30T23:59:59Z")' }
 
-  Scenario: prepare fiscal year
-
-    Given path 'finance/fiscal-years'
-    And request
-    """
-    {
-      "id": '#(fiscalYearId)',
-      "name": '#(codePrefix + year)',
-      "code": '#(codePrefix + year)',
-      "periodStart": '#(year + "-01-01T00:00:00Z")',
-      "periodEnd": '#(year + "-12-30T23:59:59Z")'
-    }
-    """
-    When method POST
-    Then status 201
-
-
-  Scenario: prepare finances for ledger
-
-
-    Given path 'finance/ledgers'
-    And request
-    """
-    {
-      "id": "#(ledgerId)",
-      "ledgerStatus": "Active",
-      "name": "#(ledgerId)",
-      "code": "#(ledgerId)",
-      "fiscalYearOneId":"#(globalFiscalYearId)"
-    }
-    """
-    When method POST
-    Then status 201
+  Scenario: Create ledger
+    * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(globalFiscalYearId)' }
 
   Scenario: Get fiscal year without budgets when fiscalYear withFinancialSummary is true
     Given path 'finance/fiscal-years', fiscalYearId
@@ -87,15 +58,15 @@ Feature: Fiscal year totals
     * def fundId = <fundId>
     * def budgetId = <budgetId>
 
-    * call createFund { 'id': '#(fundId)', 'ledgerId': #(ledgerId) }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
     Given path 'finance-storage/budgets'
     And request
     """
     {
-      "id": "#(id)",
+      "id": "#(budgetId)",
       "budgetStatus": "Active",
       "fundId": "#(fundId)",
-      "name": "#(id)",
+      "name": "#(budgetId)",
       "fiscalYearId":"#(fiscalYearId)",
       "initialAllocation": <initialAllocation>,
       "allocationTo": <allocationTo>,

@@ -11,8 +11,6 @@ Feature: Pay an invoice and delete a piece
 
     * callonce variables
 
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
     * def orderId = callonce uuid3
@@ -20,13 +18,13 @@ Feature: Pay an invoice and delete a piece
     * def invoiceId = callonce uuid5
     * def invoiceLineId = callonce uuid6
 
-    # Prepare finances
-    * callonce createFund { id: #(fundId) }
-    * callonce createBudget { id: #(budgetId), fundId: #(fundId), allocated: 1000 }
-
   Scenario: Pay an invoice and delete a piece
+    # 0. Prepare finances
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+
     # 1. Create an order
-    * def v = call createOrder { id: #(orderId) }
+    * def v = call createOrder { id: '#(orderId)' }
 
     # 2. Create an order line
     * table locations
@@ -35,7 +33,7 @@ Feature: Pay an invoice and delete a piece
     * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', quantity: 2, locations: '#(locations)' }
 
     # 3. Open the order
-    * def v = call openOrder { orderId: #(orderId) }
+    * def v = call openOrder { orderId: '#(orderId)' }
 
     # 4. Receive the piece
     Given path 'orders/pieces'
@@ -70,28 +68,16 @@ Feature: Pay an invoice and delete a piece
     And match $.receivingResults[0].processedSuccessfully == 1
 
     # 5. Create an invoice
-    * def v = call createInvoice { id: #(invoiceId) }
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # 6. Add an invoice line
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0] = { fundId:'#(fundId)', code:'#(fundId)', distributionType:'percentage', value:100 }
-    * set invoiceLine.total = 1
-    * set invoiceLine.subTotal = 1
-    * set invoiceLine.releaseEncumbrance = true
-
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', total: 1, releaseEncumbrance: true }
 
     # 7. Approve the invoice
-    * def v = call approveInvoice { invoiceId: #(invoiceId) }
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # 8. Pay the invoice
-    * def v = call payInvoice { invoiceId: #(invoiceId) }
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
     # 9. Delete the piece
     Given path 'orders/pieces'

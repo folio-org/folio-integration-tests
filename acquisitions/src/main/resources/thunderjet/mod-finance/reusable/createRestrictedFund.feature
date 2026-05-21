@@ -1,9 +1,10 @@
-Feature: fund
+Feature: Create restricted fund
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createRestrictedFund
+  Scenario: Create restricted fund
 
     * def code = karate.get('code', id)
     * def ledgerId = karate.get('ledgerId', globalLedgerId)

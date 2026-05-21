@@ -49,12 +49,8 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
 
   Scenario: Checking that one voucher lines are created with two fundDistr and expense class ext number is included in the voucherLine.externalAccountNumber
 
-    Given path 'invoice/invoices'
-    * copy newInvoice =  invoiceTemplate
-    And request newInvoice
-    When method POST
-    Then status 201
-    * def invoiceId = $.id
+    * def invoiceId = call uuid
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # ============= Create lines ===================
     Given path 'invoice/invoice-lines'
@@ -75,21 +71,12 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
     * def invoiceLineId2 = $.id
 
     # ============= approve invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
     And param limit = '2147483647'
-    And param query = 'invoiceId==' + invoicePayload.id
+    And param query = 'invoiceId==' + invoiceId
     When method GET
     Then status 200
     * def voucher = $.vouchers[0]
@@ -111,12 +98,8 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
 
 
   Scenario: Checking that one voucher lines are created with two fundDistr with same voucherLine.externalAccountNumber
-    Given path 'invoice/invoices'
-    * copy newInvoice = invoiceTemplate
-    And request newInvoice
-    When method POST
-    Then status 201
-    * def invoiceId = $.id
+    * def invoiceId = call uuid
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # ============= Create lines ===================
     Given path 'invoice/invoice-lines'
@@ -139,21 +122,12 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
     * def invoiceLineId2 = $.id
 
     # ============= approve invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
     And param limit = '2147483647'
-    And param query = 'invoiceId==' + invoicePayload.id
+    And param query = 'invoiceId==' + invoiceId
     When method GET
     Then status 200
     * def voucher = $.vouchers[0]
@@ -173,12 +147,8 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
 
 
   Scenario: Checking that two voucher lines are created and in each line there is fundDistr with unique voucherLine.externalAccountNumber
-    Given path 'invoice/invoices'
-    * copy newInvoice = invoiceTemplate
-    And request newInvoice
-    When method POST
-    Then status 201
-    * def invoiceId = $.id
+    * def invoiceId = call uuid
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # ============= Create lines ===================
     Given path 'invoice/invoice-lines'
@@ -201,21 +171,12 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
     * def invoiceLineId2 = $.id
 
     # ============= approve invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
     And param limit = '2147483647'
-    And param query = 'invoiceId==' + invoicePayload.id
+    And param query = 'invoiceId==' + invoiceId
     When method GET
     Then status 200
     * def voucher = $.vouchers[0]
@@ -235,12 +196,8 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
 
 
   Scenario: Checking that two voucher lines are created and in each line there is fundDistr with unique voucherLine.externalAccountNumber
-    Given path 'invoice/invoices'
-    * copy newInvoice = invoiceTemplate
-    And request newInvoice
-    When method POST
-    Then status 201
-    * def invoiceId = $.id
+    * def invoiceId = call uuid
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # ============= Create lines ===================
     Given path 'invoice/invoice-lines'
@@ -264,21 +221,12 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
     * def invoiceLineId2 = $.id
 
     # ============= approve invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
     And param limit = '2147483647'
-    And param query = 'invoiceId==' + invoicePayload.id
+    And param query = 'invoiceId==' + invoiceId
     When method GET
     Then status 200
     * def voucher = $.vouchers[0]
@@ -297,12 +245,8 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
     And match fundDistributions2[0].expenseClassId == globalPrnExpenseClassId
 
   Scenario: Checking that two voucher lines are created and in each line there is fundDistr with the same voucherLine.externalAccountNumber
-    Given path 'invoice/invoices'
-    * copy newInvoice = invoiceTemplate
-    And request newInvoice
-    When method POST
-    Then status 201
-    * def invoiceId = $.id
+    * def invoiceId = call uuid
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
     # ============= Create lines ===================
     Given path 'invoice/invoice-lines'
@@ -325,21 +269,12 @@ Feature: Create voucher lines for each unique : externalAccountNumber-extensionN
     * def invoiceLineId2 = $.id
 
     # ============= approve invoice ===================
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
-
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
     # ============= Verify voucher lines ===================
     Given path '/voucher/vouchers'
     And param limit = '2147483647'
-    And param query = 'invoiceId==' + invoicePayload.id
+    And param query = 'invoiceId==' + invoiceId
     When method GET
     Then status 200
     * def voucher = $.vouchers[0]

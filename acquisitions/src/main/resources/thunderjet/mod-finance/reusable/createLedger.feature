@@ -1,9 +1,10 @@
-Feature: ledger
+Feature: Create ledger
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createLedger
+  Scenario: Create ledger
     * def fiscalYearId = karate.get('fiscalYearId', globalFiscalYearId)
     * def restrictEncumbrance = karate.get('restrictEncumbrance', true)
     * def restrictExpenditures = karate.get('restrictExpenditures', true)

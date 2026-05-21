@@ -2,9 +2,10 @@
 Feature: Create Item
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createItem
+  Scenario: Create Item
     * def itemId = call uuid
     * def id = karate.get('id', itemId)
     * def status = karate.get('status', 'Available')

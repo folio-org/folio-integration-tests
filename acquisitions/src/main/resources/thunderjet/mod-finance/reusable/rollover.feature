@@ -2,6 +2,7 @@ Feature: rollover
   # parameters: id, ledgerId, fromFiscalYearId, toFiscalYearId, restrictEncumbrance, restrictExpenditures, needCloseBudgets, rolloverType, budgetsRollover, encumbrancesRollover
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Perform a fiscal year rollover, without checking for status or errors

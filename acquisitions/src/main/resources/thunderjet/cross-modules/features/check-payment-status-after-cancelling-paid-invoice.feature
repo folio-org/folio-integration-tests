@@ -21,8 +21,8 @@ Feature: Check payment status after cancelling paid invoice
     * def invoiceLineId = call uuid
 
     * print "Create finances"
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
     * print "Create an order and line"
     * def v = call createOrder { id: '#(orderId)' }
@@ -34,15 +34,8 @@ Feature: Check payment status after cancelling paid invoice
     * print "Create an invoice"
     * def v = call createInvoice { id: '#(invoiceId)' }
 
-    * print "Get the encumbrance id"
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLine = $
-    * def encumbranceId = poLine.fundDistribution[0].encumbrance
-
     * print "Add an invoice line linked to the po line"
-    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', encumbranceId: '#(encumbranceId)', total: 10, releaseEncumbrance: false }
+    * def v = call createInvoiceLineFromPoLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', poLineId: '#(poLineId)', fundId: '#(fundId)', total: 10, releaseEncumbrance: false }
 
     * print "Approve the invoice"
     * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
@@ -78,8 +71,8 @@ Feature: Check payment status after cancelling paid invoice
     * def invoiceLineId2 = call uuid
 
     * print "Create finances"
-    * call createFund { id: '#(fundId)' }
-    * call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 1000, fundId: '#(fundId)', status: 'Active' }
 
     * print "Create an order and line"
     * def v = call createOrder { id: '#(orderId)' }

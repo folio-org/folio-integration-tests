@@ -1,13 +1,14 @@
 Feature: Create Budget Expense Class
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
   Scenario: Add expense class to budget
     * def newGeneratedId = call uuid
     * def id = karate.get('id', newGeneratedId)
 
-    Given path '/finance/budget-expense-classes'
+    Given path '/finance-storage/budget-expense-classes'
     And request
     """
       {

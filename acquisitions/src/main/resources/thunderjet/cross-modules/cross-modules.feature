@@ -316,3 +316,30 @@ Feature: cross-module integration tests
 
   Scenario: Budget Summary When Decrease Allocation Exceeds Available Amount
     * call read('features/budget-summary-transfer-decreases-below-available.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Fund Distributions Related To Two Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-two-ledgers-with-multi-fund-pol.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Fund Distributions Related To Three Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-three-ledgers-with-expense-classes-twice.feature')
+
+  Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Different Fund Distributions Related To Three Different Ledgers And Same Fiscal Year
+    * call read('features/rollover-three-ledgers-with-different-fund-distributions.feature')
+
+  Scenario: Rollover Based On Expended When Credit Invoice Exists
+    * call read('features/rollover-based-on-expended-with-credit-invoice.feature')
+
+  Scenario: Over Encumbrance Is Calculated Correctly For Fiscal Year Ledger And Group
+    * call read('features/over-encumbrance-for-fy-ledger-and-group.feature')
+
+  Scenario: Order can be opened when balance is close to the encumbered available balance
+    * call read('features/open-order-when-balance-close-to-encumbered-available.feature')
+
+  Scenario: Expense Class Percent Of Total Expended Calculated Correctly When Budget Over Expended
+    * call read('features/expense-class-percent-expended-when-budget-over-expended.feature')
+
+  Scenario: Rollover Settings Applying To Encumbrances With No Encumbrance Rollover Options Active
+    * call read('features/rollover-settings-no-encumbrances.feature')
+
+  Scenario: Unreleased Encumbrance Is Rolled Over To The Next Fiscal Year
+    * call read('features/unreleased-encumbrance-rolled-over-to-next-fiscal-year.feature')

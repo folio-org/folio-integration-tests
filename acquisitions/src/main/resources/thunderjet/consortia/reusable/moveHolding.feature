@@ -2,9 +2,10 @@
 Feature: Move holding
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: moveHolding
+  Scenario: Move holding
     Given path 'inventory/holdings/move'
     And request
     """

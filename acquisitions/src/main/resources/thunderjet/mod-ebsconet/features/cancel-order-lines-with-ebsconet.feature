@@ -13,8 +13,6 @@ Feature: Cancel order lines with ebsconet
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-
     * def fundId = callonce uuid1
     * def budgetId = callonce uuid2
     * def orderId = callonce uuid3
@@ -31,26 +29,18 @@ Feature: Cancel order lines with ebsconet
     * def v = call createOrder { id: '#(orderId)' }
 
   Scenario Outline: Create a po line with paymentStatus=<paymentStatus> and receiptStatus=<receiptStatus>
-    * copy poLine = orderLineTemplate
-    * set poLine.id = <id>
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.fundDistribution[0].code = fundId
-    * set poLine.paymentStatus = '<paymentStatus>'
-    * set poLine.receiptStatus = '<receiptStatus>'
-    * set poLine.checkinItems = '<checkinItems>'
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * def id = <id>
+    * def paymentStatus = <paymentStatus>
+    * def receiptStatus = <receiptStatus>
+    * def checkinItems = <checkinItems>
+    * def v = call createOrderLine { id: '#(id)', orderId: '#(orderId)', fundId: '#(fundId)', paymentStatus: '#(paymentStatus)', receiptStatus: '#(receiptStatus)', checkinItems: '#(checkinItems)' }
 
     Examples:
-      | id        | paymentStatus        | receiptStatus        | checkinItems |
-      | poLineId1 | Awaiting Payment     | Partially Received   | false        |
-      | poLineId2 | Payment Not Required | Awaiting Receipt     | false        |
-      | poLineId3 | Fully Paid           | Receipt Not Required | true         |
-      | poLineId4 | Partially Paid       | Fully Received       | false        |
+      | id        | paymentStatus          | receiptStatus          | checkinItems |
+      | poLineId1 | 'Awaiting Payment'     | 'Partially Received'   | false        |
+      | poLineId2 | 'Payment Not Required' | 'Awaiting Receipt'     | false        |
+      | poLineId3 | 'Fully Paid'           | 'Receipt Not Required' | true         |
+      | poLineId4 | 'Partially Paid'       | 'Fully Received'       | false        |
 
   Scenario: Open the order
     * def v = call openOrder { orderId: '#(orderId)' }

@@ -1,5 +1,4 @@
-@parallel=false
-Feature: Checking that it is impossible to add a invoice line to already approved invoice
+Feature: Check that it is impossible to add an invoice line to an already approved invoice
 
   Background:
     * print karate.info.scenarioName
@@ -11,23 +10,18 @@ Feature: Checking that it is impossible to add a invoice line to already approve
 
     * callonce variables
 
-    # prepare sample data
+
+  Scenario: Check that it is impossible to add an invoice line to an already approved invoice
     * def invoicePayload = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLinePayload = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
+    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
 
-    # initialize common invoice data
-     * def invoiceId = callonce uuid1
-     * def firstInvoiceLineId = callonce uuid2
-     * def secondInvoiceLineId = callonce uuid3
+    * def invoiceId = call uuid
+    * def firstInvoiceLineId = call uuid
+    * def secondInvoiceLineId = call uuid
 
-#    * def invoiceId = "34ead894-57a0-4276-8802-87fc7851f915"
-#    * def firstInvoiceLineId = "34ead894-57a0-4276-8801-87fc7851f545"
-#    * def secondInvoiceLineId = "34ead894-57a0-4276-8801-87fc7851f685"
-
-  Scenario: Create invoice with lockTotal and without adjustment
+    # 1. Create invoice with lockTotal and without adjustment
     * set invoicePayload.id = invoiceId
     * set invoicePayload.lockTotal = 10.02
-    # ============= create invoice ===================
     Given path 'invoice/invoices'
     And request invoicePayload
     When method POST
@@ -39,47 +33,37 @@ Feature: Checking that it is impossible to add a invoice line to already approve
     And match $.subTotal == 0.0
     And match $.total == 0.0
 
-  Scenario: Add first invoice line to created invoice
-     # ============= create invoice lines ===================
-    Given path 'invoice/invoice-lines'
-    * set invoiceLinePayload.id = firstInvoiceLineId
-    * set invoiceLinePayload.invoiceId = invoiceId
-    * set invoiceLinePayload.quantity = 1
-    * set invoiceLinePayload.subTotal = 10.02
-    * set invoiceLinePayload.total = 10.02
-    * remove invoiceLinePayload.fundDistributions[0].expenseClassId
+    # 2. Add first invoice line to created invoice
+    * copy invoiceLine1 = invoiceLineTemplate
+    * set invoiceLine1.id = firstInvoiceLineId
+    * set invoiceLine1.invoiceId = invoiceId
+    * set invoiceLine1.quantity = 1
+    * set invoiceLine1.subTotal = 10.02
+    * set invoiceLine1.total = 10.02
+    * remove invoiceLine1.fundDistributions[0].expenseClassId
 
-    And request invoiceLinePayload
+    Given path 'invoice/invoice-lines'
+    And request invoiceLine1
     When method POST
     Then status 201
     And match $.adjustmentsTotal == 0.0
     And match $.subTotal == 10.02
     And match $.total == 10.02
 
-  # ============= approve invoice ===================
-  Scenario: Approve invoice with lock total is not equal to calculated total
-  Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoicePayload = $
-    * set invoicePayload.status = "Approved"
+    # 3. Approve invoice with lock total is not equal to calculated total
+  * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
-    Given path 'invoice/invoices', invoiceId
-    And request invoicePayload
-    When method PUT
-    Then status 204
+    # 4. Add second invoice line to created invoice, check error code
+    * copy invoiceLine2 = invoiceLineTemplate
+    * set invoiceLine2.id = secondInvoiceLineId
+    * set invoiceLine2.invoiceId = invoiceId
+    * set invoiceLine2.quantity = 1
+    * set invoiceLine2.subTotal = 11.02
+    * set invoiceLine2.total = 11.02
+    * remove invoiceLine2.fundDistributions[0].expenseClassId
 
-  Scenario: Add second invoice line to created invoice
-     # ============= create invoice lines ===================
     Given path 'invoice/invoice-lines'
-    * set invoiceLinePayload.id = secondInvoiceLineId
-    * set invoiceLinePayload.invoiceId = invoiceId
-    * set invoiceLinePayload.quantity = 1
-    * set invoiceLinePayload.subTotal = 11.02
-    * set invoiceLinePayload.total = 11.02
-    * remove invoiceLinePayload.fundDistributions[0].expenseClassId
-
-    And request invoiceLinePayload
+    And request invoiceLine2
     When method POST
     Then status 500
     And match $.errors[0].code == 'prohibitedInvoiceLineCreation'

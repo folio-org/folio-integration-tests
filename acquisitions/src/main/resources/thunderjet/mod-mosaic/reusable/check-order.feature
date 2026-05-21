@@ -1,11 +1,12 @@
 @ignore
-Feature: checkOrder
+Feature: Check order
   # parameters: poNumber, orderTemplateId, workflowStatus?
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: checkOrder
+  Scenario: Check order
     Given path "orders/composite-orders"
     And param query = "poNumber==" + poNumber
     When method GET

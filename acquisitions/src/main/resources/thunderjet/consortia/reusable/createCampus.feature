@@ -2,9 +2,10 @@
 Feature: Create campus
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createCampus
+  Scenario: Create campus
     Given path 'location-units/campuses'
     And request
     """

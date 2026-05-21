@@ -1,5 +1,4 @@
 # For MODORDERS-1366, https://foliotest.testrail.io/index.php?/cases/view/844840
-@parallel=false
 Feature: Piece received via receiving full-screen in a new holding can be edited
 
   Background:
@@ -29,26 +28,18 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
 
     # 1: Create fund and budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
     * configure headers = headersUser
 
     # 2: Create order
     * def v = call createOrder { 'id': '#(orderId)' }
 
     # 3: Create order line with quantity 1 and create inventory instance, holding, item
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.physical.createInventory = 'Instance, Holding, Item'
-    * set poLine.cost.quantityPhysical = 1
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.locations[0].locationId = originalLocationId
-    * set poLine.locations[0].quantityPhysical = 1
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * table locations
+      | locationId         | quantity    | quantityPhysical |
+      | originalLocationId | 1           | 1                |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', createInventory: 'Instance, Holding, Item', locations: '#(locations)' }
 
     # 4: Open order
     * def v = call openOrder { 'orderId': '#(orderId)' }
@@ -181,26 +172,18 @@ Feature: Piece received via receiving full-screen in a new holding can be edited
 
     # 1. Create fund and budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)' }
-    * call createBudget { 'id': '#(budgetId)', 'allocated': 10000, 'fundId': '#(fundId)' }
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', allocated: 10000, fundId: '#(fundId)' }
     * configure headers = headersUser
 
     # 2. Create order
-    * def v = call createOrder { 'id': '#(orderId)' }
+    * def v = call createOrder { id: '#(orderId)' }
 
-    # 3. Create order line with quantity 1 and create inventory instance, holding, item
-    * def poLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.physical.createInventory = 'Instance, Holding'
-    * set poLine.cost.quantityPhysical = 1
-    * set poLine.fundDistribution[0].fundId = fundId
-    * set poLine.locations[0].locationId = originalLocationId
-    * set poLine.locations[0].quantityPhysical = 1
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    # 3. Create order line with quantity 1 and create inventory instance, holding
+    * table locations
+      | locationId         | quantity    | quantityPhysical |
+      | originalLocationId | 1           | 1                |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', createInventory: 'Instance, Holding', locations: '#(locations)' }
 
     # 4. Open order
     * def v = call openOrder { 'orderId': '#(orderId)' }

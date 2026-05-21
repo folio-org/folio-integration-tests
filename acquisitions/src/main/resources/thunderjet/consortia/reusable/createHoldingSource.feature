@@ -2,9 +2,10 @@
 Feature: Create holding source
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createHoldingSource
+  Scenario: Create holding source
     Given path 'holdings-sources'
     And request
     """

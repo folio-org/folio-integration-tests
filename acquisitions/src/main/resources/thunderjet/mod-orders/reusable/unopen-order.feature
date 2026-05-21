@@ -1,11 +1,14 @@
 @ignore
 Feature: Unopen order
-  # parameters: orderId
+  # parameters: orderId, deleteHoldings
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: unopenOrder
+  Scenario: Unopen order
+    * def deleteHoldings = karate.get("deleteHoldings", false)
+
     Given path 'orders/composite-orders', orderId
     When method GET
     Then status 200
@@ -15,6 +18,7 @@ Feature: Unopen order
     * remove order.poLines
 
     Given path 'orders/composite-orders', orderId
+    And param deleteHoldings = deleteHoldings
     And request orderResponse
     When method PUT
     Then status 204

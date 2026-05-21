@@ -15,7 +15,6 @@ Feature: Validate fund distribution for zero price
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
 
   @Positive
   Scenario: Validate fund distribution for zero price
@@ -39,33 +38,19 @@ Feature: Validate fund distribution for zero price
     * def v = call createOrder { id: '#(orderId)' }
 
     * print '3. Create an order line with a fund distribution using amounts'
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId1
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.cost.listUnitPrice = 0.0
-    * set poLine.cost.poLineEstimatedPrice = 0.0
-    * set poLine.fundDistribution[0] = { fundId: '#(fundId1)', code: '#(fundId1)', distributionType: "amount", value: 0.0 }
-    * set poLine.fundDistribution[1] = { fundId: '#(fundId2)', code: '#(fundId2)', distributionType: "amount", value: 0.0 }
+    * table fundDistribution
+      | fundId  | code    | distributionType | value |
+      | fundId1 | fundId1 | 'amount'         | 0.0   |
+      | fundId2 | fundId2 | 'amount'         | 0.0   |
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId)', listUnitPrice: 0.0, fundDistribution: '#(fundDistribution)' }
 
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * print '4. Create an order line with a fund distribution using percentages'
+    * table fundDistribution
+      | fundId  | code    | distributionType | value |
+      | fundId1 | fundId1 | 'percentage'     | 50.0  |
+      | fundId2 | fundId2 | 'percentage'     | 50.0  |
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId)', listUnitPrice: 0.0, fundDistribution: '#(fundDistribution)' }
 
-    * print 'Create an order line with a fund distribution using percentages'
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId2
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.cost.listUnitPrice = 0.0
-    * set poLine.cost.poLineEstimatedPrice = 0.0
-    * set poLine.fundDistribution[0] = { fundId: '#(fundId1)', code: '#(fundId1)', distributionType: "percentage", value: 50.0 }
-    * set poLine.fundDistribution[1] = { fundId: '#(fundId2)', code: '#(fundId2)', distributionType: "percentage", value: 50.0 }
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
-
-    * print 'Open the order'
+    * print '5. Open the order'
     * def v = call openOrder { orderId: '#(orderId)' }
 

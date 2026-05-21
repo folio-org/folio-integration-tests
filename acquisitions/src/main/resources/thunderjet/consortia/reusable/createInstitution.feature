@@ -2,9 +2,10 @@
 Feature: Create institution
 
   Background:
+    * print karate.info.scenarioName
     * url baseUrl
 
-  Scenario: createInstitution
+  Scenario: Create institution
     Given path 'location-units/institutions'
     And request
     """

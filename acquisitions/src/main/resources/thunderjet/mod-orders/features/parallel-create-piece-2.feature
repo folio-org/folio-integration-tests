@@ -6,16 +6,16 @@ Feature: Create pieces for an open order in parallel (part 2)
     * url baseUrl
 
   Scenario: Create piece 1
-    * call createPiece { pieceId: "#(pieceId1)", poLineId: "#(poLineId1)", titleId: "#(titleId1)" }
+    * def v = call createPiece { pieceId: "#(pieceId1)", poLineId: "#(poLineId1)", titleId: "#(titleId1)" }
 
   Scenario: Create piece 2
-    * call createPiece { pieceId: "#(pieceId2)", poLineId: "#(poLineId2)", titleId: "#(titleId2)" }
+    * def v = call createPiece { pieceId: "#(pieceId2)", poLineId: "#(poLineId2)", titleId: "#(titleId2)" }
 
   Scenario: Create piece 3
-    * call createPiece { pieceId: "#(pieceId3)", poLineId: "#(poLineId3)", titleId: "#(titleId3)" }
+    * def v = call createPiece { pieceId: "#(pieceId3)", poLineId: "#(poLineId3)", titleId: "#(titleId3)" }
 
   Scenario: Create piece 4
-    * call createPiece { pieceId: "#(pieceId4)", poLineId: "#(poLineId4)", titleId: "#(titleId4)" }
+    * def v = call createPiece { pieceId: "#(pieceId4)", poLineId: "#(poLineId4)", titleId: "#(titleId4)" }
 
   Scenario: Create piece 5
-    * call createPiece { pieceId: "#(pieceId5)", poLineId: "#(poLineId5)", titleId: "#(titleId5)" }
+    * def v = call createPiece { pieceId: "#(pieceId5)", poLineId: "#(poLineId5)", titleId: "#(titleId5)" }

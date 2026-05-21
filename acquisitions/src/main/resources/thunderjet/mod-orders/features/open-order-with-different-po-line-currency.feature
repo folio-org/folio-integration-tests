@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Open order with different po line currency
 
   Background:
@@ -15,78 +14,34 @@ Feature: Open order with different po line currency
 
     * callonce variables
 
-    * def fundId = callonce uuid1
-    * def budgetId = callonce uuid2
 
-    * def orderId = callonce uuid3
-    * def orderLineIdOne = callonce uuid4
-    * def orderLineIdTwo = callonce uuid5
+  Scenario: Open order with different po line currency
+    * def fundId = call uuid
+    * def budgetId = call uuid
+    * def orderId = call uuid
+    * def orderLineIdOne = call uuid
+    * def orderLineIdTwo = call uuid
 
-  Scenario Outline: prepare finances for fund with <fundId> and budget with <budgetId>
-    * def fundId = <fundId>
-    * def budgetId = <budgetId>
-
+    # 1. create fund and budget
     * configure headers = headersAdmin
-    * call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-    * call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 9999 }
+    * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerWithRestrictionsId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 9999 }
 
-    Examples:
-      | fundId | budgetId |
-      | fundId | budgetId |
+    # 2. Create order
+    * configure headers = headersUser
+    * def v = call createOrder { id: '#(orderId)' }
 
-  Scenario: Create orders
+    # 3. Create order lines
+    * table lines
+      | id             | currency |
+      | orderLineIdOne | 'USD'    |
+      | orderLineIdTwo | 'EUR'    |
+    * def v = call createOrderLine lines
 
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time'
-    }
-    """
-    When method POST
-    Then status 201
+    # 4. Open order
+    * def v = call openOrder { orderId: '#(orderId)' }
 
-  Scenario Outline: Create order lines for <orderLineId> and <fundId>
-    * def orderId = <orderId>
-    * def poLineId = <orderLineId>
-
-    Given path 'orders/order-lines'
-
-    * def orderLine = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * set orderLine.id = poLineId
-    * set orderLine.purchaseOrderId = orderId
-    * set orderLine.cost.listUnitPrice = <amount>
-    * set orderLine.cost.currency = <currency>
-    * set orderLine.fundDistribution[0].fundId = <fundId>
-
-    And request orderLine
-    When method POST
-    Then status 201
-
-    Examples:
-      | orderId | orderLineId    | fundId | amount | currency |
-      | orderId | orderLineIdOne | fundId | 1      | 'USD'    |
-      | orderId | orderLineIdTwo | fundId | 1      | 'EUR'    |
-
-  Scenario: Open order
-    # ============= get order to open ===================
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def orderResponse = $
-    * set orderResponse.workflowStatus = "Open"
-
-    # ============= update order to open ===================
-    Given path 'orders/composite-orders', orderId
-    And request orderResponse
-    When method PUT
-    Then status 204
-
-  Scenario: get encumbrances
-
+    # 5. Check encumbrances
     * configure headers = headersAdmin
     Given path '/finance/exchange-rate'
     And param from = 'EUR'
@@ -102,6 +57,3 @@ Feature: Open order with different po line currency
     * def transaction = $.transactions[0]
     And match transaction.amount == java.math.BigDecimal.valueOf(rate).setScale(2, java.math.RoundingMode.HALF_EVEN);
     And match transaction.currency == 'USD'
-
-
-

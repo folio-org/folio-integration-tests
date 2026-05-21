@@ -66,8 +66,6 @@ Feature: global variables
     * def extLibraryId = 'bf61fea0-77af-11ee-b962-0242ac120002'
     * def extItemBarcode = 'FAT-unknownIBC'
 
-    * def servicePointId = 'afbd1042-794a-11ee-b962-0242ac120002'
-
     * def intMaterialTypeId = 'daf1aaea-794d-11ee-b962-0242ac150002'
     * def intUserGroupId = '5edd4dce-77b3-11ee-b962-0242ac120002'
     * def checkInId = '4257262e-77b4-11ee-b962-0242ac120002'

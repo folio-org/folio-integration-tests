@@ -10,9 +10,13 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import static org.folio.test.config.TestParam.TEST_TENANT;
+import static org.folio.test.config.TestParam.TEST_TENANT_ID;
+
 @FolioTest(team = "folijet", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DataImportApiTest extends TestBaseEureka {
+
     private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
 
     public DataImportApiTest() {
@@ -53,6 +57,8 @@ class DataImportApiTest extends TestBaseEureka {
     @AfterAll
     public void teardown() {
         if (shouldCreateTenant()) {
+            System.clearProperty(TEST_TENANT.getValue());
+            System.clearProperty(TEST_TENANT_ID.getValue());
             feature("classpath:common/eureka/destroy-data.feature")
                     .reportDir(timestampedReportDir())
                     .run();

@@ -11,6 +11,7 @@ Feature: mod-linked-data integration tests
       | 'mod-entities-links'                      |
       | 'mod-inventory'                           |
       | 'mod-inventory-storage'                   |
+      | 'mod-source-record-manager'               |
       | 'mod-source-record-storage'               |
       | 'mod-quick-marc'                          |
       | 'mod-linked-data'                         |
@@ -26,7 +27,8 @@ Feature: mod-linked-data integration tests
       | 'linked-data.resources.bib.put'                                |
       | 'linked-data.resources.bib.delete'                             |
       | 'linked-data.resources.bib.marc.get'                           |
-      | 'linked-data.resources.reindex.post'                           |
+      | 'linked-data.batch.reindex.full.post'                          |
+      | 'linked-data.batch.reindex.incremental.post'                   |
       | 'linked-data.resources.graph.get'                              |
       | 'linked-data.resources.rdf.get'                                |
       | 'linked-data.resources.bib.id.get'                             |
@@ -36,6 +38,17 @@ Feature: mod-linked-data integration tests
       | 'linked-data.import.file.post'                                 |
       | 'linked-data.hub.preview.get'                                  |
       | 'linked-data.hub.import.post'                                  |
+      | 'linked-data.profiles.item.get'                                |
+      | 'linked-data.profiles.metadata.get'                            |
+      | 'linked-data.profiles.preferred.get'                           |
+      | 'linked-data.profiles.preferred.post'                          |
+      | 'linked-data.profiles.preferred.delete'                        |
+      | 'linked-data.profiles.settings.get'                            |
+      | 'linked-data.profiles.settings.post'                           |
+      | 'linked-data.authority-assignment-check.post'                  |
+      | 'linked-data.vocabularies.item.get'                            |
+      | 'linked-data.batch.graph.cleaning.post'                        |
+      | 'linked-data.batch.status.get'                                 |
       | 'search.linked-data.work.collection.get'                       |
       | 'search.linked-data.hub.collection.get'                        |
       | 'search.instances.collection.get'                              |
@@ -61,6 +74,7 @@ Feature: mod-linked-data integration tests
       | 'source-storage.records.formatted.item.get'                           |
       | 'linked-data.admin.caches.delete'                                     |
       | 'base-url.item.put'                                                   |
+      | 'search.index.inventory.reindex.post'                                 |
 
     * table linkedDataBulkImportPermissions
       | name                                                       |
@@ -68,7 +82,7 @@ Feature: mod-linked-data integration tests
       | 'linked-data-import.start.post'                            |
       | 'linked-data-import.jobs.item.get'                         |
       | 'linked-data-import.jobs.failed-lines.collection.get'      |
-      | 'linked-data-import.jobs.item.cancel.put'                  |
+      | 'linked-data-import.jobs.item.stop.put'                  |
 
   Scenario: create a tenant and linked-data-cataloger user
     * call read('classpath:common/eureka/setup-users.feature')

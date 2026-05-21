@@ -11,53 +11,19 @@ Feature: Check remaining amount upon invoice approval
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
+    * callonce variables
 
   Scenario Outline: Approve invoice with <invoiceAmount> amount and budget with <allocated> and <netTransfers> amount to get <httpCode> code
 
     * def budgetId = call uuid
     * def fundId = call uuid
-
     * def invoiceId = call uuid
     * def invoiceLineId = call uuid
 
-    # ============= Create funds =============
+    # ============= Create fund and budget =============
     * configure headers = headersAdmin
-    Given path 'finance/funds'
-    And request
-    """
-    {
-      "fund": {
-        "id": "#(fundId)",
-        "code": "#(fundId)",
-        "description": "Fund for orders API Tests",
-        "externalAccountNo": "1111111111111111111111111",
-        "fundStatus": "Active",
-        "ledgerId": "5e4fbdab-f1b1-4be8-9c33-d3c41ec9a695",
-        "name": "Fund for orders API Tests",
-      }
-    }
-    """
-    When method POST
-    Then status 201
-
-    # ============= Create budgets ===================
-    Given path 'finance/budgets'
-    And request
-    """
-    {
-      "id": "#(budgetId)",
-      "budgetStatus": "Active",
-      "fundId": "#(fundId)",
-      "name": "#(budgetId)",
-      "fiscalYearId":"ac2164c7-ba3d-1bc2-a12c-e35ceccbfaf2",
-      "allowableExpenditure": 100,
-      "allowableEncumbrance": 100,
-      "allocated": <allocated>,
-      "netTransfers": <netTransfers>
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createFund { id: '#(fundId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: '#(<allocated>)', netTransfers: '#(<netTransfers>)' }
 
     # ============= Create invoices ===================
     * configure headers = headersUser
@@ -97,29 +63,8 @@ Feature: Check remaining amount upon invoice approval
     When method POST
     Then status 201
 
-    # ============= Create lines ===================
-    Given path 'invoice/invoice-lines'
-    And request
-    """
-    {
-        "id": "#(invoiceLineId)",
-        "invoiceId": "#(invoiceId)",
-        "invoiceLineStatus": "Open",
-        "fundDistributions": [
-            {
-                "distributionType": "percentage",
-                "fundId": "#(fundId)",
-                "value": 100
-            }
-        ],
-        "subTotal": <invoiceAmount>,
-        "description": "test",
-        "quantity": "1"
-    }
-    """
-    When method POST
-    Then status 201
-
+    # ============= Create invoice line ===================
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundId: '#(fundId)', total: '#(<invoiceAmount>)' }
 
     # ============= approve invoice ===================
     Given path 'invoice/invoices', invoiceId

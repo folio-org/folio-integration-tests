@@ -23,10 +23,6 @@ Feature: Check encumbrance status after moving expended value
 
     * callonce variables
 
-    * def orderLineTemplate = read('classpath:samples/mod-orders/orderLines/minimal-order-line.json')
-    * def invoiceTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice.json')
-    * def invoiceLineTemplate = read('classpath:samples/mod-invoice/invoices/global/invoice-line-percentage.json')
-
     * def fundId1 = callonce uuid1
     * def fundId2 = callonce uuid2
     * def fundId3 = callonce uuid3
@@ -44,8 +40,8 @@ Feature: Check encumbrance status after moving expended value
     * def fundId = <fundId>
     * def fundCode = <fundCode>
     * def budgetId = <budgetId>
-    * call createFund { id: '#(fundId)', code: '#(fundCode)', ledgerId: '#(globalLedgerId)' }
-    * call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * def v = call createFund { id: '#(fundId)', code: '#(fundCode)', ledgerId: '#(globalLedgerId)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
     Examples:
       | fundId  | fundCode    | budgetId  |
@@ -56,60 +52,22 @@ Feature: Check encumbrance status after moving expended value
 
 
   Scenario: Create an order
-    Given path 'orders/composite-orders'
-    And request
-    """
-    {
-      id: '#(orderId)',
-      vendor: '#(globalVendorId)',
-      orderType: 'One-Time',
-      reEncumber: 'True'
-    }
-    """
-    When method POST
-    Then status 201
+    * def v = call createOrder { id: '#(orderId)' }
 
   Scenario: Create a po line
-    * copy poLine = orderLineTemplate
-    * set poLine.id = poLineId
-    * set poLine.purchaseOrderId = orderId
-    * set poLine.fundDistribution[0].fundId = fundId1
-    * set poLine.fundDistribution[0].code = 'fundCode1'
-    * set poLine.fundDistribution[0].value = 50
-    * set poLine.fundDistribution[0].distributionType = 'percentage'
-    * set poLine.fundDistribution[1].fundId = fundId2
-    * set poLine.fundDistribution[1].code = 'fundCode1'
-    * set poLine.fundDistribution[1].value = 50
-    * set poLine.fundDistribution[1].distributionType = 'percentage'
-    * set poLine.paymentStatus = 'Awaiting Payment'
-
-    Given path 'orders/order-lines'
-    And request poLine
-    When method POST
-    Then status 201
+    * table fundDistribution
+      | fundId  | code        | distributionType | value |
+      | fundId1 | 'fundCode1' | 'percentage'     | 50    |
+      | fundId2 | 'fundCode2' | 'percentage'     | 50    |
+    * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', paymentStatus: 'Awaiting Payment', fundDistribution: '#(fundDistribution)' }
 
   Scenario: Open the order
-    Given path 'orders/composite-orders', orderId
-    When method GET
-    Then status 200
-
-    * def order = $
-    * set order.workflowStatus = 'Open'
-
-    Given path 'orders/composite-orders', orderId
-    And request order
-    When method PUT
-    Then status 204
+    * def v = call openOrder { orderId: '#(orderId)' }
 
   Scenario: Create an invoice
-    * copy invoice = invoiceTemplate
-    * set invoice.id = invoiceId
-    Given path 'invoice/invoices'
-    And request invoice
-    When method POST
-    Then status 201
+    * def v = call createInvoice { id: '#(invoiceId)' }
 
-  Scenario: Create a invoice line
+  Scenario: Create an invoice line
     * print "Get the encumbrance id"
     Given path 'orders/order-lines', poLineId
     When method GET
@@ -119,42 +77,18 @@ Feature: Check encumbrance status after moving expended value
     * def encumbranceId2 = poLine.fundDistribution[1].encumbrance
 
     * print "Add an invoice line linked to the po line"
-    * copy invoiceLine = invoiceLineTemplate
-    * set invoiceLine.id = invoiceLineId
-    * set invoiceLine.invoiceId = invoiceId
-    * set invoiceLine.poLineId = poLineId
-    * set invoiceLine.fundDistributions[0] = { fundId:'#(fundId1)', code: 'fundCode1', encumbrance: '#(encumbranceId1)', distributionType:'percentage', value:50 }
-    * set invoiceLine.fundDistributions[1] = { fundId:'#(fundId2)', code: 'fundCode2', encumbrance: '#(encumbranceId2)', distributionType:'percentage', value:50 }
-    * set invoiceLine.total = 1
-    * set invoiceLine.subTotal = 1
-    * set invoiceLine.releaseEncumbrance = true
-    * remove invoiceLine.fundDistributions[0].expenseClassId
-    Given path 'invoice/invoice-lines'
-    And request invoiceLine
-    When method POST
-    Then status 201
+    * table fundDistributions
+    | fundId  | code        | encumbrance    | distributionType | value |
+    | fundId1 | 'fundCode1' | encumbranceId1 | 'percentage'     | 50    |
+    | fundId2 | 'fundCode2' | encumbranceId2 | 'percentage'     | 50    |
+
+    * def v = call createInvoiceLine { invoiceLineId: '#(invoiceLineId)', invoiceId: '#(invoiceId)', fundDistributions: '#(fundDistributions)', poLineId: '#(poLineId)', total: 1, releaseEncumbrance: true }
 
   Scenario: Approve the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Approved'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Pay the invoice
-    Given path 'invoice/invoices', invoiceId
-    When method GET
-    Then status 200
-    * def invoice = $
-    * set invoice.status = 'Paid'
-    Given path 'invoice/invoices', invoiceId
-    And request invoice
-    When method PUT
-    Then status 204
+    * def v = call payInvoice { invoiceId: '#(invoiceId)' }
 
   Scenario: Update fundId in poLine
     Given path 'orders/order-lines', poLineId
