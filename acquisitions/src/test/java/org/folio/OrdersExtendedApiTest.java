@@ -46,7 +46,8 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_18("item-under-holdings-after-instance-connection-change-move", true),
     FEATURE_19("item-under-holdings-after-instance-connection-change-create-new", true),
     FEATURE_20("pe-mix-change-instance-connection-find-create-delete-holdings", true),
-    FEATURE_21("open-order-with-resolution-statuses", true);
+    FEATURE_21("unopen-open-order-with-pol-and-fund-distribution", true),
+    FEATURE_22("open-order-with-resolution-statuses", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -233,10 +234,16 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     runFeatureTest(Feature.FEATURE_20.getFileName());
   }
 
+  @DisplayName("(Thunderjet) (C350926) An open Order with POL and Funds distribution can be Unopened")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void unopenOpenOrderWithPolAndFundDistribution() {
+    runFeatureTest(Feature.FEATURE_21.getFileName());
+  }
+
   @Test
   @DisplayName("(Thunderjet) (C580268) Order auto-closing when Receipt status and Payment status are set to Receipt/Payment Not Required")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void openOrderWithResolutionPoLineStatuses() {
-    runFeatureTest(Feature.FEATURE_21.getFileName());
+    runFeatureTest(Feature.FEATURE_22.getFileName());
   }
 }
