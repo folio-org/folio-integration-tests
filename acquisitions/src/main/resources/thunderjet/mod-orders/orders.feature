@@ -356,3 +356,6 @@ Feature: mod-orders integration tests
 
   Scenario: Item Appears Under Holdings After Instance Connection Change With Holding Setting Create New
     * call read('features/item-under-holdings-after-instance-connection-change-create-new.feature')
+
+  Scenario: An Open Order With POL And Funds Distribution Can Be Unopened
+    * call read('features/unopen-open-order-with-pol-and-fund-distribution.feature')
