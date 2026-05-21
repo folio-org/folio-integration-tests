@@ -49,7 +49,7 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     // moved from CrossModulesCriticalPathApiTest (TestRail group = Extended)
     FEATURE_22("encumbrance-remains-unreleased-after-expense-class-change-with-paid-invoice-release-false", true),
     FEATURE_23("over-encumbrance-for-fy-ledger-and-group", true),
-    FEATURE_24("open-order-when-balance-close-to-encumbered-available", true),
+    FEATURE_24("check-encumbrance-restrictions-when-opening-order", true),
     FEATURE_25("expense-class-percent-expended-when-budget-over-expended", true),
     FEATURE_26("rollover-settings-no-encumbrances", true),
     FEATURE_27("unreleased-encumbrance-rolled-over-to-next-fiscal-year", true),
@@ -262,9 +262,9 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
   }
 
   @Test
-  @DisplayName("(Thunderjet) (C449361) Order Can Be Opened When Balance Is Close To The Encumbered Available Balance")
+  @DisplayName("(Thunderjet) (C449361, C503053) Check encumbrance restrictions when opening an order")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void openOrderWhenBalanceCloseToEncumberedAvailable() {
+  void checkEncumbranceRestrictionsWhenOpeningOrder() {
     runFeatureTest(Feature.FEATURE_24.getFileName());
   }
 
