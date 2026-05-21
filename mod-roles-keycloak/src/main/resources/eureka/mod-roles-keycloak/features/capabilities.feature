@@ -51,3 +51,13 @@ Feature: Read operations on capabilities
     And match response.endpoints == '#[2]'
     And match response.endpoints contains { method: 'GET', path: '/roles/capabilities' }
     And match response.endpoints contains { method: 'GET', path: '/roles/{id}/capabilities' }
+
+  @Negative
+  Scenario: get a capability by a non-existing id
+    * def missingCapabilityId = uuid()
+
+    Given path 'capabilities', missingCapabilityId
+    When method get
+    Then status 404
+    And match response.total_records == 1
+    And match response.errors == '#array'
