@@ -40,6 +40,8 @@ Feature: Add item to LINKED_DATA instance
     * def holdings = call read(utilsPath+'@CreateHoldings') { instanceId: '#(instanceId)', testTenant: '#(testTenant)' }
     * def holdingsId = holdings.id
 
+    * pause(1000)
+
     * def from = isoDate()
     * def until = isoDate()
 
@@ -72,7 +74,7 @@ Feature: Add item to LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -100,7 +102,7 @@ Feature: Add item to LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -128,7 +130,7 @@ Feature: Add item to LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from

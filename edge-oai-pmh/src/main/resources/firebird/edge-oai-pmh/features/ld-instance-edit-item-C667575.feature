@@ -42,6 +42,7 @@ Feature: Edit item of LINKED_DATA instance
     * def item = call read(utilsPath+'@CreateSimpleItem') { holdingsId: '#(holdingsId)', testTenant: '#(testTenant)'  }
     * def itemId = item.id
 
+    * pause(1000)
     * def from = isoDate()
     * def until = isoDate()
 
@@ -68,7 +69,7 @@ Feature: Edit item of LINKED_DATA instance
     When method GET
     Then status 200
     * def itemBody = response
-    * eval itemBody['discoverySuppress'] = true
+    * eval itemBody['discoverySuppress'] = false
 
     Given path 'item-storage/items', itemId
     And request itemBody
@@ -82,7 +83,7 @@ Feature: Edit item of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -110,7 +111,7 @@ Feature: Edit item of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -138,7 +139,7 @@ Feature: Edit item of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from

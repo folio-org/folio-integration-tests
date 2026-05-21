@@ -40,6 +40,7 @@ Feature: Edit holdings of LINKED_DATA instance
     * def holdings = call read(utilsPath+'@CreateHoldings') { instanceId: '#(instanceId)', testTenant: '#(testTenant)' }
     * def holdingsId = holdings.id
 
+    * pause(1000)
     * def from = isoDate()
     * def until = isoDate()
 
@@ -66,9 +67,9 @@ Feature: Edit holdings of LINKED_DATA instance
     When method GET
     Then status 200
     * def holdingsBody = response
-    * eval holdingsBody['discoverySuppress'] = true
+    * eval holdingsBody['discoverySuppress'] = false
 
-    Given path 'holdings-storage/holdings', hodlingsId
+    Given path 'holdings-storage/holdings', holdingsId
     And request holdingsBody
     When method PUT
     Then status 204
@@ -80,7 +81,7 @@ Feature: Edit holdings of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -108,7 +109,7 @@ Feature: Edit holdings of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -136,7 +137,7 @@ Feature: Edit holdings of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from

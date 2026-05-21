@@ -6,6 +6,7 @@ Feature: Delete item of LINKED_DATA instance
     * callonce variables
     * call login testUser
     * def defaultHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
+    * def textPlainHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain', 'Authtoken-Refresh-Cache': 'true' }
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
   Scenario: ListRecords: Delete Item of LINKED_DATA Instance is retrieved in response (marc21_withholdings)
@@ -42,6 +43,7 @@ Feature: Delete item of LINKED_DATA instance
     * def item = call read(utilsPath+'@CreateSimpleItem') { holdingsId: '#(holdingsId)', testTenant: '#(testTenant)'  }
     * def itemId = item.id
 
+    * pause(1000)
     * def from = isoDate()
     * def until = isoDate()
 
@@ -64,6 +66,7 @@ Feature: Delete item of LINKED_DATA instance
     * def from = isoDate()
 
     # Delete item
+    * configure headers = textPlainHeaders
     Given path 'item-storage/items', itemId
     When method DELETE
     Then status 204
@@ -77,7 +80,7 @@ Feature: Delete item of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -104,7 +107,7 @@ Feature: Delete item of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -131,7 +134,7 @@ Feature: Delete item of LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from

@@ -34,7 +34,7 @@ Feature: Add holdings to LINKED_DATA instance
     And def srsId = instance.srsId
     And def linkedDataId = instance.linkedDataId
 
-    * pause(30000)
+    * pause(5000)
 
     * def from = isoDate()
     * def until = isoDate()
@@ -67,7 +67,7 @@ Feature: Add holdings to LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -95,7 +95,7 @@ Feature: Add holdings to LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
@@ -123,7 +123,7 @@ Feature: Add holdings to LINKED_DATA instance
 
     # Send harvest request
     Given path 'oai/records'
-    And param apikey = universityApikey
+    And param apikey = apikey
     And param metadataPrefix = 'marc21_withholdings'
     And param verb = 'ListRecords'
     And param from = from
