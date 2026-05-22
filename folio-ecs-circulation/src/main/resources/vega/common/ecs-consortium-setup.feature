@@ -111,10 +111,6 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
       | 'inventory.items.item.get'                            |
       | 'inventory-storage.holdings.item.get'                 |
       | 'user-tenants.collection.get'                         |
-#      | 'consortia.user-tenants.collection.get'               |
-#      | 'consortia.user-tenants.item.post'                    |
-#      | 'consortia.sharing-instances.item.post'               |
-#      | 'consortia.sharing-instances.collection.get'          |
       | 'circulation-bff.pick-slips.collection.get'           |
       | 'circulation-bff.search-slips.collection.get'         |
 
