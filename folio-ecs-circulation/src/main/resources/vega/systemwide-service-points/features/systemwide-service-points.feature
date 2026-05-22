@@ -51,10 +51,31 @@ Feature: systemwide-service-points tests
     * call setupTenantForConsortia { tenant: '#(collegeTenant)', id: '#(collegeTenantId)', isCentral: false, code: 'COL' }
     * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
 
+    # Verify all three tenants are visible in the consortium before proceeding
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    * configure retry = { count: 10, interval: 10000 }
+    Given path 'consortia', consortiumId, 'tenants'
+    And retry until response.totalRecords == 3
+    When method GET
+    Then status 200
+    * print 'Consortium tenants registered:', response.totalRecords
+    And match response.tenants[*].id contains centralTenant
+    And match response.tenants[*].id contains collegeTenant
+    And match response.tenants[*].id contains universityTenant
+
   Scenario: create service point in consortium and verify replication to college and university
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
 
+    # Pre-flight: confirm consortium has all 3 tenants before creating the service point
+    * configure retry = { count: 10, interval: 10000 }
+    Given path 'consortia', consortiumId, 'tenants'
+    And retry until response.totalRecords == 3
+    When method GET
+    Then status 200
+    * print 'Pre-flight OK - consortium tenants:', response.totalRecords
+
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
     * def servicePointId = uuid()
     * def servicePointName = 'consortium-sp-' + uuid()
     Given path 'service-points'
