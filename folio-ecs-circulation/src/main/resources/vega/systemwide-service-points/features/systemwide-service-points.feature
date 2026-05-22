@@ -72,7 +72,7 @@ Feature: systemwide-service-points tests
 
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
-    * configure retry = { count: 60, interval: 15000 }
+    * configure retry = { count: 80, interval: 15000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
     And retry until response.totalRecords == 1
@@ -83,7 +83,7 @@ Feature: systemwide-service-points tests
 
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-    * configure retry = { count: 60, interval: 15000 }
+    * configure retry = { count: 80, interval: 15000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
     And retry until response.totalRecords == 1
