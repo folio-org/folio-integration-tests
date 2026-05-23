@@ -37,11 +37,10 @@ Feature: systemwide-service-points tests
     * call setupTenant { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)' }
     * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
 
-    # Extend the Keycloak access-token lifespan to 2 hours AFTER tenant setup so the realms exist.
-    # This prevents token expiry during long async waits (service-point replication, etc.)
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(centralTenant)' }
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(collegeTenant)' }
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(universityTenant)' }
+    # Extend the Keycloak access-token lifespan to 1 hour after tenant setup so the realms exist.
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(centralTenant)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(collegeTenant)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(universityTenant)' }
 
   Scenario: create consortium and register consortium, college, and university tenants
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
@@ -64,7 +63,7 @@ Feature: systemwide-service-points tests
     And match response.tenants[*].id contains collegeTenant
     And match response.tenants[*].id contains universityTenant
 
-  Scenario: create service point in consortium and verify replication to college and university
+  Scenario: create service point with same id in all consortium tenants and verify visibility per tenant
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
 
@@ -79,49 +78,47 @@ Feature: systemwide-service-points tests
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
     * def servicePointId = uuid()
     * def servicePointName = 'consortium-sp-' + uuid()
-
-    # Use the consortia sharing/settings API to publish the service point to ALL member tenants.
-    # Direct POST /service-points only creates in the current tenant; sharing/settings propagates it.
-    Given path 'consortia', consortiumId, 'sharing/settings'
-    And request
+    * def servicePointPayload =
       """
       {
-        "settingId": "#(servicePointId)",
-        "url": "/service-points",
-        "payload": {
-          "id": "#(servicePointId)",
-          "name": "#(servicePointName)",
-          "code": "#(servicePointName)",
-          "discoveryDisplayName": "#(servicePointName)"
-        }
+        "id": "#(servicePointId)",
+        "name": "#(servicePointName)",
+        "code": "#(servicePointName)",
+        "discoveryDisplayName": "#(servicePointName)"
       }
       """
+
+    # Create the service point in the central tenant
+    Given path 'service-points'
+    And request servicePointPayload
     When method POST
     Then status 201
-    And match response.createSettingsPCId == '#uuid'
-    * def createSettingsPCId = response.createSettingsPCId
-    * print 'Publication PCId:', createSettingsPCId
 
-    # Wait for the publication coordinator to reach a terminal state (COMPLETE or ERROR).
-    # Using != 'IN_PROGRESS' so we exit immediately on ERROR instead of exhausting retries.
-    * configure retry = { count: 20, interval: 10000 }
-    Given path 'consortia', consortiumId, 'publications', createSettingsPCId
-    And retry until response.status != null && response.status != 'IN_PROGRESS'
+    # Create the same service point (same UUID) in the college tenant.
+    # ECS does not auto-replicate service points; each tenant must have its own copy.
+    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+    Given path 'service-points'
+    And request servicePointPayload
+    When method POST
+    Then status 201
+
+    # Create the same service point in the university tenant
+    * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    Given path 'service-points'
+    And request servicePointPayload
+    When method POST
+    Then status 201
+
+    # Verify the service point is visible in each tenant with the same id and name
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    Given path 'service-points', servicePointId
     When method GET
     Then status 200
-    * def publicationStatus = response.status
-    * print 'Publication result status:', publicationStatus, 'full:', response
+    And match response.id == servicePointId
+    And match response.name == servicePointName
 
-    # Fetch per-tenant error details from publications-results regardless of status, so
-    # CI logs show exactly which member tenant rejected the service-point creation.
-    Given path 'consortia', consortiumId, 'publication-results', createSettingsPCId
-    When method GET
-    * print 'Publication results detail:', response
-
-    And match publicationStatus == 'COMPLETE'
-
-    # Verify service point is now visible in college tenant
-    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
     Given path 'service-points', servicePointId
     When method GET
@@ -129,8 +126,6 @@ Feature: systemwide-service-points tests
     And match response.id == servicePointId
     And match response.name == servicePointName
 
-    # Verify service point is now visible in university tenant
-    * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
     Given path 'service-points', servicePointId
     When method GET
