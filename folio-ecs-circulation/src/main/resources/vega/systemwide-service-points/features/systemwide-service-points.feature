@@ -98,15 +98,27 @@ Feature: systemwide-service-points tests
       """
     When method POST
     Then status 201
+    And match response.createSettingsPCId == '#uuid'
     * def createSettingsPCId = response.createSettingsPCId
+    * print 'Publication PCId:', createSettingsPCId
 
-    # Wait for the publication coordinator to report COMPLETE
+    # Wait for the publication coordinator to reach a terminal state (COMPLETE or ERROR).
+    # Using != 'IN_PROGRESS' so we exit immediately on ERROR instead of exhausting retries.
     * configure retry = { count: 20, interval: 10000 }
     Given path 'consortia', consortiumId, 'publications', createSettingsPCId
-    And retry until response.status == 'COMPLETE'
+    And retry until response.status != null && response.status != 'IN_PROGRESS'
     When method GET
     Then status 200
-    And match response.status == 'COMPLETE'
+    * def publicationStatus = response.status
+    * print 'Publication result status:', publicationStatus, 'full:', response
+
+    # Fetch per-tenant error details from publications-results regardless of status, so
+    # CI logs show exactly which member tenant rejected the service-point creation.
+    Given path 'consortia', consortiumId, 'publication-results', createSettingsPCId
+    When method GET
+    * print 'Publication results detail:', response
+
+    And match publicationStatus == 'COMPLETE'
 
     # Verify service point is now visible in college tenant
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
