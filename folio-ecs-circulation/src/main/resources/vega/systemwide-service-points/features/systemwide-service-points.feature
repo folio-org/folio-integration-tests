@@ -79,56 +79,52 @@ Feature: systemwide-service-points tests
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
     * def servicePointId = uuid()
     * def servicePointName = 'consortium-sp-' + uuid()
-    Given path 'service-points'
+
+    # Use the consortia sharing/settings API to publish the service point to ALL member tenants.
+    # Direct POST /service-points only creates in the current tenant; sharing/settings propagates it.
+    Given path 'consortia', consortiumId, 'sharing/settings'
     And request
       """
       {
-        "id": "#(servicePointId)",
-        "name": "#(servicePointName)",
-        "code": "#(servicePointName)",
-        "discoveryDisplayName": "#(servicePointName)"
+        "settingId": "#(servicePointId)",
+        "url": "/service-points",
+        "payload": {
+          "id": "#(servicePointId)",
+          "name": "#(servicePointName)",
+          "code": "#(servicePointName)",
+          "discoveryDisplayName": "#(servicePointName)"
+        }
       }
       """
     When method POST
     Then status 201
+    * def createSettingsPCId = response.createSettingsPCId
 
-    # JS polling loop: re-login on every attempt so tokens are always fresh,
-    # and log the actual response for diagnostics when replication is slow.
-    # NOTE: must pass a single object arg to avoid Karate's list-call semantics.
-    * def pollForServicePoint =
-      """
-      function(args) {
-        var loginConfig = args.loginConfig;
-        var spId = args.spId;
-        var maxAttempts = 80;
-        var intervalMs  = 15000;
-        for (var i = 0; i < maxAttempts; i++) {
-          var result = karate.call(
-            'classpath:vega/systemwide-service-points/get-service-point.feature@GetServicePoint',
-            { username: loginConfig.username, password: loginConfig.password,
-              tenant: loginConfig.tenant, servicePointId: spId }
-          );
-          karate.log('Attempt', i + 1, '- tenant:', loginConfig.tenant,
-                     'totalRecords:', result.totalRecords);
-          if (result.totalRecords == 1) {
-            return result;
-          }
-          if (i < maxAttempts - 1) {
-            java.lang.Thread.sleep(intervalMs);
-          }
-        }
-        karate.fail('Service point ' + spId + ' not replicated to tenant '
-                    + loginConfig.tenant + ' after ' + maxAttempts + ' attempts');
-      }
-      """
+    # Wait for the publication coordinator to report COMPLETE
+    * configure retry = { count: 20, interval: 10000 }
+    Given path 'consortia', consortiumId, 'publications', createSettingsPCId
+    And retry until response.status == 'COMPLETE'
+    When method GET
+    Then status 200
+    And match response.status == 'COMPLETE'
 
-    * def collegeResult = call pollForServicePoint { loginConfig: { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }, spId: '#(servicePointId)' }
-    And match collegeResult.servicepoints[0].id == servicePointId
-    And match collegeResult.servicepoints[0].name == servicePointName
+    # Verify service point is now visible in college tenant
+    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+    Given path 'service-points', servicePointId
+    When method GET
+    Then status 200
+    And match response.id == servicePointId
+    And match response.name == servicePointName
 
-    * def universityResult = call pollForServicePoint { loginConfig: { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }, spId: '#(servicePointId)' }
-    And match universityResult.servicepoints[0].id == servicePointId
-    And match universityResult.servicepoints[0].name == servicePointName
+    # Verify service point is now visible in university tenant
+    * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    Given path 'service-points', servicePointId
+    When method GET
+    Then status 200
+    And match response.id == servicePointId
+    And match response.name == servicePointName
 
   Scenario: create service point in college and verify no replication to consortium and university
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
