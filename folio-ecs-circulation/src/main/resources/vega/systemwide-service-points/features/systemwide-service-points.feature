@@ -16,14 +16,15 @@ Feature: systemwide-service-points tests
       | 'mod-consortia'         |
 
     * table userPermissions
-      | name                                          |
-      | 'users.item.post'                             |
-      | 'usergroups.item.post'                        |
-      | 'perms.permissions.item.post'                 |
-      | 'perms.users.item.post'                       |
-      | 'users.collection.get'                        |
-      | 'users.item.get'                              |
-      | 'inventory-storage.service-points.item.post'  |
+      | name                                              |
+      | 'users.item.post'                                 |
+      | 'usergroups.item.post'                            |
+      | 'perms.permissions.item.post'                     |
+      | 'perms.users.item.post'                           |
+      | 'users.collection.get'                            |
+      | 'users.item.get'                                  |
+      | 'inventory-storage.service-points.item.post'      |
+      | 'inventory-storage.service-points.item.get'       |
       | 'inventory-storage.service-points.collection.get' |
 
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
