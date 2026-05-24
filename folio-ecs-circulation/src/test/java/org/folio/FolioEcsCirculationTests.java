@@ -46,4 +46,9 @@ class FolioEcsCirculationTests extends TestBaseEureka {
   void ecsRequestsTests() {
     runFeature(ECS_REQUESTS_BASE_PATH + "ecs-requests.feature");
   }
+
+  @Test
+  void staffSlipsTests() {
+    runFeature("classpath:vega/staff-slips/features/staff-slips.feature");
+  }
 }
