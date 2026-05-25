@@ -225,6 +225,13 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
     When method POST
     Then status 201
 
+    # Also create the central service point in the university tenant so it is available
+    # as a pickup location without relying on cross-tenant Kafka replication.
+    Given path 'service-points'
+    And request { id: '#(ecsServicePointId)', name: 'ECS Central Service Point', code: 'ECS-SP-C', discoveryDisplayName: 'ECS Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    When method POST
+    Then status 201
+
     Given path 'instance-types'
     And request { id: '#(uniInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
     When method POST
