@@ -61,7 +61,7 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
 
     # Wait until item is visible via allowed-service-points (confirms mod-search indexing)
     * configure headers = headersCentral
-    * configure retry = { count: 20, interval: 15000 }
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
     And param operation = 'create'
@@ -146,7 +146,7 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
 
     # Wait until instance is indexed by mod-search (confirms cross-tenant visibility)
     * configure headers = headersCentral
-    * configure retry = { count: 20, interval: 15000 }
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
     And param operation = 'create'
