@@ -19,7 +19,7 @@ public record FolioRuntimeHook(Class<?> testClass, TestInfo testInfo, int number
       var prefix = "[" + annotation.team() + "/" + annotation.module() + "] " + testName + " {" + number + "}  ";
       featureRuntime.result.setDisplayName(prefix + featureRuntime.result.getDisplayName());
     } else {
-      logger.debug("FolioTest annotation not found on test class {}. Feature display name won't be modified.", testClass.getName());
+      logger.info("FolioTest annotation not found on test class {}. Feature display name won't be modified.", testClass.getName());
     }
   }
 
