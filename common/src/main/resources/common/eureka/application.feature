@@ -13,12 +13,14 @@ Feature: Applications
     * def keycloakMasterToken = keycloakResponse.response.access_token
 
     Given path 'applications'
+    And param latest = 1
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def totalAmount = response.totalRecords
 
     Given path 'applications'
+    And param latest = 1
     And param limit = totalAmount
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
