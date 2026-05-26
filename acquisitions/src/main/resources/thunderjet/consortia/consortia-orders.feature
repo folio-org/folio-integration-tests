@@ -43,3 +43,6 @@ Feature: consortia orders integration tests
 
   Scenario: Open order with the same member tenant locations
     * call read('features/open-order-with-locations-from-same-member-tenant.feature')
+
+  Scenario: Received pieces are counted when reopening previously unopened synchronized order
+    * call read('features/received-pieces-counted-when-reopening-synchronized-order.feature')

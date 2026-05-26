@@ -331,3 +331,15 @@ Feature: cross-module integration tests
 
   Scenario: Over Encumbrance Is Calculated Correctly For Fiscal Year Ledger And Group
     * call read('features/over-encumbrance-for-fy-ledger-and-group.feature')
+
+  Scenario: Order can be opened when balance is close to the encumbered available balance
+    * call read('features/open-order-when-balance-close-to-encumbered-available.feature')
+
+  Scenario: Expense Class Percent Of Total Expended Calculated Correctly When Budget Over Expended
+    * call read('features/expense-class-percent-expended-when-budget-over-expended.feature')
+
+  Scenario: Rollover Settings Applying To Encumbrances With No Encumbrance Rollover Options Active
+    * call read('features/rollover-settings-no-encumbrances.feature')
+
+  Scenario: Unreleased Encumbrance Is Rolled Over To The Next Fiscal Year
+    * call read('features/unreleased-encumbrance-rolled-over-to-next-fiscal-year.feature')

@@ -110,3 +110,18 @@ Feature: init data for mod-entities-links
     And request link
     When method PUT
     Then status 422
+  
+  @Ignore #Util scenario
+  @GetSRSRecord
+  Scenario: Get SRS record
+    Given path 'source-storage/records', recordId, 'formatted'
+    And param idType = idType
+    When method GET
+    Then status 200
+  
+  @Ignore #Util scenario
+  @DeleteAuthority
+  Scenario: delete authority by id
+    Given path 'authority-storage/authorities', authorityId
+    When method DELETE
+    Then status 204

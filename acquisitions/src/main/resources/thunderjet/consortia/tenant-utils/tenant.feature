@@ -106,7 +106,7 @@ Feature: Tenant object in mod-consortia api tests
     * def result = call read('classpath:common-consortia/eureka/initData.feature@Login') { username: '#(universityUser.username)', password: '#(universityUser.password)', tenant: '#(uniTenant.name)'}
     Given path 'user-tenants'
     And param query = 'username=dummy_user'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(result.token)', 'x-okapi-tenant': '#(uniTenant.name)', 'Accept': 'application/json' }
+    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(result.okapitoken)', 'x-okapi-tenant': '#(uniTenant.name)', 'Accept': 'application/json' }
     When method GET
     Then status 200
     And match response.totalRecords == 1

@@ -18,6 +18,10 @@ Feature: mod-dcb integration tests
       | 'mod-feesfines'             |
       | 'mod-circulation-item'      |
       | 'mod-dcb'                   |
+      | 'mod-notify'                |
+      | 'mod-template-engine'       |
+      | 'mod-sender'                |
+      | 'mod-email'                 |
 
     * table adminAdditionalPermissions
       | name                                                              |
@@ -29,12 +33,14 @@ Feature: mod-dcb integration tests
       | 'circulation-storage.patron-notice-policies.item.post'            |
       | 'circulation-storage.request-policies.item.post'                  |
       | 'circulation-storage.requests.collection.get'                     |
+      | 'circulation-storage.requests.item.get'                           |
       | 'circulation.check-in-by-barcode.post'                            |
       | 'circulation.check-out-by-barcode.post'                           |
       | 'circulation.requests.item.get'                                   |
       | 'circulation.requests.item.put'                                   |
       | 'circulation.rules.put'                                           |
       | 'dcb.transactions.collection.get'                                 |
+      | 'circulation.rules.get'                                           |
       | 'dcb.transactions.item.put'                                       |
       | 'dcb.transactions.post'                                           |
       | 'dcb.transactions.status.get'                                     |
@@ -63,6 +69,7 @@ Feature: mod-dcb integration tests
       | 'inventory-storage.service-points.item.post'                      |
       | 'inventory-storage.service-points.item.put'                       |
       | 'inventory.instances.item.post'                                   |
+      | 'inventory.items.item.get'                                        |
       | 'inventory.items.item.post'                                       |
       | 'lost-item-fees-policies.item.post'                               |
       | 'overdue-fines-policies.item.post'                                |
@@ -74,6 +81,9 @@ Feature: mod-dcb integration tests
       | 'consortium-search.campuses.collection.get'                       |
       | 'consortium-search.libraries.collection.get'                      |
       | 'consortium-search.institutions.collection.get'                   |
+      | 'templates.item.post'                                             |
+      | 'email.message.collection.get'                                    |
+      | 'patron-notice.post'                                              |
 
 
     * table userPermissions
@@ -85,6 +95,7 @@ Feature: mod-dcb integration tests
       | 'usergroups.item.post'                                            |
       | 'inventory-storage.service-points.item.post'                      |
       | 'inventory-storage.items.item.get'                                |
+      | 'inventory.items.item.get'                                        |
       | 'inventory.items.item.post'                                       |
       | 'inventory.instances.item.post'                                   |
       | 'inventory-storage.instance-types.item.post'                      |

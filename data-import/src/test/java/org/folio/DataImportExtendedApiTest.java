@@ -7,6 +7,9 @@ import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.*;
 
+import static org.folio.test.config.TestParam.TEST_TENANT;
+import static org.folio.test.config.TestParam.TEST_TENANT_ID;
+
 @FolioTest(team = "folijet", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DataImportExtendedApiTest extends TestBaseEureka {
@@ -35,9 +38,14 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     @AfterAll
     public void teardown() {
         if (shouldCreateTenant()) {
-            feature("classpath:common/eureka/destroy-data.feature")
-                    .reportDir(timestampedReportDir())
-                    .run();
+            try {
+                feature("classpath:common/eureka/destroy-data.feature")
+                        .reportDir(timestampedReportDir())
+                        .run();
+            } finally {
+                System.clearProperty(TEST_TENANT.getValue());
+                System.clearProperty(TEST_TENANT_ID.getValue());
+            }
         }
     }
 

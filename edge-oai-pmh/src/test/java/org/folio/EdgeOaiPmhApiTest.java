@@ -28,27 +28,57 @@ public class EdgeOaiPmhApiTest extends TestBaseEureka {
     }
 
     @Test
-    public void test() {
+    public void test00() {
         runFeatureTest("edge-oai-pmh.feature");
     }
 
     @Test
-    public void test1() {
+    public void test01() {
         runFeatureTest("instance-suppressed-with-discovery-flag-C193960.feature");
     }
 
     @Test
-    public void test2() {
+    public void test02() {
         runFeatureTest("holdings-item-suppressed-with-discovery-flag-C193961.feature");
     }
 
     @Test
-    public void test3() {
+    public void test03() {
         runFeatureTest("skip-suppressed-records-C193912.feature");
     }
 
     @Test
-    public void test4() {
+    public void test04() {
         runFeatureTest("skip-suppressed-holdings-items.feature");
+    }
+
+    @Test
+    public void test05() {
+        runFeatureTest("ld-instance-add-holdings-C667569.feature");
+    }
+
+    @Test
+    public void test06() {
+        runFeatureTest("ld-instance-delete-holdings-C667577.feature");
+    }
+
+    @Test
+    public void test07() {
+        runFeatureTest("ld-instance-add-item-C667572.feature");
+    }
+
+    @Test
+    public void test08() {
+        runFeatureTest("ld-instance-edit-item-C667575.feature");
+    }
+
+    @Test
+    public void test09() {
+        runFeatureTest("ld-instance-delete-item-C667576.feature");
+    }
+
+    @Test
+    public void test10() {
+        runFeatureTest("ld-instance-edit-holdings-C667574.feature");
     }
 }

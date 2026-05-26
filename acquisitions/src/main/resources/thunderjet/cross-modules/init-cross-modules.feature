@@ -32,6 +32,7 @@ Feature: Cross-module integration tests
       | 'finance-storage.budget-expense-classes.item.post'         |
       | 'finance-storage.group-fund-fiscal-years.collection.get'   |
       | 'finance-storage.group-fund-fiscal-years.item.post'        |
+      | 'finance.budgets-expense-classes-totals.collection.get'    |
       | 'finance.budgets.collection.get'                           |
       | 'finance.budgets.item.delete'                              |
       | 'finance.budgets.item.get'                                 |
@@ -47,6 +48,7 @@ Feature: Cross-module integration tests
       | 'finance.funds.item.put'                                   |
       | 'finance.group-fiscal-year-summaries.collection.get'       |
       | 'finance.group-fund-fiscal-years.collection.get'           |
+      | 'finance.groups-expense-classes-totals.collection.get'     |
       | 'finance.groups.item.post'                                 |
       | 'finance.ledger-rollovers-budgets.collection.get'          |
       | 'finance.ledger-rollovers-budgets.item.get'                |

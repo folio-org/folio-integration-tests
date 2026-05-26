@@ -41,4 +41,9 @@ class ModEntitiesLinksTest extends TestBaseEureka {
     void authoritiesFiltering() {
         runFeatureTest("get-authorities-with-filtering.feature");
     }
+
+    @Test
+    void authorityLeaderStatusOnDelete() {
+      runFeatureTest("authority-leader-status-on-delete.feature");
+    }
 }

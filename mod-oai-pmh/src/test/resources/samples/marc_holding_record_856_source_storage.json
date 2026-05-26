@@ -1,0 +1,135 @@
+{
+  "id": "11111111-1111-1111-1111-111111111112",
+  "snapshotId": "11111111-1111-1111-1111-111111111112",
+  "matchedId": "11111111-1111-1111-1111-111111111112",
+  "generation": 0,
+  "recordType": "MARC_HOLDING",
+  "state": "ACTUAL",
+  "rawRecord": {
+    "content": "00415cy  a22001454  4500"
+  },
+  "parsedRecord": {
+    "id": "11111111-1111-1111-1111-111111111112",
+    "content": {
+      "leader": "00415cy  a22001454  4500",
+      "fields": [
+        {
+          "001": "hold000000856ss"
+        },
+        {
+          "004": "inst000000856ss"
+        },
+        {
+          "008": "9301234u    8   1   uu          "
+        },
+        {
+          "005": "20260422100000.0"
+        },
+        {
+          "852": {
+            "ind1": "0",
+            "ind2": "1",
+            "subfields": [
+              {
+                "b": "KU/CC/DI/A"
+              },
+              {
+                "a": "subfield a value"
+              },
+              {
+                "e": "subfield e value"
+              },
+              {
+                "g": "subfield g value"
+              },
+              {
+                "1": "subfield 1 value"
+              }
+            ]
+          }
+        },
+        {
+          "856": {
+            "subfields": [
+              {
+                "u": "Holdings URI 4 3"
+              },
+              {
+                "3": "Holdings material 4 3"
+              },
+              {
+                "y": "Component part(s) of resource"
+              },
+              {
+                "z": "Holdings Public note 4 3"
+              }
+            ],
+            "ind1": "4",
+            "ind2": "3"
+          }
+        },
+        {
+          "856": {
+            "subfields": [
+              {
+                "u": "Holdings URI 4 4"
+              },
+              {
+                "3": "Holdings material 4 4"
+              },
+              {
+                "y": "Version of component part(s) of resource"
+              },
+              {
+                "z": "Holdings Public note 4 4"
+              }
+            ],
+            "ind1": "4",
+            "ind2": "4"
+          }
+        },
+        {
+          "856": {
+            "subfields": [
+              {
+                "u": "Holdings URI 4 2"
+              },
+              {
+                "3": "Holdings material 4 2"
+              },
+              {
+                "y": "Related resource"
+              },
+              {
+                "z": "Holdings Public note 4 2"
+              }
+            ],
+            "ind1": "4",
+            "ind2": "2"
+          }
+        },
+        {
+          "999": {
+            "ind1": "f",
+            "ind2": "f",
+            "subfields": [
+              {
+                "s": "11111111-1111-1111-1111-111111111112"
+              },
+              {
+                "i": "11111111-1111-1111-1111-111111111113"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "externalIdsHolder": {
+    "holdingsId": "11111111-1111-1111-1111-111111111113"
+  },
+  "deleted": false
+}

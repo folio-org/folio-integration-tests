@@ -1,4 +1,4 @@
-# For MODORDERS-1170
+# For MODORDERS-1170, https://foliotest.testrail.io/index.php?/cases/view/580268
 Feature: Close order if order line has resolution statuses that should make it as closed
 
   Background:
@@ -20,6 +20,7 @@ Feature: Close order if order line has resolution statuses that should make it a
     * def orderId = callonce uuid
     * def poLineId = callonce uuid
 
+  @C580268
   @Positive
   Scenario: Oper order with resolution statuses that should make it as closed
     # 1. Create fund and budget
