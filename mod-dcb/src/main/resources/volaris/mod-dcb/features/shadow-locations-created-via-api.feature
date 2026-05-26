@@ -17,44 +17,17 @@ Feature: ECS | Shadow locations created via API
 
   @C1003528
   Scenario: Create shadow location institution, campus, library, and location via API with isShadow true
-    Given path '/location-units/institutions'
-    And request { name: 'ECS Shadow Institution Test', code: '#(shadowInstCode)', isShadow: true }
-    When method POST
-    Then status 201
-    And match response.isShadow == true
-    * def shadowInstitutionId = response.id
+    * def createInstitutionResult = call read('classpath:volaris/mod-dcb/reusable/create-institution.feature') { name: 'ECS Shadow Institution Test', code: '#(shadowInstCode)', isShadow: true }
+    And match createInstitutionResult.response.isShadow == true
+    * def shadowInstitutionId = createInstitutionResult.response.id
 
-    Given path '/location-units/campuses'
-    And request { name: 'ECS Shadow Campus Test', code: '#(shadowCampCode)', institutionId: '#(shadowInstitutionId)', isShadow: true }
-    When method POST
-    Then status 201
-    And match response.isShadow == true
-    * def shadowCampusId = response.id
+    * def createCampusResult = call read('classpath:volaris/mod-dcb/reusable/create-campus.feature') { name: 'ECS Shadow Campus Test', code: '#(shadowCampCode)', institutionId: '#(shadowInstitutionId)', isShadow: true }
+    And match createCampusResult.response.isShadow == true
+    * def shadowCampusId = createCampusResult.response.id
 
-    Given path '/location-units/libraries'
-    And request { name: 'ECS Shadow Library Test', code: '#(shadowLibCode)', campusId: '#(shadowCampusId)', isShadow: true }
-    When method POST
-    Then status 201
-    And match response.isShadow == true
-    * def shadowLibraryId = response.id
+    * def createLibraryResult = call read('classpath:volaris/mod-dcb/reusable/create-library.feature') { name: 'ECS Shadow Library Test', code: '#(shadowLibCode)', campusId: '#(shadowCampusId)', isShadow: true }
+    And match createLibraryResult.response.isShadow == true
+    * def shadowLibraryId = createLibraryResult.response.id
 
-    Given path '/locations'
-    And request
-      """
-      {
-        "isActive": true,
-        "institutionId": "#(shadowInstitutionId)",
-        "campusId": "#(shadowCampusId)",
-        "libraryId": "#(shadowLibraryId)",
-        "servicePointIds": ["#(servicePointId)"],
-        "name": "ECS Shadow Location Test",
-        "code": "#(shadowLocCode)",
-        "discoveryDisplayName": "ECS Shadow Location Test",
-        "details": {},
-        "primaryServicePoint": "#(servicePointId)",
-        "isShadow": true
-      }
-      """
-    When method POST
-    Then status 201
-    And match response.isShadow == true
+    * def createLocationResult = call read('classpath:volaris/mod-dcb/reusable/create-location.feature') { name: 'ECS Shadow Location Test', code: '#(shadowLocCode)', institutionId: '#(shadowInstitutionId)', campusId: '#(shadowCampusId)', libraryId: '#(shadowLibraryId)', servicePointId: '#(servicePointId)', isShadow: true }
+    And match createLocationResult.response.isShadow == true

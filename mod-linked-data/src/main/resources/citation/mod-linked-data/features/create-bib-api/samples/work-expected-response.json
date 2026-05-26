@@ -197,9 +197,12 @@
   ],
   "http://bibfra.me/vocab/library/content": [
     {
-      "id": "-8147146195166577135",
+      "id": "2784831315844563980",
       "http://bibfra.me/vocab/library/code": [
         "cri"
+      ],
+      "http://bibfra.me/vocab/library/source": [
+        "rdacontent"
       ],
       "http://bibfra.me/vocab/library/term": [
         "cartographic image"

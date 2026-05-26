@@ -22,9 +22,9 @@ Feature: MARC Derived Records
     * match fields contains { 041: { subfields: [ { t: "ger" } ], ind1: " ", ind2: " " } }
     * match fields contains { 257: { subfields: [ { a: "United States" } ], ind1: " ", ind2: " " } }
     * match fields contains { 300: { subfields: [ { a: "20 pages" }, { b: "illustrations (some color)" }, { c: "8x8" }, { e: "reference manual" }, { 3: "ref print." } ], ind1: " ", ind2: " " } }
-    * match fields contains { 336: { subfields: [ { a: "cartographic image" }, { b: "cri" } ], ind1: " ", ind2: " " } }
-    * match fields contains { 337: { subfields: [ { a: "unspecified" }, { b: "z" } ], ind1: " ", ind2: " " } }
-    * match fields contains { 338: { subfields: [ { a: "audio belt" }, { b: "sb" } ], ind1: " ", ind2: " " } }
+    * match fields contains { 336: { subfields: [ { a: "cartographic image" }, { b: "cri" }, { '2': "rdacontent" } ], ind1: " ", ind2: " " } }
+    * match fields contains { 337: { subfields: [ { a: "unspecified" }, { b: "z" }, { '2': "rdamedia" } ], ind1: " ", ind2: " " } }
+    * match fields contains { 338: { subfields: [ { a: "audio belt" }, { b: "sb" }, { '2': "rdacarrier" } ], ind1: " ", ind2: " " } }
     * match fields contains { 856: { subfields: [ { u: "http://url_of_instance" }, { z: "url of instance note" } ], ind1: " ", ind2: " " } }
 
   @C831966

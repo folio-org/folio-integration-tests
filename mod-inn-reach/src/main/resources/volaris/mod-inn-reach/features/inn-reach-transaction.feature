@@ -54,7 +54,7 @@ Feature: Inn reach transaction
     * def barcode = '912235'
     * def itemBarcode = '7010'
     * def incorrectItemBarcode = '1016'
-    * def transferItemBarcode = '9572e604-afd5-42d6-9ef5-b0b0f284b114'
+    * def itemId = '9572e604-afd5-42d6-9ef5-b0b0f284b114'
     * def incorrectItemBarcode = '7099'
     * def incorrectTransId = '7571e602-afd5-42d3-9ef5-b0b0f284b214'
     * def incorrectTrackingID = '77777'
@@ -206,7 +206,7 @@ Feature: Inn reach transaction
     * def transactionId = response.transactions[0].id
 
     * print 'Start TransferItem'
-    Given path '/inn-reach/transactions/', transactionId , '/' , 'itemhold/transfer-item/',transferItemBarcode
+    Given path '/inn-reach/transactions/', transactionId , '/' , 'itemhold/transfer-item/',itemId
     And retry until responseStatus == 204
     When method POST
     Then status 204
@@ -594,6 +594,7 @@ Feature: Inn reach transaction
     * def updateTrans = $.transactions[0]
     * updateTrans.state = 'OWNER_RENEW'
     * updateTrans.hold.patronId = 'fpbg4dg3rffcdchjgf35apzcf4'
+    * updateTrans.hold.folioItemId = itemId
     Given path '/inn-reach/transactions/' + transactionId
     And request updateTrans
     When method PUT
@@ -737,7 +738,7 @@ Feature: Inn reach transaction
   #    Negative transfer item hold
   Scenario: Start Negative Transfer Item
     * print 'Start Negative TransferItem'
-    Given path '/inn-reach/transactions/', incorrectTransId , '/' , 'itemhold/transfer-item/',transferItemBarcode
+    Given path '/inn-reach/transactions/', incorrectTransId , '/' , 'itemhold/transfer-item/',itemId
     When method POST
     Then status 404
 

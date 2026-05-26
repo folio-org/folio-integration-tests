@@ -3,6 +3,8 @@
   "name": "Example Request Policy",
   "description": "Description of request policy",
   "requestTypes": [
-    "Hold"
+    "Hold",
+    "Page",
+    "Recall"
   ]
 }

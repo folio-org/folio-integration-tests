@@ -39,6 +39,11 @@ public class ConsortiaEdgeOaiPmhApiTest extends TestBaseEureka {
         runFeatureTest("features/deleted-folio-instances-C729202.feature");
     }
 
+    @Test
+    public void test3() {
+        runFeatureTest("features/linked-data-edited-item-C688762.feature");
+    }
+
 
     @Override
     public void runHook() {
