@@ -839,13 +839,8 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # trigger age-to-lost processing directly
-    Given path '/circulation/scheduled-age-to-lost'
-    When method POST
-    Then status 204
-
-    # get the loan and verify that the loan has been aged to lost and got agedToLostDate
-    * configure retry = { count: 10, interval: 2000 }
+    # wait for age-to-lost processing to be triggered by the SYSTEM scheduler timer
+    * configure retry = { count: 20, interval: 15000 }
     Given path 'loan-storage', 'loans', extLoanId
     And retry until response.itemStatus == 'Aged to lost'
     When method GET
@@ -945,13 +940,8 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # trigger age-to-lost processing directly
-    Given path '/circulation/scheduled-age-to-lost'
-    When method POST
-    Then status 204
-
-    # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
-    * configure retry = { count: 10, interval: 2000 }
+    # wait for age-to-lost processing to be triggered by the SYSTEM scheduler timer
+    * configure retry = { count: 20, interval: 15000 }
     Given path 'loan-storage', 'loans', extLoanId
     And print response
     And retry until response.itemStatus == 'Aged to lost'
