@@ -84,6 +84,8 @@ Feature: mod-dcb integration tests
       | 'templates.item.post'                                             |
       | 'email.message.collection.get'                                    |
       | 'patron-notice.post'                                              |
+      | 'circulation.renew-by-barcode.post'                               |
+      | 'circulation.override-renewal-block.post'                         |
 
 
     * table userPermissions
@@ -140,6 +142,8 @@ Feature: mod-dcb integration tests
       | 'patron-blocks.automated-patron-blocks.collection.get'            |
       | 'dcb.shadow_locations.refresh.post'                               |
       | 'circulation-item.item.get'                                       |
+      | 'circulation.renew-by-barcode.post'                               |
+      | 'circulation.override-renewal-block.post'                         |
 
 
   Scenario: create tenant and users for testing for mod-dcb
