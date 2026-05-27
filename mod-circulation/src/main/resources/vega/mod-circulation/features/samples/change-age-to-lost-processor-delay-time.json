@@ -10,5 +10,6 @@
     "delay": "30"
   },
   "enabled": true,
+  "moduleName": "mod-circulation",
   "moduleId": "mod-circulation-24.4.0-SNAPSHOT.1293"
 }
