@@ -58,49 +58,57 @@ Feature: Edit main title of LINKED_DATA instance
     * configure headers = defaultHeaders
     * def from = isoDate()
 
-    # Edit title in source record for LINKED_DATA instance
+    # Edit title for LINKED_DATA instance using Inventory + SRS APIs
     Given path 'instance-storage/instances', instanceId
     When method GET
     Then status 200
-    * def version = $._version
+    * def updatedInstance = response
+    * def updatedMainTitle = 'Updated linked data main title ' + uuid()
+    * set updatedInstance.title = updatedMainTitle
 
-    Given path 'records-editor/records'
-    And param externalId = instanceId
+    Given path 'instance-storage/instances', instanceId
+    And header Accept = 'text/plain'
+    And request updatedInstance
+    When method PUT
+    Then status 204
+
+    Given path 'source-storage/records', srsId
     When method GET
     Then status 200
-    * def instanceRecord = response
-    * def parsedRecordId = response.parsedRecordId
-    * def updatedMainTitle = 'Updated linked data main title ' + uuid()
-    * def field245 = { tag: '245', indicators: [ '\\', '\\' ], content: '#("$a " + updatedMainTitle)', isProtected: false }
-    * eval
+    * def srsRecord = response
+    * def set245a =
       """
-      var i;
-      var idx = -1;
-      for (i = 0; i < instanceRecord.fields.length; i++) {
-        if (instanceRecord.fields[i].tag == '245') {
-          idx = i;
-          break;
+      function(fields, value) {
+        for (var i = 0; i < fields.length; i++) {
+          if (fields[i]['245']) {
+            var subfields = fields[i]['245'].subfields;
+            for (var j = 0; j < subfields.length; j++) {
+              if (subfields[j]['a'] != null) {
+                subfields[j]['a'] = value;
+                return true;
+              }
+            }
+            subfields.push({ a: value });
+            return true;
+          }
         }
-      }
-      if (idx >= 0) {
-        instanceRecord.fields[idx] = field245;
-      } else {
-        instanceRecord.fields.push(field245);
+        return false;
       }
       """
-    * set instanceRecord._actionType = 'edit'
-    * set instanceRecord.relatedRecordVersion = version
+    * def updated245 = set245a(srsRecord.parsedRecord.content.fields, updatedMainTitle)
+    * match updated245 == true
 
-    Given path 'records-editor/records', parsedRecordId
-    And request instanceRecord
+    Given path 'source-storage/records', srsId
+    And request srsRecord
     When method PUT
-    Then status 202
+    Then status 200
 
     * pause(5000)
-    * def until = isoDate()
 
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
+    * configure retry = { count: 12, interval: 2000 }
+    * def until = isoDate()
 
     # Verify updated record in Source record storage mode
     Given path 'oai/records'
@@ -109,6 +117,7 @@ Feature: Edit main title of LINKED_DATA instance
     And param verb = 'ListRecords'
     And param from = from
     And param until = until
+    And retry until karate.xmlPath(response, "count(//*[local-name()='record'])") > 0
     When method GET
     Then status 200
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == updatedMainTitle
@@ -129,6 +138,7 @@ Feature: Edit main title of LINKED_DATA instance
 
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
+    * def until = isoDate()
 
     # Verify updated record in Inventory mode
     Given path 'oai/records'
@@ -137,6 +147,7 @@ Feature: Edit main title of LINKED_DATA instance
     And param verb = 'ListRecords'
     And param from = from
     And param until = until
+    And retry until karate.xmlPath(response, "count(//*[local-name()='record'])") > 0
     When method GET
     Then status 200
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == updatedMainTitle
@@ -157,6 +168,7 @@ Feature: Edit main title of LINKED_DATA instance
 
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
+    * def until = isoDate()
 
     # Verify updated record in Source record storage and Inventory mode
     Given path 'oai/records'
@@ -165,6 +177,7 @@ Feature: Edit main title of LINKED_DATA instance
     And param verb = 'ListRecords'
     And param from = from
     And param until = until
+    And retry until karate.xmlPath(response, "count(//*[local-name()='record'])") > 0
     When method GET
     Then status 200
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == updatedMainTitle

@@ -84,6 +84,6 @@ public class EdgeOaiPmhApiTest extends TestBaseEureka {
 
     @Test
     public void test11() {
-        runFeatureTest("ld-instance-edit-main-title.feature");
+        runFeatureTest("ld-instance-edit-main-title-C663358.feature");
     }
 }
