@@ -90,25 +90,39 @@ public class ModDCBExtendedTest extends TestBaseEureka {
   void testBorrowingFlowChainOfResponsibility() {  runFeatureTest("borrowing-flow-chain-of-responsibility.feature"); }
 
   @Test
-  void testRefreshDcbShadowLocations() { runFeatureTest("refresh-dcb-shadow-locations.feature"); }
+  void testRefreshDcbShadowLocations() {
+    runFeatureTest("refresh-dcb-shadow-locations.feature");
+  }
 
   @Test
-  void testShadowLocationsCreatedViaApi() { runFeatureTest("shadow-locations-created-via-api.feature"); }
+  void testShadowLocationsCreatedViaApi() {
+    runFeatureTest("shadow-locations-created-via-api.feature");
+  }
 
   @Test
-  void testEcsShadowLocationsNotDisplayed() { runFeatureTest("ecs-shadow-locations-not-displayed.feature"); }
+  void testEcsShadowLocationsNotDisplayed() {
+    runFeatureTest("ecs-shadow-locations-not-displayed.feature");
+  }
 
   @Test
-  void testExpirationLendingFlow() { runFeatureTest("expiration-lending-flow.feature"); }
+  void testExpirationLendingFlow() {
+    runFeatureTest("expiration-lending-flow.feature");
+  }
 
   @Test
-  void testExpirationBorrowerFlow() { runFeatureTest("expiration-borrower-flow.feature"); }
+  void testExpirationBorrowerFlow() {
+    runFeatureTest("expiration-borrower-flow.feature");
+  }
 
   @Test
-  void testExpirationPickupFlow() { runFeatureTest("expiration-pickup-flow.feature"); }
+  void testExpirationPickupFlow() {
+    runFeatureTest("expiration-pickup-flow.feature");
+  }
 
   @Test
-  void testExpirationBorrowingPickupFlow() { runFeatureTest("expiration-borrowing-pickup-flow.feature"); }
+  void testExpirationBorrowingPickupFlow() {
+    runFeatureTest("expiration-borrowing-pickup-flow.feature");
+  }
 
   @Test
   void testBorrowingPickupUpdateWithPatronNotice() {
