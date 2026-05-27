@@ -37,6 +37,8 @@ Feature: mod-dcb integration tests
       | 'circulation.check-in-by-barcode.post'                            |
       | 'circulation.check-out-by-barcode.post'                           |
       | 'circulation.requests.item.get'                                   |
+      | 'circulation.requests.item.post'                                  |
+      | 'addresstypes.item.post'                                          |
       | 'circulation.requests.item.put'                                   |
       | 'circulation.rules.put'                                           |
       | 'dcb.transactions.collection.get'                                 |
@@ -142,6 +144,8 @@ Feature: mod-dcb integration tests
       | 'patron-blocks.automated-patron-blocks.collection.get'            |
       | 'dcb.shadow_locations.refresh.post'                               |
       | 'circulation-item.item.get'                                       |
+      | 'circulation.requests.item.post'                                  |
+      | 'addresstypes.item.post'                                          |
       | 'circulation.renew-by-barcode.post'                               |
       | 'circulation.override-renewal-block.post'                         |
 
