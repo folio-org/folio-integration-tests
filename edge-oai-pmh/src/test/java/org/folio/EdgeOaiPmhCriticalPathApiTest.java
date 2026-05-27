@@ -25,7 +25,11 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @AfterAll
     public void tearDown() {
-        runFeature("classpath:common/eureka/destroy-data.feature");
+        try {
+            runFeature("classpath:common/eureka/destroy-data.feature");
+        } finally {
+            super.afterAll();
+        }
     }
 
     @Test

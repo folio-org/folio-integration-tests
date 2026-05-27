@@ -27,7 +27,12 @@ public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @AfterAll
     public void tearDown() {
-        runFeature(TEST_BASE_PATH + "destroy-consortia.feature");
+        try {
+            runFeature(TEST_BASE_PATH + "destroy-consortia.feature");
+        } finally {
+            super.afterAll();
+        }
+
     }
 
     @Test
