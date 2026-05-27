@@ -858,9 +858,11 @@ Feature: Loans tests
     When method POST
     Then status 201
     * def ageToLostAppTimerId = response.id
+    # pause to allow the scheduler to pick up the newly created timer
+    * call pause 5000
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
-    * configure retry = { count: 10, interval: 2000 }
+    * configure retry = { count: 30, interval: 10000 }
     Given path 'loan-storage', 'loans', extLoanId
     And retry until response.itemStatus == 'Aged to lost'
     When method GET
@@ -984,9 +986,11 @@ Feature: Loans tests
     When method POST
     Then status 201
     * def ageToLostAppTimerId = response.id
+    # pause to allow the scheduler to pick up the newly created timer
+    * call pause 5000
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
-    * configure retry = { count: 10, interval: 2000 }
+    * configure retry = { count: 30, interval: 10000 }
     Given path 'loan-storage', 'loans', extLoanId
     And print response
     And retry until response.itemStatus == 'Aged to lost'
