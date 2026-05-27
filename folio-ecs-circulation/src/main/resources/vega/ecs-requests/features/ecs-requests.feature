@@ -7,280 +7,14 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * configure readTimeout = 600000
     * callonce login admin
 
-    * table modules
-      | name                        |
-      | 'mod-permissions'           |
-      | 'okapi'                     |
-      | 'mod-users'                 |
-      | 'mod-login'                 |
-      | 'mod-inventory-storage'     |
-      | 'mod-inventory'             |
-      | 'mod-consortia'             |
-      | 'mod-circulation-storage'   |
-      | 'mod-circulation'           |
-      | 'mod-circulation-bff'       |
-      | 'mod-tlr'                   |
-      | 'mod-search'                |
-
-    * table userPermissions
-      | name                                                        |
-      | 'users.item.post'                                           |
-      | 'users.item.get'                                            |
-      | 'users.collection.get'                                      |
-      | 'usergroups.item.post'                                      |
-      | 'inventory-storage.service-points.item.post'                |
-      | 'inventory-storage.holdings.item.post'                      |
-      | 'inventory-storage.items.item.post'                         |
-      | 'inventory-storage.instance-types.item.post'                |
-      | 'inventory-storage.loan-types.item.post'                    |
-      | 'inventory-storage.material-types.item.post'                |
-      | 'inventory-storage.location-units.institutions.item.post'   |
-      | 'inventory-storage.location-units.campuses.item.post'       |
-      | 'inventory-storage.location-units.libraries.item.post'      |
-      | 'inventory-storage.locations.item.post'                     |
-      | 'inventory-storage.holdings-sources.item.post'              |
-      | 'inventory.instances.item.get'                              |
-      | 'inventory.instances.item.post'                             |
-      | 'inventory.items.item.post'                                 |
-      | 'circulation-storage.circulation-rules.put'                 |
-      | 'circulation-storage.loan-policies.item.post'               |
-      | 'circulation-storage.patron-notice-policies.item.post'      |
-      | 'circulation-storage.request-policies.item.post'            |
-      | 'lost-item-fees-policies.item.post'                         |
-      | 'overdue-fines-policies.item.post'                          |
-      | 'circulation.settings.item.post'                            |
-      | 'tlr.settings.put'                                          |
-      | 'consortia.sharing-instances.item.post'                     |
-      | 'consortia.sharing-instances.collection.get'                |
-      | 'user-tenants.collection.get'                               |
-      | 'consortia.user-tenants.collection.get'                     |
-      | 'consortia.user-tenants.item.post'                          |
-      | 'circulation-bff.requests.allowed-service-points.get'       |
-      | 'circulation-bff.requests.post'                             |
-      | 'circulation.requests.item.post'                            |
-      | 'search.index.instance-records.reindex.full.post'           |
-
-    * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
-    * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
-    * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
-    * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
-    * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
-    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature')
-    * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
-
     # Fixed UUIDs for inventory entities shared across scenarios
     * callonce read('classpath:vega/ecs-requests/ecs-requests-variables.feature')
 
-    * def centralTenantUuid = centralTenantId.length == 36 ? centralTenantId : karate.get('centralTenantUuid')
-    * eval karate.set('centralTenantUuid', centralTenantUuid)
-    * eval karate.set('centralTenantId', centralTenant)
+    # Run common consortium setup (tenants, inventory, policies, ECS TLR)
+    * callonce read('classpath:vega/common/ecs-consortium-setup.feature')
 
-  Scenario: create and initialize central and university tenants
-    # Extend Keycloak access-token lifespan to 2 hours so tokens never expire
-    # during long async waits (mod-search indexing, service-point replication, etc.)
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(centralTenant)' }
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 7200, testTenant: '#(universityTenant)' }
-
-    # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
-    # Uses abortedStepsShouldPass so this is a no-op when the tenants don't exist yet.
-    * configure abortedStepsShouldPass = true
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantUuid)' }
-    * configure abortedStepsShouldPass = false
-
-    * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }
-    * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
-
-  Scenario: create consortium and register central and university tenants
-    * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
-    * def okapitoken = centralLogin.okapitoken
-
-    * call setupConsortium { tenant: '#(centralTenant)' }
-    * call setupTenantForConsortia { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'CON' }
-    * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
-
-    # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant requests
-    * table userPermissions
-      | name                                                  |
-      | 'circulation.requests.item.post'                      |
-      | 'circulation.requests.item.get'                       |
-      | 'circulation-bff.requests.allowed-service-points.get' |
-      | 'circulation-bff.requests.post'                       |
-      | 'inventory.instances.item.get'                        |
-      | 'inventory.items.item.get'                            |
-      | 'inventory-storage.holdings.item.get'                 |
-      | 'user-tenants.collection.get'                         |
-      | 'consortia.user-tenants.collection.get'               |
-      | 'consortia.user-tenants.item.post'                    |
-      | 'consortia.sharing-instances.item.post'               |
-      | 'consortia.sharing-instances.collection.get'          |
-
-    * def shadowConsortiaAdmin = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
-    * configure cookies = null
-    * call putCaps { tenant: '#(universityTenant)', user: '#(shadowConsortiaAdmin)' }
-
-    # Re-login as consortia_admin to restore the central tenant okapitoken
-    # (putCaps calls getAuthorizationToken for universityTenant, overwriting okapitoken)
-    * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
-    * def okapitoken = centralLogin.okapitoken
-
-    # Wait for consortium registration to propagate through Kafka
-    * configure retry = { count: 20, interval: 30000 }
-    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
-    Given path 'user-tenants'
-    And param tenantId = centralTenant
-    And retry until responseStatus == 200
-    When method GET
-    Then status 200
-
-  Scenario: initialize mod-search indices for central tenant
-    * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
-    * def okapitoken = centralLogin.okapitoken
-
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
-    Given path 'search/index/instance-records/reindex/full'
-    And request {}
-    When method POST
-    Then status 200
-
-  Scenario: setup inventory data in central tenant
-    * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
-
-    Given path 'location-units/institutions'
-    And request { id: '#(ecsInstitutionId)', name: 'ECS Test Institution Central', code: 'ECSI-C' }
-    When method POST
-    Then status 201
-
-    Given path 'location-units/campuses'
-    And request { id: '#(ecsCampusId)', name: 'ECS Test Campus Central', code: 'ECSC-C', institutionId: '#(ecsInstitutionId)' }
-    When method POST
-    Then status 201
-
-    Given path 'location-units/libraries'
-    And request { id: '#(ecsLibraryId)', name: 'ECS Test Library Central', code: 'ECSL-C', campusId: '#(ecsCampusId)' }
-    When method POST
-    Then status 201
-
-    Given path 'service-points'
-    And request { id: '#(ecsServicePointId)', name: 'ECS Central Service Point', code: 'ECS-SP-C', discoveryDisplayName: 'ECS Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
-    When method POST
-    Then status 201
-
-    Given path 'instance-types'
-    And request { id: '#(ecsInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
-    When method POST
-    Then status 201
-
-    Given path 'loan-types'
-    And request { id: '#(ecsLoanTypeId)', name: 'ECS Loan Type' }
-    When method POST
-    Then status 201
-
-    Given path 'material-types'
-    And request { id: '#(ecsMaterialTypeId)', name: 'ECS Material Type' }
-    When method POST
-    Then status 201
-
-    Given path 'holdings-sources'
-    And request { id: '#(ecsHoldingsSourceId)', name: 'ECS FOLIO Central' }
-    When method POST
-    Then status 201
-
-    Given path 'locations'
-    And request
-      """
-      {
-        "id": "#(ecsLocationId)",
-        "name": "ECS Central Location",
-        "code": "ECS-LOC-C",
-        "institutionId": "#(ecsInstitutionId)",
-        "campusId": "#(ecsCampusId)",
-        "libraryId": "#(ecsLibraryId)",
-        "primaryServicePoint": "#(ecsServicePointId)",
-        "servicePointIds": ["#(ecsServicePointId)"]
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: setup inventory data in university tenant
-    * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-
-    Given path 'location-units/institutions'
-    And request { id: '#(uniInstitutionId)', name: 'ECS Test Institution University', code: 'ECSI-U' }
-    When method POST
-    Then status 201
-
-    Given path 'location-units/campuses'
-    And request { id: '#(uniCampusId)', name: 'ECS Test Campus University', code: 'ECSC-U', institutionId: '#(uniInstitutionId)' }
-    When method POST
-    Then status 201
-
-    Given path 'location-units/libraries'
-    And request { id: '#(uniLibraryId)', name: 'ECS Test Library University', code: 'ECSL-U', campusId: '#(uniCampusId)' }
-    When method POST
-    Then status 201
-
-    Given path 'service-points'
-    And request { id: '#(uniServicePointId)', name: 'ECS University Service Point', code: 'ECS-SP-U', discoveryDisplayName: 'ECS University Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
-    When method POST
-    Then status 201
-
-    Given path 'instance-types'
-    And request { id: '#(uniInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
-    When method POST
-    Then status 201
-
-    Given path 'loan-types'
-    And request { id: '#(uniLoanTypeId)', name: 'ECS Loan Type' }
-    When method POST
-    Then status 201
-
-    Given path 'material-types'
-    And request { id: '#(uniMaterialTypeId)', name: 'ECS Material Type' }
-    When method POST
-    Then status 201
-
-    Given path 'holdings-sources'
-    And request { id: '#(uniHoldingsSourceId)', name: 'ECS FOLIO University' }
-    When method POST
-    Then status 201
-
-    Given path 'locations'
-    And request
-      """
-      {
-        "id": "#(uniLocationId)",
-        "name": "ECS University Location",
-        "code": "ECS-LOC-U",
-        "institutionId": "#(uniInstitutionId)",
-        "campusId": "#(uniCampusId)",
-        "libraryId": "#(uniLibraryId)",
-        "primaryServicePoint": "#(ecsServicePointId)",
-        "servicePointIds": ["#(ecsServicePointId)", "#(uniServicePointId)"]
-      }
-      """
-    When method POST
-    Then status 201
-
-  Scenario: setup circulation policies and enable ECS TLR
-    * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
-    * def okapitoken = centralLogin.okapitoken
-
-    # Enable ECS TLR feature at consortium level
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true' }
-    Given path 'tlr/settings'
-    And request { "ecsTlrFeatureEnabled": true, "excludeFromEcsRequestLendingTenantSearch": [] }
-    When method PUT
-    Then status 204
-
-    * call setupCirculationPolicies { tenant: '#(centralTenant)', okapitoken: '#(okapitoken)', policyLabel: 'Central' }
-
-    * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
-    * call setupCirculationPolicies { tenant: '#(universityTenant)', okapitoken: '#(universityLogin.okapitoken)', policyLabel: 'University' }
+    * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
+    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature')
 
   Scenario: create ILR ECS request via mod-circulation-bff
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
@@ -325,17 +59,18 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'ECS ILR Test Instance' }
     * def inventory = call setupInventory inventoryParams
 
-    # Wait until item is visible via allowed-service-points (confirms mod-search indexing and ECS propagation)
+    # Wait until item is visible via allowed-service-points (confirms mod-search indexing)
     * configure headers = headersCentral
-    * configure retry = { count: 20, interval: 15000 }
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
     And param operation = 'create'
     And param itemId = inventory.itemId
-    And retry until responseStatus == 200 && response.Page && response.Page.filter(function(sp){ return sp.id == ecsServicePointId }).length > 0
+    And retry until responseStatus == 200 && response && karate.sizeOf(response) > 0
     When method GET
     Then status 200
-
+    * def allowedSpIds = response.Page ? response.Page.map(function(sp){ return sp.id }) : []
+    * if (!allowedSpIds.includes(ecsServicePointId)) karate.fail('ILR: ecsServicePointId not found in allowed service points: ' + karate.toJson(response))
 
     # Create ILR ECS request via mod-circulation-bff
     Given path 'circulation-bff/requests'
@@ -409,17 +144,18 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'ECS TLR Test Instance' }
     * def inventory = call setupInventory inventoryParams
 
-    # Wait until instance is indexed by mod-search (confirms cross-tenant visibility and ECS propagation)
+    # Wait until instance is indexed by mod-search (confirms cross-tenant visibility)
     * configure headers = headersCentral
-    * configure retry = { count: 20, interval: 15000 }
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
     And param operation = 'create'
     And param instanceId = inventory.instanceId
-    And retry until responseStatus == 200 && response.Page && response.Page.filter(function(sp){ return sp.id == ecsServicePointId }).length > 0
+    And retry until responseStatus == 200 && response && karate.sizeOf(response) > 0
     When method GET
     Then status 200
-
+    * def allowedSpIds = response.Page ? response.Page.map(function(sp){ return sp.id }) : []
+    * if (!allowedSpIds.includes(ecsServicePointId)) karate.fail('TLR: ecsServicePointId not found in allowed service points: ' + karate.toJson(response))
 
     # Create TLR ECS request via mod-circulation-bff
     Given path 'circulation-bff/requests'
