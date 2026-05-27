@@ -10,10 +10,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "mod-dcb")
-public class ModDCBTest extends TestBaseEureka {
+public class ModDCBExtendedTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:volaris/mod-dcb/features/";
 
-  public ModDCBTest() {
+  public ModDCBExtendedTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
@@ -168,6 +168,11 @@ public class ModDCBTest extends TestBaseEureka {
   @Test
   void testBorrowerRenewalPolicy() {
     runFeatureTest("borrower-renewal-policy.feature");
+  }
+
+  @Test
+  void testBorrowingPickupRenewalPolicy() {
+    runFeatureTest("borrowing-pickup-renewal-policy.feature");
   }
 
   @BeforeAll
