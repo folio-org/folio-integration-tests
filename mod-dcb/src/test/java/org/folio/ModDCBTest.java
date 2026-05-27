@@ -165,6 +165,11 @@ public class ModDCBTest extends TestBaseEureka {
     runFeatureTest("borrower-service-point-hold-shelf.feature");
   }
 
+  @Test
+  void testBorrowerRenewalPolicy() {
+    runFeatureTest("borrower-renewal-policy.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
