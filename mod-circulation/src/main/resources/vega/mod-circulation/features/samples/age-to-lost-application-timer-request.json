@@ -1,0 +1,14 @@
+{
+  "routingEntry": {
+    "methods": [
+      "POST"
+    ],
+    "pathPattern": "/circulation/scheduled-age-to-lost",
+    "unit": "second",
+    "delay": "1"
+  },
+  "enabled": true,
+  "moduleName": "mod-circulation",
+  "moduleId": "mod-circulation-24.4.0-SNAPSHOT.1293"
+}
+

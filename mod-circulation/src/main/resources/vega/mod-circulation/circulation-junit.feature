@@ -151,7 +151,9 @@ Feature: mod-circulation integration tests
       | name                                                          |
       | 'calendar.endpoint.calendars.calendarId.delete'               |
       | 'scheduler.collection.get'                                    |
+      | 'scheduler.item.post'                                         |
       | 'scheduler.item.put'                                          |
+      | 'scheduler.item.delete'                                       |
       | 'calendar.endpoint.calendars.post'                            |
       | 'calendar.endpoint.calendars.surroundingOpenings.get'         |
       | 'circulation.requests.queue.item-reorder.collection.post'     |
