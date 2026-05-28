@@ -1,4 +1,4 @@
-@LD_INSTANCE_EDIT_MAIN_TITLE
+@C66358
 Feature: Edit main title of LINKED_DATA instance
 
   Background:
