@@ -98,6 +98,7 @@ Feature: Reindex resources in linked-data search index
     * def query = hubQuery
     * call searchLinkedDataHub
 
+  @C1250449
   @Positive
   Scenario: Incremental reindex skips all already-indexed resources; full reindex without resourceType restores all search indexing
     # Step 1: Drop both search indexes to simulate a stale/missing state
