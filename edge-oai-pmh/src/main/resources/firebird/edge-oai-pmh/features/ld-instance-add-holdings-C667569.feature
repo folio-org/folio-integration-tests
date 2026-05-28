@@ -7,6 +7,9 @@ Feature: Add holdings to LINKED_DATA instance
     * call login testUser
     * def defaultHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
+    * callonce read('init_data/update-configuration.feature@TechnicalConfig')
+    * callonce read('init_data/update-configuration.feature@BehaviorConfig')
+    * callonce read('init_data/init-edge-oai-pmh.feature')
 
   Scenario: ListRecords: Add Holdings to LINKED_DATA Instance is retrieved in response (marc21_withholdings)
     * configure headers = defaultHeaders
