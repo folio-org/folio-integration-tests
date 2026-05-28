@@ -1,5 +1,4 @@
 @parallel=false
-
 Feature: GetRecord: SRS & Inventory - Verify SRS LDR/05=d records are harvested as deleted
 
   # JIRA: MODOAIPMH-613, MODOAIPMH-614

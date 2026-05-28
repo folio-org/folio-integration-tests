@@ -6,7 +6,7 @@ Feature: Skip suppressed holdings and items for C193958, C193959
     * callonce login testUser
     * def okapiTokenAdmin = okapitoken
   
-  @C193958  
+  @C193958
   Scenario: Verify record skipped if both instance and holdings are suppressed
     # Configure OAI-PMH to skip suppressed records
     Given path 'oai-pmh/configuration-settings'

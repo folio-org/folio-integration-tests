@@ -1,5 +1,4 @@
 @parallel=false
-
 Feature: Tests export hodings records
 
   Background:
@@ -94,6 +93,7 @@ Feature: Tests export hodings records
       | fileName                      | uploadFormat |
       | test-export-authority-csv.csv | csv          |
 
+  @C805753
   Scenario Outline: test upload CQL file and export flow for authority uuids when related MARC_AUTHORITY records exist.
     #should create file definition
     Given path 'data-export/file-definitions'

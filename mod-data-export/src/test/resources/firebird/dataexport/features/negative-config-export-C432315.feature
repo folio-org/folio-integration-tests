@@ -74,8 +74,7 @@ Feature: Negative - Verify configured limit of exported file size
     Then status 201
 
   @C432315
-    Scenario: Configure limit of exported file size to 2147483648
-
+  Scenario: Configure limit of exported file size to 2147483648
     Given path 'data-export/configuration'
     And request
       """
@@ -89,15 +88,14 @@ Feature: Negative - Verify configured limit of exported file size
     And match response contains 'Slice size is not a number: 2147483648'
 
   @C432315
-    Scenario: Configure limit of exported file size to 100000
-
-      Given path 'data-export/configuration'
-      And request
-        """
-        {
-          "key": "slice_size",
-          "value": "100000"
-        }
-        """
-      When method POST
-      Then status 201
+  Scenario: Configure limit of exported file size to 100000
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "100000"
+      }
+      """
+    When method POST
+    Then status 201

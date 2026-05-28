@@ -124,6 +124,7 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
       | fileName                                    | uploadFormat |
       | test-export-config-authority-csv.csv        | csv          |
 
+  @C432314
   Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
     #should create file definition
 
@@ -206,6 +207,7 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
       | fileName                                    | uploadFormat |
       | test-export-config-authority-csv.csv        | csv          |
 
+  @C432314
   Scenario Outline: test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
     #should create file definition
 
