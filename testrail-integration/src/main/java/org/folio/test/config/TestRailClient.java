@@ -13,14 +13,19 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.folio.test.utils.EnvUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 public class TestRailClient {
 
+  private static final Logger logger = LoggerFactory.getLogger(TestRailClient.class);
   private static final String API_V2 = "index.php?/api/v2/";
 
   private final String baseUrl;
@@ -37,6 +42,17 @@ public class TestRailClient {
     this.password = EnvUtils.getString(TESTRAIL_PASSWORD);
     this.objectMapper = new ObjectMapper();
     this.restTemplate = new RestTemplate();
+    logger.info("TestRailClient:: Initialized with baseUrl={}, username={}, passwordPresent={}",
+      baseUrl, username, password != null && !password.isEmpty());
+    if (baseUrl == null) {
+      logger.warn("TestRailClient:: TESTRAIL_HOST env var is not set - all requests will fail");
+    }
+    if (username == null || username.isEmpty()) {
+      logger.warn("TestRailClient:: TESTRAIL_USERNAME env var is empty - auth will fail");
+    }
+    if (password == null || password.isEmpty()) {
+      logger.warn("TestRailClient:: TESTRAIL_PASSWORD env var is empty - auth will fail");
+    }
   }
 
   private static String getBaseUrl(String url) {

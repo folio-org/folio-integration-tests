@@ -57,7 +57,11 @@ public class InvoicesExtendedApiTest extends TestBaseEureka implements Acquisiti
   @AfterAll
   @Override
   public void afterAll() {
-    SharedInvoicesTenant.cleanupTenant(this.getClass(), this::runFeature);
+    try {
+      SharedInvoicesTenant.cleanupTenant(this.getClass(), this::runFeature);
+    } finally {
+      super.afterAll();
+    }
   }
 
   @Test

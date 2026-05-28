@@ -57,7 +57,11 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka implements Acquisi
   @AfterAll
   @Override
   public void afterAll() {
-    SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
+    try {
+      SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
+    } finally {
+      super.afterAll();
+    }
   }
 
   @Test

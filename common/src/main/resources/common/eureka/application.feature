@@ -67,4 +67,27 @@ Feature: Applications
     # search application id by dependencies names, combine all ids together
     * karate.forEach(uniqueDependencyNames, dependencyName => dependencyIds = dependencyIds.concat(appDescriptions.filter(descriptor => descriptor.name == dependencyName).flatMap(x => x.id)))
     * def appIds = karate.distinct(appIds.concat(dependencyIds))
+
+    # When the registry holds multiple versions of the same application, keep only the highest SemVer per name —
+    # mgr-tenant-entitlements rejects payloads with duplicate application names.
+    * def descriptorById = {}
+    * karate.forEach(appDescriptions, d => descriptorById[d.id] = d)
+    * def Semver = Java.type('org.semver4j.Semver')
+    * def isNewer = (a, b) => new Semver(a).compareTo(new Semver(b)) > 0
+    * def pickLatestPerName =
+      """
+      ids => {
+        var latestByName = {};
+        ids.forEach(id => {
+          var descriptor = descriptorById[id];
+          if (!descriptor) return;
+          var current = latestByName[descriptor.name];
+          if (!current || isNewer(descriptor.version, current.version)) {
+            latestByName[descriptor.name] = descriptor;
+          }
+        });
+        return Object.keys(latestByName).map(name => latestByName[name].id);
+      }
+      """
+    * def appIds = pickLatestPerName(appIds)
     * karate.set('applicationIds', appIds)
