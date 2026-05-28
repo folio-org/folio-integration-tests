@@ -15,10 +15,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @FolioTest(team = "firebird", module = "data-export")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ModDataExportCriticalPathApiTest extends TestBaseEureka {
+public class ModDataExportSmokeApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/dataexport/features/";
 
-    public ModDataExportCriticalPathApiTest() {
+    public ModDataExportSmokeApiTest() {
         super(new TestIntegrationService(
                 new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
     }
@@ -35,37 +35,7 @@ public class ModDataExportCriticalPathApiTest extends TestBaseEureka {
 
     @Test
     @Order(1)
-    void fileExportForMarcAuthorityRecordExportTest() {
-        runFeatureTest("export-for-authority");
-    }
-
-    @Test
-    @Order(2)
-    void ExportInstanceConfigC431148Test() {
-        runFeatureTest("export-for-instance-config-C431148");
-    }
-
-    @Test
-    @Order(3)
-    void ExportInstanceConfigCqlC432309Test() {
-        runFeatureTest("export-for-instance-config-cql-C432309");
-    }
-
-    @Test
-    @Order(4)
-    void ExportHoldingConfigC432311Test() {
-        runFeatureTest("export-for-holding-config-C432311");
-    }
-
-    @Test
-    @Order(5)
-    void ExportAuthorityConfigC432314Test() {
-        runFeatureTest("export-authority-config-C432314");
-    }
-
-    @Test
-    @Order(6)
-    void NegativeConfigExportC432315Test() {
-        runFeatureTest("negative-config-export-C432315");
+    void dataExportDeletedAuthoritiesDeletedProfileTest() {
+        runFeatureTest("export-deleted-authorities-deleted-profile");
     }
 }
