@@ -82,7 +82,8 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
     FEATURE_56("update_fund_in_poline_when_invoice_approved", true),
     FEATURE_57("rollover-multi-ledger", true),
     FEATURE_58("rollover-many-orders-and-lines", false),
-    FEATURE_59("approve-invoice-with-different-fund-than-order", false);
+    FEATURE_59("approve-invoice-with-different-fund-than-order", false),
+    FEATURE_60("pay-unopen-open", false);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -481,4 +482,9 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
     runFeatureTest(Feature.FEATURE_59.getFileName());
   }
 
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void payUnopenOpen() {
+    runFeatureTest(Feature.FEATURE_60.getFileName());
+  }
 }

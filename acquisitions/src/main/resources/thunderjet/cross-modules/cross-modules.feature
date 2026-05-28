@@ -331,3 +331,6 @@ Feature: cross-module integration tests
 
   Scenario: Over Encumbrance Is Calculated Correctly For Fiscal Year Ledger And Group
     * call read('features/over-encumbrance-for-fy-ledger-and-group.feature')
+
+  Scenario: Pay, unopen, open
+    * call read('features/pay-unopen-open.feature')
