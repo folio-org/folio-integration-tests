@@ -10,6 +10,7 @@ Feature: C378101 - ListRecords: SRS & Inventory - Verify that effective call num
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
+  @C378101
   Scenario: Verify effective call number is properly included in response for holdings and items (marc21_withholdings)
     # Use unique IDs to avoid conflicts with other tests
     * def testInstanceId = 'affcfc75-becf-490c-a15c-9fa9ca33575e'

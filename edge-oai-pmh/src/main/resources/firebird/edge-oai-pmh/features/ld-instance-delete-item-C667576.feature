@@ -1,4 +1,3 @@
-@C667576
 Feature: Delete item of LINKED_DATA instance
 
   Background:
@@ -9,6 +8,7 @@ Feature: Delete item of LINKED_DATA instance
     * def textPlainHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain', 'Authtoken-Refresh-Cache': 'true' }
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
+  @C667576
   Scenario: ListRecords: Delete Item of LINKED_DATA Instance is retrieved in response (marc21_withholdings)
     * configure headers = defaultHeaders
 

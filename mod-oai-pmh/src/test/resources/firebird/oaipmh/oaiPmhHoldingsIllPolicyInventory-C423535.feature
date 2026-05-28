@@ -10,6 +10,7 @@ Feature: ListRecords/GetRecord: Inventory - Verify holdings ILL policy is includ
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
+  @C423535
   Scenario: Verify Inventory holdings ILL policy is returned in 952 subfield r for ListRecords and GetRecord
     * def randomUuid = function(){ return java.util.UUID.randomUUID() + '' }
     * def runSuffix = java.lang.String.valueOf(java.lang.System.currentTimeMillis())

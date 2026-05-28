@@ -1,5 +1,4 @@
 @parallel=false
-@C432314
 Feature: Verify configured limit of exported file size - Authorities (UUID)
 
   Background:
@@ -15,6 +14,7 @@ Feature: Verify configured limit of exported file size - Authorities (UUID)
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
+  @C432314
   Scenario Outline: setting configuration slice_size to 1, test upload file and export flow for authority uuids when related MARC_AUTHORITY records exist.
     #should create file definition
 

@@ -1,5 +1,5 @@
 @parallel=false
-@C566112
+
 Feature: Test export authority deleted
 
   Background:
@@ -21,6 +21,7 @@ Feature: Test export authority deleted
 
     * configure retry = { interval: 15000, count: 10 }
 
+  @C566112
   Scenario: Test export deleted authority
     # create authority that will be deleted
     * def authorityDeletedId = '0410f607-60eb-4a5d-9951-28f3794941ec'

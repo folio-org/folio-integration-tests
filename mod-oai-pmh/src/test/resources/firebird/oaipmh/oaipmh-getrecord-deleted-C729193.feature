@@ -1,5 +1,5 @@
 @parallel=false
-@C729193
+
 Feature: GetRecord: SRS & Inventory - Verify that set for deletion MARC Instances are harvested
 
   # TestRail Case ID: C729193

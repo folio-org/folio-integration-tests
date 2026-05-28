@@ -1,4 +1,3 @@
-@C193960
 Feature: instance suppressed with discovery flag C193960
 
   Background:
@@ -9,7 +8,7 @@ Feature: instance suppressed with discovery flag C193960
     * callonce read('init_data/update-configuration.feature@TechnicalConfig')
     * callonce read('init_data/update-configuration.feature@BehaviorConfig')
     * callonce read('init_data/init-edge-oai-pmh.feature')
-
+  @C193960
   Scenario: Verify suppressed records are included with discovery flag when configured to transfer suppressed records
     # Set technical config to avoid pagination
     Given path 'oai-pmh/configuration-settings'

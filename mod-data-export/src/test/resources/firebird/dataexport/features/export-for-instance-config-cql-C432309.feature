@@ -1,4 +1,3 @@
-@C432309
 Feature: Verify configured limit of exported file size - Instances (CQL query)
 
   Background:
@@ -14,6 +13,7 @@ Feature: Verify configured limit of exported file size - Instances (CQL query)
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
+  @C432309
   Scenario Outline: setting configuration slice_size to 1 and test should check record fields are there and file format is cql.
 
     Given path 'data-export/configuration'
@@ -155,6 +155,7 @@ Feature: Verify configured limit of exported file size - Instances (CQL query)
       | fileName                                                             | uploadFormat |
       | test-export-config-instance-cql.cql                                  | cql          |
 
+  @C432309
   Scenario Outline: setting configuration slice_size to N and test should check record fields are there and file format is cql.
 
     Given path 'data-export/configuration'
@@ -232,6 +233,7 @@ Feature: Verify configured limit of exported file size - Instances (CQL query)
       | fileName                                                         | uploadFormat |
       | test-export-config-instance-cql.cql                              | cql          |
 
+  @C432309
   Scenario Outline: setting configuration slice_size to N-1 and test should check record fields are there and file format is cql.
 
     Given path 'data-export/configuration'
@@ -396,6 +398,7 @@ Feature: Verify configured limit of exported file size - Instances (CQL query)
       | fileName                                                         | uploadFormat |
       | test-export-config-instance-cql.cql                              | cql          |
 
+  @C432309
   Scenario: reset configuration to default
     #reset slice_size back to default value to avoid affecting other tests
     Given path 'data-export/configuration'

@@ -1,5 +1,5 @@
 @parallel=false
-@C805753
+
 Feature: Tests export hodings records
 
   Background:
@@ -15,7 +15,7 @@ Feature: Tests export hodings records
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
-
+  @C805753
   Scenario Outline: test upload file and export flow for authority when related MARC_AUTHORITY records exist.
     Given path 'data-export/configuration'
     And request
