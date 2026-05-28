@@ -19,7 +19,7 @@ Feature: GetRecord: SRS & Inventory - Verify SRS LDR/05=d records are harvested 
     * def testSrsId = 'be1b25ae-4a9d-4077-93e6-7f8e59efd609'
     * def testInstanceId = '6eee8eb9-db1a-46e2-a8ad-780f19974efa'
 
-  @Positive
+  @Positive @C375977
   Scenario: Verify GetRecord returns deleted header for SRS record with LDR/05=d
 
     # Preconditions: Record source is SRS + Inventory, deleted records processing is Persistent

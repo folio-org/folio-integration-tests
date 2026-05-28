@@ -9,6 +9,7 @@ Feature: ListRecords: SRS - Verify 856 mappings for source record storage with h
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
+  @C388516
   Scenario: Verify ListRecords returns expected 856 indicators and subfield t values for source record storage records
     * def randomUuid = function(){ return java.util.UUID.randomUUID() + '' }
     * def runSuffix = java.lang.String.valueOf(java.lang.System.currentTimeMillis())
