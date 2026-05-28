@@ -1,4 +1,5 @@
 @parallel=false
+@C566112
 Feature: Test export authority deleted
 
   Background:

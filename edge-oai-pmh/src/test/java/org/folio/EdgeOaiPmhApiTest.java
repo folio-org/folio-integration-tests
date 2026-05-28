@@ -32,23 +32,4 @@ public class EdgeOaiPmhApiTest extends TestBaseEureka {
         runFeatureTest("edge-oai-pmh.feature");
     }
 
-    @Test
-    public void test01() {
-        runFeatureTest("instance-suppressed-with-discovery-flag-C193960.feature");
-    }
-
-    @Test
-    public void test02() {
-        runFeatureTest("holdings-item-suppressed-with-discovery-flag-C193961.feature");
-    }
-
-    @Test
-    public void test03() {
-        runFeatureTest("skip-suppressed-records-C193912.feature");
-    }
-
-    @Test
-    public void test04() {
-        runFeatureTest("skip-suppressed-holdings-items.feature");
-    }
 }

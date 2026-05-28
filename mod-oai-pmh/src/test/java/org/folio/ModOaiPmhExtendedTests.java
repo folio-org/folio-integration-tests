@@ -30,11 +30,7 @@ public class ModOaiPmhExtendedTests extends TestBaseEureka {
 
     @AfterAll
     public void tearDown() {
-        try {
-            runFeature("classpath:common/eureka/destroy-data.feature");
-        } finally {
-            super.afterAll();
-        }
+        runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
     @Test

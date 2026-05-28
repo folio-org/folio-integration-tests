@@ -30,11 +30,13 @@ public class ModDataExportCriticalPathApiTest extends TestBaseEureka {
 
     @AfterAll
     public void modDataExportTestsAfterAll() {
-        try {
-            runFeature("classpath:common/eureka/destroy-data.feature");
-        } finally {
-            super.afterAll();
-        }
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
+
+    @Test
+    @Order(8)
+    void fileExportForMarcAuthorityRecordExportTest() {
+        runFeatureTest("export-for-authority");
     }
 
     @Test

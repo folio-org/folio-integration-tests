@@ -30,11 +30,7 @@ public class ModOaiPmhCriticalPathTests extends TestBaseEureka {
 
     @AfterAll
     public void tearDown() {
-        try {
-            runFeature("classpath:common/eureka/destroy-data.feature");
-        } finally {
-            super.afterAll();
-        }
+        runFeature("classpath:common/eureka/destroy-data.feature");
     }
 
     @Test
@@ -100,5 +96,10 @@ public class ModOaiPmhCriticalPathTests extends TestBaseEureka {
     @Test
     void oaiPmhListRecordsC397334() {
         runFeatureTest("oaiPmhListRecordsC397334");
+    }
+
+    @Test
+    void oaiPmhListRecordsAdditionalTestsWhenSourceIsInventory() {
+        runFeatureTest("oaipmh-listRecords-sourceInventory");
     }
 }

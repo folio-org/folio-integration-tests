@@ -6,6 +6,9 @@ Feature: instance suppressed with discovery flag C193960
     * callonce variables
     * callonce login testUser
     * def okapiTokenAdmin = okapitoken
+    * callonce read('init_data/update-configuration.feature@TechnicalConfig')
+    * callonce read('init_data/update-configuration.feature@BehaviorConfig')
+    * callonce read('init_data/init-edge-oai-pmh.feature')
 
   Scenario: Verify suppressed records are included with discovery flag when configured to transfer suppressed records
     # Set technical config to avoid pagination

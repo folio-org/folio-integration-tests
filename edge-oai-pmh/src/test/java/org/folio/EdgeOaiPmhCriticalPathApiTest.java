@@ -25,11 +25,27 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @AfterAll
     public void tearDown() {
-        try {
-            runFeature("classpath:common/eureka/destroy-data.feature");
-        } finally {
-            super.afterAll();
-        }
+        runFeature("classpath:common/eureka/destroy-data.feature");
+    }
+
+    @Test
+    public void test01() {
+        runFeatureTest("instance-suppressed-with-discovery-flag-C193960.feature");
+    }
+
+    @Test
+    public void test02() {
+        runFeatureTest("holdings-item-suppressed-with-discovery-flag-C193961.feature");
+    }
+
+    @Test
+    public void test03() {
+        runFeatureTest("skip-suppressed-records-C193912.feature");
+    }
+
+    @Test
+    public void test04() {
+        runFeatureTest("skip-suppressed-holdings-items.feature");
     }
 
     @Test

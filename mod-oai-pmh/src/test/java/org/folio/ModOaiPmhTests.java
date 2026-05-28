@@ -44,11 +44,6 @@ public class ModOaiPmhTests extends TestBaseEureka {
         runFeatureTest("oaipmh-listRecords-additional");
     }
 
-    @Test
-    void oaiPmhListRecordsAdditionalTestsWhenSourceIsInventory() {
-        runFeatureTest("oaipmh-listRecords-sourceInventory");
-    }
-
     @Disabled("Disabled until the records retrieving within verbs like ListRecords and listIdentifiers " +
             "will be switched to use the inventory storage + generate marc utils on the fly library instead of SRS only")
     @Test

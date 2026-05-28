@@ -87,12 +87,6 @@ public class ModDataExportApiTest extends TestBaseEureka {
     }
 
     @Test
-    @Order(8)
-    void fileExportForMarcAuthorityRecordExportTest() {
-        runFeatureTest("export-for-authority");
-    }
-
-    @Test
     @Order(9)
     void deleteJobExecutionTest() {
         runFeatureTest("delete-job-execution");
@@ -114,12 +108,6 @@ public class ModDataExportApiTest extends TestBaseEureka {
     @Order(12)
     void dataExportDeletedMarcIdsTest() {
         runFeatureTest("export-deleted-marc-ids");
-    }
-
-    @Test
-    @Order(15)
-    void dataExportDeletedAuthoritiesTest() {
-        runFeatureTest("export-deleted-authorities");
     }
 
     @Test
