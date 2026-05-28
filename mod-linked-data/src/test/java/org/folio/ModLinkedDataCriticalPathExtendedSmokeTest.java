@@ -9,12 +9,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "citation", module = "mod-linked-data")
-class ModLinkedDataCriticalPathTest extends TestBaseEureka {
+class ModLinkedDataCriticalPathExtendedSmokeTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH =
     "classpath:citation/mod-linked-data/features/";
 
-  public ModLinkedDataCriticalPathTest() {
+  public ModLinkedDataCriticalPathExtendedSmokeTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
