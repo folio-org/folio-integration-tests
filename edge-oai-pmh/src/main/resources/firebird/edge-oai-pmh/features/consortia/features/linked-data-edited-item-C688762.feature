@@ -130,6 +130,7 @@ Feature: Edited items of shared LINKED_DATA instance
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
 
+    * pause(1000)
     * def from = isoDate()
     * def until = isoDate()
 
