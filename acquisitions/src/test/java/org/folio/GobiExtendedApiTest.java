@@ -6,6 +6,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +50,7 @@ class GobiExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   }
 
   public GobiExtendedApiTest() {
-    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+    super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
   @BeforeAll
@@ -63,7 +64,11 @@ class GobiExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @AfterAll
   @Override
   public void afterAll() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
+    try {
+      runFeature("classpath:common/eureka/destroy-data.feature");
+    } finally {
+      super.afterAll();
+    }
   }
 
   @Test

@@ -79,7 +79,11 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka implements A
   @AfterAll
   @Override
   public void afterAll() {
-    destroyTenant();
+    try {
+      destroyTenant();
+    } finally {
+      super.afterAll();
+    }
   }
 
   @Test
