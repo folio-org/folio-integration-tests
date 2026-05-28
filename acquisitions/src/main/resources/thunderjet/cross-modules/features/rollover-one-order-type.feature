@@ -88,8 +88,8 @@ Feature: Rollover one order type
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match each $.transactions[*].encumbrance.status == 'Released'
-    And match each $.transactions[*].amount == 0.0
+    And match $.transactions[0].encumbrance.status == 'Released'
+    And match $.transactions[0].amount == 0.0
     * def encumbranceId1 = $.transactions[0].id
 
     Given path 'finance/transactions'
@@ -97,8 +97,8 @@ Feature: Rollover one order type
     When method GET
     Then status 200
     And match $.totalRecords == 1
-    And match each $.transactions[*].encumbrance.status == 'Unreleased'
-    And match each $.transactions[*].amount == 10.0
+    And match $.transactions[0].encumbrance.status == 'Unreleased'
+    And match $.transactions[0].amount == 10.0
     * def encumbranceId2 = $.transactions[0].id
 
     # 9. Check encumbrance links after rollover (POLs point to the new encumbrances)
