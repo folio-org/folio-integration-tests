@@ -31,10 +31,11 @@ public class SharedCacheInstance {
   public void start() {
     logger.info("start:: Shared cache instance is running");
     if (isTestRailEnabled()) {
-      logger.info("start:: Test Rail integration is enabled");
+      logger.info("start:: Test Rail integration is enabled, runId={}", runId);
       setCaseIds(runId);
+      logger.info("start:: Test Rail case id cache loaded, totalCaseIds={}", caseIds.size());
     } else {
-      logger.info("start:: Test Rail integration is disabled");
+      logger.info("start:: Test Rail integration is disabled (TESTRAIL_RUN_ID env var not set)");
     }
   }
 
@@ -46,14 +47,19 @@ public class SharedCacheInstance {
     var requestOffset = 0;
     var requestLimit = 250; // This is the maximum Test Rail will take
     while (true) {
-      logger.info("setCaseIds:: Retrieving tests, offset: {}, limit: {}", requestOffset, requestLimit);
+      logger.info("setCaseIds:: Retrieving tests for runId={}, offset={}, limit={}", runId, requestOffset * requestLimit, requestLimit);
       var responsePayload = testRailDao.getTests(testRailClient, runId, requestOffset * requestLimit, requestLimit);
       if (responsePayload == null) {
+        logger.warn("setCaseIds:: Response payload is null for runId={}, offset={} - stopping pagination", runId, requestOffset * requestLimit);
         break;
       }
+      logger.info("setCaseIds:: Response received: offset={}, limit={}, size={}, testsCount={}",
+        responsePayload.offset(), responsePayload.limit(), responsePayload.size(),
+        responsePayload.tests() == null ? 0 : responsePayload.tests().size());
 
       var tests = responsePayload.tests();
       if (tests.isEmpty()) {
+        logger.warn("setCaseIds:: No tests returned for runId={}, offset={} - stopping pagination", runId, requestOffset * requestLimit);
         break;
       }
       var caseIdsChunk = tests.stream()
@@ -61,16 +67,19 @@ public class SharedCacheInstance {
         .map(Test::caseId)
         .distinct()
         .toList();
+      logger.info("setCaseIds:: Chunk extracted {} distinct case ids from {} tests (runningTotal={})",
+        caseIdsChunk.size(), tests.size(), caseIds.size() + caseIdsChunk.size());
       caseIds.addAll(caseIdsChunk);
 
-      if (responsePayload.links().next() == null) {
+      if (responsePayload.links() == null || responsePayload.links().next() == null) {
+        logger.info("setCaseIds:: No next link - pagination complete at offset={}", requestOffset * requestLimit);
         break;
       }
       logger.info("setCaseIds:: Offset: {}, next: {}", responsePayload.offset(), responsePayload.links().next());
       requestOffset++;
     }
 
-    logger.info("setCaseIds:: Set {} case ids", caseIds.size());
+    logger.info("setCaseIds:: Set {} case ids for runId={}", caseIds.size(), runId);
   }
 
   public Set<Integer> getCaseIds() {
