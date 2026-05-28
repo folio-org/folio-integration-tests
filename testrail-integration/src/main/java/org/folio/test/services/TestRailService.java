@@ -33,14 +33,22 @@ public class TestRailService {
   }
 
   public void createResults(Integer runId, Map<String, Results> results) {
+    logger.info("createResults:: Starting result sync for runId={}, featureCount={}", runId, results == null ? 0 : results.size());
     var caseIds = SharedCacheInstanceInitializer.getSharedCacheInstance().getCaseIds();
     if (CollectionUtils.isEmpty(caseIds)) {
       logger.warn("createResults: Cannot create results, no case ids were found for the {} run", runId);
       return;
     }
+    logger.info("createResults:: Using {} cached case ids for runId={}", caseIds.size(), runId);
+    if (results == null || results.isEmpty()) {
+      logger.warn("createResults:: No feature results to process for runId={}", runId);
+      return;
+    }
     for (var result : results.entrySet()) {
+      logger.info("createResults:: Processing feature [{}]", result.getKey());
       prepareAndSendResults(runId, caseIds, result.getKey(), result.getValue());
     }
+    logger.info("createResults:: Finished result sync for runId={}", runId);
   }
 
   private void prepareAndSendResults(Integer runId, Set<Integer> caseIds, String featureName, Results results) {
@@ -57,7 +65,7 @@ public class TestRailService {
         continue;
       }
       setStatus(scenarioResult, resultPayload);
-      logger.debug("prepareAndSendResults: Prepared result payload for [{}] scenario and [{}] feature: {}", scenarioName, featureName, resultPayload);
+      logger.info("prepareAndSendResults: Prepared result payload for [{}] scenario and [{}] feature: {}", scenarioName, featureName, resultPayload);
 
       resultsPayload.add(resultPayload);
     }
@@ -66,7 +74,7 @@ public class TestRailService {
       logger.warn("prepareAndSendResults: No results payload was prepared for [{}]", featureName);
       return;
     }
-    logger.debug("prepareAndSendResults: Prepared results for [{}]: {}", featureName, resultsPayload);
+    logger.info("prepareAndSendResults: Prepared results for [{}]: {}", featureName, resultsPayload);
     sendResults(runId, featureName, resultsPayload);
   }
 
@@ -108,6 +116,6 @@ public class TestRailService {
   private void sendResults(Integer runId, String featureName, List<Result> resultsPayload) {
     var requestPayload = new AddResultsForCasesRequest(resultsPayload);
     var responsePayload = testRailDao.addResultsForCases(testRailClient, runId, requestPayload);
-    logger.debug("sendResults:: Created results [{}] response: {}", featureName, responsePayload);
+    logger.info("sendResults:: Created results [{}] response: {}", featureName, responsePayload);
   }
 }
