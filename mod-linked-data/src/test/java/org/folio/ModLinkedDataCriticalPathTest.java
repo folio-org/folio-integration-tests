@@ -5,28 +5,22 @@ import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "citation", module = "mod-linked-data")
-class ModLinkedDataTest extends TestBaseEureka {
+class ModLinkedDataCriticalPathTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH =
     "classpath:citation/mod-linked-data/features/";
 
-  public ModLinkedDataTest() {
+  public ModLinkedDataCriticalPathTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
   @BeforeAll
   void setup() {
     runFeature("classpath:citation/mod-linked-data/linked-data-junit.feature");
-  }
-
-  @AfterAll
-  void tearDown() {
-    runFeature("classpath:common/eureka/destroy-data.feature");
   }
 
   @Test
