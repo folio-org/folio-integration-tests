@@ -15,7 +15,10 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.folio.test.models.ResultStatus.FAILED;
 import static org.folio.test.models.ResultStatus.PASSED;
@@ -23,6 +26,7 @@ import static org.folio.test.models.ResultStatus.PASSED;
 public class TestRailService {
 
   private static final Logger logger = LoggerFactory.getLogger(TestRailService.class);
+  private static final Pattern CASE_TAG_PATTERN = Pattern.compile("^C(\\d+)$");
 
   private final TestRailDao testRailDao;
   private final TestRailClient testRailClient;
@@ -81,9 +85,11 @@ public class TestRailService {
   private boolean setCaseId(Set<Integer> caseIds, ScenarioResult scenarioResult, Result resultPayload) {
     var scenarioName = scenarioResult.getScenario().getName();
     var optional = scenarioResult.getScenario().getTags().stream()
-      .filter(tag -> tag.getName() != null && tag.getName().startsWith("C"))
-      .map(tag -> tag.getName().replace("C", ""))
-      .map(Integer::parseInt)
+      .map(tag -> tag.getName())
+      .filter(Objects::nonNull)
+      .map(CASE_TAG_PATTERN::matcher)
+      .filter(Matcher::matches)
+      .map(matcher -> Integer.parseInt(matcher.group(1)))
       .findFirst();
     if (optional.isEmpty()) {
       logger.warn("setCaseId: Cannot set case id for [{}] scenario, invalid tag format", scenarioName);

@@ -31,5 +31,4 @@ public class EdgeOaiPmhApiTest extends TestBaseEureka {
     public void test00() {
         runFeatureTest("edge-oai-pmh.feature");
     }
-
 }
