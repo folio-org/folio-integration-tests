@@ -79,7 +79,11 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @AfterAll
   @Override
   public void afterAll() {
-    SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
+    try {
+      SharedOrdersTenant.cleanupTenant(this.getClass(), this::runFeature);
+    } finally {
+      super.afterAll();
+    }
   }
 
   @Test
