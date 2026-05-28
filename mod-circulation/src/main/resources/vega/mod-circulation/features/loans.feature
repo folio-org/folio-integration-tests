@@ -839,30 +839,27 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # find the scheduled-age-to-lost SYSTEM timer to get moduleId and moduleName
-    Given path 'scheduler/timers'
-    And param limit = 100
-    When method GET
-    Then status 200
-    * def fun = function(t) { return t.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
-    * def timers = karate.filter(response.timerDescriptors, fun)
-    * def ageToLostModuleId = timers[0].moduleId
-    * def ageToLostModuleName = timers[0].moduleName
-
-    # create a temporary APPLICATION timer to trigger age-to-lost processing every second
-    * def createRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
-    * createRequest.moduleId = ageToLostModuleId
-    * createRequest.moduleName = ageToLostModuleName
-    Given path 'scheduler/timers'
-    And request createRequest
+    # get a system-level token to call the internal scheduled-age-to-lost endpoint
+    Given url baseKeycloakUrl
+    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = kcClientId
+    And form field client_secret = kcClientSecret
     When method POST
-    Then status 201
-    * def ageToLostAppTimerId = response.id
-    # pause to allow the scheduler to pick up the newly created timer
-    * call pause 5000
+    Then status 200
+    * def tenantSystemToken = response.access_token
+
+    # trigger age-to-lost processing using system token
+    Given url baseUrl
+    And path '/circulation/scheduled-age-to-lost'
+    And header Authorization = 'Bearer ' + tenantSystemToken
+    And header x-okapi-tenant = testTenant
+    When method POST
+    Then status 204
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
-    * configure retry = { count: 30, interval: 10000 }
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'loan-storage', 'loans', extLoanId
     And retry until response.itemStatus == 'Aged to lost'
     When method GET
@@ -870,10 +867,6 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
     And match $.itemStatus == 'Aged to lost'
 
-    # delete the temporary APPLICATION timer
-    Given path 'scheduler/timers', ageToLostAppTimerId
-    When method DELETE
-    Then status 204
 
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
@@ -967,30 +960,27 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # find the scheduled-age-to-lost SYSTEM timer to get moduleId and moduleName
-    Given path 'scheduler/timers'
-    And param limit = 100
-    When method GET
-    Then status 200
-    * def fun = function(t) { return t.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }
-    * def timers = karate.filter(response.timerDescriptors, fun)
-    * def ageToLostModuleId = timers[0].moduleId
-    * def ageToLostModuleName = timers[0].moduleName
-
-    # create a temporary APPLICATION timer to trigger age-to-lost processing every second
-    * def createRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
-    * createRequest.moduleId = ageToLostModuleId
-    * createRequest.moduleName = ageToLostModuleName
-    Given path 'scheduler/timers'
-    And request createRequest
+    # get a system-level token to call the internal scheduled-age-to-lost endpoint
+    Given url baseKeycloakUrl
+    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = kcClientId
+    And form field client_secret = kcClientSecret
     When method POST
-    Then status 201
-    * def ageToLostAppTimerId = response.id
-    # pause to allow the scheduler to pick up the newly created timer
-    * call pause 5000
+    Then status 200
+    * def tenantSystemToken = response.access_token
+
+    # trigger age-to-lost processing using system token
+    Given url baseUrl
+    And path '/circulation/scheduled-age-to-lost'
+    And header Authorization = 'Bearer ' + tenantSystemToken
+    And header x-okapi-tenant = testTenant
+    When method POST
+    Then status 204
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
-    * configure retry = { count: 30, interval: 10000 }
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'loan-storage', 'loans', extLoanId
     And print response
     And retry until response.itemStatus == 'Aged to lost'
@@ -1000,10 +990,6 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.lostItemHasBeenBilled == false
     And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
 
-    # delete the temporary APPLICATION timer
-    Given path 'scheduler/timers', ageToLostAppTimerId
-    When method DELETE
-    Then status 204
 
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
