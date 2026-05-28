@@ -1,4 +1,3 @@
-@C66358
 Feature: Edit main title of LINKED_DATA instance
 
   Background:
@@ -8,6 +7,7 @@ Feature: Edit main title of LINKED_DATA instance
     * def defaultHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*', 'Authtoken-Refresh-Cache': 'true' }
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
+  @C66358
   Scenario: ListRecords: Edit main title of LINKED_DATA Instance is retrieved in response (marc21)
     * configure headers = defaultHeaders
 
