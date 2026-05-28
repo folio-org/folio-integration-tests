@@ -839,16 +839,45 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # get a system-level token to call the internal scheduled-age-to-lost endpoint
+    # get a system-level token using sidecar-module-access-client to call the internal scheduled-age-to-lost endpoint
+    * configure headers = null
     Given url baseKeycloakUrl
-    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
     And header Content-Type = 'application/x-www-form-urlencoded'
     And form field grant_type = 'client_credentials'
     And form field client_id = kcClientId
     And form field client_secret = kcClientSecret
+    And form field scope = 'email openid'
+    When method POST
+    Then status 200
+    * def keycloakMasterToken = response.access_token
+
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant, 'clients'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * def m2mClientId = 'sidecar-module-access-client'
+    * def sidecarClientUUID = response.filter(x => x.clientId == m2mClientId)[0].id
+
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant, 'clients', sidecarClientUUID, 'client-secret'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * def sidecarSecret = response.value
+
+    Given url baseKeycloakUrl
+    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = m2mClientId
+    And form field client_secret = sidecarSecret
+    And form field scope = 'email openid'
     When method POST
     Then status 200
     * def tenantSystemToken = response.access_token
+    * configure headers = headersUser
 
     # trigger age-to-lost processing using system token
     Given url baseUrl
@@ -960,16 +989,45 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # get a system-level token to call the internal scheduled-age-to-lost endpoint
+    # get a system-level token using sidecar-module-access-client to call the internal scheduled-age-to-lost endpoint
+    * configure headers = null
     Given url baseKeycloakUrl
-    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
     And header Content-Type = 'application/x-www-form-urlencoded'
     And form field grant_type = 'client_credentials'
     And form field client_id = kcClientId
     And form field client_secret = kcClientSecret
+    And form field scope = 'email openid'
+    When method POST
+    Then status 200
+    * def keycloakMasterToken = response.access_token
+
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant, 'clients'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * def m2mClientId = 'sidecar-module-access-client'
+    * def sidecarClientUUID = response.filter(x => x.clientId == m2mClientId)[0].id
+
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant, 'clients', sidecarClientUUID, 'client-secret'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * def sidecarSecret = response.value
+
+    Given url baseKeycloakUrl
+    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = m2mClientId
+    And form field client_secret = sidecarSecret
+    And form field scope = 'email openid'
     When method POST
     Then status 200
     * def tenantSystemToken = response.access_token
+    * configure headers = headersUser
 
     # trigger age-to-lost processing using system token
     Given url baseUrl
