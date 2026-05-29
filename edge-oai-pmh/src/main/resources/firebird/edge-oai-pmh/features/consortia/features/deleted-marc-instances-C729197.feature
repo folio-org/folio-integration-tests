@@ -1,4 +1,3 @@
-@C729197
 Feature: Deleted MARC instances
 
   Background:
@@ -19,6 +18,7 @@ Feature: Deleted MARC instances
     * configure headers = headersUniversity
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
+  @C729197
   Scenario: Consortia | Verify that deleted MARC Instances are retrieved in the responses of single tenant and cross-tenant harvests
     # Check instances exist
     Given path 'inventory/instances/'

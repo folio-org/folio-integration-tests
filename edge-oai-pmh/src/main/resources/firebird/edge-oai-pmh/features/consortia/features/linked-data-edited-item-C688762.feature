@@ -1,4 +1,3 @@
-@C688762
 Feature: Edited items of shared LINKED_DATA instance
 
   Background:
@@ -18,6 +17,7 @@ Feature: Edited items of shared LINKED_DATA instance
     * configure headers = headersUniversity
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
+  @C688762
   Scenario: Consortia | ListRecords: Verify that edit Item of shared LINKED_DATA Instance is retrieved in the responses of single tenant and cross-tenant harvests
     # Create LINKED_DATA instance
     * configure headers = headersConsortia
@@ -130,6 +130,7 @@ Feature: Edited items of shared LINKED_DATA instance
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
 
+    * pause(1000)
     * def from = isoDate()
     * def until = isoDate()
 

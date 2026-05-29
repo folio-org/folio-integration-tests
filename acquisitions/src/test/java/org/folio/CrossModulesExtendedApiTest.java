@@ -85,7 +85,11 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
   @AfterAll
   @Override
   public void afterAll() {
-    SharedCrossModulesTenant.cleanupTenant(this.getClass(), this::runFeature);
+    try {
+      SharedCrossModulesTenant.cleanupTenant(this.getClass(), this::runFeature);
+    } finally {
+      super.afterAll();
+    }
   }
 
   @Test

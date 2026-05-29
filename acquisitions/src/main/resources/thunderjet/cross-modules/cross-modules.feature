@@ -343,3 +343,6 @@ Feature: cross-module integration tests
 
   Scenario: Unreleased Encumbrance Is Rolled Over To The Next Fiscal Year
     * call read('features/unreleased-encumbrance-rolled-over-to-next-fiscal-year.feature')
+
+  Scenario: Rollover one order type
+    * call read('features/rollover-one-order-type.feature')
