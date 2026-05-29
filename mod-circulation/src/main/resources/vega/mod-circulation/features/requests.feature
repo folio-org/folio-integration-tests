@@ -1970,7 +1970,7 @@ Feature: Requests tests
     Given path 'locale'
     And request { "locale": "hi-IN", "timezone": "UTC", "currency": "USD", "numberingSystem": "latn" }
     When method PUT
-    Then status 200
+    Then status 201
 
     # verify that the locale was updated to hi-IN
     Given path 'locale'
@@ -2011,5 +2011,5 @@ Feature: Requests tests
     Given path 'locale'
     And request originalLocale
     When method PUT
-    Then status 200
+    Then status 201
 
