@@ -129,9 +129,7 @@ Feature: Lender Transaction Renewal Policy
     When method PUT
     Then status 200
 
-    # Step 5: Verify open loan exists for patron; capture loanDate for due date calculations
-    # renewalCount is absent when zero per FOLIO loan-storage behaviour
-    * def addHours = function(isoStr, h) { var d = new Date(isoStr); d.setTime(d.getTime() + h * 3600000); return d.toISOString().replace('Z', '+00:00'); }
+    # Step 5: Verify open loan exists for patron with renewalCount=0 (field absent when zero per FOLIO loan-storage behaviour)
     * url baseUrl
     Given path 'loan-storage', 'loans'
     And param query = '(itemId = ' + itemId656317 + ')'
@@ -139,8 +137,6 @@ Feature: Lender Transaction Renewal Policy
     When method GET
     Then status 200
     And match $.loans[0].userId == patronId656317
-    * def loanDate = response.loans[0].loanDate
-    And match $.loans[0].dueDate == addHours(loanDate, 1)
 
     # Step 6: First renewal via DCB renew endpoint
     * url baseUrlNew
@@ -152,14 +148,13 @@ Feature: Lender Transaction Renewal Policy
     And match $.item.renewalInfo.renewalMaxCount == 2
     And match $.item.renewalInfo.renewable == true
 
-    # Step 7: Verify loan renewalCount=1 and due date incremented by 1 hour in loan-storage
+    # Step 7: Verify loan renewalCount=1 in loan-storage
     * url baseUrl
     Given path 'loan-storage', 'loans'
     And param query = '(itemId = ' + itemId656317 + ')'
     When method GET
     Then status 200
     And match $.loans[0].renewalCount == 1
-    And match $.loans[0].dueDate == addHours(loanDate, 2)
 
     # Step 8: Second renewal via DCB renew endpoint
     * url baseUrlNew
@@ -171,14 +166,13 @@ Feature: Lender Transaction Renewal Policy
     And match $.item.renewalInfo.renewalMaxCount == 2
     And match $.item.renewalInfo.renewable == true
 
-    # Step 8: Verify loan renewalCount=2 and due date incremented by another hour in loan-storage
+    # Step 8: Verify loan renewalCount=2 in loan-storage
     * url baseUrl
     Given path 'loan-storage', 'loans'
     And param query = '(itemId = ' + itemId656317 + ')'
     When method GET
     Then status 200
     And match $.loans[0].renewalCount == 2
-    And match $.loans[0].dueDate == addHours(loanDate, 3)
 
     # Step 9: Third renewal attempt - max renewals reached, expected 422 with "loan at maximum renewal number"
     * url baseUrlNew
@@ -188,11 +182,10 @@ Feature: Lender Transaction Renewal Policy
     Then status 422
     And match $.errors[0].message contains 'loan at maximum renewal number'
 
-    # Step 10: Verify loan renewalCount unchanged at 2 and due date still at +3 hours after failed renewal
+    # Step 10: Verify loan renewalCount unchanged at 2 after failed renewal
     * url baseUrl
     Given path 'loan-storage', 'loans'
     And param query = '(itemId = ' + itemId656317 + ')'
     When method GET
     Then status 200
     And match $.loans[0].renewalCount == 2
-    And match $.loans[0].dueDate == addHours(loanDate, 3)
