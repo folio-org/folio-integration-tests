@@ -1,5 +1,4 @@
 @parallel=false
-@C432315
 Feature: Negative - Verify configured limit of exported file size
 
   Background:
@@ -15,6 +14,7 @@ Feature: Negative - Verify configured limit of exported file size
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
+  @C432315
   Scenario: Configure limit of exported file size to 0
     Given path 'data-export/configuration'
     And request
@@ -29,6 +29,7 @@ Feature: Negative - Verify configured limit of exported file size
     * print response
     And match response contains "Slice size value cannot be less than 1: 0"
 
+  @C432315
   Scenario: Configure limit of exported file size to text
 
     Given path 'data-export/configuration'
@@ -43,6 +44,7 @@ Feature: Negative - Verify configured limit of exported file size
     Then status 400
     And match response contains 'Slice size is not a number: text'
 
+  @C432315
   Scenario: Configure limit of exported file size
 
     Given path 'data-export/configuration'
@@ -57,6 +59,7 @@ Feature: Negative - Verify configured limit of exported file size
     Then status 400
     And match response contains 'Slice size is not a number: 2.5'
 
+  @C432315
   Scenario: Configure limit of exported file size to 2147483647
 
     Given path 'data-export/configuration'
@@ -70,8 +73,8 @@ Feature: Negative - Verify configured limit of exported file size
     When method POST
     Then status 201
 
-    Scenario: Configure limit of exported file size to 2147483648
-
+  @C432315
+  Scenario: Configure limit of exported file size to 2147483648
     Given path 'data-export/configuration'
     And request
       """
@@ -84,15 +87,15 @@ Feature: Negative - Verify configured limit of exported file size
     Then status 400
     And match response contains 'Slice size is not a number: 2147483648'
 
-    Scenario: Configure limit of exported file size to 100000
-
-      Given path 'data-export/configuration'
-      And request
-        """
-        {
-          "key": "slice_size",
-          "value": "100000"
-        }
-        """
-      When method POST
-      Then status 201
+  @C432315
+  Scenario: Configure limit of exported file size to 100000
+    Given path 'data-export/configuration'
+    And request
+      """
+      {
+        "key": "slice_size",
+        "value": "100000"
+      }
+      """
+    When method POST
+    Then status 201

@@ -1,4 +1,3 @@
-@C667575
 Feature: Edit item of LINKED_DATA instance
 
   Background:
@@ -8,6 +7,7 @@ Feature: Edit item of LINKED_DATA instance
     * def defaultHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*', 'Authtoken-Refresh-Cache': 'true' }
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
+  @C667575
   Scenario: ListRecords: Edit Item of LINKED_DATA Instance is retrieved in response (marc21_withholdings)
     * configure headers = defaultHeaders
 

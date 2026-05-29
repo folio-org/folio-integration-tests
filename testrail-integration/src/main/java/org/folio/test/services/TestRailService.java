@@ -15,7 +15,10 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.folio.test.models.ResultStatus.FAILED;
 import static org.folio.test.models.ResultStatus.PASSED;
@@ -23,6 +26,7 @@ import static org.folio.test.models.ResultStatus.PASSED;
 public class TestRailService {
 
   private static final Logger logger = LoggerFactory.getLogger(TestRailService.class);
+  private static final Pattern CASE_TAG_PATTERN = Pattern.compile("^C(\\d+)$");
 
   private final TestRailDao testRailDao;
   private final TestRailClient testRailClient;
@@ -33,14 +37,22 @@ public class TestRailService {
   }
 
   public void createResults(Integer runId, Map<String, Results> results) {
+    logger.info("createResults:: Starting result sync for runId={}, featureCount={}", runId, results == null ? 0 : results.size());
     var caseIds = SharedCacheInstanceInitializer.getSharedCacheInstance().getCaseIds();
     if (CollectionUtils.isEmpty(caseIds)) {
       logger.warn("createResults: Cannot create results, no case ids were found for the {} run", runId);
       return;
     }
+    logger.info("createResults:: Using {} cached case ids for runId={}", caseIds.size(), runId);
+    if (results == null || results.isEmpty()) {
+      logger.warn("createResults:: No feature results to process for runId={}", runId);
+      return;
+    }
     for (var result : results.entrySet()) {
+      logger.info("createResults:: Processing feature [{}]", result.getKey());
       prepareAndSendResults(runId, caseIds, result.getKey(), result.getValue());
     }
+    logger.info("createResults:: Finished result sync for runId={}", runId);
   }
 
   private void prepareAndSendResults(Integer runId, Set<Integer> caseIds, String featureName, Results results) {
@@ -57,7 +69,7 @@ public class TestRailService {
         continue;
       }
       setStatus(scenarioResult, resultPayload);
-      logger.debug("prepareAndSendResults: Prepared result payload for [{}] scenario and [{}] feature: {}", scenarioName, featureName, resultPayload);
+      logger.info("prepareAndSendResults: Prepared result payload for [{}] scenario and [{}] feature: {}", scenarioName, featureName, resultPayload);
 
       resultsPayload.add(resultPayload);
     }
@@ -66,16 +78,18 @@ public class TestRailService {
       logger.warn("prepareAndSendResults: No results payload was prepared for [{}]", featureName);
       return;
     }
-    logger.debug("prepareAndSendResults: Prepared results for [{}]: {}", featureName, resultsPayload);
+    logger.info("prepareAndSendResults: Prepared results for [{}]: {}", featureName, resultsPayload);
     sendResults(runId, featureName, resultsPayload);
   }
 
   private boolean setCaseId(Set<Integer> caseIds, ScenarioResult scenarioResult, Result resultPayload) {
     var scenarioName = scenarioResult.getScenario().getName();
     var optional = scenarioResult.getScenario().getTags().stream()
-      .filter(tag -> tag.getName() != null && tag.getName().startsWith("C"))
-      .map(tag -> tag.getName().replace("C", ""))
-      .map(Integer::parseInt)
+      .map(tag -> tag.getName())
+      .filter(Objects::nonNull)
+      .map(CASE_TAG_PATTERN::matcher)
+      .filter(Matcher::matches)
+      .map(matcher -> Integer.parseInt(matcher.group(1)))
       .findFirst();
     if (optional.isEmpty()) {
       logger.warn("setCaseId: Cannot set case id for [{}] scenario, invalid tag format", scenarioName);
@@ -108,6 +122,6 @@ public class TestRailService {
   private void sendResults(Integer runId, String featureName, List<Result> resultsPayload) {
     var requestPayload = new AddResultsForCasesRequest(resultsPayload);
     var responsePayload = testRailDao.addResultsForCases(testRailClient, runId, requestPayload);
-    logger.debug("sendResults:: Created results [{}] response: {}", featureName, responsePayload);
+    logger.info("sendResults:: Created results [{}] response: {}", featureName, responsePayload);
   }
 }
