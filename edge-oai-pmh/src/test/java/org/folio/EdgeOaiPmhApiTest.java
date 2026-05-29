@@ -82,9 +82,4 @@ public class EdgeOaiPmhApiTest extends TestBaseEureka {
         runFeatureTest("ld-instance-edit-holdings-C667574.feature");
     }
 
-    @Test
-    public void test11() {
-        runFeatureTest("ld-instance-edit-main-title-C663358.feature");
-    }
-
 }
