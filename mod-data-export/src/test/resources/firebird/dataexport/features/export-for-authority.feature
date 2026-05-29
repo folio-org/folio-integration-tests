@@ -14,7 +14,7 @@ Feature: Tests export hodings records
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
-
+  @C805753
   Scenario Outline: test upload file and export flow for authority when related MARC_AUTHORITY records exist.
     Given path 'data-export/configuration'
     And request
@@ -93,6 +93,7 @@ Feature: Tests export hodings records
       | fileName                      | uploadFormat |
       | test-export-authority-csv.csv | csv          |
 
+  @C805753
   Scenario Outline: test upload CQL file and export flow for authority uuids when related MARC_AUTHORITY records exist.
     #should create file definition
     Given path 'data-export/file-definitions'

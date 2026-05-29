@@ -6,7 +6,7 @@ Feature: Skip suppressed from discovery records C193912
     * callonce login testUser
     * def okapiTokenAdmin = okapitoken
 
-  @C193912  
+  @C193912
   Scenario: Verify suppressed records are skipped when configured to skip suppressed records
     # Set technical config to avoid pagination
     Given path 'oai-pmh/configuration-settings'
