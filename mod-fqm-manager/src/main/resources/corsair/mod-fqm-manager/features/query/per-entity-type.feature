@@ -192,4 +192,4 @@ Feature: Query each entity type
     And params {includeResults: true, limit: 100, offset:0}
     When method GET
     Then status 200
-    And match $.content[0]["users.departments"] contains '310f6067-4fd0-5108-a589-cb429c5c7973'
+    And match $.content[0]["users.departments"] contains 'Test department'
