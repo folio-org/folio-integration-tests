@@ -6,6 +6,7 @@ Feature: Graph cleaning removes orphaned sub-resources from the linked-data grap
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
+  @C1282787
   @Positive
   Scenario: Orphaned sub-resources are removed after graph cleaning job completes
     # Step 1: Create a Work resource - produces sub-nodes (Title, etc.) connected via resource_edges

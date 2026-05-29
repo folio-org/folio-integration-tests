@@ -18,6 +18,7 @@ Feature: Test export authority deleted with deleted profile
 
     * configure retry = { interval: 5000, count: 10 }
 
+  @C566112
   Scenario: Test export deleted authority with deleted profile
     # check how may deleted records already exist
     Given path 'authority-storage/authorities'

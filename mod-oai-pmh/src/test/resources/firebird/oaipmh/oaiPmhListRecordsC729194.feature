@@ -27,6 +27,7 @@ Feature: ListRecords: SRS - Verify that set for deletion MARC Instances are harv
 
     * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
 
+  @C729194
   Scenario: C729194 - Verify set for deletion MARC instances are harvested with Persistent deleted records support
 
     # Preconditions verification: Ensure "Record source" is set to "Source record storage"

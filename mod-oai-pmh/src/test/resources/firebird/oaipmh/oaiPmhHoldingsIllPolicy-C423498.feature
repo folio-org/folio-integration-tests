@@ -10,6 +10,7 @@ Feature: ListRecords/GetRecord: SRS - Verify holdings ILL policy is included in 
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
+  @C423498
   Scenario: Verify holdings ILL policy is returned in 952 subfield r for ListRecords and GetRecord
     * def testInstanceId = '9fe4a767-d071-4952-ad14-43f2df7d3e01'
     * def testSrsId = 'f0f8ee76-4438-4667-b95e-ff90763eb201'
