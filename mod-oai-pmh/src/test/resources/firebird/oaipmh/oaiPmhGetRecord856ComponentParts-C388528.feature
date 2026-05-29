@@ -10,6 +10,7 @@ Feature: GetRecord: SRS & Inventory - Verify 856 4 3 and 856 4 4 are returned fo
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
+  @C388528
   Scenario: Verify GetRecord returns 856 4 3 and 856 4 4 for instance, holdings and item
     * def testInstanceId = '4d112934-30c8-42c3-bfe4-dabdfd4c7c0e'
     * def testSrsId = '2d2673fe-b45f-4e0e-b469-4f8fb76dcd93'

@@ -1,15 +1,14 @@
-Feature: Delete item of LINKED_DATA instance
+Feature: Edit main title of LINKED_DATA instance
 
   Background:
     * url baseUrl
     * callonce variables
     * call login testUser
-    * def defaultHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
-    * def textPlainHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'text/plain', 'Authtoken-Refresh-Cache': 'true' }
+    * def defaultHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*', 'Authtoken-Refresh-Cache': 'true' }
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
-  @C667576
-  Scenario: ListRecords: Delete Item of LINKED_DATA Instance is retrieved in response (marc21_withholdings)
+  @C663358
+  Scenario: ListRecords: Edit main title of LINKED_DATA Instance is retrieved in response (marc21)
     * configure headers = defaultHeaders
 
     # Configure OAI-PMH
@@ -37,56 +36,91 @@ Feature: Delete item of LINKED_DATA instance
 
     * pause(5000)
 
-    # create holdings record
-    * def holdings = call read(utilsPath+'@CreateHoldings') { instanceId: '#(instanceId)', testTenant: '#(testTenant)' }
-    * def holdingsId = holdings.id
-    * def item = call read(utilsPath+'@CreateSimpleItem') { holdingsId: '#(holdingsId)', testTenant: '#(testTenant)'  }
-    * def itemId = item.id
-
-    * pause(1000)
+    # Verify there is no record match for this instance in the current harvest window
     * def from = isoDate()
     * def until = isoDate()
 
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
 
-    # Send harvest request
     Given path 'oai/records'
     And param apikey = apikey
-    And param metadataPrefix = 'marc21_withholdings'
+    And param metadataPrefix = 'marc21'
     And param verb = 'ListRecords'
     And param from = from
     And param until = until
     When method GET
     Then status 200
-    And match response//error/@code == 'noRecordsMatch'
+    * def baselineXml = karate.prettyXml(response)
+    And match baselineXml !contains instanceId
 
     * url baseUrl
     * configure headers = defaultHeaders
     * def from = isoDate()
 
-    # Delete item
-    * configure headers = textPlainHeaders
-    Given path 'item-storage/items', itemId
-    When method DELETE
-    Then status 204
-    * def itemBody = response
-    * eval itemBody['discoverySuppress'] = true
+    # Edit title for LINKED_DATA instance using Inventory + SRS APIs
+    Given path 'instance-storage/instances', instanceId
+    When method GET
+    Then status 200
+    * def updatedInstance = response
+    * def updatedMainTitle = 'Updated linked data main title ' + uuid()
+    * set updatedInstance.title = updatedMainTitle
 
-    * def until = isoDate()
+    Given path 'instance-storage/instances', instanceId
+    And header Accept = 'text/plain'
+    And request updatedInstance
+    When method PUT
+    Then status 204
+
+    Given path 'source-storage/records', srsId
+    When method GET
+    Then status 200
+    * def srsRecord = response
+    * def set245a =
+      """
+      function(fields, value) {
+        for (var i = 0; i < fields.length; i++) {
+          if (fields[i]['245']) {
+            var subfields = fields[i]['245'].subfields;
+            for (var j = 0; j < subfields.length; j++) {
+              if (subfields[j]['a'] != null) {
+                subfields[j]['a'] = value;
+                return true;
+              }
+            }
+            subfields.push({ a: value });
+            return true;
+          }
+        }
+        return false;
+      }
+      """
+    * def updated245 = set245a(srsRecord.parsedRecord.content.fields, updatedMainTitle)
+    * match updated245 == true
+
+    Given path 'source-storage/records', srsId
+    And request srsRecord
+    When method PUT
+    Then status 200
+
+    * pause(5000)
 
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
+    * configure retry = { count: 12, interval: 2000 }
+    * def until = isoDate()
 
-    # Send harvest request
+    # Verify updated record in Source record storage mode
     Given path 'oai/records'
     And param apikey = apikey
-    And param metadataPrefix = 'marc21_withholdings'
+    And param metadataPrefix = 'marc21'
     And param verb = 'ListRecords'
     And param from = from
     And param until = until
+    And retry until karate.xmlPath(response, "count(//*[local-name()='record'])") > 0
     When method GET
     Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == updatedMainTitle
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId
@@ -104,16 +138,19 @@ Feature: Delete item of LINKED_DATA instance
 
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
+    * def until = isoDate()
 
-    # Send harvest request
+    # Verify updated record in Inventory mode
     Given path 'oai/records'
     And param apikey = apikey
-    And param metadataPrefix = 'marc21_withholdings'
+    And param metadataPrefix = 'marc21'
     And param verb = 'ListRecords'
     And param from = from
     And param until = until
+    And retry until karate.xmlPath(response, "count(//*[local-name()='record'])") > 0
     When method GET
     Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == updatedMainTitle
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId
@@ -131,16 +168,19 @@ Feature: Delete item of LINKED_DATA instance
 
     * url edgeUrl
     * configure headers = { 'Accept': 'text/xml' }
+    * def until = isoDate()
 
-    # Send harvest request
+    # Verify updated record in Source record storage and Inventory mode
     Given path 'oai/records'
     And param apikey = apikey
-    And param metadataPrefix = 'marc21_withholdings'
+    And param metadataPrefix = 'marc21'
     And param verb = 'ListRecords'
     And param from = from
     And param until = until
+    And retry until karate.xmlPath(response, "count(//*[local-name()='record'])") > 0
     When method GET
     Then status 200
+    And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == updatedMainTitle
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == srsId
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='i'] == instanceId
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='l'] == linkedDataId

@@ -18,7 +18,7 @@ Feature: ListRecords: SRS & Inventory - Verify edited deleted MARC and FOLIO ins
     * def currentOnlyDate = function(){ return java.time.LocalDateTime.now(java.time.ZoneOffset.UTC).format(java.time.format.DateTimeFormatter.ofPattern('yyyy-MM-dd')) }
     * def currentDate = currentOnlyDate()
 
-  @Positive
+  @Positive @C926147
   Scenario: Verify edited deleted MARC and FOLIO instances are returned in ListRecords marc21_withholdings with status deleted
     * def marcInstanceId = java.util.UUID.randomUUID() + ''
     * def folioInstanceId = java.util.UUID.randomUUID() + ''

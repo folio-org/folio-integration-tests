@@ -13,6 +13,7 @@ Feature: Verify configured limit of exported file size - Holdings (UUID)
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
+  @C432311
   Scenario Outline: test should generate marc record on the fly when export holding without underlying MARC_HOLDING records.
     #should create file definition
 
@@ -121,6 +122,7 @@ Feature: Verify configured limit of exported file size - Holdings (UUID)
       | fileName                                        | uploadFormat |
       | test-export-config-holding-csv.csv              | csv          |
 
+  @C432311
   Scenario Outline: test should generate marc record on the fly when export holding without underlying MARC_HOLDING records.
     #should create file definition
 
@@ -198,6 +200,7 @@ Feature: Verify configured limit of exported file size - Holdings (UUID)
       | fileName                                        | uploadFormat |
       | test-export-config-holding-csv.csv              | csv          |
 
+  @C432311
   Scenario Outline: test should generate marc record on the fly when export holding without underlying MARC_HOLDING records.
     #should create file definition
 

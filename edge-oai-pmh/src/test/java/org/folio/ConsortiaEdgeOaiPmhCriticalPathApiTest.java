@@ -6,17 +6,18 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "firebird", module = "edge-oai-omh")
-public class ConsortiaEdgeOaiPmhApiTest extends TestBaseEureka {
+public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/consortia/";
 
-    public ConsortiaEdgeOaiPmhApiTest() {
+    public ConsortiaEdgeOaiPmhCriticalPathApiTest() {
         super(new TestIntegrationService(
-                new TestModuleConfiguration(TEST_BASE_PATH)));
+                new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
     }
 
     @BeforeAll

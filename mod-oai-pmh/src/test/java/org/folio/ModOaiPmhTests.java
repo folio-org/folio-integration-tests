@@ -44,11 +44,6 @@ public class ModOaiPmhTests extends TestBaseEureka {
         runFeatureTest("oaipmh-listRecords-additional");
     }
 
-    @Test
-    void oaiPmhListRecordsAdditionalTestsWhenSourceIsInventory() {
-        runFeatureTest("oaipmh-listRecords-sourceInventory");
-    }
-
     @Disabled("Disabled until the records retrieving within verbs like ListRecords and listIdentifiers " +
             "will be switched to use the inventory storage + generate marc utils on the fly library instead of SRS only")
     @Test
@@ -64,111 +59,6 @@ public class ModOaiPmhTests extends TestBaseEureka {
     @Test
     void loadDefaultConfigurationTests() {
         runFeature("classpath:firebird/mod-configuration/load-default-pmh-configuration.feature");
-    }
-
-    @Test
-    void oaiPmhGetRecordMarcDeletedSrsTests() {
-        runFeatureTest("oaipmh-getrecord-deleted-C729189");
-    }
-
-    @Test
-    void oaiPmhGetRecordMarcDeletedSrsInvTests() {
-        runFeatureTest("oaipmh-getrecord-deleted-C729193");
-    }
-
-    @Test
-    void oaiPmhGetRecordMarcDeletedBySrsLeaderSrsInvTests() {
-        runFeatureTest("oaipmh-getrecord-deleted-srs-leader-past-C375977");
-    }
-
-    @Test
-    void oaiPmhGetRecordFolioDeletedInvTests() {
-        runFeatureTest("oaipmh-getrecord-deleted-C729198");
-    }
-
-    @Test
-    void oaiPmhGetRecordFolioDeletedSrsInvTests() {
-        runFeatureTest("oaipmh-getrecord-deleted-C729199");
-    }
-
-    @Test
-    void oaiPmhListIdentifiersDeletedC729195() {
-        runFeatureTest("oaipmh-listidentifiers-deleted-C729195");
-    }
-
-    @Test
-    void oaiPmhListIdentifiersDeletedC729201() {
-        runFeatureTest("oaipmh-listidentifiers-deleted-C729201");
-    }
-
-    @Test
-    void oaiPmhListRecordsC375976() {
-        runFeatureTest("oaiPmhListRecordsC375976");
-    }
-
-    @Test
-    void oaiPmhListRecordsC375978() {
-        runFeatureTest("oaiPmhListRecordsC375978");
-    }
-
-    @Test
-    void oaiPmhListRecordsC729194() {
-        runFeatureTest("oaiPmhListRecordsC729194");
-    }
-
-    @Test
-    void oaiPmhListRecordsC729200() {
-        runFeatureTest("oaiPmhListRecordsC729200");
-    }
-
-    @Test
-    void oaiPmhListRecordsC378101() {
-        runFeatureTest("oaiPmhListRecordsC378101");
-    }
-
-    @Test
-    void oaiPmhListRecordsC380606() {
-        runFeatureTest("oaiPmhListRecordsC380606");
-    }
-
-    @Test
-    void oaiPmhListRecordsC397334() {
-        runFeatureTest("oaiPmhListRecordsC397334");
-    }
-
-  @Test
-  void oaiPmhGetRecord856ComponentParts() {
-      runFeatureTest("oaiPmhGetRecord856ComponentParts-C388528");
-  }
-
-  @Test
-  void oaiPmhHoldingsIllPolicy() {
-      runFeatureTest("oaiPmhHoldingsIllPolicy-C423498");
-  }
-
-  @Test
-  void oaiPmhHoldingsIllPolicyInventory() {
-      runFeatureTest("oaiPmhHoldingsIllPolicyInventory-C423535");
-  }
-
-  @Test
-  void oaiPmhListRecords856SourceStorage() {
-      runFeatureTest("oaiPmhListRecords856SourceStorage-C388516");
-  }
-
-  @Test
-  void verifyBehaviorConfigurationC375138() {
-      runFeatureTest("verifyBehaviorConfigurationC375138");
-  }
-
-    @Test
-    void oaiPmhGetRecordDeletedItemsWithholdingsC375984() {
-        runFeatureTest("oaipmh-getrecord-deleted-items-withholdings-C375984");
-    }
-
-    @Test
-    void oaiPmhListRecordsDeletedEditedMarcFolio() {
-        runFeatureTest("oaipmh-listrecords-deleted-edited-marc-folio-C926147");
     }
 
     @Test
