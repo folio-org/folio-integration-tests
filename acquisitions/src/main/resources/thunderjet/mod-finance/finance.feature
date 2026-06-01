@@ -111,6 +111,9 @@ Feature: mod-finance integration tests
   Scenario: Budget's totals (available, unavailable, encumbered) is updated when encumbrance's amount is changed but status has not been changed
     * call read('features/update-encumbrance-transactions.feature')
 
+  Scenario: Recalculate budget
+    * call read('features/recalculate-budget.feature')
+
   Scenario: Get funds without providing filter query should take into account acquisition units
     * call read('features/acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units.feature')
 
