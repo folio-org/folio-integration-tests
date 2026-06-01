@@ -1,8 +1,8 @@
 # Keycloak Upgrade Integration Tests
 
-This module verifies that data created with the previous Keycloak image still works after restarting the same environment with a newer `folio-keycloak` image.
+This test verifies that data created with the previous Keycloak image still works after installing a newer `folio-keycloak` image.
 
-The test is intentionally split into two runners because the Keycloak container must be replaced between phases while preserving the Keycloak database.
+The test is split into two runners because the Keycloak container must be replaced between phases while preserving the Keycloak database.
 
 ## Run
 
