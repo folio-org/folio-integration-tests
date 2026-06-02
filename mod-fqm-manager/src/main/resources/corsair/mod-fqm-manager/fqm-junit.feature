@@ -40,6 +40,7 @@ Feature: mod-fqm-manager integration tests
       | 'comments.collection.get'                                          |
       | 'configuration.entries.collection.get'                             |
       | 'departments.collection.get'                                       |
+      | 'departments.item.post'                                            |
       | 'feefineactions.collection.get'                                    |
       | 'feefines.collection.get'                                          |
       | 'finance.budgets.collection.get'                                   |

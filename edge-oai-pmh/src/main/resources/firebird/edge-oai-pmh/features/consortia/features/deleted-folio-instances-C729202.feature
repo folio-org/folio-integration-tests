@@ -1,4 +1,3 @@
-@C729202
 Feature: Deleted FOLIO instances
 
   Background:
@@ -19,6 +18,7 @@ Feature: Deleted FOLIO instances
     * configure headers = headersUniversity
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
+  @C729202
   Scenario: Consortia | Verify that deleted FOLIO Instances are retrieved in the responses of single tenant and cross-tenant harvests
     # Create FOLIO instances
     * configure headers = headersUniversity

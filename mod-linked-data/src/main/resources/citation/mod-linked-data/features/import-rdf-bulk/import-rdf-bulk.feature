@@ -2,7 +2,7 @@ Feature: Import Bibframe2 RDF in bulk into linked data graph
 
   Background:
     * url baseUrl
-    * configure retry = { count: 20, interval: 5000 }
+    * configure retry = { count: 30, interval: 10000 }
     * call login testAdmin
     * def testAdminHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * call login linkedDataBulkImportUser

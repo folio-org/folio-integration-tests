@@ -3,5 +3,6 @@
   "personal": {
     "lastName": "testuser",
     "preferredContactTypeId": "002"
-  }
+  },
+  "departments": ["310f6067-4fd0-5108-a589-cb429c5c7973"]
 }

@@ -1,4 +1,3 @@
-@C193961
 Feature: holdings and item suppressed with discovery flag C193961
 
   Background:
@@ -7,6 +6,7 @@ Feature: holdings and item suppressed with discovery flag C193961
     * callonce login testUser
     * def okapiTokenAdmin = okapitoken
 
+  @C193961
   Scenario: Verify suppressed holdings and items are included with discovery flag when configured to transfer suppressed records
     # Set technical config to avoid pagination
     Given path 'oai-pmh/configuration-settings'
