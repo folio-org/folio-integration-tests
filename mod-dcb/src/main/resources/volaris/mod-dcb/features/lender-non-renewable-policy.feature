@@ -135,6 +135,7 @@ Feature: Lender Transaction Non-Renewable Loan Policy
     When method GET
     Then status 200
 
+    * def expectedDueDateStr = Java.type('java.time.LocalDate').now().plusDays(7).format(java.time.format.DateTimeFormatter.ofPattern('yyyy-MM-dd'))
     * url baseUrl
     Given path 'loan-storage', 'loans'
     And param query = '( itemId = ' + itemId656300 + ' )'
@@ -142,6 +143,8 @@ Feature: Lender Transaction Non-Renewable Loan Policy
     Then status 200
     And match $.totalRecords == 1
     And match $.loans[0].userId == patronId656300
+    And match $.loans[0].dueDate contains expectedDueDateStr
+    And match $.loans[0].renewalCount == '#notpresent'
 
     # Step 6: Attempt renewal via DCB renew endpoint - expect 422 as loan is not renewable
     * url baseUrlNew
@@ -154,7 +157,7 @@ Feature: Lender Transaction Non-Renewable Loan Policy
     Then status 422
     And match $.errors[0].message contains 'loan is not renewable'
 
-    # Step 7: Verify loan is still unchanged - totalRecords still 1, renewalCount absent (= 0)
+    # Step 7: Verify loan is still unchanged - totalRecords still 1, renewalCount absent (= 0), due date unchanged
     * url baseUrl
     Given path 'loan-storage', 'loans'
     And param query = '( itemId = ' + itemId656300 + ' )'
@@ -162,3 +165,5 @@ Feature: Lender Transaction Non-Renewable Loan Policy
     Then status 200
     And match $.totalRecords == 1
     And match $.loans[0].userId == patronId656300
+    And match $.loans[0].dueDate contains expectedDueDateStr
+    And match $.loans[0].renewalCount == '#notpresent'
