@@ -963,24 +963,43 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # find mod-circulation moduleId from the applications registry
+    # use master Keycloak token for admin operations (applications lookup, scheduler timers)
     * configure headers = null
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
     * def keycloakMasterToken = keycloakResponse.response.access_token
+    * def authHeader = 'Bearer ' + keycloakMasterToken
+    * def adminHeaders = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-tenant': testTenant, 'Authorization': authHeader }
+    * configure headers = adminHeaders
+
+    # find mod-circulation moduleId from the applications registry
     Given url baseUrl
     And path 'applications'
     And param limit = 500
-    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * print 'Applications registry response:', response
-    * def allModules = []
-    * def collectModules = function(d){ if(d.modules) allModules = allModules.concat(d.modules) }
-    * karate.forEach(response.applicationDescriptors, collectModules)
-    * def circulationModule = karate.filter(allModules, function(m){ return m.name == 'mod-circulation' })[0]
-    * print 'mod-circulation module found:', circulationModule
-    * def circulationModuleId = circulationModule.id
-    * configure headers = headersUser
+    * def findCirculationModuleId =
+      """
+      function(descriptors) {
+        for (var i = 0; i < descriptors.length; i++) {
+          var d = descriptors[i];
+          if (d.modules) {
+            for (var j = 0; j < d.modules.length; j++) {
+              if (d.modules[j].name === 'mod-circulation') return d.modules[j].id;
+            }
+          }
+          if (d.moduleDescriptors) {
+            for (var j = 0; j < d.moduleDescriptors.length; j++) {
+              var id = d.moduleDescriptors[j].id;
+              if (id && id.indexOf('mod-circulation-') === 0) return id;
+            }
+          }
+        }
+        return null;
+      }
+      """
+    * def circulationModuleId = findCirculationModuleId(response.applicationDescriptors)
+    * print 'mod-circulation moduleId found:', circulationModuleId
 
     # log timers currently available in the scheduler
     Given path '/scheduler/timers'
@@ -992,13 +1011,15 @@ Feature: Loans tests
     # create a temporary APPLICATION timer to trigger age-to-lost processing
     * def createRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
     * createRequest.moduleId = circulationModuleId
-    * createRequest.moduleName = circulationModule.name
+    * createRequest.moduleName = 'mod-circulation'
     Given path '/scheduler/timers'
     And request createRequest
     When method POST
     Then status 201
     * def ageToLostAppTimerId = response.id
     * print 'Created age-to-lost timer with id:', ageToLostAppTimerId
+
+    * configure headers = headersUser
     # pause to allow the scheduler to pick up the newly created timer
     * call pause 5000
 
@@ -1014,9 +1035,11 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
 
     # delete the temporary APPLICATION timer
+    * configure headers = adminHeaders
     Given path '/scheduler/timers', ageToLostAppTimerId
     When method DELETE
     Then status 204
+    * configure headers = headersUser
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1019IBC-1'
