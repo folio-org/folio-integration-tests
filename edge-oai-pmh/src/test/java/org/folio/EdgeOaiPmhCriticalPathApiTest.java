@@ -9,7 +9,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "edge-oai-omh")
+@FolioTest(team = "firebird", module = "edge-oai-pmh")
 public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/";
 
@@ -85,5 +85,9 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @Test
     public void test12() {runFeatureTest("ld-instance-create-with-url-C663352.feature");
+    }
+
+    @Test
+    public void test013() {runFeatureTest("marc-extended-latin-from-until-C163911.feature");
     }
 }
