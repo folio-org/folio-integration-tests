@@ -181,3 +181,15 @@ Feature: Query each entity type
     And match $.content contains deep {"organization.status": 'Active'}
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
+
+  @C1282799
+  Scenario: Query loans by user department
+    * def queryRequest = { entityTypeId: '#(loanEntityTypeId)' , fqlQuery: '{"users.departments":{"$in":["310f6067-4fd0-5108-a589-cb429c5c7973"]},"_version":"24"}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query', queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content[0]["users.departments"] contains 'Test department'

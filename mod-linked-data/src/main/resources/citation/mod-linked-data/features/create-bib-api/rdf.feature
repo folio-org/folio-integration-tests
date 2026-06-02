@@ -7,6 +7,7 @@ Feature: Derived Bibframe2 RDF
     * configure headers = testUserHeaders
     * def baseResourceUrl = foliioUiUrl + '/linked-data-editor/resources/'
 
+  @C1273161
   Scenario: Validate Bibframe2 RDF
     * def rdfCall = call getRdf { resourceId:  '#(instanceId)' }
     * def rdf = rdfCall.response
