@@ -40,15 +40,20 @@ public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
         runFeatureTest("features/deleted-folio-instances-C729202.feature");
     }
 
-  @Test
-  public void test3() {
-      runFeatureTest("features/linked-data-edited-item-C688762.feature");
-  }
+    @Test
+    public void test3() {
+        runFeatureTest("features/linked-data-edited-item-C688762.feature");
+    }
 
-  @Test
-  public void test4() {
-      runFeatureTest("features/linked-data-edited-main-title-C688749.feature");
-  }
+    @Test
+    public void test4() {
+        runFeatureTest("features/linked-data-edited-main-title-C688749.feature");
+    }
+
+    @Test
+    public void test5() {
+        runFeatureTest("features/linked-data-edited-holdings-C688761.feature");
+    }
 
 
     @Override
