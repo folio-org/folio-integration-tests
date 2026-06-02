@@ -14,7 +14,7 @@ Feature: Edited holdings of shared LINKED_DATA instance
     * configure headers = headersUniversity
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
-  @C688761
+  @C688755
   Scenario: Consortia | ListRecords: Verify that edit Holdings of shared LINKED_DATA Instance is retrieved in single tenant and cross-tenant harvests
     # Create LINKED_DATA instance in central tenant
     * configure headers = headersConsortia
