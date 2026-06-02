@@ -56,8 +56,8 @@ Feature: cross-module integration tests
   Scenario: Check encumbrance status after moving expended value
     * call read('features/check-encumbrance-status-after-moving-expended-value.feature')
 
-  Scenario: Check the encumbrances after issuing credit when the order is fully paid
-    * call read('features/check-encumbrances-after-issuing-credit-for-paid-order.feature')
+  Scenario: Encumbrance remains released after another credited invoice was paid
+    * call read('features/encumbrance-remains-released-after-another-credited-invoice-was-paid.feature')
 
   Scenario: Check encumbrances after order is reopened
     * call read('features/check-encumbrances-after-order-is-reopened.feature')
