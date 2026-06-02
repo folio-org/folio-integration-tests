@@ -844,9 +844,7 @@ Feature: Loans tests
     And param limit = 100
     When method GET
     Then status 200
-    * def circulationTimer = karate.filter(response.timerDescriptors, function(t){ return t.routingEntry.pathPattern == '/circulation/actual-cost-expiration-by-timeout' })[0]
-    * def circulationModuleId = circulationTimer.moduleId
-    * def circulationModuleName = circulationTimer.moduleName
+    * print 'Scheduler timers response:', response
 
     # create a temporary APPLICATION timer to trigger age-to-lost processing
     * def createRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
@@ -965,24 +963,42 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # find mod-circulation moduleId and moduleName from an existing circulation timer in the scheduler
+    # find mod-circulation moduleId from the applications registry
+    * configure headers = null
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
+    Given url baseUrl
+    And path 'applications'
+    And param limit = 500
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * print 'Applications registry response:', response
+    * def allModules = []
+    * def collectModules = function(d){ if(d.modules) allModules = allModules.concat(d.modules) }
+    * karate.forEach(response.applicationDescriptors, collectModules)
+    * def circulationModule = karate.filter(allModules, function(m){ return m.name == 'mod-circulation' })[0]
+    * print 'mod-circulation module found:', circulationModule
+    * def circulationModuleId = circulationModule.id
+    * configure headers = headersUser
+
+    # log timers currently available in the scheduler
     Given path '/scheduler/timers'
     And param limit = 100
     When method GET
     Then status 200
-    * def circulationTimer = karate.filter(response.timerDescriptors, function(t){ return t.routingEntry.pathPattern == '/circulation/actual-cost-expiration-by-timeout' })[0]
-    * def circulationModuleId = circulationTimer.moduleId
-    * def circulationModuleName = circulationTimer.moduleName
+    * print 'Scheduler timers response:', response
 
     # create a temporary APPLICATION timer to trigger age-to-lost processing
     * def createRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
     * createRequest.moduleId = circulationModuleId
-    * createRequest.moduleName = circulationModuleName
+    * createRequest.moduleName = circulationModule.name
     Given path '/scheduler/timers'
     And request createRequest
     When method POST
     Then status 201
     * def ageToLostAppTimerId = response.id
+    * print 'Created age-to-lost timer with id:', ageToLostAppTimerId
     # pause to allow the scheduler to pick up the newly created timer
     * call pause 5000
 
