@@ -839,11 +839,17 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
+    # get Keycloak master token for scheduler admin operations
+    * configure headers = null
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
+    * configure headers = headersUser
+
     # find current module id for age-to-lost processor delay time
-    * configure retry = { count: 15, interval: 3000 }
+    * url baseUrl
     Given path '/scheduler/timers'
     And param limit = 100
-    And retry until response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
@@ -858,6 +864,7 @@ Feature: Loans tests
     * updateRequest.routingEntry.delay = '1'
     Given path '/scheduler/timers/'+timerId
     And request updateRequest
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method PUT
     Then status 200
 
@@ -878,6 +885,7 @@ Feature: Loans tests
     * revertRequest.routingEntry.delay = '30'
     Given path '/scheduler/timers/'+timerId
     And request revertRequest
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method PUT
     Then status 200
 
@@ -972,11 +980,17 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
+    # get Keycloak master token for scheduler admin operations
+    * configure headers = null
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
+    * configure headers = headersUser
+
     # find current module id for age-to-lost processor delay time
-    * configure retry = { count: 15, interval: 3000 }
+    * url baseUrl
     Given path '/scheduler/timers'
     And param limit = 100
-    And retry until response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
     * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
@@ -991,6 +1005,7 @@ Feature: Loans tests
     * updateRequest.routingEntry.delay = '1'
     Given path '/scheduler/timers/'+timerId
     And request updateRequest
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method PUT
     Then status 200
 
@@ -1013,6 +1028,7 @@ Feature: Loans tests
     * revertRequest.routingEntry.delay = '30'
     Given path '/scheduler/timers/'+timerId
     And request revertRequest
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method PUT
     Then status 200
 
