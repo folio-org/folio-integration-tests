@@ -839,10 +839,26 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # trigger age-to-lost processing directly
-    Given path '/circulation/scheduled-age-to-lost'
+    # find mod-circulation moduleId and moduleName from an existing circulation timer in the scheduler
+    Given path '/scheduler/timers'
+    And param limit = 100
+    When method GET
+    Then status 200
+    * def circulationTimer = karate.filter(response.timerDescriptors, function(t){ return t.routingEntry.pathPattern == '/circulation/actual-cost-expiration-by-timeout' })[0]
+    * def circulationModuleId = circulationTimer.moduleId
+    * def circulationModuleName = circulationTimer.moduleName
+
+    # create a temporary APPLICATION timer to trigger age-to-lost processing
+    * def createRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
+    * createRequest.moduleId = circulationModuleId
+    * createRequest.moduleName = circulationModuleName
+    Given path '/scheduler/timers'
+    And request createRequest
     When method POST
-    Then status 204
+    Then status 201
+    * def ageToLostAppTimerId = response.id
+    # pause to allow the scheduler to pick up the newly created timer
+    * call pause 5000
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
     * configure retry = { count: 10, interval: 2000 }
@@ -853,6 +869,10 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
     And match $.itemStatus == 'Aged to lost'
 
+    # delete the temporary APPLICATION timer
+    Given path '/scheduler/timers', ageToLostAppTimerId
+    When method DELETE
+    Then status 204
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
 
@@ -945,10 +965,26 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # trigger age-to-lost processing directly
-    Given path '/circulation/scheduled-age-to-lost'
+    # find mod-circulation moduleId and moduleName from an existing circulation timer in the scheduler
+    Given path '/scheduler/timers'
+    And param limit = 100
+    When method GET
+    Then status 200
+    * def circulationTimer = karate.filter(response.timerDescriptors, function(t){ return t.routingEntry.pathPattern == '/circulation/actual-cost-expiration-by-timeout' })[0]
+    * def circulationModuleId = circulationTimer.moduleId
+    * def circulationModuleName = circulationTimer.moduleName
+
+    # create a temporary APPLICATION timer to trigger age-to-lost processing
+    * def createRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
+    * createRequest.moduleId = circulationModuleId
+    * createRequest.moduleName = circulationModuleName
+    Given path '/scheduler/timers'
+    And request createRequest
     When method POST
-    Then status 204
+    Then status 201
+    * def ageToLostAppTimerId = response.id
+    # pause to allow the scheduler to pick up the newly created timer
+    * call pause 5000
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
     * configure retry = { count: 10, interval: 2000 }
@@ -961,6 +997,10 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.lostItemHasBeenBilled == false
     And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
 
+    # delete the temporary APPLICATION timer
+    Given path '/scheduler/timers', ageToLostAppTimerId
+    When method DELETE
+    Then status 204
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1019IBC-1'
