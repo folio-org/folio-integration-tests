@@ -82,4 +82,8 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
     public void test11() {
         runFeatureTest("ld-instance-edit-main-title-C663358.feature");
     }
+
+    @Test
+    public void test12() {runFeatureTest("ld-instance-create-with-url-C663352.feature");
+    }
 }

@@ -1951,3 +1951,65 @@ Feature: Requests tests
     And match response.allowedServicePoints.Hold == "#notpresent"
     And match response.allowedServicePoints.Page == "#notpresent"
     And match response.allowedServicePoints.Recall == "#notpresent"
+
+  Scenario: Create a Page request with Hindi locale (hi-IN) set in Settings > Tenant > Language and localization
+    * def extMaterialTypeId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extItemBarcode = 'FAT-HINDI-IBC'
+    * def extUserBarcode = 'FAT-HINDI-UBC'
+    * def extMaterialTypeName = 'electronic resource hindi'
+
+    # retrieve original locale settings so they can be restored after the test
+    Given path 'locale'
+    When method GET
+    Then status 200
+    * def originalLocale = response
+
+    # set locale to Hindi (hi-IN) via Settings > Tenant > Language and localization
+    Given path 'locale'
+    And request { "locale": "hi-IN", "timezone": "UTC", "currency": "USD", "numberingSystem": "latn" }
+    When method PUT
+    Then status 201
+
+    # verify that the locale was updated to hi-IN
+    Given path 'locale'
+    When method GET
+    Then status 200
+    And match response.locale == 'hi-IN'
+    And match response.currency == 'USD'
+    And match response.timezone == 'UTC'
+    And match response.numberingSystem == 'latn'
+
+    # post a material type
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
+
+    # post an item with status Available
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
+
+    # post a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # post a Page request and verify it is created successfully
+    * def requestId = call uuid1
+    * def requestEntityRequest = read('classpath:vega/mod-circulation/features/samples/request/request-entity-request.json')
+    * requestEntityRequest.id = requestId
+    * requestEntityRequest.itemId = extItemId
+    * requestEntityRequest.requesterId = extUserId
+    * requestEntityRequest.requestType = 'Page'
+    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.requestLevel = 'Item'
+    Given path 'circulation', 'requests'
+    And request requestEntityRequest
+    When method POST
+    Then status 201
+    And match response.item.barcode == extItemBarcode
+    And match response.requester.barcode == extUserBarcode
+    And match response.requestType == 'Page'
+
+    # restore original locale settings
+    Given path 'locale'
+    And request originalLocale
+    When method PUT
+    Then status 201
+

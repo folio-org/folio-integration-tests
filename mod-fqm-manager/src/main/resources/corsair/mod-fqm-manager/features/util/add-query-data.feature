@@ -12,6 +12,13 @@ Feature: Add FQM query data
     When method POST
     Then status 201
 
+    # Add department
+    * def departmentRequest = {code: 'DEPT', name: 'Test department', id: '310f6067-4fd0-5108-a589-cb429c5c7973'}
+    Given path '/departments'
+    And request departmentRequest
+    When method POST
+    Then status 201
+
     # Add users
     * def userRequest = read('classpath:corsair/mod-fqm-manager/features/samples/user-request.json')
     Given path 'users'
