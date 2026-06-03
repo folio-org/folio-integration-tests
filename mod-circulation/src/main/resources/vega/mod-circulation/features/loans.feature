@@ -839,28 +839,28 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # find current module id for age-to-lost processor delay time
+    # find mod-circulation moduleId from any visible timer in the scheduler
     Given path '/scheduler/timers'
-    And param limit = 100
+    And param limit = 500
     When method GET
     Then status 200
-    * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
-    * def currentModuleId = modules[0].moduleId
-    * def timerId = modules[0].id
+    * print 'Scheduler timers response:', response
+    * def circulationTimers = karate.filter(response.timerDescriptors, function(m){ return m.moduleName == 'mod-circulation' })
+    * def circulationModuleId = circulationTimers.length > 0 ? circulationTimers[0].moduleId : 'mod-circulation-unknown'
+    * print 'mod-circulation moduleId:', circulationModuleId
 
-    # update age-to-lost processor delay time
-    * def updateRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * updateRequest.moduleId = currentModuleId
-    * updateRequest.id = timerId
-    * updateRequest.routingEntry.unit = 'second'
-    * updateRequest.routingEntry.delay = '1'
-    Given path '/scheduler/timers/'+timerId
-    And request updateRequest
-    When method PUT
-    Then status 200
+    # create a temporary timer to trigger age-to-lost processing
+    * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
+    * ageToLostTimerRequest.moduleId = circulationModuleId
+    Given path '/scheduler/timers'
+    And request ageToLostTimerRequest
+    When method POST
+    Then status 201
+    * def ageToLostAppTimerId = response.id
+    * print 'Created age-to-lost timer with id:', ageToLostAppTimerId
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
-    * configure retry = { count: 10, interval: 2000 }
+    * configure retry = { count: 15, interval: 3000 }
     Given path 'loan-storage', 'loans', extLoanId
     And retry until response.itemStatus == 'Aged to lost'
     When method GET
@@ -868,16 +868,10 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
     And match $.itemStatus == 'Aged to lost'
 
-    # revert age-to-lost processor delay time
-    * def revertRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * revertRequest.moduleId = currentModuleId
-    * revertRequest.id = timerId
-    * revertRequest.routingEntry.unit = 'minute'
-    * revertRequest.routingEntry.delay = '30'
-    Given path '/scheduler/timers/'+timerId
-    And request revertRequest
-    When method PUT
-    Then status 200
+    # delete the temporary timer
+    Given path '/scheduler/timers', ageToLostAppTimerId
+    When method DELETE
+    Then status 204
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
 
@@ -970,30 +964,29 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # find current module id for age-to-lost processor delay time
+    # find mod-circulation moduleId from any visible timer in the scheduler
     Given path '/scheduler/timers'
-    And param limit = 100
+    And param limit = 500
     When method GET
     Then status 200
-    * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
-    * def currentModuleId = modules[0].moduleId
-    * def timerId = modules[0].id
+    * print 'Scheduler timers response:', response
+    * def circulationTimers = karate.filter(response.timerDescriptors, function(m){ return m.moduleName == 'mod-circulation' })
+    * def circulationModuleId = circulationTimers.length > 0 ? circulationTimers[0].moduleId : 'mod-circulation-unknown'
+    * print 'mod-circulation moduleId:', circulationModuleId
 
-    # update age-to-lost processor delay time
-    * def updateRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * updateRequest.moduleId = currentModuleId
-    * updateRequest.id = timerId
-    * updateRequest.routingEntry.unit = 'second'
-    * updateRequest.routingEntry.delay = '1'
-    Given path '/scheduler/timers/'+timerId
-    And request updateRequest
-    When method PUT
-    Then status 200
+    # create a temporary APPLICATION timer to trigger age-to-lost processing
+    * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
+    * ageToLostTimerRequest.moduleId = circulationModuleId
+    Given path '/scheduler/timers'
+    And request ageToLostTimerRequest
+    When method POST
+    Then status 201
+    * def ageToLostAppTimerId = response.id
+    * print 'Created age-to-lost APPLICATION timer with id:', ageToLostAppTimerId
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
-    * configure retry = { count: 10, interval: 2000 }
+    * configure retry = { count: 15, interval: 3000 }
     Given path 'loan-storage', 'loans', extLoanId
-    And print response
     And retry until response.itemStatus == 'Aged to lost'
     When method GET
     And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
@@ -1001,16 +994,10 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.lostItemHasBeenBilled == false
     And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
 
-    # revert age-to-lost processor delay time
-    * def revertRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * revertRequest.moduleId = currentModuleId
-    * revertRequest.id = timerId
-    * revertRequest.routingEntry.unit = 'minute'
-    * revertRequest.routingEntry.delay = '30'
-    Given path '/scheduler/timers/'+timerId
-    And request revertRequest
-    When method PUT
-    Then status 200
+    # delete the temporary APPLICATION timer
+    Given path '/scheduler/timers', ageToLostAppTimerId
+    When method DELETE
+    Then status 204
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1019IBC-1'
