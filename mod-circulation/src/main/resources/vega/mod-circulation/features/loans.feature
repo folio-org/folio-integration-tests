@@ -840,73 +840,12 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
-    * configure headers = null
-    Given url baseKeycloakUrl
-    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = kcClientId
-    And form field client_secret = kcClientSecret
-    And form field scope = 'email openid'
-    When method POST
-    Then status 200
-    * def keycloakMasterToken = response.access_token
+    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
+    * def sidecarToken = sidecarResult.sidecarToken
 
-    Given url baseKeycloakUrl
-    And path 'admin', 'realms', testTenant, 'clients'
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    When method GET
-    Then status 200
-    * def m2mClientId = 'sidecar-module-access-client'
-    * def sidecarClientUUID = response.filter(x => x.clientId == m2mClientId)[0].id
-
-    Given url baseKeycloakUrl
-    And path 'admin', 'realms', testTenant, 'clients', sidecarClientUUID, 'client-secret'
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    When method GET
-    Then status 200
-    * def sidecarSecret = response.value
-
-    Given url baseKeycloakUrl
-    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = m2mClientId
-    And form field client_secret = sidecarSecret
-    And form field scope = 'email openid'
-    When method POST
-    Then status 200
-    * def sidecarToken = response.access_token
-
-    # find age-to-lost timer using sidecar token (system-level visibility)
-    Given url baseUrl
-    And path '/scheduler/timers'
-    And param limit = 500
-    And header Authorization = 'Bearer ' + sidecarToken
-    And header x-okapi-tenant = testTenant
-    When method GET
-    Then status 200
-    * def ageToLostTimers = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry && m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
-    * print 'age-to-lost timers found with sidecar token:', ageToLostTimers.length
-    * if (ageToLostTimers.length == 0) karate.abort()
-    * def currentTimerId = ageToLostTimers[0].id
-    * def currentModuleId = ageToLostTimers[0].moduleId
-    * def currentModuleName = ageToLostTimers[0].moduleName
-
-    # update age-to-lost timer delay to 1 second using sidecar token
-    * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * ageToLostTimerRequest.id = currentTimerId
-    * ageToLostTimerRequest.moduleId = currentModuleId
-    * ageToLostTimerRequest.moduleName = currentModuleName
-    * ageToLostTimerRequest.routingEntry.unit = 'second'
-    * ageToLostTimerRequest.routingEntry.delay = '1'
-    Given url baseUrl
-    And path '/scheduler/timers', currentTimerId
-    And request ageToLostTimerRequest
-    And header Authorization = 'Bearer ' + sidecarToken
-    And header x-okapi-tenant = testTenant
-    When method PUT
-    Then status 200
+    # find age-to-lost timer and update delay to 1 second
+    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extSidecarToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
+    * def currentTimerId = updateResult.currentTimerId
     * configure headers = headersUser
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
@@ -919,16 +858,7 @@ Feature: Loans tests
     And match $.itemStatus == 'Aged to lost'
 
     # revert age-to-lost timer delay back to 30 minutes
-    * configure headers = null
-    * ageToLostTimerRequest.routingEntry.unit = 'minute'
-    * ageToLostTimerRequest.routingEntry.delay = '30'
-    Given url baseUrl
-    And path '/scheduler/timers', currentTimerId
-    And request ageToLostTimerRequest
-    And header Authorization = 'Bearer ' + sidecarToken
-    And header x-okapi-tenant = testTenant
-    When method PUT
-    Then status 200
+    * call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extSidecarToken: #(sidecarToken), extTimerId: #(currentTimerId), extModuleId: #(updateResult.currentModuleId), extModuleName: #(updateResult.currentModuleName), extUnit: 'minute', extDelay: '30' }
     * configure headers = headersUser
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
@@ -1023,73 +953,12 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
-    * configure headers = null
-    Given url baseKeycloakUrl
-    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = kcClientId
-    And form field client_secret = kcClientSecret
-    And form field scope = 'email openid'
-    When method POST
-    Then status 200
-    * def keycloakMasterToken = response.access_token
+    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
+    * def sidecarToken = sidecarResult.sidecarToken
 
-    Given url baseKeycloakUrl
-    And path 'admin', 'realms', testTenant, 'clients'
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    When method GET
-    Then status 200
-    * def m2mClientId = 'sidecar-module-access-client'
-    * def sidecarClientUUID = response.filter(x => x.clientId == m2mClientId)[0].id
-
-    Given url baseKeycloakUrl
-    And path 'admin', 'realms', testTenant, 'clients', sidecarClientUUID, 'client-secret'
-    And header Authorization = 'Bearer ' + keycloakMasterToken
-    When method GET
-    Then status 200
-    * def sidecarSecret = response.value
-
-    Given url baseKeycloakUrl
-    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
-    And header Content-Type = 'application/x-www-form-urlencoded'
-    And form field grant_type = 'client_credentials'
-    And form field client_id = m2mClientId
-    And form field client_secret = sidecarSecret
-    And form field scope = 'email openid'
-    When method POST
-    Then status 200
-    * def sidecarToken = response.access_token
-
-    # find age-to-lost timer using sidecar token (system-level visibility)
-    Given url baseUrl
-    And path '/scheduler/timers'
-    And param limit = 500
-    And header Authorization = 'Bearer ' + sidecarToken
-    And header x-okapi-tenant = testTenant
-    When method GET
-    Then status 200
-    * def ageToLostTimers = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry && m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
-    * print 'age-to-lost timers found with sidecar token:', ageToLostTimers.length
-    * if (ageToLostTimers.length == 0) karate.abort()
-    * def currentTimerId = ageToLostTimers[0].id
-    * def currentModuleId = ageToLostTimers[0].moduleId
-    * def currentModuleName = ageToLostTimers[0].moduleName
-
-    # update age-to-lost timer delay to 1 second using sidecar token
-    * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * ageToLostTimerRequest.id = currentTimerId
-    * ageToLostTimerRequest.moduleId = currentModuleId
-    * ageToLostTimerRequest.moduleName = currentModuleName
-    * ageToLostTimerRequest.routingEntry.unit = 'second'
-    * ageToLostTimerRequest.routingEntry.delay = '1'
-    Given url baseUrl
-    And path '/scheduler/timers', currentTimerId
-    And request ageToLostTimerRequest
-    And header Authorization = 'Bearer ' + sidecarToken
-    And header x-okapi-tenant = testTenant
-    When method PUT
-    Then status 200
+    # find age-to-lost timer and update delay to 1 second
+    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extSidecarToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
+    * def currentTimerId = updateResult.currentTimerId
     * configure headers = headersUser
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
@@ -1104,18 +973,8 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
 
     # revert age-to-lost timer delay back to 30 minutes
-    * configure headers = null
-    * ageToLostTimerRequest.routingEntry.unit = 'minute'
-    * ageToLostTimerRequest.routingEntry.delay = '30'
-    Given url baseUrl
-    And path '/scheduler/timers', currentTimerId
-    And request ageToLostTimerRequest
-    And header Authorization = 'Bearer ' + sidecarToken
-    And header x-okapi-tenant = testTenant
-    When method PUT
-    Then status 200
+    * call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extSidecarToken: #(sidecarToken), extTimerId: #(currentTimerId), extModuleId: #(updateResult.currentModuleId), extModuleName: #(updateResult.currentModuleName), extUnit: 'minute', extDelay: '30' }
     * configure headers = headersUser
-    And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
 
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
