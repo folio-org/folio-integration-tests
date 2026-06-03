@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "edge-oai-omh")
+@FolioTest(team = "firebird", module = "edge-oai-pmh")
 public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/consortia/";
 
@@ -40,10 +40,15 @@ public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
         runFeatureTest("features/deleted-folio-instances-C729202.feature");
     }
 
-    @Test
-    public void test3() {
-        runFeatureTest("features/linked-data-edited-item-C688762.feature");
-    }
+  @Test
+  public void test3() {
+      runFeatureTest("features/linked-data-edited-item-C688762.feature");
+  }
+
+  @Test
+  public void test4() {
+      runFeatureTest("features/linked-data-edited-main-title-C688749.feature");
+  }
 
 
     @Override
