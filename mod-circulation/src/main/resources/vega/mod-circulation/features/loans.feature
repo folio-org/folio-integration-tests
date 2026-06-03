@@ -839,33 +839,56 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # get mod-circulation moduleId from applications registry (requires Keycloak master token)
+    # get a system-level token using sidecar-module-access-client to call the internal scheduled-age-to-lost endpoint
     * configure headers = null
-    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
-    * def keycloakMasterToken = keycloakResponse.response.access_token
-    * url baseUrl
-    Given path 'applications'
-    And param limit = 500
+    Given url baseKeycloakUrl
+    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = kcClientId
+    And form field client_secret = kcClientSecret
+    And form field scope = 'email openid'
+    When method POST
+    Then status 200
+    * def keycloakMasterToken = response.access_token
+
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant, 'clients'
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
-    * def findCirculationModuleId = function(descriptors) { for (var i = 0; i < descriptors.length; i++) { var d = descriptors[i]; if (d.modules) { for (var j = 0; j < d.modules.length; j++) { if (d.modules[j].name === 'mod-circulation') return d.modules[j].id; } } } return null; }
-    * def circulationModuleId = findCirculationModuleId(response.applicationDescriptors)
-    * print 'mod-circulation moduleId:', circulationModuleId
+    * def m2mClientId = 'sidecar-module-access-client'
+    * def sidecarClientUUID = response.filter(x => x.clientId == m2mClientId)[0].id
+
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant, 'clients', sidecarClientUUID, 'client-secret'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * def sidecarSecret = response.value
+
+    Given url baseKeycloakUrl
+    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = m2mClientId
+    And form field client_secret = sidecarSecret
+    And form field scope = 'email openid'
+    When method POST
+    Then status 200
+    * def tenantSystemToken = response.access_token
     * configure headers = headersUser
 
-    # create a temporary system timer to trigger age-to-lost processing (requires SCHEDULER_API_ALLOW_SYSTEM_TIMER_MUTATION=true)
-    * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
-    * ageToLostTimerRequest.moduleId = circulationModuleId
-    Given path '/scheduler/timers'
-    And request ageToLostTimerRequest
+    # trigger age-to-lost processing using system token
+    Given url baseUrl
+    And path '/circulation/scheduled-age-to-lost'
+    And header Authorization = 'Bearer ' + tenantSystemToken
+    And header x-okapi-tenant = testTenant
     When method POST
-    Then status 201
-    * def ageToLostTimerId = response.id
-    * print 'Created age-to-lost timer with id:', ageToLostTimerId
+    Then status 204
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
-    * configure retry = { count: 15, interval: 3000 }
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'loan-storage', 'loans', extLoanId
     And retry until response.itemStatus == 'Aged to lost'
     When method GET
@@ -873,12 +896,8 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
     And match $.itemStatus == 'Aged to lost'
 
-    # delete the temporary timer
-    Given path '/scheduler/timers', ageToLostTimerId
-    When method DELETE
-    Then status 204
 
-    Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
+  Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
 
     * def extItemBarcode = 'FAT-995IBC'
     * def extUserBarcode = 'FAT-995UBC'
@@ -969,34 +988,58 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # get mod-circulation moduleId from applications registry (requires Keycloak master token)
+    # get a system-level token using sidecar-module-access-client to call the internal scheduled-age-to-lost endpoint
     * configure headers = null
-    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
-    * def keycloakMasterToken = keycloakResponse.response.access_token
-    * url baseUrl
-    Given path 'applications'
-    And param limit = 500
+    Given url baseKeycloakUrl
+    And path 'realms', 'master', 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = kcClientId
+    And form field client_secret = kcClientSecret
+    And form field scope = 'email openid'
+    When method POST
+    Then status 200
+    * def keycloakMasterToken = response.access_token
+
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant, 'clients'
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
-    * def findCirculationModuleId = function(descriptors) { for (var i = 0; i < descriptors.length; i++) { var d = descriptors[i]; if (d.modules) { for (var j = 0; j < d.modules.length; j++) { if (d.modules[j].name === 'mod-circulation') return d.modules[j].id; } } } return null; }
-    * def circulationModuleId = findCirculationModuleId(response.applicationDescriptors)
-    * print 'mod-circulation moduleId:', circulationModuleId
+    * def m2mClientId = 'sidecar-module-access-client'
+    * def sidecarClientUUID = response.filter(x => x.clientId == m2mClientId)[0].id
+
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant, 'clients', sidecarClientUUID, 'client-secret'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * def sidecarSecret = response.value
+
+    Given url baseKeycloakUrl
+    And path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = m2mClientId
+    And form field client_secret = sidecarSecret
+    And form field scope = 'email openid'
+    When method POST
+    Then status 200
+    * def tenantSystemToken = response.access_token
     * configure headers = headersUser
 
-    # create a temporary system timer to trigger age-to-lost processing (requires SCHEDULER_API_ALLOW_SYSTEM_TIMER_MUTATION=true)
-    * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
-    * ageToLostTimerRequest.moduleId = circulationModuleId
-    Given path '/scheduler/timers'
-    And request ageToLostTimerRequest
+    # trigger age-to-lost processing using system token
+    Given url baseUrl
+    And path '/circulation/scheduled-age-to-lost'
+    And header Authorization = 'Bearer ' + tenantSystemToken
+    And header x-okapi-tenant = testTenant
     When method POST
-    Then status 201
-    * def ageToLostTimerId = response.id
-    * print 'Created age-to-lost timer with id:', ageToLostTimerId
+    Then status 204
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
-    * configure retry = { count: 15, interval: 3000 }
+    * configure retry = { count: 10, interval: 2000 }
     Given path 'loan-storage', 'loans', extLoanId
+    And print response
     And retry until response.itemStatus == 'Aged to lost'
     When method GET
     And match $.agedToLostDelayedBilling.agedToLostDate == '#present'
@@ -1004,10 +1047,6 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.lostItemHasBeenBilled == false
     And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
 
-    # delete the temporary timer
-    Given path '/scheduler/timers', ageToLostTimerId
-    When method DELETE
-    Then status 204
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings
     * def extItemBarcode1 = 'FAT-1019IBC-1'
