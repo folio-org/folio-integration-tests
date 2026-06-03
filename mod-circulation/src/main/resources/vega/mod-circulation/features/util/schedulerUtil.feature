@@ -2,6 +2,7 @@ Feature: scheduler utility for mod-circulation
 
   Background:
     * url baseUrl
+    * configure headers = null
 
   @UpdateAgeToLostTimer
   Scenario: find age-to-lost timer and update its delay
@@ -15,10 +16,10 @@ Feature: scheduler utility for mod-circulation
     * def lookupNeeded = !karate.get('extTimerId')
 
     # find age-to-lost timer when ID is not already known
-    * if (lookupNeeded) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindAgeToLostTimer', { extSidecarToken: extSidecarToken })
-    * def currentTimerId    = lookupNeeded ? foundTimerId    : extTimerId
-    * def currentModuleId   = lookupNeeded ? foundModuleId   : extModuleId
-    * def currentModuleName = lookupNeeded ? foundModuleName : extModuleName
+    * def findResult = lookupNeeded ? karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindAgeToLostTimer', { extSidecarToken: extSidecarToken }) : {}
+    * def currentTimerId    = lookupNeeded ? findResult.foundTimerId    : extTimerId
+    * def currentModuleId   = lookupNeeded ? findResult.foundModuleId   : extModuleId
+    * def currentModuleName = lookupNeeded ? findResult.foundModuleName : extModuleName
 
     # build and send the timer update request
     * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
