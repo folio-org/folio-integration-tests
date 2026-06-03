@@ -29,6 +29,7 @@ function fn() {
     tenantParams: { loadReferenceData: true },
     testTenant: effectiveTestTenant,
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    foliioUiUrl: karate.properties['foliioUiUrl'] || 'https://my-library.foliio.org',
     testAdmin: { tenant: effectiveTestTenant, name: 'test-admin', password: 'admin' },
     testUser: { tenant: effectiveTestTenant, name: 'test-user', password: 'test' },
     login: karate.read('classpath:common/login.feature'),

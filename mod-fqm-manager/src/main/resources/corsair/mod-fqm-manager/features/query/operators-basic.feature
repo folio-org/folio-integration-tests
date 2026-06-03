@@ -112,6 +112,35 @@ Feature: Query with basic operators
     * def totalRecords = parseInt(response.totalRecords)
     * assert totalRecords > 0
 
+  Scenario: Run query with $starts_with operator and check results
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$starts_with\":\"integration_test\"}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query', queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_456'}
+    And match $.content contains deep {"users.username": 'integration_test_other_user'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
+  Scenario: Run query with $contains operator and check results
+    * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.username\": {\"$contains\":\"test_user\"}}' }
+    * def queryCall = call postQuery
+    * def queryId = queryCall.queryId
+
+    Given path 'query', queryId
+    And params {includeResults: true, limit: 100, offset:0}
+    When method GET
+    Then status 200
+    And match $.content contains deep {"users.username": 'integration_test_user_123'}
+    And match $.content contains deep {"users.username": 'integration_test_user_456'}
+    * def totalRecords = parseInt(response.totalRecords)
+    * assert totalRecords > 0
+
   Scenario: Run query with '$empty = true' operator and check results (MODFQMMGR-119)
     * def queryRequest = { entityTypeId: '#(userEntityTypeId)' , fqlQuery: '{\"users.middle_name\": {\"$empty\":true}}' }
     * def queryCall = call postQuery

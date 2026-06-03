@@ -39,9 +39,6 @@ Feature: create reference data
     When method POST
     Then status 201
 
-#  Scenario: post instance
-#  * call read('init_data/create-instance.feature') { instanceId: '#(instanceId)', instanceTypeId: '#(instanceTypeId)', instanceHrid :'#(instanceHrid)', instanceSource: 'MARC'}
-
   Scenario: create location
     Given path 'location-units/institutions'
     And request
@@ -85,7 +82,7 @@ Feature: create reference data
     And request
     """
      {
-        "id": "d5629ec6-7259-4644-bb94-41bd30b2d1c6",
+        "id": "f34d27c6-a8eb-461b-acd6-5dea81771e70",
         "name": "SECOND FLOOR",
         "code": "KU/CC/DI/2",
         "isActive": true,
@@ -112,5 +109,32 @@ Feature: create reference data
           "source": "folio"
         }
     """
+    When method POST
+    Then status 201
+
+  Scenario: create loan type
+    Given path 'loan-types'
+    And request
+      """
+      {
+        "id":"2b94c631-fca9-4892-a730-03ee529ffe27",
+        "name":"Can circulate",
+        "source": "folio"
+      }
+      """
+    When method POST
+    Then status 201
+
+  Scenario: create material type
+    Given path 'material-types'
+    And request
+      """
+      {
+        "id":"1a54b431-2e4f-452d-9cae-9cee66c9a892",
+        "name":"book",
+        "source":"folio"
+      }
+
+      """
     When method POST
     Then status 201

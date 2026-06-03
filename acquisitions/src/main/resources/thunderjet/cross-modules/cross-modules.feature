@@ -56,8 +56,8 @@ Feature: cross-module integration tests
   Scenario: Check encumbrance status after moving expended value
     * call read('features/check-encumbrance-status-after-moving-expended-value.feature')
 
-  Scenario: Check the encumbrances after issuing credit when the order is fully paid
-    * call read('features/check-encumbrances-after-issuing-credit-for-paid-order.feature')
+  Scenario: Encumbrance remains released after another credited invoice was paid
+    * call read('features/encumbrance-remains-released-after-another-credited-invoice-was-paid.feature')
 
   Scenario: Check encumbrances after order is reopened
     * call read('features/check-encumbrances-after-order-is-reopened.feature')
@@ -334,3 +334,18 @@ Feature: cross-module integration tests
 
   Scenario: Pay, unopen, open
     * call read('features/pay-unopen-open.feature')
+
+  Scenario: Check encumbrance restrictions when opening an order
+    * call read('features/check-encumbrance-restrictions-when-opening-order.feature')
+
+  Scenario: Expense Class Percent Of Total Expended Calculated Correctly When Budget Over Expended
+    * call read('features/expense-class-percent-expended-when-budget-over-expended.feature')
+
+  Scenario: Rollover Settings Applying To Encumbrances With No Encumbrance Rollover Options Active
+    * call read('features/rollover-settings-no-encumbrances.feature')
+
+  Scenario: Unreleased Encumbrance Is Rolled Over To The Next Fiscal Year
+    * call read('features/unreleased-encumbrance-rolled-over-to-next-fiscal-year.feature')
+
+  Scenario: Rollover one order type
+    * call read('features/rollover-one-order-type.feature')

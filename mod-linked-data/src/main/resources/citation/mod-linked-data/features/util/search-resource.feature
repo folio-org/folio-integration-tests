@@ -1,7 +1,6 @@
 Feature: Search resource
   Background:
     * url baseUrl
-    * configure retry = { count: 20, interval: 5000 }
 
   @searchLinkedDataWork
   Scenario: Search work resource

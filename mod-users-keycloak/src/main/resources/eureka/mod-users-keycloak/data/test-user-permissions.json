@@ -1,0 +1,18 @@
+[
+  "users-keycloak.item.get",
+  "users-keycloak.item.post",
+  "users-keycloak.collection.get",
+  "users-keycloak.item.put",
+  "users-keycloak.item.delete",
+  "users-keycloak.migrations.post",
+  "users-keycloak.migrations.get",
+  "users-keycloak.migrations.delete",
+  "users-keycloak.idp-migrations.post",
+  "users-keycloak.idp-migrations.delete",
+  "users-keycloak.password-reset-link.generate",
+  "users-keycloak.password-reset-link.reset",
+  "users-keycloak.password-reset-link.validate",
+  "users-keycloak.users.permissions.collection.get",
+  "users-keycloak.auth-users.item.get",
+  "users-keycloak.auth-users.item.post"
+]

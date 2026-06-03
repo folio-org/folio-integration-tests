@@ -69,51 +69,50 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_43("open-order-with-manual-exchange-rate", true),
     FEATURE_44("open-order-with-many-product-ids", true),
     FEATURE_45("open-order-without-holdings", true),
-    FEATURE_46("open-order-with-resolution-statuses", true),
-    FEATURE_47("open-order-with-restricted-locations", true),
-    FEATURE_48("open-order-with-the-same-fund-distributions", true),
-    FEATURE_49("order-event", true),
-    FEATURE_50("order-line-event", true),
-    FEATURE_51("parallel-create-piece", true),
-    FEATURE_52("parallel-update-order-lines-different-orders", true),
-    FEATURE_53("parallel-update-order-lines-same-order", true),
-    FEATURE_54("pe-mix-update-piece", true),
-    FEATURE_55("piece-audit-history", true),
-    FEATURE_56("piece-batch-job", true),
-    FEATURE_57("piece-deletion-restriction", true),
-    FEATURE_58("piece-operations-for-order-flows-mixed-order-line", false),
-    FEATURE_59("pieces-batch-update-status", true),
-    FEATURE_60("piece-status-transitions", true),
-    FEATURE_61("poline_change_instance_connection", true),
-    FEATURE_62("poline-change-instance-connection-with-holdings-items", true),
-    FEATURE_63("poline-claiming-interval-checks", true),
-    FEATURE_64("productIds-field-error-when-attempting-to-update-unmodified-order", true),
-    FEATURE_65("receive-20-pieces", true),
-    FEATURE_66("receive-piece-against-non-package-pol", true),
-    FEATURE_67("receive-piece-against-package-pol", true),
-    FEATURE_68("reopen-order-creates-encumbrances", true),
-    FEATURE_69("reopen-order-with-50-lines", true),
-    FEATURE_70("retrieve-titles-with-honor-of-acq-units", true),
-    FEATURE_71("routing-list-print-template", true),
-    FEATURE_72("routing-lists-api", true),
-    FEATURE_73("should-decrease-quantity-when-delete-piece-with-no-location", true),
-    FEATURE_74("three-fund-distributions", true),
-    FEATURE_75("title-instance-creation", true),
-    FEATURE_76("unlink-title", true),
-    FEATURE_77("unopen-order-with-different-fund", true),
-    FEATURE_78("unreceive-piece-and-check-order-line", true),
-    FEATURE_79("update_fields_in_item", true),
-    FEATURE_80("update-purchase-order-with-order-lines", true),
-    FEATURE_81("update-purchase-order-workflow-status", true),
-    FEATURE_82("validate-fund-distribution-for-zero-price", true),
-    FEATURE_83("validate-pol-receipt-not-required-with-checkin-items", true),
-    FEATURE_84("create-order-with-suppress-instance-from-discovery", true),
-    FEATURE_85("auto-populate-fund-code", true),
-    FEATURE_86("holding-detail", true),
-    FEATURE_87("piece-item-synchronization", true),
-    FEATURE_88("open-order-with-invalid-material-type-rollback", true),
-    FEATURE_89("no-side-effect-with-failed-piece-operation", true),
-    FEATURE_90("batch-create-pieces-updates-encumbrance", true);
+    FEATURE_46("open-order-with-restricted-locations", true),
+    FEATURE_47("open-order-with-the-same-fund-distributions", true),
+    FEATURE_48("order-event", true),
+    FEATURE_49("order-line-event", true),
+    FEATURE_50("parallel-create-piece", true),
+    FEATURE_51("parallel-update-order-lines-different-orders", true),
+    FEATURE_52("parallel-update-order-lines-same-order", true),
+    FEATURE_53("pe-mix-update-piece", true),
+    FEATURE_54("piece-audit-history", true),
+    FEATURE_55("piece-batch-job", true),
+    FEATURE_56("piece-deletion-restriction", true),
+    FEATURE_57("piece-operations-for-order-flows-mixed-order-line", false),
+    FEATURE_58("pieces-batch-update-status", true),
+    FEATURE_59("piece-status-transitions", true),
+    FEATURE_60("poline_change_instance_connection", true),
+    FEATURE_61("poline-change-instance-connection-with-holdings-items", true),
+    FEATURE_62("poline-claiming-interval-checks", true),
+    FEATURE_63("productIds-field-error-when-attempting-to-update-unmodified-order", true),
+    FEATURE_64("receive-20-pieces", true),
+    FEATURE_65("receive-piece-against-non-package-pol", true),
+    FEATURE_66("receive-piece-against-package-pol", true),
+    FEATURE_67("reopen-order-creates-encumbrances", true),
+    FEATURE_68("reopen-order-with-50-lines", true),
+    FEATURE_69("retrieve-titles-with-honor-of-acq-units", true),
+    FEATURE_70("routing-list-print-template", true),
+    FEATURE_71("routing-lists-api", true),
+    FEATURE_72("should-decrease-quantity-when-delete-piece-with-no-location", true),
+    FEATURE_73("three-fund-distributions", true),
+    FEATURE_74("title-instance-creation", true),
+    FEATURE_75("unlink-title", true),
+    FEATURE_76("unopen-order-with-different-fund", true),
+    FEATURE_77("unreceive-piece-and-check-order-line", true),
+    FEATURE_78("update_fields_in_item", true),
+    FEATURE_79("update-purchase-order-with-order-lines", true),
+    FEATURE_80("update-purchase-order-workflow-status", true),
+    FEATURE_81("validate-fund-distribution-for-zero-price", true),
+    FEATURE_82("validate-pol-receipt-not-required-with-checkin-items", true),
+    FEATURE_83("create-order-with-suppress-instance-from-discovery", true),
+    FEATURE_84("auto-populate-fund-code", true),
+    FEATURE_85("holding-detail", true),
+    FEATURE_86("piece-item-synchronization", true),
+    FEATURE_87("open-order-with-invalid-material-type-rollback", true),
+    FEATURE_88("no-side-effect-with-failed-piece-operation", true),
+    FEATURE_89("batch-create-pieces-updates-encumbrance", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -429,272 +428,266 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void openOrderWithResolutionPoLineStatuses() {
+  void openOrderWithRestrictedLocations() {
     runFeatureTest(Feature.FEATURE_46.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void openOrderWithRestrictedLocations() {
+  void openOrderWithTheSameFundDistributions() {
     runFeatureTest(Feature.FEATURE_47.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void openOrderWithTheSameFundDistributions() {
+  void orderEventTests() {
     runFeatureTest(Feature.FEATURE_48.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void orderEventTests() {
+  void orderLineEventTests() {
     runFeatureTest(Feature.FEATURE_49.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void orderLineEventTests() {
-    runFeatureTest(Feature.FEATURE_50.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void parallelCreatePiece() {
-    runFeatureTest(Feature.FEATURE_51.getFileName(), 5);
+    runFeatureTest(Feature.FEATURE_50.getFileName(), 5);
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void parallelUpdateOrderLinesDifferentOrders() {
-    runFeatureTest(Feature.FEATURE_52.getFileName(), 5);
+    runFeatureTest(Feature.FEATURE_51.getFileName(), 5);
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void parallelUpdateOrderLinesSameOrder() {
-    runFeatureTest(Feature.FEATURE_53.getFileName(), 5);
+    runFeatureTest(Feature.FEATURE_52.getFileName(), 5);
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void peMixUpdatePiece() {
-    runFeatureTest(Feature.FEATURE_54.getFileName());
+    runFeatureTest(Feature.FEATURE_53.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceAuditHistory() {
-    runFeatureTest(Feature.FEATURE_55.getFileName());
+    runFeatureTest(Feature.FEATURE_54.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceBatchJob() {
-    runFeatureTest(Feature.FEATURE_56.getFileName());
+    runFeatureTest(Feature.FEATURE_55.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceDeletionRestriction() {
-    runFeatureTest(Feature.FEATURE_57.getFileName());
+    runFeatureTest(Feature.FEATURE_56.getFileName());
   }
 
   @Test
   @Disabled
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceOperations() {
-    runFeatureTest(Feature.FEATURE_58.getFileName());
+    runFeatureTest(Feature.FEATURE_57.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void updatePiecesBatchStatus() {
-    runFeatureTest(Feature.FEATURE_59.getFileName());
+    runFeatureTest(Feature.FEATURE_58.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceStatusTransitions() {
-    runFeatureTest(Feature.FEATURE_60.getFileName());
+    runFeatureTest(Feature.FEATURE_59.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void poLineChangeInstanceConnection() {
-    runFeatureTest(Feature.FEATURE_61.getFileName());
+    runFeatureTest(Feature.FEATURE_60.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void poLineChangeInstanceConnectionWithHoldingsItems() {
-    runFeatureTest(Feature.FEATURE_62.getFileName());
+    runFeatureTest(Feature.FEATURE_61.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void polineClaimingIntervalChecks() {
-    runFeatureTest(Feature.FEATURE_63.getFileName());
+    runFeatureTest(Feature.FEATURE_62.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void getPutCompositeOrder() {
-    runFeatureTest(Feature.FEATURE_64.getFileName());
+    runFeatureTest(Feature.FEATURE_63.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void receive20Pieces() {
-    runFeatureTest(Feature.FEATURE_65.getFileName());
+    runFeatureTest(Feature.FEATURE_64.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void receivePieceAgainstNonPackagePol() {
-    runFeatureTest(Feature.FEATURE_66.getFileName());
+    runFeatureTest(Feature.FEATURE_65.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void receivePieceAgainstPackagePol() {
-    runFeatureTest(Feature.FEATURE_67.getFileName());
+    runFeatureTest(Feature.FEATURE_66.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void reopenOrderCreatesEncumbrances() {
-    runFeatureTest(Feature.FEATURE_68.getFileName());
+    runFeatureTest(Feature.FEATURE_67.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void reopenOrderWith50Lines() {
-    runFeatureTest(Feature.FEATURE_69.getFileName());
+    runFeatureTest(Feature.FEATURE_68.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void retrieveTitlesWithHonorOfAcqUnits() {
-    runFeatureTest(Feature.FEATURE_70.getFileName());
+    runFeatureTest(Feature.FEATURE_69.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void routingListPrintTemplate() {
-    runFeatureTest(Feature.FEATURE_71.getFileName());
+    runFeatureTest(Feature.FEATURE_70.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void testRoutingListApi() {
-    runFeatureTest(Feature.FEATURE_72.getFileName());
+    runFeatureTest(Feature.FEATURE_71.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void shouldDecreaseQuantityWhenDeletePieceWithNoLocation() {
-    runFeatureTest(Feature.FEATURE_73.getFileName());
+    runFeatureTest(Feature.FEATURE_72.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void threeFundDistributions() {
-    runFeatureTest(Feature.FEATURE_74.getFileName());
+    runFeatureTest(Feature.FEATURE_73.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void testTitleInstanceCreation() {
-    runFeatureTest(Feature.FEATURE_75.getFileName());
+    runFeatureTest(Feature.FEATURE_74.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void unlinkTitle() {
-    runFeatureTest(Feature.FEATURE_76.getFileName());
+    runFeatureTest(Feature.FEATURE_75.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void unOpenOrderWithDifferentFund() {
-    runFeatureTest(Feature.FEATURE_77.getFileName(), THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_76.getFileName(), THREAD_COUNT);
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void unreceivePieceAndCheckOrderLine() {
-    runFeatureTest(Feature.FEATURE_78.getFileName(), THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_77.getFileName(), THREAD_COUNT);
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void updateFieldsInItemAfterUpdatingInPiece() {
-    runFeatureTest(Feature.FEATURE_79.getFileName(), THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_78.getFileName(), THREAD_COUNT);
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void updatePurchaseOrderWithOrderLines() {
-    runFeatureTest(Feature.FEATURE_80.getFileName());
+    runFeatureTest(Feature.FEATURE_79.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void updatePurchaseOrderWorkflowStatus() {
-    runFeatureTest(Feature.FEATURE_81.getFileName());
+    runFeatureTest(Feature.FEATURE_80.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void validateFundDistributionForZeroPrice() {
-    runFeatureTest(Feature.FEATURE_82.getFileName(), THREAD_COUNT);
+    runFeatureTest(Feature.FEATURE_81.getFileName(), THREAD_COUNT);
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void validatePoLineReceiptNotRequiredWithCheckinItems() {
-    runFeatureTest(Feature.FEATURE_83.getFileName());
+    runFeatureTest(Feature.FEATURE_82.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void createOrderWithSuppressInstanceFromDiscovery() {
-    runFeatureTest(Feature.FEATURE_84.getFileName());
+    runFeatureTest(Feature.FEATURE_83.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void autoPopulateFundCodeInPoLine() {
-    runFeatureTest(Feature.FEATURE_85.getFileName());
+    runFeatureTest(Feature.FEATURE_84.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void retrieveHoldingDetailsWithPiecesAndItems() {
-    runFeatureTest(Feature.FEATURE_86.getFileName());
+    runFeatureTest(Feature.FEATURE_85.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void pieceItemSynchronization() {
-    runFeatureTest(Feature.FEATURE_87.getFileName());
+    runFeatureTest(Feature.FEATURE_86.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void openOrderWithInvalidMaterialTypeRollback() {
-    runFeatureTest(Feature.FEATURE_88.getFileName());
+    runFeatureTest(Feature.FEATURE_87.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void noSideEffectWithFailedPieceOperation() {
-    runFeatureTest(Feature.FEATURE_89.getFileName());
+    runFeatureTest(Feature.FEATURE_88.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void batchCreatePiecesUpdatesEncumbrance() {
-    runFeatureTest(Feature.FEATURE_90.getFileName());
+    runFeatureTest(Feature.FEATURE_89.getFileName());
   }
 }

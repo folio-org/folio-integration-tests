@@ -18,6 +18,7 @@ Feature: edge-oai-pmh ECS tests
       | 'mod-source-record-manager'              |
       | 'mod-inventory-storage'                  |
       | 'mod-inventory'                          |
+      | 'mod-linked-data'                        |
 
     * table userPermissions
       | name                                     |
@@ -82,6 +83,8 @@ Feature: edge-oai-pmh ECS tests
       | 'inventory.instances.item.get'                                                |
       | 'inventory.instances.item.put'                                                |
       | 'inventory.instances.item.delete'                                             |
+      | 'inventory.items.item.post'                                                   |
+      | 'inventory.items.item.get'                                                    |
       | 'inventory-storage.hrid-settings.item.put'                                    |
       | 'data-import.uploaddefinitions.post'                                          |
       | 'data-import.uploadDefinitions.item.get'                                      |
@@ -91,6 +94,7 @@ Feature: edge-oai-pmh ECS tests
       | 'metadata-provider.jobExecutions.collection.get'                              |
       | 'user-tenants.collection.get'                                                 |
       | 'oai-pmh.all'                                                                 |
+      | 'linked-data.resources.bib.post'                                              |
 
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')

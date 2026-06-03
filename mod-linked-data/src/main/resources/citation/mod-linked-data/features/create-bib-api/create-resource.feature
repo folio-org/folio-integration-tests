@@ -6,6 +6,7 @@ Feature: Create Work and Instance resource using API
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
+  @C1273161
   Scenario: create work and instance resources through API
     * def workRequest = read('samples/work-request.json')
     * def expectedWorkResponse = read('samples/work-expected-response.json')

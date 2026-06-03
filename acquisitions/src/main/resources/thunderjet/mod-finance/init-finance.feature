@@ -36,6 +36,7 @@ Feature: Initialize mod-finance integration tests
       | 'finance-storage.transactions.batch.execute'                  |
       | 'finance-storage.transactions.collection.get'                 |
       | 'finance.budgets-expense-classes-totals.collection.get'       |
+      | 'finance.budgets-recalculate.item.post'                       |
       | 'finance.budgets.collection.get'                              |
       | 'finance.budgets.item.delete'                                 |
       | 'finance.budgets.item.get'                                    |

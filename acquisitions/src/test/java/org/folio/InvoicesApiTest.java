@@ -56,7 +56,8 @@ public class InvoicesApiTest extends TestBaseEureka implements AcquisitionsTest 
     FEATURE_31("should_populate_vendor_address_on_get_voucher_by_id", true),
     FEATURE_32("voucher-numbers", true),
     FEATURE_33("voucher-with-lines-using-same-external-account", true),
-    FEATURE_34("fund-code-auto-populate-invoice-lines", true);
+    FEATURE_34("fund-code-auto-populate-invoice-lines", true),
+    FEATURE_35("delete-line-check-next-line-number", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -301,5 +302,11 @@ public class InvoicesApiTest extends TestBaseEureka implements AcquisitionsTest 
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void fundCodeAutoPopulateInvoiceLines() {
     runFeatureTest(Feature.FEATURE_34.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void deleteLineCheckNextLineNumber() {
+    runFeatureTest(Feature.FEATURE_35.getFileName());
   }
 }

@@ -9,11 +9,9 @@ Feature: Consortia Sharing Patron Groups settings api tests
     * def group = 'Staff'
     * def desc = 'Staff patron group'
     * def expirationOffsetInDays = 10
-    * def sourceConsortium = 'consortium'
     * def updatedDesc = 'Staff patron group updated'
     * def updatedDays = 20
     * def sourceConsortium = 'consortium'
-    * def sourceLocal = 'local'
 
   @Positive
   Scenario: Attempt to POST a sharingSetting with invalid request body or non-existing path id
@@ -199,7 +197,7 @@ Feature: Consortia Sharing Patron Groups settings api tests
     Then status 404
 
   @Positive
-  Scenario: Verify changing source consortium to local after any fails in delete request
+  Scenario: Verify source changes to user after any fails in delete request
     * def settingId = 'e3601cea-ec88-44cb-a20e-f8b5443d3e18'
     * def group = 'Space'
     * def desc = 'Space exploration'
@@ -298,14 +296,13 @@ Feature: Consortia Sharing Patron Groups settings api tests
     # 6.1 Check from /groups endpoint that group has not been deleted in 'centralTenant' because it is used by user
     Given path 'groups', settingId
     And header x-okapi-tenant = centralTenant
-    And retry until response.source == sourceLocal
+    And retry until response.source == 'user'
     When method GET
     Then status 200
     And match response.id == settingId
     And match response.group == group
     And match response.desc == desc
-    # its source should be source after delete request failed
-    And match response.source == sourceLocal
+    And match response.source == 'user'
 
     # 6.2 Check from /groups endpoint that group has been deleted in 'universityTenant'
     Given path 'groups', settingId

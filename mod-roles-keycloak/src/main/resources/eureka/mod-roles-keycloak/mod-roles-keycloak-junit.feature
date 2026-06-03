@@ -58,6 +58,10 @@ Feature: mod-roles-keycloak integration tests setup
       | 'loadable-roles.collection.get'               |
       | 'loadable-roles.item.put'                     |
 
+    * table adminPermissions
+      | name                         |
+      | 'users-keycloak.item.delete' |
+
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature@createTenant')
     Given call read('classpath:common/eureka/setup-users.feature@createEntitlement')
@@ -77,3 +81,6 @@ Feature: mod-roles-keycloak integration tests setup
     Then status 201
 
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
+
+  Scenario: create admin user
+    * call read('classpath:common/eureka/create-additional-user.feature') { testUser: '#(testAdmin)', userPermissions: '#(adminPermissions)' }

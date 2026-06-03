@@ -31,7 +31,7 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: { tenant: effectiveTestTenant, name: 'test-admin', password: 'admin' },
     testUser: { tenant: effectiveTestTenant, name: 'test-user', password: 'test' },
-    login: karate.read('classpath:common/login.feature'),
+    loginWithExpiry: karate.read('classpath:eureka/mod-login-keycloak/features/helpers/login-with-expiry.feature'),
     uuid: function () {
       return java.util.UUID.randomUUID() + '';
     },
