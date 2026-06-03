@@ -56,8 +56,8 @@ Feature: cross-module integration tests
   Scenario: Check encumbrance status after moving expended value
     * call read('features/check-encumbrance-status-after-moving-expended-value.feature')
 
-  Scenario: Check the encumbrances after issuing credit when the order is fully paid
-    * call read('features/check-encumbrances-after-issuing-credit-for-paid-order.feature')
+  Scenario: Encumbrance remains released after another credited invoice was paid
+    * call read('features/encumbrance-remains-released-after-another-credited-invoice-was-paid.feature')
 
   Scenario: Check encumbrances after order is reopened
     * call read('features/check-encumbrances-after-order-is-reopened.feature')
@@ -332,8 +332,8 @@ Feature: cross-module integration tests
   Scenario: Over Encumbrance Is Calculated Correctly For Fiscal Year Ledger And Group
     * call read('features/over-encumbrance-for-fy-ledger-and-group.feature')
 
-  Scenario: Order can be opened when balance is close to the encumbered available balance
-    * call read('features/open-order-when-balance-close-to-encumbered-available.feature')
+  Scenario: Check encumbrance restrictions when opening an order
+    * call read('features/check-encumbrance-restrictions-when-opening-order.feature')
 
   Scenario: Expense Class Percent Of Total Expended Calculated Correctly When Budget Over Expended
     * call read('features/expense-class-percent-expended-when-budget-over-expended.feature')
