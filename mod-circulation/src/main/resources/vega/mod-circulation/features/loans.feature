@@ -839,14 +839,9 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
-    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
-    * def sidecarToken = sidecarResult.sidecarToken
-
     # find age-to-lost timer and update delay to 1 second
-    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extSidecarToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
+    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extToken: #(okapitoken), extUnit: 'second', extDelay: '1' }
     * def currentTimerId = updateResult.currentTimerId
-    * configure headers = headersUser
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
     * configure retry = { count: 15, interval: 3000 }
@@ -858,8 +853,7 @@ Feature: Loans tests
     And match $.itemStatus == 'Aged to lost'
 
     # revert age-to-lost timer delay back to 30 minutes
-    * call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extSidecarToken: #(sidecarToken), extTimerId: #(currentTimerId), extModuleId: #(updateResult.currentModuleId), extModuleName: #(updateResult.currentModuleName), extUnit: 'minute', extDelay: '30' }
-    * configure headers = headersUser
+    * call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extToken: #(okapitoken), extTimerId: #(currentTimerId), extModuleId: #(updateResult.currentModuleId), extModuleName: #(updateResult.currentModuleName), extUnit: 'minute', extDelay: '30' }
 
   Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
 
@@ -952,14 +946,9 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
-    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
-    * def sidecarToken = sidecarResult.sidecarToken
-
     # find age-to-lost timer and update delay to 1 second
-    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extSidecarToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
+    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extToken: #(okapitoken), extUnit: 'second', extDelay: '1' }
     * def currentTimerId = updateResult.currentTimerId
-    * configure headers = headersUser
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
     * configure retry = { count: 15, interval: 3000 }
@@ -973,8 +962,7 @@ Feature: Loans tests
     And match $.agedToLostDelayedBilling.dateLostItemShouldBeBilled == '#present'
 
     # revert age-to-lost timer delay back to 30 minutes
-    * call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extSidecarToken: #(sidecarToken), extTimerId: #(currentTimerId), extModuleId: #(updateResult.currentModuleId), extModuleName: #(updateResult.currentModuleName), extUnit: 'minute', extDelay: '30' }
-    * configure headers = headersUser
+    * call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extToken: #(okapitoken), extTimerId: #(currentTimerId), extModuleId: #(updateResult.currentModuleId), extModuleName: #(updateResult.currentModuleName), extUnit: 'minute', extDelay: '30' }
 
 
   Scenario: When patron has exceeded their Patron Group Limit for 'Maximum number of items charged out', patron is not allowed to borrow items per Conditions settings

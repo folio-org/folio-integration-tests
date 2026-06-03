@@ -6,17 +6,17 @@ Feature: scheduler utility for mod-circulation
 
   @UpdateAgeToLostTimer
   Scenario: find age-to-lost timer and update its delay
-    # extSidecarToken  - required: sidecar-module-access-client Bearer token
-    # extUnit          - required: delay unit ('second' or 'minute')
-    # extDelay         - required: delay value (e.g. '1' or '30')
-    # extTimerId       - optional: if provided, skip timer lookup
-    # extModuleId      - optional: required when extTimerId is provided
-    # extModuleName    - optional: required when extTimerId is provided
+    # extToken       - required: okapi token with scheduler.item.get and scheduler.item.put permissions
+    # extUnit        - required: delay unit ('second' or 'minute')
+    # extDelay       - required: delay value (e.g. '1' or '30')
+    # extTimerId     - optional: if provided, skip timer lookup
+    # extModuleId    - optional: required when extTimerId is provided
+    # extModuleName  - optional: required when extTimerId is provided
 
     * def lookupNeeded = !karate.get('extTimerId')
 
     # find age-to-lost timer when ID is not already known
-    * def findResult = lookupNeeded ? karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindAgeToLostTimer', { extSidecarToken: extSidecarToken }) : {}
+    * def findResult = lookupNeeded ? karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindAgeToLostTimer', { extToken: extToken }) : {}
     * def currentTimerId    = lookupNeeded ? findResult.foundTimerId    : extTimerId
     * def currentModuleId   = lookupNeeded ? findResult.foundModuleId   : extModuleId
     * def currentModuleName = lookupNeeded ? findResult.foundModuleName : extModuleName
@@ -30,27 +30,26 @@ Feature: scheduler utility for mod-circulation
     * ageToLostTimerRequest.routingEntry.delay = extDelay
     Given path '/scheduler/timers', currentTimerId
     And request ageToLostTimerRequest
-    And header Authorization = 'Bearer ' + extSidecarToken
-    And header x-okapi-token = extSidecarToken
+    And header x-okapi-token = extToken
     And header x-okapi-tenant = testTenant
+    And header Content-Type = 'application/json'
     When method PUT
     Then status 200
 
   @FindAgeToLostTimer
-  Scenario: find age-to-lost scheduler timer using a sidecar token
-    # extSidecarToken - required: sidecar-module-access-client Bearer token
+  Scenario: find age-to-lost scheduler timer
+    # extToken - required: okapi token with scheduler.collection.get permission
 
     Given path '/scheduler/timers'
     And param limit = 500
-    And header Authorization = 'Bearer ' + extSidecarToken
-    And header x-okapi-token = extSidecarToken
+    And header x-okapi-token = extToken
     And header x-okapi-tenant = testTenant
+    And header Content-Type = 'application/json'
     When method GET
     Then status 200
     * def ageToLostTimers = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry && m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
-    * print 'age-to-lost timers found with sidecar token:', ageToLostTimers.length
+    * print 'age-to-lost timers found:', ageToLostTimers.length
     * if (ageToLostTimers.length == 0) karate.abort()
     * def foundTimerId    = ageToLostTimers[0].id
     * def foundModuleId   = ageToLostTimers[0].moduleId
     * def foundModuleName = ageToLostTimers[0].moduleName
-
