@@ -195,6 +195,11 @@ public class ModDCBExtendedTest extends TestBaseEureka {
   }
 
   @Test
+  void testLenderNonRenewablePolicy() {
+    runFeatureTest("lender-non-renewable-policy.feature");
+  }
+
+  @Test
   void testLenderRenewStatusRestriction() {
     runFeatureTest("lender-renew-status-restriction.feature");
   }
