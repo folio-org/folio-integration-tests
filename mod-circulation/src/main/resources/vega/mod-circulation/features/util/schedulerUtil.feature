@@ -23,11 +23,8 @@ Feature: scheduler utility for mod-circulation
 
     * if (lookupNeeded) karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindOrCreateAgeToLostTimer', { extToken: extToken, extUnit: extUnit, extDelay: extDelay })
 
-    # skip PUT when timer was just created (already at the requested delay)
-    * def skipPut = currentTimerCreated
-
-    # build and send the timer update request (only when updating an existing timer)
-    * if (!skipPut) karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@PutAgeToLostTimer', { extToken: extToken, extTimerId: currentTimerId, extModuleId: currentModuleId, extModuleName: currentModuleName, extUnit: extUnit, extDelay: extDelay })
+    # update delay only when timer already existed (created timers already have the desired delay)
+    * if (!currentTimerCreated) karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@PutAgeToLostTimer', { extToken: extToken, extTimerId: currentTimerId, extModuleId: currentModuleId, extModuleName: currentModuleName, extUnit: extUnit, extDelay: extDelay })
 
   @FindOrCreateAgeToLostTimer
   Scenario: find age-to-lost scheduler timer, or create it if not registered
@@ -49,7 +46,6 @@ Feature: scheduler utility for mod-circulation
     * def currentTimerId    = timerFound ? ageToLostTimers[0].id         : null
     * def currentModuleId   = timerFound ? ageToLostTimers[0].moduleId   : null
     * def currentModuleName = timerFound ? ageToLostTimers[0].moduleName : null
-    * def currentTimerCreated = false
 
     # create the timer if not registered (fallback for environments without Kafka-registered timer)
     * if (!timerFound) karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@CreateAgeToLostTimer', { extToken: extToken, extUnit: extUnit, extDelay: extDelay })
@@ -68,9 +64,9 @@ Feature: scheduler utility for mod-circulation
     And header Content-Type = 'application/json'
     When method POST
     Then status 201
-    * def currentTimerId    = response.id
-    * def currentModuleId   = response.moduleId
-    * def currentModuleName = response.moduleName
+    * def currentTimerId      = response.id
+    * def currentModuleId     = response.moduleId
+    * def currentModuleName   = response.moduleName
     * def currentTimerCreated = true
 
   @PutAgeToLostTimer
@@ -82,14 +78,14 @@ Feature: scheduler utility for mod-circulation
     # extUnit       - required
     # extDelay      - required
 
-    * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
-    * ageToLostTimerRequest.id = extTimerId
-    * ageToLostTimerRequest.moduleId = extModuleId
-    * ageToLostTimerRequest.moduleName = extModuleName
-    * ageToLostTimerRequest.routingEntry.unit = extUnit
-    * ageToLostTimerRequest.routingEntry.delay = extDelay
+    * def timerRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
+    * timerRequest.id = extTimerId
+    * timerRequest.moduleId = extModuleId
+    * timerRequest.moduleName = extModuleName
+    * timerRequest.routingEntry.unit = extUnit
+    * timerRequest.routingEntry.delay = extDelay
     Given path '/scheduler/timers', extTimerId
-    And request ageToLostTimerRequest
+    And request timerRequest
     And header Authorization = 'Bearer ' + extToken
     And header x-okapi-tenant = testTenant
     And header Content-Type = 'application/json'
