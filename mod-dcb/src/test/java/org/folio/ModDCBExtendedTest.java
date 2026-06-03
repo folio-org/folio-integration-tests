@@ -189,6 +189,21 @@ public class ModDCBExtendedTest extends TestBaseEureka {
     runFeatureTest("borrowing-pickup-renewal-policy.feature");
   }
 
+  @Test
+  void testLenderRenewalPolicy() {
+    runFeatureTest("lender-renewal-policy.feature");
+  }
+
+  @Test
+  void testLenderNonRenewablePolicy() {
+    runFeatureTest("lender-non-renewable-policy.feature");
+  }
+
+  @Test
+  void testLenderRenewStatusRestriction() {
+    runFeatureTest("lender-renew-status-restriction.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
