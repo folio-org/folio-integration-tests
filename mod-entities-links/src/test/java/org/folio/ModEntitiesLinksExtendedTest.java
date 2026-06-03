@@ -4,17 +4,18 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "spitfire", module = "mod-entities-links")
-class ModEntitiesLinksTest extends TestBaseEureka {
+class ModEntitiesLinksExtendedTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:spitfire/mod-entities-links/features/";
 
-    public ModEntitiesLinksTest() {
+    public ModEntitiesLinksExtendedTest() {
         super(new TestIntegrationService(
-                new TestModuleConfiguration(TEST_BASE_PATH)));
+                new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
     }
 
     @BeforeAll
@@ -28,17 +29,8 @@ class ModEntitiesLinksTest extends TestBaseEureka {
     }
 
     @Test
-    void entitiesLinksTest() {
-        runFeatureTest("entitiesLinksTest.feature");
-    }
-
-    @Test
-    void linkingRulesTest() {
-        runFeatureTest("linkingRulesTest.feature");
-    }
-
-    @Test
-    void authoritiesFiltering() {
-        runFeatureTest("get-authorities-with-filtering.feature");
+    void authorityLeaderStatusOnDelete() {
+        runFeatureTest("authority-leader-status-on-delete.feature");
     }
 }
+
