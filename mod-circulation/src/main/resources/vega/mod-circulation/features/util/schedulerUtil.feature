@@ -16,10 +16,11 @@ Feature: scheduler utility for mod-circulation
     * def lookupNeeded = !karate.get('extTimerId')
 
     # find age-to-lost timer when ID is not already known
-    * def findResult = lookupNeeded ? karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindAgeToLostTimer', { extToken: extToken }) : {}
-    * def currentTimerId    = lookupNeeded ? findResult.foundTimerId    : extTimerId
-    * def currentModuleId   = lookupNeeded ? findResult.foundModuleId   : extModuleId
-    * def currentModuleName = lookupNeeded ? findResult.foundModuleName : extModuleName
+    * def currentTimerId    = karate.get('extTimerId')
+    * def currentModuleId   = karate.get('extModuleId')
+    * def currentModuleName = karate.get('extModuleName')
+
+    * if (lookupNeeded) karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindAgeToLostTimer', { extToken: extToken })
 
     # build and send the timer update request
     * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/change-age-to-lost-processor-delay-time.json')
@@ -47,9 +48,10 @@ Feature: scheduler utility for mod-circulation
     And header Content-Type = 'application/json'
     When method GET
     Then status 200
+    * print 'all timers:', response
     * def ageToLostTimers = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry && m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
     * print 'age-to-lost timers found:', ageToLostTimers.length
     * if (ageToLostTimers.length == 0) karate.abort()
-    * def foundTimerId    = ageToLostTimers[0].id
-    * def foundModuleId   = ageToLostTimers[0].moduleId
-    * def foundModuleName = ageToLostTimers[0].moduleName
+    * def currentTimerId    = ageToLostTimers[0].id
+    * def currentModuleId   = ageToLostTimers[0].moduleId
+    * def currentModuleName = ageToLostTimers[0].moduleName
