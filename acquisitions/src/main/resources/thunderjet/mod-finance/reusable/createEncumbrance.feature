@@ -11,7 +11,8 @@ Feature: Create an encumbrance
     * def sourcePurchaseOrderId = karate.get('orderId', null)
     * def sourcePoLineId = karate.get('poLineId', null)
     * def expenseClassId = karate.get('expenseClassId', null)
-    * def transactionEncumbrance = { initialAmountEncumbered: '#(amount)', status: 'Unreleased', sourcePurchaseOrderId: '#(sourcePurchaseOrderId)', sourcePoLineId: '#(sourcePoLineId)', orderType: 'One-Time', subscription: false, reEncumber: false }
+    * def initialAmountEncumbered = karate.get('initialAmountEncumbered', amount)
+    * def transactionEncumbrance = { initialAmountEncumbered: '#(initialAmountEncumbered)', status: 'Unreleased', sourcePurchaseOrderId: '#(sourcePurchaseOrderId)', sourcePoLineId: '#(sourcePoLineId)', orderType: 'One-Time', subscription: false, reEncumber: false }
     * def expectedStatus = karate.get('expectedStatus', 204)
 
     Given path 'finance/transactions/batch-all-or-nothing'

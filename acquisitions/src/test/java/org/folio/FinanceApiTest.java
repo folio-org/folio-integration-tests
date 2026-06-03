@@ -57,8 +57,9 @@ public class FinanceApiTest extends TestBaseEureka implements AcquisitionsTest {
     FEATURE_29("unopen-order-after-rollover-MODORDERS-542", false),
     FEATURE_30("unrelease-encumbrance", true),
     FEATURE_31("update-encumbrance-transactions", true),
-    FEATURE_32("acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units", true),
-    FEATURE_33("acq-units/verify-get-funds-with-query-where-user-has-units", true);
+    FEATURE_32("recalculate-budget", true),
+    FEATURE_33("acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units", true),
+    FEATURE_34("acq-units/verify-get-funds-with-query-where-user-has-units", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -293,13 +294,19 @@ public class FinanceApiTest extends TestBaseEureka implements AcquisitionsTest {
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void verifyGetFundsWithoutQueryWhereUserHasUnitsAndFilterOnlyByUnits() {
+  void recalculateBudget() {
     runFeatureTest(Feature.FEATURE_32.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void verifyGetFundsWithQueryWhereUserHasUnits() {
+  void verifyGetFundsWithoutQueryWhereUserHasUnitsAndFilterOnlyByUnits() {
     runFeatureTest(Feature.FEATURE_33.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void verifyGetFundsWithQueryWhereUserHasUnits() {
+    runFeatureTest(Feature.FEATURE_34.getFileName());
   }
 }

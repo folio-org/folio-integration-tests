@@ -65,6 +65,7 @@ function fn() {
     createTransaction: karate.read('classpath:thunderjet/mod-finance/reusable/createTransaction.feature'),
     createEncumbrance: karate.read('classpath:thunderjet/mod-finance/reusable/createEncumbrance.feature'),
     createPayment: karate.read('classpath:thunderjet/mod-finance/reusable/createPayment.feature'),
+    createCredit: karate.read('classpath:thunderjet/mod-finance/reusable/createCredit.feature'),
     createPendingPayment: karate.read('classpath:thunderjet/mod-finance/reusable/createPendingPayment.feature'),
     createLedger: karate.read('classpath:thunderjet/mod-finance/reusable/createLedger.feature'),
     createExpenseClass: karate.read('classpath:thunderjet/mod-finance/reusable/createExpenseClass.feature'),
