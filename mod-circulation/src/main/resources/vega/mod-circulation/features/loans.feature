@@ -840,12 +840,13 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # find current module id for age-to-lost processor delay time
-    * configure retry = { count: 15, interval: 3000 }
+    * configure retry = { count: 30, interval: 5000 }
     Given path '/scheduler/timers'
     And param limit = 100
-    And retry until response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
+    And retry until karate.log('scheduler timers response:', response) || (response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0)
     When method GET
     Then status 200
+    * print 'scheduler timers final response:', response
     * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
     * def currentModuleId = modules[0].moduleId
     * def timerId = modules[0].id
@@ -976,9 +977,10 @@ Feature: Loans tests
     * configure retry = { count: 30, interval: 5000 }
     Given path '/scheduler/timers'
     And param limit = 100
-    And retry until response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
+    And retry until karate.log('scheduler timers response:', response) || (response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0)
     When method GET
     Then status 200
+    * print 'scheduler timers final response:', response
     * def modules = karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' })
     * def currentModuleId = modules[0].moduleId
     * def timerId = modules[0].id
