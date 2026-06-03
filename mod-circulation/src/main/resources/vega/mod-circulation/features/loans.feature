@@ -964,17 +964,23 @@ Feature: Loans tests
     * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
     * def extLoanId = checkOutResponse.response.id
 
-    # find mod-circulation moduleId from any visible timer in the scheduler
-    Given path '/scheduler/timers'
+    # get mod-circulation moduleId from the applications registry using Keycloak master token
+    * configure headers = null
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
+    * url baseUrl
+    Given path 'applications'
     And param limit = 500
+    And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
-    * print 'Scheduler timers response:', response
-    * def circulationTimers = karate.filter(response.timerDescriptors, function(m){ return m.moduleName == 'mod-circulation' })
-    * def circulationModuleId = circulationTimers.length > 0 ? circulationTimers[0].moduleId : 'mod-circulation-unknown'
+    * print 'Applications response:', response
+    * def findCirculationModuleId = function(descriptors) { for (var i = 0; i < descriptors.length; i++) { var d = descriptors[i]; if (d.modules) { for (var j = 0; j < d.modules.length; j++) { if (d.modules[j].name === 'mod-circulation') return d.modules[j].id; } } } return null; }
+    * def circulationModuleId = findCirculationModuleId(response.applicationDescriptors)
     * print 'mod-circulation moduleId:', circulationModuleId
+    * configure headers = headersUser
 
-    # create a temporary APPLICATION timer to trigger age-to-lost processing
+    # create a temporary timer to trigger age-to-lost processing
     * def ageToLostTimerRequest = read('classpath:vega/mod-circulation/features/samples/age-to-lost-application-timer-request.json')
     * ageToLostTimerRequest.moduleId = circulationModuleId
     Given path '/scheduler/timers'
