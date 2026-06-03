@@ -973,7 +973,7 @@ Feature: Loans tests
     * def extLoanId = checkOutResponse.response.id
 
     # find current module id for age-to-lost processor delay time
-    * configure retry = { count: 15, interval: 3000 }
+    * configure retry = { count: 30, interval: 5000 }
     Given path '/scheduler/timers'
     And param limit = 100
     And retry until response.timerDescriptors && karate.filter(response.timerDescriptors, function(m){ return m.routingEntry.pathPattern == '/circulation/scheduled-age-to-lost' }).length > 0
