@@ -858,11 +858,11 @@ Feature: Loans tests
     And match $.itemStatus == 'Aged to lost'
 
     # cleanup: delete timer if it was created by this test, otherwise revert delay to 30 minutes
-    * if (updateResult.currentTimerCreated) call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteAgeToLostTimer') { extToken: #(sidecarToken), extTimerId: #(currentTimerId) }
-    * if (!updateResult.currentTimerCreated) call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extToken: #(sidecarToken), extTimerId: #(currentTimerId), extModuleId: #(updateResult.currentModuleId), extModuleName: #(updateResult.currentModuleName), extUnit: 'minute', extDelay: '30' }
+    * if (updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteAgeToLostTimer', { extToken: sidecarToken, extTimerId: currentTimerId })
+    * if (!updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer', { extToken: sidecarToken, extTimerId: currentTimerId, extModuleId: updateResult.currentModuleId, extModuleName: updateResult.currentModuleName, extUnit: 'minute', extDelay: '30' })
     * configure headers = headersUser
 
-  Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
+    Scenario: When an existing loan is checked in, update checkInServicePointId, returnDate
 
     * def extItemBarcode = 'FAT-995IBC'
     * def extUserBarcode = 'FAT-995UBC'
