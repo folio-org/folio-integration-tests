@@ -8,6 +8,7 @@ Feature: Test authority record leader status on delete
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * def utilPath = 'classpath:spitfire/mod-entities-links/features/samples/util/base.feature'
     * def sourceFileDtoPath = '/setup-records/authority/source-files/authority-source-file1.json'
+    * callonce read(utilPath + '@Setup')
 
   @C399060
   Scenario: LDR position 05 replaced with ""d"" when ""MARC Authority"" record deleted
