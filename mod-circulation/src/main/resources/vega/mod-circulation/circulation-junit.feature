@@ -168,4 +168,6 @@ Feature: mod-circulation integration tests
       | 'mod-settings.global.read.circulation'                        |
       | 'feesfines.accounts-bulk.check-waive.post'                    |
       | 'circulation-storage.circulation-rules.get'                   |
+      | 'locale.item.get'                                             |
+      | 'locale.item.put'                                             |
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')

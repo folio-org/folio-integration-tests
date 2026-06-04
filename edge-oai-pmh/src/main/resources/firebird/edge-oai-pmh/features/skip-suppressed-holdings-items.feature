@@ -6,7 +6,7 @@ Feature: Skip suppressed holdings and items for C193958, C193959
     * callonce login testUser
     * def okapiTokenAdmin = okapitoken
   
-  @C193958  
+  @C193958
   Scenario: Verify record skipped if both instance and holdings are suppressed
     # Configure OAI-PMH to skip suppressed records
     Given path 'oai-pmh/configuration-settings'
@@ -112,6 +112,7 @@ Feature: Skip suppressed holdings and items for C193958, C193959
     # Verify that the suppressed record is NOT included in the response
     And match response //identifier !contains 'oai:folio.org:' + testTenant + '/' + newInstanceId
 
+  @C193958
   Scenario: Verify instance included but suppressed holdings skipped when configured to skip suppressed records
     # Configure OAI-PMH to skip suppressed records (ensure config is set)
     Given path 'oai-pmh/configuration-settings'

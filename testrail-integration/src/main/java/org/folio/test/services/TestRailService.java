@@ -15,7 +15,11 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static org.folio.test.models.ResultStatus.FAILED;
 import static org.folio.test.models.ResultStatus.PASSED;
@@ -23,6 +27,7 @@ import static org.folio.test.models.ResultStatus.PASSED;
 public class TestRailService {
 
   private static final Logger logger = LoggerFactory.getLogger(TestRailService.class);
+  private static final Pattern CASE_TAG_PATTERN = Pattern.compile("^C(\\d+)$");
 
   private final TestRailDao testRailDao;
   private final TestRailClient testRailClient;
@@ -53,22 +58,21 @@ public class TestRailService {
 
   private void prepareAndSendResults(Integer runId, Set<Integer> caseIds, String featureName, Results results) {
     var resultsPayload = new ArrayList<Result>();
-    for (var scenarioResult : results.getScenarioResults().toList()) {
+    results.getScenarioResults().flatMap(TestRailService::flatten).forEach(scenarioResult -> {
       var scenarioName = scenarioResult.getScenario().getName();
       if (CollectionUtils.isEmpty(scenarioResult.getScenario().getTags())) {
         logger.warn("prepareAndSendResults: Cannot retrieve tags for [{}] scenario and [{}] feature", scenarioName, featureName);
-        continue;
+        return;
       }
 
       var resultPayload = new Result();
       if (setCaseId(caseIds, scenarioResult, resultPayload)) {
-        continue;
+        return;
       }
       setStatus(scenarioResult, resultPayload);
       logger.info("prepareAndSendResults: Prepared result payload for [{}] scenario and [{}] feature: {}", scenarioName, featureName, resultPayload);
-
       resultsPayload.add(resultPayload);
-    }
+    });
 
     if (resultsPayload.isEmpty()) {
       logger.warn("prepareAndSendResults: No results payload was prepared for [{}]", featureName);
@@ -78,12 +82,27 @@ public class TestRailService {
     sendResults(runId, featureName, resultsPayload);
   }
 
+  /** Top-level scenario + all scenarios reached via `call read(...)` recursively. */
+  private static Stream<ScenarioResult> flatten(ScenarioResult sr) {
+    if (sr == null) {
+      return Stream.empty();
+    }
+    var nested = sr.getStepResults().stream()
+      .filter(step -> step.getCallResults() != null)
+      .flatMap(step -> step.getCallResults().stream())
+      .flatMap(fr -> fr.getScenarioResults().stream())
+      .flatMap(TestRailService::flatten);
+    return Stream.concat(Stream.of(sr), nested);
+  }
+
   private boolean setCaseId(Set<Integer> caseIds, ScenarioResult scenarioResult, Result resultPayload) {
     var scenarioName = scenarioResult.getScenario().getName();
     var optional = scenarioResult.getScenario().getTags().stream()
-      .filter(tag -> tag.getName() != null && tag.getName().startsWith("C"))
-      .map(tag -> tag.getName().replace("C", ""))
-      .map(Integer::parseInt)
+      .map(tag -> tag.getName())
+      .filter(Objects::nonNull)
+      .map(CASE_TAG_PATTERN::matcher)
+      .filter(Matcher::matches)
+      .map(matcher -> Integer.parseInt(matcher.group(1)))
       .findFirst();
     if (optional.isEmpty()) {
       logger.warn("setCaseId: Cannot set case id for [{}] scenario, invalid tag format", scenarioName);
