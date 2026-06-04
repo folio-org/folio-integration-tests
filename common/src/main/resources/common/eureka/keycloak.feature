@@ -16,6 +16,34 @@ Feature: keycloak
     When method post
     Then status 200
 
+  @getSidecarToken
+  Scenario: get sidecar-module-access-client token (has elevated system permissions)
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
+
+    Given path 'admin', 'realms', testTenant, 'clients'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * def sidecarClientId = 'sidecar-module-access-client'
+    * def sidecarClientUUID = response.filter(x => x.clientId == sidecarClientId)[0].id
+
+    Given path 'admin', 'realms', testTenant, 'clients', sidecarClientUUID, 'client-secret'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    Then status 200
+    * def sidecarSecret = response.value
+
+    Given path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
+    And header Content-Type = 'application/x-www-form-urlencoded'
+    And form field grant_type = 'client_credentials'
+    And form field client_id = sidecarClientId
+    And form field client_secret = sidecarSecret
+    And form field scope = 'email openid'
+    When method POST
+    Then status 200
+    * def sidecarToken = response.access_token
+
   @configureAccessTokenTime
   Scenario: adjust access token lifespan
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
