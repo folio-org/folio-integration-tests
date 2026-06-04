@@ -6,6 +6,7 @@ Feature: Integration with mod-search for new Work and Instance: Outbound
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
 
+  @C1273161
   Scenario Outline: Should Index Work in mod-search. <scenario>
     * def query = '<query>'
     * def searchCall = call searchLinkedDataWork

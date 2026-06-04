@@ -88,6 +88,7 @@ Feature: Import Bibframe2 RDF - Verify RDF
     * eval validateSubject(rdfResponse, work, 'Austria (AT)', 'http://id.loc.gov/ontologies/bibframe/Place')
     * eval validateSubject(rdfResponse, work, 'Middle East', 'http://id.loc.gov/ontologies/bibframe/Place')
 
+  @C957380
   Scenario: Validate HRID
     * def hridResource = karate.filter(rdfResponse, x => x['@type'] && x['@type'].indexOf('http://id.loc.gov/ontologies/bibframe/Local') > -1 && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'] && x['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['@value'] == hrid)[0]
     * match hridResource != null == true

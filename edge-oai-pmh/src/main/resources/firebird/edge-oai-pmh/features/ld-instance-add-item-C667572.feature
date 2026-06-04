@@ -1,4 +1,3 @@
-@C667572
 Feature: Add item to LINKED_DATA instance
 
   Background:
@@ -8,6 +7,7 @@ Feature: Add item to LINKED_DATA instance
     * def defaultHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json', 'Authtoken-Refresh-Cache': 'true' }
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
+  @C667572
   Scenario: ListRecords: Add Item to LINKED_DATA Instance is retrieved in response (marc21_withholdings)
     * configure headers = defaultHeaders
 

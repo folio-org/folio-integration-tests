@@ -10,6 +10,7 @@ Feature: C397334 - ListRecords: Inventory - Verify the response contains 856 fie
     #=========================SETUP=================================================
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testUser.tenant)' }
 
+  @C397334
   Scenario: Verify 856 field with subfield "t" populated for instance, holdings and items
     # Use unique IDs to avoid conflicts with other tests
     * def testInstanceId = '12bc05c4-081f-45ac-8f87-7ff551c3fc16'

@@ -6,7 +6,7 @@ public class SharedInvoicesTenant extends BaseSharedTenant {
 
   private static final String INIT_FEATURE_PATH = "classpath:thunderjet/mod-invoice/init-invoice.feature";
   private static final String SHARED_TENANT_FILE = "target/shared-invoices-tenant.properties";
-  private static final String LAST_CLASS_NAME = "org.folio.InvoicesSmokeApiTest";
+  private static final String LAST_CLASS_NAME = "org.folio.InvoicesExtendedApiTest";
 
   private SharedInvoicesTenant() {
   }

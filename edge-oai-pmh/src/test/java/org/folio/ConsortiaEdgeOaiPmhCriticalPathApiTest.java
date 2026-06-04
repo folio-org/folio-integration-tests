@@ -6,17 +6,18 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "edge-oai-omh")
-public class ConsortiaEdgeOaiPmhApiTest extends TestBaseEureka {
+@FolioTest(team = "firebird", module = "edge-oai-pmh")
+public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/consortia/";
 
-    public ConsortiaEdgeOaiPmhApiTest() {
+    public ConsortiaEdgeOaiPmhCriticalPathApiTest() {
         super(new TestIntegrationService(
-                new TestModuleConfiguration(TEST_BASE_PATH)));
+                new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
     }
 
     @BeforeAll
@@ -42,6 +43,21 @@ public class ConsortiaEdgeOaiPmhApiTest extends TestBaseEureka {
     @Test
     public void test3() {
         runFeatureTest("features/linked-data-edited-item-C688762.feature");
+    }
+
+    @Test
+    public void test4() {
+        runFeatureTest("features/linked-data-edited-main-title-C688749.feature");
+    }
+
+    @Test
+    public void test5() {
+        runFeatureTest("features/linked-data-edited-holdings-C688755.feature");
+    }
+
+    @Test
+    public void test6() {
+        runFeatureTest("features/linked-data-add-item-C688761.feature");
     }
 
 
