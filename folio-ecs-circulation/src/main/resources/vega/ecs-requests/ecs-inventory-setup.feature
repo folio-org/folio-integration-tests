@@ -42,7 +42,8 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
 
     # Share instance from university to central tenant
     * def sharingId = uuid()
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true' }
+    * def headersConsortium = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
+    * configure headers = headersConsortium
     Given path 'consortia', consortiumId, 'sharing/instances'
     And request
       """
@@ -56,16 +57,17 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
     When method POST
     Then status 201
     And match response.instanceIdentifier == instanceId
+    * def sharingInstanceId = response.id
 
-    # Wait for sharing to complete
+    # Wait for sharing to complete by polling the specific sharing instance
     * configure retry = { count: 20, interval: 30000 }
-    Given path 'consortia', consortiumId, 'sharing/instances'
-    And param instanceIdentifier = instanceId
-    And param sourceTenantId = universityTenant
-    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
+    * configure headers = headersConsortium
+    Given path 'consortia', consortiumId, 'sharing/instances', sharingInstanceId
+    And retry until responseStatus == 200 && (response.status == 'COMPLETE' || response.status == 'ERROR')
     When method GET
     Then status 200
-    And match response.sharingInstances[0].status == 'COMPLETE'
+    * if (response.status == 'ERROR') karate.fail('Instance sharing failed: ' + karate.toJson(response))
+    And match response.status == 'COMPLETE'
 
     # Verify instance source updated to CONSORTIUM-FOLIO
     * java.lang.Thread.sleep(5000)
