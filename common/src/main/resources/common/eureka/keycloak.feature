@@ -25,8 +25,8 @@ Feature: keycloak
     And header Authorization = 'Bearer ' + keycloakMasterToken
     When method GET
     Then status 200
-    * def m2mClientId = 'sidecar-module-access-client'
-    * def sidecarClientUUID = response.filter(x => x.clientId == m2mClientId)[0].id
+    * def sidecarClientId = 'sidecar-module-access-client'
+    * def sidecarClientUUID = response.filter(x => x.clientId == sidecarClientId)[0].id
 
     Given path 'admin', 'realms', testTenant, 'clients', sidecarClientUUID, 'client-secret'
     And header Authorization = 'Bearer ' + keycloakMasterToken
@@ -37,7 +37,7 @@ Feature: keycloak
     Given path 'realms', testTenant, 'protocol', 'openid-connect', 'token'
     And header Content-Type = 'application/x-www-form-urlencoded'
     And form field grant_type = 'client_credentials'
-    And form field client_id = m2mClientId
+    And form field client_id = sidecarClientId
     And form field client_secret = sidecarSecret
     And form field scope = 'email openid'
     When method POST
