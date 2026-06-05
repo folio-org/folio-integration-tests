@@ -466,7 +466,9 @@ Feature: init data for mod-circulation
 
   @DeclareItemLost
   Scenario: init common data
-    * def declareItemLostRequest = { declaredLostDateTime: declaredLostDateTime, servicePointId: servicePointId }
+    * def declareItemLostRequest = {}
+    * declareItemLostRequest.declaredLostDateTime = karate.get('declaredLostDateTime')
+    * declareItemLostRequest.servicePointId = karate.get('servicePointId')
 
     Given path 'circulation/loans/' + loanId + '/declare-item-lost'
     And request declareItemLostRequest
