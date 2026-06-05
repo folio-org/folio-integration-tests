@@ -291,9 +291,12 @@ Feature: Print events tests
     * def extMaterialTypeId = call uuid1
     * def extItemId1 = call uuid1
     * def extUserId = call uuid1
+    # generate a unique name — must be explicit to avoid picking up extMaterialTypeName
+    # leaked into scope from requests.feature (which runs before this feature in root.feature)
+    * def extPrintMaterialTypeName = 'print-event-type-' + java.util.UUID.randomUUID()
 
     # post a material type
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extPrintMaterialTypeName) }
 
     # post an item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId1), extItemBarcode: 'printLogs_itemBarcode6', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId) }
