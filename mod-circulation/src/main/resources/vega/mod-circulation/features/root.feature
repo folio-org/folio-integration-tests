@@ -51,5 +51,12 @@ Feature: Root feature that runs all other mod-circulation features
     * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
     * call read('classpath:vega/mod-circulation/features/loans.feature')
     * call read('classpath:vega/mod-circulation/features/requests.feature')
+    # Reset extMaterialTypeName after requests.feature so it cannot leak into subsequent features
+    # (Karate merges called-feature variables back into the root scenario scope; requests.feature
+    # sets extMaterialTypeName = 'electronic resource hindi <UUID>' which would otherwise be
+    # picked up by karate.get('extMaterialTypeName', ...) in every later @PostMaterialType call)
+    * def extMaterialTypeName = null
     * call read('classpath:vega/mod-circulation/features/print-events.feature')
+    # Reset again — print-events.feature sets extMaterialTypeName via its @PostMaterialType calls
+    * def extMaterialTypeName = null
     * call read('classpath:vega/mod-circulation/features/retrival-service-point.feature')
