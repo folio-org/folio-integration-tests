@@ -11,8 +11,6 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
   Scenario: setup consortium with central and university tenants
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
     * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
-    * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
-    * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
     * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
     * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
 
@@ -96,20 +94,52 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
-    * def stepStartedAt = java.lang.System.currentTimeMillis()
-    * print 'ECS setup: starting setupConsortium', { tenant: centralTenant, consortiumId: consortiumId }
-    * call setupConsortium { tenant: '#(centralTenant)' }
-    * print 'ECS setup: completed setupConsortium in ms:', (java.lang.System.currentTimeMillis() - stepStartedAt)
+    # --- Create consortium (idempotent: 409 means already exists from a previous run) ---
+    * def ecsConsortiumHeaders = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    * configure headers = ecsConsortiumHeaders
+    * configure retry = { count: 10, interval: 10000 }
+    Given path 'consortia'
+    And request { id: '#(consortiumId)', name: '#(centralTenant + "name for test")' }
+    And retry until responseStatus == 201 || responseStatus == 409
+    When method POST
+    * print 'ECS setup: setupConsortium responseStatus:', responseStatus
+    * if (responseStatus != 201 && responseStatus != 409) karate.fail('ECS setup: unexpected consortium create status ' + responseStatus + ' body: ' + karate.toJson(response))
 
-    * def stepStartedAt = java.lang.System.currentTimeMillis()
-    * print 'ECS setup: starting setupTenantForConsortia (central)', { tenant: centralTenant, tenantId: centralTenantId, consortiumId: consortiumId }
-    * call setupTenantForConsortia { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'CON' }
-    * print 'ECS setup: completed setupTenantForConsortia (central) in ms:', (java.lang.System.currentTimeMillis() - stepStartedAt)
+    # --- Register central tenant in consortium (idempotent, then wait for COMPLETED) ---
+    * configure retry = { count: 30, interval: 15000 }
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(centralTenant)', code: 'CON', name: '#(centralTenant + " tenants name")', isCentral: true }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
+    When method POST
+    * print 'ECS setup: register centralTenant responseStatus:', responseStatus, 'body:', response
+    * if (responseStatus != 201 && responseStatus != 409 && responseStatus != 422) karate.fail('ECS setup: unexpected central tenant register status ' + responseStatus + ' body: ' + karate.toJson(response))
 
-    * def stepStartedAt = java.lang.System.currentTimeMillis()
-    * print 'ECS setup: starting setupTenantForConsortia (university)', { tenant: universityTenant, tenantId: universityTenantId, consortiumId: consortiumId }
-    * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
-    * print 'ECS setup: completed setupTenantForConsortia (university) in ms:', (java.lang.System.currentTimeMillis() - stepStartedAt)
+    * configure retry = { count: 20, interval: 15000 }
+    Given path 'consortia', consortiumId, 'tenants', centralTenant
+    And retry until responseStatus == 200 && (response.setupStatus == 'COMPLETED' || response.setupStatus == 'FAILED')
+    When method GET
+    Then status 200
+    * print 'ECS setup: centralTenant setupStatus:', response.setupStatus
+    * if (response.setupStatus != 'COMPLETED') karate.fail('ECS setup: centralTenant setupStatus is ' + response.setupStatus)
+
+    # --- Register university tenant in consortium (idempotent, then wait for COMPLETED) ---
+    * configure retry = { count: 30, interval: 15000 }
+    Given path 'consortia', consortiumId, 'tenants'
+    And param adminUserId = consortiaAdmin.id
+    And request { id: '#(universityTenant)', code: 'UNI', name: '#(universityTenant + " tenants name")', isCentral: false }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
+    When method POST
+    * print 'ECS setup: register universityTenant responseStatus:', responseStatus, 'body:', response
+    * if (responseStatus != 201 && responseStatus != 409 && responseStatus != 422) karate.fail('ECS setup: unexpected university tenant register status ' + responseStatus + ' body: ' + karate.toJson(response))
+
+    * configure retry = { count: 20, interval: 15000 }
+    Given path 'consortia', consortiumId, 'tenants', universityTenant
+    And retry until responseStatus == 200 && (response.setupStatus == 'COMPLETED' || response.setupStatus == 'FAILED')
+    When method GET
+    Then status 200
+    * print 'ECS setup: universityTenant setupStatus:', response.setupStatus
+    * if (response.setupStatus != 'COMPLETED') karate.fail('ECS setup: universityTenant setupStatus is ' + response.setupStatus)
 
     # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant operations
     * table baseShadowPermissions
