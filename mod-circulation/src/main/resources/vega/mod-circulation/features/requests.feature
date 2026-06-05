@@ -1958,7 +1958,7 @@ Feature: Requests tests
     * def extUserId = call uuid1
     * def extItemBarcode = 'FAT-HINDI-IBC'
     * def extUserBarcode = 'FAT-HINDI-UBC'
-    * def extMaterialTypeName = 'electronic resource hindi ' + extMaterialTypeId
+    * def extMaterialTypeName = 'electronic resource hindi ' + random_string()
 
     # retrieve original locale settings so they can be restored after the test
     Given path 'locale'
