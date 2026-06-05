@@ -54,7 +54,8 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     FEATURE_26("rollover-settings-no-encumbrances", true),
     FEATURE_27("unreleased-encumbrance-rolled-over-to-next-fiscal-year", true),
     FEATURE_28("invoice-encumbrance-update-without-acquisition-unit", true),
-    FEATURE_29("encumbrance-remains-released-after-another-credited-invoice-was-paid", true);
+    FEATURE_29("encumbrance-remains-released-after-another-credited-invoice-was-paid", true),
+    FEATURE_30("encumbrance-calculated-correctly-after-cancelling-paid-credit-invoice", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -306,6 +307,13 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void encumbranceRemainsReleasedAfterAnotherCreditedInvoiceWasPaid() {
     runFeatureTest(Feature.FEATURE_29.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C451473) Encumbrance calculated correctly after cancelling paid credit Invoice")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void encumbranceCalculatedCorrectlyAfterCancellingPaidCreditInvoice() {
+    runFeatureTest(Feature.FEATURE_30.getFileName());
   }
 
 }

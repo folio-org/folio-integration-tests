@@ -59,6 +59,9 @@ Feature: cross-module integration tests
   Scenario: Encumbrance remains released after another credited invoice was paid
     * call read('features/encumbrance-remains-released-after-another-credited-invoice-was-paid.feature')
 
+  Scenario: Encumbrance calculated correctly after cancelling paid credit Invoice
+    * call read('features/encumbrance-calculated-correctly-after-cancelling-paid-credit-invoice.feature')
+
   Scenario: Check encumbrances after order is reopened
     * call read('features/check-encumbrances-after-order-is-reopened.feature')
 
