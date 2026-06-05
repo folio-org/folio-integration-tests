@@ -198,7 +198,7 @@ Feature: init data for mod-circulation
   @PostMaterialType
   Scenario: create material type
     * def intMaterialTypeId = call uuid1
-    * def materialTypeName = call random_string
+    * def materialTypeName = 'material-type-' + intMaterialTypeId
     * def materialTypeEntityRequest = read('samples/item/material-type-entity-request.json')
     * materialTypeEntityRequest.id = karate.get('extMaterialTypeId', intMaterialTypeId)
     * materialTypeEntityRequest.name = karate.get('extMaterialTypeName', materialTypeName)
@@ -466,7 +466,7 @@ Feature: init data for mod-circulation
 
   @DeclareItemLost
   Scenario: init common data
-    * def declareItemLostRequest = { declaredLostDateTime: #(declaredLostDateTime), servicePointId:#(servicePointId) }
+    * def declareItemLostRequest = { declaredLostDateTime: declaredLostDateTime, servicePointId: servicePointId }
 
     Given path 'circulation/loans/' + loanId + '/declare-item-lost'
     And request declareItemLostRequest
