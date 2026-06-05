@@ -96,9 +96,20 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
+    * def stepStartedAt = java.lang.System.currentTimeMillis()
+    * print 'ECS setup: starting setupConsortium', { tenant: centralTenant, consortiumId: consortiumId }
     * call setupConsortium { tenant: '#(centralTenant)' }
+    * print 'ECS setup: completed setupConsortium in ms:', (java.lang.System.currentTimeMillis() - stepStartedAt)
+
+    * def stepStartedAt = java.lang.System.currentTimeMillis()
+    * print 'ECS setup: starting setupTenantForConsortia (central)', { tenant: centralTenant, tenantId: centralTenantId, consortiumId: consortiumId }
     * call setupTenantForConsortia { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'CON' }
+    * print 'ECS setup: completed setupTenantForConsortia (central) in ms:', (java.lang.System.currentTimeMillis() - stepStartedAt)
+
+    * def stepStartedAt = java.lang.System.currentTimeMillis()
+    * print 'ECS setup: starting setupTenantForConsortia (university)', { tenant: universityTenant, tenantId: universityTenantId, consortiumId: consortiumId }
     * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
+    * print 'ECS setup: completed setupTenantForConsortia (university) in ms:', (java.lang.System.currentTimeMillis() - stepStartedAt)
 
     # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant operations
     * table baseShadowPermissions
