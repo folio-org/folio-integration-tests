@@ -2013,3 +2013,6 @@ Feature: Requests tests
     When method PUT
     Then status 201
 
+    # clear extMaterialTypeName so it does not bleed into features called after this one
+    * def extMaterialTypeName = null
+
