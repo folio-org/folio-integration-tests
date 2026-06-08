@@ -35,6 +35,8 @@ Feature: mod-data-import integration tests
       | 'inventory.instances.collection.get'                                  |
       | 'inventory.instances.item.put'                                        |
       | 'inventory.instances.item.get'                                        |
+      | 'inventory-storage.contributor-name-types.collection.get'             |
+      | 'inventory-storage.contributor-types.collection.get'                  |
       | 'inventory-storage.instances.collection.get'                          |
       | 'inventory-storage.instance-types.item.post'                          |
       | 'inventory-storage.holdings-types.item.post'                          |

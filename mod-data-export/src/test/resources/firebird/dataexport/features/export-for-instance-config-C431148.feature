@@ -1,4 +1,3 @@
-@C431148
 Feature: Verify configured limit of exported file size - Instances (UUID)
 
   Background:
@@ -14,6 +13,7 @@ Feature: Verify configured limit of exported file size - Instances (UUID)
     * configure headers = headersUser
     * configure retry = { interval: 15000, count: 10 }
 
+  @C431148
   Scenario Outline: setting configuration slice_size to 1 and test should check record fields are there and file format is csv.
 
     Given path 'data-export/configuration'
@@ -150,6 +150,7 @@ Feature: Verify configured limit of exported file size - Instances (UUID)
       | fileName                                                         | uploadFormat |
       | test-export-config-instance.csv                                  | csv          |
 
+  @C431148
   Scenario Outline: setting configuration slice_size to N and test should check record fields are there and file format is csv.
 
     Given path 'data-export/configuration'
@@ -227,6 +228,7 @@ Feature: Verify configured limit of exported file size - Instances (UUID)
       | fileName                                                         | uploadFormat |
       | test-export-config-instance.csv                                  | csv          |
 
+  @C431148
   Scenario Outline: setting configuration slice_size to N-1 and test should check record fields are there and file format is csv.
 
     Given path 'data-export/configuration'

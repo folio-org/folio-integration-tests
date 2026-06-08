@@ -36,54 +36,53 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
     FEATURE_10("change-poline-fd-and-pay-invoice", true),
     FEATURE_11("check-approve-and-pay-invoice-with-invoice-references-same-po-line", true),
     FEATURE_12("check-encumbrance-status-after-moving-expended-value", true),
-    FEATURE_13("check-encumbrances-after-issuing-credit-for-paid-order", true),
-    FEATURE_14("check-encumbrances-after-order-is-reopened", true),
-    FEATURE_15("check-encumbrances-after-order-is-reopened-2", true),
-    FEATURE_16("check-encumbrances-after-order-line-exchange-rate-update", true),
-    FEATURE_17("check-order-re-encumber-after-preview-rollover", true),
-    FEATURE_18("check-order-re-encumber-work-correctly", true),
-    FEATURE_19("check-order-total-fields-calculated-correctly", true),
-    FEATURE_20("check-payment-status-after-cancelling-paid-invoice", true),
-    FEATURE_21("check-paymentstatus-after-reopen", true),
-    FEATURE_22("check-po-numbers-updates", true),
-    FEATURE_23("check-po-numbers-updates-when-invoice-line-deleted", true),
-    FEATURE_24("create-order-and-approve-invoice-were-pol-without-fund-distributions", true),
-    FEATURE_25("create-order-and-invoice-with-odd-penny", true),
-    FEATURE_26("create-order-with-invoice-that-has-enough-money", true),
-    FEATURE_27("delete-encumbrance", true),
-    FEATURE_28("invoice-encumbrance-update-without-acquisition-unit", true),
-    FEATURE_29("ledger-fiscal-year-rollover", true),
-    FEATURE_30("ledger-fiscal-year-rollover-cash-balance", true),
-    FEATURE_31("link-invoice-line-to-po-line", true),
-    FEATURE_32("MODFISTO-270-delete-planned-budget-without-transactions", true),
-    FEATURE_33("moving_encumbered_value_to_different_budget", true),
-    FEATURE_34("moving_expended_value_to_newly_created_encumbrance", true),
-    FEATURE_35("open-approve-and-pay-order-with-50-lines", true),
-    FEATURE_36("open-order-after-approving-invoice", true),
-    FEATURE_37("order-invoice-relation", true),
-    FEATURE_38("order-invoice-relation-can-be-changed", true),
-    FEATURE_39("order-invoice-relation-can-be-deleted", true),
-    FEATURE_40("order-invoice-relation-must-be-deleted-if-invoice-deleted", true),
-    FEATURE_41("partial-rollover", true),
-    FEATURE_42("pay-invoice-and-delete-piece", true),
-    FEATURE_43("pay-invoice-with-new-expense-class", true),
-    FEATURE_44("pay-invoice-without-order-acq-unit-permission", true),
-    FEATURE_45("pending-payment-update-after-encumbrance-deletion", true),
-    FEATURE_46("remove-fund-distribution-after-rollover-when-re-encumber-false", true),
-    FEATURE_47("remove_linked_invoice_lines_fund_distribution_encumbrance_reference", true),
-    FEATURE_48("rollover-and-pay-invoice-using-past-fiscal-year", true),
-    FEATURE_49("rollover-with-closed-order", true),
-    FEATURE_50("rollover-with-no-settings", true),
-    FEATURE_51("rollover-with-pending-order", true),
-    FEATURE_52("unopen-approve-invoice-reopen", true),
-    FEATURE_53("unopen-order-and-add-addition-pol-and-check-encumbrances", true),
-    FEATURE_54("unopen-order-simple-case", true),
-    FEATURE_55("update-encumbrance-links-with-fiscal-year", true),
-    FEATURE_56("update_fund_in_poline_when_invoice_approved", true),
-    FEATURE_57("rollover-multi-ledger", true),
-    FEATURE_58("rollover-many-orders-and-lines", false),
-    FEATURE_59("approve-invoice-with-different-fund-than-order", false),
-    FEATURE_60("pay-unopen-open", false);
+    FEATURE_13("check-encumbrances-after-order-is-reopened", true),
+    FEATURE_14("check-encumbrances-after-order-is-reopened-2", true),
+    FEATURE_15("check-encumbrances-after-order-line-exchange-rate-update", true),
+    FEATURE_16("check-order-re-encumber-after-preview-rollover", true),
+    FEATURE_17("check-order-re-encumber-work-correctly", true),
+    FEATURE_18("check-order-total-fields-calculated-correctly", true),
+    FEATURE_19("check-payment-status-after-cancelling-paid-invoice", true),
+    FEATURE_20("check-paymentstatus-after-reopen", true),
+    FEATURE_21("check-po-numbers-updates", true),
+    FEATURE_22("check-po-numbers-updates-when-invoice-line-deleted", true),
+    FEATURE_23("create-order-and-approve-invoice-were-pol-without-fund-distributions", true),
+    FEATURE_24("create-order-and-invoice-with-odd-penny", true),
+    FEATURE_25("create-order-with-invoice-that-has-enough-money", true),
+    FEATURE_26("delete-encumbrance", true),
+    FEATURE_27("ledger-fiscal-year-rollover", true),
+    FEATURE_28("ledger-fiscal-year-rollover-cash-balance", true),
+    FEATURE_29("link-invoice-line-to-po-line", true),
+    FEATURE_30("MODFISTO-270-delete-planned-budget-without-transactions", true),
+    FEATURE_31("moving_encumbered_value_to_different_budget", true),
+    FEATURE_32("moving_expended_value_to_newly_created_encumbrance", true),
+    FEATURE_33("open-approve-and-pay-order-with-50-lines", true),
+    FEATURE_34("open-order-after-approving-invoice", true),
+    FEATURE_35("order-invoice-relation", true),
+    FEATURE_36("order-invoice-relation-can-be-changed", true),
+    FEATURE_37("order-invoice-relation-can-be-deleted", true),
+    FEATURE_38("order-invoice-relation-must-be-deleted-if-invoice-deleted", true),
+    FEATURE_39("partial-rollover", true),
+    FEATURE_40("pay-invoice-and-delete-piece", true),
+    FEATURE_41("pay-invoice-with-new-expense-class", true),
+    FEATURE_42("pay-invoice-without-order-acq-unit-permission", true),
+    FEATURE_43("pending-payment-update-after-encumbrance-deletion", true),
+    FEATURE_44("remove-fund-distribution-after-rollover-when-re-encumber-false", true),
+    FEATURE_45("remove_linked_invoice_lines_fund_distribution_encumbrance_reference", true),
+    FEATURE_46("rollover-and-pay-invoice-using-past-fiscal-year", true),
+    FEATURE_47("rollover-with-closed-order", true),
+    FEATURE_48("rollover-with-no-settings", true),
+    FEATURE_49("rollover-with-pending-order", true),
+    FEATURE_50("unopen-approve-invoice-reopen", true),
+    FEATURE_51("unopen-order-and-add-addition-pol-and-check-encumbrances", true),
+    FEATURE_52("unopen-order-simple-case", true),
+    FEATURE_53("update-encumbrance-links-with-fiscal-year", true),
+    FEATURE_54("update_fund_in_poline_when_invoice_approved", true),
+    FEATURE_55("rollover-multi-ledger", true),
+    FEATURE_56("rollover-many-orders-and-lines", false),
+    FEATURE_57("approve-invoice-with-different-fund-than-order", true),
+    FEATURE_58("rollover-one-order-type", true),
+    FEATURE_59("pay-unopen-open", false);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -200,272 +199,260 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkEncumbrancesAfterIssuingCreditForPaidOrder() {
+  void checkEncumbrancesAfterOrderIsReopened() {
     runFeatureTest(Feature.FEATURE_13.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkEncumbrancesAfterOrderIsReopened() {
+  void checkEncumbrancesAfterOrderIsReopened2() {
     runFeatureTest(Feature.FEATURE_14.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkEncumbrancesAfterOrderIsReopened2() {
+  void checkEncumbrancesAfterOrderLineExchangeRateUpdate() {
     runFeatureTest(Feature.FEATURE_15.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkEncumbrancesAfterOrderLineExchangeRateUpdate() {
+  void checkOrderReEncumberAfterPreviewRollover() {
     runFeatureTest(Feature.FEATURE_16.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkOrderReEncumberAfterPreviewRollover() {
+  void checkOrderReEncumberWorksCorrectly() {
     runFeatureTest(Feature.FEATURE_17.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkOrderReEncumberWorksCorrectly() {
+  void checkOrderTotalFieldsCalculatedCorrectly() {
     runFeatureTest(Feature.FEATURE_18.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkOrderTotalFieldsCalculatedCorrectly() {
+  void checkPaymentStatusAfterCancellingPaidInvoice() {
     runFeatureTest(Feature.FEATURE_19.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkPaymentStatusAfterCancellingPaidInvoice() {
+  void checkPaymentStatusAfterReopen() {
     runFeatureTest(Feature.FEATURE_20.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkPaymentStatusAfterReopen() {
+  void checkPoNumbersUpdates() {
     runFeatureTest(Feature.FEATURE_21.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkPoNumbersUpdates() {
+  void checkPoNumbersUpdatesWhenIinvoiceLineDeleted() {
     runFeatureTest(Feature.FEATURE_22.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void checkPoNumbersUpdatesWhenIinvoiceLineDeleted() {
+  void createOrderAndApproveInvoiceWerePolWithoutFundDistributions() {
     runFeatureTest(Feature.FEATURE_23.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void createOrderAndApproveInvoiceWerePolWithoutFundDistributions() {
+  void createOrderAndInvoiceWithOddPenny() {
     runFeatureTest(Feature.FEATURE_24.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void createOrderAndInvoiceWithOddPenny() {
+  void createOrderWithInvoiceWithEnoughMoney() {
     runFeatureTest(Feature.FEATURE_25.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void createOrderWithInvoiceWithEnoughMoney() {
+  void deleteEncumbrance() {
     runFeatureTest(Feature.FEATURE_26.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void deleteEncumbrance() {
+  void ledgerRollover() {
     runFeatureTest(Feature.FEATURE_27.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void invoiceEncumbranceUpdateWithoutAcquisitionUnit() {
+  void ledgerFiscalYearRolloverCashBalance() {
     runFeatureTest(Feature.FEATURE_28.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerRollover() {
+  void linkInvoiceLineToPoLine() {
     runFeatureTest(Feature.FEATURE_29.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearRolloverCashBalance() {
+  void deletePlannedBudgetWithoutTransactions() {
     runFeatureTest(Feature.FEATURE_30.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void linkInvoiceLineToPoLine() {
+  void movingEncumberedValueToDifferentBudget() {
     runFeatureTest(Feature.FEATURE_31.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void deletePlannedBudgetWithoutTransactions() {
+  void movingExpendedValueToNewlyCreatedEncumbrance() {
     runFeatureTest(Feature.FEATURE_32.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void movingEncumberedValueToDifferentBudget() {
+  void openApproveAndPayOrderWith50Lines() {
     runFeatureTest(Feature.FEATURE_33.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void movingExpendedValueToNewlyCreatedEncumbrance() {
+  void openOrderAfterApprovingInvoice() {
     runFeatureTest(Feature.FEATURE_34.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void openApproveAndPayOrderWith50Lines() {
+  void orderInvoiceRelation() {
     runFeatureTest(Feature.FEATURE_35.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void openOrderAfterApprovingInvoice() {
+  void orderInvoiceRelationCanBeChanged() {
     runFeatureTest(Feature.FEATURE_36.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void orderInvoiceRelation() {
+  void orderInvoiceRelationCanBeDeleted() {
     runFeatureTest(Feature.FEATURE_37.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void orderInvoiceRelationCanBeChanged() {
+  void order_invoice_relation_must_be_deleted_if_invoice_deleted() {
     runFeatureTest(Feature.FEATURE_38.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void orderInvoiceRelationCanBeDeleted() {
+  void partialRollover() {
     runFeatureTest(Feature.FEATURE_39.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void order_invoice_relation_must_be_deleted_if_invoice_deleted() {
+  void payInvoiceAndDeletePiece() {
     runFeatureTest(Feature.FEATURE_40.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void partialRollover() {
+  void payInvoiceWithNewExpenseClass() {
     runFeatureTest(Feature.FEATURE_41.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void payInvoiceAndDeletePiece() {
+  void payInvoiceWithoutOrderAcqUnitPermission() {
     runFeatureTest(Feature.FEATURE_42.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void payInvoiceWithNewExpenseClass() {
+  void pendingPaymentUpdateAfterEncumbranceDeletion() {
     runFeatureTest(Feature.FEATURE_43.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void payInvoiceWithoutOrderAcqUnitPermission() {
+  void removeFundDistributionAfterRolloverWhenReEncumberFalse() {
     runFeatureTest(Feature.FEATURE_44.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void pendingPaymentUpdateAfterEncumbranceDeletion() {
+  void removeLinkedInvoiceLinesFundDistributionEncumbranceReference() {
     runFeatureTest(Feature.FEATURE_45.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void removeFundDistributionAfterRolloverWhenReEncumberFalse() {
+  void rolloverAndPayInvoiceUsingPastFiscalYear() {
     runFeatureTest(Feature.FEATURE_46.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void removeLinkedInvoiceLinesFundDistributionEncumbranceReference() {
+  void rolloverWithClosedOrder() {
     runFeatureTest(Feature.FEATURE_47.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void rolloverAndPayInvoiceUsingPastFiscalYear() {
+  void rolloverWithNoSettings() {
     runFeatureTest(Feature.FEATURE_48.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void rolloverWithClosedOrder() {
+  void rolloverWithPendingOrder() {
     runFeatureTest(Feature.FEATURE_49.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void rolloverWithNoSettings() {
+  void unopenApproveInvoiceReopen() {
     runFeatureTest(Feature.FEATURE_50.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void rolloverWithPendingOrder() {
+  void unopen_order_and_add_addition_pol_and_check_encumbrances() {
     runFeatureTest(Feature.FEATURE_51.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void unopenApproveInvoiceReopen() {
+  void unopen_order_simple_case() {
     runFeatureTest(Feature.FEATURE_52.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void unopen_order_and_add_addition_pol_and_check_encumbrances() {
+  void updateEncumbranceLinksWithFiscalYear() {
     runFeatureTest(Feature.FEATURE_53.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void unopen_order_simple_case() {
+  void updateFundInPoLineWhenInvoiceApproved() {
     runFeatureTest(Feature.FEATURE_54.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void updateEncumbranceLinksWithFiscalYear() {
-    runFeatureTest(Feature.FEATURE_55.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void updateFundInPoLineWhenInvoiceApproved() {
-    runFeatureTest(Feature.FEATURE_56.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void rolloverMultiLedger() {
-    runFeatureTest(Feature.FEATURE_57.getFileName());
+    runFeatureTest(Feature.FEATURE_55.getFileName());
   }
 
   @Test
@@ -473,18 +460,24 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
   @Disabled
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void rolloverManyOrdersAndLines() {
-    runFeatureTest(Feature.FEATURE_58.getFileName());
+    runFeatureTest(Feature.FEATURE_56.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void approveInvoiceWithDifferentFundThanOrder() {
-    runFeatureTest(Feature.FEATURE_59.getFileName());
+    runFeatureTest(Feature.FEATURE_57.getFileName());
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void rolloverOneOrderTypeFeature() {
+    runFeatureTest(Feature.FEATURE_58.getFileName());
   }
 
   @Test
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void payUnopenOpen() {
-    runFeatureTest(Feature.FEATURE_60.getFileName());
+    runFeatureTest(Feature.FEATURE_59.getFileName());
   }
 }

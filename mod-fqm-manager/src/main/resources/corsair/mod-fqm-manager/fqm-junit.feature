@@ -1,3 +1,4 @@
+@FqmManagerSetup
 Feature: mod-fqm-manager integration tests
 
   Background:
@@ -39,16 +40,20 @@ Feature: mod-fqm-manager integration tests
       | 'comments.collection.get'                                          |
       | 'configuration.entries.collection.get'                             |
       | 'departments.collection.get'                                       |
+      | 'departments.item.post'                                            |
       | 'feefineactions.collection.get'                                    |
       | 'feefines.collection.get'                                          |
       | 'finance.budgets.collection.get'                                   |
       | 'finance.exchange-rate.item.get'                                   |
       | 'finance.expense-classes.collection.get'                           |
       | 'finance.fiscal-years.collection.get'                              |
+      | 'finance.fiscal-years.item.post'                                   |
       | 'finance.fund-types.collection.get'                                |
       | 'finance.funds.collection.get'                                     |
+      | 'finance.funds.item.post'                                          |
       | 'finance.groups.collection.get'                                    |
       | 'finance.ledgers.collection.get'                                   |
+      | 'finance.ledgers.item.post'                                        |
       | 'finance.transactions.collection.get'                              |
       | 'fqm.entityTypes.collection.get'                                   |
       | 'fqm.entityTypes.custom.available-joins.collection.post'           |
@@ -76,6 +81,7 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.authority-source-files.collection.get'          |
       | 'inventory-storage.alternative-title-types.collection.get'         |
       | 'inventory-storage.call-number-types.collection.get'               |
+      | 'inventory-storage.call-number-types.item.post'                    |
       | 'inventory-storage.classification-types.collection.get'            |
       | 'inventory-storage.contributor-name-types.collection.get'          |
       | 'inventory-storage.contributor-types.collection.get'               |
@@ -95,6 +101,8 @@ Feature: mod-fqm-manager integration tests
       | 'inventory-storage.instance-types.item.post'                       |
       | 'inventory-storage.instances.item.get'                             |
       | 'inventory-storage.instances.item.post'                            |
+      | 'inventory-storage.item-damaged-statuses.collection.get'           |
+      | 'inventory-storage.item-damaged-statuses.item.post'                |
       | 'inventory-storage.item-note-types.collection.get'                 |
       | 'inventory-storage.items.item.get'                                 |
       | 'inventory-storage.items.item.post'                                |
@@ -122,10 +130,14 @@ Feature: mod-fqm-manager integration tests
       | 'lost-item-fees-policies.collection.get'                           |
       | 'manual-block-templates.collection.get'                            |
       | 'manualblocks.collection.get'                                      |
+      | 'orders-storage.custom-fields.collection.get'                      |
+      | 'orders-storage.custom-fields.collection.put'                      |
       | 'orders-storage.pieces.collection.get'                             |
+      | 'orders-storage.pieces.item.post'                                  |
       | 'orders-storage.po-lines.item.post'                                |
       | 'orders-storage.purchase-orders.item.post'                         |
       | 'orders-storage.titles.collection.get'                             |
+      | 'orders-storage.titles.item.post'                                  |
       | 'orders.acquisition-methods.collection.get'                        |
       | 'orders.item.get'                                                  |
       | 'orders.po-lines.item.get'                                         |

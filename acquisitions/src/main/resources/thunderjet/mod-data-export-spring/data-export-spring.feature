@@ -22,3 +22,9 @@ Feature: mod-data-export-spring integration tests
 
   Scenario: Claims Export
     * call read('features/claims-export.feature')
+
+  Scenario: Already exported order is not included repeatedly in next exports AND title special characters are escaped in EDI
+    * call read('features/exported-order-not-repeated-in-next-exports.feature')
+
+  Scenario: Automatic export flag triggers EDIFACT orders export
+    * call read('features/automatic-export-flag-triggers-edifact-export.feature')

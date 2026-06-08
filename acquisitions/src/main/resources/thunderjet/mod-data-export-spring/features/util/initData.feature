@@ -74,6 +74,7 @@ Feature: Init data for mod-data-export-spring
     * poLineEntityRequest.physical.materialSupplier = karate.get('extMaterialSupplier', globalVendorId)
     * poLineEntityRequest.eresource.materialType = karate.get('extMaterialTypeId', globalMaterialTypeIdElec)
     * poLineEntityRequest.vendorDetail.vendorAccount = karate.get('extAccountNumber', 'default account number')
+    * poLineEntityRequest.titleOrPackage = karate.get('extTitleOrPackage', poLineEntityRequest.titleOrPackage)
 
     Given path 'orders/order-lines'
     And request poLineEntityRequest
@@ -127,3 +128,27 @@ Feature: Init data for mod-data-export-spring
     And param query = '(type==' + exportType + ')'
     When method GET
     Then status 200
+
+  @UpdateIntegrationOfOrganization
+  Scenario: Re-schedule existing integration (export config) of organization
+    # parameters: extExportConfigId, extEdiScheduleTime (optional: extEdiScheduleFrequency, extEdiSchedulePeriod, extEdiScheduleWeekDays, extEdiScheduleTimeZone)
+    * def configId = karate.get('extExportConfigId')
+
+    # Get current export config
+    Given path 'data-export-spring/configs', configId
+    When method GET
+    Then status 200
+    * json exportConfig = response
+
+    # Update schedule parameters
+    * set exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleFrequency = karate.get('extEdiScheduleFrequency', exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleFrequency)
+    * set exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.schedulePeriod = karate.get('extEdiSchedulePeriod', exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.schedulePeriod)
+    * set exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleTime = karate.get('extEdiScheduleTime', exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.scheduleTime)
+    * set exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.weekDays = karate.get('extEdiScheduleWeekDays', exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.weekDays)
+    * set exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.timeZone = karate.get('extEdiScheduleTimeZone', exportConfig.exportTypeSpecificParameters.vendorEdiOrdersExportConfig.ediSchedule.scheduleParameters.timeZone)
+
+    # Put updated export config
+    Given path 'data-export-spring/configs', configId
+    And request exportConfig
+    When method PUT
+    Then status 204

@@ -10,7 +10,7 @@ Feature: test for retrival service-point for requests when item, SP and location
     * def groupId = call uuid1
 
     * def extMaterialTypeId = call uuid1
-    * def materialTypeIdResponse = callonce read('classpath:vega/mod-circulation/features/util/initData.feature@@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
+    * def materialTypeIdResponse = callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId) }
 
     # create user and group for all scenarios
     * def extUserId = call uuid1

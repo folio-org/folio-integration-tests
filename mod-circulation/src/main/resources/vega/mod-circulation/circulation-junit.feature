@@ -151,7 +151,10 @@ Feature: mod-circulation integration tests
       | name                                                          |
       | 'calendar.endpoint.calendars.calendarId.delete'               |
       | 'scheduler.collection.get'                                    |
+      | 'scheduler.item.get'                                          |
+      | 'scheduler.item.post'                                         |
       | 'scheduler.item.put'                                          |
+      | 'scheduler.item.delete'                                       |
       | 'calendar.endpoint.calendars.post'                            |
       | 'calendar.endpoint.calendars.surroundingOpenings.get'         |
       | 'circulation.requests.queue.item-reorder.collection.post'     |
@@ -165,4 +168,6 @@ Feature: mod-circulation integration tests
       | 'mod-settings.global.read.circulation'                        |
       | 'feesfines.accounts-bulk.check-waive.post'                    |
       | 'circulation-storage.circulation-rules.get'                   |
+      | 'locale.item.get'                                             |
+      | 'locale.item.put'                                             |
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')

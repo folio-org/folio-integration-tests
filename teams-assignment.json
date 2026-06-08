@@ -103,6 +103,7 @@
   {
     "team": "Vega",
     "modules": [
+      "folio-ecs-circulation",
       "mod-feesfines",
       "mod-patron-blocks",
       "mod-circulation",
@@ -156,6 +157,6 @@
       "mod-login-keycloak",
       "mod-scheduler"
     ],
-    "slackChannel": "#folio-eureka-support"
+    "slackChannel": "#folio-eureka-notify"
   }
 ]

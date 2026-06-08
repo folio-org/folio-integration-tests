@@ -32,7 +32,67 @@ class ModRolesKeycloakTests extends TestBaseEureka {
   }
 
   @Test
-  void listRoles() {
-    runFeatureTest("list-roles");
+  void capabilities() {
+    runFeatureTest("capabilities");
+  }
+
+  @Test
+  void capabilitySets() {
+    runFeatureTest("capability-sets");
+  }
+
+  @Test
+  void userCapabilities() {
+    runFeatureTest("user-capabilities");
+  }
+
+  @Test
+  void userCapabilitySets() {
+    runFeatureTest("user-capability-sets");
+  }
+
+  @Test
+  void roles() {
+    runFeatureTest("roles");
+  }
+
+  @Test
+  void userRoles() {
+    runFeatureTest("user-roles");
+  }
+
+  @Test
+  void userDeletionCleanup() {
+    runFeatureTest("user-deletion-cleanup");
+  }
+
+  @Test
+  void userEffectiveAccess() {
+    runFeatureTest("user-effective-access");
+  }
+
+  @Test
+  void userEffectiveAccessViaRoleCapabilities() {
+    runFeatureTest("user-effective-access-via-role-capabilities");
+  }
+
+  @Test
+  void userEffectiveAccessViaRoleCapabilitySets() {
+    runFeatureTest("user-effective-access-via-role-capability-sets");
+  }
+
+  @Test
+  void roleCapabilities() {
+    runFeatureTest("role-capabilities");
+  }
+
+  @Test
+  void roleCapabilitySets() {
+    runFeatureTest("role-capability-sets");
+  }
+
+  @Test
+  void roleEffectiveAccess() {
+    runFeatureTest("role-effective-access");
   }
 }

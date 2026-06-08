@@ -8,7 +8,7 @@ Feature: Verify exported Bibframe2 RDF
     * def rdf = rdfCall.response
 
   @C1259776
-  Scenario: Verify RDF contains a resource whose resource id url starts with foliioUiUrl
+  Scenario: Verify RDF contains a resource whose resource id url starts with folioUiUrl
     * def matchingInstances = rdf.filter(x => x['@id'] == baseResourceUrl + instanceResourceId)
     * assert matchingInstances.length > 0
 
@@ -78,7 +78,7 @@ Feature: Verify exported Bibframe2 RDF
     * match creatorAgentId == 'http://id.loc.gov/rwo/agents/n87116094'
 
   @C805759
-  Scenario: Verify Contrinutors (LCCN Not present) in the RDF
+  Scenario: Verify Contributors (LCCN Not present) in the RDF
     * def contributors = contributorsRdfs.filter(x => !x['@type'].includes('http://id.loc.gov/ontologies/bibframe/PrimaryContribution'))
 
     * def familyContributor = contributors.filter(x => rdf.filter(a => a['@id'] == x['http://id.loc.gov/ontologies/bibframe/agent'][0]['@id'])[0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] == 'Rinehart family, Rinehart, Family Rinehart')[0]

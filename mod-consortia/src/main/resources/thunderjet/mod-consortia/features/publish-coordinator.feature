@@ -126,7 +126,7 @@ Feature: Consortia publish coordinator tests
 
   @Positive
   Scenario: Sending GET request and check the results
-    * def departmentsPayload = { id: '#(departmentId)', name: '#(name)', code: '#(code)', usageNumber: 0, source: '#(source)' }
+    * def departmentsPayload = { id: '#(departmentId)', name: '#(name)', code: '#(code)', source: '#(source)' }
 
     # 1. Publish requests to endpoint /departments
     Given path 'consortia', consortiumId, 'publications'
@@ -177,6 +177,7 @@ Feature: Consortia publish coordinator tests
 
     # 4. Retrieve succeeded publication status. expected status COMPLETE
     Given path 'consortia', consortiumId, 'publications', publicationId
+    And header x-okapi-tenant = centralTenant
     And retry until response.status == 'COMPLETE'
     When method GET
     Then status 200
@@ -204,7 +205,7 @@ Feature: Consortia publish coordinator tests
 
   @Positive
   Scenario: Sending PUT request to update and check results
-    * def departmentsPayload = { id: '#(departmentId)', name: '#(updateName)', code: '#(updateCode)', usageNumber: 10, source: '#(source)' }
+    * def departmentsPayload = { id: '#(departmentId)', name: '#(updateName)', code: '#(updateCode)', source: '#(source)' }
 
     # 1. Publish requests to endpoint /departments with PUT request to update department name and code
     Given path 'consortia', consortiumId, 'publications'
@@ -262,8 +263,10 @@ Feature: Consortia publish coordinator tests
     And match response.metadata.createdByUserId == consortiaAdmin.id
 
     # 4.2 Check from /departments endpoint that department has been created in 'universityTenant'
+    * call login universityUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     Given path 'departments', departmentId
-    And header x-okapi-tenant = universityTenant
+    And headers {'x-okapi-tenant':'#(universityTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.id == departmentId
@@ -273,8 +276,10 @@ Feature: Consortia publish coordinator tests
     And match response.metadata.createdByUserId == consortiaAdmin.id
 
     # 4.3 Check from /departments endpoint that department has been created in 'collegeTenant'
+    * call login collegeUser1
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json' }
     Given path 'departments', departmentId
-    And header x-okapi-tenant = collegeTenant
+    And headers {'x-okapi-tenant':'#(collegeTenant)', 'x-okapi-token':'#(okapitoken)'}
     When method GET
     Then status 200
     And match response.id == departmentId
@@ -352,7 +357,7 @@ Feature: Consortia publish coordinator tests
     * def name = 'Finance'
     * def code = 'XYZ'
     * def source = 'System'
-    * def departmentsPayload = { id: '#(departmentId)', name: '#(name)', code: '#(code)', usageNumber: 0, source: '#(source)' }
+    * def departmentsPayload = { id: '#(departmentId)', name: '#(name)', code: '#(code)', source: '#(source)' }
 
     # Setup:
     # We will create department object in 'universityTenant'
