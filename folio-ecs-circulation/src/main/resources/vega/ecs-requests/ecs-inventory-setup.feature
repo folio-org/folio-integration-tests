@@ -117,9 +117,10 @@ Feature: Create ECS inventory (instance + holding + item) via central-to-univers
     When method POST
     Then status 201
 
-    # Trigger mod-search full reindex for the university tenant so the new holding and item
-    # are indexed immediately without waiting for the Kafka incremental pipeline.
-    * configure headers = headersUniversity
+    # Trigger mod-search full reindex from the CENTRAL tenant (member tenants are not allowed
+    # to trigger reindex in a consortium environment). The central-tenant reindex covers all
+    # consortium members, so the new university holding and item will be indexed.
+    * configure headers = headersCentral
     Given path 'search/index/instance-records/reindex/full'
     And request {}
     When method POST
