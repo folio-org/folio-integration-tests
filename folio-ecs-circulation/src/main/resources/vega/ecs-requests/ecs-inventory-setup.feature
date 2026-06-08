@@ -117,3 +117,25 @@ Feature: Create ECS inventory (instance + holding + item) via central-to-univers
     When method POST
     Then status 201
 
+    # Trigger mod-search full reindex for the university tenant so the new holding and item
+    # are indexed immediately without waiting for the Kafka incremental pipeline.
+    * configure headers = headersUniversity
+    Given path 'search/index/instance-records/reindex/full'
+    And request {}
+    When method POST
+    Then status 200
+
+    # Wait until the instance appears in the consortium search index with items indexed.
+    # expandAll=true returns the instance with nested items; items.length > 0 confirms
+    # that the university holding+item are indexed and visible for cross-tenant queries.
+    * def headersSearchConsortium = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
+    * configure headers = headersSearchConsortium
+    * configure retry = { count: 20, interval: 15000 }
+    Given path 'search/instances'
+    And param query = 'id==' + instanceId
+    And param expandAll = 'true'
+    And retry until responseStatus == 200 && response.totalRecords > 0 && response.instances && response.instances[0] && response.instances[0].items && response.instances[0].items.length > 0
+    When method GET
+    Then status 200
+    * print 'ECS inventory setup: instance indexed in mod-search with', response.instances[0].items.length, 'item(s)'
+
