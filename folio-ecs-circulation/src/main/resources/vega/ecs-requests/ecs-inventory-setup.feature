@@ -117,12 +117,15 @@ Feature: Create ECS inventory (instance + holding + item) via central-to-univers
     When method POST
     Then status 201
 
-    # Trigger mod-search full reindex from the CENTRAL tenant (member tenants are not allowed
-    # to trigger reindex in a consortium environment). The central-tenant reindex covers all
-    # consortium members, so the new university holding and item will be indexed.
+    # Trigger mod-search full reindex from the CENTRAL tenant.
+    # If a previous reindex is still in progress (e.g. from consortium setup), wait for it
+    # to finish (400 "already in progress") then retry until a new reindex starts (200).
+    # The new reindex will include the holding and item just created in mod-inventory-storage.
     * configure headers = headersCentral
+    * configure retry = { count: 20, interval: 30000 }
     Given path 'search/index/instance-records/reindex/full'
     And request {}
+    And retry until responseStatus == 200
     When method POST
     Then status 200
 
