@@ -1,13 +1,13 @@
 @ignore
-Feature: Create ECS inventory (instance + holding + item) and share instance to central tenant
+Feature: Create ECS inventory (instance + holding + item) via central-to-university sharing
 
   # Parameters:
-  #   okapitoken        - central tenant admin token (for sharing API)
+  #   okapitoken        - central tenant admin token (for instance creation and sharing API)
   #   centralTenant     - central tenant name
   #   consortiumId      - consortium UUID
   #   uniOkapitoken     - university tenant token
   #   universityTenant  - university tenant name
-  #   instanceTypeId    - instance type UUID
+  #   instanceTypeId    - instance type UUID (same UUID used in both tenants)
   #   locationId        - permanent location UUID (university tenant)
   #   holdingsSourceId  - holdings source UUID (university tenant)
   #   materialTypeId    - material type UUID
@@ -16,16 +16,22 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
   #
   # Returns (via karate.set):
   #   instanceId, holdingId, itemId, itemBarcode
+  #
+  # Strategy: create instance in CENTRAL tenant, then share FROM central TO university.
+  # Sharing from central → member is SYNCHRONOUS (returns COMPLETE immediately),
+  # which avoids the long async Kafka wait that occurs when sharing from member → central.
 
   Background:
     * url baseUrl
 
-  Scenario: create instance, share to central, create holding and item in university tenant
+  Scenario: create instance in central, share to university, create holding and item in university
+    * def headersCentral = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
     * def headersUniversity = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    * def headersConsortium = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
 
-    # Create instance in university tenant
+    # Create instance in CENTRAL tenant
     * def instanceId = uuid()
-    * configure headers = headersUniversity
+    * configure headers = headersCentral
     Given path 'inventory/instances'
     And request
       """
@@ -40,9 +46,9 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
     When method POST
     Then status 201
 
-    # Share instance from university to central tenant
+    # Share FROM CENTRAL TO UNIVERSITY
+    # When sourceTenantId = central, mod-consortia returns COMPLETE synchronously — no Kafka wait.
     * def sharingId = uuid()
-    * def headersConsortium = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     * configure headers = headersConsortium
     Given path 'consortia', consortiumId, 'sharing/instances'
     And request
@@ -50,34 +56,34 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
       {
         "id": "#(sharingId)",
         "instanceIdentifier": "#(instanceId)",
-        "sourceTenantId": "#(universityTenant)",
-        "targetTenantId": "#(centralTenant)"
+        "sourceTenantId": "#(centralTenant)",
+        "targetTenantId": "#(universityTenant)"
       }
       """
     When method POST
     Then status 201
     And match response.instanceIdentifier == instanceId
     * def sharingInstanceId = response.id
+    * print 'ECS inventory setup: sharing status after POST:', response.status
 
-    # Wait for sharing to complete by polling the specific sharing instance
-    * configure retry = { count: 20, interval: 30000 }
-    * configure headers = headersConsortium
+    # Poll for COMPLETE (fast for central→university; guard against rare IN_PROGRESS edge case)
+    * configure retry = { count: 20, interval: 15000 }
     Given path 'consortia', consortiumId, 'sharing/instances', sharingInstanceId
     And retry until responseStatus == 200 && (response.status == 'COMPLETE' || response.status == 'ERROR')
     When method GET
     Then status 200
-    * if (response.status == 'ERROR') karate.fail('Instance sharing failed: ' + karate.toJson(response))
+    * print 'ECS inventory setup: sharing final status:', response.status
+    * if (response.status == 'ERROR') karate.fail('Instance sharing central→university failed: ' + karate.toJson(response))
     And match response.status == 'COMPLETE'
 
-    # Verify instance source updated to CONSORTIUM-FOLIO
-    * java.lang.Thread.sleep(5000)
+    # Verify the shared CONSORTIUM-FOLIO instance is visible in the university tenant
     * configure headers = headersUniversity
     Given path 'inventory/instances', instanceId
     When method GET
     Then status 200
     And match response.source == 'CONSORTIUM-FOLIO'
 
-    # Create holding in university tenant
+    # Create holding in university tenant (against the CONSORTIUM-FOLIO shadow instance)
     * def holdingId = uuid()
     Given path 'holdings-storage/holdings'
     And request
