@@ -82,7 +82,7 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
     FEATURE_56("rollover-many-orders-and-lines", false),
     FEATURE_57("approve-invoice-with-different-fund-than-order", true),
     FEATURE_58("rollover-one-order-type", true),
-    FEATURE_59("pay-unopen-open", false);
+    FEATURE_59("pay-unopen-open", true);
 
     private final String fileName;
     private final boolean isEnabled;
