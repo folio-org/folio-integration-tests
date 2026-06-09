@@ -431,3 +431,41 @@ Feature: Setup quickMARC
     And headers headersUser
     When method GET
     Then status 200
+
+  @Ignore #Util scenario, accepts 'authorityId', 'authorityNaturalId' parameters
+  @CreateBibWithAuthLinks
+  Scenario: Create bib record with 100 and 600 authority links
+    * def newBibId = uuid()
+    * def newBibHrid = 'test-bib-' + newBibId
+    * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@CreateMarcBib') {id: '#(newBibId)', hrid: '#(newBibHrid)'}
+
+    Given path 'records-editor/records'
+    And param externalId = newBibId
+    And headers headersUser
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    When method GET
+    Then status 200
+    * def newBibRecord = response
+
+    * def linkContent = ' $0 ' + authorityNaturalId + ' $9 ' + authorityId
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId": 1, "status": "NEW"}}
+    * def tag600 = {"tag": "600", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","\\"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId), "authorityNaturalId":#(authorityNaturalId), "linkingRuleId": 8, "status": "NEW"}}
+    * newBibRecord.fields = newBibRecord.fields.filter(f => f.tag != '100')
+    * newBibRecord.fields.push(tag100)
+    * newBibRecord.fields.push(tag600)
+    * set newBibRecord._actionType = 'edit'
+
+    Given path 'records-editor/records', newBibRecord.parsedRecordId
+    And headers headersUser
+    And request newBibRecord
+    When method PUT
+    Then status 202
+
+    Given path 'links/instances', newBibId
+    And headers headersUser
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
+
+    * def instanceId = newBibId
+    * def parsedRecordId = newBibRecord.parsedRecordId
