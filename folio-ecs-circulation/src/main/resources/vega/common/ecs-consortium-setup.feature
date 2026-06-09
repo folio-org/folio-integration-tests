@@ -177,53 +177,58 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
 
     # ========== Step 3: Initialize mod-search indices ==========
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    # 200 = reindex started; 400 = already in progress (also acceptable)
+    * configure retry = { count: 10, interval: 10000 }
     Given path 'search/index/instance-records/reindex/full'
     And request {}
+    And retry until responseStatus == 200 || responseStatus == 400
     When method POST
-    Then status 200
+    * print 'ECS setup: initial mod-search reindex status:', responseStatus
 
     # ========== Step 4: Setup inventory data in central tenant ==========
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    # Retry handles transient 502/503 during startup; 409/422 = entity already exists (idempotent)
+    * configure retry = { count: 10, interval: 15000 }
 
     Given path 'location-units/institutions'
     And request { id: '#(ecsInstitutionId)', name: 'ECS Test Institution Central', code: 'ECSI-C' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'location-units/campuses'
     And request { id: '#(ecsCampusId)', name: 'ECS Test Campus Central', code: 'ECSC-C', institutionId: '#(ecsInstitutionId)' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'location-units/libraries'
     And request { id: '#(ecsLibraryId)', name: 'ECS Test Library Central', code: 'ECSL-C', campusId: '#(ecsCampusId)' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'service-points'
     And request { id: '#(ecsServicePointId)', name: 'ECS Central Service Point', code: 'ECS-SP-C', discoveryDisplayName: 'ECS Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'instance-types'
     And request { id: '#(ecsInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'loan-types'
     And request { id: '#(ecsLoanTypeId)', name: 'ECS Loan Type' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'material-types'
     And request { id: '#(ecsMaterialTypeId)', name: 'ECS Material Type' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'holdings-sources'
     And request { id: '#(ecsHoldingsSourceId)', name: 'ECS FOLIO Central' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'locations'
     And request
@@ -239,59 +244,71 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
         "servicePointIds": ["#(ecsServicePointId)"]
       }
       """
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     # ========== Step 5: Setup inventory data in university tenant ==========
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
 
+    # Wait for mod-inventory-storage to become fully available in the newly-registered university
+    # tenant. After setupStatus==COMPLETED, the service may still be initialising schema/caches
+    # and return 502/503 for the first few seconds. A lightweight GET is the fastest gate.
+    * configure retry = { count: 30, interval: 10000 }
+    Given path 'location-units/institutions'
+    And param limit = 0
+    And retry until responseStatus == 200
+    When method GET
+    * print 'ECS setup: mod-inventory-storage ready in university tenant'
+
+    * configure retry = { count: 10, interval: 15000 }
+
     Given path 'location-units/institutions'
     And request { id: '#(uniInstitutionId)', name: 'ECS Test Institution University', code: 'ECSI-U' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'location-units/campuses'
     And request { id: '#(uniCampusId)', name: 'ECS Test Campus University', code: 'ECSC-U', institutionId: '#(uniInstitutionId)' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'location-units/libraries'
     And request { id: '#(uniLibraryId)', name: 'ECS Test Library University', code: 'ECSL-U', campusId: '#(uniCampusId)' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'service-points'
     And request { id: '#(uniServicePointId)', name: 'ECS University Service Point', code: 'ECS-SP-U', discoveryDisplayName: 'ECS University Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     # Also create the central service point in the university tenant so it is available
     # as a pickup location without relying on cross-tenant Kafka replication.
     Given path 'service-points'
     And request { id: '#(ecsServicePointId)', name: 'ECS Central Service Point', code: 'ECS-SP-C', discoveryDisplayName: 'ECS Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'instance-types'
     And request { id: '#(uniInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'loan-types'
     And request { id: '#(uniLoanTypeId)', name: 'ECS Loan Type' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'material-types'
     And request { id: '#(uniMaterialTypeId)', name: 'ECS Material Type' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'holdings-sources'
     And request { id: '#(uniHoldingsSourceId)', name: 'ECS FOLIO University' }
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     Given path 'locations'
     And request
@@ -307,19 +324,20 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
         "servicePointIds": ["#(ecsServicePointId)", "#(uniServicePointId)"]
       }
       """
+    And retry until responseStatus == 201 || responseStatus == 409 || responseStatus == 422
     When method POST
-    Then status 201
 
     # ========== Step 6: Setup circulation policies and enable ECS TLR ==========
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
     # Enable ECS TLR feature at consortium level
+    * configure retry = { count: 10, interval: 10000 }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true' }
     Given path 'tlr/settings'
     And request { "ecsTlrFeatureEnabled": true, "excludeFromEcsRequestLendingTenantSearch": [] }
+    And retry until responseStatus == 204 || responseStatus == 200
     When method PUT
-    Then status 204
 
     * call setupCirculationPolicies { tenant: '#(centralTenant)', okapitoken: '#(okapitoken)', policyLabel: 'Central' }
 
