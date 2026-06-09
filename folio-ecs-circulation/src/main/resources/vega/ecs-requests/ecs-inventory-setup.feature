@@ -129,17 +129,23 @@ Feature: Create ECS inventory (instance + holding + item) via central-to-univers
     When method POST
     Then status 200
 
-    # Wait until the instance appears in the consortium search index with items indexed.
-    # expandAll=true returns the instance with nested items; items.length > 0 confirms
-    # that the university holding+item are indexed and visible for cross-tenant queries.
+    # Also trigger an item-specific reindex to ensure item-level data is indexed.
+    # This uses a separate endpoint that reindexes items without requiring a full instance reindex.
+    Given path 'search/index/inventory/reindex'
+    And request { recreateIndex: false, resourceName: 'item' }
+    When method POST
+    * print 'ECS inventory setup: item reindex response status:', responseStatus
+    # 200 = started, 400 = already running; both are acceptable — items will be indexed either way
+
+    # Wait until the item appears in mod-search using a targeted CQL items.id query.
+    # This avoids assumptions about the consortium response structure (expandAll varies per tenant).
     * def headersSearchConsortium = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
     * configure headers = headersSearchConsortium
     * configure retry = { count: 20, interval: 15000 }
     Given path 'search/instances'
-    And param query = 'id==' + instanceId
-    And param expandAll = 'true'
-    And retry until responseStatus == 200 && response.totalRecords > 0 && response.instances && response.instances[0] && response.instances[0].items && response.instances[0].items.length > 0
+    And param query = 'items.id==' + itemId
+    And retry until responseStatus == 200 && response.totalRecords > 0
     When method GET
     Then status 200
-    * print 'ECS inventory setup: instance indexed in mod-search with', response.instances[0].items.length, 'item(s)'
+    * print 'ECS inventory setup: item indexed in mod-search, found in', response.totalRecords, 'instance(s)'
 
