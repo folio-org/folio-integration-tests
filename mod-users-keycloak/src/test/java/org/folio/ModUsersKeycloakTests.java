@@ -45,4 +45,9 @@ class ModUsersKeycloakTests extends TestBaseEureka {
   void passwordReset() {
     runFeatureTest("password-reset");
   }
+
+  @Test
+  void userIdentityProvider() {
+    runFeatureTest("consortia/shadow-user-idp-linking");
+  }
 }
