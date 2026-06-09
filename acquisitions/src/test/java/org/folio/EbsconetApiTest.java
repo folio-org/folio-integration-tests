@@ -9,12 +9,20 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @Order(14)
 @FolioTest(team = "thunderjet", module = "ebsconet")
@@ -24,30 +32,14 @@ public class EbsconetApiTest extends TestBaseEureka implements AcquisitionsTest 
   private static final String TEST_TENANT = "testebsconet";
   private static final int THREAD_COUNT = 4;
 
-  private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("cancel-order-lines-with-ebsconet", true),
-    FEATURE_2("close-order-with-order-line", true),
-    FEATURE_3("get-ebsconet-order-line", true),
-    FEATURE_4("update-ebsconet-order-line", true),
-    FEATURE_5("update-ebsconet-order-line-empty-locations", true),
-    FEATURE_6("update-mixed-order-line", true);
-
-    private final String fileName;
-    private final boolean isEnabled;
-
-    Feature(String fileName, boolean isEnabled) {
-      this.fileName = fileName;
-      this.isEnabled = isEnabled;
-    }
-
-    public boolean isEnabled() {
-      return isEnabled;
-    }
-
-    public String getFileName() {
-      return fileName;
-    }
-  }
+  private static final String[] FEATURES = {
+    "cancel-order-lines-with-ebsconet",
+    "close-order-with-order-line",
+    "get-ebsconet-order-line",
+    "update-ebsconet-order-line",
+    "update-ebsconet-order-line-empty-locations",
+    "update-mixed-order-line"
+};
 
   public EbsconetApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -72,42 +64,13 @@ public class EbsconetApiTest extends TestBaseEureka implements AcquisitionsTest 
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   public void runFeatures() {
-    runFeatures(Feature.values(), THREAD_COUNT, null);
+    runFeatures(Arrays.asList(FEATURES), THREAD_COUNT, null);
   }
 
-  @Test
+  @TestFactory
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void cancelOrderLinesWithEbsconet() {
-    runFeatureTest(Feature.FEATURE_1.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void closeOrderWithOrderLine() {
-    runFeatureTest(Feature.FEATURE_2.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void getEbsconetOrderLine() {
-    runFeatureTest(Feature.FEATURE_3.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void updateEbsconetOrderLine() {
-    runFeatureTest(Feature.FEATURE_4.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void updateEbsconetOrderLineEmptyLocations() {
-    runFeatureTest(Feature.FEATURE_5.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void updateEbsconetOrderLineMixedFormat() {
-    runFeatureTest(Feature.FEATURE_6.getFileName());
+  @Execution(ExecutionMode.CONCURRENT)
+  Stream<DynamicTest> runFeaturesSeparately() {
+    return Stream.of(FEATURES).map(featureName -> dynamicTest(featureName, () -> runFeatureTest(featureName)));
   }
 }

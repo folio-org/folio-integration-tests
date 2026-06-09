@@ -45,8 +45,8 @@ public class SharedTenantOptions {
 
   /**
    * Returns a property of the run mode, which can be used to either run test methods individually, on their own Java
-   * "thread pool-per-method" way, or utilize the "shared thread pool-per-class" mode (i.e. methods defined by an enum
-   * implementing CommonFeature). By default, tests in the CI enable the "shared thread pool-per-class" for efficiency,
+   * "thread pool-per-method" way, or utilize the "shared thread pool-per-class" mode (i.e. using runFeatures).
+   * By default, tests in the CI enable the "shared thread pool-per-class" for efficiency,
    * while existing options reserve the ability to run individual methods locally using the "dev" profile with or
    * without the shared thread pool.
    * <ul>
