@@ -10,11 +10,42 @@ Feature: update of two authorities records linked to one instance tests
     * def authorityNaturalId2 = karate.properties['authorityNaturalId2']
     * def authorityId1 = karate.properties['linkedAuthorityId1']
     * def authorityId2 = karate.properties['linkedAuthorityId2']
-    * def instanceId = karate.properties['instanceId']
 
   Scenario: Should unlink bib record on first authority field update making it unlinkable
+    # create a fresh bib with 100, 600 (auth1) and 240 (auth2) links
+    * def localBibId = uuid()
+    * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@CreateMarcBib') {id: '#(localBibId)', hrid: '#("update-linked-1-" + localBibId)'}
+
+    Given path '/records-editor/records'
+    And param externalId = localBibId
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    When method GET
+    Then status 200
+    * def bibRecord = response
+
+    * def linkContent1 = ' $0 ' + authorityNaturalId1 + ' $9 ' + authorityId1
+    * def linkContent2 = ' $0 ' + authorityNaturalId2 + ' $9 ' + authorityId2
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent1)', "indicators": ["\\","1"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId1), "authorityNaturalId":#(authorityNaturalId1), "linkingRuleId": 1, "status": "NEW"}}
+    * def tag600 = {"tag": "600", "content":'#("$a Johnson" + linkContent1)', "indicators": ["\\","\\"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId1), "authorityNaturalId":#(authorityNaturalId1), "linkingRuleId": 8, "status": "NEW"}}
+    * def tag240 = {"tag": "240", "content":'#("$a Test note" + linkContent2)', "indicators": ["\\","\\"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId2), "authorityNaturalId":#(authorityNaturalId2), "linkingRuleId": 5, "status": "NEW"}}
+    * bibRecord.fields = bibRecord.fields.filter(f => f.tag != '100')
+    * bibRecord.fields.push(tag100)
+    * bibRecord.fields.push(tag600)
+    * bibRecord.fields.push(tag240)
+    * set bibRecord._actionType = 'edit'
+
+    Given path '/records-editor/records', bibRecord.parsedRecordId
+    And request bibRecord
+    When method PUT
+    Then status 202
+
+    Given path '/links/instances', localBibId
+    And retry until response.totalRecords == 3
+    When method GET
+    Then status 200
+
     # retrieve marc bib record and check it contains a link
-    Given path '/source-storage/records', instanceId, 'formatted'
+    Given path '/source-storage/records', localBibId, 'formatted'
     And param idType = 'INSTANCE'
     When method GET
     Then status 200
@@ -27,12 +58,6 @@ Feature: update of two authorities records linked to one instance tests
 
     # save bib snapshotId to use for retry later
     * def bibSnapshotId = response.snapshotId
-
-    # check instance links
-    Given path '/links/instances', instanceId
-    And retry until response.totalRecords == 3
-    When method GET
-    Then status 200
 
     # retrieve quick marc authority record
     Given path '/records-editor/records'
@@ -55,7 +80,7 @@ Feature: update of two authorities records linked to one instance tests
     Then status 202
 
     # check instance links
-    Given path '/links/instances', instanceId
+    Given path '/links/instances', localBibId
     And retry until response.totalRecords == 1
     When method GET
     Then status 200
@@ -69,7 +94,7 @@ Feature: update of two authorities records linked to one instance tests
     Then match response.authorities[0].numberOfTitles == 0
 
     # retrieve marc bib record
-    Given path '/source-storage/records', instanceId, 'formatted'
+    Given path '/source-storage/records', localBibId, 'formatted'
     And param idType = 'INSTANCE'
     And retry until response.snapshotId != bibSnapshotId
     When method GET
@@ -87,7 +112,7 @@ Feature: update of two authorities records linked to one instance tests
     * def updatedRecord = response
 
     # rollback link deletion
-    * remove updatedRecord.fields[?(@.tag=='100')] 
+    * remove updatedRecord.fields[?(@.tag=='100')]
     * set field.content = '$a Johnson'
     * updatedRecord.fields.push(field)
     * set updatedRecord._actionType = 'edit'
@@ -97,7 +122,7 @@ Feature: update of two authorities records linked to one instance tests
     Then status 202
 
     Given path '/records-editor/records'
-    And param externalId = instanceId
+    And param externalId = localBibId
     When method GET
     Then status 200
     And def bibRecord = response
@@ -112,14 +137,44 @@ Feature: update of two authorities records linked to one instance tests
     Then status 202
 
     # check instance links
-    Given path '/links/instances', instanceId
+    Given path '/links/instances', localBibId
     And retry until response.totalRecords == 2
     When method GET
     Then status 200
 
   Scenario: Should unlink bib record on second authority field update making it unlinkable
+    # create a fresh bib with 100 (auth1) and 240 (auth2) links
+    * def localBibId = uuid()
+    * call read('classpath:spitfire/mod-quick-marc/features/setup/setup.feature@CreateMarcBib') {id: '#(localBibId)', hrid: '#("update-linked-2-" + localBibId)'}
+
+    Given path '/records-editor/records'
+    And param externalId = localBibId
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    When method GET
+    Then status 200
+    * def bibRecord = response
+
+    * def linkContent1 = ' $0 ' + authorityNaturalId1 + ' $9 ' + authorityId1
+    * def linkContent2 = ' $0 ' + authorityNaturalId2 + ' $9 ' + authorityId2
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent1)', "indicators": ["\\","1"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId1), "authorityNaturalId":#(authorityNaturalId1), "linkingRuleId": 1, "status": "NEW"}}
+    * def tag240 = {"tag": "240", "content":'#("$a Test note" + linkContent2)', "indicators": ["\\","\\"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId2), "authorityNaturalId":#(authorityNaturalId2), "linkingRuleId": 5, "status": "NEW"}}
+    * bibRecord.fields = bibRecord.fields.filter(f => f.tag != '100')
+    * bibRecord.fields.push(tag100)
+    * bibRecord.fields.push(tag240)
+    * set bibRecord._actionType = 'edit'
+
+    Given path '/records-editor/records', bibRecord.parsedRecordId
+    And request bibRecord
+    When method PUT
+    Then status 202
+
+    Given path '/links/instances', localBibId
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
+
     # retrieve marc bib record and check it contains a link
-    Given path '/source-storage/records', instanceId, 'formatted'
+    Given path '/source-storage/records', localBibId, 'formatted'
     And param idType = 'INSTANCE'
     When method GET
     Then status 200
@@ -150,7 +205,7 @@ Feature: update of two authorities records linked to one instance tests
     Then status 202
 
     # check instance links
-    Given path '/links/instances', instanceId
+    Given path '/links/instances', localBibId
     And retry until response.totalRecords == 1
     When method GET
     Then status 200
@@ -164,7 +219,7 @@ Feature: update of two authorities records linked to one instance tests
     Then match response.authorities[0].numberOfTitles == 0
 
     # retrieve marc bib record
-    Given path '/source-storage/records', instanceId, 'formatted'
+    Given path '/source-storage/records', localBibId, 'formatted'
     And param idType = 'INSTANCE'
     And retry until response.snapshotId != bibSnapshotId
     When method GET
