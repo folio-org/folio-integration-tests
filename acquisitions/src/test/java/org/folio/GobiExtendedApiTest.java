@@ -108,7 +108,7 @@ class GobiExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   }
 
   @Test
-  @DisplayName("(Thunderjet) TenantId Is Not Populated By mod-gobi On Non-ECS Environment")
+  @DisplayName("(Thunderjet) (C852053) TenantId Is Not Populated By mod-gobi On Non-ECS Environment")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void tenantIdNotPopulatedOnNonEcs() {
     runFeatureTest(Feature.FEATURE_5.getFileName());

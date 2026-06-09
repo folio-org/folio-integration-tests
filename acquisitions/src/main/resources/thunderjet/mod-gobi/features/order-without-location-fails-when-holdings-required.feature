@@ -46,7 +46,7 @@ Feature: Order without location fails when Inventory interaction requires holdin
 
     # 4. Submit A GOBI Order And Expect Failure Due To Missing Location With Holdings-Required Default
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request po
     When method POST
     Then status 422
