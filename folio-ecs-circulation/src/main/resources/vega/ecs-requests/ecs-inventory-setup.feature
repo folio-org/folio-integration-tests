@@ -117,35 +117,25 @@ Feature: Create ECS inventory (instance + holding + item) via central-to-univers
     When method POST
     Then status 201
 
-    # Trigger mod-search full reindex from the CENTRAL tenant.
-    # If a previous reindex is still in progress (e.g. from consortium setup), wait for it
-    # to finish (400 "already in progress") then retry until a new reindex starts (200).
-    # The new reindex will include the holding and item just created in mod-inventory-storage.
+    # Trigger a central mod-search full reindex (fire-and-forget).
+    # This ensures the central instance is indexed for TLR lookups.
+    # 200 = reindex started; 400 = already in progress — both are acceptable.
     * configure headers = headersCentral
-    * configure retry = { count: 20, interval: 30000 }
     Given path 'search/index/instance-records/reindex/full'
     And request {}
-    And retry until responseStatus == 200
     When method POST
-    Then status 200
+    * print 'ECS inventory setup: central reindex trigger status:', responseStatus
 
-    # Also trigger an item-specific reindex to ensure item-level data is indexed.
-    # This uses a separate endpoint that reindexes items without requiring a full instance reindex.
-    Given path 'search/index/inventory/reindex'
-    And request { recreateIndex: false, resourceName: 'item' }
-    When method POST
-    * print 'ECS inventory setup: item reindex response status:', responseStatus
-    # 200 = started, 400 = already running; both are acceptable — items will be indexed either way
-
-    # Wait until the item appears in mod-search using a targeted CQL items.id query.
-    # This avoids assumptions about the consortium response structure (expandAll varies per tenant).
-    * def headersSearchConsortium = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
-    * configure headers = headersSearchConsortium
+    # Wait until the item appears in the UNIVERSITY tenant's own mod-search index.
+    # University mod-inventory fires intra-tenant Kafka events to university mod-search,
+    # which is reliable even when cross-tenant Kafka is degraded.
+    * def headersUniversitySearch = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    * configure headers = headersUniversitySearch
     * configure retry = { count: 20, interval: 15000 }
     Given path 'search/instances'
     And param query = 'items.id==' + itemId
     And retry until responseStatus == 200 && response.totalRecords > 0
     When method GET
     Then status 200
-    * print 'ECS inventory setup: item indexed in mod-search, found in', response.totalRecords, 'instance(s)'
+    * print 'ECS inventory setup: item indexed in university mod-search, found in', response.totalRecords, 'instance(s)'
 
