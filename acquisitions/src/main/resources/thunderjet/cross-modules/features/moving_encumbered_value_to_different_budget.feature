@@ -64,6 +64,7 @@ Feature: Moving encumbered value from budget 1 to budget 2
 
   Scenario: Cancel the invoice
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)' }
+    * call pause 1200
 
   Scenario: Check the budget after invoice cancel
     Given path 'finance/budgets', budgetId1
