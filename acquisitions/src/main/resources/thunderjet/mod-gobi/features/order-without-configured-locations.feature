@@ -56,7 +56,7 @@ Feature: Order can be created without configured locations in the system
 
     # 5. Submit The First GOBI Order While Electronic Default Is Instance
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request po
     When method POST
     Then status 201
@@ -96,7 +96,7 @@ Feature: Order can be created without configured locations in the system
     * def poSecond = read('classpath:samples/mod-gobi/po-listed-electronic-monograph-no-location.xml')
     * set poSecond/PurchaseOrder/Order/ListedElectronicMonograph/OrderDetail/YBPOrderKey = '901022691797'
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request poSecond
     When method POST
     Then status 201
