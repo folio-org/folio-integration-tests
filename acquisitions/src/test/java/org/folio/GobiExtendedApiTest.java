@@ -1,7 +1,7 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.folio.shared.AcquisitionsTest;
+import org.folio.shared.SharedTenantOptions;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -48,7 +48,7 @@ class GobiExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
   @BeforeAll
   @Override
   public void beforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
+    System.setProperty("testTenant", SharedTenantOptions.generateTenantName(TEST_TENANT));
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-gobi/init-gobi.feature");
   }
