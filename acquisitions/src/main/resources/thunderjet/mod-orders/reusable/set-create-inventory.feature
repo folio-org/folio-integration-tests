@@ -32,6 +32,3 @@ Feature: Upsert createInventory orders-storage setting
     }
     """
     * eval upsert()
-
-    # mod-orders-storage SettingService caches settings for 60s; wait for the new value to take effect
-    * call pause 65000

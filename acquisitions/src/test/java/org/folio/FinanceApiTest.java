@@ -1,21 +1,28 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.folio.shared.AcquisitionsTest;
+import org.folio.shared.SharedTenantOptions;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @Order(10)
 @FolioTest(team = "thunderjet", module = "mod-finance")
@@ -25,58 +32,42 @@ public class FinanceApiTest extends TestBaseEureka implements AcquisitionsTest {
   private static final String TEST_TENANT = "testfinance";
   private static final int THREAD_COUNT = 4;
 
-  private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("allowable-encumbrance-and-expenditure-restrictions", true),
-    FEATURE_2("batch-transaction-api", true),
-    FEATURE_3("budget-and-fund-optimistic-locking", true),
-    FEATURE_4("budget-can-be-deleted-if-have-only-allocation-transactions-from-or-to", true),
-    FEATURE_5("budget-can-not-be-deleted-if-have-other-than-allocation-transactions", true),
-    FEATURE_6("budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions", true),
-    FEATURE_7("budget-expense-classes", true),
-    FEATURE_8("budgets-totals-calculation", true),
-    FEATURE_9("budget-transfer-transactions", true),
-    FEATURE_10("budget-update", true),
-    FEATURE_11("create-planned-budget", true),
-    FEATURE_12("current-budget-for-fund", true),
-    FEATURE_13("curr-fiscal-year-for-ledger-consider-time-zone", false),
-    FEATURE_14("finance-data", true),
-    FEATURE_15("fiscal-year-totals", true),
-    FEATURE_16("group-and-ledger-transfers-after-rollover", true),
-    FEATURE_17("group-expense-classes", true),
-    FEATURE_18("group-fiscal-year-totals", true),
-    FEATURE_19("ledger-fiscal-year-preview-rollover", true),
-    FEATURE_20("ledger-fiscal-year-preview-rollover-need-close-budgets", true),
-    FEATURE_21("ledger-fiscal-year-rollover-fail-resistance-when-duplicate-encumbrance", true),
-    FEATURE_22("ledger-fiscal-year-rollover-MODFISTO-247", true),
-    FEATURE_23("ledger-fiscal-year-rollover-order-with-broken-encumbrance", true),
-    FEATURE_24("ledger-fiscal-year-rollover-pol-and-system-currencies-are-different", true),
-    FEATURE_25("ledger-fiscal-year-rollovers-multiple", true),
-    FEATURE_26("ledger-fiscal-year-sequential-rollovers", true),
-    FEATURE_27("ledger-fiscal-year-skip-previous-year-encumbrance", true),
-    FEATURE_28("ledger-totals", true),
-    FEATURE_29("unopen-order-after-rollover-MODORDERS-542", false),
-    FEATURE_30("unrelease-encumbrance", true),
-    FEATURE_31("update-encumbrance-transactions", true),
-    FEATURE_32("recalculate-budget", true),
-    FEATURE_33("acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units", true),
-    FEATURE_34("acq-units/verify-get-funds-with-query-where-user-has-units", true);
-
-    private final String fileName;
-    private final boolean isEnabled;
-
-    Feature(String fileName, boolean isEnabled) {
-      this.fileName = fileName;
-      this.isEnabled = isEnabled;
-    }
-
-    public String getFileName() {
-      return fileName;
-    }
-
-    public boolean isEnabled() {
-      return isEnabled;
-    }
-  }
+  private static final String[] FEATURES = {
+    "allowable-encumbrance-and-expenditure-restrictions",
+    "batch-transaction-api",
+    "budget-and-fund-optimistic-locking",
+    "budget-can-be-deleted-if-have-only-allocation-transactions-from-or-to",
+    "budget-can-not-be-deleted-if-have-other-than-allocation-transactions",
+    "budget-can-not-be-deleted-if-have-to-and-from-fund-in-allocation-transactions",
+    "budget-expense-classes",
+    "budgets-totals-calculation",
+    "budget-transfer-transactions",
+    "budget-update",
+    "create-planned-budget",
+    "current-budget-for-fund",
+    /*"curr-fiscal-year-for-ledger-consider-time-zone",*/
+    "finance-data",
+    "fiscal-year-totals",
+    "group-and-ledger-transfers-after-rollover",
+    "group-expense-classes",
+    "group-fiscal-year-totals",
+    "ledger-fiscal-year-preview-rollover",
+    "ledger-fiscal-year-preview-rollover-need-close-budgets",
+    "ledger-fiscal-year-rollover-fail-resistance-when-duplicate-encumbrance",
+    "ledger-fiscal-year-rollover-MODFISTO-247",
+    "ledger-fiscal-year-rollover-order-with-broken-encumbrance",
+    "ledger-fiscal-year-rollover-pol-and-system-currencies-are-different",
+    "ledger-fiscal-year-rollovers-multiple",
+    "ledger-fiscal-year-sequential-rollovers",
+    "ledger-fiscal-year-skip-previous-year-encumbrance",
+    "ledger-totals",
+    "unopen-order-after-rollover-MODORDERS-542",
+    "unrelease-encumbrance",
+    "update-encumbrance-transactions",
+    "recalculate-budget",
+    "acq-units/verify-get-funds-without-query-where-user-has-units-and-filter-only-by-units",
+    "acq-units/verify-get-funds-with-query-where-user-has-units"
+  };
 
   public FinanceApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -85,7 +76,7 @@ public class FinanceApiTest extends TestBaseEureka implements AcquisitionsTest {
   @BeforeAll
   @Override
   public void beforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
+    System.setProperty("testTenant", SharedTenantOptions.generateTenantName(TEST_TENANT));
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-finance/init-finance.feature");
   }
@@ -101,212 +92,13 @@ public class FinanceApiTest extends TestBaseEureka implements AcquisitionsTest {
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   public void runFeatures() {
-    runFeatures(Feature.values(), THREAD_COUNT, null);
+    runFeatures(Arrays.asList(FEATURES), THREAD_COUNT, null);
   }
 
-  @Test
+  @TestFactory
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void allowableEncumbranceAndExpenditureRestrictions() {
-    runFeatureTest(Feature.FEATURE_1.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void batchTransactionApi() {
-    runFeatureTest(Feature.FEATURE_2.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetAndFundOptimisticLocking() {
-    runFeatureTest(Feature.FEATURE_3.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetCanBeDeletedIfHaveOnlyAllocationTransactionsFromOrTo() {
-    runFeatureTest(Feature.FEATURE_4.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetCanNotBeDeletedIfHaveOtherThanAllocationTransactions() {
-    runFeatureTest(Feature.FEATURE_5.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetCanNotBeDeletedIfHaveToAndFromFundInAllocationTransactions() {
-    runFeatureTest(Feature.FEATURE_6.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetExpenseClasses() {
-    runFeatureTest(Feature.FEATURE_7.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetsTotalsCalculation() {
-    runFeatureTest(Feature.FEATURE_8.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetTransferTransactions() {
-    runFeatureTest(Feature.FEATURE_9.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void budgetUpdate() {
-    runFeatureTest(Feature.FEATURE_10.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void createPlannedBudget() {
-    runFeatureTest(Feature.FEATURE_11.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void currentBudgetForFund() {
-    runFeatureTest(Feature.FEATURE_12.getFileName());
-  }
-
-  @Test
-  @Disabled
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void currFiscalYearForLedgerConsiderTimeZone() {
-    runFeatureTest(Feature.FEATURE_13.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void financeData() {
-    runFeatureTest(Feature.FEATURE_14.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void fiscalYearTotals() {
-    runFeatureTest(Feature.FEATURE_15.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void groupAndLedgerTransfersAfterRollover() {
-    runFeatureTest(Feature.FEATURE_16.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void groupExpenseClasses() {
-    runFeatureTest(Feature.FEATURE_17.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void groupFiscalYearTotals() {
-    runFeatureTest(Feature.FEATURE_18.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearPreviewRollover() {
-    runFeatureTest(Feature.FEATURE_19.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearPreviewRolloverNeedCloseBudgets() {
-    runFeatureTest(Feature.FEATURE_20.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearRolloverFailResistanceWhenDuplicateEncumbrance() {
-    runFeatureTest(Feature.FEATURE_21.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearRolloverMODFISTO247() {
-    runFeatureTest(Feature.FEATURE_22.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearRolloverOrderWithBrokenEncumbrance() {
-    runFeatureTest(Feature.FEATURE_23.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearRolloverPolAndSystemCurrenciesAreDifferent() {
-    runFeatureTest(Feature.FEATURE_24.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearRolloversMultiple() {
-    runFeatureTest(Feature.FEATURE_25.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearSequentialRollovers() {
-    runFeatureTest(Feature.FEATURE_26.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerFiscalYearSkipPreviousYearEncumbrance() {
-    runFeatureTest(Feature.FEATURE_27.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void ledgerTotals() {
-    runFeatureTest(Feature.FEATURE_28.getFileName());
-  }
-
-  @Test
-  @Disabled
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void unopenOrderAfterRolloverMODORDERS542() {
-    runFeatureTest(Feature.FEATURE_29.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void unreleaseEncumbrance() {
-    runFeatureTest(Feature.FEATURE_30.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void updateEncumbranceTransactions() {
-    runFeatureTest(Feature.FEATURE_31.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void recalculateBudget() {
-    runFeatureTest(Feature.FEATURE_32.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void verifyGetFundsWithoutQueryWhereUserHasUnitsAndFilterOnlyByUnits() {
-    runFeatureTest(Feature.FEATURE_33.getFileName());
-  }
-
-  @Test
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void verifyGetFundsWithQueryWhereUserHasUnits() {
-    runFeatureTest(Feature.FEATURE_34.getFileName());
+  @Execution(ExecutionMode.CONCURRENT)
+  Stream<DynamicTest> runFeaturesSeparately() {
+    return Stream.of(FEATURES).map(featureName -> dynamicTest(featureName, () -> runFeatureTest(featureName)));
   }
 }

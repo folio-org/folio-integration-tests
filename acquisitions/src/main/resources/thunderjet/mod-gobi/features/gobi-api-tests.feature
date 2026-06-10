@@ -7,6 +7,7 @@ Feature: GOBI api tests
 
     * callonce login testAdmin
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def v = call read('classpath:thunderjet/mod-orders/reusable/set-create-inventory.feature') { eresource: 'Instance, Holding, Item', physical: 'Instance, Holding, Item', other: 'None' }
 
     * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, application/xml', 'x-okapi-tenant': '#(testTenant)' }
@@ -43,7 +44,7 @@ Feature: GOBI api tests
   Scenario: Created an order and Checked fields of the order to match with requested data
     * def sample_po_2 = read('classpath:samples/mod-gobi/po-listed-electronic-monograph.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po_2
     And retry until responseStatus == 201
     When method POST
@@ -97,7 +98,7 @@ Feature: GOBI api tests
     # try to create an order using the mapping above
     * def sample_po_3 = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po_3
     When method POST
     Then status 500
@@ -234,7 +235,7 @@ Feature: GOBI api tests
 
     # Put an order for original mapping
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po_original
     And retry until responseStatus == 201
     When method POST
@@ -267,7 +268,7 @@ Feature: GOBI api tests
 
     # Try to put an order for original mapping
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po_original
     When method POST
     Then status 500
@@ -275,7 +276,7 @@ Feature: GOBI api tests
 
     # Put order for updated mapping
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po_updated
     And retry until responseStatus == 201
     When method POST
@@ -320,7 +321,7 @@ Feature: GOBI api tests
     # Put an order for updated mapping
     * def sample_po_updated = read('classpath:samples/mod-gobi/po-unlisted-print-serial-updated.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po_updated
     And retry until responseStatus == 201
     When method POST
@@ -371,7 +372,7 @@ Feature: GOBI api tests
     # Put an order for available lookup translations
     * def sample_po = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po
     And retry until responseStatus == 201
     When method POST
@@ -478,7 +479,7 @@ Feature: GOBI api tests
     * def order = read('classpath:samples/mod-gobi/po-listed-electronic-monograph.xml')
     * set order/PurchaseOrder/Order/ListedElectronicMonograph/OrderDetail/ListPrice/Amount = "-12"
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request order
     When method POST
     Then status 422

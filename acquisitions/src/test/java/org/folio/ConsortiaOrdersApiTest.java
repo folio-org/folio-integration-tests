@@ -1,7 +1,7 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.folio.shared.AcquisitionsTest;
+import org.folio.shared.SharedTenantOptions;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -9,12 +9,20 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @Order(1)
 @FolioTest(team = "thunderjet", module = "consortia")
@@ -24,25 +32,9 @@ class ConsortiaOrdersApiTest extends TestBaseEureka implements AcquisitionsTest 
   private static final String TENANT = "testconsortia";
   private static final int THREAD_COUNT = 1; // Consortia tests share tenant resources, must run sequentially
 
-  private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("consortia-orders", true);
-
-    private final String fileName;
-    private final boolean isEnabled;
-
-    Feature(String fileName, boolean isEnabled) {
-      this.fileName = fileName;
-      this.isEnabled = isEnabled;
-    }
-
-    public String getFileName() {
-      return fileName;
-    }
-
-    public boolean isEnabled() {
-      return isEnabled;
-    }
-  }
+  private static final String[] FEATURES = {
+    "consortia-orders"
+  };
 
   ConsortiaOrdersApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -51,7 +43,7 @@ class ConsortiaOrdersApiTest extends TestBaseEureka implements AcquisitionsTest 
   @BeforeAll
   @Override
   public void beforeAll() {
-    System.setProperty("testTenant", TENANT + RandomUtils.nextLong());
+    System.setProperty("testTenant", SharedTenantOptions.generateTenantName(TENANT));
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/consortia/init-consortia-orders.feature");
   }
@@ -67,12 +59,13 @@ class ConsortiaOrdersApiTest extends TestBaseEureka implements AcquisitionsTest 
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   public void runFeatures() {
-    runFeatures(Feature.values(), THREAD_COUNT, null);
+    runFeatures(Arrays.asList(FEATURES), THREAD_COUNT, null);
   }
 
-  @Test
+  @TestFactory
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void consortiaOrdersApiTest() {
-    runFeatureTest(Feature.FEATURE_1.getFileName());
+  @Execution(ExecutionMode.CONCURRENT)
+  Stream<DynamicTest> runFeaturesSeparately() {
+    return Stream.of(FEATURES).map(featureName -> dynamicTest(featureName, () -> runFeatureTest(featureName)));
   }
 }

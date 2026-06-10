@@ -7,6 +7,7 @@ Feature: Receipt not required sets receiving workflow to Independent for Open or
 
     * callonce login testAdmin
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def v = call read('classpath:thunderjet/mod-orders/reusable/set-create-inventory.feature') { eresource: 'Instance, Holding, Item', physical: 'Instance, Holding, Item', other: 'None' }
 
     * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
@@ -45,7 +46,7 @@ Feature: Receipt not required sets receiving workflow to Independent for Open or
 
     # 3. Submit A GOBI Order Using The Custom Mapping
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request po
     When method POST
     Then status 201

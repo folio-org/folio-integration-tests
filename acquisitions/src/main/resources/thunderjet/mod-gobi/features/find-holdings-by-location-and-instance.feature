@@ -7,6 +7,7 @@ Feature: Find holdings by location and instance
 
     * callonce login testAdmin
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def v = call read('classpath:thunderjet/mod-orders/reusable/set-create-inventory.feature') { eresource: 'Instance, Holding, Item', physical: 'Instance, Holding, Item', other: 'None' }
 
     * callonce login testUser
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
@@ -16,7 +17,7 @@ Feature: Find holdings by location and instance
   Scenario: Create first order
     * def sample_po_1 = read('classpath:samples/mod-gobi/po-physical-annex-holding-1.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po_1
     When method POST
     Then status 201
@@ -38,7 +39,7 @@ Feature: Find holdings by location and instance
   Scenario: Create second order
     * def sample_po_2 = read('classpath:samples/mod-gobi/po-physical-annex-holding-2.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po_2
     When method POST
     Then status 201

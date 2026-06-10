@@ -6,13 +6,16 @@ import com.intuit.karate.Runner;
 import com.intuit.karate.RuntimeHook;
 import com.intuit.karate.StringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.folio.test.config.CommonFeature;
 import org.folio.test.hooks.FolioRuntimeHook;
 import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
 import org.folio.test.shared.SharedCacheInstanceExtension;
 import org.folio.test.utils.EnvUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -20,8 +23,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -150,10 +153,10 @@ public abstract class TestBaseEureka {
     // This is critically important for the Test Rail integration, because the scenario results
     // only hold a pointer to the json report that we just generated after the feature run, and if
     // we truncate the folder, the pointer when used will point to nowhere, and will throw an exception
-    if (isTestRailEnabled() || isInitOrDestroyData(featureName)) {
-      var prefix = getFolderPrefix(featureName);
-      builder.reportDir(timestampedReportDir().concat(prefix));
-    }
+    // This is also important when running JUnit tests in parallel with junit.jupiter.execution.parallel.enabled
+    // and @Execution(ExecutionMode.CONCURRENT).
+    var prefix = getFolderPrefix(featureName);
+    builder.reportDir(timestampedReportDir().concat(prefix));
 
     Results results = builder.parallel(threadCount);
     try {
@@ -166,21 +169,13 @@ public abstract class TestBaseEureka {
     Assertions.assertEquals(0, results.getFailCount());
   }
 
-  private boolean isInitOrDestroyData(String featureName) {
-    return featureName.startsWith("init-") || featureName.endsWith("destroy-data.feature");
-  }
-
   private String getFolderPrefix(String featureName) {
     return featureName.startsWith("init-") ? "-init" : featureName.endsWith("destroy-data.feature") ? "-destroy" : "";
   }
 
   // ============================== For a list of files with multiple features ==============================
 
-  public void runFeatures(CommonFeature[] values, int threadCount, TestInfo testInfo) {
-    var featureNames = Arrays.stream(values)
-      .filter(CommonFeature::isEnabled)
-      .map(CommonFeature::getFileName)
-      .toList();
+  public void runFeatures(List<String> featureNames, int threadCount, TestInfo testInfo) {
     var testCount = testCounts.computeIfAbsent(getClass(), key -> new AtomicInteger());
     var hook = new FolioRuntimeHook(getClass(), testInfo, testCount.incrementAndGet());
 
