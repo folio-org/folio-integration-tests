@@ -88,6 +88,7 @@ Feature: Encumbrance calculated correctly after cancelling paid credit Invoice
     # Step 1. Cancel invoice
     #         Expected: Successful toast message appears, Invoice status became "Cancelled"
     * def v = call cancelInvoice { invoiceId: #(invoiceId) }
+    * call pause 1200
 
     Given path 'invoice/invoices', invoiceId
     When method GET

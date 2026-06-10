@@ -9,11 +9,20 @@ import org.folio.test.services.TestIntegrationService;
 import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @Order(12)
 @FolioTest(team = "thunderjet", module = "mod-invoice")
@@ -23,26 +32,10 @@ public class InvoicesExtendedApiTest extends TestBaseEureka implements Acquisiti
   private static final String TEST_TENANT = "testinvoice";
   private static final int THREAD_COUNT = 4;
 
-  private enum Feature implements org.folio.test.config.CommonFeature {
+  private static final String[] FEATURES = {
     // moved from InvoicesSmokeApiTest (TestRail group = Extended)
-    FEATURE_1("pay-invoice-with-0-value", true);
-
-    private final String fileName;
-    private final boolean isEnabled;
-
-    Feature(String fileName, boolean isEnabled) {
-      this.fileName = fileName;
-      this.isEnabled = isEnabled;
-    }
-
-    public String getFileName() {
-      return fileName;
-    }
-
-    public boolean isEnabled() {
-      return isEnabled;
-    }
-  }
+    "pay-invoice-with-0-value"
+};
 
   public InvoicesExtendedApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -69,14 +62,13 @@ public class InvoicesExtendedApiTest extends TestBaseEureka implements Acquisiti
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   public void runFeatures() {
-    runFeatures(Feature.values(), THREAD_COUNT, null);
+    runFeatures(Arrays.asList(FEATURES), THREAD_COUNT, null);
   }
 
-  @Test
-  @DisplayName("(Thunderjet) (C357044) Pay Invoice With 0 Value")
+  @TestFactory
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void payInvoiceWith0Value() {
-    runFeatureTest(Feature.FEATURE_1.getFileName());
+  @Execution(ExecutionMode.CONCURRENT)
+  Stream<DynamicTest> runFeaturesSeparately() {
+    return Stream.of(FEATURES).map(featureName -> dynamicTest(featureName, () -> runFeatureTest(featureName)));
   }
 }
-

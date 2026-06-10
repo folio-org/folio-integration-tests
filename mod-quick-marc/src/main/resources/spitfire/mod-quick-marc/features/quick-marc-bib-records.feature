@@ -30,9 +30,13 @@ Feature: Test quickMARC
     And match result.fields contains repeatedFieldWithLink
 
   Scenario: Edit quickMarcJson
+    * def editBibId = uuid()
+    * call read('setup/setup.feature@CreateMarcBib') {id: '#(editBibId)', hrid: '#("edit-bib-" + editBibId)'}
+
     Given path 'records-editor/records'
-    And param externalId = testInstanceId
+    And param externalId = editBibId
     And headers headersUser
+    And retry until response.updateInfo.recordState == 'ACTUAL'
     When method GET
     Then status 200
     * def quickMarcJson = $
@@ -51,7 +55,7 @@ Feature: Test quickMARC
     Then status 202
 
     Given path 'records-editor/records'
-    And param externalId = testInstanceId
+    And param externalId = editBibId
     And headers headersUser
     And retry until response.updateInfo.recordState == 'ACTUAL'
     When method GET
@@ -61,8 +65,11 @@ Feature: Test quickMARC
     And match result.fields contains newField2
 
   Scenario: PUT quickMarc with linked and unlinked fields
+    * def bibSetup = call read('setup/setup.feature@CreateBibWithAuthLinks') {authorityId: '#(linkedAuthorityId1)', authorityNaturalId: '#(authorityNaturalId1)'}
+    * def linkedBibId = bibSetup.instanceId
+
     Given path 'records-editor/records'
-    And param externalId = testInstanceId
+    And param externalId = linkedBibId
     And headers headersUser
     When method GET
     Then status 200
@@ -80,9 +87,9 @@ Feature: Test quickMARC
     When method PUT
     Then status 202
 
-    * def newLink = { "id":3, "authorityId": #(linkedAuthorityId2), "authorityNaturalId": #(authorityNaturalId2), "instanceId": #(testInstanceId), "linkingRuleId": #(newField.linkDetails.linkingRuleId), "status":"ACTUAL" }
+    * def newLink = { "id": '#number', "authorityId": #(linkedAuthorityId2), "authorityNaturalId": #(authorityNaturalId2), "instanceId": #(linkedBibId), "linkingRuleId": #(newField.linkDetails.linkingRuleId), "status":"ACTUAL" }
 
-    Given path 'links/instances', testInstanceId
+    Given path 'links/instances', linkedBibId
     And headers headersUser
     When method GET
     Then status 200
@@ -91,9 +98,13 @@ Feature: Test quickMARC
     And match result.links contains newLink
 
   Scenario: Should update record twice without any errors
+    * def twiceBibId = uuid()
+    * call read('setup/setup.feature@CreateMarcBib') {id: '#(twiceBibId)', hrid: '#("twice-bib-" + twiceBibId)'}
+
     Given path 'records-editor/records'
-    And param externalId = testInstanceId
+    And param externalId = twiceBibId
     And headers headersUser
+    And retry until response.updateInfo.recordState == 'ACTUAL'
     When method GET
     Then status 200
     And def record = response
@@ -111,8 +122,9 @@ Feature: Test quickMARC
     Then status 202
 
     Given path 'records-editor/records'
-    And param externalId = testInstanceId
+    And param externalId = twiceBibId
     And headers headersUser
+    And retry until response.updateInfo.recordState == 'ACTUAL'
     When method GET
     Then status 200
     And def record = response
@@ -132,8 +144,9 @@ Feature: Test quickMARC
     Then status 202
 
     Given path 'records-editor/records'
-    And param externalId = testInstanceId
+    And param externalId = twiceBibId
     And headers headersUser
+    And retry until response.updateInfo.recordState == 'ACTUAL'
     When method GET
     Then status 200
     Then match record.updateInfo.recordState == "ACTUAL"

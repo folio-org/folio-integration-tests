@@ -431,7 +431,7 @@ And match response.paymentStatus == 'Payment Not Required'
 
 ### Dynamic Test Data
 - Use `call uuid` for unique IDs
-- Generate unique tenant names: `"testorders" + RandomUtils.nextLong()`
+- Generate unique tenant names: `SharedTenantOptions.generateTenantName("testorders")` (do NOT use `+ RandomUtils.nextLong()` — its unbounded 19-digit suffix can overflow FOLIO's 31-char tenant name limit)
 - Create test-specific resources to avoid conflicts
 
 ## Error Handling & Debugging

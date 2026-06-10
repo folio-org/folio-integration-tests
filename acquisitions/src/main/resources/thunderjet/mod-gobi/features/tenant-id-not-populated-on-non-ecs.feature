@@ -8,6 +8,8 @@ Feature: TenantId is not populated by mod-gobi on non-ECS environment
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    # Per AC: Electronic default = "Instance, holdings"
+    * def v = call read('classpath:thunderjet/mod-orders/reusable/set-create-inventory.feature') { eresource: 'Instance, Holding', physical: 'Instance, Holding, Item', other: 'None' }
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
@@ -39,7 +41,7 @@ Feature: TenantId is not populated by mod-gobi on non-ECS environment
 
     # 2. Submit A GOBI Order That Links To An Existing Location
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request po
     When method POST
     Then status 201

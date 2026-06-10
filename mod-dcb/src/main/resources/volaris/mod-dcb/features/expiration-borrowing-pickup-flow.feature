@@ -80,6 +80,13 @@ Feature: Testing Borrowing-Pickup Flow Request Expiration
     And match $.status == 'AWAITING_PICKUP'
     And match $.role == 'BORROWING-PICKUP'
 
+    # get sidecar-module-access-client token and speed up request-expiration timer
+    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
+    * def sidecarToken = sidecarResult.sidecarToken
+    * def updateResult = call read('classpath:volaris/mod-dcb/features/util/schedulerUtil.feature@UpdateRequestExpirationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
+    * def currentTimerId = updateResult.currentTimerId
+    * configure headers = headersUser
+
     * call pause 90000
     * configure retry = { count: 30, interval: 10000 }
 
@@ -89,6 +96,11 @@ Feature: Testing Borrowing-Pickup Flow Request Expiration
     Then status 200
     And match $.status == 'EXPIRED'
     And match $.role == 'BORROWING-PICKUP'
+
+    # revert request-expiration timer
+    * if (updateResult.currentTimerCreated) karate.call('classpath:volaris/mod-dcb/features/util/schedulerUtil.feature@DeleteRequestExpirationTimer', { extToken: sidecarToken, extTimerId: currentTimerId })
+    * if (!updateResult.currentTimerCreated) karate.call('classpath:volaris/mod-dcb/features/util/schedulerUtil.feature@UpdateRequestExpirationTimer', { extToken: sidecarToken, extTimerId: currentTimerId, extModuleId: updateResult.currentModuleId, extModuleName: updateResult.currentModuleName, extUnit: 'minute', extDelay: '30' })
+    * configure headers = headersUser
     * configure retry = { count: 10, interval: 5000 }
 
     Given path 'request-storage', 'requests'
