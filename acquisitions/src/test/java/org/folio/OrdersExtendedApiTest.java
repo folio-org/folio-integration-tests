@@ -47,6 +47,8 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     "unopen-order-delete-empty-holding-mixed-pols",
     "pe-mix-change-instance-connection-create-new-delete-holdings",
     "pe-mix-synchronized-change-instance-connection-create-new-delete-holdings",
+    "pe-mix-synchronized-change-instance-connection-find-create-delete-holdings",
+    "pe-mix-change-instance-connection-find-create-keep-holdings",
     "physical-change-instance-connection-find-create-delete-holdings",
     "pe-mix-change-instance-connection-create-new-keep-holdings",
     "pe-mix-synchronized-change-instance-connection-create-new-keep-holdings",
