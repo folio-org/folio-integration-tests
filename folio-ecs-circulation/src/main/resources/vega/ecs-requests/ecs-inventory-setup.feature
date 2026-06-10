@@ -42,7 +42,9 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
 
     # Share instance from university to central tenant
     * def sharingId = uuid()
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true' }
+    # Use central-tenant headers WITHOUT x-okapi-consortium-tenant for the consortia sharing API
+    # (x-okapi-consortium-tenant causes routing issues on the subsequent GET polling call)
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Authtoken-Refresh-Cache': 'true' }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And request
       """
@@ -56,15 +58,45 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
     When method POST
     Then status 201
     And match response.instanceIdentifier == instanceId
+    * karate.log('Instance sharing POST response - instanceId:', instanceId, 'sharingId:', sharingId, 'status:', response.status, 'error:', response.error)
 
-    # Wait for sharing to complete
-    * configure retry = { count: 20, interval: 30000 }
+    # Wait for sharing to complete.
+    # Uses a JS retryLogic function to:
+    #   1. Log every poll attempt (HTTP status + full response body) for diagnostics
+    #   2. Handle 401 token expiry by re-logging in as consortia_admin (central tenant)
+    #   3. Return true only when status reaches COMPLETE or ERROR
+    * def sharingRetryLogic =
+      """
+      function() {
+        karate.log('Sharing poll - HTTP ' + responseStatus + ' | response: ' + karate.toJson(response));
+        if (responseStatus == 401) {
+          karate.log('Got 401 - refreshing consortia_admin token for tenant: ' + centralTenant);
+          var login = karate.call('classpath:common-consortia/eureka/initData.feature@Login',
+            { username: consortiaAdmin.username, password: consortiaAdmin.password, tenant: centralTenant });
+          karate.configure('headers', {
+            'Content-Type': 'application/json', 'Accept': 'application/json',
+            'x-okapi-token': login.okapitoken, 'x-okapi-tenant': centralTenant,
+            'Authtoken-Refresh-Cache': 'true'
+          });
+          return false;
+        }
+        if (responseStatus == 200 && response.sharingInstances && response.sharingInstances.length > 0) {
+          var si = response.sharingInstances[0];
+          karate.log('Sharing instance status: ' + si.status + ' | error: ' + si.error);
+          return si.status == 'COMPLETE' || si.status == 'ERROR';
+        }
+        karate.log('Sharing instances not yet available (HTTP ' + responseStatus + ')');
+        return false;
+      }
+      """
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'consortia', consortiumId, 'sharing/instances'
     And param instanceIdentifier = instanceId
     And param sourceTenantId = universityTenant
-    And retry until response.sharingInstances && response.sharingInstances.length > 0 && (response.sharingInstances[0].status == 'COMPLETE' || response.sharingInstances[0].status == 'ERROR')
+    And retry until sharingRetryLogic()
     When method GET
     Then status 200
+    * karate.log('Sharing finished - final status:', response.sharingInstances[0].status, '| error:', response.sharingInstances[0].error)
     And match response.sharingInstances[0].status == 'COMPLETE'
 
     # Verify instance source updated to CONSORTIUM-FOLIO
