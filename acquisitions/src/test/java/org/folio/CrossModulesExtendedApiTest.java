@@ -64,7 +64,8 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     "unreleased-encumbrance-rolled-over-to-next-fiscal-year",
     "invoice-encumbrance-update-without-acquisition-unit",
     "encumbrance-remains-released-after-another-credited-invoice-was-paid",
-    "encumbrance-calculated-correctly-after-cancelling-paid-credit-invoice"
+    "encumbrance-calculated-correctly-after-cancelling-paid-credit-invoice",
+    "change-instance-connection-then-approve-and-pay-invoice"
   };
 
   public CrossModulesExtendedApiTest() {
