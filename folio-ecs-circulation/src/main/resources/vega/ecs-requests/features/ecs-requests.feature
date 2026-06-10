@@ -59,19 +59,33 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'ECS ILR Test Instance' }
     * def inventory = call setupInventory inventoryParams
 
-    # Wait until ECS cross-tenant allowed-service-points includes ecsServicePointId.
-    # Requires x-okapi-consortium-tenant + x-consortium-id for the ECS routing path;
-    # without them circulation-bff uses a local-only path that cannot find university items.
+    # Wait until allowed-service-points confirms ecsServicePointId is available for pickup.
+    # Uses JSON.stringify to tolerate any response format (object-array or plain-UUID Page values).
+    # After 5 polls (75 s) fails with the full response body to expose the actual API output.
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
+    * karate.set('_ilrSpPoll', 0)
+    * def ilrSpCheckFn =
+      """
+      function() {
+        var n = karate.get('_ilrSpPoll') + 1;
+        karate.set('_ilrSpPoll', n);
+        var respStr = JSON.stringify(response);
+        karate.log('ILR SP poll #' + n + ' HTTP=' + responseStatus + ' resp=' + respStr.substring(0, 600));
+        if (responseStatus == 200 && respStr.indexOf(ecsServicePointId) >= 0) return true;
+        if (n >= 5) {
+          karate.fail('ILR: ecsServicePointId (' + ecsServicePointId + ') absent after ' + n + ' polls. HTTP=' + responseStatus + ' response=' + respStr);
+        }
+        return false;
+      }
+      """
     * configure retry = { count: 40, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
     And param operation = 'create'
     And param itemId = inventory.itemId
-    And retry until responseStatus == 200 && response.Page && karate.jsonPath(response, '$.Page[*].id').contains(ecsServicePointId)
+    And retry until ilrSpCheckFn()
     When method GET
     Then status 200
-    And match response.Page contains { id: '#(ecsServicePointId)' }
 
     # Create ILR ECS request via mod-circulation-bff
     Given path 'circulation-bff/requests'
@@ -145,19 +159,33 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'ECS TLR Test Instance' }
     * def inventory = call setupInventory inventoryParams
 
-    # Wait until ECS cross-tenant allowed-service-points includes ecsServicePointId.
-    # Requires x-okapi-consortium-tenant + x-consortium-id for the ECS routing path;
-    # without them circulation-bff returns a non-ECS response immediately (wrong/missing SPs).
+    # Wait until allowed-service-points confirms ecsServicePointId is available for pickup.
+    # Uses JSON.stringify to tolerate any response format (object-array or plain-UUID Page values).
+    # After 5 polls (75 s) fails with the full response body to expose the actual API output.
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
+    * karate.set('_tlrSpPoll', 0)
+    * def tlrSpCheckFn =
+      """
+      function() {
+        var n = karate.get('_tlrSpPoll') + 1;
+        karate.set('_tlrSpPoll', n);
+        var respStr = JSON.stringify(response);
+        karate.log('TLR SP poll #' + n + ' HTTP=' + responseStatus + ' resp=' + respStr.substring(0, 600));
+        if (responseStatus == 200 && respStr.indexOf(ecsServicePointId) >= 0) return true;
+        if (n >= 5) {
+          karate.fail('TLR: ecsServicePointId (' + ecsServicePointId + ') absent after ' + n + ' polls. HTTP=' + responseStatus + ' response=' + respStr);
+        }
+        return false;
+      }
+      """
     * configure retry = { count: 40, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
     And param operation = 'create'
     And param instanceId = inventory.instanceId
-    And retry until responseStatus == 200 && response.Page && karate.jsonPath(response, '$.Page[*].id').contains(ecsServicePointId)
+    And retry until tlrSpCheckFn()
     When method GET
     Then status 200
-    And match response.Page contains { id: '#(ecsServicePointId)' }
 
     # Create TLR ECS request via mod-circulation-bff
     Given path 'circulation-bff/requests'

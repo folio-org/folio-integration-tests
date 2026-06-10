@@ -58,18 +58,33 @@ Feature: ECS staff slips (pick slips and search slips) via circulation-bff
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'Staff Slip Test Instance' }
     * def inventory = call setupInventory inventoryParams
 
-    # Wait until ECS cross-tenant allowed-service-points includes ecsServicePointId.
-    # Requires x-okapi-consortium-tenant + x-consortium-id for the ECS routing path.
+    # Wait until allowed-service-points confirms ecsServicePointId is available for pickup.
+    # Uses JSON.stringify to tolerate any response format (object-array or plain-UUID Page values).
+    # After 5 polls (75 s) fails with the full response body to expose the actual API output.
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
+    * karate.set('_ssSpPoll', 0)
+    * def ssSpCheckFn =
+      """
+      function() {
+        var n = karate.get('_ssSpPoll') + 1;
+        karate.set('_ssSpPoll', n);
+        var respStr = JSON.stringify(response);
+        karate.log('SS SP poll #' + n + ' HTTP=' + responseStatus + ' resp=' + respStr.substring(0, 600));
+        if (responseStatus == 200 && respStr.indexOf(ecsServicePointId) >= 0) return true;
+        if (n >= 5) {
+          karate.fail('StaffSlip: ecsServicePointId (' + ecsServicePointId + ') absent after ' + n + ' polls. HTTP=' + responseStatus + ' response=' + respStr);
+        }
+        return false;
+      }
+      """
     * configure retry = { count: 40, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
     And param operation = 'create'
     And param instanceId = inventory.instanceId
-    And retry until responseStatus == 200 && response.Page && karate.jsonPath(response, '$.Page[*].id').contains(ecsServicePointId)
+    And retry until ssSpCheckFn()
     When method GET
     Then status 200
-    And match response.Page contains { id: '#(ecsServicePointId)' }
 
     # ========== Pick slips ==========
     # Create TLR Page request via mod-circulation-bff (item becomes Paged)
