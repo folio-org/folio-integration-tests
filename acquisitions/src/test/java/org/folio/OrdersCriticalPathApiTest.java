@@ -10,10 +10,19 @@ import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @Order(5)
 @FolioTest(team = "thunderjet", module = "mod-orders")
@@ -23,26 +32,10 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka implements Acquisi
   private static final String TEST_TENANT = "testorders";
   private static final int THREAD_COUNT = 4;
 
-  private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("receive-piece-new-holding-edit", true),
-    FEATURE_2("receive-pieces-delete-empty-holding", true);
-
-    private final String fileName;
-    private final boolean isEnabled;
-
-    Feature(String fileName, boolean isEnabled) {
-      this.fileName = fileName;
-      this.isEnabled = isEnabled;
-    }
-
-    public boolean isEnabled() {
-      return isEnabled;
-    }
-
-    public String getFileName() {
-      return fileName;
-    }
-  }
+  private static final String[] FEATURES = {
+    "receive-piece-new-holding-edit",
+    "receive-pieces-delete-empty-holding"
+  };
 
   public OrdersCriticalPathApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -69,20 +62,13 @@ public class OrdersCriticalPathApiTest extends TestBaseEureka implements Acquisi
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   public void runFeatures() {
-    runFeatures(Feature.values(), THREAD_COUNT, null);
+    runFeatures(Arrays.asList(FEATURES), THREAD_COUNT, null);
   }
 
-  @Test
-  @DisplayName("(Thunderjet) (C844840) Piece received via receiving full-screen in a new holding can be edited")
+  @TestFactory
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void createOrderPaymentNotRequiredFullyReceive() {
-    runFeatureTest(Feature.FEATURE_1.getFileName());
-  }
-
-  @Test
-  @DisplayName("(Thunderjet) (C1045969) Receive pieces for POL with Instance Holdings and delete empty holding")
-  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void receivePiecesDeleteEmptyHolding() {
-    runFeatureTest(Feature.FEATURE_2.getFileName());
+  @Execution(ExecutionMode.CONCURRENT)
+  Stream<DynamicTest> runFeaturesSeparately() {
+    return Stream.of(FEATURES).map(featureName -> dynamicTest(featureName, () -> runFeatureTest(featureName)));
   }
 }

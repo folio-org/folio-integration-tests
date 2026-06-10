@@ -8,6 +8,7 @@ Feature: Verify tenant address lookup populates billTo on order
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
+    * def v = call read('classpath:thunderjet/mod-orders/reusable/set-create-inventory.feature') { eresource: 'Instance, Holding, Item', physical: 'Instance, Holding, Item', other: 'None' }
 
     * callonce login testUser
     * def okapitokenUser = okapitoken
@@ -35,7 +36,7 @@ Feature: Verify tenant address lookup populates billTo on order
     # 3. Post A GOBI Order - LocalData3 Contains "GOBI" Which Is Used By LookupConfigAddress
     * def sample_po = read('classpath:samples/mod-gobi/po-unlisted-print-monograph.xml')
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po
     When method POST
     Then status 201

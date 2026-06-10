@@ -26,6 +26,12 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                 .run();
     }
 
+    @Test
+    void diAuthorityExtended() {
+        feature("classpath:folijet/data-import/features/marc-records/data-import-authority-records-extended.feature")
+                .run();
+    }
+
     @BeforeAll
     public void setup() {
         if (shouldCreateTenant()) {

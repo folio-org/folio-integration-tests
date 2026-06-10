@@ -7,6 +7,7 @@ Feature: Validate POL suppress instance from discovery
 
     * callonce login testAdmin
     * def okapitokenAdmin = okapitoken
+    * def v = call read('classpath:thunderjet/mod-orders/reusable/set-create-inventory.feature') { okapitoken: '#(okapitokenAdmin)', eresource: 'Instance, Holding, Item', physical: 'Instance, Holding, Item', other: 'None' }
     * callonce login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenUser)", "Accept": "application/json", "x-okapi-tenant": "#(testTenant)" }
@@ -23,7 +24,7 @@ Feature: Validate POL suppress instance from discovery
   Scenario: Send order with (with SuppressInstanceFromDiscovery = true)
     # Create an order
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request poTrueValue
     When method POST
     Then status 201
@@ -53,7 +54,7 @@ Feature: Validate POL suppress instance from discovery
   Scenario: Send order with (with SuppressInstanceFromDiscovery = false)
     # Create an order
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request poFalseValue
     When method POST
     Then status 201
@@ -83,7 +84,7 @@ Feature: Validate POL suppress instance from discovery
   Scenario: Send order with (with SuppressInstanceFromDiscovery unset value)
     # Create an order
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request poUnsetValue
     When method POST
     Then status 201
@@ -113,7 +114,7 @@ Feature: Validate POL suppress instance from discovery
   Scenario: Send order with (with SuppressInstanceFromDiscovery invalid value)
     # Create an order
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request poInvalidValue
     When method POST
     Then status 400
@@ -124,7 +125,7 @@ Feature: Validate POL suppress instance from discovery
   Scenario: Send order with (with SuppressInstanceFromDiscovery invalid position)
     # Create an order
     Given path '/gobi/orders'
-    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitoken)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request poInvalidPosition
     When method POST
     Then status 400

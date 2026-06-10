@@ -1,7 +1,7 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.folio.shared.AcquisitionsTest;
+import org.folio.shared.SharedTenantOptions;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -9,12 +9,20 @@ import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @Order(17)
 @FolioTest(team = "thunderjet", module = "mod-organizations")
@@ -24,25 +32,9 @@ public class OrganizationsApiTest extends TestBaseEureka implements Acquisitions
   private static final String TEST_TENANT = "testorg";
   private static final int THREAD_COUNT = 4;
 
-  private enum Feature implements org.folio.test.config.CommonFeature {
-    FEATURE_1("acquisitions-api-tests", true);
-
-    private final String fileName;
-    private final boolean isEnabled;
-
-    Feature(String fileName, boolean isEnabled) {
-      this.fileName = fileName;
-      this.isEnabled = isEnabled;
-    }
-
-    public boolean isEnabled() {
-      return isEnabled;
-    }
-
-    public String getFileName() {
-      return fileName;
-    }
-  }
+  private static final String[] FEATURES = {
+    "acquisitions-api-tests"
+};
 
   public OrganizationsApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -51,7 +43,7 @@ public class OrganizationsApiTest extends TestBaseEureka implements Acquisitions
   @BeforeAll
   @Override
   public void beforeAll() {
-    System.setProperty("testTenant", TEST_TENANT + RandomUtils.nextLong());
+    System.setProperty("testTenant", SharedTenantOptions.generateTenantName(TEST_TENANT));
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/mod-organizations/init-organizations.feature");
   }
@@ -67,12 +59,13 @@ public class OrganizationsApiTest extends TestBaseEureka implements Acquisitions
   @DisplayName("(Thunderjet) Run features")
   @DisabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   public void runFeatures() {
-    runFeatures(Feature.values(), THREAD_COUNT, null);
+    runFeatures(Arrays.asList(FEATURES), THREAD_COUNT, null);
   }
 
-  @Test
+  @TestFactory
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
-  void acquisitionsApiTests() {
-    runFeatureTest(Feature.FEATURE_1.getFileName());
+  @Execution(ExecutionMode.CONCURRENT)
+  Stream<DynamicTest> runFeaturesSeparately() {
+    return Stream.of(FEATURES).map(featureName -> dynamicTest(featureName, () -> runFeatureTest(featureName)));
   }
 }
