@@ -58,18 +58,18 @@ Feature: ECS staff slips (pick slips and search slips) via circulation-bff
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'Staff Slip Test Instance' }
     * def inventory = call setupInventory inventoryParams
 
-    # Wait until instance is indexed by mod-search
-    * configure headers = headersCentral
-    * configure retry = { count: 20, interval: 15000 }
+    # Wait until ECS cross-tenant allowed-service-points includes ecsServicePointId.
+    # Requires x-okapi-consortium-tenant + x-consortium-id for the ECS routing path.
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true', 'x-consortium-id': '#(consortiumId)' }
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'circulation-bff/requests/allowed-service-points'
     And param requesterId = userId
     And param operation = 'create'
     And param instanceId = inventory.instanceId
-    And retry until responseStatus == 200 && response && karate.sizeOf(response) > 0
+    And retry until responseStatus == 200 && response.Page && karate.jsonPath(response, '$.Page[*].id').contains(ecsServicePointId)
     When method GET
     Then status 200
-    * def allowedSpIds = response.Page ? response.Page.map(function(sp){ return sp.id }) : []
-    * if (!allowedSpIds.includes(ecsServicePointId)) karate.fail('Pick slip: ecsServicePointId not found in allowed service points: ' + karate.toJson(response))
+    And match response.Page contains { id: '#(ecsServicePointId)' }
 
     # ========== Pick slips ==========
     # Create TLR Page request via mod-circulation-bff (item becomes Paged)
