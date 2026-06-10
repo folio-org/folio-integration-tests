@@ -1,7 +1,7 @@
 package org.folio;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.folio.shared.AcquisitionsTest;
+import org.folio.shared.SharedTenantOptions;
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -43,7 +43,7 @@ class ConsortiaOrdersApiTest extends TestBaseEureka implements AcquisitionsTest 
   @BeforeAll
   @Override
   public void beforeAll() {
-    System.setProperty("testTenant", TENANT + RandomUtils.nextLong());
+    System.setProperty("testTenant", SharedTenantOptions.generateTenantName(TENANT));
     System.setProperty("testTenantId", UUID.randomUUID().toString());
     runFeature("classpath:thunderjet/consortia/init-consortia-orders.feature");
   }

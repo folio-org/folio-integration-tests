@@ -6,6 +6,19 @@ import java.util.UUID;
 
 public class SharedTenantOptions {
 
+  private static final long TENANT_SUFFIX_BOUND = 1_000_000_000L;
+
+  /**
+   * Generates a tenant name as {@code prefix + bounded-random-suffix} that complies with the
+   * FOLIO tenant name regex {@code [a-z][a-z0-9_]{0,29}[a-z0-9]} (max 31 chars).
+   *
+   * @param prefix Lowercase tenant prefix (must be ≤ 22 chars to stay within the 31-char limit)
+   * @return tenant name with a numeric suffix of at most 9 digits
+   */
+  public static String generateTenantName(String prefix) {
+    return prefix + RandomUtils.insecure().randomLong(0, TENANT_SUFFIX_BOUND);
+  }
+
   /**
    *  Returns a property object containing tenant name, tenant id and the destroy option, which are
    *  needed for {@code AcquisitionsTest.beforeAll() and AcquisitionsTest.afterAll()} operation.
@@ -22,7 +35,7 @@ public class SharedTenantOptions {
     var tenantId = System.getProperty("tenant-id");
     var destroy = Boolean.parseBoolean(System.getProperty("destroy"));
     if (tenantName == null || tenantId == null) {
-      tenantName = tenantPrefix + RandomUtils.nextLong();
+      tenantName = generateTenantName(tenantPrefix);
       tenantId = UUID.randomUUID().toString();
     }
     return new TenantData(tenantName, tenantId, destroy);
