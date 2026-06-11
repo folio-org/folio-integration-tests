@@ -27,6 +27,10 @@ Feature: init data for items
     * def location = karate.read('classpath:samples/items/location-annex.json')
     * call read('init-data/mod-items-util.feature@PostLocation') location
 
+  Scenario: setup material type test data
+    * def materialType = karate.read('classpath:samples/items/material-type.json')
+    * call read('init-data/mod-items-util.feature@PostMaterialType') materialType
+
   Scenario: setup test data for instance
     #setup instance
     * def instance = karate.read('classpath:samples/items/inventory-instance.json')
