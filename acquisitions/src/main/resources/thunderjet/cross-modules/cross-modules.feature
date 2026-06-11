@@ -355,3 +355,7 @@ Feature: cross-module integration tests
 
   Scenario: Pay, unopen, open
     * call read('features/pay-unopen-open.feature')
+
+  Scenario: POL Payment Status Updated To Fully Paid For Two Orders When Cancelling Invoice Against Previous Fiscal Year
+    * call read('features/cancel-approved-invoice-against-past-fy-fully-paid-two-orders.feature')
+
