@@ -7,7 +7,7 @@ Feature: POL Payment Status Updated To Fully Paid For Two Orders When Cancelling
     * callonce login testUser
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
-    * configure retry = { count: 15, interval: 15000 }
+    * configure retry = { count: 15, interval: 500 }
 
     * callonce variables
 
