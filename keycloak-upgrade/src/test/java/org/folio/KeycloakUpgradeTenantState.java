@@ -13,17 +13,10 @@ final class KeycloakUpgradeTenantState {
 
   private static final String TEST_TENANT = "testTenant";
   private static final String TEST_TENANT_ID = "testTenantId";
-  private static final String MEMBER_TENANT = "memberTenant";
-  private static final String MEMBER_TENANT_ID = "memberTenantId";
-  private static final String CONSORTIUM_ID = "consortiumId";
-  private static final String CONSORTIA_ADMIN_ID = "consortiaAdminId";
-  private static final String MEMBER_ADMIN_ID = "memberAdminId";
-  private static final String CONSORTIA_USER_ID = "consortiaUserId";
   private static final String STATE_FILE = "keycloak.upgrade.stateFile";
   private static final Path DEFAULT_STATE_FILE = Path.of("target", "keycloak-upgrade-tenant.properties");
   private static final String[] REQUIRED_STATE_KEYS = {
-    TEST_TENANT, TEST_TENANT_ID, MEMBER_TENANT, MEMBER_TENANT_ID, CONSORTIUM_ID,
-    CONSORTIA_ADMIN_ID, MEMBER_ADMIN_ID, CONSORTIA_USER_ID
+    TEST_TENANT, TEST_TENANT_ID
   };
 
   private KeycloakUpgradeTenantState() {
@@ -46,7 +39,6 @@ final class KeycloakUpgradeTenantState {
 
     state.setProperty(TEST_TENANT, testTenant);
     state.setProperty(TEST_TENANT_ID, testTenantId);
-    addMissingConsortiaState(state);
     setTenantProperties(state);
     save(state);
   }
@@ -113,15 +105,6 @@ final class KeycloakUpgradeTenantState {
   private static Path stateFile() {
     var override = System.getProperty(STATE_FILE);
     return isBlank(override) ? DEFAULT_STATE_FILE : Path.of(override);
-  }
-
-  private static void addMissingConsortiaState(Properties properties) {
-    properties.computeIfAbsent(MEMBER_TENANT, key -> randomTenantName("kcmember"));
-    properties.computeIfAbsent(MEMBER_TENANT_ID, key -> UUID.randomUUID().toString());
-    properties.computeIfAbsent(CONSORTIUM_ID, key -> UUID.randomUUID().toString());
-    properties.computeIfAbsent(CONSORTIA_ADMIN_ID, key -> UUID.randomUUID().toString());
-    properties.computeIfAbsent(MEMBER_ADMIN_ID, key -> UUID.randomUUID().toString());
-    properties.computeIfAbsent(CONSORTIA_USER_ID, key -> UUID.randomUUID().toString());
   }
 
   private static void validateState(Properties properties) {

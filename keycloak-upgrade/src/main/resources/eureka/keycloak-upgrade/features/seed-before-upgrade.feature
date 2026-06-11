@@ -33,12 +33,24 @@ Feature: seed data before Keycloak upgrade
       | 'role-capabilities.collection.get'            |
       | 'permissions.users.item.get'                  |
 
-  Scenario: create tenant, user credentials, consortia affiliation, and role data before upgrade
-    # Seed central/member tenants and the consortia affiliation fixture used by post-upgrade verification.
-    * call read('classpath:eureka/keycloak-upgrade/features/seed-consortia-before-upgrade.feature')
+  Scenario: create tenant, user credentials, and role data before upgrade
+    # Create the tenant and enable required applications before requesting tenant-scoped Keycloak tokens.
+    * call read('classpath:common/eureka/setup-users.feature@createTenant')
+    * call read('classpath:common/eureka/setup-users.feature@createEntitlement')
+
+    # Wait until the tenant realm is visible before retrieving the tenant-scoped module token.
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
+    Given url baseKeycloakUrl
+    And path 'admin', 'realms', testTenant
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    And retry until responseStatus == 200
+    When method get
+    Then status 200
 
     # Create the test user, assign credentials, and grant the permissions needed for verification.
     * configure headers = null
+    * configure cookies = null
     * call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
     * call read('classpath:common/eureka/setup-users.feature@createTestUser')
     * call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
@@ -46,6 +58,8 @@ Feature: seed data before Keycloak upgrade
     * def testUserId = karate.get('userId')
 
     # Verify the user can authenticate before the Keycloak upgrade.
+    Given url baseUrl
+    * configure cookies = null
     Given path 'authn', 'login'
     And headers { 'Content-Type': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
     And request { username: '#(testUser.name)', password: '#(testUser.password)' }

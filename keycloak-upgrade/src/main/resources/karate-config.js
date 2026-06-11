@@ -17,12 +17,6 @@ function fn() {
   var adminPasswordOverride = karate.properties['admin.password'];
   var effectiveTestTenant = testTenant ? testTenant : 'testtenant';
   var effectiveTestTenantId = testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })();
-  var memberTenant = karate.properties['memberTenant'] || 'kcmembertenant';
-  var memberTenantId = karate.properties['memberTenantId'] || (function() { return java.util.UUID.randomUUID() + '' })();
-  var consortiumId = karate.properties['consortiumId'] || (function() { return java.util.UUID.randomUUID() + '' })();
-  var consortiaAdminId = karate.properties['consortiaAdminId'] || (function() { return java.util.UUID.randomUUID() + '' })();
-  var memberAdminId = karate.properties['memberAdminId'] || (function() { return java.util.UUID.randomUUID() + '' })();
-  var consortiaUserId = karate.properties['consortiaUserId'] || (function() { return java.util.UUID.randomUUID() + '' })();
 
   var config = {
     baseUrl: baseUrlOverride || 'http://localhost:8000',
@@ -39,15 +33,7 @@ function fn() {
     tenantParams: { loadReferenceData: true },
     testTenant: effectiveTestTenant,
     testTenantId: effectiveTestTenantId,
-    centralTenant: effectiveTestTenant,
-    centralTenantId: effectiveTestTenantId,
-    memberTenant: memberTenant,
-    memberTenantId: memberTenantId,
-    consortiumId: consortiumId,
     testUser: { tenant: effectiveTestTenant, name: 'kc-upgrade-user', password: 'test' },
-    consortiaAdmin: { id: consortiaAdminId, username: 'kc-upgrade-consortia-admin', password: 'kc-upgrade-consortia-admin-password', tenant: effectiveTestTenant, phone: '111-111', mobilePhone: '111-222' },
-    memberAdmin: { id: memberAdminId, username: 'kc-upgrade-member-admin', password: 'kc-upgrade-member-admin-password', tenant: memberTenant, phone: '222-111', mobilePhone: '222-222' },
-    consortiaUser: { id: consortiaUserId, username: 'kc-upgrade-consortia-user', password: 'kc-upgrade-consortia-user-password', type: 'staff', tenant: effectiveTestTenant, phone: '333-111', mobilePhone: '333-222' },
     upgradeRoleName: 'kc-upgrade-role-' + effectiveTestTenant,
     upgradeRoleDescription: 'Role created before a Keycloak upgrade and verified after restart',
     upgradeRolePermission: 'roles.collection.get',

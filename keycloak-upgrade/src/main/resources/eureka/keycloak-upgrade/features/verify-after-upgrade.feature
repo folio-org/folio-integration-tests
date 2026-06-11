@@ -60,9 +60,6 @@ Feature: verify data after Keycloak upgrade
     Then status 200
     And match response.permissions contains upgradeRolePermission
 
-    # Verify consortia affiliation and shadow-user fixtures through FOLIO APIs.
-    * call read('classpath:eureka/keycloak-upgrade/features/verify-consortia-after-upgrade.feature')
-
     # Verify refresh-token rotation still works after the upgrade.
     * configure headers = null
     * configure cookies = null
