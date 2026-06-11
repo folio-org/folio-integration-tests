@@ -67,6 +67,8 @@ Feature: bulk operations integration tests
       | 'inventory-storage.statistical-code-types.item.post'      |
       | 'inventory-storage.statistical-codes.collection.get'      |
       | 'inventory-storage.statistical-codes.item.post'           |
+      | 'inventory-storage.material-types.item.get'               |
+      | 'inventory-storage.material-types.item.post'              |
       | 'inventory.instances.collection.get'                      |
       | 'inventory.instances.item.get'                            |
       | 'inventory.instances.item.post'                           |

@@ -104,9 +104,20 @@ Feature: mod bulk operations items features
                         }
                     ]
                 }
-            }
+            }, {
+                  "bulkOperationId": "#(operationId)",
+                  "rule_details": {
+                    "option": "MATERIAL_TYPE",
+                    "actions": [{
+                            "type": "REPLACE_WITH",
+                            "initial": null,
+                            "updated": "#(materialTypeId)"
+                      }
+                  ]
+              }
+        }
         ],
-        "totalRecords": 1
+        "totalRecords": 6
     }
     """
     When method POST
@@ -132,8 +143,10 @@ Feature: mod bulk operations items features
     And param step = 'EDIT'
     When method GET
     Then status 200
+    And match response.header[13].value == 'Material type'
     And match response.header[31].value == 'Action note'
     And match response.header[37].value == 'Reproduction note'
+    And match response.rows[0].row[13] == 'test_material_type'
     And match response.rows[0].row[38] == 'Selected'
     And match response.rows[0].row[39] == '#null'
     And match response.rows[0].row[40] contains 'Unknown'
@@ -162,6 +175,7 @@ Feature: mod bulk operations items features
     And param limit = '10'
     And param step = 'COMMIT'
     When method GET
+    Then status 200
     And match response.header[31].value == 'Action note'
     And match response.header[37].value == 'Reproduction note'
     And match response.rows[0].row[38] == 'Selected'
@@ -194,6 +208,7 @@ Feature: mod bulk operations items features
     And match response.items[0].permanentLoanType.name == 'Selected'
     And match response.items[0].permanentLocation.name == 'Annex'
     And match response.items[0].temporaryLocation.name == '#notpresent'
+    And match response.items[0].materialType.name == 'test_material_type'
 
   Scenario: In-App approach add notes to item
     * configure headers = { 'Content-Type': 'multipart/form-data', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
