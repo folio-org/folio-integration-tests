@@ -121,6 +121,7 @@ function fn() {
     createPiecesBatch: karate.read('classpath:thunderjet/mod-orders/reusable/create-pieces-batch.feature'),
     createPieceWithHoldingOrLocation: karate.read('classpath:thunderjet/mod-orders/reusable/create-piece-with-holding-or-location.feature'),
     updatePiecesBatchStatus: karate.read('classpath:thunderjet/mod-orders/reusable/update-pieces-batch-status.feature'),
+    unreceivePieceLikeUI: karate.read('classpath:thunderjet/mod-orders/reusable/unreceive-piece-like-ui.feature'),
     claimPieces: karate.read('classpath:thunderjet/mod-orders/reusable/claim-pieces.feature'),
     receivePieceWithHolding: karate.read('classpath:thunderjet/mod-orders/reusable/receive-piece-with-holding.feature'),
     verifyPieceAuditEvents: karate.read('classpath:thunderjet/mod-orders/reusable/verify-piece.feature@VerifyPieceAuditEvents'),
