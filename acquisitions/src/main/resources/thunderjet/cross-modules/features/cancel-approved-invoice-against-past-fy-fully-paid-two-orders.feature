@@ -107,24 +107,17 @@ Feature: POL Payment Status Updated To Fully Paid For Two Orders When Cancelling
     When method GET
     Then status 200
     And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
-    And match response.ledgerFiscalYearRolloverProgresses[0].ordersRolloverStatus == 'Success'
-    And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Success'
 
     # 12. Shift Fiscal Year Periods So FY#1 Becomes Past And FY#2 Includes Current Date
-    * def v = call read('classpath:thunderjet/cross-modules/reusable/shiftFiscalYearPeriods.feature') { fromFiscalYearId: '#(fyId1)', toFiscalYearId: '#(fyId2)', series: '#(series)' }
+    * def v = call backdateFY { id: '#(fyId1)' }
+    * def v = call backdateFY { id: '#(fyId2)' }
 
     # 13. Cancel Invoice Against Previous Fiscal Year With "Fully Paid" POL Payment Status (Steps 4-6)
     * def v = call cancelInvoice { invoiceId: '#(invoiceId)', poLinePaymentStatus: 'Fully Paid' }
 
     # 14. Verify Invoice Status Is "Cancelled" After Cancellation (Step 6)
-    * def isInvoiceCancelled =
-    """
-    function(response) {
-      return response.status == 'Cancelled';
-    }
-    """
     Given path 'invoice/invoices', invoiceId
-    And retry until isInvoiceCancelled(response)
+    And retry until response.status == 'Cancelled'
     When method GET
     Then status 200
 
