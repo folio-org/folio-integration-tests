@@ -135,22 +135,22 @@ Feature: POL Payment Status Updated To Fully Paid For Two Orders When Cancelling
     And match $.invoiceLineStatus == 'Cancelled'
 
     # 16. Verify Past FY Encumbrance #1 Is "Unreleased" With Correct Amounts (Step 8)
-    * def isEncumbrance1Correct =
+    * def isEncumbranceCorrect =
     """
-    function(response) {
+    function(response, amount) {
       if (!response.transactions || response.transactions.length == 0) return false;
       var t = response.transactions[0];
       return t.encumbrance.status == 'Unreleased' &&
-      t.amount == 25.00 &&
+      t.amount == amount &&
       t.fiscalYearId == fyId1 &&
-      t.encumbrance.initialAmountEncumbered == 25.00 &&
+      t.encumbrance.initialAmountEncumbered == amount &&
       t.encumbrance.amountAwaitingPayment == 0.00 &&
       t.encumbrance.amountExpended == 0.00;
     }
     """
     Given path 'finance/transactions'
     And param query = 'id==' + encumbranceId1
-    And retry until isEncumbrance1Correct(response)
+    And retry until isEncumbranceCorrect(response, 25.00)
     When method GET
     Then status 200
 
@@ -167,22 +167,9 @@ Feature: POL Payment Status Updated To Fully Paid For Two Orders When Cancelling
     And match $.invoiceLineStatus == 'Cancelled'
 
     # 19. Verify Past FY Encumbrance #2 Is "Unreleased" With Correct Amounts (Step 11)
-    * def isEncumbrance2Correct =
-    """
-    function(response) {
-      if (!response.transactions || response.transactions.length == 0) return false;
-      var t = response.transactions[0];
-      return t.encumbrance.status == 'Unreleased' &&
-      t.amount == 50.00 &&
-      t.fiscalYearId == fyId1 &&
-      t.encumbrance.initialAmountEncumbered == 50.00 &&
-      t.encumbrance.amountAwaitingPayment == 0.00 &&
-      t.encumbrance.amountExpended == 0.00;
-    }
-    """
     Given path 'finance/transactions'
     And param query = 'id==' + encumbranceId2
-    And retry until isEncumbrance2Correct(response)
+    And retry until isEncumbranceCorrect(response, 50.00)
     When method GET
     Then status 200
 
