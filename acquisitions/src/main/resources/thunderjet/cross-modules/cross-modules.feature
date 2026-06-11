@@ -35,6 +35,9 @@ Feature: cross-module integration tests
   Scenario: Audit events for Organization
     * call read('features/audit-event-organization.feature')
 
+  Scenario: Auto-reopen order in new FY
+    * call read('features/auto-reopen-order-in-new-fy.feature')
+
   Scenario: Cancel invoice and unrelease 2 encumbrances
     * call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')
 
