@@ -209,6 +209,11 @@ public class ModDCBExtendedTest extends TestBaseEureka {
     runFeatureTest("non-lender-renew-restriction.feature");
   }
 
+  @Test
+  void testBorrowingPickupBlockUnblockRenewal() {
+    runFeatureTest("borrowing-pickup-block-unblock-renewal.feature");
+  }
+
   @BeforeAll
   public void setup() {
     runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
