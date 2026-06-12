@@ -32,7 +32,12 @@ class ModSchedulerTests extends TestBaseEureka {
   }
 
   @Test
-  void listTimers() {
-    runFeatureTest("list-timers");
+  void systemTimers() {
+    runFeatureTest("system-timers");
+  }
+
+  @Test
+  void userTimers() {
+    runFeatureTest("user-timers");
   }
 }

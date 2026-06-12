@@ -37,6 +37,7 @@ public class CrossModulesApiTest extends TestBaseEureka implements AcquisitionsT
     "audit-event-invoice",
     "audit-event-invoice-line",
     "audit-event-organization",
+    "auto-reopen-order-in-new-fy",
     "cancel-invoice-and-unrelease-2-encumbrances",
     "cancel-invoice-linked-to-order",
     "cancel-invoice-with-encumbrance",
