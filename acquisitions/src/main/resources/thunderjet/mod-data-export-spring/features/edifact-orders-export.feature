@@ -11,6 +11,8 @@ Feature: EDIFACT orders export tests
     * configure headers = headersUser
     * configure retry = { count: 12, interval: 5000 }
 
+    * call read('classpath:thunderjet/mod-data-export-spring/features/util/initHelpers.feature')
+
   Scenario: If there is an open order for organization and organization has integration method with the same acquisition method as order THEN export job should be triggered and be 'SUCCESSFUL' (ediSchedulePeriod = 'DAY')
     # Create an organization
     * def extOrganizationId = call uuid1
