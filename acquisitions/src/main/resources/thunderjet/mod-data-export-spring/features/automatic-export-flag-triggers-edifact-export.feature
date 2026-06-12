@@ -11,6 +11,8 @@ Feature: Verify, if Saved flag "automaticExport" in the POL supports EDIFACT ord
     * configure headers = headersUser
     * configure retry = { count: 12, interval: 5000 }
 
+    * call read('classpath:thunderjet/mod-data-export-spring/features/util/initHelpers.feature')
+
     * def expCreateOrg = read('classpath:thunderjet/mod-data-export-spring/features/util/initData.feature@CreateOrganization')
     * def expSetupOrgAcc = read('classpath:thunderjet/mod-data-export-spring/features/util/initData.feature@SetAccountToOrganization')
     * def expCreateOrgOrder = read('classpath:thunderjet/mod-data-export-spring/features/util/initData.feature@CreateOrderForOrganization')
