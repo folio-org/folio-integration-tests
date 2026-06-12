@@ -64,7 +64,7 @@ Feature: systemwide-service-points tests
     And match response.tenants[*].id contains collegeTenant
     And match response.tenants[*].id contains universityTenant
 
-  Scenario: create service point with same id in all consortium tenants and verify visibility per tenant
+  Scenario: create service point in central tenant and verify ECS auto-replication to member tenants
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
 
@@ -89,50 +89,41 @@ Feature: systemwide-service-points tests
       }
       """
 
-    # Create the service point in the central tenant
+    # Create the service point in the central tenant.
+    # ECS auto-replicates service points from central to all member tenants.
     Given path 'service-points'
     And request servicePointPayload
     When method POST
     Then status 201
 
-    # Create the same service point (same UUID) in the college tenant.
-    # ECS does not auto-replicate service points; each tenant must have its own copy.
+    # Verify the service point is visible in the central tenant
+    Given path 'service-points', servicePointId
+    When method GET
+    Then status 200
+    And match response.id == servicePointId
+    And match response.name == servicePointName
+
+    # Verify the service point is replicated to the college tenant (ECS auto-replication)
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+    * configure retry = { count: 20, interval: 5000 }
     Given path 'service-points'
-    And request servicePointPayload
-    When method POST
-    Then status 201
+    And param query = 'id=="' + servicePointId + '"'
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
 
-    # Create the same service point in the university tenant
+    # Verify the service point is replicated to the university tenant (ECS auto-replication)
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    * configure retry = { count: 20, interval: 5000 }
     Given path 'service-points'
-    And request servicePointPayload
-    When method POST
-    Then status 201
-
-    # Verify the service point is visible in each tenant with the same id and name
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralLogin.okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
-    Given path 'service-points', servicePointId
+    And param query = 'id=="' + servicePointId + '"'
+    And retry until response.totalRecords == 1
     When method GET
     Then status 200
-    And match response.id == servicePointId
-    And match response.name == servicePointName
-
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
-    Given path 'service-points', servicePointId
-    When method GET
-    Then status 200
-    And match response.id == servicePointId
-    And match response.name == servicePointName
-
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-    Given path 'service-points', servicePointId
-    When method GET
-    Then status 200
-    And match response.id == servicePointId
-    And match response.name == servicePointName
+    And match response.totalRecords == 1
 
   Scenario: create service point in college and verify no replication to consortium and university
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
