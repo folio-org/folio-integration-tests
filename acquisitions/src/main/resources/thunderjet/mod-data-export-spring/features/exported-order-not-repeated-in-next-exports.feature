@@ -11,6 +11,8 @@ Feature: Already exported order is not included repeatedly in next exports AND t
     * configure headers = headersUser
     * configure retry = { count: 12, interval: 5000 }
 
+    * call read('classpath:thunderjet/mod-data-export-spring/features/util/initHelpers.feature')
+
     * def expCreateOrg = read('classpath:thunderjet/mod-data-export-spring/features/util/initData.feature@CreateOrganization')
     * def expSetupOrgAcc = read('classpath:thunderjet/mod-data-export-spring/features/util/initData.feature@SetAccountToOrganization')
     * def expCreateOrgOrder = read('classpath:thunderjet/mod-data-export-spring/features/util/initData.feature@CreateOrderForOrganization')

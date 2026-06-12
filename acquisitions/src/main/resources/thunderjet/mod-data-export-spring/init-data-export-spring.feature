@@ -83,11 +83,6 @@ Feature: Initialize mod-data-export-spring integration tests
       | 'inventory-storage.service-points.item.post'                  |
       | 'organizations.organizations.item.post'                       |
 
-    * callonce variables
-
-    * def nextZonedTimeAsLocaleSettings = read('features/util/get-next-time-function.js')
-    * def currentDayOfWeek = read('features/util/get-day-of-week-function.js')
-    * def waitIfNecessary = read('features/util/determine-if-wait-necessary-function.js')
 
 
   Scenario: Create tenant and test user

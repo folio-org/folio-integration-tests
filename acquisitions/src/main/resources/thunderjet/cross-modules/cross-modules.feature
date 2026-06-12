@@ -35,6 +35,9 @@ Feature: cross-module integration tests
   Scenario: Audit events for Organization
     * call read('features/audit-event-organization.feature')
 
+  Scenario: Auto-reopen order in new FY
+    * call read('features/auto-reopen-order-in-new-fy.feature')
+
   Scenario: Cancel invoice and unrelease 2 encumbrances
     * call read('features/cancel-invoice-and-unrelease-2-encumbrances.feature')
 
@@ -46,6 +49,9 @@ Feature: cross-module integration tests
 
   Scenario: Change fund distribution and check initial amount encumbered
     * call read('features/change-fd-check-initial-amount.feature')
+
+  Scenario: Change POL Instance Connection To ISBN-Qualifier Instance Then Approve And Pay Invoice
+    * call read('features/change-instance-connection-then-approve-and-pay-invoice.feature')
 
   Scenario: Change poline fund distribution and pay invoice
     * call read('features/change-poline-fd-and-pay-invoice.feature')
@@ -352,3 +358,7 @@ Feature: cross-module integration tests
 
   Scenario: Pay, unopen, open
     * call read('features/pay-unopen-open.feature')
+
+  Scenario: POL Payment Status Updated To Fully Paid For Two Orders When Cancelling Invoice Against Previous Fiscal Year
+    * call read('features/cancel-approved-invoice-against-past-fy-fully-paid-two-orders.feature')
+

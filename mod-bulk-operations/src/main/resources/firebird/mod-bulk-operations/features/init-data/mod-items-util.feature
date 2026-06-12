@@ -39,6 +39,13 @@ Feature: setup user data feature
     When method POST
     Then status 201
 
+  @PostMaterialType
+  Scenario: POST material type
+    Given path 'material-types'
+    And request materialType
+    When method POST
+    Then status 201
+
   @PostInstance
   Scenario: POST inventory
     Given path 'inventory'
