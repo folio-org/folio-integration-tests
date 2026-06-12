@@ -332,7 +332,7 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
 
   Scenario: Fail to create title level hold when request is blocked by circulation rule and instance has no items
-    * def requesterBarcode = "FAT-6947-1"
+    * def requesterBarcode = "FAT-23931"
     * def requesterId = call uuid1
     * def instanceId = call uuid1
     * def holdingsId = call uuid1
