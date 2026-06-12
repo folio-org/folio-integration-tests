@@ -16,7 +16,7 @@ Feature: Helper for "close-order-when-fully-paid-and-received"
     * def v = call updateOrderLine { id: '#(poLineId)', paymentStatus: '#(newPaymentStatus)', receiptStatus: '#(newReceiptStatus)' }
 
     # 10. Wait for a potential order status update
-    * call pause 300
+    * call pause 500
 
     # 11. Check order's expected workflow status
     Given path 'orders/composite-orders', orderId
@@ -35,7 +35,7 @@ Feature: Helper for "close-order-when-fully-paid-and-received"
     * if (newReceiptStatus == 'Awaiting Receipt') karate.call('classpath:thunderjet/mod-orders/reusable/unreceive-piece-like-ui.feature', { pieceId: pieceId, poLineId: poLineId })
 
     # 10. Wait for a potential order status update
-    * call pause 300
+    * call pause 500
 
     # 11. Check order's expected workflow status
     Given path 'orders/composite-orders', orderId

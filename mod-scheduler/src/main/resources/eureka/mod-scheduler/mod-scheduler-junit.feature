@@ -2,6 +2,7 @@ Feature: mod-scheduler integration tests setup
 
   Background:
     * url baseUrl
+    * configure retry = { count: 10, interval: 5000 }
 
     * table modules
       | name                  |
@@ -28,7 +29,6 @@ Feature: mod-scheduler integration tests setup
     * def userId = karate.get('userId')
     * def password = testUser.password
     * def accesstoken = karate.get('accessToken')
-    * configure retry = { count: 20, interval: 5000 }
     Given path 'authn', 'credentials'
     And headers {'x-okapi-tenant':'#(testTenant)', 'x-okapi-token': '#(accesstoken)'}
     And request {username: '#(userName)', "userId": '#(userId)', password :'#(password)'}
