@@ -227,10 +227,12 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
 
     # Also create the central service point in the university tenant so it is available
     # as a pickup location without relying on cross-tenant Kafka replication.
+    # On snapshot/ECS environments the service point is replicated from central to university
+    # via Kafka before this step runs, so 422 "Service Point Exists" is a valid outcome.
     Given path 'service-points'
     And request { id: '#(ecsServicePointId)', name: 'ECS Central Service Point', code: 'ECS-SP-C', discoveryDisplayName: 'ECS Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'instance-types'
     And request { id: '#(uniInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
