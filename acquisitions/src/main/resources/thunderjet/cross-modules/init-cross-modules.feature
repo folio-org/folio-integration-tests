@@ -98,6 +98,7 @@ Feature: Cross-module integration tests
       | 'orders.po-lines.item.post'                                |
       | 'orders.po-lines.item.put'                                 |
       | 'orders.re-encumber.item.post'                             |
+      | 'orders.receiving.collection.post'                         |
       | 'organizations.organizations.item.get'                     |
       | 'organizations.organizations.item.post'                    |
       | 'organizations.organizations.item.put'                     |

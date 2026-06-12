@@ -62,6 +62,8 @@ Feature: Update purchase order with order lines
       | poLineId2 | 'testCancelled' | 'Cancelled'   | 'Cancelled'   |
     * def v = call updateOrderLine orderLinesUpdated
 
+    * call pause 300
+
     ### 6. Validate composite orders after order line update
     * table compositeOrdersToValidate
       | id       | workflowStatus | titleOrPackage  | paymentStatus | receiptStatus |

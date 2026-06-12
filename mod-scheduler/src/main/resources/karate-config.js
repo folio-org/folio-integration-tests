@@ -2,7 +2,6 @@ function fn() {
 
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
-  karate.configure('retry', { count: 20, interval: 15000 });
 
   var env = karate.env;
   var testTenant = karate.properties['testTenant'];
