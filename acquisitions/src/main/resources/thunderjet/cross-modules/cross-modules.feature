@@ -338,6 +338,9 @@ Feature: cross-module integration tests
   Scenario: Rollover Based On Expended When Credit Invoice Exists
     * call read('features/rollover-based-on-expended-with-credit-invoice.feature')
 
+  Scenario: Rollover After Fund Distribution Change With Paid Invoice Based On Initial Encumbrance
+    * call read('features/rollover-after-fund-change-with-paid-invoice-initial-encumbrance.feature')
+
   Scenario: Over Encumbrance Is Calculated Correctly For Fiscal Year Ledger And Group
     * call read('features/over-encumbrance-for-fy-ledger-and-group.feature')
 
@@ -358,3 +361,7 @@ Feature: cross-module integration tests
 
   Scenario: Pay, unopen, open
     * call read('features/pay-unopen-open.feature')
+
+  Scenario: POL Payment Status Updated To Fully Paid For Two Orders When Cancelling Invoice Against Previous Fiscal Year
+    * call read('features/cancel-approved-invoice-against-past-fy-fully-paid-two-orders.feature')
+

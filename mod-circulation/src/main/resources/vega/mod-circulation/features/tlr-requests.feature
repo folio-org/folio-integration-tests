@@ -331,6 +331,50 @@ Feature: Title level request tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
 
+  Scenario: Fail to create title level hold when request is blocked by circulation rule and instance has no items
+    * def requesterBarcode = "FAT-23931"
+    * def requesterId = call uuid1
+    * def instanceId = call uuid1
+    * def holdingsId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
+    * def requestId = call uuid1
+
+    # update TLR-settings: keep titleLevelRequestsFeatureEnabled=true, set tlrHoldShouldFollowCirculationRules=true
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig') { extTlrHoldShouldFollowCirculationRules: true }
+
+    # create a requester user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # create an instance with a holding but no items
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+
+    # attempt a Title Level Hold request - should fail because the instance has no items and tlrHoldShouldFollowCirculationRules is enabled
+    * def holdRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * holdRequest.id = requestId
+    * holdRequest.instanceId = instanceId
+    * holdRequest.requesterId = requesterId
+    * holdRequest.pickupServicePointId = servicePointId
+    * holdRequest.requestType = "Hold"
+    Given path 'circulation', 'requests'
+    And request holdRequest
+    When method POST
+    Then status 422
+    * def error = response.errors[0]
+    And match error.message == 'Hold requests are not allowed for this patron and title combination'
+    And match error.parameters == '#[2]'
+    And match error.parameters[*].key contains "requesterId"
+    And match error.parameters[*].value contains requesterId
+    And match error.parameters[*].key contains "instanceId"
+    And match error.parameters[*].value contains instanceId
+    And match error.code == "REQUEST_NOT_ALLOWED_FOR_PATRON_TITLE_COMBINATION"
+
+    # restore TLR-settings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+
   Scenario: Title-level hold is placed when it must follow circulation rules and request policy allows Hold requests
     * def borrowerBarcode = "FAT-6946-4"
     * def requesterBarcode = "FAT-6946-5"
