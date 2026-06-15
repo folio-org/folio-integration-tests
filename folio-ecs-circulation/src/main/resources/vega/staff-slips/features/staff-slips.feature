@@ -53,7 +53,7 @@ Feature: ECS staff slips (pick slips and search slips) via circulation-bff
     Then status 200
     * def requester = response
 
-    # Create inventory in university tenant and share instance to central
+    # Create instance in central tenant, share to university (sync), create holding+item in university
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * def inventoryParams = { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(universityLogin.okapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(uniInstanceTypeId)', locationId: '#(uniLocationId)', holdingsSourceId: '#(uniHoldingsSourceId)', materialTypeId: '#(uniMaterialTypeId)', loanTypeId: '#(uniLoanTypeId)', instanceTitle: 'Staff Slip Test Instance' }
     * def inventory = call setupInventory inventoryParams
