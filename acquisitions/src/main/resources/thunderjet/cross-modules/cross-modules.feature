@@ -338,6 +338,9 @@ Feature: cross-module integration tests
   Scenario: Rollover Based On Expended When Credit Invoice Exists
     * call read('features/rollover-based-on-expended-with-credit-invoice.feature')
 
+  Scenario: Rollover After Fund Distribution Change With Paid Invoice Based On Initial Encumbrance
+    * call read('features/rollover-after-fund-change-with-paid-invoice-initial-encumbrance.feature')
+
   Scenario: Over Encumbrance Is Calculated Correctly For Fiscal Year Ledger And Group
     * call read('features/over-encumbrance-for-fy-ledger-and-group.feature')
 

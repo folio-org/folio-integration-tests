@@ -66,7 +66,8 @@ public class CrossModulesExtendedApiTest extends TestBaseEureka implements Acqui
     "encumbrance-remains-released-after-another-credited-invoice-was-paid",
     "encumbrance-calculated-correctly-after-cancelling-paid-credit-invoice",
     "change-instance-connection-then-approve-and-pay-invoice",
-    "cancel-approved-invoice-against-past-fy-fully-paid-two-orders"
+    "cancel-approved-invoice-against-past-fy-fully-paid-two-orders",
+    "rollover-after-fund-change-with-paid-invoice-initial-encumbrance"
   };
 
   public CrossModulesExtendedApiTest() {
