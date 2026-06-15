@@ -2016,3 +2016,51 @@ Feature: Requests tests
     # clear extMaterialTypeName so it does not bleed into features called after this one
     * def extMaterialTypeName = null
 
+  @C663341
+  Scenario: Search requests of all types and verify request UUID appears in search results
+    # Page request: Available item checked out by nobody; only Page request is possible
+    * def pageRequestId = call uuid1
+    * def pageItemId = call uuid1
+    * def pageUserId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(pageItemId), extItemBarcode: 'FAT-663341-IBC-1' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(pageUserId), extUserBarcode: 'FAT-663341-UBC-1', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(pageRequestId), itemId: #(pageItemId), requesterId: #(pageUserId), extRequestType: 'Page', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # Hold request: item must be checked out first, then a second user places a Hold
+    * def holdRequestId = call uuid1
+    * def holdItemId = call uuid1
+    * def holdBorrowerId = call uuid1
+    * def holdRequesterId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(holdItemId), extItemBarcode: 'FAT-663341-IBC-2' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(holdBorrowerId), extUserBarcode: 'FAT-663341-UBC-2', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(holdRequesterId), extUserBarcode: 'FAT-663341-UBC-3', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: 'FAT-663341-UBC-2', extCheckOutItemBarcode: 'FAT-663341-IBC-2' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(holdRequestId), itemId: #(holdItemId), requesterId: #(holdRequesterId), extRequestType: 'Hold', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # Recall request: item must be checked out first, then a second user places a Recall
+    * def recallRequestId = call uuid1
+    * def recallItemId = call uuid1
+    * def recallBorrowerId = call uuid1
+    * def recallRequesterId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(recallItemId), extItemBarcode: 'FAT-663341-IBC-3' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(recallBorrowerId), extUserBarcode: 'FAT-663341-UBC-4', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(recallRequesterId), extUserBarcode: 'FAT-663341-UBC-5', extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: 'FAT-663341-UBC-4', extCheckOutItemBarcode: 'FAT-663341-IBC-3' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(recallRequestId), itemId: #(recallItemId), requesterId: #(recallRequesterId), extRequestType: 'Recall', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # Step 1: Search all 3 request types – verify at least 3 results are returned
+    * def searchQuery = 'id==(' + pageRequestId + ' OR ' + holdRequestId + ' OR ' + recallRequestId + ')'
+    Given path 'circulation', 'requests'
+    And param query = searchQuery
+    When method GET
+    Then status 200
+    And assert response.totalRecords >= 3
+
+    # Step 2: Note the UUID of the first request in search results
+    * def requestUuid = $.requests[0].id
+
+    # Step 3: Verify noted UUID resolves to a valid individual request (equivalent of CSV "Request UUID" column)
+    Given path 'circulation', 'requests', requestUuid
+    When method GET
+    Then status 200
+    And match $.id == requestUuid
