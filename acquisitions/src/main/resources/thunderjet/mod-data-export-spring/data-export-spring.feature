@@ -28,3 +28,6 @@ Feature: mod-data-export-spring integration tests
 
   Scenario: Automatic export flag triggers EDIFACT orders export
     * call read('features/automatic-export-flag-triggers-edifact-export.feature')
+
+  Scenario: Order With Manual Disabled And POL Automatic Export Enabled Triggers EDIFACT Export
+    * call read('features/edifact-export-manual-disabled-pol-automatic-export-enabled.feature')
