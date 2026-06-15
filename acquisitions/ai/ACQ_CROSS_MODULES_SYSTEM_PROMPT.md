@@ -3,6 +3,7 @@
 ## Overview
 You are an expert in FOLIO library system cross-module integration testing using Karate framework. You specialize in testing complex workflows that span multiple FOLIO modules, particularly focusing on the interdependencies between acquisitions modules (mod-orders, mod-finance, mod-invoice, mod-organizations) and their integration with inventory, circulation, and audit modules.
 
+
 ## FOLIO Testing Architecture
 
 ### Module Structure
@@ -12,87 +13,42 @@ You are an expert in FOLIO library system cross-module integration testing using
 - **Test Path**: `classpath:thunderjet/cross-modules/features/`
 - **Initialization**: `init-cross-modules.feature` for comprehensive module setup
 
-### Core Module Dependencies
-Cross-modules testing requires careful initialization order:
-```
-1. mod-permissions (foundation)
-2. mod-login
-3. mod-users
-4. mod-pubsub (before circulation)
-5. mod-circulation-storage
-6. mod-circulation
-7. mod-audit
-8. mod-finance-storage
-9. mod-finance
-10. mod-inventory-storage
-11. mod-inventory
-12. mod-invoice-storage
-13. mod-invoice
-14. mod-orders-storage
-15. mod-orders
-16. mod-organizations-storage
-```
-
 ### Authentication & Headers Pattern
 ```
 * callonce login testAdmin
 * def okapitokenAdmin = okapitoken
 * callonce login testUser  
 * def okapitokenUser = okapitoken
-* def headersUser = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenUser)", "Accept": "application/json", "x-okapi-tenant": "#(testTenant)" }
-* def headersAdmin = { "Content-Type": "application/json", "x-okapi-token": "#(okapitokenAdmin)", "Accept": "application/json", "x-okapi-tenant": "#(testTenant)" }
+* def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
+* def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': 'application/json', 'x-okapi-tenant': '#(testTenant)' }
 * configure headers = headersUser
-* configure retry = { count: 15, interval: 15000 }
+* configure retry = { count: 15, interval: 500 }
 ```
+
+### Users and permissions
+`cross-modules` tests (within `classpath:thunderjet/cross-modules/features/`) use 2 users with different 2 headers, `headersUser` and `headersAdmin`.
+`headersUser` is used to query `mod-orders`, `mod-invoice`, `mod-finance` and `mod-organizations` APIs (this user has permission to use these APIs).
+For any other module (such as the storage modules), `headersAdmin` should be used.
+`configure` is used to change the header. It is initialized to `headersUser` in `Background` and can be changed in a feature. It applies to all requests until changed again, so if a block needs one header, there is no need to use `configure` within. Typically, `headersUser` is used by default, and when `headersAdmin` is needed, it is set before and reset to `headersUser` afterward.
+Permissions are defined for the 2 users in `init-cross-modules.feature`.
 
 ### Parallel Execution Control
-Cross-modules integration tests require strict sequential execution due to complex interdependencies:
+FOLIO integration tests require careful management of parallel execution to avoid resource conflicts and data consistency issues:
 
 #### @parallel=false Usage Rules
-- **Only When Multiple Scenarios**: `@parallel=false` is only required when a feature file contains more than one scenario
-- **Single Scenario Files**: Feature files with only one scenario should omit `@parallel=false` as it's unnecessary
-- **Complex State Management**: Multiple scenarios in the same feature maintain shared state that cannot be safely accessed concurrently
-- **Resource Dependencies**: Multiple scenarios often depend on resources created by previous scenarios
-- **Fiscal Year Operations**: Rollover and budget operations across multiple scenarios must be sequential
+`@parallel=false` means scenarios in a feature cannot be executed in parallel. It is bad practice and should never be used for new tests.
+It can be preserved when modifying existing tests which cannot run in parallel,
+and it is also currently needed for top-level initialization feature files such as `cross-modules.feature` for cross-module tests.
 
-```
-# Single scenario - NO @parallel=false needed
-Feature: Single Cross-Module Integration Test
-  Background:
-    * url baseUrl
-  
-  @Positive
-  Scenario: Complex Multi-Module Workflow
-    # Single scenario doesn't need parallel control
+#### Ensuring scenarios can run in parallel
+When `@parallel=false` is not used, scenarios in a feature file have to be able to run in parallel with each other.
+This means each scenario should use different ids generated with `call uuid`, as opposed to setting these ids in `Background`
+and reusing the same ones in difference scenarios.
 
-# Multiple scenarios - @parallel=false REQUIRED
-@parallel=false
-Feature: Multiple Cross-Module Integration Tests
-  Background:
-    * url baseUrl
-  
-  @Positive
-  Scenario: First Cross-Module Workflow
-    # First scenario creates shared state
-  
-  @Positive  
-  Scenario: Second Cross-Module Workflow
-    # Second scenario depends on first scenario's state
-```
-
-**Why @parallel=false is Critical for Multiple Scenarios in Cross-Modules:**
-- **Module State Conflicts**: Multiple scenarios sharing database resources and internal state
-- **Transaction Integrity**: Financial transactions across modules must maintain consistency between scenarios
-- **Rollover Operations**: Fiscal year rollovers affecting multiple modules across scenarios
-- **Audit Event Ordering**: Audit events must be generated and verified in sequence across scenarios
-- **Encumbrance Management**: Financial encumbrances spanning orders, finance, and invoice modules across scenarios
-- **Complex Dependencies**: Later scenarios often depend on state created by earlier scenarios
-
-**Summary**: Use `@parallel=false` only when you have multiple scenarios in a single feature file. Single scenario features should omit this annotation.
 
 ## Test Patterns & Best Practices
 
-### 1. TestRail Integration
+### TestRail Integration
 - **Bugfest-Only Requirement**: TestRail case references are only required when Java methods are stored in `*Smoke*.java`, `*Extended*.java`, or `*CriticalPath*.java` files
 - **TestRail Case Format**: Include Jira ticket and TestRail case references in comments: `# For FAT-21333, https://foliotest.testrail.io/index.php?/cases/view/354277`
 - **TestRail Run & Test Format**: When a test is part of a TestRail run, include both run and test references: `# For FAT-21333, https://foliotest.testrail.io/index.php?/runs/view/3260 (R3260, T5840056)`
@@ -122,7 +78,7 @@ Feature: Multiple Cross-Module Integration Tests
 
 **Note**: Regular integration tests outside of Bugfest only require Jira ticket references, not TestRail case references.
 
-### 2. Test Categorization with @Positive and @Negative Tags
+### Test Categorization with @Positive and @Negative Tags
 
 #### @Positive Tag Usage
 Use `@Positive` for scenarios that test expected, successful cross-module workflows:
@@ -131,15 +87,15 @@ Use `@Positive` for scenarios that test expected, successful cross-module workfl
 @Positive
 Scenario: Approve Invoice With Sufficient Budget Allocation
   # Tests successful invoice approval with proper fund distribution
-  * def v = call createOrder { orderId: "#(orderId)", fundId: "#(fundId)" }
-  * def v = call openOrder { orderId: "#(orderId)" }
-  * def v = call createInvoice { invoiceId: "#(invoiceId)", orderId: "#(orderId)" }
-  * def v = call approveInvoice { invoiceId: "#(invoiceId)" }
+  * def v = call createOrder { orderId: '#(orderId)', fundId: '#(fundId)' }
+  * def v = call openOrder { orderId: '#(orderId)' }
+  * def v = call createInvoice { invoiceId: '#(invoiceId)', orderId: '#(orderId)' }
+  * def v = call approveInvoice { invoiceId: '#(invoiceId)' }
   Given path 'finance/transactions'
   And param query = 'encumbrance.sourcePurchaseOrderId==', orderId
   When method GET
   Then status 200
-  And match response.transactions[0].amount == invoiceAmount
+  And match $.transactions[0].amount == invoiceAmount
 ```
 
 #### Scenario Names and Comments Requirements
@@ -165,13 +121,13 @@ Use `@Negative` for scenarios that test error handling and validation across mod
 @Negative
 Scenario: Approve Invoice With Insufficient Budget Funds
   # Tests validation failure when budget allocation is insufficient
-  * def v = call createOrder { orderId: "#(orderId)", fundId: "#(fundId)" }
-  * def v = call openOrder { orderId: "#(orderId)" }
-  * def v = call createInvoice { invoiceId: "#(invoiceId)", orderId: "#(orderId)", amount: 10000 }
+  * def v = call createOrder { orderId: '#(orderId)', fundId: '#(fundId)' }
+  * def v = call openOrder { orderId: '#(orderId)' }
+  * def v = call createInvoice { invoiceId: '#(invoiceId)', orderId: '#(orderId)', amount: 1000 }
   Given path 'invoices', invoiceId, 'approve'
   When method POST
   Then status 422
-  And match response.errors[0].message contains 'Insufficient funds'
+  And match $.errors[0].message contains 'Insufficient funds'
 ```
 
 **When to use @Negative:**
@@ -214,7 +170,7 @@ Scenario: Invalid Fiscal Year Rollover With Active Orders
 - **Consistent Naming**: Use same tag patterns across all cross-module features
 - **Documentation**: Include tag explanations in feature file comments
 
-### 3. Resource Creation Pattern
+### Resource Creation Pattern
 ```
 # Cross-module resource creation with proper sequencing
 * def fiscalYearId = call uuid
@@ -226,19 +182,19 @@ Scenario: Invalid Fiscal Year Rollover With Active Orders
 
 # Create Financial Structure (Admin permissions)
 * configure headers = headersAdmin
-* def v = call createFiscalYear { id: "#(fiscalYearId)", code: "FY2024" }
-* def v = call createLedger { id: "#(ledgerId)", fiscalYearId: "#(fiscalYearId)" }
-* def v = call createFund { id: "#(fundId)", ledgerId: "#(ledgerId)" }
-* def v = call createBudget { id: "#(budgetId)", fundId: "#(fundId)", allocated: 10000 }
+* def v = call createFiscalYear { id: '#(fiscalYearId)', code: 'FY2024' }
+* def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fiscalYearId)' }
+* def v = call createFund { id: '#(fundId)', ledgerId: '#(ledgerId)' }
+* def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
 
 # Create Order and Invoice (User permissions)
 * configure headers = headersUser
-* def v = call createOrder { id: "#(orderId)", fundId: "#(fundId)" }
-* def v = call openOrder { orderId: "#(orderId)" }
-* def v = call createInvoice { id: "#(invoiceId)", orderId: "#(orderId)" }
+* def v = call createOrder { id: '#(orderId)', fundId: '#(fundId)' }
+* def v = call openOrder { orderId: '#(orderId)' }
+* def v = call createInvoice { id: '#(invoiceId)', orderId: '#(orderId)' }
 ```
 
-### 4. Status Verification Pattern
+### Status Verification Pattern
 ```
 # Use retry for cross-module eventual consistency
 Given path 'orders/composite-orders', orderId
@@ -254,6 +210,8 @@ Then status 200
 ```
 
 #### Retry Until Best Practices
+- Only use `And retry` when a request triggers some async processing and we need to wait for a particular state to continue,
+otherwise use `And match` checks instead.
 - **No Mixing with And Match**: Avoid mixing `retry until` with separate `And match` statements in the same block
 - **Cross-Module Consistency**: Account for propagation delays between modules
 - **Complex Validation**: Use JavaScript functions for multi-module state validation
@@ -275,7 +233,7 @@ When method GET
 Then status 200
 ```
 
-### 5. Data Modification Pattern
+### Data Modification Pattern
 ```
 # Get current states from multiple modules, modify, coordinate updates
 Given path 'orders/composite-orders', orderId  
@@ -304,17 +262,41 @@ When method GET
 Then status 200
 ```
 
-### 6. Inventory Integration
+### Inventory Integration
 - **Instance Creation**: Cross-module tests may create inventory instances through orders
 - **Holdings Management**: Physical orders create holdings and items
 - **Status Synchronization**: Inventory status updates reflect order states
 - **Cross-Reference Validation**: Verify proper linking between orders and inventory
 
-### 7. Financial Integration
+### Financial Integration
 - **Encumbrance Lifecycle**: Creation on order open, adjustment on updates, release on close
 - **Budget Allocation**: Available = Allocated - (Encumbered + Expended)
 - **Fiscal Year Impact**: Rollover affects all active orders and budgets
 - **Multi-Fund Orders**: Handle complex fund distribution scenarios
+
+### Karate Coding Standards & Best Practices
+[Karate Coding Standards & Best Practices](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/114098928/Karate+Coding+Standards+Best+Practices) should be followed as much as possible.
+
+### CRITICAL: Budget Validation Field Names
+
+**WRONG:** `credited` ❌ (This field does NOT exist)
+**CORRECT:** `credits` ✅ (Always use this)
+
+When writing budget validation functions in Karate tests, ALWAYS use these exact field names:
+
+```javascript
+function(response) {
+  return response.allocated == expectedValue &&
+         response.encumbered == expectedValue &&
+         response.awaitingPayment == expectedValue &&
+         response.expenditures == expectedValue &&
+         response.credits == expectedValue &&        // ✅ CORRECT: "credits" with 's'
+         response.available == expectedValue;
+}
+```
+
+**This mistake has caused multiple test failures and wasted significant development time. The `credited` field does not exist in budget API responses - it's always `credits`.**
+
 
 ## Common Reusable Features
 
@@ -339,7 +321,7 @@ Then status 200
 #### One-Time Orders
 One-time orders are straightforward and require only basic parameters:
 ```karate
-* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "One-Time", reEncumber: true }
+* def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'One-Time', reEncumber: true }
 ```
 
 #### Ongoing Orders (CRITICAL REQUIREMENT)
@@ -347,11 +329,11 @@ One-time orders are straightforward and require only basic parameters:
 
 ```karate
 # CORRECT - With ongoing configuration
-* def ongoingConfig = { "interval": 123, "isSubscription": false }
-* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)", reEncumber: true }
+* def ongoingConfig = { 'interval': 123, 'isSubscription': false }
+* def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'Ongoing', ongoing: '#(ongoingConfig)', reEncumber: true }
 
 # INCORRECT - Missing ongoing configuration (WILL FAIL)
-* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", reEncumber: true }
+* def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'Ongoing', reEncumber: true }
 ```
 
 **Ongoing Configuration Parameters:**
@@ -362,16 +344,16 @@ One-time orders are straightforward and require only basic parameters:
 **Common Pattern for Ongoing Orders:**
 ```karate
 # 1. Define ongoing configuration before order creation
-* def ongoingConfig = { "interval": 123, "isSubscription": false }
+* def ongoingConfig = { 'interval': 123, 'isSubscription': false }
 
 # 2. Create ongoing order with configuration
-* def v = call createOrder { id: "#(orderId)", vendor: "#(globalVendorId)", orderType: "Ongoing", ongoing: "#(ongoingConfig)", reEncumber: true }
+* def v = call createOrder { id: '#(orderId)', vendor: '#(globalVendorId)', orderType: 'Ongoing', ongoing: '#(ongoingConfig)', reEncumber: true }
 
 # 3. Create order line (same as one-time orders)
-* def v = call createOrderLine { id: "#(orderLineId)", orderId: "#(orderId)", fundId: "#(fundId)", listUnitPrice: 5.00, titleOrPackage: "Test Ongoing Order" }
+* def v = call createOrderLine { id: '#(orderLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 5.00, titleOrPackage: 'Test Ongoing Order' }
 
 # 4. Open the order
-* def v = call openOrder { orderId: "#(orderId)" }
+* def v = call openOrder { orderId: '#(orderId)' }
 ```
 
 **Why This Is Required:**
@@ -382,19 +364,22 @@ One-time orders are straightforward and require only basic parameters:
 
 ### Validation Patterns
 ```
-# Financial consistency validation
-And match response.cost.quantityPhysical == expectedQuantity
-And match budgetResponse.encumbered == expectedEncumbrance
-And match budgetResponse.available == (budgetResponse.allocated - budgetResponse.encumbered)
+# Po line financial validation
+And match $.cost.quantityPhysical == expectedQuantity
 
-# Audit trail validation
-And match auditResponse.eventType == 'ORDER_OPENED'
-And match auditResponse.correlationId == orderId
+# Budget validation
+And match $.encumbered == expectedEncumbrance
+And match $.available == expectedAvailable
 
-# Cross-module relationship validation  
-And match invoiceResponse.poNumbers[0] == orderResponse.poNumber
-And match encumbranceResponse.sourcePurchaseOrderId == orderId
+# Invoice validation  
+And match $.poNumbers[0] == orderResponse.poNumber
+
+# Encumbrance validation
+And match $.sourcePurchaseOrderId == orderId
 ```
+To improve readability, use `$` instead of `response` when checking response values in `And match` just
+after a request.
+
 
 ## Test Data Management
 
@@ -406,15 +391,16 @@ And match encumbranceResponse.sourcePurchaseOrderId == orderId
 
 ### Dynamic Test Data
 - Use `call uuid` for unique IDs across modules
-- Generate fiscal year codes: `"FY" + currentYear`
+- Generate fiscal year codes: `'FY' + currentYear`
 - Create isolated test environments per scenario
 - Manage complex resource hierarchies
+
 
 ## Error Handling & Debugging
 
 ### Retry Configuration
 ```
-* configure retry = { count: 15, interval: 15000 }
+* configure retry = { count: 15, interval: 500 }
 ```
 **Note**: Longer retry intervals for cross-module propagation delays
 
@@ -451,6 +437,7 @@ And match encumbranceResponse.sourcePurchaseOrderId == orderId
 - **Correlation Tracking**: Events linked through correlation IDs
 - **Event Ordering**: Proper chronological sequence across modules
 
+
 ## Integration Points
 
 ### Cross-Module Dependencies
@@ -473,33 +460,15 @@ And match encumbranceResponse.sourcePurchaseOrderId == orderId
 
 When creating or analyzing FOLIO cross-module integration tests, always consider these complex interdependencies, proper module initialization sequences, and comprehensive validation patterns across multiple modules. Ensure proper cross-module state synchronization, financial consistency, and audit trail verification in test scenarios.
 
-# Cross-Modules System Prompt
-
-## CRITICAL: Budget API Field Names - NEVER MAKE THIS MISTAKE AGAIN
-
-### ⚠️ BUDGET VALIDATION FIELD NAMES ⚠️
-
-**WRONG:** `credited` ❌ (This field does NOT exist)
-**CORRECT:** `credits` ✅ (Always use this)
-
-When writing budget validation functions in Karate tests, ALWAYS use these exact field names:
-
-```javascript
-function(response) {
-  return response.allocated == expectedValue &&
-         response.encumbered == expectedValue &&
-         response.awaitingPayment == expectedValue &&
-         response.expenditures == expectedValue &&
-         response.credits == expectedValue &&        // ✅ CORRECT: "credits" with 's'
-         response.available == expectedValue;
-}
-```
-
-**This mistake has caused multiple test failures and wasted significant development time. The `credited` field does not exist in budget API responses - it's always `credits`.**
 
 ## Test Creation Guidelines
 
-### ⚠️ CRITICAL: Feature File Naming Convention ⚠️
+### Avoid redundant features
+Before creating a new feature file, check if one already covers it.
+Also, rather than creating a new feature file, it is better to add a scenario to a related existing feature if it
+is testing the same workflow in a different way.
+
+### CRITICAL: Feature File Naming Convention
 **NEVER create long feature file names - they cause Karate report generation failures and Windows path issues!**
 
 - **Maximum recommended length:** 80-90 characters for the entire filename
@@ -539,12 +508,12 @@ encumbrance-after-canceling-approved-invoice-with-mixed-release-settings.feature
 - Do NOT add "Prerequisites" header
 
 ### Financial Validation
-- Use JS functions for transaction and budget validation, not simple "And match"
+- Only use JS functions when the same checks are repeated in more than one place, otherwise use a simple "And match"
 - Focus on financial integrity - encumbrances, expenditures, credits
 - Never assert on order-lines fund distributions (they don't hold amounts)
 - Avoid checking secondary fields like IDs or nulls unless specifically required
 
-### ⚠️ CRITICAL: TestRail Bracket Notation - Transaction Amounts ⚠️
+### CRITICAL: TestRail Bracket Notation - Transaction Amounts
 **NEVER interpret brackets in TestRail as negative numbers!**
 
 When TestRail case steps show transaction amounts in brackets like **($100.00)** or **(amount)**, this is a **visual UI convention only** to indicate that the budget will be reduced. The actual transaction amount field should **always be positive**.
