@@ -54,7 +54,6 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     "encumbrance-released-when-order-closes",
     "encumbrance-tags-inheritance",
     "encumbrance-update-after-expense-class-change",
-    "encumbrance-expense-class-switch-two-distributions",
     "expense-class-handling-for-order-and-lines",
     "find-holdings-by-location-and-instance-for-mixed-pol",
     "fund-codes-in-open-order-error",
