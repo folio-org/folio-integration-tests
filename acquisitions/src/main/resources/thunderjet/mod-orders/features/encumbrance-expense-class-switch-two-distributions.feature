@@ -42,15 +42,15 @@ Feature: Encumbrance Expense Class Switch In Two Fund Distributions
     * def v = call openOrder { orderId: '#(orderId)' }
 
     # 5. Switch Expense Classes In Both Fund Distribution Records (Electronic -> Print And Print -> Electronic)
-    * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }
-    * def updatedFundDistribution = orderLineResponse.poLine.fundDistribution
+    * call getOrderLine { poLineId: '#(poLineId)' }
+    * def updatedFundDistribution = poLine.fundDistribution
     * set updatedFundDistribution[0].expenseClassId = globalPrnExpenseClassId
     * set updatedFundDistribution[1].expenseClassId = globalElecExpenseClassId
     * def v = call updateOrderLine { id: '#(poLineId)', fundDistribution: '#(updatedFundDistribution)' }
 
     # 6. Verify That Both Fund Distribution Records Have The Switched Expense Classes
-    * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }
-    * def fundDistribution = orderLineResponse.poLine.fundDistribution
+    * call getOrderLine { poLineId: '#(poLineId)' }
+    * def fundDistribution = poLine.fundDistribution
     And match fundDistribution[0].expenseClassId == globalPrnExpenseClassId
     And match fundDistribution[1].expenseClassId == globalElecExpenseClassId
 
