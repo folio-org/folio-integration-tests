@@ -480,3 +480,5 @@ Feature: Print events tests
     Given path 'circulation/' + 'settings/' + settingId
     When method DELETE
     Then status 204
+
+    * def extMaterialTypeName = null
