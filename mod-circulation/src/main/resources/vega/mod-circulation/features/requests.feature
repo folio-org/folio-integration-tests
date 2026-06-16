@@ -2056,7 +2056,8 @@ Feature: Requests tests
     Then status 200
     And assert response.totalRecords >= 3
 
-    # Step 2: Note the UUID ofts[0].id
+    # Step 2: Note the UUID of the first request in search results
+    * def requestUuid = $.requests[0].id
 
     # Step 3: Verify noted UUID resolves to a valid individual request (equivalent of CSV "Request UUID" column)
     Given path 'circulation', 'requests', requestUuid
