@@ -30,6 +30,7 @@ You are an expert in FOLIO library system cross-module integration testing using
 `headersUser` is used to query `mod-orders`, `mod-invoice`, `mod-finance` and `mod-organizations` APIs (this user has permission to use these APIs).
 For any other module (such as the storage modules), `headersAdmin` should be used.
 `configure` is used to change the header. It is initialized to `headersUser` in `Background` and can be changed in a feature. It applies to all requests until changed again, so if a block needs one header, there is no need to use `configure` within. Typically, `headersUser` is used by default, and when `headersAdmin` is needed, it is set before and reset to `headersUser` afterward.
+**Never add `* configure headers = headersUser` at the very end of a scenario** — it has no effect because the scenario is already finishing, and the `Background` resets headers for the next scenario anyway.
 Permissions are defined for the 2 users in `init-cross-modules.feature`.
 
 ### Parallel Execution Control
