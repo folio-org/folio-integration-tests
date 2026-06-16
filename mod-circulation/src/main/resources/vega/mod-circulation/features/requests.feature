@@ -2092,7 +2092,7 @@ Feature: Requests tests
     When method GET
     Then status 200
     And assert response.requests.length == 1
-    And match $.requests[0].id == itemRequestId
+    And match $.requests[0].id == itemLevelRequestId
     And match $.requests[0].requestLevel == 'Item'
 
     Given path 'circulation/requests'
@@ -2100,5 +2100,5 @@ Feature: Requests tests
     When method GET
     Then status 200
     And assert response.requests.length == 1
-    And match $.requests[0].id == titleRequestId
+    And match $.requests[0].id == titleLevelRequestId
     And match $.requests[0].requestLevel == 'Title'
