@@ -29,6 +29,8 @@ Feature: bulk operations integration tests
       | 'inventory-storage.call-number-types.item.post'               |
       | 'inventory-storage.holdings-sources.item.post'                |
       | 'inventory-storage.instances.item.post'                       |
+      | 'inventory-storage.instances.item.get'                        |
+      | 'inventory-storage.instances.item.put'                        |
       | 'inventory-storage.holdings.item.post'                        |
       | 'inventory-storage.items.item.post'                           |
       | 'inventory-storage.items.item.put'                            |
