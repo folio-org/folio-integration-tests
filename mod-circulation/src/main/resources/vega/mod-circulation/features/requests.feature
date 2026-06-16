@@ -2056,11 +2056,55 @@ Feature: Requests tests
     Then status 200
     And assert response.totalRecords >= 3
 
-    # Step 2: Note the UUID of the first request in search results
-    * def requestUuid = $.requests[0].id
+    # Step 2: Note the UUID ofts[0].id
 
     # Step 3: Verify noted UUID resolves to a valid individual request (equivalent of CSV "Request UUID" column)
     Given path 'circulation', 'requests', requestUuid
     When method GET
     Then status 200
     And match $.id == requestUuid
+
+  @C350388
+  Scenario: Test request filtration by request level
+    * def itemId1 = call uuid1
+    * def itemId2 = call uuid1
+    * def itemBarcode1 = 'FAT-23921-ITEM-1'
+    * def itemBarcode2 = 'FAT-23921-ITEM-2'
+    * def userId1 = call uuid1
+    * def userId2 = call uuid1
+    * def userBarcode1 = 'FAT-23921-USER-1'
+    * def userBarcode2 = 'FAT-23921-USER-2'
+    * def itemLevelRequestId = call uuid1
+    * def titleLevelRequestId = call uuid1
+
+    # post two items under the same holding
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2) }
+
+    # post users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(groupId) }
+
+    # post an item-level Page request on item 1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(itemRequestId), itemId: #(itemId1), requesterId: #(userId1), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+
+    # post a title-level Page request on the instance (TLR is enabled via the 'Run tlr-request feature' scenario above)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(titleRequestId), requesterId: #(userId2), extInstanceId: #(instanceId) }
+
+    # verify that filtering by requestLevel==Item returns only the item-level request for userId1
+    Given path 'circulation/requests'
+    And param query = 'requestLevel==Item AND requesterId==' + userId1
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == itemRequestId
+    And match $.requests[0].requestLevel == 'Item'
+
+    # verify that filtering by requestLevel==Title returns only the title-level request for userId2
+    Given path 'circulation/requests'
+    And param query = 'requestLevel==Title AND requesterId==' + userId2
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == titleRequestId
+    And match $.requests[0].requestLevel == 'Title'

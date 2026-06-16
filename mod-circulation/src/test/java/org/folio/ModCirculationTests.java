@@ -32,6 +32,12 @@ class ModCirculationTests extends TestBaseEureka {
     runFeatureTest("root");
   }
 
+//  @Test
+//  void requestsTest() {
+//    runFeatureTest("requests");
+//  }
+
+
   @Test
   void runParallelTest() {
     runFeatureTest("parallel-checkout", 3);
