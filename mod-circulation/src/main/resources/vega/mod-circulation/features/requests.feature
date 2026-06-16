@@ -2073,19 +2073,24 @@ Feature: Requests tests
     * def itemBarcode2 = 'FAT-23921-ITEM-2'
     * def userId1 = call uuid1
     * def userId2 = call uuid1
+    * def patronGroupId = call uuid1
     * def userBarcode1 = 'FAT-23921-USER-1'
     * def userBarcode2 = 'FAT-23921-USER-2'
     * def itemLevelRequestId = call uuid1
     * def titleLevelRequestId = call uuid1
 
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2) }
 
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(patronGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(patronGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(patronGroupId) }
 
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(itemRequestId), itemId: #(itemId1), requesterId: #(userId1), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(titleRequestId), requesterId: #(userId2), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(itemLevelRequestId), itemId: #(itemId1), requesterId: #(userId1), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(titleLevelRequestId), requesterId: #(userId2), extInstanceId: #(instanceId) }
 
     Given path 'circulation/requests'
     And param query = 'requestLevel==Item AND requesterId==' + userId1
