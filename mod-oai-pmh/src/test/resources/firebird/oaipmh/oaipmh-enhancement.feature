@@ -58,7 +58,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 7
+    * match response count(//record) == 10
 
   Scenario: get ListIdentifiers for marc21_withholdings
     And param verb = 'ListIdentifiers'
@@ -174,7 +174,7 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#notnull'
-    And match response //resumptionToken/@cursor == '3'
+    And match response //resumptionToken/@cursor == '4'
     And def resumptionToken = get response //resumptionToken
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
@@ -186,10 +186,10 @@ Feature: Test enhancements to oai-pmh
     When method GET
     Then status 200
     And match response //resumptionToken == '#present'
-    And match response //resumptionToken/@cursor == '6'
+    And match response //resumptionToken/@cursor == '8'
     And def currentRecordsReturned = get response count(//record)
     And def totalRecords = addVariables(totalRecords, +currentRecordsReturned)
-    And match totalRecords == 7
+    And match totalRecords == 10
 
     Examples:
       | prefix                |
@@ -220,7 +220,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 7
+    * match response count(//record) == 9
 
     # set deleted record support to no
     * def deletedRecordsSupportConfig = 'no'
@@ -235,7 +235,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 7
+    * match response count(//record) == 9
 
     #return record to original state
     Given url baseUrl
@@ -269,7 +269,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 7
+    * match response count(//record) == 9
 
     #return record to original state
     Given url baseUrl
@@ -288,14 +288,30 @@ Feature: Test enhancements to oai-pmh
     When method GET
 
     * def record = response
+    * def instanceId = record.externalIdsHolder.instanceId
+
+    # set inventory instance deleted = true
+    Given url baseUrl
+    And path 'instance-storage/instances', instanceId
+    And header Accept = 'application/json'
+    When method GET
+    Then status 200
+
+    * def instance = response
+    * set instance.deleted = true
+
+    Given url baseUrl
+    And path 'instance-storage/instances', instanceId
+    And request instance
+    And header Accept = 'text/plain'
+    When method PUT
+    Then status 204
 
     Given url baseUrl
     And path 'source-storage/records', srsId
-    * set record.parsedRecord.content.leader = '01542dcm a2200361   4500'
-    And request record
-    And header Accept = 'application/json'
-    When method PUT
-    Then status 200
+    And header Accept = 'text/plain'
+    When method DELETE
+    Then status 204
 
     Given url pmhUrl
     And param verb = 'ListRecords'
@@ -303,17 +319,8 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 8
+    * match response count(//record) == 10
     * match response //header[@status='deleted'] == '#notnull'
-
-    #return record to original state
-    Given url baseUrl
-    And path 'source-storage/records', srsId
-    * set record.parsedRecord.content.leader = '01542ccm a2200361   4500'
-    And request record
-    And header Accept = 'application/json'
-    When method PUT
-    Then status 200
 
   Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
     * def suppressedRecordsProcessingConfig = 'true'
@@ -330,15 +337,14 @@ Feature: Test enhancements to oai-pmh
     When method DELETE
     Then status 204
 
-
     Given url pmhUrl
     And param verb = 'ListRecords'
     And param metadataPrefix = 'marc21'
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
-    * match response count(//header[@status='deleted']) == 4
+    * match response count(//record) == 9
+    * match response count(//header[@status='deleted']) == 1
 
   Scenario: Verify that resumption Token contains tenantId and all the other required parameters
     * def maxRecordsPerResponseConfig = '5'
