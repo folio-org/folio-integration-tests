@@ -58,7 +58,8 @@ class OrdersExtendedApiTest extends TestBaseEureka implements AcquisitionsTest {
     "item-under-holdings-after-instance-connection-change-create-new",
     "pe-mix-change-instance-connection-find-create-delete-holdings",
     "unopen-open-order-with-pol-and-fund-distribution",
-    "open-order-with-resolution-statuses"
+    "open-order-with-resolution-statuses",
+    "encumbrance-expense-class-switch-two-distributions"
 };
 
   public OrdersExtendedApiTest() {
