@@ -42,23 +42,15 @@ Feature: Encumbrance Expense Class Switch In Two Fund Distributions
     * def v = call openOrder { orderId: '#(orderId)' }
 
     # 5. Switch Expense Classes In Both Fund Distribution Records (Electronic -> Print And Print -> Electronic)
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def poLine = $
-    * set poLine.fundDistribution[0].expenseClassId = globalPrnExpenseClassId
-    * set poLine.fundDistribution[1].expenseClassId = globalElecExpenseClassId
-
-    Given path 'orders/order-lines', poLineId
-    And request poLine
-    When method PUT
-    Then status 204
+    * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }
+    * def updatedFundDistribution = orderLineResponse.poLine.fundDistribution
+    * set updatedFundDistribution[0].expenseClassId = globalPrnExpenseClassId
+    * set updatedFundDistribution[1].expenseClassId = globalElecExpenseClassId
+    * def v = call updateOrderLine { id: '#(poLineId)', fundDistribution: '#(updatedFundDistribution)' }
 
     # 6. Verify That Both Fund Distribution Records Have The Switched Expense Classes
-    Given path 'orders/order-lines', poLineId
-    When method GET
-    Then status 200
-    * def fundDistribution = $.fundDistribution
+    * def orderLineResponse = call getOrderLine { poLineId: '#(poLineId)' }
+    * def fundDistribution = orderLineResponse.poLine.fundDistribution
     And match fundDistribution[0].expenseClassId == globalPrnExpenseClassId
     And match fundDistribution[1].expenseClassId == globalElecExpenseClassId
 
@@ -73,5 +65,4 @@ Feature: Encumbrance Expense Class Switch In Two Fund Distributions
     * def transaction2 = karate.jsonPath(response, "$.transactions[?(@.id=='" + fundDistribution[1].encumbrance + "')]")[0]
     And match transaction1.expenseClassId == globalPrnExpenseClassId
     And match transaction2.expenseClassId == globalElecExpenseClassId
-    * configure headers = headersUser
 
