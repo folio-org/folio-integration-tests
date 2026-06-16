@@ -2064,3 +2064,55 @@ Feature: Requests tests
     When method GET
     Then status 200
     And match $.id == requestUuid
+
+  @C396391
+  Scenario: Verify requester.departments is populated in pick slip
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extDepartmentId = call uuid1
+    * def extMaterialTypeId = call uuid1
+    * def extLocationId = call uuid1
+    * def extServicePointId = call uuid1
+    * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
+    * def extItemBarcode = 'FAT-396391IBC'
+    * def extUserBarcode = 'FAT-396391UBC'
+    * def extDepartmentName = 'dept-' + java.util.UUID.randomUUID()
+    * def extMaterialTypeName = 'pick-slip-dept-mat-' + java.util.UUID.randomUUID()
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
+
+    # post a material type and item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingId) }
+
+    # post a department
+    Given path 'departments'
+    And request { id: '#(extDepartmentId)', name: '#(extDepartmentName)', code: '#(extDepartmentName)' }
+    When method POST
+    Then status 201
+
+    # post a user with the department assigned
+    * def userEntityRequest = read('classpath:vega/mod-circulation/features/samples/user/user-entity-request.json')
+    * userEntityRequest.id = extUserId
+    * userEntityRequest.barcode = extUserBarcode
+    * userEntityRequest.patronGroup = fourthUserGroupId
+    * userEntityRequest.departments = [extDepartmentId]
+    Given path 'users'
+    And request userEntityRequest
+    When method POST
+    Then status 201
+
+    # post a Page request
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(extHoldingId), extServicePointId: #(extServicePointId) }
+
+    # get pick slips and verify requester.departments is populated
+    Given path 'circulation', 'pick-slips', extServicePointId
+    When method GET
+    Then status 200
+    And match $.pickSlips[0].requester.barcode == extUserBarcode
+    And match $.pickSlips[0].requester.departments == extDepartmentName
