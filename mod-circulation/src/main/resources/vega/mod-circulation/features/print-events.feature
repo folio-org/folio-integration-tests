@@ -397,7 +397,6 @@ Feature: Print events tests
 
   @C1307937
   Scenario: Requests can be exported to CSV if user last printed request was deleted
-    # For UIREQ-1305
     * def extMaterialTypeId = call uuid1
     * def extItemId = call uuid1
     * def extUser1Id = call uuid1
@@ -406,7 +405,8 @@ Feature: Print events tests
     * def settingId = call uuid1
 
     # post material type and item
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: 'print-deleted-user-type' }
+    * def extMaterialTypeName = 'print-deleted-user-type-' + java.util.UUID.randomUUID()
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: '#(extMaterialTypeName)' }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: 'FAT-1305IBC', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(holdingId) }
 
     # create User 1 (requester)
