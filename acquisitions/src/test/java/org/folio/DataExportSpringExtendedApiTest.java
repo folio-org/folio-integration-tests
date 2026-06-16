@@ -35,7 +35,8 @@ class DataExportSpringExtendedApiTest extends TestBaseEureka implements Acquisit
 
   private static final String[] FEATURES = {
     "exported-order-not-repeated-in-next-exports",
-    "automatic-export-flag-triggers-edifact-export"
+    "automatic-export-flag-triggers-edifact-export",
+    "edifact-export-manual-disabled-pol-automatic-export-enabled"
   };
 
   public DataExportSpringExtendedApiTest() {
