@@ -111,6 +111,9 @@ Feature: mod-orders integration tests
   Scenario: Encumbrance update after expense class change
     * call read('features/encumbrance-update-after-expense-class-change.feature')
 
+  Scenario: Encumbrance expense class switch in two fund distributions
+    * call read('features/encumbrance-expense-class-switch-two-distributions.feature')
+
   Scenario: Handling of expense classes for order and lines
     * call read('features/expense-class-handling-for-order-and-lines.feature')
 

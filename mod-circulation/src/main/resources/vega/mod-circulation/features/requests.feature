@@ -2064,3 +2064,46 @@ Feature: Requests tests
     When method GET
     Then status 200
     And match $.id == requestUuid
+
+  @C350388
+  Scenario: Test request filtration by request level
+    * def itemId1 = call uuid1
+    * def itemId2 = call uuid1
+    * def itemBarcode1 = 'FAT-23921-ITEM-1'
+    * def itemBarcode2 = 'FAT-23921-ITEM-2'
+    * def userId1 = call uuid1
+    * def userId2 = call uuid1
+    * def patronGroupId = call uuid1
+    * def userBarcode1 = 'FAT-23921-USER-1'
+    * def userBarcode2 = 'FAT-23921-USER-2'
+    * def itemLevelRequestId = call uuid1
+    * def titleLevelRequestId = call uuid1
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2) }
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(patronGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(patronGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(patronGroupId) }
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(itemLevelRequestId), itemId: #(itemId1), requesterId: #(userId1), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(titleLevelRequestId), requesterId: #(userId2), extInstanceId: #(instanceId) }
+
+    Given path 'circulation/requests'
+    And param query = 'requestLevel==Item AND requesterId==' + userId1
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == itemLevelRequestId
+    And match $.requests[0].requestLevel == 'Item'
+
+    Given path 'circulation/requests'
+    And param query = 'requestLevel==Title AND requesterId==' + userId2
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == titleLevelRequestId
+    And match $.requests[0].requestLevel == 'Title'
