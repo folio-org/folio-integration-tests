@@ -2107,3 +2107,72 @@ Feature: Requests tests
     And assert response.requests.length == 1
     And match $.requests[0].id == titleLevelRequestId
     And match $.requests[0].requestLevel == 'Title'
+
+  @C515012
+  Scenario: staffUsername token can be added to Search slip (Hold requests)
+    * def searchSlipId = 'e6e29ec1-1a76-4913-bbd3-65f4ffd94e03'
+    * def extServicePointId = call uuid1
+    * def extLocationId = call uuid1
+    * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-515012IBC'
+    * def extCheckoutUserId = call uuid1
+    * def extCheckoutUserBarcode = 'FAT-515012UBC-1'
+    * def extHoldUserId = call uuid1
+    * def extHoldUserBarcode = 'FAT-515012UBC-2'
+
+    # Step 1-3: Retrieve Search slip (Hold requests) to save current template
+    Given path 'staff-slips-storage', 'staff-slips', searchSlipId
+    When method GET
+    Then status 200
+    And match response.name == 'Search slip (Hold requests)'
+    * def originalStaffSlip = response
+
+    # Step 4-8: Update template body with {{staffSlip.staffUsername}} token
+    * def updatedStaffSlip = originalStaffSlip
+    * updatedStaffSlip.template = '<p>{{item.barcodeImage}}</p><p>{{staffSlip.staffUsername}}</p>'
+    Given path 'staff-slips-storage', 'staff-slips', searchSlipId
+    And request updatedStaffSlip
+    When method PUT
+    Then status 204
+
+    # Step 9: Verify template was saved with {{staffSlip.staffUsername}} token
+    Given path 'staff-slips-storage', 'staff-slips', searchSlipId
+    When method GET
+    Then status 200
+    And match response.template contains '{{staffSlip.staffUsername}}'
+    And match response.template contains '{{item.barcodeImage}}'
+
+    # Set up inventory for Hold request: service point, location, holdings, item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extHoldingsRecordId: #(extHoldingId) }
+
+    # Post checkout user and hold requester user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extCheckoutUserId), extUserBarcode: #(extCheckoutUserBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extHoldUserId), extUserBarcode: #(extHoldUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # Check out item to checkout user so a Hold request becomes eligible
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extCheckoutUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId) }
+
+    # Create Hold request for hold requester user
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extHoldUserId), extRequestType: 'Hold', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(extHoldingId), extServicePointId: #(extServicePointId) }
+
+    # Step 10-13: GET search slips and verify item, requester and request data are returned
+    Given path 'circulation', 'search-slips', extServicePointId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.searchSlips[0].item.barcode == extItemBarcode
+    And match $.searchSlips[0].requester.barcode == extHoldUserBarcode
+    And match $.searchSlips[0].request.requestID == extRequestId
+
+    # Step 12/14: Restore original Search slip template
+    Given path 'staff-slips-storage', 'staff-slips', searchSlipId
+    And request originalStaffSlip
+    When method PUT
+    Then status 204
