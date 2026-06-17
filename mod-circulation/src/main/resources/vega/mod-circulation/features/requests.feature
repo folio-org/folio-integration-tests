@@ -2162,6 +2162,14 @@ Feature: Requests tests
     * def extRequestId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extHoldUserId), extRequestType: 'Hold', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(extHoldingId), extServicePointId: #(extServicePointId) }
 
+    # Enable PRINT_HOLD_REQUESTS so search-slips returns results (defaults to disabled)
+    * def printHoldSettingId = call uuid1
+    * def printHoldSettingBody = { id: '#(printHoldSettingId)', name: 'PRINT_HOLD_REQUESTS', value: { printHoldRequestsEnabled: true } }
+    Given path 'circulation', 'settings'
+    And request printHoldSettingBody
+    When method POST
+    Then status 201
+
     # Step 10-13: GET search slips and verify item, requester and request data are returned
     Given path 'circulation', 'search-slips', extServicePointId
     When method GET
@@ -2175,4 +2183,9 @@ Feature: Requests tests
     Given path 'staff-slips-storage', 'staff-slips', searchSlipId
     And request originalStaffSlip
     When method PUT
+    Then status 204
+
+    # Clean up: delete PRINT_HOLD_REQUESTS setting
+    Given path 'circulation', 'settings', printHoldSettingId
+    When method DELETE
     Then status 204
