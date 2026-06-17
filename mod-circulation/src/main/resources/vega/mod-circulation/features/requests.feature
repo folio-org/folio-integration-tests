@@ -2159,3 +2159,5 @@ Feature: Requests tests
     Then status 200
     And match $.pickSlips[0].requester.barcode == extUserBarcode
     And match $.pickSlips[0].requester.departments == extDepartmentName
+
+    * def extMaterialTypeName = null
