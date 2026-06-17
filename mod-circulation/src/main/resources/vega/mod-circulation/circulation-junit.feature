@@ -167,6 +167,7 @@ Feature: mod-circulation integration tests
       | 'mod-settings.global.read.mod-circulation'                    |
       | 'mod-settings.global.read.circulation'                        |
       | 'feesfines.accounts-bulk.check-waive.post'                    |
+      | 'users.item.delete'                                           |
       | 'circulation-storage.circulation-rules.get'                   |
       | 'locale.item.get'                                             |
       | 'locale.item.put'                                             |
