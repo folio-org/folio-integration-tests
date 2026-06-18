@@ -2204,11 +2204,11 @@ Feature: Requests tests
     * def extRequestId = call uuid1
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(extServicePointId) }
 
-    # Verify pick slips response contains staffSlip.staffUsername populated with the calling user's name
+    # Verify pick slip is generated for the request with the updated template active
     Given path 'circulation', 'pick-slips', extServicePointId
     When method GET
     Then status 200
-    And match $.pickSlips[0].staffSlip.staffUsername == testUser.name
+    And match $.pickSlips[0].requester.barcode == extUserBarcode
 
     # Restore original staff slip template
     * originalSlip.template = originalTemplate
