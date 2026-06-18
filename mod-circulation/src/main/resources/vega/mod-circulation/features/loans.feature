@@ -2416,8 +2416,11 @@ Feature: Loans tests
     * def loanHistorySettingsId = loanHistoryExists ? response.circulationSettings[0].id : loanAnonymizationSettingsId
     # set anonymize immediately after loan closes, treat fee/fines differently, anonymize fee/fines immediately after close
     # use direct property assignment to ensure closingType is stored as a nested object (not a string)
-    * def immediateClosingType = { loan: 'IMMEDIATELY', feeFine: 'IMMEDIATELY' }
+    * def immediateClosingType = { loan: 'immediately', feeFine: 'immediately', loanExceptions: [] }
     * def immediateSettingsValue = {}
+    * immediateSettingsValue.loan = {}
+    * immediateSettingsValue.feeFine = {}
+    * immediateSettingsValue.loanExceptions = []
     * immediateSettingsValue.treatEnabled = true
     * immediateSettingsValue.closingType = immediateClosingType
     * if (!loanHistoryExists) karate.call('classpath:vega/mod-circulation/features/util/initData.feature@PostLoanHistorySettings', { loanHistorySettingsId: loanHistorySettingsId, loanHistorySettingsValue: immediateSettingsValue })
@@ -2470,53 +2473,56 @@ Feature: Loans tests
     Then status 200
     And match response.accounts[0].status.name == 'Closed'
 
-    # debug: print full loan details to understand why anonymization is not triggering
-    Given path 'circulation', 'loans', loanId1
-    When method GET
-    Then status 200
-    * print 'loan1 full state (userId/feesAndFines/systemReturnDate):', response
-
-    Given path 'circulation', 'loans', loanId2
-    When method GET
-    Then status 200
-    * print 'loan2 full state (userId/feesAndFines/systemReturnDate):', response
-
-    # step 5: trigger the loan anonymization scheduler via sidecar token
+    # step 5: trigger loan anonymization by updating the scheduler timer to 1 second delay
+    # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
     * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
     * def sidecarToken = sidecarResult.sidecarToken
 
-    # update loan anonymization timer to fire every 1 second
+    # find or create loan anonymization timer with 1 second delay
     * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
     * def currentTimerId = updateResult.currentTimerId
-
-    # verify the timer was actually updated (same pattern as age-to-lost tests)
-    * configure headers = null
-    Given path '/scheduler/timers', currentTimerId
-    And header Authorization = 'Bearer ' + sidecarToken
-    And header x-okapi-tenant = testTenant
-    When method GET
-    Then status 200
-    * print 'timer state after PUT (expect delay=1, unit=second):', response
-
     * configure headers = headersUser
 
-    # step 5 verification: both closed loans are anonymized (no longer appear in patron's closed loans)
-    * configure retry = { count: 120, interval: 3000 }
-    Given path 'circulation', 'loans'
-    And param query = 'userId==' + extUserId + ' and status.name=="Closed"'
-    And retry until response.totalRecords == 0
+    # step 5 verification: both closed loans are anonymized (userId field should be removed)
+    # check initial state of loans before waiting
+    Given path 'loan-storage', 'loans', loanId1
     When method GET
     Then status 200
-    And match response.totalRecords == 0
+    * print 'DEBUG: loan 1 BEFORE anonymization:', response
+    * print 'DEBUG: loan 1 userId present?', response.userId
 
-    # cleanup: reset loan anonymization timer
+    Given path 'loan-storage', 'loans', loanId2
+    When method GET
+    Then status 200
+    * print 'DEBUG: loan 2 BEFORE anonymization:', response
+    * print 'DEBUG: loan 2 userId present?', response.userId
+
+    # check loan records directly in loan-storage to verify anonymization
+    * configure retry = { count: 30, interval: 3000 }
+    Given path 'loan-storage', 'loans', loanId1
+    And retry until response.userId == '#notpresent'
+    When method GET
+    Then status 200
+    * print 'DEBUG: loan 1 AFTER anonymization:', response
+    And match response.userId == '#notpresent'
+
+    Given path 'loan-storage', 'loans', loanId2
+    When method GET
+    Then status 200
+    * print 'DEBUG: loan 2 AFTER anonymization:', response
+    And match response.userId == '#notpresent'
+
+    # cleanup: delete timer if it was created by this test, otherwise revert delay to 60 minutes
     * if (updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteLoanAnonymizationTimer', { extToken: sidecarToken, extTimerId: currentTimerId })
     * if (!updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer', { extToken: sidecarToken, extTimerId: currentTimerId, extModuleId: updateResult.currentModuleId, extModuleName: updateResult.currentModuleName, extUnit: 'minute', extDelay: '60' })
     * configure headers = headersUser
 
     # step 6: reset loan history settings to "Never"
-    * def neverClosingType = { loan: 'NEVER', feeFine: 'NEVER' }
+    * def neverClosingType = { loan: 'never', feeFine: 'never', loanExceptions: [] }
     * def neverSettingsValue = {}
+    * neverSettingsValue.loan = {}
+    * neverSettingsValue.feeFine = {}
+    * neverSettingsValue.loanExceptions = []
     * neverSettingsValue.treatEnabled = false
     * neverSettingsValue.closingType = neverClosingType
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PutLoanHistorySettings') { loanHistorySettingsId: #(loanHistorySettingsId), loanHistorySettingsValue: #(neverSettingsValue) }
