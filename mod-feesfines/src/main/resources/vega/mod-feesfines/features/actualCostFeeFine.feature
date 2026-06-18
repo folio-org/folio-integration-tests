@@ -194,28 +194,14 @@ Feature: Actual cost fee/fine tests
     * def actualCostRecordCopyNumber = openActualCostRecord.item.copyNumber
     Then match openActualCostRecord.status == 'Open'
 
-    # find current module id for actual-cost-expiration-by-timeout processor delay time
-    Given path '/scheduler/timers'
-    And param limit = 100
-    When method GET
-    Then status 200
-    * def fun = function(module) { return module.routingEntry.pathPattern == '/circulation/actual-cost-expiration-by-timeout' }
-    * def timers = karate.filter(response.timerDescriptors, fun)
-    * def timerId = timers[0].id
-    * def moduleId = timers[0].moduleId
-    * def moduleName = timers[0].moduleName
+    # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
+    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
+    * def sidecarToken = sidecarResult.sidecarToken
 
-    # update actual-cost-expiration-by-timeout processor delay time
-    * def updateRequest = read('classpath:vega/mod-feesfines/features/samples/update-timer-request.json')
-    * updateRequest.id = timerId
-    * updateRequest.moduleId = moduleId
-    * updateRequest.moduleName = moduleName
-    * updateRequest.routingEntry.unit = 'second'
-    * updateRequest.routingEntry.delay = '1'
-    Given path '/scheduler/timers/'+timerId
-    And request updateRequest
-    When method PUT
-    Then status 200
+    # find or create actual-cost-expiration-by-timeout timer with 1 second delay
+    * def updateResult = call read('classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@UpdateActualCostExpirationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
+    * def currentTimerId = updateResult.currentTimerId
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
     # get actual cost record and verify that the record has been expired and has properties mapped in CIRC-1769
     * configure retry = { count: 20, interval: 10000 }
@@ -233,17 +219,10 @@ Feature: Actual cost fee/fine tests
     Then match actualCostRecord.item.chronology == actualCostRecordChronology
     Then match actualCostRecord.item.copyNumber == actualCostRecordCopyNumber
 
-    # revert actual-cost-expiration-by-timeout processor delay time
-    * def revertRequest = read('classpath:vega/mod-feesfines/features/samples/update-timer-request.json')
-    * revertRequest.id = timerId
-    * revertRequest.moduleId = moduleId
-    * revertRequest.moduleName = moduleName
-    * revertRequest.routingEntry.unit = 'minute'
-    * revertRequest.routingEntry.delay = '20'
-    Given path '/scheduler/timers/'+timerId
-    And request revertRequest
-    When method PUT
-    Then status 200
+    # cleanup: delete timer if it was created by this test, otherwise revert delay to 20 minutes
+    * if (updateResult.currentTimerCreated) karate.call('classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@DeleteActualCostExpirationTimer', { extToken: sidecarToken, extTimerId: currentTimerId })
+    * if (!updateResult.currentTimerCreated) karate.call('classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@UpdateActualCostExpirationTimer', { extToken: sidecarToken, extTimerId: currentTimerId, extModuleId: updateResult.currentModuleId, extModuleName: updateResult.currentModuleName, extUnit: 'minute', extDelay: '20' })
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
 
     # bring back old circulation rules
     * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRules)" }
