@@ -2167,12 +2167,18 @@ Feature: Requests tests
     * def extMaterialTypeId = call uuid1
     * def extMaterialTypeName = 'staff-username-mat-' + java.util.UUID.randomUUID()
     * def extServicePointId = call uuid1
+    * def extLocationId = call uuid1
+    * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
     * def extItemId = call uuid1
     * def extUserId = call uuid1
     * def extItemBarcode = 'FAT-20840IBC'
     * def extUserBarcode = 'FAT-20840UBC'
 
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
 
     # Get the "Request delivery" staff slip and save original template for restore
     Given path 'staff-slips-storage', 'staff-slips'
@@ -2199,10 +2205,10 @@ Feature: Requests tests
 
     # Create item, user, and Page request to generate a pick slip
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: '#(fourthUserGroupId)' }
     * def extRequestId = call uuid1
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(extHoldingId), extServicePointId: #(extServicePointId) }
 
     # Verify pick slip is generated for the request with the updated template active
     Given path 'circulation', 'pick-slips', extServicePointId
