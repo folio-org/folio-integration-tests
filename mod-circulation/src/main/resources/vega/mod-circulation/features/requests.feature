@@ -2174,7 +2174,7 @@ Feature: Requests tests
 
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
 
-    # Get the "Request delivery" staff slip and save original body for restore
+    # Get the "Request delivery" staff slip and save original template for restore
     Given path 'staff-slips-storage', 'staff-slips'
     And param query = 'name=="Request delivery"'
     When method GET
@@ -2182,20 +2182,20 @@ Feature: Requests tests
     And match response.totalRecords == 1
     * def slipId = response.staffSlips[0].id
     * def originalSlip = response.staffSlips[0]
-    * def originalBody = originalSlip.body
+    * def originalTemplate = originalSlip.template
 
-    # Update the slip body with {{staffSlip.staffUsername}} token
-    * originalSlip.body = '{{staffSlip.staffUsername}}'
+    # Update the slip template with {{staffSlip.staffUsername}} token
+    * originalSlip.template = '{{staffSlip.staffUsername}}'
     Given path 'staff-slips-storage', 'staff-slips', slipId
     And request originalSlip
     When method PUT
     Then status 204
 
-    # Verify the token was saved in the slip body
+    # Verify the token was saved in the slip template
     Given path 'staff-slips-storage', 'staff-slips', slipId
     When method GET
     Then status 200
-    And match response.body contains '{{staffSlip.staffUsername}}'
+    And match response.template contains '{{staffSlip.staffUsername}}'
 
     # Create item, user, and Page request to generate a pick slip
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
@@ -2210,8 +2210,8 @@ Feature: Requests tests
     Then status 200
     And match $.pickSlips[0].staffSlip.staffUsername == testUser.name
 
-    # Restore original staff slip template body
-    * originalSlip.body = originalBody
+    # Restore original staff slip template
+    * originalSlip.template = originalTemplate
     Given path 'staff-slips-storage', 'staff-slips', slipId
     And request originalSlip
     When method PUT
