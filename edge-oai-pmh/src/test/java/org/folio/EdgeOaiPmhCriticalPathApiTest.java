@@ -29,6 +29,11 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
     }
 
     @Test
+    public void test00() {
+        runFeatureTest("edge-oai-pmh.feature");
+    }
+
+    @Test
     public void test01() {
         runFeatureTest("instance-suppressed-with-discovery-flag-C193960.feature");
     }
@@ -88,6 +93,6 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
     }
 
     @Test
-    public void test013() {runFeatureTest("marc-extended-latin-from-until-C163911.feature");
+    public void test13() {runFeatureTest("marc-extended-latin-from-until-C163911.feature");
     }
 }
