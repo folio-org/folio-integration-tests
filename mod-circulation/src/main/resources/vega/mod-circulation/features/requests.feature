@@ -2161,3 +2161,60 @@ Feature: Requests tests
     And match $.pickSlips[0].requester.departments == extDepartmentName
 
     * def extMaterialTypeName = null
+
+  Scenario: staffUsername token can be added to Request delivery staff slip and renders with the correct username
+    # For FAT-20840
+    * def extMaterialTypeId = call uuid1
+    * def extMaterialTypeName = 'staff-username-mat-' + java.util.UUID.randomUUID()
+    * def extServicePointId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extItemBarcode = 'FAT-20840IBC'
+    * def extUserBarcode = 'FAT-20840UBC'
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+
+    # Get the "Request delivery" staff slip and save original body for restore
+    Given path 'staff-slips-storage', 'staff-slips'
+    And param query = 'name=="Request delivery"'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    * def slipId = response.staffSlips[0].id
+    * def originalSlip = response.staffSlips[0]
+    * def originalBody = originalSlip.body
+
+    # Update the slip body with {{staffSlip.staffUsername}} token
+    * originalSlip.body = '{{staffSlip.staffUsername}}'
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    And request originalSlip
+    When method PUT
+    Then status 204
+
+    # Verify the token was saved in the slip body
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    When method GET
+    Then status 200
+    And match response.body contains '{{staffSlip.staffUsername}}'
+
+    # Create item, user, and Page request to generate a pick slip
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: '#(fourthUserGroupId)' }
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId), extServicePointId: #(extServicePointId) }
+
+    # Verify pick slips response contains staffSlip.staffUsername populated with the calling user's name
+    Given path 'circulation', 'pick-slips', extServicePointId
+    When method GET
+    Then status 200
+    And match $.pickSlips[0].staffSlip.staffUsername == testUser.name
+
+    # Restore original staff slip template body
+    * originalSlip.body = originalBody
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    And request originalSlip
+    When method PUT
+    Then status 204
+
+    * def extMaterialTypeName = null

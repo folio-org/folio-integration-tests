@@ -172,4 +172,7 @@ Feature: mod-circulation integration tests
       | 'locale.item.get'                                             |
       | 'locale.item.put'                                             |
       | 'departments.item.post'                                       |
+      | 'circulation-storage.staff-slips.collection.get'             |
+      | 'circulation-storage.staff-slips.item.get'                   |
+      | 'circulation-storage.staff-slips.item.put'                   |
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
