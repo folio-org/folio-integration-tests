@@ -608,3 +608,58 @@ Feature: Title level request tests
     And request rulesEntityRequest
     When method PUT
     Then status 204
+
+  Scenario: TLR Page request fails when TLR feature is disabled and succeeds when it is enabled
+    * def requesterId = call uuid1
+    * def itemId = call uuid1
+    * def instanceId = call uuid1
+    * def holdingsId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
+    * def requestId1 = call uuid1
+    * def requestId2 = call uuid1
+    * def requesterBarcode = 'FAT-8001UBC'
+    * def itemBarcode = 'FAT-8001IBC'
+
+    # disable TLR feature
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig') { extTitleLevelRequestsFeatureEnabled: false }
+
+    # prepare domain objects
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(requesterId), extUserBarcode: #(requesterBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(holdingSourceId), extHoldingSourceName: #(holdingSourceName), extHoldingsRecordId: #(holdingsId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId), extItemBarcode: #(itemBarcode), extHoldingsRecordId: #(holdingsId) }
+
+    # attempt a Title Level Page request - should fail because TLR feature is disabled
+    * def pageRequest = read('classpath:vega/mod-circulation/features/samples/request/title-level-request-entity-request.json')
+    * pageRequest.id = requestId1
+    * pageRequest.instanceId = instanceId
+    * pageRequest.requesterId = requesterId
+    * pageRequest.pickupServicePointId = servicePointId
+    * pageRequest.requestType = 'Page'
+    Given path 'circulation', 'requests'
+    And request pageRequest
+    When method POST
+    Then status 422
+    * def error = response.errors[0]
+    And match error.message != null
+
+    # enable TLR feature
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig') { extTitleLevelRequestsFeatureEnabled: true }
+
+    # successfully place a Title Level Page request
+    * pageRequest.id = requestId2
+    Given path 'circulation', 'requests'
+    And request pageRequest
+    When method POST
+    Then status 201
+    And match response.requestType == 'Page'
+    And match response.requestLevel == 'Title'
+    And match response.instanceId == instanceId
+    And match response.requesterId == requesterId
+
+    # restore TLR-settings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
