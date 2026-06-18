@@ -171,6 +171,7 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.circulation-rules.get'                   |
       | 'locale.item.get'                                             |
       | 'locale.item.put'                                             |
+      | 'departments.item.post'                                       |
       | 'circulation-storage.staff-slips.collection.get'              |
       | 'circulation-storage.staff-slips.item.get'                    |
       | 'circulation-storage.staff-slips.item.put'                    |
