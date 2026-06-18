@@ -102,4 +102,9 @@ public class ModOaiPmhCriticalPathTests extends TestBaseEureka {
     void oaiPmhListRecordsAdditionalTestsWhenSourceIsInventory() {
         runFeatureTest("oaipmh-listRecords-sourceInventory");
     }
+
+    @Test
+    void oaiPmhListRecordsC163912() {
+        runFeatureTest("oaiPmhListRecordsC163912");
+    }
 }
