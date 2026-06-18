@@ -16,6 +16,7 @@ Feature: Tests for cql and exporting the records
 
   #Positive scenarios
 
+  @C15847
   Scenario Outline: test upload file and export flow for instance uuids.
     #should create file definition
     Given path 'data-export/file-definitions'

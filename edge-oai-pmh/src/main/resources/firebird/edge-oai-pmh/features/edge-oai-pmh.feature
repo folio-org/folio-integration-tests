@@ -40,6 +40,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='3']/*[local-name()='subfield'][@code='y'] == 'Component part(s) of resource'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] == 'Version of component part(s) of resource'
 
+  @C353581
   Scenario: ListRecords: SRS Verify that changes to holdings are triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'holdings-storage/holdings', holdingId
@@ -91,6 +92,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7', 'publicNote8','publicNote1','publicNote2','publicNote3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] contains only ['empty value','No information provided','No information provided updated']
 
+  @C353584
   Scenario: ListRecords: SRS Verify that changes to items are triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'item-storage/items', itemId
@@ -142,6 +144,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2=' ']/*[local-name()='subfield'][@code='y'] contains only ['empty value','No information provided','No information provided updated']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] contains only ['Version of component part(s) of resource','Version of component part(s) of resource updated']
 
+  @C353605
   Scenario: ListRecords: SRS: Verify that changes to instances are triggering harvesting by verb=ListRecords with marc21_withholdings
     * url baseUrl
 
@@ -209,6 +212,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='4']/*[local-name()='subfield'][@code='y'] contains only ['Version of component part(s) of resource','Version of component part(s) of resource updated']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
 
+  @C353623
   Scenario: ListRecords: SRS: Verify that adding a new item to the existing instance is triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'item-storage/items'
@@ -254,6 +258,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='1']/*[local-name()='subfield'][@code='y'] == 'Version of resource'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856' and @ind1='4' and @ind2='3']/*[local-name()='subfield'][@code='y'] == 'Component part(s) of resource'
 
+  @C375975
   Scenario: ListRecords: SRS: Verify that changes to instances are triggering harvesting by verb=ListRecords with marc21
     * url baseUrl
 
@@ -294,6 +299,7 @@ Feature: edge-oai-pmh features
     # Updated part
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
 
+  @C353626
   Scenario: ListRecords: SRS: Verify that changes to holdings and item are triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'item-storage/items', itemId
@@ -358,6 +364,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] contains only ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification9','materialsSpecification3','materialsSpecification1','materialsSpecification2 UPDATED','materialsSpecification3']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7 UPDATED', 'publicNote8','publicNote9','publicNote3','publicNote1','publicNote2','publicNote3']
 
+  @C353629
   Scenario: ListRecords: SRS: Verify that adding a new holdings (FOLIO) to the existing instance is triggering harvesting records with marc21_withholdings
     * url baseUrl
     Given path 'holdings-storage/holdings'
@@ -430,7 +437,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='3'] contains only ['materialsSpecification6','materialsSpecification3','materialsSpecification4','materialsSpecification5','materialsSpecification7', 'materialsSpecification8','materialsSpecification9','materialsSpecification3','materialsSpecification1','materialsSpecification2 UPDATED','materialsSpecification3','materialsSpecification3','materialsSpecification4']
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='856']/*[local-name()='subfield'][@code='z'] contains only ['publicNote6','publicNote3','publicNote4','publicNote5','publicNote7 UPDATED', 'publicNote8','publicNote9','publicNote3','publicNote1','publicNote2','publicNote3','publicNote3','publicNote4']
 
-
+  @C13782
   Scenario: List records with marc21_withholdings prefix and with from param when records exist
     Given path 'oai'
     And param apikey = apikey
@@ -482,6 +489,7 @@ Feature: edge-oai-pmh features
     Then status 200
     And match response count(/OAI-PMH/ListRecords/record) == 0
 
+  @C13783
   Scenario: List records with marc21 prefix and with from and until param when record exist
     Given path 'oai'
     And param apikey = apikey
@@ -498,7 +506,7 @@ Feature: edge-oai-pmh features
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='999']/*[local-name()='subfield'][@code='s'] == '67dfac11-1caf-4470-9ad1-d533f6360bc8'
     And match response//metadata/*[local-name()='record']/*[local-name()='datafield'][@tag='245']/*[local-name()='subfield'][@code='a'] == 'New test field'
 
-
+  @C13781
   Scenario: List records with marc21 prefix and with from param when records exist
     Given path 'oai'
     And param apikey = apikey
