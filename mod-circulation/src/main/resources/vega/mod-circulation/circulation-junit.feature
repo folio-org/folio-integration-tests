@@ -171,4 +171,5 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.circulation-rules.get'                   |
       | 'locale.item.get'                                             |
       | 'locale.item.put'                                             |
+      | 'departments.item.post'                                       |
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
