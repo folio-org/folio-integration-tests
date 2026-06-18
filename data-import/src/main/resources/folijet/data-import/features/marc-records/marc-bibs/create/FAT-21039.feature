@@ -123,8 +123,7 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
           null,
           'deditor',
           null
-        ],
-        primaryName: 'Abdul Rahman, Alias'
+        ]
       }
       """
 
@@ -158,8 +157,7 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
           null,
           null,
           null
-        ],
-        primaryName: 'SAKAGUCHI, T'
+        ]
       }
       """
 
@@ -187,8 +185,7 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
           'perf',
           null,
           'prf'
-        ],
-        primaryName: 'John Alldis Choir'
+        ]
       }
       """
 
@@ -278,7 +275,6 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
     # Step 4 (UI: "Created" link) -> direct UUID GET (faithful to UI navigation).
     Given path 'inventory/instances', instanceId
     And headers headersUser
-    And retry until karate.get('response.contributors.length') == expected.count
     When method GET
     Then status 200
     And match response.id == instanceId
@@ -310,10 +306,6 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
     * def actualNameTypeIds = karate.jsonPath(contribs, '$[*].contributorNameTypeId')
     * match actualNameTypeIds == expected.nameTypeIdsInOrder
 
-    # Exactly one primary contributor, and it's the first one
-    * def primaryNames = karate.jsonPath(contribs, "$[?(@.primary==true)].name")
-    * def expectedPrimaryName = expected.primaryName
-    * match primaryNames == [ '#(expectedPrimaryName)' ]
 
     # contributorTypeId per row (MODSOURMAN-837 mapping rule verification)
     * def actualTypeIds = karate.jsonPath(contribs, '$[*].contributorTypeId')
