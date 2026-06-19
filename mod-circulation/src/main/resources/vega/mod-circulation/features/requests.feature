@@ -2246,8 +2246,8 @@ Feature: Requests tests
     When method DELETE
     Then status 204
 
+  @515011
   Scenario: staffUsername token can be added to Request delivery staff slip and renders with the correct username
-    # For FAT-20840
     * def extMaterialTypeId = call uuid1
     * def extMaterialTypeName = 'staff-username-mat-' + java.util.UUID.randomUUID()
     * def extServicePointId = call uuid1
