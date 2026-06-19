@@ -2183,6 +2183,7 @@ Feature: Requests tests
     Then status 200
     And match response.name == 'Search slip (Hold requests)'
     * def originalStaffSlip = response
+    * def originalTemplate = originalStaffSlip.template
 
     # Step 4-8: Update template body with {{staffSlip.staffUsername}} token
     * def updatedStaffSlip = originalStaffSlip
@@ -2202,7 +2203,7 @@ Feature: Requests tests
     # Set up inventory for Hold request: service point, location, holdings, item
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), sourceId: #(extHoldingSourceId), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extHoldingsRecordId: #(extHoldingId) }
 
     # Post checkout user and hold requester user
@@ -2234,6 +2235,7 @@ Feature: Requests tests
     And match $.searchSlips[0].request.requestID == extRequestId
 
     # Step 12/14: Restore original Search slip template
+    * originalStaffSlip.template = originalTemplate
     Given path 'staff-slips-storage', 'staff-slips', searchSlipId
     And request originalStaffSlip
     When method PUT
