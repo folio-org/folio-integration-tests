@@ -1,0 +1,6 @@
+{
+  "notifyPatron": false,
+  "servicePointId": "#(servicePointId)",
+  "userName": "test user",
+  "cancellationReason": "Cancelled as error"
+}

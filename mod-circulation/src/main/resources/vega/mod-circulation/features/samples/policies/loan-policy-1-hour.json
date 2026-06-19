@@ -1,0 +1,18 @@
+{
+  "id": "#(id)",
+  "loanable": true,
+  "renewable": true,
+  "name": "Loan policy - 1 hour",
+  "loansPolicy": {
+    "profileId": "Rolling",
+    "period": {
+      "duration": 1,
+      "intervalId": "Hours"
+    },
+    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
+  },
+  "renewalsPolicy": {
+    "unlimited": true,
+    "renewFromId": "CURRENT_DUE_DATE"
+  }
+}

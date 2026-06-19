@@ -25,8 +25,10 @@ Feature: mod-circulation integration tests
       | name                                                           |
       | 'accounts.collection.get'                                      |
       | 'accounts.item.put'                                            |
+      | 'accounts.item.get'                                            |
       | 'feesfines.accounts.check-pay.post'                            |
       | 'feesfines.accounts.pay.post'                                  |
+      | 'feesfines.accounts.cancel.post'                               |
       | 'patron-blocks.automated-patron-blocks.collection.get'         |
       | 'check-in-storage.check-ins.collection.get'                    |
       | 'check-in-storage.check-ins.item.get'                          |
@@ -65,6 +67,8 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.item.move.post'                          |
       | 'feefineactions.item.post'                                     |
       | 'feefineactions.collection.get'                                |
+      | 'feefineactions.item.get'                                      |
+      | 'feefineactions.item.put'                                      |
       | 'feefines.item.post'                                           |
       | 'inventory-storage.contributor-name-types.item.post'           |
       | 'inventory-storage.holdings.item.post'                         |
@@ -82,7 +86,7 @@ Feature: mod-circulation integration tests
       | 'inventory-storage.location-units.institutions.item.post'      |
       | 'inventory-storage.location-units.libraries.item.post'         |
       | 'inventory-storage.locations.item.post'                        |
-      | 'inventory-storage.locations.item.put'                        |
+      | 'inventory-storage.locations.item.put'                         |
       | 'inventory-storage.material-types.item.post'                   |
       | 'inventory-storage.preceding-succeeding-titles.collection.get' |
       | 'inventory-storage.preceding-succeeding-titles.item.delete'    |
@@ -133,9 +137,6 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.loan-policies.item.get'                   |
       | 'mod-settings.global.write.mod-circulation'                    |
       | 'mod-settings.entries.item.post'                               |
-      | 'circulation.settings.item.post'                               |
-      | 'circulation.settings.item.delete'                             |
-      | 'circulation.settings.collection.get'                          |
       | 'circulation-storage.circulation-settings.item.put'            |
       | 'circulation.print-events-entry.item.post'                     |
       | 'login.item.post'                                              |

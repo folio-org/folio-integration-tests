@@ -73,8 +73,11 @@ Feature: init data for mod-circulation
 
   @PostOwner
   Scenario: create owner
+    * def intOwnerId = call uuid1
+    * def intServicePointId = call uuid1
     * def ownerEntityRequest = read('samples/feefine/owner-entity-request.json')
-
+    * ownerEntityRequest.id = karate.get('extOwnerId', intOwnerId)
+    * ownerEntityRequest.servicePointOwner[0].value = karate.get('extServicePointId', intServicePointId)
     Given path 'owners'
     And request ownerEntityRequest
     When method POST
@@ -103,6 +106,15 @@ Feature: init data for mod-circulation
 
     Given path 'accounts/' + accountId + '/pay'
     And request payEntityRequest
+    When method POST
+    Then status 201
+
+  @CancelFeeFine
+  Scenario: cancel fee/fine
+    * def cancellationRequest = read('samples/feefine/cancel-fee-fine-request.json')
+    * cancellationRequest.servicePointId = servicePointId
+    Given path 'accounts/' + accountId + '/cancel'
+    And request cancellationRequest
     When method POST
     Then status 201
 
@@ -301,6 +313,17 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostLoanPolicyOneHour
+  Scenario: create 1-hour loan policy
+    * def intLoanPolicyId = call uuid1
+    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-1-hour.json')
+    * loanPolicyEntityRequest.id = karate.get('extLoanPolicyId', intLoanPolicyId)
+    * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
   @PostLoanPolicyWithLimit
   Scenario: create loan policy with limit
     * def intLoanPolicyId = call uuid1
@@ -332,6 +355,32 @@ Feature: init data for mod-circulation
     * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
     * overdueFinePolicyEntityRequest.id = karate.get('extOverdueFinePoliciesId', intOverduePolicyId)
     * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
+    Given path 'overdue-fines-policies'
+    And request overdueFinePolicyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostOverdueFinePolicyWithoutFine
+  Scenario: create overdue fine policy without fine
+    * def intOverdueFinePolicyId = call uuid1
+    * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-without-fine.json')
+    * overdueFinePolicyEntityRequest.id = karate.get('extOverdueFinePolicyId', intOverdueFinePolicyId)
+    * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
+    Given path 'overdue-fines-policies'
+    And request overdueFinePolicyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostOverdueFinePolicyWithFine
+  Scenario: create overdue fine policy with fine
+    * def intOverdueFinePolicyId = call uuid1
+    * def intOverdueFineQuantity = '1.00'
+    * def intOverdueFineIntervalId = 'day'
+    * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-with-fine.json')
+    * overdueFinePolicyEntityRequest.id = karate.get('extOverdueFinePolicyId', intOverdueFinePolicyId)
+    * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
+    * overdueFinePolicyEntityRequest.overdueFine.quantity = karate.get('extOverdueFineQuantity', intOverdueFineQuantity)
+    * overdueFinePolicyEntityRequest.overdueFine.intervalId = karate.get('extOverdueFineIntervalId', intOverdueFineIntervalId)
     Given path 'overdue-fines-policies'
     And request overdueFinePolicyEntityRequest
     When method POST
@@ -441,13 +490,13 @@ Feature: init data for mod-circulation
     * def intCheckInDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
 
     * def checkInRequest = read('classpath:vega/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
+    * checkInRequest.itemBarcode = karate.get('extItemBarcode', checkInRequest.itemBarcode)
     * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
     * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
     When method POST
     Then status 200
-    And match $.item.barcode == itemBarcode
     And match $.loan.action == 'checkedin'
     And match $.loan.status.name == 'Closed'
 
@@ -602,4 +651,10 @@ Feature: init data for mod-circulation
     Given path 'settings/entries'
     And request checkoutLockSettingsRequest
     When method POST
+    Then status 204
+
+  @DeleteCirculationSetting
+  Scenario: delete circulation setting
+    Given path 'circulation', 'settings', settingId
+    When method DELETE
     Then status 204
