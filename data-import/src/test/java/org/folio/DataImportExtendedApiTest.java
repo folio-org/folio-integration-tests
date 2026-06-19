@@ -27,6 +27,12 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     }
 
     @Test
+    void fat21039Contributors() {
+        feature("classpath:folijet/data-import/features/marc-records/marc-bibs/create/FAT-21039.feature")
+                .run();
+    }
+
+    @Test
     void diAuthorityExtended() {
         feature("classpath:folijet/data-import/features/marc-records/data-import-authority-records-extended.feature")
                 .run();

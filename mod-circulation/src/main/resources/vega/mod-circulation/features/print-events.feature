@@ -395,7 +395,7 @@ Feature: Print events tests
     # clear extMaterialTypeName so it does not bleed into features called after this one
     * def extMaterialTypeName = null
 
-  @C1307937
+  @C784480
   Scenario: Requests can be exported to CSV if user last printed request was deleted
     * def extMaterialTypeId = call uuid1
     * def extItemId = call uuid1
