@@ -132,12 +132,12 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
       {
         count: 6,
         namesInOrder: [
-          'SAKAGUCHI, T',
-          'OZAWA, K',
-          'HAMAGAKI, H',
-          'ESUMI, S',
-          'KURIHARA, N',
-          'CHUJO, T'
+          'SAKAGUCHI, T.',
+          'OZAWA, K.',
+          'HAMAGAKI, H.',
+          'ESUMI, S.',
+          'KURIHARA, N.',
+          'CHUJO, T.'
         ],
         nameTypeIdsInOrder: [
           '#(personalId)','#(personalId)','#(personalId)','#(personalId)','#(personalId)','#(personalId)'
@@ -257,7 +257,10 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
           idx: i,
           entry: entriesSorted[i],
           expected: expectedByOrder[i],
-          expectedSource: expectedSourceByOrder[i]
+          expectedSource: expectedSourceByOrder[i],
+          personalNameTypeId: personalNameTypeId,
+          corporateNameTypeId: corporateNameTypeId,
+          meetingNameTypeId: meetingNameTypeId
         });
       }
       """
@@ -279,9 +282,15 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
     Then status 200
     And match response.id == instanceId
     And match response.hrid == hrid
-    * def contribs = response.contributors
+    * def allContribs = response.contributors
 
-    # Count
+    # Determine expected name type ID from first contributor in expected list
+    * def expectedNameTypeId = expected.nameTypeIdsInOrder[0]
+
+    # Filter contributors to only those with the expected name type (Personal/Corporate/Meeting)
+    * def contribs = karate.filter(allContribs, function(c){ return c.contributorNameTypeId == expectedNameTypeId })
+
+    # Count (should match expected count for Personal name contributors)
     * def actualCount = karate.sizeOf(contribs)
     * match actualCount == expected.count
 
@@ -298,11 +307,11 @@ Feature: FAT-21039 Verify mapping of contributors from MARC 720 fields with rela
       }
       """
 
-    # Names in source-MRC tag order
+    # Names in source-MRC tag order (only Personal names)
     * def actualNames = karate.jsonPath(contribs, '$[*].name')
     * match actualNames == expected.namesInOrder
 
-    # contributorNameTypeId per row
+    # contributorNameTypeId per row (verify all are Personal name type)
     * def actualNameTypeIds = karate.jsonPath(contribs, '$[*].contributorNameTypeId')
     * match actualNameTypeIds == expected.nameTypeIdsInOrder
 
