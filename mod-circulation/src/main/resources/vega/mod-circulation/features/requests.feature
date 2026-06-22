@@ -2064,3 +2064,247 @@ Feature: Requests tests
     When method GET
     Then status 200
     And match $.id == requestUuid
+
+  @C350388
+  Scenario: Test request filtration by request level
+    * def itemId1 = call uuid1
+    * def itemId2 = call uuid1
+    * def itemBarcode1 = 'FAT-23921-ITEM-1'
+    * def itemBarcode2 = 'FAT-23921-ITEM-2'
+    * def userId1 = call uuid1
+    * def userId2 = call uuid1
+    * def patronGroupId = call uuid1
+    * def userBarcode1 = 'FAT-23921-USER-1'
+    * def userBarcode2 = 'FAT-23921-USER-2'
+    * def itemLevelRequestId = call uuid1
+    * def titleLevelRequestId = call uuid1
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteTlrConfig')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTlrConfig')
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2) }
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(patronGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(patronGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(patronGroupId) }
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(itemLevelRequestId), itemId: #(itemId1), requesterId: #(userId1), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostTitleLevelRequest') { requestId: #(titleLevelRequestId), requesterId: #(userId2), extInstanceId: #(instanceId) }
+
+    Given path 'circulation/requests'
+    And param query = 'requestLevel==Item AND requesterId==' + userId1
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == itemLevelRequestId
+    And match $.requests[0].requestLevel == 'Item'
+
+    Given path 'circulation/requests'
+    And param query = 'requestLevel==Title AND requesterId==' + userId2
+    When method GET
+    Then status 200
+    And assert response.requests.length == 1
+    And match $.requests[0].id == titleLevelRequestId
+    And match $.requests[0].requestLevel == 'Title'
+
+  @C396391
+  Scenario: Verify requester.departments is populated in pick slip
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extDepartmentId = call uuid1
+    * def extMaterialTypeId = call uuid1
+    * def extLocationId = call uuid1
+    * def extServicePointId = call uuid1
+    * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
+    * def extItemBarcode = 'FAT-396391IBC'
+    * def extUserBarcode = 'FAT-396391UBC'
+    * def extDepartmentName = 'dept-' + java.util.UUID.randomUUID()
+    * def extMaterialTypeName = 'pick-slip-dept-mat-' + java.util.UUID.randomUUID()
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
+
+    # post a material type and item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingId) }
+
+    # post a department
+    Given path 'departments'
+    And request { id: '#(extDepartmentId)', name: '#(extDepartmentName)', code: '#(extDepartmentName)' }
+    When method POST
+    Then status 201
+
+    # post a user with the department assigned
+    * def userEntityRequest = read('classpath:vega/mod-circulation/features/samples/user/user-entity-request.json')
+    * userEntityRequest.id = extUserId
+    * userEntityRequest.barcode = extUserBarcode
+    * userEntityRequest.patronGroup = fourthUserGroupId
+    * userEntityRequest.departments = [extDepartmentId]
+    Given path 'users'
+    And request userEntityRequest
+    When method POST
+    Then status 201
+
+    # post a Page request
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(extHoldingId), extServicePointId: #(extServicePointId) }
+
+    # get pick slips and verify requester.departments is populated
+    Given path 'circulation', 'pick-slips', extServicePointId
+    When method GET
+    Then status 200
+    And match $.pickSlips[0].requester.barcode == extUserBarcode
+    And match $.pickSlips[0].requester.departments == extDepartmentName
+
+    * def extMaterialTypeName = null
+
+  @C515012
+  Scenario: staffUsername token can be added to Search slip (Hold requests)
+    * def searchSlipId = 'e6e29ec1-1a76-4913-bbd3-65f4ffd94e03'
+    * def extServicePointId = call uuid1
+    * def extLocationId = call uuid1
+    * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
+    * def extItemId = call uuid1
+    * def extItemBarcode = 'FAT-515012IBC'
+    * def extCheckoutUserId = call uuid1
+    * def extCheckoutUserBarcode = 'FAT-515012UBC-1'
+    * def extHoldUserId = call uuid1
+    * def extHoldUserBarcode = 'FAT-515012UBC-2'
+
+    # Step 1-3: Retrieve Search slip (Hold requests) to save current template
+    Given path 'staff-slips-storage', 'staff-slips', searchSlipId
+    When method GET
+    Then status 200
+    And match response.name == 'Search slip (Hold requests)'
+    * def originalStaffSlip = response
+    * def originalTemplate = originalStaffSlip.template
+
+    # Step 4-8: Update template body with {{staffSlip.staffUsername}} token
+    * def updatedStaffSlip = originalStaffSlip
+    * updatedStaffSlip.template = '<p>{{item.barcodeImage}}</p><p>{{staffSlip.staffUsername}}</p>'
+    Given path 'staff-slips-storage', 'staff-slips', searchSlipId
+    And request updatedStaffSlip
+    When method PUT
+    Then status 204
+
+    # Step 9: Verify template was saved with {{staffSlip.staffUsername}} token
+    Given path 'staff-slips-storage', 'staff-slips', searchSlipId
+    When method GET
+    Then status 200
+    And match response.template contains '{{staffSlip.staffUsername}}'
+    And match response.template contains '{{item.barcodeImage}}'
+
+    # Set up inventory for Hold request: service point, location, holdings, item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), sourceId: #(extHoldingSourceId), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extHoldingsRecordId: #(extHoldingId) }
+
+    # Post checkout user and hold requester user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extCheckoutUserId), extUserBarcode: #(extCheckoutUserBarcode), extGroupId: #(fourthUserGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extHoldUserId), extUserBarcode: #(extHoldUserBarcode), extGroupId: #(fourthUserGroupId) }
+
+    # Check out item to checkout user so a Hold request becomes eligible
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extCheckoutUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extServicePointId: #(extServicePointId) }
+
+    # Create Hold request for hold requester user
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extHoldUserId), extRequestType: 'Hold', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(extHoldingId), extServicePointId: #(extServicePointId) }
+
+    # Enable PRINT_HOLD_REQUESTS so search-slips returns results (defaults to disabled)
+    * def printHoldSettingId = call uuid1
+    * def printHoldSettingBody = { id: '#(printHoldSettingId)', name: 'PRINT_HOLD_REQUESTS', value: { printHoldRequestsEnabled: true } }
+    Given path 'circulation', 'settings'
+    And request printHoldSettingBody
+    When method POST
+    Then status 201
+
+    # Step 10-13: GET search slips and verify item, requester and request data are returned
+    Given path 'circulation', 'search-slips', extServicePointId
+    When method GET
+    Then status 200
+    And match $.totalRecords == 1
+    And match $.searchSlips[0].item.barcode == extItemBarcode
+    And match $.searchSlips[0].requester.barcode == extHoldUserBarcode
+    And match $.searchSlips[0].request.requestID == extRequestId
+
+    # Step 12/14: Restore original Search slip template
+    * originalStaffSlip.template = originalTemplate
+    Given path 'staff-slips-storage', 'staff-slips', searchSlipId
+    And request originalStaffSlip
+    When method PUT
+    Then status 204
+
+    # Clean up: delete PRINT_HOLD_REQUESTS setting
+    Given path 'circulation', 'settings', printHoldSettingId
+    When method DELETE
+    Then status 204
+
+  @515011
+  Scenario: staffUsername token can be added to Request delivery staff slip and renders with the correct username
+    * def extMaterialTypeId = call uuid1
+    * def extMaterialTypeName = 'staff-username-mat-' + java.util.UUID.randomUUID()
+    * def extServicePointId = call uuid1
+    * def extLocationId = call uuid1
+    * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extItemBarcode = 'FAT-20840IBC'
+    * def extUserBarcode = 'FAT-20840UBC'
+
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
+
+    # Get the "Request delivery" staff slip and save original template for restore
+    Given path 'staff-slips-storage', 'staff-slips'
+    And param query = 'name=="Request delivery"'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    * def slipId = response.staffSlips[0].id
+    * def originalSlip = response.staffSlips[0]
+    * def originalTemplate = originalSlip.template
+
+    # Update the slip template with {{staffSlip.staffUsername}} token
+    * originalSlip.template = '{{staffSlip.staffUsername}}'
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    And request originalSlip
+    When method PUT
+    Then status 204
+
+    # Verify the token was saved in the slip template
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    When method GET
+    Then status 200
+    And match response.template contains '{{staffSlip.staffUsername}}'
+
+    # Create item, user, and Page request to generate a pick slip
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: #(extMaterialTypeName) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode), extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: '#(fourthUserGroupId)' }
+    * def extRequestId = call uuid1
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequest') { requestId: #(extRequestId), itemId: #(extItemId), requesterId: #(extUserId), extRequestType: 'Page', extRequestLevel: 'Item', extInstanceId: #(instanceId), extHoldingsRecordId: #(extHoldingId), extServicePointId: #(extServicePointId) }
+
+    # Verify pick slip is generated for the request with the updated template active
+    Given path 'circulation', 'pick-slips', extServicePointId
+    When method GET
+    Then status 200
+    And match $.pickSlips[0].requester.barcode == extUserBarcode
+
+    # Restore original staff slip template
+    * originalSlip.template = originalTemplate
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    And request originalSlip
+    When method PUT
+    Then status 204
+
+    * def extMaterialTypeName = null

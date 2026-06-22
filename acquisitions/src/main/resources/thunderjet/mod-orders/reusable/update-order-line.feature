@@ -1,6 +1,6 @@
 @ignore
 Feature: Update order line
-  # parameters: id, titleOrPackage?, paymentStatus?, receiptStatus?, listUnitPrice?
+  # parameters: id, titleOrPackage?, paymentStatus?, receiptStatus?, listUnitPrice?, fundDistribution?
 
   Background:
     * print karate.info.scenarioName
@@ -17,6 +17,7 @@ Feature: Update order line
     * set poLine.receiptStatus = karate.get('receiptStatus', poLine.receiptStatus)
     * set poLine.cost.listUnitPrice = karate.get('listUnitPrice', poLine.cost.listUnitPrice)
     * set poLine.cost.poLineEstimatedPrice = karate.get('listUnitPrice', poLine.cost.listUnitPrice)
+    * set poLine.fundDistribution = karate.get('fundDistribution', poLine.fundDistribution)
 
     Given path 'orders/order-lines', id
     And request poLine

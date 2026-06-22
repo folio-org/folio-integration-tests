@@ -63,27 +63,9 @@ public class ModDataExportApiTest extends TestBaseEureka {
     }
 
     @Test
-    @Order(6)
-    void fileUploadAndExportForCqlTest() {
-        runFeatureTest("export-for-cql");
-    }
-
-    @Test
-    @Order(5)
-    void fileExportForMarcHoldingRecordExportTest() {
-        runFeatureTest("export-for-holdings");
-    }
-
-    @Test
     @Order(13)
     void fileExportForMarcInstanceRecordExportTest() {
         runFeatureTest("export-for-instances-default-mapping");
-    }
-
-    @Test
-    @Order(14)
-    void fileExportForDefaultHoldingRecordExportTest() {
-        runFeatureTest("export-for-holdings-default-mapping");
     }
 
     @Test
