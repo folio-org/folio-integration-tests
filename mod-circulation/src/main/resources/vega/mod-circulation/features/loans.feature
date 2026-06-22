@@ -20,13 +20,6 @@ Feature: Loans tests
     * def checkOutByBarcodeId = call uuid1
     * def parseObjectToDate = read('classpath:vega/mod-circulation/features/util/parse-object-to-date-function.js')
 
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner') { extServicePointId: #(servicePointId) }
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-
   @SuccessfulCheckOut
   Scenario: When patron and item id's entered at checkout, post a new loan using the circulation rule matched
     * def extUserId = call uuid1
@@ -2393,6 +2386,11 @@ Feature: Loans tests
     * def userBarcode2 = 'FAT-23836-USER-2'
     * def materialTypeId1 = call uuid1
     * def materialTypeId2 = call uuid1
+    * def instanceId = call uuid1
+    * def servicePointId = call uuid1
+    * def locationId = call uuid1
+    * def holdingId = call uuid1
+    * def groupId = call uuid1
 
     # find existing loan anonymization settings and delete them
     Given path 'circulation/settings'
@@ -2469,7 +2467,12 @@ Feature: Loans tests
     Then status 200
     Then match response.rulesAsText contains updateRulesEntity.rulesAsText
 
-    # create items and users
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner') { extServicePointId: #(servicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1), extMaterialTypeId: #(materialTypeId1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2), extMaterialTypeId: #(materialTypeId2) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(groupId) }
