@@ -631,3 +631,9 @@ Feature: init data for mod-circulation
     Given path 'circulation', 'settings', loanHistorySettingsId
     When method DELETE
     Then status 204
+
+  @DeleteCirculationSetting
+  Scenario: delete circulation setting
+    Given path 'circulation', 'settings', settingId
+    When method DELETE
+    Then status 204
