@@ -2308,3 +2308,62 @@ Feature: Requests tests
     Then status 204
 
     * def extMaterialTypeName = null
+
+  @C519972
+  Scenario: staffUsername token can be added to Transit staff slip and renders with the correct username
+    * def extCheckInServicePointId = call uuid1
+    * def extItemId = call uuid1
+    * def extUserId = call uuid1
+    * def extItemBarcode = 'FAT-519972IBC'
+    * def extUserBarcode = 'FAT-519972UBC'
+
+    # Step 1-3: Get the "Transit" staff slip and save original template for restore
+    Given path 'staff-slips-storage', 'staff-slips'
+    And param query = 'name=="Transit"'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
+    * def slipId = response.staffSlips[0].id
+    * def originalSlip = response.staffSlips[0]
+    * def originalTemplate = originalSlip.template
+
+    # Step 4-8: Update the slip template with {{staffSlip.staffUsername}} token
+    * originalSlip.template = '<p>Hold request for item:</p><p>{{item.barcodeImage}}</p><p>Pick slip printed by:</p><p>{{staffSlip.staffUsername}}</p>'
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    And request originalSlip
+    When method PUT
+    Then status 204
+
+    # Step 9: Verify template was saved with {{staffSlip.staffUsername}} token
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    When method GET
+    Then status 200
+    And match response.template contains '{{staffSlip.staffUsername}}'
+
+    # Create item at default holdings (home SP = servicePointId from Background) and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: #(extItemBarcode) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode), extGroupId: '#(fourthUserGroupId)' }
+
+    # Check out item to user at the home service point
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extServicePointId: #(servicePointId) }
+
+    # Create a non-home service point for check-in to trigger "In transit" status
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extCheckInServicePointId) }
+
+    # Step 12-13: Check in item at non-home service point — item goes "In transit"
+    * def checkInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extCheckInServicePointId) }
+    And match checkInResponse.response.item.status.name == 'In transit'
+    And match checkInResponse.response.item.barcode == extItemBarcode
+
+    # Verify item is "In transit" and its destination is the home service point
+    Given path 'inventory', 'items', extItemId
+    When method GET
+    Then status 200
+    And match response.status.name == 'In transit'
+
+    # Restore original staff slip template
+    * originalSlip.template = originalTemplate
+    Given path 'staff-slips-storage', 'staff-slips', slipId
+    And request originalSlip
+    When method PUT
+    Then status 204

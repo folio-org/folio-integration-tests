@@ -650,6 +650,34 @@ Feature: init data for mod-circulation
     When method POST
     Then status 204
 
+  @PostLoanHistorySettings
+  Scenario: create loan history (anonymization) settings
+    * def loanHistoryRequest = {}
+    * loanHistoryRequest.id = loanHistorySettingsId
+    * loanHistoryRequest.name = 'loan-history'
+    * loanHistoryRequest.value = loanHistorySettingsValue
+    Given path 'circulation', 'settings'
+    And request loanHistoryRequest
+    When method POST
+    Then status 201
+
+  @PutLoanHistorySettings
+  Scenario: update loan history (anonymization) settings
+    * def loanHistoryRequest = {}
+    * loanHistoryRequest.id = loanHistorySettingsId
+    * loanHistoryRequest.name = 'loan-history'
+    * loanHistoryRequest.value = loanHistorySettingsValue
+    Given path 'circulation', 'settings', loanHistorySettingsId
+    And request loanHistoryRequest
+    When method PUT
+    Then status 204
+
+  @DeleteLoanHistorySettings
+  Scenario: delete loan history (anonymization) settings
+    Given path 'circulation', 'settings', loanHistorySettingsId
+    When method DELETE
+    Then status 204
+
   @DeleteCirculationSetting
   Scenario: delete circulation setting
     Given path 'circulation', 'settings', settingId
