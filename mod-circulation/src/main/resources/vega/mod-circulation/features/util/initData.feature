@@ -487,7 +487,7 @@ Feature: init data for mod-circulation
     * def intCheckInDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
 
     * def checkInRequest = read('classpath:vega/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
-    * checkInRequest.itemBarcode = karate.get('extItemBarcode', checkInRequest.itemBarcode)
+    * checkInRequest.itemBarcode = karate.get('extItemBarcode', itemBarcode)
     * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
     * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
     Given path 'circulation', 'check-in-by-barcode'
