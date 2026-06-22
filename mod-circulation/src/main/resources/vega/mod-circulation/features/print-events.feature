@@ -403,11 +403,21 @@ Feature: Print events tests
     * def extUser2Id = call uuid1
     * def requestId = call uuid1
     * def settingId = call uuid1
+    * def extServicePointId = call uuid1
+    * def extLocationId = call uuid1
+    * def extHoldingId = call uuid1
+    * def extHoldingSourceId = call uuid1
+    * def extHoldingSourceName = random_string()
+
+    # set up dedicated service point, location and holdings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(extLocationId), extServicePointId: #(extServicePointId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingSourceId: #(extHoldingSourceId), extHoldingSourceName: #(extHoldingSourceName), extLocationId: #(extLocationId), extHoldingsRecordId: #(extHoldingId) }
 
     # post material type and item
     * def extMaterialTypeName = 'print-deleted-user-type-' + java.util.UUID.randomUUID()
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(extMaterialTypeId), extMaterialTypeName: '#(extMaterialTypeName)' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: 'FAT-1305IBC', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(holdingId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(extItemId), extItemBarcode: 'FAT-1305IBC', extStatusName: 'Available', extMaterialTypeId: #(extMaterialTypeId), extHoldingsRecordId: #(extHoldingId) }
 
     # create User 1 (requester)
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUser1Id), extUserBarcode: 'FAT-1305UBC', extGroupId: #(fourthUserGroupId) }
@@ -428,12 +438,19 @@ Feature: Print events tests
     * requestEntityRequest.itemId = extItemId
     * requestEntityRequest.requesterId = extUser1Id
     * requestEntityRequest.requestType = 'Page'
-    * requestEntityRequest.holdingsRecordId = holdingId
+    * requestEntityRequest.holdingsRecordId = extHoldingId
     * requestEntityRequest.requestLevel = 'Item'
+    * requestEntityRequest.pickupServicePointId = extServicePointId
     Given path 'circulation', 'requests'
     And request requestEntityRequest
     When method POST
     Then status 201
+
+    # Verify pick slip is generated at the correct service point
+    Given path 'circulation', 'pick-slips', extServicePointId
+    When method GET
+    Then status 200
+    And match $.pickSlips[0].request.requestID == requestId
 
     # create User 2 (the printer, precondition step 3)
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUser2Id), extUserBarcode: 'FAT-1306UBC', extGroupId: #(fourthUserGroupId), firstName: 'PrinterUser' }
