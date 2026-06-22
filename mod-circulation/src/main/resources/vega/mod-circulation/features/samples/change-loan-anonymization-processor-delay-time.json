@@ -1,0 +1,15 @@
+{
+  "id": "3ffb3caa-564e-480e-8fc7-38dc64cb180b",
+  "type": "system",
+  "routingEntry": {
+    "methods": [
+      "POST"
+    ],
+    "pathPattern": "/circulation/scheduled-anonymize-processing",
+    "unit": "minute",
+    "delay": "30"
+  },
+  "enabled": true,
+  "moduleId": "mod-circulation-24.4.0-SNAPSHOT.1293"
+}
+
