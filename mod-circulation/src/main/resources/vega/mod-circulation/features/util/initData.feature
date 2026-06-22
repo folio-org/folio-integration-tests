@@ -73,11 +73,8 @@ Feature: init data for mod-circulation
 
   @PostOwner
   Scenario: create owner
-    * def intOwnerId = call uuid1
-    * def intServicePointId = call uuid1
     * def ownerEntityRequest = read('samples/feefine/owner-entity-request.json')
-    * ownerEntityRequest.id = karate.get('extOwnerId', intOwnerId)
-    * ownerEntityRequest.servicePointOwner[0].value = karate.get('extServicePointId', intServicePointId)
+    * ownerEntityRequest.servicePointOwner[0].value = karate.get('extServicePointId', servicePointId)
     Given path 'owners'
     And request ownerEntityRequest
     When method POST
