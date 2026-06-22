@@ -2606,7 +2606,7 @@ Feature: Loans tests
 #    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
 #    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
 #    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner') { extServicePointId: #(servicePointId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner') { servicePointId: #(servicePointId) }
 #    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
 #    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1), extMaterialTypeId: #(materialTypeId1) }
 #    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2), extMaterialTypeId: #(materialTypeId2) }

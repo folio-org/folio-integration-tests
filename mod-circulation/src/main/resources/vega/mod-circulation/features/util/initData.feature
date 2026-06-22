@@ -74,7 +74,7 @@ Feature: init data for mod-circulation
   @PostOwner
   Scenario: create owner
     * def ownerEntityRequest = read('samples/feefine/owner-entity-request.json')
-    * ownerEntityRequest.servicePointOwner[0].value = karate.get('extServicePointId', servicePointId)
+
     Given path 'owners'
     And request ownerEntityRequest
     When method POST
@@ -487,14 +487,14 @@ Feature: init data for mod-circulation
     * def intCheckInDate = call read('classpath:vega/mod-circulation/features/util/get-time-now-function.js')
 
     * def checkInRequest = read('classpath:vega/mod-circulation/features/samples/check-in-by-barcode-entity-request.json')
-    * checkInRequest.itemBarcode = karate.get('extItemBarcode', itemBarcode)
     * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
     * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
     Given path 'circulation', 'check-in-by-barcode'
     And request checkInRequest
     When method POST
     Then status 200
-#    And match $.loan.action == 'checkedin'
+    And match $.item.barcode == itemBarcode
+    And match $.loan.action == 'checkedin'
     And match $.loan.status.name == 'Closed'
 
   @CheckInItemError
