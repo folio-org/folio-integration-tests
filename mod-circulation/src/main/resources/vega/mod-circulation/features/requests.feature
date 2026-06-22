@@ -2328,7 +2328,7 @@ Feature: Requests tests
     * def originalTemplate = originalSlip.template
 
     # Step 4-8: Update the slip template with {{staffSlip.staffUsername}} token
-    * originalSlip.template = '{{staffSlip.staffUsername}}'
+    * originalSlip.template = '<p>Hold request for item:</p><p>{{item.barcodeImage}}</p><p>Pick slip printed by:</p><p>{{staffSlip.staffUsername}}</p>'
     Given path 'staff-slips-storage', 'staff-slips', slipId
     And request originalSlip
     When method PUT
@@ -2353,6 +2353,7 @@ Feature: Requests tests
     # Step 12-13: Check in item at non-home service point — item goes "In transit"
     * def checkInResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode), extServicePointId: #(extCheckInServicePointId) }
     And match checkInResponse.response.item.status.name == 'In transit'
+    And match checkInResponse.response.item.barcode == extItemBarcode
 
     # Verify item is "In transit" and its destination is the home service point
     Given path 'inventory', 'items', extItemId
