@@ -2620,8 +2620,8 @@ Feature: Loans tests
     * def loanIdWithOverdueFine = checkOutResponse2.response.id
 
     # check both items in
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { extItemBarcode: #(itemBarcode1), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { extItemBarcode: #(itemBarcode2), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode1), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode2), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
 
     # verify that no overdue fine was created for the first loan (the one with overdue fine policy WITHOUT fine)
     Given path 'accounts'
