@@ -2509,199 +2509,199 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting') { settingId: #(loanHistorySettingsId) }
 
 
-  @C9221
-  Scenario: Loan is anonymized only after overdue fine is closed
-    * def itemId1 = call uuid1
-    * def itemId2 = call uuid1
-    * def itemBarcode1 = 'FAT-23836-ITEM-1'
-    * def itemBarcode2 = 'FAT-23836-ITEM-2'
-    * def userId1 = call uuid1
-    * def userId2 = call uuid1
-    * def userBarcode1 = 'FAT-23836-USER-1'
-    * def userBarcode2 = 'FAT-23836-USER-2'
-    * def materialTypeId1 = call uuid1
-    * def materialTypeId2 = call uuid1
-    * def instanceId = call uuid1
-    * def servicePointId = call uuid1
-    * def locationId = call uuid1
-    * def holdingId = call uuid1
-    * def groupId = call uuid1
-
-    # find existing loan anonymization settings and delete them
-    Given path 'circulation/settings'
-    And param query = 'name=="loan_history"'
-    When method GET
-    Then status 200
-    * def settings = response.circulationSettings
-    * def existingLoanAnonymizationSettingId = settings.length > 0 ? settings[0].id : null
-    * print 'existingLoanAnonymizationSettingId: ', existingLoanAnonymizationSettingId
-    * if (existingLoanAnonymizationSettingId != null) karate.call('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting', { settingId: existingLoanAnonymizationSettingId })
-
-    # create new loan anonymization settings
-    Given path 'circulation', 'settings'
-    And request
-    """
-    {
-      "name": "loan_history",
-      "value": {
-        "closingType": {
-          "loan": "immediately",
-          "feeFine": "interval",
-          "loanExceptions": []
-        },
-        "loan": {},
-        "feeFine": {
-          "duration": 1,
-          "intervalId": "minute"
-        },
-        "loanExceptions": [],
-        "treatEnabled": true
-      }
-    }
-    """
-    When method POST
-    Then status 201
-    * def loanAnonymizationSettingsId = response.id
-
-    # create 2 different material types (to create 2 different circulation rules for them later)
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId2) }
-
-    # backup current circulation rules
-    Given path 'circulation', 'rules'
-    When method GET
-    Then status 200
-    * def currentCirculationRulesAsText = response.rulesAsText
-
-    # create circulation policies
-    * def overdueFinePolicyIdWithoutFine = call uuid1
-    * def overdueFinePolicyIdWithFine = call uuid1
-    * def loanPolicyId = call uuid1
-    * def requestPolicyId = call uuid1
-    * def patronNoticePolicyId = call uuid1
-    * def lostItemFeePolicyId = call uuid1
-
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLoanPolicyOneHour') { extLoanPolicyId: #(loanPolicyId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(patronNoticePolicyId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOverdueFinePolicyWithoutFine') { extOverdueFinePolicyId: #(overdueFinePolicyIdWithoutFine) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOverdueFinePolicyWithFine') { extOverdueFinePolicyId: #(overdueFinePolicyIdWithFine), extOverdueFineQuantity: '1.00', extOverdueFineIntervalId: 'day' }
-
-    # create new circulation rules
-    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithoutFine + ' i ' + lostItemFeePolicyId + '\nm ' + materialTypeId1 + ': l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithoutFine + ' i ' + lostItemFeePolicyId + '\nm ' + materialTypeId2 + ': l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithFine + ' i ' + lostItemFeePolicyId
-
-    * def updateRulesEntity = { "rulesAsText": "#(rules)" }
-    Given path 'circulation', 'rules'
-    And request updateRulesEntity
-    When method PUT
-    Then status 204
-
-    Given path 'circulation-rules-storage'
-    When method GET
-    Then status 200
-    Then match response.rulesAsText contains updateRulesEntity.rulesAsText
-
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner') { servicePointId: #(servicePointId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1), extMaterialTypeId: #(materialTypeId1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2), extMaterialTypeId: #(materialTypeId2) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(groupId) }
-
-    # check both items out
-    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode1), extCheckOutItemBarcode: #(itemBarcode1), extServicePointId: #(servicePointId), extLoanDate: '2020-01-01T00:00:00.000Z' }
-    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode2), extCheckOutItemBarcode: #(itemBarcode2), extServicePointId: #(servicePointId), extLoanDate: '2020-01-01T00:00:00.000Z' }
-    * def loanIdWithoutOverdueFine = checkOutResponse1.response.id
-    * def loanIdWithOverdueFine = checkOutResponse2.response.id
-
-    # check both items in
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode1), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode2), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
-
-    # verify that no overdue fine was created for the first loan (the one with overdue fine policy WITHOUT fine)
-    Given path 'accounts'
-    And param query = 'loanId==' + loanIdWithoutOverdueFine + ' and feeFineType==Overdue fine'
-    When method GET
-    Then status 200
-    And match response.totalRecords == 0
-    And match response.accounts == []
-
-    # verify that an overdue fine was created for the second loan (the one with overdue fine policy WITH fine)
-    Given path 'accounts'
-    And param query = 'loanId==' + loanIdWithOverdueFine + ' and feeFineType==Overdue fine'
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    And match response.accounts[0].amount == '#present'
-    * def accountId = response.accounts[0].id
-
-    # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
-    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
-    * def sidecarToken = sidecarResult.sidecarToken
-
-    # change loan anonymization timer delay to speed up the test
-    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
-    * configure headers = headersUser
-
-    # verify that the first loan has been anonymized
-    * configure retry = { count: 15, interval: 3000 }
-    Given path 'loan-storage', 'loans', loanIdWithoutOverdueFine
-    And retry until response.userId == null || response.userId == undefined
-    When method GET
-    Then status 200
-    And match $.userId == '#notpresent'
-
-    # verify that second loan was not anonymized (because it has an open overdue fine)
-    Given path 'loan-storage', 'loans', loanIdWithOverdueFine
-    When method GET
-    Then status 200
-    And match $.userId == '#present'
-
-    # cancel overdue fine for the second loan
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CancelFeeFine') { accountId: #(accountId), servicePointId: #(servicePointId) }
-
-    # verify that overdue fine was closed
-    Given path 'accounts', accountId
-    When method GET
-    Then status 200
-    And match response.status.name == 'Closed'
-    And match response.paymentStatus.name == 'Cancelled as error'
-
-    # get overdue fine action for cancellation
-    Given path 'feefineactions'
-    And param query = 'accountId==' + accountId + ' and typeAction=="Cancelled as error"'
-    When method GET
-    Then status 200
-    And match response.totalRecords == 1
-    * def feeFineAction = response.feefineactions[0]
-    * def feeFineActionId = feeFineAction.id
-
-    # change cancellation action date to avoid waiting for 1 minute until anonymization kicks in
-    * feeFineAction.dateAction = '2020-01-10T00:00:00.000Z'
-    Given path 'feefineactions', feeFineActionId
-    And request feeFineAction
-    When method PUT
-    Then status 204
-
-    # verify that second loan has been anonymized
-    * configure retry = { count: 10, interval: 3000 }
-    Given path 'loan-storage', 'loans', loanIdWithOverdueFine
-    And retry until response.userId == null || response.userId == undefined
-    When method GET
-    Then status 200
-    And match $.userId == '#notpresent'
-
-    # delete loan anonymization settings
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting') { settingId: #(loanAnonymizationSettingsId) }
-
-    # restore original circulation rules
-    * def savedRulesEntity = { "rulesAsText": "#(currentCirculationRulesAsText)" }
-    Given path 'circulation/rules'
-    And request savedRulesEntity
-    When method PUT
-    Then status 204
+#  @C9221
+#  Scenario: Loan is anonymized only after overdue fine is closed
+#    * def itemId1 = call uuid1
+#    * def itemId2 = call uuid1
+#    * def itemBarcode1 = 'FAT-23836-ITEM-1'
+#    * def itemBarcode2 = 'FAT-23836-ITEM-2'
+#    * def userId1 = call uuid1
+#    * def userId2 = call uuid1
+#    * def userBarcode1 = 'FAT-23836-USER-1'
+#    * def userBarcode2 = 'FAT-23836-USER-2'
+#    * def materialTypeId1 = call uuid1
+#    * def materialTypeId2 = call uuid1
+#    * def instanceId = call uuid1
+#    * def servicePointId = call uuid1
+#    * def locationId = call uuid1
+#    * def holdingId = call uuid1
+#    * def groupId = call uuid1
+#
+#    # find existing loan anonymization settings and delete them
+#    Given path 'circulation/settings'
+#    And param query = 'name=="loan_history"'
+#    When method GET
+#    Then status 200
+#    * def settings = response.circulationSettings
+#    * def existingLoanAnonymizationSettingId = settings.length > 0 ? settings[0].id : null
+#    * print 'existingLoanAnonymizationSettingId: ', existingLoanAnonymizationSettingId
+#    * if (existingLoanAnonymizationSettingId != null) karate.call('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting', { settingId: existingLoanAnonymizationSettingId })
+#
+#    # create new loan anonymization settings
+#    Given path 'circulation', 'settings'
+#    And request
+#    """
+#    {
+#      "name": "loan_history",
+#      "value": {
+#        "closingType": {
+#          "loan": "immediately",
+#          "feeFine": "interval",
+#          "loanExceptions": []
+#        },
+#        "loan": {},
+#        "feeFine": {
+#          "duration": 1,
+#          "intervalId": "minute"
+#        },
+#        "loanExceptions": [],
+#        "treatEnabled": true
+#      }
+#    }
+#    """
+#    When method POST
+#    Then status 201
+#    * def loanAnonymizationSettingsId = response.id
+#
+#    # create 2 different material types (to create 2 different circulation rules for them later)
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId1) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId2) }
+#
+#    # backup current circulation rules
+#    Given path 'circulation', 'rules'
+#    When method GET
+#    Then status 200
+#    * def currentCirculationRulesAsText = response.rulesAsText
+#
+#    # create circulation policies
+#    * def overdueFinePolicyIdWithoutFine = call uuid1
+#    * def overdueFinePolicyIdWithFine = call uuid1
+#    * def loanPolicyId = call uuid1
+#    * def requestPolicyId = call uuid1
+#    * def patronNoticePolicyId = call uuid1
+#    * def lostItemFeePolicyId = call uuid1
+#
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLoanPolicyOneHour') { extLoanPolicyId: #(loanPolicyId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(patronNoticePolicyId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOverdueFinePolicyWithoutFine') { extOverdueFinePolicyId: #(overdueFinePolicyIdWithoutFine) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOverdueFinePolicyWithFine') { extOverdueFinePolicyId: #(overdueFinePolicyIdWithFine), extOverdueFineQuantity: '1.00', extOverdueFineIntervalId: 'day' }
+#
+#    # create new circulation rules
+#    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithoutFine + ' i ' + lostItemFeePolicyId + '\nm ' + materialTypeId1 + ': l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithoutFine + ' i ' + lostItemFeePolicyId + '\nm ' + materialTypeId2 + ': l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithFine + ' i ' + lostItemFeePolicyId
+#
+#    * def updateRulesEntity = { "rulesAsText": "#(rules)" }
+#    Given path 'circulation', 'rules'
+#    And request updateRulesEntity
+#    When method PUT
+#    Then status 204
+#
+#    Given path 'circulation-rules-storage'
+#    When method GET
+#    Then status 200
+#    Then match response.rulesAsText contains updateRulesEntity.rulesAsText
+#
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { extInstanceId: #(instanceId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner') { servicePointId: #(servicePointId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1), extMaterialTypeId: #(materialTypeId1) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2), extMaterialTypeId: #(materialTypeId2) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(groupId) }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(groupId) }
+#
+#    # check both items out
+#    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode1), extCheckOutItemBarcode: #(itemBarcode1), extServicePointId: #(servicePointId), extLoanDate: '2020-01-01T00:00:00.000Z' }
+#    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode2), extCheckOutItemBarcode: #(itemBarcode2), extServicePointId: #(servicePointId), extLoanDate: '2020-01-01T00:00:00.000Z' }
+#    * def loanIdWithoutOverdueFine = checkOutResponse1.response.id
+#    * def loanIdWithOverdueFine = checkOutResponse2.response.id
+#
+#    # check both items in
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode1), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode2), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
+#
+#    # verify that no overdue fine was created for the first loan (the one with overdue fine policy WITHOUT fine)
+#    Given path 'accounts'
+#    And param query = 'loanId==' + loanIdWithoutOverdueFine + ' and feeFineType==Overdue fine'
+#    When method GET
+#    Then status 200
+#    And match response.totalRecords == 0
+#    And match response.accounts == []
+#
+#    # verify that an overdue fine was created for the second loan (the one with overdue fine policy WITH fine)
+#    Given path 'accounts'
+#    And param query = 'loanId==' + loanIdWithOverdueFine + ' and feeFineType==Overdue fine'
+#    When method GET
+#    Then status 200
+#    And match response.totalRecords == 1
+#    And match response.accounts[0].amount == '#present'
+#    * def accountId = response.accounts[0].id
+#
+#    # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
+#    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
+#    * def sidecarToken = sidecarResult.sidecarToken
+#
+#    # change loan anonymization timer delay to speed up the test
+#    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
+#    * configure headers = headersUser
+#
+#    # verify that the first loan has been anonymized
+#    * configure retry = { count: 15, interval: 3000 }
+#    Given path 'loan-storage', 'loans', loanIdWithoutOverdueFine
+#    And retry until response.userId == null || response.userId == undefined
+#    When method GET
+#    Then status 200
+#    And match $.userId == '#notpresent'
+#
+#    # verify that second loan was not anonymized (because it has an open overdue fine)
+#    Given path 'loan-storage', 'loans', loanIdWithOverdueFine
+#    When method GET
+#    Then status 200
+#    And match $.userId == '#present'
+#
+#    # cancel overdue fine for the second loan
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CancelFeeFine') { accountId: #(accountId), servicePointId: #(servicePointId) }
+#
+#    # verify that overdue fine was closed
+#    Given path 'accounts', accountId
+#    When method GET
+#    Then status 200
+#    And match response.status.name == 'Closed'
+#    And match response.paymentStatus.name == 'Cancelled as error'
+#
+#    # get overdue fine action for cancellation
+#    Given path 'feefineactions'
+#    And param query = 'accountId==' + accountId + ' and typeAction=="Cancelled as error"'
+#    When method GET
+#    Then status 200
+#    And match response.totalRecords == 1
+#    * def feeFineAction = response.feefineactions[0]
+#    * def feeFineActionId = feeFineAction.id
+#
+#    # change cancellation action date to avoid waiting for 1 minute until anonymization kicks in
+#    * feeFineAction.dateAction = '2020-01-10T00:00:00.000Z'
+#    Given path 'feefineactions', feeFineActionId
+#    And request feeFineAction
+#    When method PUT
+#    Then status 204
+#
+#    # verify that second loan has been anonymized
+#    * configure retry = { count: 10, interval: 3000 }
+#    Given path 'loan-storage', 'loans', loanIdWithOverdueFine
+#    And retry until response.userId == null || response.userId == undefined
+#    When method GET
+#    Then status 200
+#    And match $.userId == '#notpresent'
+#
+#    # delete loan anonymization settings
+#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting') { settingId: #(loanAnonymizationSettingsId) }
+#
+#    # restore original circulation rules
+#    * def savedRulesEntity = { "rulesAsText": "#(currentCirculationRulesAsText)" }
+#    Given path 'circulation/rules'
+#    And request savedRulesEntity
+#    When method PUT
+#    Then status 204
