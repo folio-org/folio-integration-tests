@@ -5,32 +5,62 @@ Feature: scheduler system timers
     * callonce login testUser
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
 
-  @Negative
-  Scenario: reject system timer creation through scheduler APIs
+  @Positive
+  Scenario: allow system timer mutation through scheduler APIs when SCHEDULER_API_ALLOW_SYSTEM_TIMER_MUTATION is enabled
+    # SCHEDULER_API_ALLOW_SYSTEM_TIMER_MUTATION is enabled in karate environment, so system timers can be mutated via scheduler APIs.
     * def futureSchedule = { cron: '0 0 0 1 1 ? 2099', zone: 'UTC' }
     * def timerId = uuid()
     * def suffix = nowMillis()
+    * def moduleName = 'mod-scheduler-karate-system-' + suffix
+    * def moduleId = moduleName + '-1.0.0'
+    * def timerPath = '/mod-scheduler-karate/' + suffix + '/system-api-timer'
     * def systemTimerRequest =
       """
       {
         "id": "#(timerId)",
         "type": "system",
         "enabled": false,
-        "moduleId": "#('mod-scheduler-karate-system-' + suffix + '-1.0.0')",
+        "moduleId": "#(moduleId)",
         "routingEntry": {
           "methods": [ "POST" ],
-          "pathPattern": "#('/mod-scheduler-karate/' + suffix + '/system-api-timer')",
+          "pathPattern": "#(timerPath)",
           "schedule": "#(futureSchedule)"
         }
       }
       """
 
+    # Create the SYSTEM timer and verify persisted descriptor fields.
     Given path 'scheduler/timers'
     And request systemTimerRequest
     When method POST
-    Then status 400
-    And match response.errors[0].code == 'validation_error'
-    And match response.errors[0].parameters contains { key: 'type', value: 'SYSTEM' }
+    Then status 201
+    And match response.id == timerId
+    And match response.type == 'system'
+    And match response.enabled == false
+    And match response.moduleId == moduleId
+    And match response.moduleName == moduleName
+    And match response.routingEntry.pathPattern == timerPath
+    And match response.routingEntry.schedule == futureSchedule
+
+    # Update the SYSTEM timer.
+    * set systemTimerRequest.enabled = true
+    Given path 'scheduler/timers', timerId
+    And request systemTimerRequest
+    When method PUT
+    Then status 200
+    And match response.id == timerId
+    And match response.enabled == true
+    And match response.modified == true
+
+    # Delete the SYSTEM timer.
+    Given path 'scheduler/timers', timerId
+    When method DELETE
+    Then status 204
+
+    # Verify the deleted timer is no longer available.
+    Given path 'scheduler/timers', timerId
+    When method GET
+    Then status 404
 
   @Positive
   Scenario: verify scheduler timers collection is reachable
@@ -65,10 +95,3 @@ Feature: scheduler system timers
     And match profilePictureCleanupTimers == '#[1]'
     And match profilePictureCleanupTimers[0] contains { enabled: true, moduleId: '#regex ^mod-users-.*' }
     And match profilePictureCleanupTimers[0].routingEntry contains { methods: [ 'POST' ], unit: 'hour', delay: '24' }
-
-    # Verify public API protects SYSTEM timers from deletion.
-    Given path 'scheduler/timers', expireUserTimers[0].id
-    When method DELETE
-    Then status 400
-    And match response.errors[0].code == 'validation_error'
-    And match response.errors[0].parameters contains { key: 'type', value: 'SYSTEM' }
