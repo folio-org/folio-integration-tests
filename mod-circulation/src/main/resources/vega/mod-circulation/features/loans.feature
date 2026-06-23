@@ -2519,6 +2519,7 @@ Feature: Loans tests
     * def userId2 = call uuid1
     * def userBarcode1 = 'FAT-23836-USER-1'
     * def userBarcode2 = 'FAT-23836-USER-2'
+    * def patronGroupId = call uuid1
     * def materialTypeId1 = call uuid1
     * def materialTypeId2 = call uuid1
 
@@ -2602,11 +2603,11 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(patronGroupId) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1), extMaterialTypeId: #(materialTypeId1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2), extMaterialTypeId: #(materialTypeId2) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(patronGroupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(patronGroupId) }
 
     # check both items out
     * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode1), extCheckOutItemBarcode: #(itemBarcode1), extLoanDate: '2020-01-01T00:00:00.000Z' }
