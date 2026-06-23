@@ -16,7 +16,7 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
       | 'mod-permissions'           |
       | 'okapi'                     |
       | 'mod-users'                 |
-      | 'mod-login'                 |
+      | 'mod-login-keycloak'        |
       | 'mod-inventory-storage'     |
       | 'mod-pubsub'                |
       | 'mod-circulation-storage'   |

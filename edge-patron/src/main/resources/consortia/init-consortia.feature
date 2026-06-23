@@ -13,7 +13,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-permissions'           |
       | 'okapi'                     |
       | 'mod-users'                 |
-      | 'mod-login'                 |
+      | 'mod-login-keycloak'        |
       | 'mod-inventory-storage'     |
       | 'mod-pubsub'                |
       | 'mod-circulation-storage'   |
@@ -160,7 +160,7 @@ Feature: Initialize mod-consortia integration tests
       | name                        |
       | 'mod-permissions'           |
       | 'okapi'                     |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-login-keycloak'        |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
