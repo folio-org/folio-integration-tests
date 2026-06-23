@@ -68,19 +68,22 @@ Feature: Helper for "close-order-when-fully-paid-and-received"
     # 4. Receive the piece if initialReceiptStatus is Fully Received
     * if (initialReceiptStatus == 'Fully Received' && !checkinItems) karate.call('classpath:thunderjet/mod-orders/reusable/receive-piece-with-holding.feature', { pieceId: pieceId, poLineId: poLineId })
 
-    # 5. Set po line initial statuses
+    # 5. Wait for a potential order status update
+    * if (initialReceiptStatus == 'Fully Received' && !checkinItems) java.lang.Thread.sleep(1000)
+
+    # 6. Set po line initial statuses
     * def v = call updateOrderLine { id: '#(poLineId)', paymentStatus: '#(initialPaymentStatus)', receiptStatus: '#(initialReceiptStatus)' }
 
-    # 6. Close order if initialWorkflowStatus is Closed
+    # 7. Close order if initialWorkflowStatus is Closed
     * if (initialWorkflowStatus == 'Closed') karate.call('classpath:thunderjet/mod-orders/reusable/close-order.feature', { orderId: orderId })
 
-    # 7. Wait for order's initial workflow status
+    # 8. Wait for order's initial workflow status
     Given path 'orders/composite-orders', orderId
     And retry until response.workflowStatus == initialWorkflowStatus
     When method GET
     Then status 200
 
-    # 8. Check po line initial statuses have not changed
+    # 9. Check po line initial statuses have not changed
     Given path '/orders/order-lines', poLineId
     When method GET
     Then status 200
