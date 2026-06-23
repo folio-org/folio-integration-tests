@@ -2521,11 +2521,6 @@ Feature: Loans tests
     * def userBarcode2 = 'FAT-23836-USER-2'
     * def materialTypeId1 = call uuid1
     * def materialTypeId2 = call uuid1
-    * def instanceId1 = call uuid1
-    * def servicePointId = call uuid1
-    * def locationId = call uuid1
-    * def holdingId = call uuid1
-    * def groupId = call uuid1
 
     # find existing loan anonymization settings and delete them
     Given path 'circulation/settings'
@@ -2602,26 +2597,26 @@ Feature: Loans tests
     Then status 200
     Then match response.rulesAsText contains updateRulesEntity.rulesAsText
 
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance') { instanceId: #(instanceId1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation') { extLocationId: #(locationId), extServicePointId: #(servicePointId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings') { extHoldingsRecordId: #(holdingId), extInstanceId: #(instanceId1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner') { servicePointId: #(servicePointId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup')
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1), extMaterialTypeId: #(materialTypeId1) }
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2), extMaterialTypeId: #(materialTypeId2) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(groupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2) }
 
     # check both items out
-    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode1), extCheckOutItemBarcode: #(itemBarcode1), extServicePointId: #(servicePointId), extLoanDate: '2020-01-01T00:00:00.000Z' }
-    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode2), extCheckOutItemBarcode: #(itemBarcode2), extServicePointId: #(servicePointId), extLoanDate: '2020-01-01T00:00:00.000Z' }
+    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode1), extCheckOutItemBarcode: #(itemBarcode1), extLoanDate: '2020-01-01T00:00:00.000Z' }
+    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode2), extCheckOutItemBarcode: #(itemBarcode2), extLoanDate: '2020-01-01T00:00:00.000Z' }
     * def loanIdWithoutOverdueFine = checkOutResponse1.response.id
     * def loanIdWithOverdueFine = checkOutResponse2.response.id
 
     # check both items in
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode1), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode2), extServicePointId: #(servicePointId), extCheckInDate: '2020-01-10T00:00:00.000Z' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode1), extCheckInDate: '2020-01-10T00:00:00.000Z' }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode2), extCheckInDate: '2020-01-10T00:00:00.000Z' }
 
     # verify that no overdue fine was created for the first loan (the one with overdue fine policy WITHOUT fine)
     Given path 'accounts'
