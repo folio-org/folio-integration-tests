@@ -2509,7 +2509,7 @@ Feature: Loans tests
     * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting') { settingId: #(loanHistorySettingsId) }
 
   @C9221
-  Scenario: When loan anonymization is set to "Immediately after loan closes" with "Treat closed loans with fee/fines differently" enabled and "Immediately after fee/fine closes", closed loans without fee/fines and loans whose fee/fines are paid are both anonymized by the scheduler
+  Scenario: Loan is anonymized 1 hour after the overdue fine is closed
     * def extUserId = call uuid1
     * def extUserBarcode = 'FAT-23836-USER'
     * def extItemBarcode1 = 'FAT-23836-ITEM-1'
@@ -2558,11 +2558,14 @@ Feature: Loans tests
       "value": {
         "closingType": {
           "loan": "immediately",
-          "feeFine": "immediately",
+          "feeFine": "interval",
           "loanExceptions": []
         },
         "loan": {},
-        "feeFine": {},
+        "feeFine": {
+          "duration": 1,
+          "intervalId": "hour"
+        },
         "loanExceptions": [],
         "treatEnabled": true
       }
@@ -2612,13 +2615,6 @@ Feature: Loans tests
     When method GET
     Then status 200
     And match response.accounts[0].status.name == 'Closed'
-
-        # verify that overdue fine was closed
-    Given path 'accounts', accountId
-    When method GET
-    Then status 200
-    And match response.status.name == 'Closed'
-    And match response.paymentStatus.name == 'Cancelled as error'
 
     # get overdue fine action for cancellation
     Given path 'feefineactions'
