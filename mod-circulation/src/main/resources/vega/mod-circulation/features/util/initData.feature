@@ -106,15 +106,6 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
-  @CancelFeeFine
-  Scenario: cancel fee/fine
-    * def cancellationRequest = read('samples/feefine/cancel-fee-fine-request.json')
-    * cancellationRequest.servicePointId = servicePointId
-    Given path 'accounts/' + accountId + '/cancel'
-    And request cancellationRequest
-    When method POST
-    Then status 201
-
   @PostLocation
   Scenario: create location
     * def intInstitutionId = call uuid1
@@ -310,17 +301,6 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
-  @PostLoanPolicyOneHour
-  Scenario: create 1-hour loan policy
-    * def intLoanPolicyId = call uuid1
-    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-1-hour.json')
-    * loanPolicyEntityRequest.id = karate.get('extLoanPolicyId', intLoanPolicyId)
-    * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
-    Given path 'loan-policy-storage/loan-policies'
-    And request loanPolicyEntityRequest
-    When method POST
-    Then status 201
-
   @PostLoanPolicyWithLimit
   Scenario: create loan policy with limit
     * def intLoanPolicyId = call uuid1
@@ -352,32 +332,6 @@ Feature: init data for mod-circulation
     * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-entity-request.json')
     * overdueFinePolicyEntityRequest.id = karate.get('extOverdueFinePoliciesId', intOverduePolicyId)
     * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
-    Given path 'overdue-fines-policies'
-    And request overdueFinePolicyEntityRequest
-    When method POST
-    Then status 201
-
-  @PostOverdueFinePolicyWithoutFine
-  Scenario: create overdue fine policy without fine
-    * def intOverdueFinePolicyId = call uuid1
-    * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-without-fine.json')
-    * overdueFinePolicyEntityRequest.id = karate.get('extOverdueFinePolicyId', intOverdueFinePolicyId)
-    * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
-    Given path 'overdue-fines-policies'
-    And request overdueFinePolicyEntityRequest
-    When method POST
-    Then status 201
-
-  @PostOverdueFinePolicyWithFine
-  Scenario: create overdue fine policy with fine
-    * def intOverdueFinePolicyId = call uuid1
-    * def intOverdueFineQuantity = '1.00'
-    * def intOverdueFineIntervalId = 'day'
-    * def overdueFinePolicyEntityRequest = read('samples/policies/overdue-fine-policy-with-fine.json')
-    * overdueFinePolicyEntityRequest.id = karate.get('extOverdueFinePolicyId', intOverdueFinePolicyId)
-    * overdueFinePolicyEntityRequest.name = overdueFinePolicyEntityRequest.name + ' ' + random_string()
-    * overdueFinePolicyEntityRequest.overdueFine.quantity = karate.get('extOverdueFineQuantity', intOverdueFineQuantity)
-    * overdueFinePolicyEntityRequest.overdueFine.intervalId = karate.get('extOverdueFineIntervalId', intOverdueFineIntervalId)
     Given path 'overdue-fines-policies'
     And request overdueFinePolicyEntityRequest
     When method POST
