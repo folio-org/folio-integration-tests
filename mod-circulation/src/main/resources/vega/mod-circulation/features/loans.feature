@@ -2374,166 +2374,48 @@ Feature: Loans tests
     When method PUT
     Then status 204
 
-#  @C9218
-#  Scenario: When loan anonymization is set to "Immediately after loan closes" with "Treat closed loans with fee/fines differently" enabled and "Immediately after fee/fine closes", closed loans without fee/fines and loans whose fee/fines are paid are both anonymized by the scheduler
-#    * def extUserId = call uuid1
-#    * def extUserBarcode = 'FAT-1054UBC'
-#    * def extItemBarcode1 = 'FAT-1054IBC-1'
-#    * def extItemBarcode2 = 'FAT-1054IBC-2'
-#    # item 1 check-in is before the due date -> no overdue fine
-#    * def extCheckInDate1 = '2021-11-10T13:25:46.000Z'
-#    # item 2 check-in is 5 minutes after the due date -> generates overdue fine
-#    * def extCheckInDate2 = '2021-11-17T13:30:46.000Z'
-#
-#    # location and service point setup
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-#
-#    # post an owner, manual charge and payment method (required for overdue fine generation)
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge')
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
-#
-#    # post 2 items under the same instance and holdings
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
-#
-#    # post a group and a user
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
-#
-#    # step 2: configure loan history settings
-#    # delete existing loan_history settings if present, then create fresh ones
-#    Given path 'circulation/settings'
-#    And param query = 'name=="loan_history"'
-#    When method GET
-#    Then status 200
-#    * def existingSettings = response.circulationSettings
-#    * def existingSettingId = existingSettings.length > 0 ? existingSettings[0].id : null
-#    * if (existingSettingId != null) karate.call('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting', { settingId: existingSettingId })
-#
-#    # create new settings: anonymize immediately after loan closes, treat fee/fines differently,
-#    # anonymize fee/fines immediately after close
-#    Given path 'circulation', 'settings'
-#    And request
-#    """
-#    {
-#      "name": "loan_history",
-#      "value": {
-#        "closingType": {
-#          "loan": "immediately",
-#          "feeFine": "immediately",
-#          "loanExceptions": []
-#        },
-#        "loan": {},
-#        "feeFine": {},
-#        "loanExceptions": [],
-#        "treatEnabled": true
-#      }
-#    }
-#    """
-#    When method POST
-#    Then status 201
-#    * def loanHistorySettingsId = response.id
-#
-#    # check out both items (both use the default loan date '2021-10-27T13:25:46.000Z')
-#    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
-#    * def loanId1 = checkOutResponse1.response.id
-#    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2) }
-#    * def loanId2 = checkOutResponse2.response.id
-#
-#    # check in item 1 before due date (no overdue fine generated)
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode1), extCheckInDate: #(extCheckInDate1) }
-#
-#    # check in item 2 after due date (overdue fine generated)
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode2), extCheckInDate: #(extCheckInDate2) }
-#
-#    # verification: both loans appear in patron's closed loans
-#    Given path 'circulation', 'loans'
-#    And param query = 'userId==' + extUserId + ' and status.name=="Closed"'
-#    When method GET
-#    Then status 200
-#    And match response.totalRecords == 2
-#
-#    # get the overdue fine associated with the 2nd loan and close it by paying
-#    Given path 'accounts'
-#    And param query = 'loanId==' + loanId2
-#    When method GET
-#    Then status 200
-#    And assert response.totalRecords >= 1
-#    And match response.accounts[0].status.name == 'Open'
-#    And match response.accounts[0].feeFineType == 'Overdue fine'
-#    * def overdueFineAccountId = response.accounts[0].id
-#    * def overdueFineAmount = response.accounts[0].amount
-#
-#    # pay the fee/fine in full to close it
-#    * def payResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPay') { accountId: #(overdueFineAccountId), amount: #(overdueFineAmount) }
-#    And match payResult.response.feefineactions[0].typeAction == 'Paid fully'
-#
-#    # verify the fee/fine account is now closed
-#    Given path 'accounts'
-#    And param query = 'id==' + overdueFineAccountId
-#    When method GET
-#    Then status 200
-#    And match response.accounts[0].status.name == 'Closed'
-#
-#    # step 5: trigger loan anonymization by updating the scheduler timer to 1 second delay
-#    # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
-#    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
-#    * def sidecarToken = sidecarResult.sidecarToken
-#
-#    # find or create loan anonymization timer with 1 second delay
-#    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
-#    * def currentTimerId = updateResult.currentTimerId
-#
-#    # verification: both closed loans are anonymized (userId field should be removed)
-#    * configure retry = { count: 15, interval: 3000 }
-#    Given path 'loan-storage', 'loans', loanId1
-#    And retry until response.userId == null || response.userId == undefined
-#    When method GET
-#    Then status 200
-#    And match $.userId == '#notpresent'
-#
-#    Given path 'loan-storage', 'loans', loanId2
-#    And retry until response.userId == null || response.userId == undefined
-#    When method GET
-#    Then status 200
-#    And match $.userId == '#notpresent'
-#
-#    # cleanup: revert timer and delete loan history settings
-#    * if (updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteLoanAnonymizationTimer', { extToken: sidecarToken, extTimerId: currentTimerId })
-#    * if (!updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer', { extToken: sidecarToken, extTimerId: currentTimerId, extModuleId: updateResult.currentModuleId, extModuleName: updateResult.currentModuleName, extUnit: 'minute', extDelay: '60' })
-#    * configure headers = headersUser
-#    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting') { settingId: #(loanHistorySettingsId) }
+  @C9218
+  Scenario: When loan anonymization is set to "Immediately after loan closes" with "Treat closed loans with fee/fines differently" enabled and "Immediately after fee/fine closes", closed loans without fee/fines and loans whose fee/fines are paid are both anonymized by the scheduler
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-1054UBC'
+    * def extItemBarcode1 = 'FAT-1054IBC-1'
+    * def extItemBarcode2 = 'FAT-1054IBC-2'
+    # item 1 check-in is before the due date -> no overdue fine
+    * def extCheckInDate1 = '2021-11-10T13:25:46.000Z'
+    # item 2 check-in is 5 minutes after the due date -> generates overdue fine
+    * def extCheckInDate2 = '2021-11-17T13:30:46.000Z'
 
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
 
-  @C9221
-  Scenario: Loan is anonymized only after overdue fine is closed
-    * def itemId1 = call uuid1
-    * def itemId2 = call uuid1
-    * def itemBarcode1 = 'FAT-23836-ITEM-1'
-    * def itemBarcode2 = 'FAT-23836-ITEM-2'
-    * def userId1 = call uuid1
-    * def userId2 = call uuid1
-    * def userBarcode1 = 'FAT-23836-USER-1'
-    * def userBarcode2 = 'FAT-23836-USER-2'
-    * def patronGroupId = call uuid1
-    * def materialTypeId1 = call uuid1
-    * def materialTypeId2 = call uuid1
+    # post an owner, manual charge and payment method (required for overdue fine generation)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
 
-    # find existing loan anonymization settings and delete them
+    # post 2 items under the same instance and holdings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
+
+    # step 2: configure loan history settings
+    # delete existing loan_history settings if present, then create fresh ones
     Given path 'circulation/settings'
     And param query = 'name=="loan_history"'
     When method GET
     Then status 200
-    * def settings = response.circulationSettings
-    * def existingLoanAnonymizationSettingId = settings.length > 0 ? settings[0].id : null
-    * print 'existingLoanAnonymizationSettingId: ', existingLoanAnonymizationSettingId
-    * if (existingLoanAnonymizationSettingId != null) karate.call('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting', { settingId: existingLoanAnonymizationSettingId })
+    * def existingSettings = response.circulationSettings
+    * def existingSettingId = existingSettings.length > 0 ? existingSettings[0].id : null
+    * if (existingSettingId != null) karate.call('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting', { settingId: existingSettingId })
 
-    # create new loan anonymization settings
+    # create new settings: anonymize immediately after loan closes, treat fee/fines differently,
+    # anonymize fee/fines immediately after close
     Given path 'circulation', 'settings'
     And request
     """
@@ -2542,14 +2424,11 @@ Feature: Loans tests
       "value": {
         "closingType": {
           "loan": "immediately",
-          "feeFine": "interval",
+          "feeFine": "immediately",
           "loanExceptions": []
         },
         "loan": {},
-        "feeFine": {
-          "duration": 1,
-          "intervalId": "minute"
-        },
+        "feeFine": {},
         "loanExceptions": [],
         "treatEnabled": true
       }
@@ -2557,111 +2436,184 @@ Feature: Loans tests
     """
     When method POST
     Then status 201
-    * def loanAnonymizationSettingsId = response.id
+    * def loanHistorySettingsId = response.id
 
-    # create 2 different material types (to create 2 different circulation rules for them later)
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostMaterialType') { extMaterialTypeId: #(materialTypeId2) }
+    # check out both items (both use the default loan date '2021-10-27T13:25:46.000Z')
+    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
+    * def loanId1 = checkOutResponse1.response.id
+    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2) }
+    * def loanId2 = checkOutResponse2.response.id
 
-    # backup current circulation rules
-    Given path 'circulation', 'rules'
+    # check in item 1 before due date (no overdue fine generated)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode1), extCheckInDate: #(extCheckInDate1) }
+
+    # check in item 2 after due date (overdue fine generated)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode2), extCheckInDate: #(extCheckInDate2) }
+
+    # verification: both loans appear in patron's closed loans
+    Given path 'circulation', 'loans'
+    And param query = 'userId==' + extUserId + ' and status.name=="Closed"'
     When method GET
     Then status 200
-    * def currentCirculationRulesAsText = response.rulesAsText
+    And match response.totalRecords == 2
 
-    # create circulation policies
-    * def overdueFinePolicyIdWithoutFine = call uuid1
-    * def overdueFinePolicyIdWithFine = call uuid1
-    * def loanPolicyId = call uuid1
-    * def requestPolicyId = call uuid1
-    * def patronNoticePolicyId = call uuid1
-    * def lostItemFeePolicyId = call uuid1
-
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLoanPolicyOneHour') { extLoanPolicyId: #(loanPolicyId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostRequestPolicy') { extRequestPolicyId: #(requestPolicyId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPatronPolicy') { extPatronPolicyId: #(patronNoticePolicyId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLostPolicy') { extLostItemFeePolicyId: #(lostItemFeePolicyId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOverdueFinePolicyWithoutFine') { extOverdueFinePolicyId: #(overdueFinePolicyIdWithoutFine) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOverdueFinePolicyWithFine') { extOverdueFinePolicyId: #(overdueFinePolicyIdWithFine), extOverdueFineQuantity: '1.00', extOverdueFineIntervalId: 'day' }
-
-    # create new circulation rules
-    * def rules = 'priority: number-of-criteria, criterium (t, s, c, b, a, m, g), last-line\nfallback-policy: l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithoutFine + ' i ' + lostItemFeePolicyId + '\nm ' + materialTypeId1 + ': l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithoutFine + ' i ' + lostItemFeePolicyId + '\nm ' + materialTypeId2 + ': l ' + loanPolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId + ' o ' + overdueFinePolicyIdWithFine + ' i ' + lostItemFeePolicyId
-
-    * def updateRulesEntity = { "rulesAsText": "#(rules)" }
-    Given path 'circulation', 'rules'
-    And request updateRulesEntity
-    When method PUT
-    Then status 204
-
-    Given path 'circulation-rules-storage'
-    When method GET
-    Then status 200
-    Then match response.rulesAsText contains updateRulesEntity.rulesAsText
-
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(patronGroupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId1), extItemBarcode: #(itemBarcode1), extMaterialTypeId: #(materialTypeId1) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemId: #(itemId2), extItemBarcode: #(itemBarcode2), extMaterialTypeId: #(materialTypeId2) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId1), extUserBarcode: #(userBarcode1), extGroupId: #(patronGroupId) }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(userId2), extUserBarcode: #(userBarcode2), extGroupId: #(patronGroupId) }
-
-    # check both items out
-    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode1), extCheckOutItemBarcode: #(itemBarcode1), extLoanDate: '2020-01-01T00:00:00.000Z' }
-    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(userBarcode2), extCheckOutItemBarcode: #(itemBarcode2), extLoanDate: '2020-01-01T00:00:00.000Z' }
-    * def loanIdWithoutOverdueFine = checkOutResponse1.response.id
-    * def loanIdWithOverdueFine = checkOutResponse2.response.id
-
-    # check both items in
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode1), extCheckInDate: '2020-01-10T00:00:00.000Z' }
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(itemBarcode2), extCheckInDate: '2020-01-10T00:00:00.000Z' }
-
-    # verify that no overdue fine was created for the first loan (the one with overdue fine policy WITHOUT fine)
+    # get the overdue fine associated with the 2nd loan and close it by paying
     Given path 'accounts'
-    And param query = 'loanId==' + loanIdWithoutOverdueFine + ' and feeFineType==Overdue fine'
+    And param query = 'loanId==' + loanId2
     When method GET
     Then status 200
-    And match response.totalRecords == 0
-    And match response.accounts == []
+    And assert response.totalRecords >= 1
+    And match response.accounts[0].status.name == 'Open'
+    And match response.accounts[0].feeFineType == 'Overdue fine'
+    * def overdueFineAccountId = response.accounts[0].id
+    * def overdueFineAmount = response.accounts[0].amount
 
-    # verify that an overdue fine was created for the second loan (the one with overdue fine policy WITH fine)
+    # pay the fee/fine in full to close it
+    * def payResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPay') { accountId: #(overdueFineAccountId), amount: #(overdueFineAmount) }
+    And match payResult.response.feefineactions[0].typeAction == 'Paid fully'
+
+    # verify the fee/fine account is now closed
     Given path 'accounts'
-    And param query = 'loanId==' + loanIdWithOverdueFine + ' and feeFineType==Overdue fine'
+    And param query = 'id==' + overdueFineAccountId
     When method GET
     Then status 200
-    And match response.totalRecords == 1
-    And match response.accounts[0].amount == '#present'
-    * def accountId = response.accounts[0].id
+    And match response.accounts[0].status.name == 'Closed'
 
+    # step 5: trigger loan anonymization by updating the scheduler timer to 1 second delay
     # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
     * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
     * def sidecarToken = sidecarResult.sidecarToken
 
-    # change loan anonymization timer delay to speed up the test
+    # find or create loan anonymization timer with 1 second delay
     * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
-    * configure headers = headersUser
+    * def currentTimerId = updateResult.currentTimerId
 
-    # verify that the first loan has been anonymized
+    # verification: both closed loans are anonymized (userId field should be removed)
     * configure retry = { count: 15, interval: 3000 }
-    Given path 'loan-storage', 'loans', loanIdWithoutOverdueFine
+    Given path 'loan-storage', 'loans', loanId1
     And retry until response.userId == null || response.userId == undefined
     When method GET
     Then status 200
     And match $.userId == '#notpresent'
 
-    # verify that second loan was not anonymized (because it has an open overdue fine)
-    Given path 'loan-storage', 'loans', loanIdWithOverdueFine
+    Given path 'loan-storage', 'loans', loanId2
+    And retry until response.userId == null || response.userId == undefined
     When method GET
     Then status 200
-    And match $.userId == '#present'
+    And match $.userId == '#notpresent'
 
-    # cancel overdue fine for the second loan
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CancelFeeFine') { accountId: #(accountId), servicePointId: #(servicePointId) }
+    # cleanup: revert timer and delete loan history settings
+    * if (updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteLoanAnonymizationTimer', { extToken: sidecarToken, extTimerId: currentTimerId })
+    * if (!updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer', { extToken: sidecarToken, extTimerId: currentTimerId, extModuleId: updateResult.currentModuleId, extModuleName: updateResult.currentModuleName, extUnit: 'minute', extDelay: '60' })
+    * configure headers = headersUser
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting') { settingId: #(loanHistorySettingsId) }
 
-    # verify that overdue fine was closed
+  @C9221
+  Scenario: When loan anonymization is set to "Immediately after loan closes" with "Treat closed loans with fee/fines differently" enabled and "Immediately after fee/fine closes", closed loans without fee/fines and loans whose fee/fines are paid are both anonymized by the scheduler
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-23836-USER'
+    * def extItemBarcode1 = 'FAT-23836-ITEM-1'
+    * def extItemBarcode2 = 'FAT-23836-ITEM-2'
+    # item 1 check-in is before the due date -> no overdue fine
+    * def extCheckInDate1 = '2021-11-10T13:25:46.000Z'
+    # item 2 check-in is 5 minutes after the due date -> generates overdue fine
+    * def extCheckInDate2 = '2021-11-17T13:30:46.000Z'
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an owner, manual charge and payment method (required for overdue fine generation)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostOwner')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostManualCharge')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPaymentMethod')
+
+    # post 2 items under the same instance and holdings
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode1) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode2) }
+
+    # post a group and a user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
+
+    # step 2: configure loan history settings
+    # delete existing loan_history settings if present, then create fresh ones
+    Given path 'circulation/settings'
+    And param query = 'name=="loan_history"'
+    When method GET
+    Then status 200
+    * def existingSettings = response.circulationSettings
+    * def existingSettingId = existingSettings.length > 0 ? existingSettings[0].id : null
+    * if (existingSettingId != null) karate.call('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting', { settingId: existingSettingId })
+
+    # create new settings: anonymize immediately after loan closes, treat fee/fines differently,
+    # anonymize fee/fines immediately after close
+    Given path 'circulation', 'settings'
+    And request
+    """
+    {
+      "name": "loan_history",
+      "value": {
+        "closingType": {
+          "loan": "immediately",
+          "feeFine": "immediately",
+          "loanExceptions": []
+        },
+        "loan": {},
+        "feeFine": {},
+        "loanExceptions": [],
+        "treatEnabled": true
+      }
+    }
+    """
+    When method POST
+    Then status 201
+    * def loanHistorySettingsId = response.id
+
+    # check out both items (both use the default loan date '2021-10-27T13:25:46.000Z')
+    * def checkOutResponse1 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode1) }
+    * def loanId1 = checkOutResponse1.response.id
+    * def checkOutResponse2 = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode2) }
+    * def loanId2 = checkOutResponse2.response.id
+
+    # check in item 1 before due date (no overdue fine generated)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode1), extCheckInDate: #(extCheckInDate1) }
+
+    # check in item 2 after due date (overdue fine generated)
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@CheckInItem') { itemBarcode: #(extItemBarcode2), extCheckInDate: #(extCheckInDate2) }
+
+    # verification: both loans appear in patron's closed loans
+    Given path 'circulation', 'loans'
+    And param query = 'userId==' + extUserId + ' and status.name=="Closed"'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 2
+
+    # get the overdue fine associated with the 2nd loan and close it by paying
+    Given path 'accounts'
+    And param query = 'loanId==' + loanId2
+    When method GET
+    Then status 200
+    And assert response.totalRecords >= 1
+    And match response.accounts[0].status.name == 'Open'
+    And match response.accounts[0].feeFineType == 'Overdue fine'
+    * def overdueFineAccountId = response.accounts[0].id
+    * def overdueFineAmount = response.accounts[0].amount
+
+    # pay the fee/fine in full to close it
+    * def payResult = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostPay') { accountId: #(overdueFineAccountId), amount: #(overdueFineAmount) }
+    And match payResult.response.feefineactions[0].typeAction == 'Paid fully'
+
+    # verify the fee/fine account is now closed
+    Given path 'accounts'
+    And param query = 'id==' + overdueFineAccountId
+    When method GET
+    Then status 200
+    And match response.accounts[0].status.name == 'Closed'
+
+        # verify that overdue fine was closed
     Given path 'accounts', accountId
     When method GET
     Then status 200
@@ -2670,7 +2622,7 @@ Feature: Loans tests
 
     # get overdue fine action for cancellation
     Given path 'feefineactions'
-    And param query = 'accountId==' + accountId + ' and typeAction=="Cancelled as error"'
+    And param query = 'accountId==' + overdueFineAccountId + ' and typeAction=="Paid fully"'
     When method GET
     Then status 200
     And match response.totalRecords == 1
@@ -2684,20 +2636,31 @@ Feature: Loans tests
     When method PUT
     Then status 204
 
-    # verify that second loan has been anonymized
-    * configure retry = { count: 10, interval: 3000 }
-    Given path 'loan-storage', 'loans', loanIdWithOverdueFine
+    # step 5: trigger loan anonymization by updating the scheduler timer to 1 second delay
+    # get sidecar-module-access-client token (has elevated system permissions to see/modify scheduler timers)
+    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
+    * def sidecarToken = sidecarResult.sidecarToken
+
+    # find or create loan anonymization timer with 1 second delay
+    * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
+    * def currentTimerId = updateResult.currentTimerId
+
+    # verification: both closed loans are anonymized (userId field should be removed)
+    * configure retry = { count: 15, interval: 3000 }
+    Given path 'loan-storage', 'loans', loanId1
     And retry until response.userId == null || response.userId == undefined
     When method GET
     Then status 200
     And match $.userId == '#notpresent'
 
-    # delete loan anonymization settings
-    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting') { settingId: #(loanAnonymizationSettingsId) }
+    Given path 'loan-storage', 'loans', loanId2
+    And retry until response.userId == null || response.userId == undefined
+    When method GET
+    Then status 200
+    And match $.userId == '#notpresent'
 
-    # restore original circulation rules
-    * def savedRulesEntity = { "rulesAsText": "#(currentCirculationRulesAsText)" }
-    Given path 'circulation/rules'
-    And request savedRulesEntity
-    When method PUT
-    Then status 204
+    # cleanup: revert timer and delete loan history settings
+    * if (updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteLoanAnonymizationTimer', { extToken: sidecarToken, extTimerId: currentTimerId })
+    * if (!updateResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer', { extToken: sidecarToken, extTimerId: currentTimerId, extModuleId: updateResult.currentModuleId, extModuleName: updateResult.currentModuleName, extUnit: 'minute', extDelay: '60' })
+    * configure headers = headersUser
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting') { settingId: #(loanHistorySettingsId) }
