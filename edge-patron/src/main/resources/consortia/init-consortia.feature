@@ -260,6 +260,12 @@ Feature: Initialize mod-consortia integration tests
     * configure cookies = null
     * call putCaps { tenant: '#(universityTenantName)', user: '#(shadowConsortiaAdmin)' }
 
+    # Extend Keycloak access token lifespan to 1 hour for both tenants.
+    # The default 10-minute lifespan causes FolioContextExecutionException in mod-tlr when
+    # system user tokens expire during long retry windows (sharing poll + allowed-service-points).
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(centralTenantName)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(universityTenantName)' }
+
   Scenario: Prepare data
     * def result = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }
 
