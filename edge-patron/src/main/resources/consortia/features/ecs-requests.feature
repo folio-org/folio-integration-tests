@@ -87,6 +87,15 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     Then status 204
     * configure headers = headersCentral
 
+    # Evict mod-search stale USER_TENANTS_CACHE (populated during @InstallApplications before consortium setup).
+    # Without this, items created in the university tenant are indexed in the university local index
+    # instead of the central consortium index, so allowed-service-points returns empty indefinitely.
+    # Pattern from edge-patron/src/main/resources/consortia/init-batch-consortia.feature.
+    Given path 'search/index/instance-records/reindex/full'
+    And request {}
+    When method POST
+    Then status 200
+
     # Setup variables
     * callonce variables
     * callonce variablesCentral
@@ -215,12 +224,11 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
 
     # Retry until mod-search indexes the item (async Kafka indexing after item creation)
     * configure headers = headersCentralConsortium
-    * configure retry = { count: 20, interval: 15000 }
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'patron/account', ilrUserId, 'item', itemId, 'allowed-service-points'
     And retry until response.allowedServicePoints && response.allowedServicePoints.length > 0
     When method GET
-    * print 'DEBUG: allowed-service-points response status:', responseStatus
-    * print 'DEBUG: allowed-service-points response:', response
+    * print 'ILR allowed-service-points response:', response
     Then status 200
     * def allowedServicePoints = response.allowedServicePoints
 
@@ -342,18 +350,15 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     And match response.id == instanceId
     And match response.source == 'CONSORTIUM-FOLIO'
 
-    # Get allowed service points for TLR instance hold (kept for debug/visibility)
-    # Retry until mod-search indexes the item (async Kafka indexing after item creation)
+    # Retry until mod-search indexes the instance (async Kafka indexing after item creation)
     * configure headers = headersCentralConsortium
-    * configure retry = { count: 20, interval: 15000 }
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'patron/account', tlrUserId, 'instance', instanceId, 'allowed-service-points'
     And retry until response.allowedServicePoints && response.allowedServicePoints.length > 0
     When method GET
-    * print 'DEBUG: TLR allowed-service-points response status:', responseStatus
-    * print 'DEBUG: TLR allowed-service-points response:', response
+    * print 'TLR allowed-service-points response:', response
     Then status 200
     * def allowedServicePoints = response.allowedServicePoints
-    * print 'DEBUG: allowedServicePoints:', allowedServicePoints
 
     # Find Central Service point — central tenant patron picks up at Central Service point
     * def matched = karate.filter(allowedServicePoints, function(x){ return x.id == centralServicePointsId })
