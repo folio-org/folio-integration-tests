@@ -21,12 +21,10 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-entities-links'        |
       | 'mod-inventory'             |
       | 'folio-custom-fields'       |
-      | 'edge-patron'               |
       | 'mod-patron'                |
       | 'mod-tlr'                   |
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
-      | 'mod-dcb'                   |
 
     # Permissions for consortiaAdmin and universityUser
     * table userPermissions
@@ -171,12 +169,10 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-circulation'           |
       | 'mod-feesfines'             |
       | 'mod-consortia-keycloak'    |
-      | 'edge-patron'               |
       | 'mod-patron'                |
       | 'mod-tlr'                   |
       | 'mod-circulation-bff'       |
       | 'mod-consortia'             |
-      | 'mod-dcb'                   |
 
     * call setupTenant { tenantId: '#(centralTenantUuid)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenantUuid)', tenant: '#(universityTenantName)', user: '#(universityUser)' }

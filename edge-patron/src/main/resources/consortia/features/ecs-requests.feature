@@ -24,7 +24,6 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
       | 'mod-entities-links'        |
       | 'mod-inventory'             |
       | 'folio-custom-fields'       |
-      | 'edge-patron'               |
       | 'mod-patron'                |
       | 'mod-tlr'                   |
       | 'mod-circulation'           |
