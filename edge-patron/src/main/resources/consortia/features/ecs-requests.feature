@@ -123,7 +123,33 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
       | instanceId | instanceId | universityInstanceTypeId | instanceHrid |
     * def v = call createInstanceWithHrid instanceData
 
-    # Share instance to central tenant (using improved sharing)
+    # Create holding and item BEFORE sharing so mod-search indexes them together with the instance
+    * def holdingId = call uuid
+    * table holdingData
+      | id        | instanceId | locationId            | sourceId                   |
+      | holdingId | instanceId | universityLocationsId | universityHoldingsSourceId |
+    * def v = call createHolding holdingData
+
+    * def itemId = call uuid
+    * table itemData
+      | id     | holdingsRecordId | barcode    | materialTypeId               | permanentLoanTypeId  | permanentLocationId      |
+      | itemId | holdingId        | randomNum  | universityMaterialTypeIdPhys | universityLoanTypeId | universityLocationsId    |
+    * def v = call createItem itemData
+
+    # Verify instance, holding and item exist before sharing
+    Given path 'inventory/instances', instanceId
+    When method GET
+    Then status 200
+
+    Given path 'holdings-storage/holdings', holdingId
+    When method GET
+    Then status 200
+
+    Given path 'inventory/items', itemId
+    When method GET
+    Then status 200
+
+    # Share instance to central tenant — item already exists so mod-search indexes instance+item together
     * def sharingId = call uuid
     Given path 'consortia', consortiumId, 'sharing/instances'
     And request
@@ -159,42 +185,13 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     And match sharingInstance.targetTenantId == centralTenantName
     And match sharingInstance.status == 'COMPLETE'
 
-    # Verify shared instance is update in source tenant with source = 'CONSORTIUM-FOLIO'
+    # Verify shared instance is updated in source tenant with source = 'CONSORTIUM-FOLIO'
     * java.lang.Thread.sleep(5000)
     Given path 'inventory/instances', instanceId
     When method GET
     Then status 200
     And match response.id == instanceId
     And match response.source == 'CONSORTIUM-FOLIO'
-
-    # Create holding in university tenant
-    * def holdingId = call uuid
-    * table holdingData
-      | id        | instanceId | locationId            | sourceId                   |
-      | holdingId | instanceId | universityLocationsId | universityHoldingsSourceId |
-    * def v = call createHolding holdingData
-
-    # Create item in the holding in university tenant
-    * def itemId = call uuid
-    * table itemData
-      | id     | holdingsRecordId | barcode    | materialTypeId               | permanentLoanTypeId  | permanentLocationId      |
-      | itemId | holdingId        | randomNum  | universityMaterialTypeIdPhys | universityLoanTypeId | universityLocationsId    |
-    * def v = call createItem itemData
-
-    # Verify instance exists in university tenant
-    Given path 'inventory/instances', instanceId
-    When method GET
-    Then status 200
-
-    # Verify holding exists in university tenant
-    Given path 'holdings-storage/holdings', holdingId
-    When method GET
-    Then status 200
-
-    # Verify item exists in university tenant
-    Given path 'inventory/items', itemId
-    When method GET
-    Then status 200
 
     * print 'DEBUG: okapitoken:', okapitoken
     * print 'DEBUG: ilrUserId:', ilrUserId
@@ -287,7 +284,21 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
       | instanceId | instanceId | universityInstanceTypeId | instanceHrid |
     * def v = call createInstanceWithHrid instanceData
 
-    # Share instance to central tenant
+    # Create holding and item BEFORE sharing so mod-search indexes them together with the instance
+    * def tlrHoldingId = call uuid
+    * table tlrHoldingData
+      | id           | instanceId | locationId            | sourceId                   |
+      | tlrHoldingId | instanceId | universityLocationsId | universityHoldingsSourceId |
+    * def v = call createHolding tlrHoldingData
+
+    * def tlrItemId = call uuid
+    * def holdingId = tlrHoldingId
+    * table tlrItemData
+      | id        | holdingsRecordId | barcode    | materialTypeId               | permanentLoanTypeId  | permanentLocationId   |
+      | tlrItemId | tlrHoldingId     | randomNum  | universityMaterialTypeIdPhys | universityLoanTypeId | universityLocationsId |
+    * def v = call createItem tlrItemData
+
+    # Share instance to central tenant — item already exists so mod-search indexes instance+item together
     * def sharingId = call uuid
     Given path 'consortia', consortiumId, 'sharing/instances'
     And request
@@ -330,22 +341,6 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     Then status 200
     And match response.id == instanceId
     And match response.source == 'CONSORTIUM-FOLIO'
-
-    # Create holding in university tenant
-    * def tlrHoldingId = call uuid
-    * table tlrHoldingData
-      | id           | instanceId | locationId            | sourceId                   |
-      | tlrHoldingId | instanceId | universityLocationsId | universityHoldingsSourceId |
-    * def v = call createHolding tlrHoldingData
-
-    # Create item in the holding in university tenant
-    * def tlrItemId = call uuid
-    # createItem.feature uses holdingId from scope directly
-    * def holdingId = tlrHoldingId
-    * table tlrItemData
-      | id        | holdingsRecordId | barcode    | materialTypeId               | permanentLoanTypeId  | permanentLocationId   |
-      | tlrItemId | tlrHoldingId     | randomNum  | universityMaterialTypeIdPhys | universityLoanTypeId | universityLocationsId |
-    * def v = call createItem tlrItemData
 
     # Get allowed service points for TLR instance hold (kept for debug/visibility)
     # Retry until mod-search indexes the item (async Kafka indexing after item creation)
