@@ -23,6 +23,9 @@ Feature: mod-orders integration tests
 
   Scenario: Order status automatic change caused by a po line update
     * call read('features/order-status-automatic-change.feature')
+
+  Scenario: Update PO lines when an order is cancelled
+    * call read('features/update-po-lines-when-order-cancelled.feature')
   # END OF SLOW FEATURES
 
   Scenario: Add piece to cancelled order
@@ -331,9 +334,6 @@ Feature: mod-orders integration tests
 
   Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
     * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
-
-  Scenario: Update PO lines when an order is cancelled
-    * call read('features/update-po-lines-when-order-cancelled.feature')
 
   Scenario: P/E Mix change instance connection create new holdings and delete abandoned holdings
     * call read('features/pe-mix-change-instance-connection-create-new-delete-holdings.feature')
