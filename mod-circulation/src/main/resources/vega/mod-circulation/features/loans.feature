@@ -2548,8 +2548,7 @@ Feature: Loans tests
     * def existingSettingId = existingSettings.length > 0 ? existingSettings[0].id : null
     * if (existingSettingId != null) karate.call('classpath:vega/mod-circulation/features/util/initData.feature@DeleteCirculationSetting', { settingId: existingSettingId })
 
-    # create new settings: anonymize immediately after loan closes, treat fee/fines differently,
-    # anonymize fee/fines immediately after close
+    # create new settings: anonymize loan after overdue fine is closed
     Given path 'circulation', 'settings'
     And request
     """
