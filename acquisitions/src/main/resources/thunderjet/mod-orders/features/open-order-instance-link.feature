@@ -10,6 +10,7 @@ Feature: Check opening an order links to the right instance based on the identif
     * callonce login testUser
     * def okapitokenUser = okapitoken
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
+    * def headersUserBypassCache = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenAdmin)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = headersUser
 
@@ -72,8 +73,7 @@ Feature: Check opening an order links to the right instance based on the identif
     And request { "id": "#(settingId)", "key": "disableInstanceMatching", "value": "{\"isInstanceMatchingDisabled\":true}" }
     When method POST
     Then status 201
-    * def v = call pause 31000
-    * configure headers = headersUser
+    * configure headers = headersUserBypassCache
 
     # Create Second Order With Disabled Instance Matching
     * def v = call createOrder { 'id': '#(orderId2)' }
@@ -105,8 +105,7 @@ Feature: Check opening an order links to the right instance based on the identif
     And request setting
     When method PUT
     Then status 204
-    * def v = call pause 31000
-    * configure headers = headersUser
+    * configure headers = headersUserBypassCache
 
     # Create Third Order And Verify Instance Matching Re-Enabled
     * def v = call createOrder { 'id': '#(orderId3)' }
