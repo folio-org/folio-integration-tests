@@ -1,5 +1,4 @@
 # For MODFISTO-298
-@parallel=false
 Feature: Partial rollover
 
   Background:
@@ -11,51 +10,50 @@ Feature: Partial rollover
     * configure headers = headersUser
 
     * callonce variables
+
+
+  Scenario: Partial rollover
+    * def series = call random_string
     * def fromYear = callonce getCurrentYear
     * def toYear = parseInt(fromYear) + 1
-    * def fyId1 = callonce uuid1
-    * def fyId2 = callonce uuid2
-    * def ledgerId = callonce uuid3
-    * def fundId = callonce uuid4
-    * def budgetId1 = callonce uuid5
-    * def budgetId2 = callonce uuid6
-    * def orderId1 = callonce uuid7
-    * def orderId2 = callonce uuid8
-    * def poLineId1 = callonce uuid9
-    * def poLineId2 = callonce uuid10
-    * def rolloverId = callonce uuid11
+    * def fyId1 = call uuid
+    * def fyId2 = call uuid
+    * def ledgerId = call uuid
+    * def fundId = call uuid
+    * def budgetId1 = call uuid
+    * def budgetId2 = call uuid
+    * def orderId1 = call uuid
+    * def orderId2 = call uuid
+    * def poLineId1 = call uuid
+    * def poLineId2 = call uuid
+    * def rolloverId = call uuid
 
-
-  Scenario: Create fiscal years and associated ledgers
+    # 1. Create fiscal years and associated ledgers
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId1), code: 'TESTFY0001', periodStart: #(periodStart1), periodEnd: #(periodEnd1), series: 'TESTFY' }
+    * def v = call createFiscalYear { id: '#(fyId1)', code: '#(series + "0001")', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: '#(series)' }
     * def periodStart2 = toYear + '-01-01T00:00:00Z'
     * def periodEnd2 = toYear + '-12-30T23:59:59Z'
-    * def v = call createFiscalYear { id: #(fyId2), code: 'TESTFY0002', periodStart: #(periodStart2), periodEnd: #(periodEnd2), series: 'TESTFY' }
-    * def v = call createLedger { id: #(ledgerId), fiscalYearId: #(fyId1) }
+    * def v = call createFiscalYear { id: '#(fyId2)', code: '#(series + "0002")', periodStart: '#(periodStart2)', periodEnd: '#(periodEnd2)', series: '#(series)' }
+    * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fyId1)' }
 
+    # 2. Create fund and budgets
+    * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
+    * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 1000, status: 'Active' }
+    * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
 
-  Scenario: Create fund and budgets
-    * def v = call createFund { id: #(fundId), code: #(fundId), ledgerId: #(ledgerId) }
-    * def v = call createBudget { id: #(budgetId1), fundId: #(fundId), fiscalYearId: #(fyId1), allocated: 1000, status: 'Active' }
-    * def v = call createBudget { id: #(budgetId2), fundId: #(fundId), fiscalYearId: #(fyId2), allocated: 1000, status: 'Active' }
-
-
-  Scenario: Create orders and lines
-    * def v = call createOrder { id: #(orderId1), orderType: 'One-Time', reEncumber: true }
+    # 3. Create orders and lines
+    * def v = call createOrder { id: '#(orderId1)', orderType: 'One-Time', reEncumber: true }
     * def ongoing = { interval: 123, isSubscription: true, renewalDate: '2022-05-08T00:00:00.000+00:00' }
-    * def v = call createOrder { id: #(orderId2), orderType: 'Ongoing', ongoing: #(ongoing), reEncumber: true }
-    * def v = call createOrderLine { id: #(poLineId1), orderId: #(orderId1), fundId: #(fundId) }
-    * def v = call createOrderLine { id: #(poLineId2), orderId: #(orderId2), fundId: #(fundId) }
+    * def v = call createOrder { id: '#(orderId2)', orderType: 'Ongoing', ongoing: '#(ongoing)', reEncumber: true }
+    * def v = call createOrderLine { id: '#(poLineId1)', orderId: '#(orderId1)', fundId: '#(fundId)' }
+    * def v = call createOrderLine { id: '#(poLineId2)', orderId: '#(orderId2)', fundId: '#(fundId)' }
 
+    # 4. Open orders
+    * def v = call openOrder { orderId: '#(orderId1)' }
+    * def v = call openOrder { orderId: '#(orderId2)' }
 
-  Scenario: Open orders
-    * def v = call openOrder { orderId: #(orderId1) }
-    * def v = call openOrder { orderId: #(orderId2) }
-
-
-  Scenario: Start rollover
+    # 5. Start rollover
     Given path 'finance/ledger-rollovers'
     And request
     """
@@ -85,8 +83,7 @@ Feature: Partial rollover
     Then status 201
     * call pause 1000
 
-
-  Scenario: Check rollover statuses
+    # 6. Check rollover statuses
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
@@ -96,16 +93,14 @@ Feature: Partial rollover
     And match response.ledgerFiscalYearRolloverProgresses[0].financialRolloverStatus == 'Success'
     And match response.ledgerFiscalYearRolloverProgresses[0].overallRolloverStatus == 'Success'
 
-
-  Scenario: Check rollover errors
+    # 7. Check rollover errors
     Given path 'finance/ledger-rollovers-errors'
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
     Then status 200
     And match $.totalRecords == 0
 
-
-  Scenario: Check the new budget
+    # 8. Check the new budget
     Given path 'finance/budgets', budgetId2
     When method GET
     Then status 200
@@ -113,8 +108,7 @@ Feature: Partial rollover
     And match $.available == 1000
     And match $.unavailable == 0
 
-
-  Scenario: Check encumbrances
+    # 9. Check encumbrances
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2
     When method GET
