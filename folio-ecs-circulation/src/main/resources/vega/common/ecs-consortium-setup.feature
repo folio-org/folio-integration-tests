@@ -29,7 +29,7 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
       | 'mod-permissions'           |
       | 'okapi'                     |
       | 'mod-users'                 |
-      | 'mod-login'                 |
+      | 'mod-login-keycloak'        |
       | 'mod-inventory-storage'     |
       | 'mod-inventory'             |
       | 'mod-consortia'             |
