@@ -11,7 +11,7 @@ Feature: systemwide-service-points tests
       | 'mod-permissions'       |
       | 'okapi'                 |
       | 'mod-users'             |
-      | 'mod-login'             |
+      | 'mod-login-keycloak'    |
       | 'mod-inventory-storage' |
       | 'mod-consortia'         |
 

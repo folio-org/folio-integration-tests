@@ -5,7 +5,7 @@ Feature: edge-patron integration tests
     * table modules
       | name                      |
       | 'okapi'                   |
-      | 'mod-login'               |
+      | 'mod-login-keycloak'      |
       | 'mod-permissions'         |
       | 'mod-inventory'           |
       | 'mod-inventory-storage'   |
