@@ -72,7 +72,7 @@ Feature: Check opening an order links to the right instance based on the identif
     And request { "id": "#(settingId)", "key": "disableInstanceMatching", "value": "{\"isInstanceMatchingDisabled\":true}" }
     When method POST
     Then status 201
-    * def v = call pause 31000
+    * def v = call pause 61000
     * configure headers = headersUser
 
     # Create Second Order With Disabled Instance Matching
@@ -105,7 +105,7 @@ Feature: Check opening an order links to the right instance based on the identif
     And request setting
     When method PUT
     Then status 204
-    * def v = call pause 31000
+    * def v = call pause 61000
     * configure headers = headersUser
 
     # Create Third Order And Verify Instance Matching Re-Enabled
