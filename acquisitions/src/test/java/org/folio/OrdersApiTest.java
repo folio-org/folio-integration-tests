@@ -115,6 +115,7 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     "update-purchase-order-with-order-lines",
     "update-purchase-order-workflow-status",
     "validate-fund-distribution-for-zero-price",
+    "validate-multi-year-prepayment-term",
     "validate-pol-receipt-not-required-with-checkin-items",
     "create-order-with-suppress-instance-from-discovery",
     "auto-populate-fund-code",
