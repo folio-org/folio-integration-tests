@@ -256,14 +256,14 @@ Feature: ECS staff slips (pick slips and search slips) via circulation-bff
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true' }
     * configure retry = { count: 10, interval: 5000 }
     Given path 'circulation-bff/pick-slips', ecsServicePointId
-    And retry until responseStatus == 200 && response.totalRecords > 0
+    And retry until responseStatus == 200 && karate.filter(response.pickSlips, function(s){ return s.requester.barcode == userBarcode }).length > 0
     When method GET
     Then status 200
-    * assert response.totalRecords > 0
-    And match response.pickSlips[0].item.title == 'Staff Slip TLR Hold Test Instance'
-    And match response.pickSlips[0].requester.lastName == 'PickSlipTlrTest'
-    And match response.pickSlips[0].requester.firstName == 'User'
-    And match response.pickSlips[0].requester.barcode == userBarcode
+    * def myPickSlip = karate.filter(response.pickSlips, function(s){ return s.requester.barcode == userBarcode })[0]
+    And match myPickSlip.item.title == 'Staff Slip TLR Hold Test Instance'
+    And match myPickSlip.requester.lastName == 'PickSlipTlrTest'
+    And match myPickSlip.requester.firstName == 'User'
+    And match myPickSlip.requester.barcode == userBarcode
 
     # ========== Search slips ==========
     # Create a second patron user for the title-level Hold request
@@ -319,11 +319,11 @@ Feature: ECS staff slips (pick slips and search slips) via circulation-bff
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'x-okapi-consortium-tenant': 'true' }
     * configure retry = { count: 10, interval: 5000 }
     Given path 'circulation-bff/search-slips', ecsServicePointId
-    And retry until responseStatus == 200 && response.totalRecords > 0
+    And retry until responseStatus == 200 && karate.filter(response.searchSlips, function(s){ return s.requester.barcode == searchSlipUserBarcode }).length > 0
     When method GET
     Then status 200
-    * assert response.totalRecords > 0
-    And match response.searchSlips[0].item.title == 'Staff Slip TLR Hold Test Instance'
-    And match response.searchSlips[0].requester.lastName == 'SearchSlipTlrTest'
-    And match response.searchSlips[0].requester.firstName == 'User'
-    And match response.searchSlips[0].requester.barcode == searchSlipUserBarcode
+    * def mySearchSlip = karate.filter(response.searchSlips, function(s){ return s.requester.barcode == searchSlipUserBarcode })[0]
+    And match mySearchSlip.item.title == 'Staff Slip TLR Hold Test Instance'
+    And match mySearchSlip.requester.lastName == 'SearchSlipTlrTest'
+    And match mySearchSlip.requester.firstName == 'User'
+    And match mySearchSlip.requester.barcode == searchSlipUserBarcode
