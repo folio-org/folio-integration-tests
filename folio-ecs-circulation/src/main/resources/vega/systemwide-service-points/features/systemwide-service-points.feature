@@ -106,6 +106,11 @@ Feature: systemwide-service-points tests
     # Verify the service point is replicated to the college tenant (ECS auto-replication)
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+    # Debug: one-shot probe before retry loop to log actual response
+    Given path 'service-points'
+    And param query = 'id=="' + servicePointId + '"'
+    When method GET
+    * print 'College tenant service-points probe - status:', responseStatus, 'body:', response
     * configure retry = { count: 60, interval: 5000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
@@ -117,6 +122,11 @@ Feature: systemwide-service-points tests
     # Verify the service point is replicated to the university tenant (ECS auto-replication)
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    # Debug: one-shot probe before retry loop to log actual response
+    Given path 'service-points'
+    And param query = 'id=="' + servicePointId + '"'
+    When method GET
+    * print 'University tenant service-points probe - status:', responseStatus, 'body:', response
     * configure retry = { count: 60, interval: 5000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
