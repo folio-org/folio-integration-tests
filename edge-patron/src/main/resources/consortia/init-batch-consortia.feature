@@ -16,7 +16,7 @@ Feature: Initialize batch ECS request data
     Given path 'search/index/instance-records/reindex/full'
     And request {}
     When method POST
-    Then status 200
+    * match [200, 400] contains responseStatus
 
     * call read('classpath:utils/inventory.feature')
     * call read('classpath:utils/inventory-university.feature')

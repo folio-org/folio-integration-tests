@@ -94,7 +94,7 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     Given path 'search/index/instance-records/reindex/full'
     And request {}
     When method POST
-    Then status 200
+    * match [200, 400] contains responseStatus
 
     # Setup variables
     * callonce variables

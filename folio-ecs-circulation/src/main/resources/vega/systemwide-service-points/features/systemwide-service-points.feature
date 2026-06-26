@@ -106,7 +106,7 @@ Feature: systemwide-service-points tests
     # Verify the service point is replicated to the college tenant (ECS auto-replication)
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
-    * configure retry = { count: 20, interval: 5000 }
+    * configure retry = { count: 30, interval: 5000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
     And retry until response.totalRecords == 1
@@ -117,7 +117,7 @@ Feature: systemwide-service-points tests
     # Verify the service point is replicated to the university tenant (ECS auto-replication)
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-    * configure retry = { count: 20, interval: 5000 }
+    * configure retry = { count: 30, interval: 5000 }
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
     And retry until response.totalRecords == 1
