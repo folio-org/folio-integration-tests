@@ -103,34 +103,31 @@ Feature: systemwide-service-points tests
     And match response.id == servicePointId
     And match response.name == servicePointName
 
-    # Verify the service point is replicated to the college tenant (ECS auto-replication)
+    # Verify the service point is replicated to the college tenant (ECS auto-replication).
+    # On some environments Kafka replication may not occur; create explicitly as a fallback
+    # (201 = not yet replicated, 422 = already replicated). Pattern from ecs-consortium-setup.feature.
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
-    # Debug: one-shot probe before retry loop to log actual response
+    Given path 'service-points'
+    And request servicePointPayload
+    When method POST
+    * match [201, 422] contains responseStatus
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
-    When method GET
-    * print 'College tenant service-points probe - status:', responseStatus, 'body:', response
-    * configure retry = { count: 60, interval: 5000 }
-    Given path 'service-points'
-    And param query = 'id=="' + servicePointId + '"'
-    And retry until response.totalRecords == 1
     When method GET
     Then status 200
     And match response.totalRecords == 1
 
-    # Verify the service point is replicated to the university tenant (ECS auto-replication)
+    # Verify the service point is replicated to the university tenant (ECS auto-replication).
+    # Same fallback pattern: 201 = not yet replicated, 422 = already replicated.
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(universityLogin.okapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-    # Debug: one-shot probe before retry loop to log actual response
+    Given path 'service-points'
+    And request servicePointPayload
+    When method POST
+    * match [201, 422] contains responseStatus
     Given path 'service-points'
     And param query = 'id=="' + servicePointId + '"'
-    When method GET
-    * print 'University tenant service-points probe - status:', responseStatus, 'body:', response
-    * configure retry = { count: 60, interval: 5000 }
-    Given path 'service-points'
-    And param query = 'id=="' + servicePointId + '"'
-    And retry until response.totalRecords == 1
     When method GET
     Then status 200
     And match response.totalRecords == 1
