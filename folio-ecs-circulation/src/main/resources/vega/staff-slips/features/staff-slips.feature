@@ -173,7 +173,7 @@ Feature: ECS staff slips (pick slips and search slips) via circulation-bff
     And match response.searchSlips[0].requester.firstName == 'User'
     And match response.searchSlips[0].requester.barcode == searchSlipUserBarcode
 
-  Scenario: verify pick slips and search slips via circulation-bff with title-level Hold request
+  Scenario: verify search slips via circulation-bff with title-level Hold request
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
     * def headersCentral = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
