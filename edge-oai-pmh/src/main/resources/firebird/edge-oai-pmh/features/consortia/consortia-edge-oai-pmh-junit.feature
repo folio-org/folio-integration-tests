@@ -72,6 +72,7 @@ Feature: edge-oai-pmh ECS tests
       | 'oai-pmh.configuration-settings.item.delete'                                  |
       | 'inventory-storage.instances.item.put'                                        |
       | 'source-storage.records.put'                                                  |
+      | 'source-storage.records.collection.get'                                       |
       | 'source-storage.records.item.get'                                             |
       | 'inventory-storage.items.item.delete'                                         |
       | 'inventory-storage.holdings.item.delete'                                      |
