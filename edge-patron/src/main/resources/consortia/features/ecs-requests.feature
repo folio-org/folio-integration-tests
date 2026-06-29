@@ -90,11 +90,15 @@ Feature: Cross-Module Integration Tests for ILR and TLR ECS Requests
     # Evict mod-search stale USER_TENANTS_CACHE (populated during @InstallApplications before consortium setup).
     # Without this, items created in the university tenant are indexed in the university local index
     # instead of the central consortium index, so allowed-service-points returns empty indefinitely.
-    # Pattern from edge-patron/src/main/resources/consortia/init-batch-consortia.feature.
+    # Retry until any competing reindex finishes and a fresh full reindex is accepted (status 200).
+    * configure retry = { count: 20, interval: 10000 }
     Given path 'search/index/instance-records/reindex/full'
     And request {}
+    And retry until responseStatus == 200
     When method POST
     Then status 200
+    # Wait for the reindex job to propagate the USER_TENANTS_CACHE eviction before creating inventory data.
+    * java.lang.Thread.sleep(60000)
 
     # Setup variables
     * callonce variables

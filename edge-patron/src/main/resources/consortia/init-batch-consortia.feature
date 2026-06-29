@@ -13,10 +13,15 @@ Feature: Initialize batch ECS request data
     # central-tenant lookup, so university tenant items are indexed in the central OpenSearch index
     # (not in the university's own index).
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenantName)', 'Accept': 'application/json' }
+    # Retry until any competing reindex finishes and a fresh full reindex is accepted (status 200).
+    * configure retry = { count: 20, interval: 10000 }
     Given path 'search/index/instance-records/reindex/full'
     And request {}
+    And retry until responseStatus == 200
     When method POST
     Then status 200
+    # Wait for the reindex job to propagate the USER_TENANTS_CACHE eviction before creating inventory data.
+    * java.lang.Thread.sleep(60000)
 
     * call read('classpath:utils/inventory.feature')
     * call read('classpath:utils/inventory-university.feature')
