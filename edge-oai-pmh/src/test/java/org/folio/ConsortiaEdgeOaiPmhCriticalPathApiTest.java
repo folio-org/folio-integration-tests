@@ -72,7 +72,7 @@ public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @Test
     public void test9() {
-        runFeatureTest("features/shared-local-marc-suppressed-get-record-C468257.feature");
+        runFeatureTest("features/linked-data-get-record-with-url-C667578.feature");
     }
 
     @Override
