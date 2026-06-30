@@ -95,4 +95,9 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
     @Test
     public void test13() {runFeatureTest("marc-extended-latin-from-until-C163911.feature");
     }
+
+    @Test
+    public void test14() {
+        runFeatureTest("ld-instance-get-record-with-holdings-items-C663362.feature");
+    }
 }
