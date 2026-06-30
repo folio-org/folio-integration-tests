@@ -32,7 +32,7 @@
     <maven.scala.version>4.9.1</maven.scala.version>
     <!-- karate 1.5.0 requires scala 2.13.13 and warns about any newer version -->
     <scala.version>2.13.13</scala.version>
-    <maven.gatling.version>4.9.4</maven.gatling.version>
+    <maven.gatling.version>4.20.8</maven.gatling.version>
     <karate.version>1.5.1</karate.version>
     <junit.version>5.10.1</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
