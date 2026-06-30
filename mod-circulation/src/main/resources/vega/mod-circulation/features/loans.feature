@@ -845,7 +845,7 @@ Feature: Loans tests
 
     # find or create age-to-lost timer with 1 second delay
     * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
-    * def currentTimerId = updateResult.currentTimerId
+    * def currentTimerId = updateResult.currentTimer.id
     * configure headers = headersUser
 
     # get the loan and verify that the loan has been aged to lost and got agedToLostDate
@@ -959,7 +959,7 @@ Feature: Loans tests
 
     # find or create age-to-lost timer with 1 second delay
     * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
-    * def currentTimerId = updateResult.currentTimerId
+    * def currentTimerId = updateResult.currentTimer.id
     * configure headers = headersUser
 
     # get the loan and verify that the loan has been aged to lost and updated agedToLostDate, lostItemHasBeenBilled and dateLostItemShouldBeBilled
@@ -2486,7 +2486,7 @@ Feature: Loans tests
 
     # find or create loan anonymization timer with 1 second delay
     * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
-    * def currentTimerId = updateResult.currentTimerId
+    * def currentTimerId = updateResult.currentTimer.id
 
     # verification: both closed loans are anonymized (userId field should be removed)
     * configure retry = { count: 15, interval: 3000 }
@@ -2638,7 +2638,7 @@ Feature: Loans tests
 
     # find or create loan anonymization timer with 1 second delay
     * def updateResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateLoanAnonymizationTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
-    * def currentTimerId = updateResult.currentTimerId
+    * def currentTimerId = updateResult.currentTimer.id
 
     # verification: both closed loans are anonymized (userId field should be removed)
     * configure retry = { count: 15, interval: 3000 }
