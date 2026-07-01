@@ -359,6 +359,9 @@ Feature: cross-module integration tests
   Scenario: Rollover one order type
     * call read('features/rollover-one-order-type.feature')
 
+  Scenario: Rollover only ongoing encumbrances
+    * call read('features/rollover-only-ongoing-encumbrances.feature')
+
   Scenario: Pay, unopen, open
     * call read('features/pay-unopen-open.feature')
 
