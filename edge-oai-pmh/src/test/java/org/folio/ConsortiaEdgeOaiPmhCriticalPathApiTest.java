@@ -65,6 +65,15 @@ public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
         runFeatureTest("features/linked-data-add-holdings-C688752.feature");
     }
 
+    @Test
+    public void test8() {
+        runFeatureTest("features/linked-data-get-record-edited-main-title-C667579.feature");
+    }
+
+    @Test
+    public void test9() {
+        runFeatureTest("features/linked-data-get-record-with-url-C667578.feature");
+    }
 
     @Override
     public void runHook() {
