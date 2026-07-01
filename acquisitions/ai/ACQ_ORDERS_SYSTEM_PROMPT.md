@@ -377,6 +377,12 @@ order-workflow-status-after-receiving-pieces-multiple-locations.feature (72 char
 - Keep scenario titles descriptive in the .feature file content, but keep filenames short
 - Think about URL lengths: Karate report URLs include the full file path
 
+### Comment and Print Format
+- Use format: "N. comment text" (where N is the step number)
+- No "Step" word in comments
+- Continue numbering from prerequisites through test steps
+- **NEVER add `* print 'N. ...'` lines in scenarios** — use `# N. ...` comments instead; the only allowed `* print` is `* print karate.info.scenarioName` in the `Background`
+
 
 ## Common Reusable Features
 
