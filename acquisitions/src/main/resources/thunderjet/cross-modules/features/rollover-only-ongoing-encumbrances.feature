@@ -18,7 +18,6 @@ Feature: Rollover only ongoing encumbrances
   @Positive
   Scenario: Rollover With Three Order Types And Only Ongoing Encumbrances Selected
     # 1. Generate Unique Identifiers For This Test Scenario
-    * print '1. Generate Unique Identifiers For This Test Scenario'
     * def series = call random_string
     * def fromYear = call getCurrentYear
     * def toYear = parseInt(fromYear) + 1
@@ -37,7 +36,6 @@ Feature: Rollover only ongoing encumbrances
     * def rolloverId = call uuid
 
     # 2. Create Fiscal Years And Ledger
-    * print '2. Create Fiscal Years And Ledger'
     * def periodStart1 = fromYear + '-01-01T00:00:00Z'
     * def periodEnd1 = fromYear + '-12-30T23:59:59Z'
     * def v = call createFiscalYear { id: '#(fyId1)', code: '#(series + "0001")', periodStart: '#(periodStart1)', periodEnd: '#(periodEnd1)', series: '#(series)' }
@@ -47,13 +45,11 @@ Feature: Rollover only ongoing encumbrances
     * def v = call createLedger { id: '#(ledgerId)', fiscalYearId: '#(fyId1)' }
 
     # 3. Create Fund And Budgets For Both Fiscal Years
-    * print '3. Create Fund And Budgets For Both Fiscal Years'
     * def v = call createFund { id: '#(fundId)', code: '#(fundId)', ledgerId: '#(ledgerId)' }
     * def v = call createBudget { id: '#(budgetId1)', fundId: '#(fundId)', fiscalYearId: '#(fyId1)', allocated: 1000, status: 'Active' }
     * def v = call createBudget { id: '#(budgetId2)', fundId: '#(fundId)', fiscalYearId: '#(fyId2)', allocated: 1000, status: 'Active' }
 
     # 4. Create Orders: One-Time ($10), Ongoing Non-Subscription ($20), Ongoing Subscription ($30)
-    * print '4. Create Orders: One-Time ($10), Ongoing Non-Subscription ($20), Ongoing Subscription ($30)'
     * def ongoingNonSub = { interval: 123, isSubscription: false }
     * def ongoingSub = { interval: 365, isSubscription: true }
     * table orders
@@ -64,7 +60,6 @@ Feature: Rollover only ongoing encumbrances
     * def v = call createOrder orders
 
     # 5. Create Order Lines With Fund Distribution
-    * print '5. Create Order Lines With Fund Distribution'
     * table orderLines
       | id        | orderId  | fundId | listUnitPrice |
       | poLineId1 | orderId1 | fundId | 10.0          |
@@ -73,7 +68,6 @@ Feature: Rollover only ongoing encumbrances
     * def v = call createOrderLine orderLines
 
     # 6. Open Orders To Create Encumbrances In FY#1
-    * print '6. Open Orders To Create Encumbrances In FY#1'
     * def v = call openOrder orders
 
     #========================================================================================================
@@ -81,13 +75,11 @@ Feature: Rollover only ongoing encumbrances
     #========================================================================================================
 
     # 7. Perform Rollover With Only Ongoing (Non-Subscription) Encumbrances Selected, Based On Initial Amount
-    * print '7. Perform Rollover With Only Ongoing (Non-Subscription) Encumbrances Selected, Based On Initial Amount'
     * def budgetsRollover = [{ rolloverAllocation: true, adjustAllocation: 0, rolloverBudgetValue: 'None', setAllowances: false }]
     * def encumbrancesRollover = [{ orderType: 'Ongoing', basedOn: 'InitialAmount', increaseBy: 0 }]
     * def v = call rollover { id: '#(rolloverId)', ledgerId: '#(ledgerId)', fromFiscalYearId: '#(fyId1)', toFiscalYearId: '#(fyId2)', restrictEncumbrance: true, needCloseBudgets: true, budgetsRollover: '#(budgetsRollover)', encumbrancesRollover: '#(encumbrancesRollover)' }
 
     # 8. Verify Rollover Completed Successfully With No Errors
-    * print '8. Verify Rollover Completed Successfully With No Errors'
     Given path 'finance/ledger-rollovers-progress'
     And param query = 'ledgerRolloverId==' + rolloverId
     When method GET
@@ -104,7 +96,6 @@ Feature: Rollover only ongoing encumbrances
     And match response.totalRecords == 0
 
     # 9. Verify Order #1 (One-Time) Encumbrance In FY#2 Is Released With Zero Amount
-    * print '9. Verify Order #1 (One-Time) Encumbrance In FY#2 Is Released With Zero Amount'
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2 + ' AND encumbrance.sourcePoLineId==' + poLineId1
     When method GET
@@ -116,7 +107,6 @@ Feature: Rollover only ongoing encumbrances
     * def encumbranceId1 = response.transactions[0].id
 
     # 10. Verify Order #2 (Ongoing) Encumbrance In FY#2 Is Unreleased With Amount $20.00
-    * print '10. Verify Order #2 (Ongoing) Encumbrance In FY#2 Is Unreleased With Amount $20.00'
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2 + ' AND encumbrance.sourcePoLineId==' + poLineId2
     When method GET
@@ -128,7 +118,6 @@ Feature: Rollover only ongoing encumbrances
     * def encumbranceId2 = response.transactions[0].id
 
     # 11. Verify Order #3 (Ongoing Subscription) Encumbrance In FY#2 Is Released With Zero Amount
-    * print '11. Verify Order #3 (Ongoing Subscription) Encumbrance In FY#2 Is Released With Zero Amount'
     Given path 'finance/transactions'
     And param query = 'transactionType==Encumbrance AND fiscalYearId==' + fyId2 + ' AND encumbrance.sourcePoLineId==' + poLineId3
     When method GET
@@ -140,7 +129,6 @@ Feature: Rollover only ongoing encumbrances
     * def encumbranceId3 = response.transactions[0].id
 
     # 12. Verify POL Encumbrance Links Point To New FY#2 Encumbrances
-    * print '12. Verify POL Encumbrance Links Point To New FY#2 Encumbrances'
     Given path 'orders/order-lines', poLineId1
     When method GET
     Then status 200

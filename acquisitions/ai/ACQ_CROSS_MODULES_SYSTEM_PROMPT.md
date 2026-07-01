@@ -500,8 +500,9 @@ encumbrance-after-canceling-approved-invoice-with-mixed-release-settings.feature
 
 ### Comment and Print Format
 - Use format: "N. comment text" (where N is the step number)
-- No "Step" word in comments or prints
+- No "Step" word in comments
 - Continue numbering from prerequisites through test steps
+- **NEVER add `* print 'N. ...'` lines in scenarios** — use `# N. ...` comments instead; the only allowed `* print` is `* print karate.info.scenarioName` in the `Background`
 
 ### Headers Required
 - Add Jira ticket number and TestRail link at the top
