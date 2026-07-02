@@ -74,8 +74,8 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'consortia.user-tenants.collection.get'                     |
       | 'consortia.user-tenants.item.post'                          |
       | 'search.index.instance-records.reindex.full.post'           |
-      | 'requests-mediated.mediated-requests.item.post'             |
-      | 'requests-mediated.mediated-requests.item.get'              |
+      | 'requests-mediated.mediated-request.item.post'              |
+      | 'requests-mediated.mediated-request.item.get'               |
 
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
@@ -110,8 +110,8 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'inventory.items.item.get'                      |
       | 'inventory-storage.holdings.item.get'           |
       | 'user-tenants.collection.get'                   |
-      | 'requests-mediated.mediated-requests.item.post' |
-      | 'requests-mediated.mediated-requests.item.get'  |
+      | 'requests-mediated.mediated-request.item.post'  |
+      | 'requests-mediated.mediated-request.item.get'   |
 
     * def userPermissions = uniShadowPermissions
     * def shadowConsortiaAdmin = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
