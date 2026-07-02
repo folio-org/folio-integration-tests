@@ -74,8 +74,8 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'consortia.user-tenants.collection.get'                     |
       | 'consortia.user-tenants.item.post'                          |
       | 'search.index.instance-records.reindex.full.post'           |
-      | 'mediated-requests.mediated-requests.item.post'             |
-      | 'mediated-requests.mediated-requests.item.get'              |
+      | 'requests-mediated.mediated-requests.item.post'             |
+      | 'requests-mediated.mediated-requests.item.get'              |
 
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
@@ -103,15 +103,15 @@ Feature: Common mediated-requests consortium setup (central + university + colle
 
     # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant operations
     * table uniShadowPermissions
-      | name                                        |
-      | 'circulation.requests.item.post'            |
-      | 'circulation.requests.item.get'             |
-      | 'inventory.instances.item.get'              |
-      | 'inventory.items.item.get'                  |
-      | 'inventory-storage.holdings.item.get'       |
-      | 'user-tenants.collection.get'               |
-      | 'mediated-requests.mediated-requests.item.post' |
-      | 'mediated-requests.mediated-requests.item.get'  |
+      | name                                            |
+      | 'circulation.requests.item.post'                |
+      | 'circulation.requests.item.get'                 |
+      | 'inventory.instances.item.get'                  |
+      | 'inventory.items.item.get'                      |
+      | 'inventory-storage.holdings.item.get'           |
+      | 'user-tenants.collection.get'                   |
+      | 'requests-mediated.mediated-requests.item.post' |
+      | 'requests-mediated.mediated-requests.item.get'  |
 
     * def userPermissions = uniShadowPermissions
     * def shadowConsortiaAdmin = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
