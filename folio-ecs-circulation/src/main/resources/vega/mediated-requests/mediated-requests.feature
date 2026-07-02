@@ -1,4 +1,4 @@
-# FAT-26989, Create Karate tests for mediated requests - create and verify mediated request persisted to DB
+# FAT-26989, Karate tests for mediated requests via mod-requests-mediated
 @parallel=false
 Feature: Mediated requests - create and retrieve via mod-requests-mediated
 
@@ -7,74 +7,43 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * configure readTimeout = 600000
     * callonce login admin
 
-    # Fixed UUIDs for inventory entities shared across scenarios
     * callonce read('classpath:vega/mediated-requests/mediated-requests-variables.feature')
-
-    # Run common consortium setup (central + university + college tenants, inventory, policies)
     * callonce read('classpath:vega/common/mediated-requests-consortium-setup.feature')
 
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature')
+    * def createPatronUser = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreatePatronUser')
+    * def createInventory = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreateInventory')
 
-  Scenario: create mediated request in university (secure) tenant and verify it is persisted to DB
-    # Login as university user — mediated requests are created in the university (secure) tenant
-    * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
-    * def uniOkapitoken = universityLogin.okapitoken
-    * def headersUniversity = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-
-    # Login as central admin for consortium-level operations (instance sharing)
+    # Shared logins reused by every scenario
+    * def uniLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
+    * def uniOkapitoken = uniLogin.okapitoken
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def centralOkapitoken = centralLogin.okapitoken
 
-    # ========== Create patron user in university tenant ==========
-    * configure headers = headersUniversity
+    * def headersUniversity = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
 
-    * def groupId = uuid()
-    Given path 'groups'
-    And request { id: '#(groupId)', group: '#("mr-grp-" + randomMillis())', desc: 'Mediated request test group', expirationOffsetInDays: '60' }
-    When method POST
-    Then status 201
-
-    * def requesterId = uuid()
-    * def requesterBarcode = 'MR-USER-' + randomMillis()
-    Given path 'users'
-    And request
+    # Shared inventory params reused by helpers
+    * def baseInventoryParams =
       """
       {
-        "id": "#(requesterId)",
-        "username": "#(requesterBarcode)",
-        "barcode": "#(requesterBarcode)",
-        "active": true,
-        "type": "patron",
-        "patronGroup": "#(groupId)",
-        "personal": { "lastName": "MRTest", "firstName": "Requester", "email": "mr-test@test.com", "preferredContactTypeId": "002", "addresses": [] },
-        "departments": [],
-        "expirationDate": "2028-12-31T23:59:59.000+00:00"
-      }
-      """
-    When method POST
-    Then status 201
-
-    # ========== Create inventory: instance in central, share to university, holding + item in university ==========
-    * def inventoryParams =
-      """
-      {
-        "okapitoken": "#(centralOkapitoken)",
+        "centralOkapitoken": "#(centralOkapitoken)",
         "centralTenant": "#(centralTenant)",
         "consortiumId": "#(consortiumId)",
         "uniOkapitoken": "#(uniOkapitoken)",
         "universityTenant": "#(universityTenant)",
-        "instanceTypeId": "#(mrInstanceTypeId)",
-        "locationId": "#(mrUniLocationId)",
-        "holdingsSourceId": "#(mrUniHoldingsSourceId)",
-        "materialTypeId": "#(mrMaterialTypeId)",
-        "loanTypeId": "#(mrLoanTypeId)",
-        "instanceTitle": "MR Test Instance"
+        "mrInstanceTypeId": "#(mrInstanceTypeId)",
+        "mrUniLocationId": "#(mrUniLocationId)",
+        "mrUniHoldingsSourceId": "#(mrUniHoldingsSourceId)",
+        "mrMaterialTypeId": "#(mrMaterialTypeId)",
+        "mrLoanTypeId": "#(mrLoanTypeId)"
       }
       """
-    * def inventory = call setupInventory inventoryParams
 
-    # ========== POST mediated request in university tenant ==========
+  Scenario: create Item-level Page mediated request and verify it is persisted to DB
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)' }
+    * def inv = call createInventory { centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', mrInstanceTypeId: '#(mrInstanceTypeId)', mrUniLocationId: '#(mrUniLocationId)', mrUniHoldingsSourceId: '#(mrUniHoldingsSourceId)', mrMaterialTypeId: '#(mrMaterialTypeId)', mrLoanTypeId: '#(mrLoanTypeId)', instanceTitle: 'MR Page Item-level Test Instance' }
+    * def inventory = inv.inventory
+
     * def mediatedRequestId = uuid()
     * configure headers = headersUniversity
 
@@ -85,14 +54,14 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
         "id": "#(mediatedRequestId)",
         "requestType": "Page",
         "fulfillmentPreference": "Hold Shelf",
-        "item": { "barcode": "#(inventory.itemBarcode)" },
-        "itemId": "#(inventory.itemId)",
-        "requesterId": "#(requesterId)",
-        "pickupServicePointId": "#(mrUniServicePointId)",
         "requestLevel": "Item",
         "requestDate": "#(java.time.Instant.now().toString())",
         "instanceId": "#(inventory.instanceId)",
-        "holdingsRecordId": "#(inventory.holdingId)"
+        "holdingsRecordId": "#(inventory.holdingId)",
+        "itemId": "#(inventory.itemId)",
+        "item": { "barcode": "#(inventory.itemBarcode)" },
+        "requesterId": "#(patron.requesterId)",
+        "pickupServicePointId": "#(mrUniServicePointId)"
       }
       """
     When method POST
@@ -104,10 +73,9 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.itemId == inventory.itemId
     And match response.instanceId == inventory.instanceId
     And match response.holdingsRecordId == inventory.holdingId
-    And match response.requesterId == requesterId
+    And match response.requesterId == patron.requesterId
     And match response.pickupServicePointId == mrUniServicePointId
 
-    # ========== GET mediated request by ID and verify it was persisted to DB ==========
     Given path 'requests-mediated/mediated-requests', mediatedRequestId
     When method GET
     Then status 200
@@ -118,5 +86,5 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.itemId == inventory.itemId
     And match response.instanceId == inventory.instanceId
     And match response.holdingsRecordId == inventory.holdingId
-    And match response.requesterId == requesterId
+    And match response.requesterId == patron.requesterId
     And match response.pickupServicePointId == mrUniServicePointId
