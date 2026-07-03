@@ -39,7 +39,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
       }
       """
 
-  Scenario: create Item-level Page mediated request and verify it is persisted to DB
+  Scenario: create Item-level Page mediated request and verify it can be retrieved
     * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)' }
     * def inv = call createInventory { centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', mrInstanceTypeId: '#(mrInstanceTypeId)', mrUniLocationId: '#(mrUniLocationId)', mrUniHoldingsSourceId: '#(mrUniHoldingsSourceId)', mrMaterialTypeId: '#(mrMaterialTypeId)', mrLoanTypeId: '#(mrLoanTypeId)', instanceTitle: 'MR Page Item-level Test Instance' }
     * def inventory = inv.inventory
