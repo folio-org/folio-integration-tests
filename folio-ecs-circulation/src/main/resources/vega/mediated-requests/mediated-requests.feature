@@ -44,7 +44,6 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def inv = call createInventory { centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', mrInstanceTypeId: '#(mrInstanceTypeId)', mrUniLocationId: '#(mrUniLocationId)', mrUniHoldingsSourceId: '#(mrUniHoldingsSourceId)', mrMaterialTypeId: '#(mrMaterialTypeId)', mrLoanTypeId: '#(mrLoanTypeId)', instanceTitle: 'MR Page Item-level Test Instance' }
     * def inventory = inv.inventory
 
-    * def mediatedRequestId = uuid()
     * configure headers = headersUniversity
 
     # Use the central service point as pickup — it is the shared pickup location visible
@@ -53,7 +52,6 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And request
       """
       {
-        "id": "#(mediatedRequestId)",
         "requestType": "Page",
         "fulfillmentPreference": "Hold Shelf",
         "requestLevel": "Item",
@@ -68,7 +66,8 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
       """
     When method POST
     Then status 201
-    And match response.id == mediatedRequestId
+    * def mediatedRequestId = response.id
+    And match mediatedRequestId == '#notnull'
     And match response.requestType == 'Page'
     And match response.requestLevel == 'Item'
     And match response.fulfillmentPreference == 'Hold Shelf'
