@@ -1,0 +1,212 @@
+{
+  "id": "67dfac11-1caf-4470-9ad1-d533f6360bc8",
+  "snapshotId": "67dfac11-1caf-4470-9ad1-d533f6360bc8",
+  "matchedId": "67dfac11-1caf-4470-9ad1-d533f6360bc8",
+  "generation": 0,
+  "recordType": "MARC_BIB",
+  "state": "ACTUAL",
+  "rawRecord": {
+    "content": "00714cam a2200205 a 4500001000900000005001700009008004100026020001500067020002200082040001800104100002100122245003400143250001200177260006700189300002100256520017500277650001300452650002300465650002000488\u001e12883376\u001e20030616111422.0\u001e020805s2002    nyu    j      000 1 eng  \u001e  \u001fa0786808772\u001e  \u001fa0786816155 (pbk.)\u001e  \u001faDLC\u001fcDLC\u001fdDLC\u001e1 \u001faChabon, Michael.\u001e10\u001faSummerland /\u001fcMichael Chabon.\u001e  \u001fa1st ed.\u001e  \u001faNew York :\u001fbMiramax Books/Hyperion Books for Children,\u001fcc2002.\u001e  \u001fa500 p. ;\u001fc22 cm.\u001e  \u001faEthan Feld, the worst baseball player in the history of the game, finds himself recruited by a 100-year-old scout to help a band of fairies triumph over an ancient enemy.\u001e 1\u001faFantasy.\u001e 1\u001faBaseball\u001fvFiction.\u001e 1\u001faMagic\u001fvFiction.\u001e\u001d"
+  },
+  "parsedRecord": {
+    "content": {
+      "leader": "00714cam a2200205 a 4500",
+      "fields": [
+        {
+          "001": "12883376"
+        },
+        {
+          "005": "20030616111422.0"
+        },
+        {
+          "008": "020805s2002    nyu    j      000 1 eng  "
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "0786808772"
+              }
+            ]
+          }
+        },
+        {
+          "020": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "0786816155 (pbk.)"
+              }
+            ]
+          }
+        },
+        {
+          "040": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "DLC"
+              },
+              {
+                "code": "c",
+                "value": "DLC"
+              },
+              {
+                "code": "d",
+                "value": "DLC"
+              }
+            ]
+          }
+        },
+        {
+          "100": {
+            "ind1": "1",
+            "ind2": " ",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "Chabon, Michael."
+              }
+            ]
+          }
+        },
+        {
+          "245": {
+            "ind1": "1",
+            "ind2": "0",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "Summerland /"
+              },
+              {
+                "code": "c",
+                "value": "Michael Chabon."
+              }
+            ]
+          }
+        },
+        {
+          "250": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "1st ed."
+              }
+            ]
+          }
+        },
+        {
+          "260": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "New York :"
+              },
+              {
+                "code": "b",
+                "value": "Miramax Books/Hyperion Books for Children,"
+              },
+              {
+                "code": "c",
+                "value": "c2002."
+              }
+            ]
+          }
+        },
+        {
+          "300": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "500 p. ;"
+              },
+              {
+                "code": "c",
+                "value": "22 cm."
+              }
+            ]
+          }
+        },
+        {
+          "520": {
+            "ind1": " ",
+            "ind2": " ",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "Ethan Feld, the worst baseball player in the history of the game, finds himself recruited by a 100-year-old scout to help a band of fairies triumph over an ancient enemy."
+              }
+            ]
+          }
+        },
+        {
+          "650": {
+            "ind1": " ",
+            "ind2": "1",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "Fantasy."
+              }
+            ]
+          }
+        },
+        {
+          "650": {
+            "ind1": " ",
+            "ind2": "1",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "Baseball"
+              },
+              {
+                "code": "v",
+                "value": "Fiction."
+              }
+            ]
+          }
+        },
+        {
+          "650": {
+            "ind1": " ",
+            "ind2": "1",
+            "subfields": [
+              {
+                "code": "a",
+                "value": "Magic"
+              },
+              {
+                "code": "v",
+                "value": "Fiction."
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "externalIdsHolder": {
+    "instanceId": "1b74ab75-9f41-4837-8662-a1d99118008d",
+    "instanceHrid": "inst0000000001"
+  },
+  "deleted": false,
+  "order": 0,
+  "additionalInfo": {
+    "suppressDiscovery": false
+  }
+}

@@ -17,6 +17,17 @@ Feature: mod-orders integration tests
     * configure afterFeature = function() { karate.call('classpath:common/eureka/destroy-data.feature'); }
 
 
+  # SLOW FEATURES - moved to the top so that a complete execution with threads finishes earlier
+  Scenario: Check opening an order links to the right instance
+    * call read('features/open-order-instance-link.feature')
+
+  Scenario: Order status automatic change caused by a po line update
+    * call read('features/order-status-automatic-change.feature')
+
+  Scenario: Update PO lines when an order is cancelled
+    * call read('features/update-po-lines-when-order-cancelled.feature')
+  # END OF SLOW FEATURES
+
   Scenario: Add piece to cancelled order
     * call read('features/add-piece-to-cancelled-order.feature')
 
@@ -165,9 +176,6 @@ Feature: mod-orders integration tests
   Scenario: Open order failure side effects
     * call read('features/open-order-failure-side-effects.feature')
 
-  Scenario: Check opening an order links to the right instance
-    * call read('features/open-order-instance-link.feature')
-
   Scenario: Open order success with expenditure restrictions
     * call read('features/open-order-success-with-expenditure-restrictions.feature')
 
@@ -191,9 +199,6 @@ Feature: mod-orders integration tests
 
   Scenario: Open order with restricted locations
     * call read('features/open-order-with-restricted-locations.feature')
-
-  Scenario: Order status automatic change caused by a po line update
-    * call read('features/order-status-automatic-change.feature')
 
   Scenario: Should open order with polines having the same fund distributions
     * call read('features/open-order-with-the-same-fund-distributions.feature')
@@ -329,9 +334,6 @@ Feature: mod-orders integration tests
 
   Scenario: Unopen order with synchronized and independent POLs deletes only empty holding
     * call read('features/unopen-order-delete-empty-holding-mixed-pols.feature')
-
-  Scenario: Update PO lines when an order is cancelled
-    * call read('features/update-po-lines-when-order-cancelled.feature')
 
   Scenario: P/E Mix change instance connection create new holdings and delete abandoned holdings
     * call read('features/pe-mix-change-instance-connection-create-new-delete-holdings.feature')

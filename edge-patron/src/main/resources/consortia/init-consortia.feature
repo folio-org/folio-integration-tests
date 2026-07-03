@@ -13,7 +13,7 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-permissions'           |
       | 'okapi'                     |
       | 'mod-users'                 |
-      | 'mod-login'                 |
+      | 'mod-login-keycloak'        |
       | 'mod-inventory-storage'     |
       | 'mod-pubsub'                |
       | 'mod-circulation-storage'   |
@@ -21,13 +21,10 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-entities-links'        |
       | 'mod-inventory'             |
       | 'folio-custom-fields'       |
-      | 'edge-patron'               |
       | 'mod-patron'                |
       | 'mod-tlr'                   |
       | 'mod-circulation'           |
       | 'mod-circulation-bff'       |
-      | 'mod-dcb'                   |
-      | 'mod-record-specifications' |
 
     # Permissions for consortiaAdmin and universityUser
     * table userPermissions
@@ -160,7 +157,7 @@ Feature: Initialize mod-consortia integration tests
       | name                        |
       | 'mod-permissions'           |
       | 'okapi'                     |
-      | 'mod-configuration'         |
+      | 'mod-settings'              |
       | 'mod-login-keycloak'        |
       | 'mod-users'                 |
       | 'mod-pubsub'                |
@@ -172,14 +169,10 @@ Feature: Initialize mod-consortia integration tests
       | 'mod-circulation'           |
       | 'mod-feesfines'             |
       | 'mod-consortia-keycloak'    |
-      | 'edge-patron'               |
       | 'mod-patron'                |
       | 'mod-tlr'                   |
       | 'mod-circulation-bff'       |
       | 'mod-consortia'             |
-      | 'mod-requests-mediated'     |
-      | 'mod-dcb'                   |
-      | 'mod-record-specifications' |
 
     * call setupTenant { tenantId: '#(centralTenantUuid)', tenant: '#(centralTenantName)', user: '#(consortiaAdmin)' }
     * call setupTenant { tenantId: '#(universityTenantUuid)', tenant: '#(universityTenantName)', user: '#(universityUser)' }
@@ -266,6 +259,12 @@ Feature: Initialize mod-consortia integration tests
     * def shadowConsortiaAdmin = { id: '#(centralAdminId)', tenant: '#(universityTenantName)' }
     * configure cookies = null
     * call putCaps { tenant: '#(universityTenantName)', user: '#(shadowConsortiaAdmin)' }
+
+    # Extend Keycloak access token lifespan to 1 hour for both tenants.
+    # The default 10-minute lifespan causes FolioContextExecutionException in mod-tlr when
+    # system user tokens expire during long retry windows (sharing poll + allowed-service-points).
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(centralTenantName)' }
+    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(universityTenantName)' }
 
   Scenario: Prepare data
     * def result = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenantName)' }

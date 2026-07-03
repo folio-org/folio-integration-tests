@@ -32,6 +32,10 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
   private static final int THREAD_COUNT = 4;
 
   private static final String[] FEATURES = {
+    // SLOW FEATURES - moved to the top so that a complete execution with threads finishes earlier
+    "open-order-instance-link",
+    "order-status-automatic-change",
+    // END OF SLOW FEATURES
     "bind-piece",
     "cancel-and-delete-order",
     "cancel-item-after-canceling-poline-in-multi-line-orders",
@@ -45,7 +49,6 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     "check-re-encumber-property",
     "close-order-and-release-encumbrances",
     "close-order-including-lines",
-    "order-status-automatic-change",
     "create-five-pieces",
     "create-open-composite-order",
     "create-order-that-has-not-enough-money",
@@ -70,7 +73,6 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     "open-ongoing-order",
     "open-ongoing-order-if-interval-or-renewaldate-notset",
     "open-order-failure-side-effects",
-    "open-order-instance-link",
     "open-order-success-with-expenditure-restrictions",
     "open-orders-with-poLines",
     "open-order-with-different-po-line-currency",
@@ -113,6 +115,7 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     "update-purchase-order-with-order-lines",
     "update-purchase-order-workflow-status",
     "validate-fund-distribution-for-zero-price",
+    "validate-multi-year-prepayment-term",
     "validate-pol-receipt-not-required-with-checkin-items",
     "create-order-with-suppress-instance-from-discovery",
     "auto-populate-fund-code",
