@@ -13,6 +13,7 @@ class FolioEcsCirculationTests extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH = "classpath:vega/systemwide-service-points/features/";
   private static final String ECS_REQUESTS_BASE_PATH = "classpath:vega/ecs-requests/features/";
+  private static final String MEDIATED_REQUESTS_BASE_PATH = "classpath:vega/mediated-requests/";
 
   public FolioEcsCirculationTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -50,5 +51,10 @@ class FolioEcsCirculationTests extends TestBaseEureka {
   @Test
   void staffSlipsTests() {
     runFeature("classpath:vega/staff-slips/features/staff-slips.feature");
+  }
+
+  @Test
+  void mediatedRequestsTests() {
+    runFeature(MEDIATED_REQUESTS_BASE_PATH + "mediated-requests.feature");
   }
 }
