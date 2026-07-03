@@ -20,13 +20,13 @@ To run all existing API tests on localhost
 mvn test
 ```
 
-To run all existing API tests on [snapshot environment](https://folio-snapshot-okapi.dev.folio.org:443)
+To run all existing API tests on snapshot environment (Eureka-based https://folio-etesting-snapshot-kong.ci.folio.org, some tests that haven't migrated may still run on Okapi-based https://folio-snapshot-okapi.dev.folio.org)
 
 ```
 mvn test -DargLine="-Dkarate.env=snapshot"
 ```
 
-To run all existing API tests on [snapshot-2 environment](https://folio-snapshot-2-okapi.dev.folio.org:443)
+To run all existing API tests on snapshot-2 environment (Eureka-based https://folio-etesting-snapshot2-kong.ci.folio.org, some tests that haven't migrated may still run on Okapi-based https://folio-snapshot-2-okapi.dev.folio.org)
 
 ```
 mvn test -DargLine="-Dkarate.env=snapshot-2"
