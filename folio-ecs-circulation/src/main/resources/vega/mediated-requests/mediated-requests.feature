@@ -47,6 +47,8 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def mediatedRequestId = uuid()
     * configure headers = headersUniversity
 
+    # Use the central service point as pickup — it is the shared pickup location visible
+    # across tenants, matching the pattern used by ECS requests.
     Given path 'requests-mediated/mediated-requests'
     And request
       """
@@ -61,7 +63,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
         "itemId": "#(inventory.itemId)",
         "item": { "barcode": "#(inventory.itemBarcode)" },
         "requesterId": "#(patron.requesterId)",
-        "pickupServicePointId": "#(mrUniServicePointId)"
+        "pickupServicePointId": "#(mrCentralServicePointId)"
       }
       """
     When method POST
@@ -74,7 +76,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.instanceId == inventory.instanceId
     And match response.holdingsRecordId == inventory.holdingId
     And match response.requesterId == patron.requesterId
-    And match response.pickupServicePointId == mrUniServicePointId
+    And match response.pickupServicePointId == mrCentralServicePointId
 
     Given path 'requests-mediated/mediated-requests', mediatedRequestId
     When method GET
@@ -87,4 +89,4 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.instanceId == inventory.instanceId
     And match response.holdingsRecordId == inventory.holdingId
     And match response.requesterId == patron.requesterId
-    And match response.pickupServicePointId == mrUniServicePointId
+    And match response.pickupServicePointId == mrCentralServicePointId
