@@ -2016,7 +2016,7 @@ Feature: Requests tests
     # clear extMaterialTypeName so it does not bleed into features called after this one
     * def extMaterialTypeName = null
 
-  @C663341
+  # @C663341 - Obsolete
   Scenario: Search requests of all types and verify request UUID appears in search results
     # Page request: Available item checked out by nobody; only Page request is possible
     * def pageRequestId = call uuid1
@@ -2246,7 +2246,7 @@ Feature: Requests tests
     When method DELETE
     Then status 204
 
-  @515011
+  @C515011
   Scenario: staffUsername token can be added to Request delivery staff slip and renders with the correct username
     * def extMaterialTypeId = call uuid1
     * def extMaterialTypeName = 'staff-username-mat-' + java.util.UUID.randomUUID()
