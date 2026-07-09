@@ -37,7 +37,8 @@ class GobiApiTest extends TestBaseEureka implements AcquisitionsTest {
     "find-holdings-by-location-and-instance",
     "validate-pol-receipt-not-required-with-checkin-items",
     "validate-pol-suppress-instance-from-discovery",
-    "verify-tenant-address-lookup.feature"
+    "verify-tenant-address-lookup.feature",
+    "verify-expense-class-lookup.feature"
   };
 
   public GobiApiTest() {

@@ -32,6 +32,9 @@ Feature: mod-gobi integration tests
   Scenario: Verify tenant address lookup populates billTo on order
     * call read('features/verify-tenant-address-lookup.feature')
 
+  Scenario: Verify expense class lookup populates fundDistribution.expenseClassId on order
+    * call read('features/verify-expense-class-lookup.feature')
+
   Scenario: Receipt not required sets receiving workflow to Independent for Pending order
     * call read('features/receipt-not-required-pending-order-independent-workflow.feature')
 
