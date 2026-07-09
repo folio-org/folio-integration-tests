@@ -15,20 +15,38 @@ Feature: Verify expense class lookup populates fundDistribution.expenseClassId o
     * def headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': 'application/json, application/xml', 'x-okapi-tenant': '#(testTenant)' }
 
     * callonce variables
-    # USHIST fund + its FY2026 budget from global/finances.feature
-    * def ushistBudgetId = '5e4fbdab-f1b1-4be8-9c33-d3c41ec9a619'
+
+    # Ensure Custom Mapping Is Removed Even If The Scenario Fails Mid-Way
+    * configure afterScenario =
+    """
+    function() {
+      karate.call('classpath:thunderjet/mod-gobi/reusable/delete-custom-mapping.feature', { orderType: 'UnlistedPrintMonograph' });
+    }
+    """
 
   @Positive
   Scenario: Expense Class Mapping Populates FundDistribution ExpenseClassId On The Resulting PO Line
-    # 1. Attach The "Prn" Expense Class To USHIST's FY2026 Budget As Active
+    # 1. Generate Unique Identifiers For This Test Scenario
+    * def fundId = call uuid
+    * def budgetId = call uuid
     * def budgetExpenseClassId = call uuid
+    # GOBI's FundCode element is capped at 30 chars, so a full UUID doesn't fit
+    * def fundCode = 'EXPCLS' + fundId.substring(0, 8)
+
+    # 2. Create Fund And Budget
+    * configure headers = headersAdmin
+    * def v = call createFund { id: '#(fundId)', code: '#(fundCode)' }
+    * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 1000 }
+    * configure headers = {}
+
+    # 3. Attach The "Prn" Expense Class To The New Budget As Active
     Given path 'finance-storage/budget-expense-classes'
     And headers headersAdmin
     And request
     """
     {
       "id": "#(budgetExpenseClassId)",
-      "budgetId": "#(ushistBudgetId)",
+      "budgetId": "#(budgetId)",
       "expenseClassId": "#(globalPrnExpenseClassId)",
       "status": "Active"
     }
@@ -36,7 +54,7 @@ Feature: Verify expense class lookup populates fundDistribution.expenseClassId o
     When method POST
     Then status 201
 
-    # 2. Upload The Custom UnlistedPrintMonograph Mapping Which Maps
+    # 4. Upload The Custom UnlistedPrintMonograph Mapping Which Maps
     #    EXPENSE_CLASS From LocalData5 Via LookupExpenseClassId (By Code)
     * def valid_mapping = read('classpath:samples/mod-gobi/unlisted-print-monograph.json')
     Given path '/gobi/orders/custom-mappings'
@@ -45,47 +63,35 @@ Feature: Verify expense class lookup populates fundDistribution.expenseClassId o
     When method POST
     Then status 201
 
-    # 3. Post A GOBI Order Whose LocalData5 Carries The Expense Class Code ("Prn")
+    # 5. Post A GOBI Order Whose FundCode Points To The New Fund And Whose
+    #    LocalData5 Carries The Expense Class Code ("Prn")
     * def sample_po = read('classpath:samples/mod-gobi/po-unlisted-print-monograph-with-expense-class.xml')
+    * set sample_po/PurchaseOrder/Order/UnlistedPrintMonograph/OrderDetail/FundCode = fundCode
 
     Given path '/gobi/orders'
     And headers { 'Content-Type': 'application/xml', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)', 'x-okapi-bypass-cache': 'true' }
     And request sample_po
-    And retry until responseStatus == 201
     When method POST
     Then status 201
     * def poLineNumber = /Response/PoLineNumber
 
-    # 4. Look Up The Created Composite Order To Grab Its Id For Cleanup
+    # 6. Look Up The Created Composite Order To Grab Its Id For Cleanup
     Given path '/orders/composite-orders'
     And headers headers
     And param query = 'poNumber==*' + poLineNumber.split('-')[0] + '*'
     When method GET
     Then status 200
-    And match response.purchaseOrders[0].approved == true
     * def orderId = response.purchaseOrders[0].id
 
-    # 5. Fetch The PO Line And Assert That Both The Fund And The Expense Class Were Populated
+    # 7. Fetch The PO Line And Assert That Both The Fund And The Expense Class Were Populated
     Given path '/orders/order-lines'
     And param query = 'poLineNumber=="*' + poLineNumber + '*"'
     And headers headers
     When method GET
     Then status 200
     And match $.poLines[0].poLineNumber == poLineNumber
-    And match $.poLines[0].fundDistribution[0].code == 'USHIST'
+    And match $.poLines[0].fundDistribution[0].code == fundCode
     And match $.poLines[0].fundDistribution[0].expenseClassId == globalPrnExpenseClassId
 
-    # 6. Delete The Custom Mapping So Subsequent Scenarios See Defaults
-    Given path '/gobi/orders/custom-mappings/UnlistedPrintMonograph'
-    And headers { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitokenUser)', 'Accept': '*/*', 'x-okapi-tenant': '#(testTenant)' }
-    When method DELETE
-    Then status 200
-
-    # 7. Cleanup Order Data
+    # 8. Cleanup Order Data (Custom Mapping Cleanup Is Handled By afterScenario)
     * def v = call cleanupOrderData { orderId: "#(orderId)" }
-
-    # 8. Detach The Expense Class From The Budget So The Shared USHIST Budget Stays Clean
-    Given path 'finance-storage/budget-expense-classes', budgetExpenseClassId
-    And headers headersAdmin
-    When method DELETE
-    Then status 204

@@ -51,7 +51,6 @@ Feature: Initialize mod-gobi integration tests
       | name                                                          |
       | 'finance.budgets.item.post'                                   |
       | 'finance.expense-classes.item.post'                           |
-      | 'finance-storage.budget-expense-classes.item.delete'          |
       | 'finance-storage.budget-expense-classes.item.post'            |
       | 'finance.fiscal-years.item.post'                              |
       | 'finance.fund-types.item.post'                                |
