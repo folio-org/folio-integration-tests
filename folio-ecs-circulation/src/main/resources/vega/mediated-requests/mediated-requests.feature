@@ -12,13 +12,15 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
 
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
     * def createPatronUser = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreatePatronUser')
-    * def createInventory = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreateInventory')
+    * def createInventoryInCollege = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreateSharedInstanceWithItemInCollege')
 
     # Shared logins reused by every scenario
     * def uniLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * def uniOkapitoken = uniLogin.okapitoken
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def centralOkapitoken = centralLogin.okapitoken
+    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
+    * def collegeOkapitoken = collegeLogin.okapitoken
 
     * def headersUniversity = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
 
@@ -31,9 +33,13 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
         "consortiumId": "#(consortiumId)",
         "uniOkapitoken": "#(uniOkapitoken)",
         "universityTenant": "#(universityTenant)",
+        "collegeOkapitoken": "#(collegeOkapitoken)",
+        "collegeTenant": "#(collegeTenant)",
         "mrInstanceTypeId": "#(mrInstanceTypeId)",
         "mrUniLocationId": "#(mrUniLocationId)",
         "mrUniHoldingsSourceId": "#(mrUniHoldingsSourceId)",
+        "mrCollegeLocationId": "#(mrCollegeLocationId)",
+        "mrCollegeHoldingsSourceId": "#(mrCollegeHoldingsSourceId)",
         "mrMaterialTypeId": "#(mrMaterialTypeId)",
         "mrLoanTypeId": "#(mrLoanTypeId)"
       }
@@ -43,7 +49,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'MR Page Item-level Test Instance'
-    * def inv = call createInventory inventoryParams
+    * def inv = call createInventoryInCollege inventoryParams
     * def inventory = inv.inventory
 
     * configure headers = headersUniversity

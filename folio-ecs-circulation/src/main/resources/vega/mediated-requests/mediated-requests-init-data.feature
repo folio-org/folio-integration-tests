@@ -6,9 +6,16 @@ Feature: Reusable setup helpers for mediated-requests scenarios
   #   universityTenant
   # Returns: requesterId, requesterBarcode, groupId
 
-  # Parameters accepted by @CreateInventory:
+  # Parameters accepted by @CreateSharedInstanceWithItemInUniversity:
   #   centralOkapitoken, uniOkapitoken, centralTenant, universityTenant,
   #   consortiumId, mrInstanceTypeId, mrUniLocationId, mrUniHoldingsSourceId,
+  #   mrMaterialTypeId, mrLoanTypeId, instanceTitle
+  # Returns: inventory (instanceId, holdingId, itemId, itemBarcode)
+
+  # Parameters accepted by @CreateSharedInstanceWithItemInCollege:
+  #   centralOkapitoken, uniOkapitoken, collegeOkapitoken,
+  #   centralTenant, universityTenant, collegeTenant,
+  #   consortiumId, mrInstanceTypeId, mrCollegeLocationId, mrCollegeHoldingsSourceId,
   #   mrMaterialTypeId, mrLoanTypeId, instanceTitle
   # Returns: inventory (instanceId, holdingId, itemId, itemBarcode)
 
@@ -45,7 +52,7 @@ Feature: Reusable setup helpers for mediated-requests scenarios
     When method POST
     Then status 201
 
-  @CreateInventory
+  @CreateSharedInstanceWithItemInUniversity
   Scenario: create instance in central, share to university, create holding and item
     # Map caller param names to the names expected by ecs-inventory-setup.feature
     * def okapitoken = centralOkapitoken
@@ -54,5 +61,17 @@ Feature: Reusable setup helpers for mediated-requests scenarios
     * def holdingsSourceId = mrUniHoldingsSourceId
     * def materialTypeId = mrMaterialTypeId
     * def loanTypeId = mrLoanTypeId
-    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature')
+    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature@CreateItemForSharedInstanceInUniversity')
     * def inventory = call setupInventory { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', instanceTypeId: '#(instanceTypeId)', locationId: '#(locationId)', holdingsSourceId: '#(holdingsSourceId)', materialTypeId: '#(materialTypeId)', loanTypeId: '#(loanTypeId)', instanceTitle: '#(instanceTitle)' }
+
+  @CreateSharedInstanceWithItemInCollege
+  Scenario: create instance in central, share to university and college, create holding and item in college
+    # Map caller param names to the names expected by ecs-inventory-setup.feature
+    * def okapitoken = centralOkapitoken
+    * def instanceTypeId = mrInstanceTypeId
+    * def locationId = mrCollegeLocationId
+    * def holdingsSourceId = mrCollegeHoldingsSourceId
+    * def materialTypeId = mrMaterialTypeId
+    * def loanTypeId = mrLoanTypeId
+    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature@CreateItemForSharedInstanceInCollege')
+    * def inventory = call setupInventory { okapitoken: '#(okapitoken)', centralTenant: '#(centralTenant)', consortiumId: '#(consortiumId)', uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', instanceTypeId: '#(instanceTypeId)', locationId: '#(locationId)', holdingsSourceId: '#(holdingsSourceId)', materialTypeId: '#(materialTypeId)', loanTypeId: '#(loanTypeId)', instanceTitle: '#(instanceTitle)' }
