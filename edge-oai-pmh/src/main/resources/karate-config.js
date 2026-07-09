@@ -124,7 +124,7 @@ function fn() {
     config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
     config.admin = {
       tenant: 'supertenant',
-      name: 'testing_admin',
+      name: 'supertenant_admin',
       password: 'admin'
     }
   } else if (env == 'rancher') {
@@ -134,7 +134,7 @@ function fn() {
     config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
     config.admin = {
       tenant: 'supertenant',
-      name: 'testing_admin',
+      name: 'supertenant_admin',
       password: 'admin'
     }
     karate.configure('ssl',true)

@@ -18,16 +18,31 @@ Feature: Deleted MARC instances
     * configure headers = headersUniversity
     * def utilsPath = 'classpath:firebird/edge-oai-pmh/features/utils.feature'
 
-  @C729197
+  @C729197 @C468257
   Scenario: Consortia | Verify that deleted MARC Instances are retrieved in the responses of single tenant and cross-tenant harvests
     # Check instances exist
-    Given path 'inventory/instances/'
+    * configure retry = { count: 5, interval: 5000 }
+    * def isAvailableSummerlandMarc =
+      """
+      function(instance) {
+        return instance.source == 'MARC'
+          && instance.title
+          && instance.title.indexOf('Summerland') == 0
+          && !instance.deleted
+          && !instance.discoverySuppress
+          && !instance.staffSuppress;
+      }
+      """
+    Given path 'inventory/instances'
+    And param limit = 1000
+    And retry until responseStatus == 200 && karate.filter(response.instances, isAvailableSummerlandMarc).length >= 3
     When method GET
     Then status 200
-    And match response.totalRecords == 3
-    And def instanceId1 = response.instances[0].id
-    And def instanceId2 = response.instances[1].id
-    And def instanceId3 = response.instances[2].id
+    * def marcInstances = karate.filter(response.instances, isAvailableSummerlandMarc)
+    * assert marcInstances.length >= 3
+    * def instanceId1 = marcInstances[0].id
+    * def instanceId2 = marcInstances[1].id
+    * def instanceId3 = marcInstances[2].id
 
     # create holdings records
     * def holdings1 = call read(utilsPath+'@CreateHoldings') { instanceId:'#(instanceId1)', testTenant: '#(universityTenant)' }
@@ -152,6 +167,169 @@ Feature: Deleted MARC instances
     When method GET
     Then status 200
     And match response.id == instanceId2
+
+    # OAI-PMH settings - Source record storage, skip suppressed from discovery records
+    * def behaviorPayload = read('classpath:samples/behavior.json')
+    * set behaviorPayload.configValue.suppressedRecordsProcessing = 'false'
+    * set behaviorPayload.configValue.deletedRecordsSupport = 'persistent'
+    * set behaviorPayload.configValue.recordsSource = 'Source record storage'
+    * set behaviorPayload.configValue.errorsProcessing = '200'
+
+    # save settings for central tenant
+    Given path 'oai-pmh/configuration-settings'
+    When method GET
+    Then status 200
+    * def behaviorId = get[0] response.configurationSettings[?(@.configName=='behavior')].id
+
+    Given path 'oai-pmh/configuration-settings', behaviorId
+    And request behaviorPayload
+    When method PUT
+    Then status 204
+
+    # save settings for university tenant
+    * configure headers = headersUniversity
+    Given path 'oai-pmh/configuration-settings'
+    When method GET
+    Then status 200
+    * def behaviorId = get[0] response.configurationSettings[?(@.configName=='behavior')].id
+
+    Given path 'oai-pmh/configuration-settings', behaviorId
+    And request behaviorPayload
+    When method PUT
+    Then status 204
+
+    # Suppress shared MARC instance in member tenant
+    Given path 'inventory/instances', instanceId1
+    When method GET
+    Then status 200
+    * def instanceBody = response
+    * set instanceBody.discoverySuppress = true
+
+    Given path 'inventory/instances', instanceId1
+    And request instanceBody
+    When method PUT
+    Then status 204
+
+    Given path 'source-storage/records', instanceId1, 'formatted'
+    And param idType = 'INSTANCE'
+    When method GET
+    Then status 200
+    * def sourceRecordId = response.matchedId ? response.matchedId : response.id
+
+    Given path 'source-storage/records', sourceRecordId, 'suppress-from-discovery'
+    When method PUT
+    Then status 200
+
+    # Suppress shared MARC source record in central tenant
+    * configure headers = headersConsortia
+    Given path 'source-storage/records', instanceId1, 'formatted'
+    And param idType = 'INSTANCE'
+    When method GET
+    Then status 200
+    * def sourceRecordId = response.matchedId ? response.matchedId : response.id
+
+    Given path 'source-storage/records', sourceRecordId, 'suppress-from-discovery'
+    When method PUT
+    Then status 200
+
+    # Suppress shared MARC instance in central tenant
+    Given path 'inventory/instances', instanceId2
+    When method GET
+    Then status 200
+    * def instanceBody = response
+    * set instanceBody.discoverySuppress = true
+
+    Given path 'inventory/instances', instanceId2
+    And request instanceBody
+    When method PUT
+    Then status 204
+
+    Given path 'source-storage/records', instanceId2, 'formatted'
+    And param idType = 'INSTANCE'
+    When method GET
+    Then status 200
+    * def sourceRecordId = response.matchedId ? response.matchedId : response.id
+
+    Given path 'source-storage/records', sourceRecordId, 'suppress-from-discovery'
+    When method PUT
+    Then status 200
+
+    * pause(10000)
+    * def identifier1 = 'oai:folio.org:' + universityTenant + '/' + instanceId1
+    * def identifier2 = 'oai:folio.org:' + universityTenant + '/' + instanceId2
+
+    * url edgeUrl
+    * configure headers = { 'Accept': 'text/xml' }
+    * configure retry = { count: 12, interval: 2000 }
+
+    # Suppressed member instance is skipped for marc21
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'GetRecord'
+    And param identifier = identifier1
+    And retry until responseStatus == 200 && karate.toString(response).indexOf('idDoesNotExist') > -1
+    When method GET
+    Then status 200
+    And match response//error/@code == 'idDoesNotExist'
+
+    # Suppressed central instance is skipped for marc21
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'marc21'
+    And param verb = 'GetRecord'
+    And param identifier = identifier2
+    And retry until responseStatus == 200 && karate.toString(response).indexOf('idDoesNotExist') > -1
+    When method GET
+    Then status 200
+    And match response//error/@code == 'idDoesNotExist'
+
+    # Suppressed member instance is skipped for marc21_withholdings
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'GetRecord'
+    And param identifier = identifier1
+    And retry until responseStatus == 200 && karate.toString(response).indexOf('idDoesNotExist') > -1
+    When method GET
+    Then status 200
+    And match response//error/@code == 'idDoesNotExist'
+
+    # Suppressed central instance is skipped for marc21_withholdings
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'marc21_withholdings'
+    And param verb = 'GetRecord'
+    And param identifier = identifier2
+    And retry until responseStatus == 200 && karate.toString(response).indexOf('idDoesNotExist') > -1
+    When method GET
+    Then status 200
+    And match response//error/@code == 'idDoesNotExist'
+
+    # Suppressed member instance is skipped for oai_dc
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'oai_dc'
+    And param verb = 'GetRecord'
+    And param identifier = identifier1
+    And retry until responseStatus == 200 && karate.toString(response).indexOf('idDoesNotExist') > -1
+    When method GET
+    Then status 200
+    And match response//error/@code == 'idDoesNotExist'
+
+    # Suppressed central instance is skipped for oai_dc
+    Given path 'oai/records'
+    And param apikey = universityApikey
+    And param metadataPrefix = 'oai_dc'
+    And param verb = 'GetRecord'
+    And param identifier = identifier2
+    And retry until responseStatus == 200 && karate.toString(response).indexOf('idDoesNotExist') > -1
+    When method GET
+    Then status 200
+    And match response//error/@code == 'idDoesNotExist'
+
+    * url baseUrl
+    * configure headers = headersConsortia
 
     * def from = isoDate()
 
