@@ -35,7 +35,7 @@ Feature: create instances via data import
     * def uploadId = response.uploadId
 
     # upload file
-    * def content = read('classpath:samples/three-marc-records.mrc')
+    * def content = karate.readAsBytes('classpath:samples/three-marc-records.mrc')
 
     Given url uploadUrl
     And header Content-Type = 'application/octet-stream'
@@ -84,6 +84,29 @@ Feature: create instances via data import
 
     * pause(20000)
 
+    * configure retry = { count: 12, interval: 5000 }
     Given path 'metadata-provider/jobExecutions'
+    And retry until responseStatus == 200 && response.jobExecutions && karate.filter(response.jobExecutions, function(job) { return job.sourcePath == key && (job.status == 'COMMITTED' || job.status == 'ERROR') }).length > 0
+    When method GET
+    Then status 200
+    * def jobExecution = karate.filter(response.jobExecutions, function(job) { return job.sourcePath == key })[0]
+    * assert jobExecution.status == 'COMMITTED'
+    * assert jobExecution.totalRecordsInFile == 3
+
+    # wait until imported MARC instances are available in inventory
+    * def isAvailableSummerlandMarc =
+      """
+      function(instance) {
+        return instance.source == 'MARC'
+          && instance.title
+          && instance.title.indexOf('Summerland') == 0
+          && !instance.deleted
+          && !instance.discoverySuppress
+          && !instance.staffSuppress;
+      }
+      """
+    Given path 'inventory/instances'
+    And param limit = 1000
+    And retry until responseStatus == 200 && karate.filter(response.instances, isAvailableSummerlandMarc).length >= 3
     When method GET
     Then status 200

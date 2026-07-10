@@ -39,7 +39,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
       }
       """
 
-  Scenario: create Item-level Page mediated request and verify it can be retrieved
+  Scenario: create and decline item-level page mediated request
     * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'MR Page Item-level Test Instance'
@@ -91,3 +91,13 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.holdingsRecordId == inventory.holdingId
     And match response.requesterId == patron.requesterId
     And match response.pickupServicePointId == mrCentralServicePointId
+
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId, 'decline'
+    When method POST
+    Then status 204
+
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    When method GET
+    Then status 200
+    And match response.id == mediatedRequestId
+    And match response.status == 'Closed - Declined'

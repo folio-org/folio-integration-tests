@@ -74,6 +74,7 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'search.index.instance-records.reindex.full.post'           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
+      | 'requests-mediated.mediated-requests.decline.execute'       |
 
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
