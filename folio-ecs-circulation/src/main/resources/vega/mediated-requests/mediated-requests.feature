@@ -177,28 +177,34 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match confirmedRequestId == '#notnull'
 
     # Verify the confirmed request exists in the central tenant with correct status and itemId
-    * def centralRequest = call fetchRequestStorageRequest { okapitoken: '#(centralOkapitoken)', tenant: '#(centralTenant)', requestId: '#(confirmedRequestId)' }
+    * configure headers = headersCentral
+    * def centralRequest = call fetchRequestStorageRequest { requestId: '#(confirmedRequestId)' }
     And match centralRequest.request.status == 'Open - Not yet filled'
     And match centralRequest.request.itemId == inventory.itemId
 
     # Verify the confirmed request exists in the college tenant with correct status and itemId
-    * def collegeRequest = call fetchRequestStorageRequest { okapitoken: '#(collegeOkapitoken)', tenant: '#(collegeTenant)', requestId: '#(confirmedRequestId)' }
+    * configure headers = headersCollege
+    * def collegeRequest = call fetchRequestStorageRequest { requestId: '#(confirmedRequestId)' }
     And match collegeRequest.request.status == 'Open - Not yet filled'
     And match collegeRequest.request.itemId == inventory.itemId
 
     # Verify the confirmed request exists in the university tenant with correct status and itemId
-    * def universityRequest = call fetchRequestStorageRequest { okapitoken: '#(uniOkapitoken)', tenant: '#(universityTenant)', requestId: '#(confirmedRequestId)' }
+    * configure headers = headersUniversity
+    * def universityRequest = call fetchRequestStorageRequest { requestId: '#(confirmedRequestId)' }
     And match universityRequest.request.status == 'Open - Not yet filled'
     And match universityRequest.request.itemId == inventory.itemId
 
     # Verify the item status is 'Paged' in the college tenant (where the item physically resides)
-    * def collegeItem = call fetchInventoryItem { okapitoken: '#(collegeOkapitoken)', tenant: '#(collegeTenant)', itemId: '#(inventory.itemId)' }
+    * configure headers = headersCollege
+    * def collegeItem = call fetchInventoryItem { itemId: '#(inventory.itemId)' }
     And match collegeItem.item.status.name == 'Paged'
 
     # Verify the circulation item status is 'Paged' in the university tenant
-    * def universityCirculationItem = call fetchCirculationItem { okapitoken: '#(uniOkapitoken)', tenant: '#(universityTenant)', itemId: '#(inventory.itemId)' }
+    * configure headers = headersUniversity
+    * def universityCirculationItem = call fetchCirculationItem { itemId: '#(inventory.itemId)' }
     And match universityCirculationItem.item.status.name == 'Paged'
 
     # Verify the circulation item status is 'Paged' in the central tenant
-    * def centralCirculationItem = call fetchCirculationItem { okapitoken: '#(centralOkapitoken)', tenant: '#(centralTenant)', itemId: '#(inventory.itemId)' }
+    * configure headers = headersCentral
+    * def centralCirculationItem = call fetchCirculationItem { itemId: '#(inventory.itemId)' }
     And match centralCirculationItem.item.status.name == 'Paged'
