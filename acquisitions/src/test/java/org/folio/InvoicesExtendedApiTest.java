@@ -25,7 +25,8 @@ public class InvoicesExtendedApiTest extends TestBaseEureka implements Acquisiti
 
   private enum Feature implements org.folio.test.config.CommonFeature {
     // moved from InvoicesSmokeApiTest (TestRail group = Extended)
-    FEATURE_1("pay-invoice-with-0-value", true);
+    FEATURE_1("pay-invoice-with-0-value", true),
+    FEATURE_2("fund-code-auto-populate-invoice-lines", true);
 
     private final String fileName;
     private final boolean isEnabled;
@@ -77,6 +78,13 @@ public class InvoicesExtendedApiTest extends TestBaseEureka implements Acquisiti
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void payInvoiceWith0Value() {
     runFeatureTest(Feature.FEATURE_1.getFileName());
+  }
+
+  @Test
+  @DisplayName("(Thunderjet) (C934328) Fund Code Auto Populate Invoice Lines")
+  @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
+  void fundCodeAutoPopulateInvoiceLines() {
+    runFeatureTest(Feature.FEATURE_2.getFileName());
   }
 }
 
