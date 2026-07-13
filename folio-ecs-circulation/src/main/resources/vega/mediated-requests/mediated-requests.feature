@@ -13,6 +13,9 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
     * def createPatronUser = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreatePatronUser')
     * def createInventoryInCollege = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreateSharedInstanceWithItemInCollege')
+    * def fetchRequestStorageRequest = read('classpath:vega/util/mediated-requests-fetch-util.feature@FetchRequestStorageRequest')
+    * def fetchInventoryItem = read('classpath:vega/util/mediated-requests-fetch-util.feature@FetchInventoryItem')
+    * def fetchCirculationItem = read('classpath:vega/util/mediated-requests-fetch-util.feature@FetchCirculationItem')
 
     # Shared logins reused by every scenario
     * def uniLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
@@ -174,46 +177,28 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match confirmedRequestId == '#notnull'
 
     # Verify the confirmed request exists in the central tenant with correct status and itemId
-    * configure headers = headersCentral
-    Given path 'request-storage/requests', confirmedRequestId
-    When method GET
-    Then status 200
-    And match response.status == 'Open - Not yet filled'
-    And match response.itemId == inventory.itemId
+    * def centralRequest = call fetchRequestStorageRequest { okapitoken: '#(centralOkapitoken)', tenant: '#(centralTenant)', requestId: '#(confirmedRequestId)' }
+    And match centralRequest.request.status == 'Open - Not yet filled'
+    And match centralRequest.request.itemId == inventory.itemId
 
     # Verify the confirmed request exists in the college tenant with correct status and itemId
-    * configure headers = headersCollege
-    Given path 'request-storage/requests', confirmedRequestId
-    When method GET
-    Then status 200
-    And match response.status == 'Open - Not yet filled'
-    And match response.itemId == inventory.itemId
+    * def collegeRequest = call fetchRequestStorageRequest { okapitoken: '#(collegeOkapitoken)', tenant: '#(collegeTenant)', requestId: '#(confirmedRequestId)' }
+    And match collegeRequest.request.status == 'Open - Not yet filled'
+    And match collegeRequest.request.itemId == inventory.itemId
 
     # Verify the confirmed request exists in the university tenant with correct status and itemId
-    * configure headers = headersUniversity
-    Given path 'request-storage/requests', confirmedRequestId
-    When method GET
-    Then status 200
-    And match response.status == 'Open - Not yet filled'
-    And match response.itemId == inventory.itemId
+    * def universityRequest = call fetchRequestStorageRequest { okapitoken: '#(uniOkapitoken)', tenant: '#(universityTenant)', requestId: '#(confirmedRequestId)' }
+    And match universityRequest.request.status == 'Open - Not yet filled'
+    And match universityRequest.request.itemId == inventory.itemId
 
     # Verify the item status is 'Paged' in the college tenant (where the item physically resides)
-    * configure headers = headersCollege
-    Given path 'item-storage/items', inventory.itemId
-    When method GET
-    Then status 200
-    And match response.status.name == 'Paged'
+    * def collegeItem = call fetchInventoryItem { okapitoken: '#(collegeOkapitoken)', tenant: '#(collegeTenant)', itemId: '#(inventory.itemId)' }
+    And match collegeItem.item.status.name == 'Paged'
 
     # Verify the circulation item status is 'Paged' in the university tenant
-    * configure headers = headersUniversity
-    Given path 'circulation-item', inventory.itemId
-    When method GET
-    Then status 200
-    And match response.status.name == 'Paged'
+    * def universityCirculationItem = call fetchCirculationItem { okapitoken: '#(uniOkapitoken)', tenant: '#(universityTenant)', itemId: '#(inventory.itemId)' }
+    And match universityCirculationItem.item.status.name == 'Paged'
 
     # Verify the circulation item status is 'Paged' in the central tenant
-    * configure headers = headersCentral
-    Given path 'circulation-item', inventory.itemId
-    When method GET
-    Then status 200
-    And match response.status.name == 'Paged'
+    * def centralCirculationItem = call fetchCirculationItem { okapitoken: '#(centralOkapitoken)', tenant: '#(centralTenant)', itemId: '#(inventory.itemId)' }
+    And match centralCirculationItem.item.status.name == 'Paged'
