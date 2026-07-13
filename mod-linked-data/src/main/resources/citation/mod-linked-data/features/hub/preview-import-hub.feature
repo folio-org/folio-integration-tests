@@ -22,7 +22,7 @@ Feature: Preview and import Hub from a remote RDF URL
     * def preveHubCall = call previewHub { hubUri: '#(hubUri)' }
     * match preveHubCall.response.resource['http://bibfra.me/vocab/lite/Hub']['http://bibfra.me/vocab/library/title'][0]['http://bibfra.me/vocab/library/Title']['http://bibfra.me/vocab/library/mainTitle'][0] == 'Pulse-echo'
     * def creator = preveHubCall.response.resource['http://bibfra.me/vocab/lite/Hub']['_creatorReference'][0]
-    * match creator.label == 'Eckardt, Jason, 1971'
+    * match creator.label == 'Eckardt, Jason, 1971-'
     * match creator.type == 'http://bibfra.me/vocab/lite/Person'
     * match creator.isPreferred == true
 
@@ -39,7 +39,7 @@ Feature: Preview and import Hub from a remote RDF URL
     * def importHubCall = call importHub { hubUri: '#(hubUri)' }
     * match importHubCall.response.resource['http://bibfra.me/vocab/lite/Hub']['http://bibfra.me/vocab/library/title'][0]['http://bibfra.me/vocab/library/Title']['http://bibfra.me/vocab/library/mainTitle'][0] == 'Pulse-echo'
     * def creator = importHubCall.response.resource['http://bibfra.me/vocab/lite/Hub']['_creatorReference'][0]
-    * match creator.label == 'Eckardt, Jason, 1971'
+    * match creator.label == 'Eckardt, Jason, 1971-'
     * match creator.type == 'http://bibfra.me/vocab/lite/Person'
     * match creator.isPreferred == true
 
