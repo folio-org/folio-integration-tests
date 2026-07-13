@@ -196,3 +196,24 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     Then status 200
     And match response.status == 'Open - Not yet filled'
     And match response.itemId == inventory.itemId
+
+    # Verify the item status is 'Paged' in the college tenant (where the item physically resides)
+    * configure headers = headersCollege
+    Given path 'item-storage/items', inventory.itemId
+    When method GET
+    Then status 200
+    And match response.status.name == 'Paged'
+
+    # Verify the circulation item status is 'Paged' in the university tenant
+    * configure headers = headersUniversity
+    Given path 'circulation-item', inventory.itemId
+    When method GET
+    Then status 200
+    And match response.status.name == 'Paged'
+
+    # Verify the circulation item status is 'Paged' in the central tenant
+    * configure headers = headersCentral
+    Given path 'circulation-item', inventory.itemId
+    When method GET
+    Then status 200
+    And match response.status.name == 'Paged'
