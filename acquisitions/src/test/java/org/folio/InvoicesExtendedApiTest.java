@@ -81,6 +81,7 @@ public class InvoicesExtendedApiTest extends TestBaseEureka implements Acquisiti
   }
 
   @Test
+  @DisplayName("(Thunderjet) (C934328) Fund Code Auto Populate Invoice Lines")
   @EnabledIfSystemProperty(named = "test.mode", matches = "no-shared-pool")
   void fundCodeAutoPopulateInvoiceLines() {
     runFeatureTest(Feature.FEATURE_2.getFileName());
