@@ -240,6 +240,14 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     When method POST
     Then match [201, 422] contains responseStatus
 
+    # Create the interim service point in the university (secure) tenant. mod-requests-mediated uses
+    # this hardcoded service point as the pickup service point when confirming a mediated request,
+    # and mod-tlr looks it up in the primary (university) tenant to clone it into the lending tenants.
+    Given path 'service-points'
+    And request { id: '#(mrInterimServicePointId)', name: 'MR Interim Service Point', code: 'MR-SP-INT', discoveryDisplayName: 'MR Interim Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    When method POST
+    Then match [201, 422] contains responseStatus
+
     Given path 'instance-types'
     And request { id: '#(mrInstanceTypeId)', name: 'MR Instance Type', code: 'MRI-T', source: 'local' }
     When method POST
