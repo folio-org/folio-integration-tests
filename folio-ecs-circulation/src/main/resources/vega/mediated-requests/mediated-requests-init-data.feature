@@ -4,6 +4,8 @@ Feature: Reusable setup helpers for mediated-requests scenarios
   # Parameters accepted by @CreatePatronUser:
   #   uniOkapitoken  - university tenant token
   #   universityTenant
+  #   collegeOkapitoken - college tenant token
+  #   collegeTenant
   # Returns: requesterId, requesterBarcode, groupId
 
   # Parameters accepted by @CreateSharedInstanceWithItemInUniversity:
@@ -23,15 +25,23 @@ Feature: Reusable setup helpers for mediated-requests scenarios
     * url baseUrl
 
   @CreatePatronUser
-  Scenario: create a patron user group and user in the university tenant
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
-
+  Scenario: create a patron user group and user in the university tenant, and the same group in college
     * def groupId = uuid()
+    * def groupName = "mr-grp-" + randomMillis()
+
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
     Given path 'groups'
-    And request { id: '#(groupId)', group: '#("mr-grp-" + randomMillis())', desc: 'Mediated request test group', expirationOffsetInDays: '60' }
+    And request { id: '#(groupId)', group: '#(groupName)', desc: 'Mediated request test group', expirationOffsetInDays: '60' }
     When method POST
     Then status 201
 
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeOkapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+    Given path 'groups'
+    And request { id: '#(groupId)', group: '#(groupName)', desc: 'Mediated request test group', expirationOffsetInDays: '60' }
+    When method POST
+    Then status 201
+
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
     * def requesterId = uuid()
     * def requesterBarcode = 'MR-USER-' + randomMillis()
     Given path 'users'
@@ -54,7 +64,6 @@ Feature: Reusable setup helpers for mediated-requests scenarios
 
   @CreateSharedInstanceWithItemInUniversity
   Scenario: create instance in central, share to university, create holding and item
-    # Map caller param names to the names expected by ecs-inventory-setup.feature
     * def okapitoken = centralOkapitoken
     * def instanceTypeId = mrInstanceTypeId
     * def locationId = mrUniLocationId
@@ -66,7 +75,6 @@ Feature: Reusable setup helpers for mediated-requests scenarios
 
   @CreateSharedInstanceWithItemInCollege
   Scenario: create instance in central, share to university and college, create holding and item in college
-    # Map caller param names to the names expected by ecs-inventory-setup.feature
     * def okapitoken = centralOkapitoken
     * def instanceTypeId = mrInstanceTypeId
     * def locationId = mrCollegeLocationId

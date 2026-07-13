@@ -1,4 +1,4 @@
-﻿@ignore
+@ignore
 Feature: Create ECS inventory (instance + holding + item) and share instance to university tenant
   # Creates the inventory via the synchronous sharing direction (central -> university).
   # Sharing FROM the central tenant TO a member tenant completes synchronously -
@@ -127,6 +127,7 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
     #   instanceTitle     - title for the new instance
     * def headersCentral = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Authtoken-Refresh-Cache': 'true' }
     * def headersCollege = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeOkapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+
     # Step 1: Create instance in central tenant
     * def instanceId = uuid()
     * configure headers = headersCentral
@@ -143,7 +144,8 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
       """
     When method POST
     Then status 201
-    # Step 2: Share central -> university (synchronous)
+
+    # Step 2: Share central -> university
     * def sharingIdUni = uuid()
     Given path 'consortia', consortiumId, 'sharing/instances'
     And request
@@ -159,7 +161,8 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
     Then status 201
     And match response.instanceIdentifier == instanceId
     And match response.status == 'COMPLETE'
-    # Step 3: Share central -> college (synchronous)
+
+    # Step 3: Share central -> college
     * def sharingIdCol = uuid()
     Given path 'consortia', consortiumId, 'sharing/instances'
     And request
@@ -175,6 +178,7 @@ Feature: Create ECS inventory (instance + holding + item) and share instance to 
     Then status 201
     And match response.instanceIdentifier == instanceId
     And match response.status == 'COMPLETE'
+
     # Step 4: Verify college copy has source = CONSORTIUM-FOLIO
     * configure headers = headersCollege
     Given path 'inventory/instances', instanceId

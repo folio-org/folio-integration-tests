@@ -118,11 +118,13 @@ Feature: Common mediated-requests consortium setup (central + university + colle
 
     # Grant shadow consortia_admin in college tenant
     * table collegeShadowPermissions
-      | name                                  |
-      | 'inventory.instances.item.get'        |
-      | 'inventory.items.item.get'            |
-      | 'inventory-storage.holdings.item.get' |
-      | 'user-tenants.collection.get'         |
+      | name                                                        |
+      | 'inventory.instances.item.get'                              |
+      | 'inventory.items.item.get'                                  |
+      | 'inventory-storage.holdings.item.get'                       |
+      | 'user-tenants.collection.get'                               |
+      | 'requests-mediated.mediated-request.item.post'              |
+      | 'requests-mediated.mediated-request.item.get'               |
 
     * def userPermissions = collegeShadowPermissions
     * def shadowConsortiaAdminCollege = { id: '#(consortiaAdmin.id)', tenant: '#(collegeTenant)' }
@@ -275,7 +277,74 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     When method POST
     Then status 201
 
-    # ========== Step 6: Setup circulation policies ==========
+    # ========== Step 6: Setup inventory data in college tenant ==========
+    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+
+    Given path 'location-units/institutions'
+    And request { id: '#(mrCollegeInstitutionId)', name: 'MR Test Institution College', code: 'MRI-COL' }
+    When method POST
+    Then status 201
+
+    Given path 'location-units/campuses'
+    And request { id: '#(mrCollegeCampusId)', name: 'MR Test Campus College', code: 'MRC-COL', institutionId: '#(mrCollegeInstitutionId)' }
+    When method POST
+    Then status 201
+
+    Given path 'location-units/libraries'
+    And request { id: '#(mrCollegeLibraryId)', name: 'MR Test Library College', code: 'MRL-COL', campusId: '#(mrCollegeCampusId)' }
+    When method POST
+    Then status 201
+
+    Given path 'service-points'
+    And request { id: '#(mrCollegeServicePointId)', name: 'MR College Service Point', code: 'MR-SP-COL', discoveryDisplayName: 'MR College Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    When method POST
+    Then status 201
+
+    # Also create the central service point in the college tenant for pickup availability
+    Given path 'service-points'
+    And request { id: '#(mrCentralServicePointId)', name: 'MR Central Service Point', code: 'MR-SP-C', discoveryDisplayName: 'MR Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    When method POST
+    Then match [201, 422] contains responseStatus
+
+    Given path 'instance-types'
+    And request { id: '#(mrInstanceTypeId)', name: 'MR Instance Type', code: 'MRI-T', source: 'local' }
+    When method POST
+    Then status 201
+
+    Given path 'loan-types'
+    And request { id: '#(mrLoanTypeId)', name: 'MR Loan Type' }
+    When method POST
+    Then status 201
+
+    Given path 'material-types'
+    And request { id: '#(mrMaterialTypeId)', name: 'MR Material Type' }
+    When method POST
+    Then status 201
+
+    Given path 'holdings-sources'
+    And request { id: '#(mrCollegeHoldingsSourceId)', name: 'MR FOLIO College' }
+    When method POST
+    Then status 201
+
+    Given path 'locations'
+    And request
+      """
+      {
+        "id": "#(mrCollegeLocationId)",
+        "name": "MR College Location",
+        "code": "MR-LOC-COL",
+        "institutionId": "#(mrCollegeInstitutionId)",
+        "campusId": "#(mrCollegeCampusId)",
+        "libraryId": "#(mrCollegeLibraryId)",
+        "primaryServicePoint": "#(mrCentralServicePointId)",
+        "servicePointIds": ["#(mrCentralServicePointId)", "#(mrCollegeServicePointId)"]
+      }
+      """
+    When method POST
+    Then status 201
+
+    # ========== Step 7: Setup circulation policies ==========
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
@@ -290,3 +359,6 @@ Feature: Common mediated-requests consortium setup (central + university + colle
 
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * call setupCirculationPolicies { tenant: '#(universityTenant)', okapitoken: '#(universityLogin.okapitoken)', policyLabel: 'MR-University' }
+
+    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
+    * call setupCirculationPolicies { tenant: '#(collegeTenant)', okapitoken: '#(collegeLogin.okapitoken)', policyLabel: 'MR-College' }
