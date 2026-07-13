@@ -48,7 +48,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
       """
 
   Scenario: create and decline item-level page mediated request
-    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)' }
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'MR Page Item-level Test Instance'
     * def inv = call createInventoryInCollege inventoryParams
@@ -111,7 +111,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.status == 'Closed - Declined'
 
   Scenario: create and confirm item-level mediated page request
-    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)' }
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'FAT-27027'
     * def inv = call createInventoryInCollege inventoryParams

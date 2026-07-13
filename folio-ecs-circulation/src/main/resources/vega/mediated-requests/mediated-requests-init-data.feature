@@ -6,6 +6,8 @@ Feature: Reusable setup helpers for mediated-requests scenarios
   #   universityTenant
   #   collegeOkapitoken - college tenant token
   #   collegeTenant
+  #   centralOkapitoken - central tenant token
+  #   centralTenant
   # Returns: requesterId, requesterBarcode, groupId
 
   # Parameters accepted by @CreateSharedInstanceWithItemInUniversity:
@@ -25,7 +27,7 @@ Feature: Reusable setup helpers for mediated-requests scenarios
     * url baseUrl
 
   @CreatePatronUser
-  Scenario: create a patron user group and user in the university tenant, and the same group in college
+  Scenario: create a patron user group and user in the university tenant, and the same group in college and central
     * def groupId = uuid()
     * def groupName = "mr-grp-" + randomMillis()
 
@@ -36,6 +38,12 @@ Feature: Reusable setup helpers for mediated-requests scenarios
     Then status 201
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeOkapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+    Given path 'groups'
+    And request { id: '#(groupId)', group: '#(groupName)', desc: 'Mediated request test group', expirationOffsetInDays: '60' }
+    When method POST
+    Then status 201
+
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralOkapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
     Given path 'groups'
     And request { id: '#(groupId)', group: '#(groupName)', desc: 'Mediated request test group', expirationOffsetInDays: '60' }
     When method POST
