@@ -11,8 +11,8 @@ Feature: Verify Linked Data Graph
   Scenario: Verify Creator of Work in graph (MARC 100)
     * def creatorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'CREATOR')[0].target)
     * def authorSubgraph = resolveSubgraphIfId(workSubgraph.outgoingEdges.filter(x => x.predicate == 'AUTHOR')[0].target)
-    * match creatorSubgraph.label == 'Edgell, David L., Sr., David Lee, 1938'
-    * match creatorSubgraph.doc == { "http://bibfra.me/vocab/lite/date": ["1938-"], "http://bibfra.me/vocab/lite/name": ["Edgell, David L."], "http://bibfra.me/vocab/lite/label":["Edgell, David L., Sr., David Lee, 1938"], "http://bibfra.me/vocab/library/titles": ["Sr."], "http://bibfra.me/vocab/lite/nameAlternative": ["David Lee"] }
+    * match creatorSubgraph.label == 'Edgell, David L., Sr., David Lee, 1938-'
+    * match creatorSubgraph.doc == { "http://bibfra.me/vocab/lite/date": ["1938-"], "http://bibfra.me/vocab/lite/name": ["Edgell, David L."], "http://bibfra.me/vocab/lite/label":["Edgell, David L., Sr., David Lee, 1938-"], "http://bibfra.me/vocab/library/titles": ["Sr."], "http://bibfra.me/vocab/lite/nameAlternative": ["David Lee"] }
     * match creatorSubgraph.types == [ 'PERSON' ]
     * match authorSubgraph.id == creatorSubgraph.id
     * match authorSubgraph.label == creatorSubgraph.label

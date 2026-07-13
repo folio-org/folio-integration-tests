@@ -66,10 +66,10 @@ Feature: Import Bibframe2 RDF - Verify graph
     * eval validateSubjectGraph(subjectGraphs, 'Readers (Primary)', readersDoc, 'TOPIC', readersTargetDoc, readersLccn)
 
     # Validate Wang, Jack, 1972 subject with LCCN
-    * def wangDoc = { 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'], 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972'] }
-    * def wangTargetDoc = { 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972'], 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'] }
+    * def wangDoc = { 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'], 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972-'] }
+    * def wangTargetDoc = { 'http://bibfra.me/vocab/lite/label': ['Wang, Jack, 1972-'], 'http://bibfra.me/vocab/lite/date': ['1972-'], 'http://bibfra.me/vocab/lite/name': ['Wang, Jack'] }
     * def wangLccn = { label: 'no2012142443', types: ['ID_LCNAF'], doc: { 'http://bibfra.me/vocab/lite/link': ['http://id.loc.gov/authorities/names/no2012142443'], 'http://bibfra.me/vocab/lite/name': ['no2012142443'], 'http://bibfra.me/vocab/lite/label': ['no2012142443'] } }
-    * eval validateSubjectGraph(subjectGraphs, 'Wang, Jack, 1972', wangDoc, 'PERSON', wangTargetDoc, wangLccn)
+    * eval validateSubjectGraph(subjectGraphs, 'Wang, Jack, 1972-', wangDoc, 'PERSON', wangTargetDoc, wangLccn)
 
     # Validate Private flying -- Accidents -- United States -- Periodicals subject with LCCN and sub-focuses
     * def conceptDoc =
