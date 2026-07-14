@@ -13,9 +13,10 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
     * def createPatronUser = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreatePatronUser')
     * def createInventoryInCollege = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreateSharedInstanceWithItemInCollege')
-    * def fetchRequestStorageRequest = read('classpath:vega/util/mediated-requests-fetch-util.feature@FetchRequestStorageRequest')
-    * def fetchInventoryItem = read('classpath:vega/util/mediated-requests-fetch-util.feature@FetchInventoryItem')
-    * def fetchCirculationItem = read('classpath:vega/util/mediated-requests-fetch-util.feature@FetchCirculationItem')
+    * def getRequest = read('classpath:vega/util/crud-utils.feature@GetRequest')
+    * def getItem = read('classpath:vega/util/crud-utils.feature@GetItem')
+    * def getCirculationItem = read('classpath:vega/util/crud-utils.feature@GetCirculationItem')
+    * def getMediatedRequest = read('classpath:vega/util/crud-utils.feature@GetMediatedRequest')
 
     # Shared logins reused by every scenario
     * def uniLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
@@ -90,9 +91,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.requesterId == patron.requesterId
     And match response.pickupServicePointId == mrCentralServicePointId
 
-    Given path 'requests-mediated/mediated-requests', mediatedRequestId
-    When method GET
-    Then status 200
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
     And match response.id == mediatedRequestId
     And match response.requestType == 'Page'
     And match response.requestLevel == 'Item'
@@ -107,9 +106,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     When method POST
     Then status 204
 
-    Given path 'requests-mediated/mediated-requests', mediatedRequestId
-    When method GET
-    Then status 200
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
     And match response.id == mediatedRequestId
     And match response.status == 'Closed - Declined'
 
@@ -151,9 +148,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.requesterId == patron.requesterId
     And match response.pickupServicePointId == mrCentralServicePointId
 
-    Given path 'requests-mediated/mediated-requests', mediatedRequestId
-    When method GET
-    Then status 200
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
     And match response.id == mediatedRequestId
     And match response.requestType == 'Page'
     And match response.requestLevel == 'Item'
@@ -168,43 +163,36 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     When method POST
     Then status 204
 
-    Given path 'requests-mediated/mediated-requests', mediatedRequestId
-    When method GET
-    Then status 200
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
     And match response.id == mediatedRequestId
     And match response.status == 'Open - Not yet filled'
     * def confirmedRequestId = response.confirmedRequestId
     And match confirmedRequestId == '#notnull'
 
-    # Verify the confirmed request exists in the central tenant with correct status and itemId
-    * configure headers = headersCentral
-    * def centralRequest = call fetchRequestStorageRequest { requestId: '#(confirmedRequestId)' }
-    And match centralRequest.request.status == 'Open - Not yet filled'
-    And match centralRequest.request.itemId == inventory.itemId
-
-    # Verify the confirmed request exists in the college tenant with correct status and itemId
+    # Verify request and item in lending tenant (college)
     * configure headers = headersCollege
-    * def collegeRequest = call fetchRequestStorageRequest { requestId: '#(confirmedRequestId)' }
-    And match collegeRequest.request.status == 'Open - Not yet filled'
-    And match collegeRequest.request.itemId == inventory.itemId
+    * call getRequest { requestId: '#(confirmedRequestId)' }
+    And match response.status == 'Open - Not yet filled'
+    And match response.itemId == inventory.itemId
 
-    # Verify the confirmed request exists in the university tenant with correct status and itemId
-    * configure headers = headersUniversity
-    * def universityRequest = call fetchRequestStorageRequest { requestId: '#(confirmedRequestId)' }
-    And match universityRequest.request.status == 'Open - Not yet filled'
-    And match universityRequest.request.itemId == inventory.itemId
+    * call getItem { itemId: '#(inventory.itemId)' }
+    And match response.status.name == 'Paged'
 
-    # Verify the item status is 'Paged' in the college tenant (where the item physically resides)
-    * configure headers = headersCollege
-    * def collegeItem = call fetchInventoryItem { itemId: '#(inventory.itemId)' }
-    And match collegeItem.item.status.name == 'Paged'
-
-    # Verify the circulation item status is 'Paged' in the university tenant
-    * configure headers = headersUniversity
-    * def universityCirculationItem = call fetchCirculationItem { itemId: '#(inventory.itemId)' }
-    And match universityCirculationItem.item.status.name == 'Paged'
-
-    # Verify the circulation item status is 'Paged' in the central tenant
+    # Verify request and circulation item in central tenant
     * configure headers = headersCentral
-    * def centralCirculationItem = call fetchCirculationItem { itemId: '#(inventory.itemId)' }
-    And match centralCirculationItem.item.status.name == 'Paged'
+    * call getRequest { requestId: '#(confirmedRequestId)' }
+    And match response.status == 'Open - Not yet filled'
+    And match response.itemId == inventory.itemId
+
+    * call getCirculationItem { itemId: '#(inventory.itemId)' }
+    And match response.status.name == 'Paged'
+
+    # Verify request and circulation item in secure tenant (university)
+    * configure headers = headersUniversity
+    * call getRequest { requestId: '#(confirmedRequestId)' }
+    And match response.status == 'Open - Not yet filled'
+    And match response.itemId == inventory.itemId
+
+    * call getCirculationItem { itemId: '#(inventory.itemId)' }
+    And match response.status.name == 'Paged'
+

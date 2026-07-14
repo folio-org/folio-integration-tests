@@ -1,5 +1,5 @@
 @ignore
-Feature: Reusable fetch helpers for mediated-requests scenarios (requests, items, circulation items)
+Feature: Reusable request/item storage helpers for mediated-requests scenarios (GET, POST, PUT, DELETE, etc.)
 
   # These scenarios rely on the caller having already set the desired tenant headers
   # (e.g. `* configure headers = headersCentral`) before invoking them with `call`.
@@ -9,32 +9,26 @@ Feature: Reusable fetch helpers for mediated-requests scenarios (requests, items
   Background:
     * url baseUrl
 
-  # Parameters accepted by @FetchRequestStorageRequest:
-  #   requestId   - request-storage request UUID
-  # Returns: request (the fetched request-storage request body)
-  @FetchRequestStorageRequest
+  @GetRequest
   Scenario: fetch a request from request-storage in the currently configured tenant
     Given path 'request-storage/requests', requestId
     When method GET
     Then status 200
-    * def request = response
 
-  # Parameters accepted by @FetchInventoryItem:
-  #   itemId      - item-storage item UUID
-  # Returns: item (the fetched item-storage item body)
-  @FetchInventoryItem
+  @GetItem
   Scenario: fetch an item from item-storage in the currently configured tenant
     Given path 'item-storage/items', itemId
     When method GET
     Then status 200
-    * def item = response
 
-  # Parameters accepted by @FetchCirculationItem:
-  #   itemId      - circulation item UUID
-  # Returns: item (the fetched circulation item body)
-  @FetchCirculationItem
+  @GetCirculationItem
   Scenario: fetch a circulation item in the currently configured tenant
     Given path 'circulation-item', itemId
     When method GET
     Then status 200
-    * def item = response
+
+  @GetMediatedRequest
+  Scenario: fetch a mediated request in the currently configured tenant
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    When method GET
+    Then status 200

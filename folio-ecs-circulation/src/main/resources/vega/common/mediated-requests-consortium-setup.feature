@@ -47,6 +47,8 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'inventory-storage.service-points.item.post'                |
       | 'inventory-storage.holdings.item.post'                      |
       | 'inventory-storage.items.item.post'                         |
+      | 'inventory-storage.items.collection.get'                    |
+      | 'inventory-storage.items.item.get'                          |
       | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.loan-types.item.post'                    |
       | 'inventory-storage.material-types.item.post'                |
@@ -62,6 +64,10 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'circulation-storage.loan-policies.item.post'               |
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.item.post'            |
+      | 'circulation-storage.request-policies.item.post'            |
+      | 'circulation-storage.requests.collection.get'               |
+      | 'circulation-storage.requests.item.get'                     |
+      | 'circulation-item.item.get'                                 |
       | 'lost-item-fees-policies.item.post'                         |
       | 'overdue-fines-policies.item.post'                          |
       | 'circulation.settings.item.post'                            |
