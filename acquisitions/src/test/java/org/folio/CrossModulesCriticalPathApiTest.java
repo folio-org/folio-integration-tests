@@ -56,7 +56,9 @@ public class CrossModulesCriticalPathApiTest extends TestBaseEureka implements A
     "encumbrance-after-canceling-approved-invoice-with-mixed-release-settings",
     "rollover-two-ledgers-with-multi-fund-pol",
     "rollover-three-ledgers-with-expense-classes-twice",
-    "rollover-three-ledgers-with-different-fund-distributions"
+    "rollover-three-ledgers-with-different-fund-distributions",
+    "encumbrance-unreleased-after-unopening-order-with-paid-invoice-release-false",
+    "encumbrance-released-after-unopening-order-with-paid-and-approved-invoices"
   };
 
   public CrossModulesCriticalPathApiTest() {

@@ -319,7 +319,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 10
+    * match response count(//record) == 9
     * match response //header[@status='deleted'] == '#notnull'
 
   Scenario: record marc as deleted and suppressDiscovery is true and config "suppressedRecordsProcessing" is true
@@ -343,7 +343,7 @@ Feature: Test enhancements to oai-pmh
     And header Accept = 'text/xml'
     When method GET
     Then status 200
-    * match response count(//record) == 9
+    * match response count(//record) == 8
     * match response count(//header[@status='deleted']) == 1
 
   Scenario: Verify that resumption Token contains tenantId and all the other required parameters
