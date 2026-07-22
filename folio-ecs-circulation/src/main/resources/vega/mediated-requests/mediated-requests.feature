@@ -117,6 +117,19 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def inv = call createInventoryInCollege inventoryParams
     * def inventory = inv.inventory
 
+    # Wait for mod-search to index the item — confirm routing depends on cross-tenant instance visibility
+    * configure headers = headersCentral
+    * configure retry = { count: 40, interval: 15000 }
+    Given path 'circulation-bff/requests/allowed-service-points'
+    And param requesterId = patron.requesterId
+    And param operation = 'create'
+    And param itemId = inventory.itemId
+    And retry until responseStatus == 200 && response && karate.sizeOf(response) > 0
+    When method GET
+    Then status 200
+    * def allowedSpIds = response.Page ? response.Page.map(function(sp){ return sp.id }) : []
+    * if (!allowedSpIds.includes(mrCentralServicePointId)) karate.fail('MR confirm: mrCentralServicePointId not found in allowed service points: ' + karate.toJson(response))
+
     * configure headers = headersUniversity
 
     Given path 'requests-mediated/mediated-requests'
