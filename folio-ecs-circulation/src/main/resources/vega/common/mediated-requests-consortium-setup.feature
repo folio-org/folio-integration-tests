@@ -37,6 +37,7 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'mod-circulation'           |
       | 'mod-tlr'                   |
       | 'mod-search'                |
+      | 'mod-circulation-bff'       |
       | 'mod-requests-mediated'     |
 
     * table baseUserPermissions
@@ -79,6 +80,7 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'consortia.user-tenants.item.post'                          |
       | 'search.index.instance-records.reindex.full.post'           |
       | 'search.instances.collection.get'                           |
+      | 'circulation-bff.requests.allowed-service-points.get'       |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
       | 'requests-mediated.mediated-requests.decline.execute'       |
