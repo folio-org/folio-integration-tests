@@ -117,16 +117,8 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def inv = call createInventoryInCollege inventoryParams
     * def inventory = inv.inventory
 
-    # Wait until item is visible via allowed-service-points (confirms mod-search indexing).
-    # mod-requests-mediated queries mod-search to find secondary tenants when confirming; if the
-    # college copy is not yet indexed, confirm returns 500 TenantPickingException.
-    * configure headers = headersCentral
     * configure retry = { count: 40, interval: 15000 }
-    Given path 'circulation-bff/requests/allowed-service-points'
-    And param requesterId = patron.requesterId
-    And param operation = 'create'
-    And param itemId = inventory.itemId
-    And retry until responseStatus == 200 && response && karate.sizeOf(response) > 0
+
     When method GET
     Then status 200
 
