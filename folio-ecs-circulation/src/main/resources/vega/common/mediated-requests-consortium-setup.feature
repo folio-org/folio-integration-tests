@@ -78,6 +78,7 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'consortia.user-tenants.collection.get'                     |
       | 'consortia.user-tenants.item.post'                          |
       | 'search.index.instance-records.reindex.full.post'           |
+      | 'search.instances.collection.get'                           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
       | 'requests-mediated.mediated-requests.decline.execute'       |
