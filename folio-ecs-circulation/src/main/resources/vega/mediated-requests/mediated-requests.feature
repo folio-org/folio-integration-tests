@@ -117,11 +117,6 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def inv = call createInventoryInCollege inventoryParams
     * def inventory = inv.inventory
 
-    * configure retry = { count: 40, interval: 15000 }
-
-    When method GET
-    Then status 200
-
     * configure headers = headersUniversity
 
     Given path 'requests-mediated/mediated-requests'
@@ -164,7 +159,9 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.requesterId == patron.requesterId
     And match response.pickupServicePointId == mrCentralServicePointId
 
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'requests-mediated/mediated-requests', mediatedRequestId, 'confirm'
+    And retry until responseStatus == 204
     When method POST
     Then status 204
 
