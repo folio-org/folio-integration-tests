@@ -4,6 +4,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -14,7 +15,8 @@ import org.junit.jupiter.api.Test;
 class LCUserRegistrationTests extends TestBaseEureka {
 
   public LCUserRegistrationTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration("classpath:vega/edge-patron/features/")));
+    super(new TestIntegrationService(new TestModuleConfiguration("classpath:vega/edge-patron/features/")),
+      new TestRailService());
   }
 
   @BeforeAll

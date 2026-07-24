@@ -7,6 +7,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,8 @@ import org.junit.jupiter.api.Test;
 class EcsRequestsTests extends TestBaseEureka {
 
   public EcsRequestsTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration("classpath:consortia/features/")));
+    super(new TestIntegrationService(new TestModuleConfiguration("classpath:consortia/features/")),
+      new TestRailService());
   }
 
   @BeforeAll

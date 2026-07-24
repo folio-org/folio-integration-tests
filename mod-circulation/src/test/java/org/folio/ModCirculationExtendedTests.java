@@ -9,18 +9,18 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "vega", module = "mod-circulation-storage")
-class ModCirculationStorageTests extends TestBaseEureka {
+@FolioTest(team = "vega", module = "mod-circulation")
+class ModCirculationExtendedTests extends TestBaseEureka {
 
-  private static final String TEST_BASE_PATH = "classpath:vega/mod-circulation-storage/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-circulation/features/";
 
-  public ModCirculationStorageTests() {
+  public ModCirculationExtendedTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:vega/mod-circulation-storage/circulation-storage-junit.feature");
+    runFeature("classpath:vega/mod-circulation/circulation-junit.feature");
   }
 
   @AfterAll
@@ -29,16 +29,7 @@ class ModCirculationStorageTests extends TestBaseEureka {
   }
 
   @Test
-  void rootTest() {
-    runFeatureTest("root");
+  void rootExtendedTest() {
+    runFeatureTest("root-extended");
   }
-  @Test
-  void printEventsTest() {
-    runFeatureTest("print-events");
-  }
-  @Test
-  void circulationSettingsTest() {
-    runFeatureTest("circulation-settings");
-  }
-
 }
