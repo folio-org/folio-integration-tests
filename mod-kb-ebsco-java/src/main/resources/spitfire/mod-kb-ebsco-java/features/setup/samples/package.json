@@ -7,7 +7,14 @@
       "customCoverage": {
         "beginCoverage": "2003-01-01",
         "endCoverage": "2004-01-01"
-      }
+      },
+      "customDisplayName": "Custom Display Name",
+      "customAltNames": [
+        {"altName": "Custom Alt 1"},
+        {"altName": "Custom Alt 2"}
+      ],
+      "customDescription": "Custom description",
+      "isFreeAccess": false
     }
   }
 }
