@@ -120,12 +120,7 @@ Feature: Requests tests - extended
     When method PUT
     Then status 204
 
-    # update thirdServicePoint with pickup location true
-    Given path 'service-points', thirdServicePointId
-    And request {"name": "Third service point", "code": "test", "discoveryDisplayName": "test", "pickupLocation": true, "holdShelfExpiryPeriod": {"duration": 3,"intervalId": "Weeks"}}
-    When method PUT
-    Then status 204
-
+    # verify that non-pickup and deleted service points are removed from policies
     Given path 'request-policy-storage/request-policies', firstRequestPolicyId
     When method GET
     Then status 200
@@ -140,6 +135,12 @@ Feature: Requests tests - extended
     And match response.allowedServicePoints.Hold == "#notpresent"
     And match response.allowedServicePoints.Page == "#notpresent"
     And match response.allowedServicePoints.Recall == "#notpresent"
+
+    # update thirdServicePoint with pickup location true
+    Given path 'service-points', thirdServicePointId
+    And request {"name": "Third service point", "code": "test", "discoveryDisplayName": "test", "pickupLocation": true, "holdShelfExpiryPeriod": {"duration": 3,"intervalId": "Weeks"}}
+    When method PUT
+    Then status 204
 
   @C350388
   Scenario: Test request filtration by request level
