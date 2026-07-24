@@ -117,6 +117,15 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def inv = call createInventoryInCollege inventoryParams
     * def inventory = inv.inventory
 
+    # Force a full mod-search reindex so the college copy of the instance is indexed regardless
+    # of Kafka delivery speed. mod-requests-mediated queries mod-search to find secondary tenants
+    # on confirm; without this, confirm returns 500 TenantPickingException on slow environments.
+    * configure headers = headersCentral
+    Given path 'search/index/instance-records/reindex/full'
+    And request {}
+    When method POST
+    Then status 200
+
     * configure headers = headersUniversity
 
     Given path 'requests-mediated/mediated-requests'
