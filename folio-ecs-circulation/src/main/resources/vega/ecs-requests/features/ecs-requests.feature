@@ -14,7 +14,7 @@ Feature: ECS ILR and TLR requests creation via mod-circulation-bff
     * callonce read('classpath:vega/common/ecs-consortium-setup.feature')
 
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature')
+    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature@CreateItemForSharedInstanceInUniversity')
 
   Scenario: create ILR ECS request via mod-circulation-bff
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
