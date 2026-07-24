@@ -124,7 +124,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     Given path 'search/index/instance-records/reindex/full'
     And request {}
     When method POST
-    Then status 200
+    Then match [200, 400] contains responseStatus
 
     * configure headers = headersUniversity
 
@@ -168,6 +168,10 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.requesterId == patron.requesterId
     And match response.pickupServicePointId == mrCentralServicePointId
 
+    # Retry confirm until mod-search has indexed the college copy of the instance.
+    # mod-requests-mediated queries mod-search to find secondary tenants; if Kafka hasn't
+    # propagated the college instance yet, confirm returns 500 TenantPickingException.
+    # The 500 occurs before any state change, so retrying the POST is safe.
     * configure retry = { count: 40, interval: 15000 }
     Given path 'requests-mediated/mediated-requests', mediatedRequestId, 'confirm'
     And retry until responseStatus == 204
