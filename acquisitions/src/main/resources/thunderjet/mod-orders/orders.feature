@@ -299,6 +299,9 @@ Feature: mod-orders integration tests
   Scenario: Title instance creation
     * call read('features/title-instance-creation.feature')
 
+  Scenario: Title Record Text Is Updated After Changing Instance Connection With Move
+    * call read('features/title-updated-after-change-instance-connection.feature')
+
   Scenario: Unlink title
     * call read('features/unlink-title.feature')
 
