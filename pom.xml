@@ -104,6 +104,7 @@
     <module>mod-login-keycloak</module>
     <module>mod-roles-keycloak</module>
     <module>mod-scheduler</module>
+    <module>mod-service-interaction</module>
   </modules>
 
   <build>

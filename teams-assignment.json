@@ -10,7 +10,8 @@
     "team": "Bienenvolk",
     "modules": [
       "mod-agreements",
-      "mod-licenses"
+      "mod-licenses",
+      "mod-service-interaction"
     ],
     "slackChannel": "#erm-developers"
   },
