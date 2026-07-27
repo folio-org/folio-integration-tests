@@ -8,11 +8,11 @@ import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "citation", module = "mod-linked-data")
+@FolioTest(team = "promin", module = "mod-linked-data")
 class ModLinkedDataCriticalPathExtendedSmokeTest extends TestBaseEureka {
 
   private static final String TEST_BASE_PATH =
-    "classpath:citation/mod-linked-data/features/";
+    "classpath:promin/mod-linked-data/features/";
 
   public ModLinkedDataCriticalPathExtendedSmokeTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -20,7 +20,7 @@ class ModLinkedDataCriticalPathExtendedSmokeTest extends TestBaseEureka {
 
   @BeforeAll
   void setup() {
-    runFeature("classpath:citation/mod-linked-data/linked-data-junit.feature");
+    runFeature("classpath:promin/mod-linked-data/linked-data-junit.feature");
   }
 
   @Test

@@ -13,11 +13,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import static org.folio.test.config.TestParam.TEST_TENANT;
 import static org.folio.test.config.TestParam.TEST_TENANT_ID;
 
-@FolioTest(team = "folijet", module = "data-import")
+@FolioTest(team = "promin", module = "data-import")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DataImportApiTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:folijet/data-import/features/";
+    private static final String TEST_BASE_PATH = "classpath:promin/data-import/features/";
 
     public DataImportApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -25,19 +25,19 @@ class DataImportApiTest extends TestBaseEureka {
 
     @Test
     void dataImportMappingRuleChange() {
-        feature("classpath:folijet/data-import/FAT-1117.feature")
+        feature("classpath:promin/data-import/FAT-1117.feature")
                 .run();
     }
 
     @Test
     void dataImportModCopyCat() {
-        feature("classpath:folijet/data-import/mod-copycat.feature")
+        feature("classpath:promin/data-import/mod-copycat.feature")
                 .run();
     }
 
     @Test
     void dataImportTest() {
-        feature("classpath:folijet/data-import/features/")
+        feature("classpath:promin/data-import/features/")
                 .threadCount(3)
                 .run();
     }
@@ -45,11 +45,11 @@ class DataImportApiTest extends TestBaseEureka {
     @BeforeAll
     public void setup() {
         if (shouldCreateTenant()) {
-            feature("classpath:folijet/data-import/data-import-junit.feature")
+            feature("classpath:promin/data-import/data-import-junit.feature")
                     .reportDir(timestampedReportDir())
                     .run();
         }
-        feature("classpath:folijet/data-import/global/create-marc-records.feature")
+        feature("classpath:promin/data-import/global/create-marc-records.feature")
                 .reportDir(timestampedReportDir())
                 .run();
     }

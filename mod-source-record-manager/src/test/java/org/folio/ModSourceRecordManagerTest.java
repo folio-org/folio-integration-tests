@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "folijet", module = "mod-source-record-manager")
+@FolioTest(team = "promin", module = "mod-source-record-manager")
 public class ModSourceRecordManagerTest extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:folijet/mod-source-record-manager/features/";
+  private static final String TEST_BASE_PATH = "classpath:promin/mod-source-record-manager/features/";
 
   public ModSourceRecordManagerTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -18,7 +18,7 @@ public class ModSourceRecordManagerTest extends TestBaseEureka {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:folijet/mod-source-record-manager/source-record-manager.feature");
+    runFeature("classpath:promin/mod-source-record-manager/source-record-manager.feature");
   }
 
   @AfterAll

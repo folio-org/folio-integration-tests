@@ -20,4 +20,4 @@ Feature: mod-password-validator integration tests
     Given call read('classpath:common/eureka/setup-users.feature')
 
   Scenario: create dummy admin user for validate.feature
-    Given call read('classpath:spitfire/passwordvalidator/features/setup/setup-dummy-admin.feature')
+    Given call read('classpath:promin/passwordvalidator/features/setup/setup-dummy-admin.feature')
