@@ -72,6 +72,15 @@ Feature: Year-based sequence reset
     Then status 422
 
   Scenario: The timer sweep resets only stale year-scoped sequences
+    # The sweep scans every reset-enabled sequence in the TENANT, so drain
+    # whatever an interrupted earlier run may have left behind before creating
+    # this scenario's fixtures. That makes the count below exact rather than
+    # merely non-zero, without coupling it to a pristine tenant.
+    Given path 'servint', 'numberGenerators', 'resetYearSequences'
+    And headers actor
+    When method POST
+    Then status 200
+
     * def resetId = createSequence({ code: 'timerReset', name: 'timerReset', format: '000', nextValue: 5, outputTemplate: '${current_year}-${generated_number}', resetOnYearChange: true, lastUsedYear: '2020' })
     * def controlId = createSequence({ code: 'timerControl', name: 'timerControl', format: '000', nextValue: 5, lastUsedYear: '2020' })
 
@@ -80,7 +89,9 @@ Feature: Year-based sequence reset
     When method POST
     Then status 200
     And match response.currentYear == currentYear
-    And match response.sequencesReset == '#number'
+    # Exactly the one stale reset-enabled sequence created since the drain —
+    # the control row opted out, and nothing else in the tenant is pending.
+    And match response.sequencesReset == 1
 
     Given path 'servint', 'numberGeneratorSequences', resetId
     And headers actor
@@ -97,11 +108,13 @@ Feature: Year-based sequence reset
     And match response.nextValue == 5
     And match response.lastUsedYear == '2020'
 
-    # The sweep is idempotent — a second run has nothing left to reset here.
+    # The sweep is idempotent — everything stale was reset by the first run,
+    # so the second one finds nothing anywhere in the tenant.
     Given path 'servint', 'numberGenerators', 'resetYearSequences'
     And headers actor
     When method POST
     Then status 200
+    And match response.sequencesReset == 0
 
     Given path 'servint', 'numberGeneratorSequences', resetId
     And headers actor

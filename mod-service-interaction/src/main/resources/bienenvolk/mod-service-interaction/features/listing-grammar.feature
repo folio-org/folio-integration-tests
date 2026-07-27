@@ -99,14 +99,21 @@ Feature: Listing grammar
     Then status 200
     And match response[*].code contains only ['s02']
 
-    # A same-level chain of three terms is a flat disjunction.
+    # A same-level chain of three terms is a flat disjunction on the port
+    # (REQ-022 AC2) — but registered deviation D-19: legacy's web-toolkit
+    # listener pairs only the top two criteria at each exit and AND-drains the
+    # leftovers, so the same request can evaluate as s01 AND (s02 OR s03)
+    # there. The legacy answer for a three-term chain was never measured (the
+    # r22 oracle matrix stops at two-term compounds), so only the status is
+    # pinned on that side.
     Given path 'servint', 'numberGeneratorSequences'
     And headers actor
     And param filters = [mine, 'code==s01||code==s02||code==s03']
     And param perPage = 100
     When method GET
     Then status 200
-    And match response[*].code contains only ['s01', 's02', 's03']
+    * if (impl != 'port') karate.abort()
+    * match response[*].code contains only ['s01', 's02', 's03']
 
   Scenario: An empty right hand side drops the clause instead of failing
     Given path 'servint', 'numberGeneratorSequences'

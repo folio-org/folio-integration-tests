@@ -93,6 +93,28 @@ test workaround.
 | D-25 | Unknown refdata value in a body | 201, value silently dropped | 400 `unknown.refdata` |
 | D-28, D-30 | Malformed or uncoercible filter values | 500 | 200 with the clause dropped |
 
+## Deviation matrix
+
+Every deviation in the module's dossier, and what this corpus does about it.
+A deviation that is neither asserted nor listed here would be a hole in the
+parity verdict.
+
+| Id | Status here | Note |
+| --- | --- | --- |
+| D-2, D-3, D-20 … D-28, D-30 | **Asserted** | The table above; each is expected per deployment, never tolerated |
+| D-19 | **Port only** | `listing-grammar.feature` pins the flat N-ary disjunction on the port; legacy's top-two pairing was never measured, so only the status is asserted there |
+| D-4 | **Designed around** | Positional assertions always carry an explicit `sort`; unsorted listings are asserted with `contains only` |
+| D-6, D-7, D-8 | **Status only** | The 422/400 triggers are identical; only the envelope shape differs, and the corpus asserts the status |
+| D-12 | **Not exercised** | Sub-route listings ignore kiwt params on the port. No scenario puts more than ten rows behind one, so the fixed page size never bites |
+| D-32 | **Partly** | The top-level empty-right-side drop is asserted as parity on both sides; the greedy absorption *inside* a compound and the `!(…)` 500 are not exercised |
+| D-5, D-13, D-14 | **Partly** | Attestation key reuse, one refdata domain lookup and the stats envelope are pinned; the cross-tenant cache, the full domain registry and per-listing envelope extras are not |
+| D-1 | **Not exercised** | `my-widgets` is dead in legacy and undeclared in the port — nothing to compare |
+| D-9, D-10, D-11 | **Not exercised** | Request-binding differences (partial PUT nulls, bare-string refdata). Adding them would re-pin known differences rather than test parity |
+| D-15, D-16, D-17 | **Structural** | Covered indirectly by `tenant-lifecycle` and by schema diffing after the run, not by a scenario |
+| D-18 | **Not exercised** | Exotic truthy seeding values (`"1"`, `"yes"`) diverge by framework contract; Okapi only ever sends `"true"`/`"false"`, which the corpus uses |
+| D-29 | Retired | No longer a deviation — legacy-identical since M9 |
+| D-31, D-33, D-34 | **Wire only** | Oversized filter values, repeated `term`, malformed percent-escapes: container-level behaviour that an HTTP client library normalises. Pinned by the module's own wire probes, deliberately out of scope here |
+
 ## Coverage
 
 | Feature | What it pins |

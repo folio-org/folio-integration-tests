@@ -81,7 +81,15 @@ Feature: Tenant lifecycle
     And headers scratchHeaders
     And request disableBody
     When method POST
+    # The port must answer exactly 204 out of its own disable branch: stock
+    # folio-spring routing reads this shape as an upgrade and would re-run
+    # Liquibase and the seeding hooks, which is the regression D-26 exists to
+    # prevent — a merely-2xx assertion would pass straight through it. The
+    # legacy 1.2 disable status was never captured from a running module (no
+    # /_/tenant/disable call appears in any evidence run), so that side stays
+    # deliberately tolerant.
     Then assert responseStatus >= 200 && responseStatus < 300
+    And assert impl != 'port' || responseStatus == 204
 
     # Data survives the disable: re-enabling finds the row still there.
     * call read(setupPath + 'tenant.feature@enable') { tenant: '#(scratchTenant)' }

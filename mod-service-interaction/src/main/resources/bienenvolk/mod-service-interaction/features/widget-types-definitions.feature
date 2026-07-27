@@ -91,6 +91,30 @@ Feature: Widget types and definitions
     * match served[0].version == '2.1'
     * match served[0].type == { name: 'SimpleSearch', version: '1.0' }
 
+  Scenario: Both definition read surfaces answer on the port
+    # The two scenarios above stop at the D-2 405, so without this one the
+    # port side of the definition surface would never be exercised at all.
+    # Nothing can be created there (definitions reach the port through
+    # widget-type import and federation only), so the row set is whatever the
+    # tenant holds — the render shape and the permission-free interface route
+    # are what get pinned.
+    * if (impl != 'port') karate.abort()
+
+    Given path 'servint', 'widgets', 'definitions'
+    And headers actor
+    And param perPage = 100
+    When method GET
+    Then status 200
+    And match response == '#array'
+    And match each response contains { name: '#string', version: '#string', type: '#object' }
+
+    Given path 'dashboard', 'definitions'
+    And headers actor
+    When method GET
+    Then status 200
+    And match response == '#array'
+    And match each response contains { name: '#string', version: '#string', type: '#object' }
+
   Scenario: Fetching an unknown definition answers 404
     Given path 'servint', 'widgets', 'definitions', uuid()
     And headers actor
