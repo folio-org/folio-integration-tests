@@ -22,7 +22,7 @@ mvn test -pl common,testrail-integration,mod-service-interaction \
 
 # against the Spring Boot rewrite
 mvn test -pl common,testrail-integration,mod-service-interaction \
-    -Dkarate.env=port -DbaseUrl=http://port-host:8081
+    -Dkarate.env=port -DbaseUrl=http://port-host:8080
 
 # a single feature
 mvn test -pl common,testrail-integration,mod-service-interaction \
@@ -32,7 +32,7 @@ mvn test -pl common,testrail-integration,mod-service-interaction \
 | Property | Default | Meaning |
 | --- | --- | --- |
 | `karate.env` | `legacy` | `legacy` or `port` — selects the deployment defaults and the expected answer for the registered deviations below |
-| `baseUrl` | `http://localhost:8080` (legacy) / `:8081` (port) | Where the module (or a gateway in front of it) answers |
+| `baseUrl` | `http://localhost:8080` | Where the module (or a gateway in front of it) answers. Both implementations serve 8080, so a rig running them side by side on one host must point one lane elsewhere |
 | `okapiUrl` | `http://localhost:9130` | Value of the `X-Okapi-Url` header handed to the module |
 | `testTenant` | a fresh `testtenant<random>` per run | Tenant the suite provisions and works in |
 | `moduleId` | `mod-service-interaction-4.4.0` / `-5.0.0` | `module_to` sent on the tenant job |
