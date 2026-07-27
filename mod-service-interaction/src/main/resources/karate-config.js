@@ -24,11 +24,9 @@ function fn() {
       baseUrl: 'http://localhost:8080',
       moduleId: 'mod-service-interaction-4.4.0'
     },
-    // Both implementations serve 8080 by default, so a rig running them side
-    // by side on one host must point one lane elsewhere with -DbaseUrl.
     port: {
       impl: 'port',
-      baseUrl: 'http://localhost:8080',
+      baseUrl: 'http://localhost:8081',
       moduleId: 'mod-service-interaction-5.0.0'
     }
   };
