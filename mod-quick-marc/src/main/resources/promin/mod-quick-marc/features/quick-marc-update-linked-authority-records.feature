@@ -1,0 +1,228 @@
+Feature: update of two authorities records linked to one instance tests
+
+  Background:
+    * url baseUrl
+    * call login testUser
+    * configure readTimeout = 65000
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
+
+    * def authorityNaturalId1 = karate.properties['authorityNaturalId1']
+    * def authorityNaturalId2 = karate.properties['authorityNaturalId2']
+    * def authorityId1 = karate.properties['linkedAuthorityId1']
+    * def authorityId2 = karate.properties['linkedAuthorityId2']
+
+  Scenario: Should unlink bib record on first authority field update making it unlinkable
+    # create a fresh bib with 100, 600 (auth1) and 240 (auth2) links
+    * def localBibId = uuid()
+    * call read('classpath:promin/mod-quick-marc/features/setup/setup.feature@CreateMarcBib') {id: '#(localBibId)', hrid: '#("update-linked-1-" + localBibId)'}
+
+    Given path '/records-editor/records'
+    And param externalId = localBibId
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    When method GET
+    Then status 200
+    * def bibRecord = response
+
+    * def linkContent1 = ' $0 ' + authorityNaturalId1 + ' $9 ' + authorityId1
+    * def linkContent2 = ' $0 ' + authorityNaturalId2 + ' $9 ' + authorityId2
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent1)', "indicators": ["\\","1"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId1), "authorityNaturalId":#(authorityNaturalId1), "linkingRuleId": 1, "status": "NEW"}}
+    * def tag600 = {"tag": "600", "content":'#("$a Johnson" + linkContent1)', "indicators": ["\\","\\"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId1), "authorityNaturalId":#(authorityNaturalId1), "linkingRuleId": 8, "status": "NEW"}}
+    * def tag240 = {"tag": "240", "content":'#("$a Test note" + linkContent2)', "indicators": ["\\","\\"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId2), "authorityNaturalId":#(authorityNaturalId2), "linkingRuleId": 5, "status": "NEW"}}
+    * bibRecord.fields = bibRecord.fields.filter(f => f.tag != '100')
+    * bibRecord.fields.push(tag100)
+    * bibRecord.fields.push(tag600)
+    * bibRecord.fields.push(tag240)
+    * set bibRecord._actionType = 'edit'
+
+    Given path '/records-editor/records', bibRecord.parsedRecordId
+    And request bibRecord
+    When method PUT
+    Then status 202
+
+    Given path '/links/instances', localBibId
+    And retry until response.totalRecords == 3
+    When method GET
+    Then status 200
+
+    # retrieve marc bib record and check it contains a link
+    Given path '/source-storage/records', localBibId, 'formatted'
+    And param idType = 'INSTANCE'
+    When method GET
+    Then status 200
+    And match response.parsedRecord.content.fields[*].100 != null
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 == ['#(authorityId1)']
+    And match response.parsedRecord.content.fields[*].600 != null
+    And match response.parsedRecord.content.fields[*].600.subfields[*].9 == ['#(authorityId1)']
+    And match response.parsedRecord.content.fields[*].240 != null
+    And match response.parsedRecord.content.fields[*].240.subfields[*].9 == ['#(authorityId2)']
+
+    # save bib snapshotId to use for retry later
+    * def bibSnapshotId = response.snapshotId
+
+    # retrieve quick marc authority record
+    Given path '/records-editor/records'
+    And param externalId = authorityId1
+    When method GET
+    Then status 200
+
+    # add new subfield to a linked field
+    * def record = response
+    * def field = karate.jsonPath(record, "$.fields[?(@.tag=='100')]")[0]
+    * set field.content = '$a Johnson $t Some value'
+    * remove record.fields[?(@.tag=='100')]
+    * record.fields.push(field)
+    * set record._actionType = 'edit'
+
+    # update authority record
+    Given path '/records-editor/records', record.parsedRecordId
+    And request record
+    When method PUT
+    Then status 202
+
+    # check instance links
+    Given path '/links/instances', localBibId
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+
+    # count links for the authorityId1 record
+    Given path '/search/authorities'
+    And param query = '(id==' + authorityId1 + ' and authRefType==("Authorized"))'
+    And retry until response.authorities[0].numberOfTitles == 0
+    When method GET
+    Then status 200
+    Then match response.authorities[0].numberOfTitles == 0
+
+    # retrieve marc bib record
+    Given path '/source-storage/records', localBibId, 'formatted'
+    And param idType = 'INSTANCE'
+    And retry until response.snapshotId != bibSnapshotId
+    When method GET
+    Then status 200
+    And match response.parsedRecord.content.fields[*].100 != null
+    And match response.parsedRecord.content.fields[*].100.subfields[*].9 == []
+    And match response.parsedRecord.content.fields[*].600 != null
+    And match response.parsedRecord.content.fields[*].600.subfields[*].9 == []
+
+    # retrieve quick marc authority record
+    Given path '/records-editor/records'
+    And param externalId = authorityId1
+    When method GET
+    Then status 200
+    * def updatedRecord = response
+
+    # rollback link deletion
+    * remove updatedRecord.fields[?(@.tag=='100')]
+    * set field.content = '$a Johnson'
+    * updatedRecord.fields.push(field)
+    * set updatedRecord._actionType = 'edit'
+    Given path '/records-editor/records', updatedRecord.parsedRecordId
+    And request updatedRecord
+    When method PUT
+    Then status 202
+
+    Given path '/records-editor/records'
+    And param externalId = localBibId
+    When method GET
+    Then status 200
+    And def bibRecord = response
+    * def linkContent = ' $0 ' + authorityNaturalId1 + ' $9 ' + authorityId1
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent)', "indicators": ["\\","1"], "linkDetails":{ "authorityId": #(authorityId1),"authorityNaturalId": #(authorityNaturalId1), "linkingRuleId": 1} }
+    * bibRecord.fields = bibRecord.fields.filter(field => field.tag != "100")
+    * bibRecord.fields.push(tag100)
+    * set bibRecord._actionType = 'edit'
+    Given path 'records-editor/records', bibRecord.parsedRecordId
+    And request bibRecord
+    When method PUT
+    Then status 202
+
+    # check instance links
+    Given path '/links/instances', localBibId
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
+
+  Scenario: Should unlink bib record on second authority field update making it unlinkable
+    # create a fresh bib with 100 (auth1) and 240 (auth2) links
+    * def localBibId = uuid()
+    * call read('classpath:promin/mod-quick-marc/features/setup/setup.feature@CreateMarcBib') {id: '#(localBibId)', hrid: '#("update-linked-2-" + localBibId)'}
+
+    Given path '/records-editor/records'
+    And param externalId = localBibId
+    And retry until response.updateInfo.recordState == 'ACTUAL'
+    When method GET
+    Then status 200
+    * def bibRecord = response
+
+    * def linkContent1 = ' $0 ' + authorityNaturalId1 + ' $9 ' + authorityId1
+    * def linkContent2 = ' $0 ' + authorityNaturalId2 + ' $9 ' + authorityId2
+    * def tag100 = {"tag": "100", "content":'#("$a Johnson" + linkContent1)', "indicators": ["\\","1"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId1), "authorityNaturalId":#(authorityNaturalId1), "linkingRuleId": 1, "status": "NEW"}}
+    * def tag240 = {"tag": "240", "content":'#("$a Test note" + linkContent2)', "indicators": ["\\","\\"], "isProtected": false, "linkDetails":{"authorityId":#(authorityId2), "authorityNaturalId":#(authorityNaturalId2), "linkingRuleId": 5, "status": "NEW"}}
+    * bibRecord.fields = bibRecord.fields.filter(f => f.tag != '100')
+    * bibRecord.fields.push(tag100)
+    * bibRecord.fields.push(tag240)
+    * set bibRecord._actionType = 'edit'
+
+    Given path '/records-editor/records', bibRecord.parsedRecordId
+    And request bibRecord
+    When method PUT
+    Then status 202
+
+    Given path '/links/instances', localBibId
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
+
+    # retrieve marc bib record and check it contains a link
+    Given path '/source-storage/records', localBibId, 'formatted'
+    And param idType = 'INSTANCE'
+    When method GET
+    Then status 200
+    And match response.parsedRecord.content.fields[*].240 != null
+    And match response.parsedRecord.content.fields[*].240.subfields[*].9 == ['#(authorityId2)']
+
+    # save bib snapshotId to use for retry later
+    * def bibSnapshotId = response.snapshotId
+
+    # retrieve quick marc authority record
+    Given path '/records-editor/records'
+    And param externalId = authorityId2
+    When method GET
+    Then status 200
+
+    # add new subfield to a linked field
+    * def record = response
+    * def field = karate.jsonPath(record, "$.fields[?(@.tag=='100')]")[0]
+    * set field.content = '$a Johnson Updated'
+    * remove record.fields[?(@.tag=='100')]
+    * record.fields.push(field)
+    * set record._actionType = 'edit'
+
+    # update authority record
+    Given path '/records-editor/records', record.parsedRecordId
+    And request record
+    When method PUT
+    Then status 202
+
+    # check instance links
+    Given path '/links/instances', localBibId
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+
+    # count links for the authorityId2 record
+    Given path '/search/authorities'
+    And param query = '(id==' + authorityId2 + ' and authRefType==("Authorized"))'
+    And retry until response.authorities[0].numberOfTitles == 0
+    When method GET
+    Then status 200
+    Then match response.authorities[0].numberOfTitles == 0
+
+    # retrieve marc bib record
+    Given path '/source-storage/records', localBibId, 'formatted'
+    And param idType = 'INSTANCE'
+    And retry until response.snapshotId != bibSnapshotId
+    When method GET
+    Then status 200
+    And match response.parsedRecord.content.fields[*].240 != null
+    And match response.parsedRecord.content.fields[*].240.subfields[*].9 == []

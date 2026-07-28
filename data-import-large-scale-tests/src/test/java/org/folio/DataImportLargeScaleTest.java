@@ -8,11 +8,11 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@FolioTest(team = "folijet", module = "data-import-large-scale-tests")
+@FolioTest(team = "promin", module = "data-import-large-scale-tests")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DataImportLargeScaleTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:folijet/data-import-large-scale-tests/features/";
+    private static final String TEST_BASE_PATH = "classpath:promin/data-import-large-scale-tests/features/";
 
     public DataImportLargeScaleTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));

@@ -14,9 +14,9 @@ import org.junit.jupiter.api.TestInfo;
 
 import java.util.Set;
 
-@FolioTest(team = "spitfire", module = "mod-kb-ebsco-java")
+@FolioTest(team = "promin", module = "mod-kb-ebsco-java")
 public class KbEbscoApiTests extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-kb-ebsco-java/features/";
+    private static final String TEST_BASE_PATH = "classpath:promin/mod-kb-ebsco-java/features/";
     private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
     private static final String SETUP_RESOURCES_TAG = "RESOURCES";
 
@@ -26,7 +26,7 @@ public class KbEbscoApiTests extends TestBaseEureka {
 
     @BeforeAll
     public void setup(TestInfo testInfo) {
-        runFeature("classpath:spitfire/mod-kb-ebsco-java/kb-ebsco-junit.feature", testInfo);
+        runFeature("classpath:promin/mod-kb-ebsco-java/kb-ebsco-junit.feature", testInfo);
     }
 
     @AfterAll

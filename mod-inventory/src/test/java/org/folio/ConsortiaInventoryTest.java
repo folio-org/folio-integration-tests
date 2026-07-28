@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-@FolioTest(team = "folijet", module = "mod-inventory")
+@FolioTest(team = "promin", module = "mod-inventory")
 public class ConsortiaInventoryTest extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:folijet/mod-inventory/features/consortia/";
+  private static final String TEST_BASE_PATH = "classpath:promin/mod-inventory/features/consortia/";
 
   public ConsortiaInventoryTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
