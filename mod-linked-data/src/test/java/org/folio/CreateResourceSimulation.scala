@@ -25,10 +25,10 @@ class CreateResourceSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:citation/mod-linked-data/linked-data-junit.feature"))
+    .exec(karateFeature("classpath:promin/mod-linked-data/linked-data-junit.feature"))
   val createResource = scenario("createResource")
     .repeat(10) {
-      exec(karateFeature("classpath:citation/mod-linked-data/features/create-bib-api/create-resource.feature"))
+      exec(karateFeature("classpath:promin/mod-linked-data/features/create-bib-api/create-resource.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

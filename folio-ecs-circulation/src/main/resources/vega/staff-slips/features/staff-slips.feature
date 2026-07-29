@@ -13,7 +13,7 @@ Feature: ECS staff slips (pick slips and search slips) via circulation-bff
     * callonce read('classpath:vega/common/ecs-consortium-setup.feature')
 
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature')
+    * def setupInventory = read('classpath:vega/ecs-requests/ecs-inventory-setup.feature@CreateItemForSharedInstanceInUniversity')
 
   Scenario: verify pick slips and search slips via circulation-bff
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }

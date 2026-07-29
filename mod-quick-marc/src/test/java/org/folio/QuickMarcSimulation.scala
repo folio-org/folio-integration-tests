@@ -24,7 +24,7 @@ class QuickMarcSimulation extends Simulation {
   )
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
-  val testBasePath = "classpath:spitfire/mod-quick-marc/"
+  val testBasePath = "classpath:promin/mod-quick-marc/"
 
   val setupInfrastructure = scenario("setupInfrastructure")
     .exec(karateFeature(testBasePath + "quick-marc-junit.feature"))

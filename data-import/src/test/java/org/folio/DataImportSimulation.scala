@@ -25,10 +25,10 @@ class DataImportSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:folijet/data-import/data-import-junit.feature"))
+    .exec(karateFeature("classpath:promin/data-import/data-import-junit.feature"))
   val create = scenario("create")
     .repeat(10) {
-      exec(karateFeature("classpath:folijet/data-import/features/file-upload.feature"))
+      exec(karateFeature("classpath:promin/data-import/features/file-upload.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
