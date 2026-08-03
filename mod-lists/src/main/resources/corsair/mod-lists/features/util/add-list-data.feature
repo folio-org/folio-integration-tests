@@ -82,6 +82,45 @@ Feature: Add FQM query data
     Then status 200
 
 
+    # Add a MARC bibliographic instance + SRS record
+    * def marcInstanceId = 'aa000000-0000-4000-8000-0000000000b1'
+    * def marcInstanceHrid = 'marclistinttest01'
+    * def marcInstanceRequest = {id: '#(marcInstanceId)', hrid: '#(marcInstanceHrid)', title: 'MARC list export instance', source: 'MARC', instanceTypeId: '#(instanceTypeId)', statisticalCodeIds: ['#(booksStatisticalCodeId)']}
+    Given path '/instance-storage/instances'
+    And request marcInstanceRequest
+    When method POST
+    Then status 201
+
+    * def marcSnapshotId = 'aa000000-0000-4000-8000-0000000000b2'
+    * def marcRecordId = 'aa000000-0000-4000-8000-0000000000b3'
+    * def marcSnapshotRequest = {jobExecutionId: '#(marcSnapshotId)', status: 'COMMITTED', processingStartedDate: '2023-01-01T00:00:00+0000'}
+    Given path 'source-storage', 'snapshots'
+    And request marcSnapshotRequest
+    When method POST
+    Then status 201
+
+    * def marcParsedContent = read('classpath:corsair/mod-lists/features/samples/marc-bib-parsed-content.json')
+    * def toJsonString = function(x){ return JSON.stringify(x) }
+    * def marcRecordRequest =
+      """
+      {
+        id: '#(marcRecordId)',
+        snapshotId: '#(marcSnapshotId)',
+        matchedId: '#(marcRecordId)',
+        recordType: 'MARC_BIB',
+        order: 0,
+        generation: 0,
+        rawRecord: { id: '#(marcRecordId)', content: '#(toJsonString(marcParsedContent))' },
+        parsedRecord: { id: '#(marcRecordId)', content: '#(marcParsedContent)' },
+        externalIdsHolder: { instanceId: '#(marcInstanceId)', instanceHrid: '#(marcInstanceHrid)' },
+        additionalInfo: { suppressDiscovery: false }
+      }
+      """
+    Given path 'source-storage', 'records'
+    And request marcRecordRequest
+    When method POST
+    Then status 201
+
     # This is a workaround due to the first refresh hanging when integration tests are run. Currently investigating why
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/user-list.json')
     * def dummyPostCall = callonce postList

@@ -450,3 +450,42 @@ Feature: Add FQM query data
     Given path '/organizations-storage/organizations'
     And request organizationsRequest
     When method POST
+
+    # Add a MARC bibliographic instance + SRS record
+    * def marcInstanceId = 'aa000000-0000-4000-8000-0000000000a1'
+    * def marcInstanceHrid = 'marcbibinttest01'
+    * def marcInstanceRequest = {id: '#(marcInstanceId)', hrid: '#(marcInstanceHrid)', title: 'MARC integration test instance', source: 'MARC', instanceTypeId: '#(instanceTypeId)'}
+    Given path '/instance-storage/instances'
+    And request marcInstanceRequest
+    When method POST
+    Then status 201
+
+    * def marcSnapshotId = 'aa000000-0000-4000-8000-0000000000a2'
+    * def marcRecordId = 'aa000000-0000-4000-8000-0000000000a3'
+    * def marcSnapshotRequest = {jobExecutionId: '#(marcSnapshotId)', status: 'COMMITTED', processingStartedDate: '2023-01-01T00:00:00+0000'}
+    Given path 'source-storage', 'snapshots'
+    And request marcSnapshotRequest
+    When method POST
+    Then status 201
+
+    * def marcParsedContent = read('classpath:corsair/mod-fqm-manager/features/samples/marc-bib-parsed-content.json')
+    * def toJsonString = function(x){ return JSON.stringify(x) }
+    * def marcRecordRequest =
+      """
+      {
+        id: '#(marcRecordId)',
+        snapshotId: '#(marcSnapshotId)',
+        matchedId: '#(marcRecordId)',
+        recordType: 'MARC_BIB',
+        order: 0,
+        generation: 0,
+        rawRecord: { id: '#(marcRecordId)', content: '#(toJsonString(marcParsedContent))' },
+        parsedRecord: { id: '#(marcRecordId)', content: '#(marcParsedContent)' },
+        externalIdsHolder: { instanceId: '#(marcInstanceId)', instanceHrid: '#(marcInstanceHrid)' },
+        additionalInfo: { suppressDiscovery: false }
+      }
+      """
+    Given path 'source-storage', 'records'
+    And request marcRecordRequest
+    When method POST
+    Then status 201

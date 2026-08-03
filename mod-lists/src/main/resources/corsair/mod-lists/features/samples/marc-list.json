@@ -1,0 +1,8 @@
+{
+  "name": "MARC Bib List",
+  "description": "MARC Bib List",
+  "entityTypeId": "bce8ea43-1271-54ca-99ad-aa185e8b5b1b",
+  "fqlQuery": "{\"$and\": [{\"marc_bib.marc_245_a\" : {\"$eq\": \"MARC list export title\"}}]}",
+  "isActive": "true",
+  "isPrivate": "false"
+}

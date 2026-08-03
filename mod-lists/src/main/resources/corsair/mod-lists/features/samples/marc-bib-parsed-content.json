@@ -1,0 +1,26 @@
+{
+  "leader": "00000nam a2200000 c 4500",
+  "fields": [
+    { "001": "#(marcInstanceHrid)" },
+    {
+      "245": {
+        "ind1": "1",
+        "ind2": "0",
+        "subfields": [
+          { "a": "MARC list export title" },
+          { "b": "a list export statement" }
+        ]
+      }
+    },
+    {
+      "999": {
+        "ind1": "f",
+        "ind2": "f",
+        "subfields": [
+          { "s": "#(marcRecordId)" },
+          { "i": "#(marcInstanceId)" }
+        ]
+      }
+    }
+  ]
+}
