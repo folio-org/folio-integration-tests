@@ -126,6 +126,21 @@ Feature: Scenarios that are primarily focused around exporting list data
     Then status 200
     And match $.fields == ['users.username', 'users.active', 'users.barcode']
 
+  Scenario: Export test - MARC bib - MARC tag fields
+    # A MARC-tag list: the export fields include dynamic MARC synthetic columns (tag-only and subfield),
+    # which are not declared on the entity type and must be recognized and preserved through the export
+    # column filter (ListExportService.addSyntheticColumns).
+    * def listRequest = read('classpath:corsair/mod-lists/features/samples/marc-list.json')
+    * def fields = ['instance.id', 'marc_bib.marc_245', 'marc_bib.marc_245_a']
+    * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')
+    * def exportId = exportResult.exportId
+    * def listId = exportResult.listId
+
+    Given path 'lists', listId, 'exports', exportId
+    When method GET
+    Then status 200
+    And match $.fields == ['instance.id', 'marc_bib.marc_245', 'marc_bib.marc_245_a']
+
   Scenario: Export test - Instance - All columns
     * def listRequest = read('classpath:corsair/mod-lists/features/samples/instance-list.json')
     * def exportResult = call read('classpath:corsair/mod-lists/features/util/export-list.feature')

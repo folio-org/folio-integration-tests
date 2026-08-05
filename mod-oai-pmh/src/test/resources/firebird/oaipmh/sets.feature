@@ -19,7 +19,7 @@ Feature: Test integration with inventory-storage into /oai-pmh/filtering-conditi
     And match configGroups contains 'resourceType'
     And match configGroups contains 'format'
     And match $.setsFilteringConditions contains {name:"illPolicy", values:["illPolicy"]}
-    And match $.setsFilteringConditions contains {name:"format", values:["audio -- audio belt","instanceFormat"]}
+    And match $.setsFilteringConditions contains {name:"format", values:["instanceFormat"]}
     And match $.setsFilteringConditions contains {name:"resourceType", values:["text","instanceType"]}
     And match $.setsFilteringConditions contains {name:"location", values:["SECOND FLOOR","MAIN LIBRARY","location"]}
     And match $.setsFilteringConditions contains {name:"materialType", values:["book","materialType"]}

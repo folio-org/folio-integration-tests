@@ -3,16 +3,17 @@ Feature: mod-lists integration tests
   Background:
     * url baseUrl
     * table modules
-      | name                      |
-      | 'mod-login'               |
-      | 'mod-permissions'         |
-      | 'mod-users'               |
-      | 'mod-circulation-storage' |
-      | 'mod-fqm-manager'         |
-      | 'mod-lists'               |
-      | 'mod-entities-links'      |
-      | 'mod-inventory-storage'   |
-      | 'mod-tags'                |
+      | name                        |
+      | 'mod-login'                 |
+      | 'mod-permissions'           |
+      | 'mod-users'                 |
+      | 'mod-circulation-storage'   |
+      | 'mod-fqm-manager'           |
+      | 'mod-lists'                 |
+      | 'mod-entities-links'        |
+      | 'mod-inventory-storage'     |
+      | 'mod-source-record-storage' |
+      | 'mod-tags'                  |
 
     * table userPermissions
       | name                                                            |
@@ -85,6 +86,9 @@ Feature: mod-lists integration tests
       | 'organizations-storage.organization-types.collection.get'       |
       | 'organizations.organizations.collection.get'                    |
       | 'search.instances.collection.get'                               |
+      | 'source-storage.records.collection.get'                         |
+      | 'source-storage.records.post'                                   |
+      | 'source-storage.snapshots.post'                                 |
       | 'tags.collection.get'                                           |
       | 'tenant-addresses.collection.get'                               |
       | 'usergroups.collection.get'                                     |
