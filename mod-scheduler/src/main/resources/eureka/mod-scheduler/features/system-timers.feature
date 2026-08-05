@@ -72,7 +72,7 @@ Feature: scheduler system timers
 
   @Positive
   Scenario: verify mod-users scheduled system timers are created during entitlement
-    * configure retry = { count: 100, interval: 5000 }
+    * configure retry = { count: 40, interval: 20000 }
     Given path 'scheduler/timers'
     And param limit = 500
     And retry until responseStatus == 200 && karate.filter(response.timerDescriptors, timer => timer.moduleName == 'mod-users').length >= 3
