@@ -40,7 +40,7 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @Test
     public void test03() {
-        runFeatureTest("skip-suppressed-records-C193912.feature");
+        runFeatureTest("skip-suppressed-records-C163912.feature");
     }
 
     @Test
