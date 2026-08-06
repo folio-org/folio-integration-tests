@@ -9,9 +9,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "spitfire", module = "mod-entities-links")
+@FolioTest(team = "promin", module = "mod-entities-links")
 class ModEntitiesLinksExtendedTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-entities-links/features/";
+    private static final String TEST_BASE_PATH = "classpath:promin/mod-entities-links/features/";
 
     public ModEntitiesLinksExtendedTest() {
         super(new TestIntegrationService(
@@ -20,7 +20,7 @@ class ModEntitiesLinksExtendedTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:spitfire/mod-entities-links/links-junit.feature");
+        runFeature("classpath:promin/mod-entities-links/links-junit.feature");
     }
 
     @AfterAll

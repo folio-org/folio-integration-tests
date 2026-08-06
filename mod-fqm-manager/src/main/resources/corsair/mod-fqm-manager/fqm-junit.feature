@@ -10,6 +10,7 @@ Feature: mod-fqm-manager integration tests
       | 'mod-users'                 |
       | 'mod-users-bl'              |
       | 'mod-inventory-storage'     |
+      | 'mod-source-record-storage' |
       | 'mod-circulation'           |
       | 'mod-circulation-storage'   |
       | 'mod-fqm-manager'           |
@@ -155,6 +156,8 @@ Feature: mod-fqm-manager integration tests
       | 'refunds.collection.get'                                           |
       | 'search.instances.collection.get'                                  |
       | 'source-storage.records.collection.get'                            |
+      | 'source-storage.records.post'                                      |
+      | 'source-storage.snapshots.post'                                    |
       | 'tags.collection.get'                                              |
       | 'transfers.collection.get'                                         |
       | 'user-tenants.collection.get'                                      |

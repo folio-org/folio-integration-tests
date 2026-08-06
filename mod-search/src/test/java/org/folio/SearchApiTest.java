@@ -9,10 +9,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "spitfire", module = "mod-search")
+@FolioTest(team = "promin", module = "mod-search")
 class SearchApiTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-search/";
+    private static final String TEST_BASE_PATH = "classpath:promin/mod-search/";
 
     public SearchApiTest() {
         super(new TestIntegrationService(

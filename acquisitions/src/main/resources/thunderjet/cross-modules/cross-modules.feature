@@ -335,6 +335,12 @@ Feature: cross-module integration tests
   Scenario: Encumbrances Are Rollovered Correctly When PO Lines Contain Different Fund Distributions Related To Three Different Ledgers And Same Fiscal Year
     * call read('features/rollover-three-ledgers-with-different-fund-distributions.feature')
 
+  Scenario: Encumbrance Is Unreleased After Un-opening The Order With Related Paid Invoice Release False
+    * call read('features/encumbrance-unreleased-after-unopening-order-with-paid-invoice-release-false.feature')
+
+  Scenario: Encumbrance Is Released After Un-opening The Order With Related Paid And Approved Invoices Release True
+    * call read('features/encumbrance-released-after-unopening-order-with-paid-and-approved-invoices.feature')
+
   Scenario: Rollover Based On Expended When Credit Invoice Exists
     * call read('features/rollover-based-on-expended-with-credit-invoice.feature')
 

@@ -108,6 +108,7 @@ class OrdersApiTest extends TestBaseEureka implements AcquisitionsTest {
     "should-decrease-quantity-when-delete-piece-with-no-location",
     "three-fund-distributions",
     "title-instance-creation",
+    "title-updated-after-change-instance-connection",
     "unlink-title",
     "unopen-order-with-different-fund",
     "unreceive-piece-and-check-order-line",

@@ -16,6 +16,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'mod-lists'               |
       | 'mod-entities-links'      |
       | 'mod-inventory-storage'   |
+      | 'mod-search'              |
       | 'mod-tags'                |
 
 
@@ -28,6 +29,7 @@ Feature: mod-consortia and mod-lists integration tests
       | 'fqm.entityTypes.collection.get'                                   |
       | 'fqm.entityTypes.item.columnValues.get'                            |
       | 'fqm.entityTypes.item.get'                                         |
+      | 'fqm.entityTypes.install.post'                                     |
       | 'fqm.materializedViews.post'                                       |
       | 'fqm.migrate.post'                                                 |
       | 'fqm.query.all'                                                    |
@@ -109,9 +111,11 @@ Feature: mod-consortia and mod-lists integration tests
 
     # generate test tenants' names
     * def random = callonce randomMillis
-    * def centralTenantId = uuid()
+    * def centralTenantUuid = uuid()
     * def centralTenant = 'central' + random
-    * def universityTenantId = uuid()
+    * def centralTenantId = centralTenant
+    * karate.set('centralTenantId', centralTenantId)
+    * def universityTenantUuid = uuid()
     * def universityTenant = 'university' + random
 
     # define users
@@ -124,14 +128,21 @@ Feature: mod-consortia and mod-lists integration tests
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
   Scenario: Create ['central', 'university'] tenants and set up admins
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantUuid)', user: '#(universityUser1)'}
 
   Scenario: Consortium api tests
     * call read('consortium.feature')
 
   Scenario: Tenant api tests
     * call read('tenant.feature')
+
+  # mod-fqm snapshots entity-type availability at install time, which happens before the consortium/central
+  # designation completes and before mod-search's central schema exists. Force a re-init per tenant now that
+  # setup is done so the mod-search-dependent instance/holdings/item composites become available.
+  Scenario: Ensure FQM entity types are initialized for all consortia tenants
+    * call read('fqm-entity-type-setup.feature@InstallFqmEntityTypesForTenant') { tenant: '#(centralTenant)', user: '#(consortiaAdmin)' }
+    * call read('fqm-entity-type-setup.feature@InstallFqmEntityTypesForTenant') { tenant: '#(universityTenant)', user: '#(universityUser1)' }
 
   Scenario Outline: ECS Export - <entityType> with <columnType>
     * call read('ecs-export.feature') <params>
@@ -146,5 +157,5 @@ Feature: mod-consortia and mod-lists integration tests
       | Holdings   | selected columns | { listFile: 'holdings-list.json', fields: ['holdings.id', 'holdings.hrid', 'holdings.instance_id'] } |
 
   Scenario: Destroy created ['university', 'central'] tenants
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantId)'}
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantId)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(centralTenantUuid)'}
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') {tenantId: '#(universityTenantUuid)'}

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "volaris", module = "tags")
 class ModTagsApiTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:spitfire/tags/features/";
+    private static final String TEST_BASE_PATH = "classpath:promin/tags/features/";
 
     public ModTagsApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -18,7 +18,7 @@ class ModTagsApiTest extends TestBaseEureka {
 
     @BeforeAll
     public void modTagsBeforeAll() {
-        runFeature("classpath:spitfire/tags/basic-junit.feature");
+        runFeature("classpath:promin/tags/basic-junit.feature");
     }
 
     @Test

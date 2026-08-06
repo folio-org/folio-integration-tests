@@ -43,6 +43,7 @@ public class ModFqmManagerTest extends TestBaseEureka {
                         "query/operators-basic",
                         "query/operators-array",
                         "query/per-entity-type",
+                        "query/marc-fields",
                         "query/special-field-tests",
                         "query/validation",
                         "consortia/consortia-fqm"

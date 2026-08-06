@@ -14,7 +14,7 @@ function fn() {
 
   var config = {
     baseUrl: 'http://localhost:8000',
-    featuresPath: 'classpath:spitfire/mod-notes/features/',
+    featuresPath: 'classpath:promin/mod-notes/features/',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 

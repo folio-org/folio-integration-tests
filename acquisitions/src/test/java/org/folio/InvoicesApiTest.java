@@ -65,7 +65,6 @@ public class InvoicesApiTest extends TestBaseEureka implements AcquisitionsTest 
     "should_populate_vendor_address_on_get_voucher_by_id",
     "voucher-numbers",
     "voucher-with-lines-using-same-external-account",
-    "fund-code-auto-populate-invoice-lines",
     "delete-line-check-next-line-number"
   };
 
