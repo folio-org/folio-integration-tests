@@ -19,7 +19,14 @@ function fn() {
   var randomNumbers = karate.properties['randomNumbers'] || (function() { return java.util.UUID.randomUUID().toString().replace('-', '').substring(0, 10); })();
   var centralTenant = 'consortium' + randomNumbers;
   var collegeTenant = 'college' + randomNumbers;
-  var universityTenant = 'university' + randomNumbers;
+  // The university (secure) tenant name must match the SECURE_TENANT_ID environment variable of
+  // mod-requests-mediated, otherwise the Kafka-driven mediated request status transitions
+  // ('Open - In transit for approval', 'Open - Awaiting pickup', 'Closed - Filled') are never
+  // applied and the mediated-requests tests time out. SECURE_TENANT_ID is set at deploy time and
+  // cannot be read or changed through any FOLIO API, so the name is fixed here instead of being
+  // randomised per run. Override with -DsecureTenantName=<name> for environments configured with
+  // a different value.
+  var universityTenant = karate.properties['secureTenantName'] || 'universitymr1';
 
   var centralTenantId = karate.properties['centralTenantId'];
   var collegeTenantId = karate.properties['collegeTenantId'];
