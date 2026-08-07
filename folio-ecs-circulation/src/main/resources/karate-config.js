@@ -109,8 +109,8 @@ function fn() {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-volaris-2nd-kong.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-2nd-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-keycloak.ci.folio.org';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.admin = {
