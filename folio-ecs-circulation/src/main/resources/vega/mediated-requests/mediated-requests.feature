@@ -311,7 +311,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
 
     # Intermediate request (central) is updated asynchronously by mod-tlr via Kafka - retry
     * configure headers = headersCentral
-    * configure retry = { count: 40, interval: 15000 }
+    * configure retry = { count: 20, interval: 15000 }
     Given path 'request-storage/requests', confirmedRequestId
     And retry until responseStatus == 200 && response.status == 'Open - In transit'
     When method GET
