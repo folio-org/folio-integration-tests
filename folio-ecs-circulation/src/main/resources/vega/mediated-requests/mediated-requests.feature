@@ -19,14 +19,14 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * def getMediatedRequest = read('classpath:vega/util/crud-utils.feature@GetMediatedRequest')
 
     # Shared logins reused by every scenario
-    * def uniLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
+    * def uniLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: 'universitymr1' }
     * def uniOkapitoken = uniLogin.okapitoken
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def centralOkapitoken = centralLogin.okapitoken
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
     * def collegeOkapitoken = collegeLogin.okapitoken
 
-    * def headersUniversity = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    * def headersUniversity = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': 'universitymr1' }
     * def headersCentral    = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(centralOkapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
     * def headersCollege    = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeOkapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
 
@@ -38,7 +38,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
         "centralTenant": "#(centralTenant)",
         "consortiumId": "#(consortiumId)",
         "uniOkapitoken": "#(uniOkapitoken)",
-        "universityTenant": "#(universityTenant)",
+        "universityTenant": "universitymr1",
         "collegeOkapitoken": "#(collegeOkapitoken)",
         "collegeTenant": "#(collegeTenant)",
         "mrInstanceTypeId": "#(mrInstanceTypeId)",
@@ -52,7 +52,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
       """
 
   Scenario: create and decline item-level page mediated request
-    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: 'universitymr1', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'MR Page Item-level Test Instance'
     * def inv = call createInventoryInCollege inventoryParams
@@ -111,7 +111,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.status == 'Closed - Declined'
 
   Scenario: create and confirm item-level mediated page request
-    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: 'universitymr1', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'FAT-27027'
     * def inv = call createInventoryInCollege inventoryParams
@@ -230,7 +230,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     # NOT in the event's tenant. This scenario therefore only passes if SECURE_TENANT_ID equals
     # the university tenant name used by this test run (pass -DuniversityTenant=<name>, or
     # -DrandomNumbers=<suffix> if the configured value is 'university<suffix>').
-    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: 'universitymr1', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'MR Send In Transit And Confirm Arrival'
     * def inv = call createInventoryInCollege inventoryParams
