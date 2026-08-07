@@ -220,16 +220,18 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     #   1. check-in in lending tenant (college)      -> 'Open - In transit for approval'
     #   2. confirm item arrival in secure tenant     -> 'Open - Item arrived'
     #   3. send item in transit in secure tenant     -> 'Open - In transit to be checked out'
-    #   4. check-in in secure tenant (university)    -> 'Open - Awaiting pickup'
-    # Statuses of all three requests (secondary/college, intermediate/central,
-    # primary/university) are verified at every step.
+    #   4. check-in in secure tenant (university)    -> primary/mediated: 'Open - Awaiting pickup'
+    #                                                   central/college routing copies: stay 'Open - In transit'
+    #   5. check-out in secure tenant (university)   -> 'Closed - Filled' for all requests
+    # Statuses of all three circulation requests (secondary/college, intermediate/central,
+    # primary/university) and the mediated request are verified at every step.
     #
-    # ENVIRONMENT REQUIREMENT: mod-requests-mediated applies the Kafka-driven status
+    # ENVIRONMENT REQUIREMENT: mod-requests-mediated applies the Kafka-driven mediated-request status
     # transitions ('Open - In transit for approval', 'Open - Awaiting pickup', 'Closed - Filled')
     # in the tenant configured via its SECURE_TENANT_ID env variable (folio.tenant.secure-tenant-id),
     # NOT in the event's tenant. This scenario therefore only passes if SECURE_TENANT_ID equals
-    # the university tenant name used by this test run (pass -DuniversityTenant=<name>, or
-    # -DrandomNumbers=<suffix> if the configured value is 'university<suffix>').
+    # universityTenant (currently fixed to 'universitymr1' in karate-config.js).
+    # Override with -DsecureTenantName=<name> for environments configured with a different value.
     * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'MR Send In Transit And Confirm Arrival'
@@ -409,21 +411,16 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
 
-    # Intermediate request (central) - awaiting pickup (async, Kafka) - retry
+    # Intermediate request (central) and secondary request (college) - mod-tlr does NOT propagate
+    # 'Awaiting pickup' to the routing copies; they remain 'Open - In transit' until checkout
+    # when they transition directly to 'Closed - Filled' (verified in step 5).
     * configure headers = headersCentral
-    Given path 'request-storage/requests', confirmedRequestId
-    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
-    When method GET
-    Then status 200
-    And match response.status == 'Open - Awaiting pickup'
+    * call getRequest { requestId: '#(confirmedRequestId)' }
+    And match response.status == 'Open - In transit'
 
-    # Secondary request (college) - awaiting pickup, and the real item follows (async, Kafka) - retry
     * configure headers = headersCollege
-    Given path 'request-storage/requests', confirmedRequestId
-    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
-    When method GET
-    Then status 200
-    And match response.status == 'Open - Awaiting pickup'
+    * call getRequest { requestId: '#(confirmedRequestId)' }
+    And match response.status == 'Open - In transit'
 
     Given path 'item-storage/items', inventory.itemId
     And retry until responseStatus == 200 && response.status.name == 'Awaiting pickup'
