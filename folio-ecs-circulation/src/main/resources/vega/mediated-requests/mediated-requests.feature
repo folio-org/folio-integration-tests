@@ -220,13 +220,12 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     #   1. check-in in lending tenant (college)      -> 'Open - In transit for approval'
     #   2. confirm item arrival in secure tenant     -> 'Open - Item arrived'
     #   3. send item in transit in secure tenant     -> 'Open - In transit to be checked out'
-    #   4. check-in in secure tenant (university)    -> primary/mediated: 'Open - Awaiting pickup'
-    #                                                   central/college routing copies: stay 'Open - In transit'
+    #   4. check-in in secure tenant (university)    -> 'Open - Awaiting pickup'
     #   5. check-out in secure tenant (university)   -> 'Closed - Filled' for all requests
-    # Statuses of all three circulation requests (secondary/college, intermediate/central,
-    # primary/university) and the mediated request are verified at every step.
+    # Statuses of all three requests (secondary/college, intermediate/central,
+    # primary/university) are verified at every step.
     #
-    # ENVIRONMENT REQUIREMENT: mod-requests-mediated applies the Kafka-driven mediated-request status
+    # ENVIRONMENT REQUIREMENT: mod-requests-mediated applies the Kafka-driven status
     # transitions ('Open - In transit for approval', 'Open - Awaiting pickup', 'Closed - Filled')
     # in the tenant configured via its SECURE_TENANT_ID env variable (folio.tenant.secure-tenant-id),
     # NOT in the event's tenant. This scenario therefore only passes if SECURE_TENANT_ID equals
@@ -411,16 +410,21 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
 
-    # Intermediate request (central) and secondary request (college) - mod-tlr does NOT propagate
-    # 'Awaiting pickup' to the routing copies; they remain 'Open - In transit' until checkout
-    # when they transition directly to 'Closed - Filled' (verified in step 5).
+    # Intermediate request (central) - awaiting pickup (async, Kafka) - retry
     * configure headers = headersCentral
-    * call getRequest { requestId: '#(confirmedRequestId)' }
-    And match response.status == 'Open - In transit'
+    Given path 'request-storage/requests', confirmedRequestId
+    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
+    When method GET
+    Then status 200
+    And match response.status == 'Open - Awaiting pickup'
 
+    # Secondary request (college) - awaiting pickup, and the real item follows (async, Kafka) - retry
     * configure headers = headersCollege
-    * call getRequest { requestId: '#(confirmedRequestId)' }
-    And match response.status == 'Open - In transit'
+    Given path 'request-storage/requests', confirmedRequestId
+    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
+    When method GET
+    Then status 200
+    And match response.status == 'Open - Awaiting pickup'
 
     Given path 'item-storage/items', inventory.itemId
     And retry until responseStatus == 200 && response.status.name == 'Awaiting pickup'
