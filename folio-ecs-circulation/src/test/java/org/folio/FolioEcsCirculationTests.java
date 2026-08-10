@@ -31,6 +31,14 @@ class FolioEcsCirculationTests extends TestBaseEureka {
     System.setProperty("centralTenantId", UUID.randomUUID().toString());
     System.setProperty("collegeTenantId", UUID.randomUUID().toString());
     System.setProperty("universityTenantId", UUID.randomUUID().toString());
+
+    // Fix all three tenant names to deterministic values so the consortium can be reused
+    // across runs. FAT-27028 runs with -DrandomNumbers=mr1 (CI convention), which creates
+    // consortiummr1, collegemr1, universitymr1. Using the same suffix here prevents
+    // setup from trying to recreate universitymr1 (already exists), which would disrupt
+    // mod-requests-mediated Kafka consumers and cause the 'Open - Awaiting pickup' assertion
+    // to time out at line 417.
+    System.setProperty("randomNumbers", "mr1");
   }
 
   @AfterAll

@@ -8,7 +8,10 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * callonce login admin
 
     * callonce read('classpath:vega/mediated-requests/mediated-requests-variables.feature')
-    * callonce read('classpath:vega/common/mediated-requests-consortium-setup.feature')
+    * def consortiumSetup = callonce read('classpath:vega/common/mediated-requests-consortium-setup.feature')
+    # If setup was skipped (all tenants existed), use the actual consortium ID found at skip time.
+    # In the full-setup case consortiumSetup.consortiumId is undefined and we keep the global value.
+    * if (consortiumSetup && consortiumSetup.consortiumId) def consortiumId = consortiumSetup.consortiumId
 
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
     * def createPatronUser = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreatePatronUser')

@@ -9,6 +9,21 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     * url baseUrl
     * configure readTimeout = 600000
 
+  # Looks up the actual consortium ID from an already-running consortium. Called when all three
+  # tenants exist and setup is being skipped to preserve mod-requests-mediated Kafka consumers.
+  @LookupConsortiumId
+  Scenario: Look up the actual consortium ID from the running consortium
+    * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
+    * def centralLoginResp = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
+    Given path 'consortia'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json'
+    And header x-okapi-token = centralLoginResp.okapitoken
+    And header x-okapi-tenant = centralTenant
+    When method GET
+    Then status 200
+    * def consortiumId = response.consortia[0].id
+
   Scenario: setup consortium with central, university, and college tenants
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
     * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
@@ -91,12 +106,59 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
 
+    # ========== Check if consortium already exists, skip setup to preserve Kafka consumers ==========
+    # All three tenant names are deterministic when randomNumbers='mr1' (set in FolioEcsCirculationTests):
+    #   centralTenant = 'consortiummr1', collegeTenant = 'collegemr1', universityTenant = 'universitymr1'
+    # Re-provisioning universitymr1 disrupts mod-requests-mediated Kafka consumers, causing the async
+    # 'Open - Awaiting pickup' status transition to time out. If all three tenants already exist
+    # (e.g., set up by a prior FAT-27028 or FAT-27029 run), we reuse them instead.
+    * def kcLookup = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def kcToken = kcLookup.response.access_token
+    Given path 'tenants'
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json'
+    And header Authorization = 'Bearer ' + kcToken
+    When method GET
+    * def tenantList = response.tenants || []
+    * def tenantIdFromList = function(name) { for (var i = 0; i < tenantList.length; i++) { if (tenantList[i].name == name) return tenantList[i].id; } return null; }
+    * def uniFoundId = tenantIdFromList(universityTenant)
+    * def cenFoundId = tenantIdFromList(centralTenant)
+    * def colFoundId = tenantIdFromList(collegeTenant)
+    * def allExist = uniFoundId != null && cenFoundId != null && colFoundId != null
+
+    * if (!allExist) karate.log('Not all consortium tenants exist; running full setup. Found: ' + (uniFoundId ? universityTenant + ' ' : '') + (cenFoundId ? centralTenant + ' ' : '') + (colFoundId ? collegeTenant : ''))
+    * if (allExist) karate.log('All consortium tenants exist (' + universityTenant + ', ' + centralTenant + ', ' + collegeTenant + '). Looking up actual consortium ID to skip setup.')
+
+    # If all exist, find the actual consortium ID (it may differ from the current-run random UUID)
+    * def getActualConsortiumId =
+      """
+      function() {
+        if (!allExist) return null;
+        try {
+          var result = karate.call('classpath:vega/common/mediated-requests-consortium-setup.feature@LookupConsortiumId');
+          return result ? result.consortiumId : null;
+        } catch(e) {
+          karate.log('Consortium ID lookup failed (will run full setup): ' + e);
+          return null;
+        }
+      }
+      """
+    * def actualConsortiumId = call getActualConsortiumId
+    * if (allExist && actualConsortiumId != null) karate.log('Reusing existing consortium ' + actualConsortiumId + '. Skipping setup to preserve Kafka consumers.')
+    * if (allExist && actualConsortiumId != null) def consortiumId = actualConsortiumId
+    * if (allExist && actualConsortiumId != null) karate.abort()
+    * if (allExist && actualConsortiumId == null) karate.log('Could not look up consortium ID. Will recreate all tenants from scratch.')
+
     # ========== Step 1: Create and initialize tenants ==========
-    # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
+    # Pre-emptive cleanup: delete any existing tenants using their actual UUIDs (found above)
+    # so the deletion succeeds even if UUIDs differ from the current-run random values.
+    * def uniDeleteId = uniFoundId || universityTenantId
+    * def cenDeleteId = cenFoundId || centralTenantUuid
+    * def colDeleteId = colFoundId || collegeTenantId
     * configure abortedStepsShouldPass = true
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(collegeTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantUuid)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(uniDeleteId)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(colDeleteId)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(cenDeleteId)' }
     * configure abortedStepsShouldPass = false
 
     * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }
