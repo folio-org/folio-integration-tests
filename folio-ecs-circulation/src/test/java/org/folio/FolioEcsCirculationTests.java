@@ -26,11 +26,24 @@ class FolioEcsCirculationTests extends TestBaseEureka {
     System.setProperty("consortiaAdminUserId", UUID.randomUUID().toString());
     System.setProperty("universityUserId", UUID.randomUUID().toString());
     System.setProperty("collegeUserId", UUID.randomUUID().toString());
-    System.setProperty("consortiumId", UUID.randomUUID().toString());
 
     System.setProperty("centralTenantId", UUID.randomUUID().toString());
     System.setProperty("collegeTenantId", UUID.randomUUID().toString());
     System.setProperty("universityTenantId", UUID.randomUUID().toString());
+
+    // Fix the randomNumbers suffix so all three tenant names are deterministic:
+    //   centralTenant    = 'consortiummr1'
+    //   collegeTenant    = 'collegemr1'
+    //   universityTenant = 'universitymr1'  (already fixed in karate-config.js)
+    // This allows the consortium setup to be skipped when all tenants already exist, preventing
+    // mod-requests-mediated Kafka consumer disruption that would cause the async
+    // 'Open - Awaiting pickup' status transition to time out.
+    // NOTE: if ECS tests are re-enabled in this runner, move them to a separate runner class
+    // (or use a different randomNumbers value) to avoid tenant-name conflicts.
+    System.setProperty("randomNumbers", "mr1");
+    // Fix the consortium ID so instance-sharing operations use the same consortium across
+    // runs when the full setup is reused.
+    System.setProperty("consortiumId", "5a00852d-49fd-4df2-a1f9-000000000001");
   }
 
   @AfterAll

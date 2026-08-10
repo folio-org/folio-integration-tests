@@ -91,12 +91,14 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
 
-    # ========== Step 1: Create and initialize tenants ==========
-    # Before cleanup, resolve the actual UUID of the fixed-name university tenant.
-    # universityTenant ('universitymr1') is a fixed name across runs, but universityTenantId is
-    # generated randomly at JVM startup (FolioEcsCirculationTests.runHook). If a previous run
-    # left the tenant behind, deletion with the new random UUID would silently fail and recreation
-    # would fail with "already taken". We look up the actual UUID via the management API first.
+    # ========== Step 0: Skip setup if consortium already exists ==========
+    # All three tenant names are deterministic (consortiummr1, collegemr1, universitymr1),
+    # so the consortium can persist between runs. Re-provisioning universitymr1 disrupts
+    # mod-requests-mediated Kafka consumers, causing the async 'Open - Awaiting pickup'
+    # status transition to time out within the 5-minute retry window. We skip the entire
+    # setup when all three tenants already exist.
+    # For partial-setup cases (some tenants exist, some don't), actual UUIDs are resolved
+    # from the management API so cleanup reliably removes whichever tenants do exist.
     * def kcLookupResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
     * def kcLookupToken = kcLookupResponse.response.access_token
     Given path 'tenants'
@@ -104,26 +106,36 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     And header Accept = 'application/json'
     And header Authorization = 'Bearer ' + kcLookupToken
     When method GET
-    * def findUniversityTenantId =
+    * def checkTenants =
       """
       function() {
         var tenants = response.tenants || [];
+        var found = {};
         for (var i = 0; i < tenants.length; i++) {
-          if (tenants[i].name == universityTenant) {
-            karate.log('Found existing university tenant with id: ' + tenants[i].id);
-            return tenants[i].id;
-          }
+          found[tenants[i].name] = tenants[i].id;
         }
-        return universityTenantId;
+        return {
+          allExist: !!(found[universityTenant] && found[centralTenant] && found[collegeTenant]),
+          uniId:     found[universityTenant] || universityTenantId,
+          centralId: found[centralTenant]    || centralTenantUuid,
+          collegeId: found[collegeTenant]    || collegeTenantId
+        };
       }
       """
-    * def resolvedUniversityTenantId = call findUniversityTenantId
+    * def tenantCheck = call checkTenants
+    * def skipSetup = tenantCheck.allExist
+    * def uniActualId     = tenantCheck.uniId
+    * def centralActualId = tenantCheck.centralId
+    * def collegeActualId = tenantCheck.collegeId
+    * if (skipSetup) karate.log('All consortium tenants exist (' + universityTenant + ', ' + centralTenant + ', ' + collegeTenant + '), skipping setup to preserve mod-requests-mediated Kafka consumers.')
+    * if (skipSetup) karate.abort()
 
-    # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
+    # ========== Step 1: Create and initialize tenants ==========
+    # Pre-emptive cleanup using actual UUIDs resolved above (handles partial-setup from failed runs).
     * configure abortedStepsShouldPass = true
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(resolvedUniversityTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(collegeTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantUuid)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(uniActualId)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(collegeActualId)' }
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralActualId)' }
     * configure abortedStepsShouldPass = false
 
     * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }
