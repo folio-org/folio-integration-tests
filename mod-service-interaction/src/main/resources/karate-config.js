@@ -69,6 +69,7 @@ function fn() {
   // UTC calendar year — the ${current_year} token and the year-reset sweep are
   // asserted against it.
   config.currentYear = new Date().getFullYear();
+  config.current_year = new Date().getFullYear();
 
   config.uuid = function () {
     return java.util.UUID.randomUUID() + '';
