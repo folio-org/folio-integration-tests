@@ -22,7 +22,10 @@ function fn() {
 
   var consortiumId = karate.properties['consortiumId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -32,8 +35,8 @@ function fn() {
 
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'ttttpatron', name: 'testpatron', password: 'password'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: 'ttttpatron', name: 'testpatron', password: generatePassword('testpatron')},
 
     centralTenantName: centralTenantName,
     centralTenantId: centralTenantId ? centralTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
@@ -43,9 +46,9 @@ function fn() {
     centralUserId: centralUserId,
     centralAdminId: centralAdminId,
 
-    consortiaAdmin: { id: centralAdminId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenantName },
-    universityUser: { id: universityUserId, username: 'university_user', password: 'university_user_password', type: 'staff', tenant: universityTenantName },
-    centralUser: { id: centralUserId, username: 'testpatron', password: 'password', type: 'staff', tenant: centralTenantName },
+    consortiaAdmin: { id: centralAdminId, username: 'consortia_admin', password: generatePassword('consortia_admin'), tenant: centralTenantName },
+    universityUser: { id: universityUserId, username: 'university_user', password: generatePassword('university_user'), type: 'staff', tenant: universityTenantName },
+    centralUser: { id: centralUserId, username: 'testpatron', password: generatePassword('testpatron'), type: 'staff', tenant: centralTenantName },
 
     // define global features
     login: karate.read('classpath:common/login.feature'),

@@ -7,8 +7,8 @@ Feature: mod-ebsconet integration tests
     * def random = callonce randomMillis
     * def testTenant = 'testebsconet' + random
     * def testTenantId = callonce uuid
-    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
-    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: '#(generatePassword("test-admin"))' }
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: '#(generatePassword("test-user"))' }
 
     # Create tenant and users, initialize data
     * def v = callonce read('classpath:thunderjet/mod-ebsconet/init-ebsconet.feature')

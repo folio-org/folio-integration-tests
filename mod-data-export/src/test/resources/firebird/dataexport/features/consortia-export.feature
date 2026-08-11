@@ -45,10 +45,10 @@ Feature: mod-consortia and mod-data-export integration tests
     * def universityTenant = 'university' + random
 
     # define users
-    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: '#(generatePassword("consortia_admin"))', tenant: '#(centralTenant)'}
 
-    * def centralUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'central_user1', password: 'central_user1_password', tenant: '#(centralTenant)'}
-    * def universityUser1 = { id: '334e5a9e-94f9-4673-8d1d-ab552863886b', username: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
+    * def centralUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521412', username: 'central_user1', password: '#(generatePassword("central_user1"))', tenant: '#(centralTenant)'}
+    * def universityUser1 = { id: '334e5a9e-94f9-4673-8d1d-ab552863886b', username: 'university_user1', password: '#(generatePassword("university_user1"))', tenant: '#(universityTenant)'}
 
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
