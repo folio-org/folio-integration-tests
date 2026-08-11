@@ -66,11 +66,9 @@ function fn() {
     adminPermissions: '["servint.dashboards.admin.allops"]'
   };
 
-  // UTC calendar year — the ${current_year} token and the year-reset sweep are
+  // UTC calendar year — the current_year token and the year-reset sweep are
   // asserted against it.
-  config.currentYear = '' + java.util.Calendar
-    .getInstance(java.util.TimeZone.getTimeZone('UTC'))
-    .get(java.util.Calendar.YEAR);
+  config.currentYear = new Date().getFullYear();
 
   config.uuid = function () {
     return java.util.UUID.randomUUID() + '';
@@ -111,6 +109,20 @@ function fn() {
     // declared local-definition creation and answers 405 — D-2.
     definitionCreate: config.impl == 'legacy' ? 201 : 405
   };
+
+  if (env == 'folio-testing-karate') {
+    config.baseUrl = '${baseUrl}';
+    config.admin = {
+      tenant: '${admin.tenant}',
+      name: '${admin.name}',
+      password: '${admin.password}'
+    }
+    config.kcClientId = '${clientId}',
+    config.kcClientSecret = '${clientSecret}'
+    config.prototypeTenant = '${prototypeTenant}';
+    karate.configure('ssl',true);
+    config.baseKeycloakUrl = '${baseKeycloakUrl}';
+  }
 
   return config;
 }
