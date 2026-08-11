@@ -69,6 +69,8 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'circulation-storage.requests.item.get'                     |
       | 'circulation-item.item.get'                                 |
       | 'circulation.check-in-by-barcode.post'                      |
+      | 'circulation.check-out-by-barcode.post'                     |
+      | 'circulation-storage.loans.item.get'                        |
       | 'lost-item-fees-policies.item.post'                         |
       | 'overdue-fines-policies.item.post'                          |
       | 'circulation.settings.item.post'                            |
