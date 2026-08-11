@@ -16,7 +16,10 @@ function fn() {
   var adminPasswordOverride = karate.properties['admin.password'];
   var effectiveTestTenant = testTenant ? testTenant : 'testtenant';
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: baseUrlOverride || 'http://localhost:8000',
     admin: {
       tenant: adminTenantOverride || 'diku',
@@ -30,8 +33,8 @@ function fn() {
     testTenant: effectiveTestTenant,
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     foliioUiUrl: karate.properties['foliioUiUrl'] || 'https://my-library.foliio.org',
-    testAdmin: { tenant: effectiveTestTenant, name: 'test-admin', password: 'admin' },
-    testUser: { tenant: effectiveTestTenant, name: 'test-user', password: 'test' },
+    testAdmin: { tenant: effectiveTestTenant, name: 'test-admin', password: generatePassword('test-admin') },
+    testUser: { tenant: effectiveTestTenant, name: 'test-user', password: generatePassword('test-user') },
     login: karate.read('classpath:common/login.feature'),
     uuid: function () {
       return java.util.UUID.randomUUID() + '';
