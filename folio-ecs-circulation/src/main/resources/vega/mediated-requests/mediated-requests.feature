@@ -410,18 +410,22 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
 
-    # Intermediate request (central) and secondary request (college) - mod-tlr does NOT propagate
-    # 'Awaiting pickup' to the routing copies; they remain 'Open - In transit' until checkout
-    # when they transition directly to 'Closed - Filled' (verified in step 5).
+    # Intermediate request (central) - awaiting pickup (async, Kafka) - retry
     * configure headers = headersCentral
-    * call getRequest { requestId: '#(confirmedRequestId)' }
-    And match response.status == 'Open - In transit'
+    Given path 'request-storage/requests', confirmedRequestId
+    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
+    When method GET
+    Then status 200
+    And match response.status == 'Open - Awaiting pickup'
 
+    # Secondary request (college) - awaiting pickup, and the real item follows (async, Kafka) - retry
     * configure headers = headersCollege
-    * call getRequest { requestId: '#(confirmedRequestId)' }
-    And match response.status == 'Open - In transit'
+    Given path 'request-storage/requests', confirmedRequestId
+    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
+    When method GET
+    Then status 200
+    And match response.status == 'Open - Awaiting pickup'
 
-    # The real item in college still reaches 'Awaiting pickup' via a separate event - retry
     Given path 'item-storage/items', inventory.itemId
     And retry until responseStatus == 200 && response.status.name == 'Awaiting pickup'
     When method GET
