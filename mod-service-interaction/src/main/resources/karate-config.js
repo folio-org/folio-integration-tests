@@ -68,9 +68,7 @@ function fn() {
 
   // UTC calendar year — the ${current_year} token and the year-reset sweep are
   // asserted against it.
-  config.currentYear = '' + java.util.Calendar
-    .getInstance(java.util.TimeZone.getTimeZone('UTC'))
-    .get(java.util.Calendar.YEAR);
+  config.currentYear = new Date().getFullYear();
 
   config.uuid = function () {
     return java.util.UUID.randomUUID() + '';
