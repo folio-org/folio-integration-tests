@@ -66,7 +66,7 @@ function fn() {
     adminPermissions: '["servint.dashboards.admin.allops"]'
   };
 
-  // UTC calendar year — the ${current_year} token and the year-reset sweep are
+  // UTC calendar year — the current_year token and the year-reset sweep are
   // asserted against it.
   config.currentYear = new Date().getFullYear();
   config.current_year = new Date().getFullYear();
@@ -110,8 +110,6 @@ function fn() {
     // declared local-definition creation and answers 405 — D-2.
     definitionCreate: config.impl == 'legacy' ? 201 : 405
   };
-
-  console.log(config)
 
   return config;
 }
