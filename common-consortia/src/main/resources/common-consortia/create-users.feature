@@ -12,15 +12,15 @@ Feature: Create users
       for (let i = 3; i < 104; i++) {
         const userId1 = uuid();
         const username1 = 'central_user'+i;
-        const password1 = username1 +'_password';
+        const password1 = generatePassword(username1);
         generatedForCentral.push({'id': userId1, 'username': username1, 'password': password1, 'tenant': centralTenant});
         const userId2 = uuid();
         const username2 = 'university_user'+i;
-        const password2 = username2 +'_password';
+        const password2 = generatePassword(username2);
         generatedForUniversity.push({'id': userId2, 'username': username2, 'password': password2, 'tenant': universityTenant});
         const userId3 = uuid();
         const username3 = 'college_user'+i;
-        const password3 = username3 +'_password';
+        const password3 = generatePassword(username3);
         generatedForCollege.push({'id': userId3, 'username': username3, 'password': password3, 'tenant': collegeTenant});
       }
     }

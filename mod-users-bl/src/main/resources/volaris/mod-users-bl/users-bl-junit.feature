@@ -31,7 +31,7 @@ Feature: mod-login integration tests
 
   Scenario: create admin user for testing purposes
     * def tempUser = testUser
-    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(testAdmin.password)' }
+    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(generatePassword(testAdmin.name))' }
     Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
     Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
     Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')

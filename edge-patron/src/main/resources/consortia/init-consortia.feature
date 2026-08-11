@@ -143,10 +143,10 @@ Feature: Initialize mod-consortia integration tests
     * def consortiumId = uuids[3]
 
     # define main users
-    * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenantName)' }
-    * def universityUser = { id: '#(universityUserId)', username: 'university_user', password: 'university_user_password', type: 'staff', tenant: '#(universityTenantName)' }
+    * def consortiaAdmin = { id: '#(centralAdminId)', username: 'consortia_admin', password: '#(generatePassword("consortia_admin"))', tenant: '#(centralTenantName)' }
+    * def universityUser = { id: '#(universityUserId)', username: 'university_user', password: '#(generatePassword("university_user"))', type: 'staff', tenant: '#(universityTenantName)' }
 
-    * def centralUser = { id: '#(centralUserId)', username: 'central_user', password: 'central_user_password', type: 'staff', tenant: '#(centralTenantName)' }
+    * def centralUser = { id: '#(centralUserId)', username: 'central_user', password: '#(generatePassword("central_user"))', type: 'staff', tenant: '#(centralTenantName)' }
 
     # reusable features
     * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')

@@ -9,7 +9,10 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9703',
     centralServerUrl: 'https://folio-dev-volaris-mockserver.ci.folio.org',
@@ -22,8 +25,8 @@ function fn() {
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'default', name: 'innreachClient', password: 'default'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: 'default', name: 'innreachClient', password: generatePassword('innreachClient')},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
