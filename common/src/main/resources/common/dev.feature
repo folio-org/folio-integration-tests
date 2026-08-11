@@ -1,8 +1,8 @@
 Feature: dev
 
   Scenario: init dev data
-    * def testAdmin = { tenant: '#(tenant)', name: 'test-admin', password: 'admin' }
-    * def testUser = { tenant: '#(tenant)', name: 'test-user', password: 'test' }
+    * def testAdmin = { tenant: '#(tenant)', name: 'test-admin', password: '#(generatePassword("test-admin"))' }
+    * def testUser = { tenant: '#(tenant)', name: 'test-user', password: '#(generatePassword("test-user"))' }
 
     * def dev = {}
     * set dev.uuid[0] = 'fa3feb3d-68a9-4b99-98e6-c97a155f0e9f'

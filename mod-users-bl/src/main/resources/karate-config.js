@@ -12,7 +12,10 @@ function fn() {
   var testTenant = karate.properties['testTenant'] || 'testtenant';
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -22,9 +25,9 @@ function fn() {
 
     testTenant: testTenant,
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
     // The tenant property of testUser is required by destroy-data.feature
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),

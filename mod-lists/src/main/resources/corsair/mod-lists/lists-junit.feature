@@ -102,10 +102,10 @@ Feature: mod-lists integration tests
 
   Scenario: create second user for testing
     * def testUserName = testUser.name
-    * def testUser = {tenant: "#(testTenant)", name: '#(testUser2.name)', password: 'test'}
+    * def testUser = {tenant: "#(testTenant)", name: '#(testUser2.name)', password: '#(generatePassword(testUser2.name))'}
     Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
     Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
     * eval java.lang.System.setProperty('testUser2Id', karate.get('userId'))
     Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
-    * def testUser = {tenant: "#(testTenant)", name: '#(testUserName)', password: 'test'}
+    * def testUser = {tenant: "#(testTenant)", name: '#(testUserName)', password: '#(generatePassword(testUserName))'}

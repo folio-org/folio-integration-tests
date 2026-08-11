@@ -15,7 +15,10 @@ function fn() {
   // once we run tests again
   var runId = karate.properties['runId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     runId: runId ? runId : '',
     baseUrl: 'https://folio-dev-spitfire-okapi.ci.folio.org',
     admin: { tenant: 'diku', name: 'diku_admin', password: adminPassword },
@@ -24,8 +27,8 @@ function fn() {
     kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: { tenant: testTenant, name: 'test-admin', password: 'admin' },
-    testUser: { tenant: testTenant, name: 'test-user', password: 'test' },
+    testAdmin: { tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin') },
+    testUser: { tenant: testTenant, name: 'test-user', password: generatePassword('test-user') },
     tenantParams: { loadReferenceData: true },
     webSemanticInstance: 'af83c0ac-c3ba-4b11-95c8-4110235dec80',
     webOfMetaphorInstance: '7e18b615-0e44-4307-ba78-76f3f447041c',

@@ -11,8 +11,8 @@ Feature: data export basic tests
 
     * def randomNumber = callonce random
     * def testTenant = 'dataexporttesttenant' + randomNumber
-    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: 'admin'}
-    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: 'test'}
+    * def testAdmin = {tenant: '#(testTenant)', name: 'test-admin', password: '#(generatePassword("test-admin"))'}
+    * def testUser = {tenant: '#(testTenant)', name: 'test-user', password: '#(generatePassword("test-user"))'}
 
     * table userPermissions
       | name              |

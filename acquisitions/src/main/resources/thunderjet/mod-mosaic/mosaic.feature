@@ -7,8 +7,8 @@ Feature: mod-mosaic integration tests
     * def random = callonce randomMillis
     * def testTenant = 'testmosaic' + random
     * def testTenantId = callonce uuid
-    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: 'admin' }
-    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+    * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: '#(generatePassword("test-admin"))' }
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: '#(generatePassword("test-user"))' }
 
     # Create tenant and users, initialize data
     * def v = callonce read('classpath:thunderjet/mod-mosaic/init-mosaic.feature')

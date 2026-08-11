@@ -61,23 +61,23 @@ Feature: mod-consortia-keycloak integration tests
     * def consortiumId = uuids[3]
 
     # define main users
-    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * def consortiaAdmin = { id: '122b3d2b-4788-4f1e-9117-56daa91cb75c', username: 'consortia_admin', password: '#(generatePassword("consortia_admin"))', tenant: '#(centralTenant)'}
 
-    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: 'central_user1_password', type: 'staff', tenant: '#(centralTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
-    * def centralUser2 = { id: '#(centralUser2Id)', username: 'central_user2', password: 'central_user2_password', type: 'staff', tenant: '#(centralTenant)'}
+    * def centralUser1 = { id: '#(centralUser1Id)', username: 'central_user1', password: '#(generatePassword("central_user1"))', type: 'staff', tenant: '#(centralTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
+    * def centralUser2 = { id: '#(centralUser2Id)', username: 'central_user2', password: '#(generatePassword("central_user2"))', type: 'staff', tenant: '#(centralTenant)'}
 
-    * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: 'university_user1_password', type: 'staff', tenant: '#(universityTenant)', phone: '#(universityUser1Phone)', mobilePhone:  '#(universityUser1MobilePhone)'}
-    * def universityUser2 = { id: '#(universityUser2Id)', username: 'university_user2', password: 'university_user2_password', type: 'staff', tenant: '#(universityTenant)'}
+    * def universityUser1 = { id: '#(universityUser1Id)', username: 'university_user1', password: '#(generatePassword("university_user1"))', type: 'staff', tenant: '#(universityTenant)', phone: '#(universityUser1Phone)', mobilePhone:  '#(universityUser1MobilePhone)'}
+    * def universityUser2 = { id: '#(universityUser2Id)', username: 'university_user2', password: '#(generatePassword("university_user2"))', type: 'staff', tenant: '#(universityTenant)'}
 
-    * def collegeUser1 = { id: '#(collegeUser1Id)', username: 'college_user1', password: 'college_user1_password', type: 'staff', tenant: '#(collegeTenant)'}
-    * def collegeUser2 = { id: '#(collegeUser2Id)', username: 'college_user2', password: 'college_user2_password', type: 'staff', tenant: '#(collegeTenant)'}
+    * def collegeUser1 = { id: '#(collegeUser1Id)', username: 'college_user1', password: '#(generatePassword("college_user1"))', type: 'staff', tenant: '#(collegeTenant)'}
+    * def collegeUser2 = { id: '#(collegeUser2Id)', username: 'college_user2', password: '#(generatePassword("college_user2"))', type: 'staff', tenant: '#(collegeTenant)'}
 
-    * def shadowUser = { id: '#(shadowUserId)', username: 'university_shadow_user', password: 'university_shadow_user_password', type: 'shadow', tenant: '#(universityTenant)'}
-    * def patronUser = { id: '#(patronUserId)', username: 'college_patron_user', password: 'college_patron_user_password', type: 'patron', tenant: '#(collegeTenant)'}
+    * def shadowUser = { id: '#(shadowUserId)', username: 'university_shadow_user', password: '#(generatePassword("university_shadow_user"))', type: 'shadow', tenant: '#(universityTenant)'}
+    * def patronUser = { id: '#(patronUserId)', username: 'college_patron_user', password: '#(generatePassword("college_patron_user"))', type: 'patron', tenant: '#(collegeTenant)'}
 
-    * def userToUpdate = { id: '#(userToUpdateId)', username: 'user_to_update', password: 'user_to_update_password', type: 'staff', tenant: '#(centralTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
-    * def universityUserToUpdate = { id: '#(universityUserToUpdateId)', username: 'university_user_to_update', password: 'university_user_to_update_password', type: 'staff', tenant: '#(universityTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
-    * def patronUserToUpdate = { id: '#(patronUserToUpdateId)', username: 'patron_user_to_update', password: 'patron_user_to_update_password', type: 'patron', tenant: '#(collegeTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
+    * def userToUpdate = { id: '#(userToUpdateId)', username: 'user_to_update', password: '#(generatePassword("user_to_update"))', type: 'staff', tenant: '#(centralTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
+    * def universityUserToUpdate = { id: '#(universityUserToUpdateId)', username: 'university_user_to_update', password: '#(generatePassword("university_user_to_update"))', type: 'staff', tenant: '#(universityTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
+    * def patronUserToUpdate = { id: '#(patronUserToUpdateId)', username: 'patron_user_to_update', password: '#(generatePassword("patron_user_to_update"))', type: 'patron', tenant: '#(collegeTenant)', phone: '#(userPhone)', mobilePhone: '#(userMobilePhone)'}
 
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')

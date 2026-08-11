@@ -106,10 +106,10 @@ Feature: mod-consortia and mod-fqm-manager integration tests
 
     # define users
     * def consortiaAdminId = '122b3d2b-4788-4f1e-9117-56daa91cb75d'
-    * def consortiaAdmin = { id: '#(consortiaAdminId)', name: 'consortia_admin', username: 'consortia_admin', password: 'consortia_admin_password', tenant: '#(centralTenant)'}
+    * def consortiaAdmin = { id: '#(consortiaAdminId)', name: 'consortia_admin', username: 'consortia_admin', password: '#(generatePassword("consortia_admin"))', tenant: '#(centralTenant)'}
 
-    * def universityUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521413', username: 'university_user1', name: 'university_user1', password: 'university_user1_password', tenant: '#(universityTenant)'}
-    * def collegeUser1 = { id: '9d45643a-2d50-4f85-bfb0-71e6f62c7a45', username: 'college_user1', name: 'college_user1', password: 'college_user1_password', tenant: '#(collegeTenant)'}
+    * def universityUser1 = { id: 'cd3f6cac-fa17-4079-9fae-2fb28e521413', username: 'university_user1', name: 'university_user1', password: '#(generatePassword("university_user1"))', tenant: '#(universityTenant)'}
+    * def collegeUser1 = { id: '9d45643a-2d50-4f85-bfb0-71e6f62c7a45', username: 'college_user1', name: 'college_user1', password: '#(generatePassword("college_user1"))', tenant: '#(collegeTenant)'}
 
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
