@@ -56,7 +56,7 @@ Feature: edge-rtac integration tests
       | 'finance.transactions.collection.get'                     |
 
     * def testTenant = 'testrtac'
-    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: 'test' }
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: '#(generatePassword("test-user"))' }
 
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }

@@ -6,7 +6,7 @@ Feature: Independent acquisitions unit for ordering and receiving
     * print karate.info.scenarioName
     * url baseUrl
 
-    * def testUser2 = { tenant: '#(testTenant)', name: 'test-user-2', password: 'test' }
+    * def testUser2 = { tenant: '#(testTenant)', name: 'test-user-2', password: '#(generatePassword("test-user-2"))' }
     * table user2Permissions
       | name                                                   |
       | 'orders.acquisitions-units-assignments.create.execute' |

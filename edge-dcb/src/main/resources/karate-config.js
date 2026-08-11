@@ -8,7 +8,10 @@ function fn() {
   var testTenant = "testedgedcb";
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:1212',
     centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
@@ -21,8 +24,8 @@ function fn() {
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'testedgedcb', name: 'dcbClient', password: 'password'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: 'testedgedcb', name: 'dcbClient', password: generatePassword('dcbClient')},
 
     login: karate.read('classpath:common/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),

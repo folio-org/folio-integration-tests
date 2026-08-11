@@ -27,7 +27,10 @@ function fn() {
   // define consortiumId
   var consortiumId = karate.properties['consortiumId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9701',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -42,8 +45,8 @@ function fn() {
     collegeApikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0Y29sbGVnZSIsInUiOiJ0ZXN0X2VkZ2VfYWRtaW4ifQ==',
     testTenant: 'testoaipmh',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
 
     // define consortia users and tenants
     centralTenant: centralTenant,
@@ -54,11 +57,11 @@ function fn() {
     collegeTenantId: collegeTenantId ? collegeTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     consortiumId: consortiumId,
 
-    consortiaAdmin: { id: consortiaAdminUserId, username: 'test_edge_admin', password: 'admin', tenant: centralTenant},
-    universityUser1: { id: universityUser1Id, username: 'test_edge_admin', password: 'admin', tenant: universityTenant},
-    collegeUser1: { id: collegeUser1Id, username: 'test_edge_admin', password: 'admin', tenant: collegeTenant},
+    consortiaAdmin: { id: consortiaAdminUserId, username: 'test_edge_admin', password: generatePassword('test_edge_admin'), tenant: centralTenant},
+    universityUser1: { id: universityUser1Id, username: 'test_edge_admin', password: generatePassword('test_edge_admin'), tenant: universityTenant},
+    collegeUser1: { id: collegeUser1Id, username: 'test_edge_admin', password: generatePassword('test_edge_admin'), tenant: collegeTenant},
     // shadow user
-    centralUser1: { id: centralUser1Id, username: 'centralUser', password: 'central_user_password', tenant: centralTenant},
+    centralUser1: { id: centralUser1Id, username: 'centralUser', password: generatePassword('centralUser'), tenant: centralTenant},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),

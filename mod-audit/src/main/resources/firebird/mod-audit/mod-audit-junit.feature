@@ -73,7 +73,7 @@ Feature: mod-audit integration tests
   Scenario: create admin user for testing
     * def tempTestUser = testUser
     * def tempUserPermissions = userPermissions
-    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(testAdmin.password)' }
+    * def testUser = { tenant: "#(testTenant)", name: '#(testAdmin.name)', password: '#(generatePassword(testAdmin.name))' }
     * def userPermissions = adminAdditionalPermissions
     Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
     Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
