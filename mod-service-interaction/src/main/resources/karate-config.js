@@ -111,5 +111,7 @@ function fn() {
     definitionCreate: config.impl == 'legacy' ? 201 : 405
   };
 
+  console.log(config)
+
   return config;
 }
