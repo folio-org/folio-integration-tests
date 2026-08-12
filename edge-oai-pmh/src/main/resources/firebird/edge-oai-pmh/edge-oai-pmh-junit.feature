@@ -76,7 +76,7 @@ Feature: mod-audit integration tests
       | 'converter-storage.field-protection-settings.collection.get'                  |
       | 'linked-data.resources.bib.post'                                              |
 
-    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: '#(generatePassword("test-user"))' }
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: '#(generateEdgeUserPassword())' }
 
 
   Scenario: create tenant and users for testing
