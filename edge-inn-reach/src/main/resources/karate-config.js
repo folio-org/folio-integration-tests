@@ -10,9 +10,11 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+  var generateEdgeUserPassword = karate.callSingle('classpath:common/util/generate-password.feature').generateEdgeUserPassword;
 
   var config = {
     generatePassword: generatePassword,
+    generateEdgeUserPassword: generateEdgeUserPassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9703',
     centralServerUrl: 'https://folio-dev-volaris-mockserver.ci.folio.org',
@@ -26,7 +28,8 @@ function fn() {
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
-    testUser: {tenant: 'default', name: 'innreachClient', password: generatePassword('innreachClient')},
+    // Password mirrored in pipelines-shared-library resources/edge/config_eureka.yaml.
+    testUser: {tenant: 'default', name: 'innreachClient', password: generateEdgeUserPassword()},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
