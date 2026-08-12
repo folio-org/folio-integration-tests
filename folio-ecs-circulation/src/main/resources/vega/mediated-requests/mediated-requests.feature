@@ -333,6 +333,9 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.status.name == 'In transit'
 
     # Mediated request moves to 'Open - In transit for approval' (async, Kafka) - retry
+    # This is a second-level async event (mod-requests-mediated reacts to mod-tlr's Kafka event),
+    # so it can lag further behind; use a higher count than the circulation-request retries above.
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'requests-mediated/mediated-requests', mediatedRequestId
     And retry until responseStatus == 200 && response.status == 'Open - In transit for approval'
     When method GET
