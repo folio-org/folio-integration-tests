@@ -413,6 +413,7 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.status == 'Open - Awaiting pickup'
 
     # Intermediate request (central) - awaiting pickup (async, Kafka) - retry
+    * configure retry = { count: 60, interval: 15000 }
     * configure headers = headersCentral
     Given path 'request-storage/requests', confirmedRequestId
     And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
