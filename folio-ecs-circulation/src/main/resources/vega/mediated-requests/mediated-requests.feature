@@ -395,17 +395,21 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     When method POST
     Then status 200
 
-    # Primary request (university) - awaiting pickup
+    # Primary request (university) - awaiting pickup (async, driven by check-in)
+    * configure retry = { count: 40, interval: 15000 }
     Given path 'request-storage/requests', confirmedRequestId
     And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
     When method GET
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
 
-    * call getCirculationItem { itemId: '#(inventory.itemId)' }
+    Given path 'circulation-item', inventory.itemId
+    And retry until responseStatus == 200 && response.status.name == 'Awaiting pickup'
+    When method GET
+    Then status 200
     And match response.status.name == 'Awaiting pickup'
 
-    # Mediated request - awaiting pickup (async, Kafka) - retry
+    # Mediated request - awaiting pickup (second-level async via mod-requests-mediated Kafka) - retry
     Given path 'requests-mediated/mediated-requests', mediatedRequestId
     And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
     When method GET
