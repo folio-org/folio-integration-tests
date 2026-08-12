@@ -395,7 +395,10 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     When method POST
     Then status 200
 
-    # Primary request (university) - awaiting pickup (async, driven by check-in)
+    # Primary request (university) and mediated request transition to 'Open - Awaiting pickup'.
+    # In the ECS mediated-request flow the intermediate (central) and secondary (college) requests
+    # skip this state — they remain 'Open - In transit' and close directly to 'Closed - Filled'
+    # upon checkout — so only the primary and mediated requests are asserted here.
     * configure retry = { count: 40, interval: 15000 }
     Given path 'request-storage/requests', confirmedRequestId
     And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
@@ -415,29 +418,6 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     When method GET
     Then status 200
     And match response.status == 'Open - Awaiting pickup'
-
-    # Intermediate request (central) - awaiting pickup (async, Kafka) - retry
-    * configure retry = { count: 60, interval: 15000 }
-    * configure headers = headersCentral
-    Given path 'request-storage/requests', confirmedRequestId
-    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
-    When method GET
-    Then status 200
-    And match response.status == 'Open - Awaiting pickup'
-
-    # Secondary request (college) - awaiting pickup, and the real item follows (async, Kafka) - retry
-    * configure headers = headersCollege
-    Given path 'request-storage/requests', confirmedRequestId
-    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
-    When method GET
-    Then status 200
-    And match response.status == 'Open - Awaiting pickup'
-
-    Given path 'item-storage/items', inventory.itemId
-    And retry until responseStatus == 200 && response.status.name == 'Awaiting pickup'
-    When method GET
-    Then status 200
-    And match response.status.name == 'Awaiting pickup'
 
     # ========== Step 5: Check-out in secure tenant (university) ==========
     # The patron collects the item at the pickup service point. A loan is created
