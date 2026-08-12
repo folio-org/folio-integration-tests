@@ -513,6 +513,9 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.status.name == 'In transit'
 
     # Loan closed in university tenant (async, Kafka) - retry
+    # Cross-tenant event (central check-in → university loan closure) takes longer than
+    # same-tenant events; use a higher count to match the 'In transit for approval' retry above.
+    * configure retry = { count: 40, interval: 15000 }
     * configure headers = headersUniversity
     Given path 'loan-storage/loans', loanId
     And retry until responseStatus == 200 && response.status.name == 'Closed'
