@@ -52,7 +52,7 @@ Feature: edge-inn-reach integration tests
       | 'inventory.items.item.post'                               |
 
     * def testTenant = 'default'
-    * def testUser = { tenant: '#(testTenant)', name: 'innreachClient', password: '#(generatePassword("innreachClient"))' }
+    * def testUser = { tenant: '#(testTenant)', name: 'innreachClient', password: '#(generateEdgeUserPassword())' }
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature') { testTenant: '#(testTenant)', testUser: #(testUser) }
