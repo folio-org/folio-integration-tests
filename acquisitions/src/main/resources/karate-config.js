@@ -33,7 +33,8 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testEdgeUser: testEdgeUser,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
-    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
+    // this user is used in edge karate tests as well
+    testUser: {tenant: testTenant, name: 'test-user', password: generateEdgeUserPassword()},
 
     // define global features
     createAdditionalUser: karate.read('classpath:common/eureka/create-additional-user.feature'),
