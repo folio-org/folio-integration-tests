@@ -43,8 +43,8 @@ function fn() {
     config.baseUrl = 'https://folio-etesting-snapshot2-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
   } else if (env == 'rancher-1') {
-    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org/';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-kong.ci.folio.org/';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-keycloak.ci.folio.org';
   } else if (env == 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';

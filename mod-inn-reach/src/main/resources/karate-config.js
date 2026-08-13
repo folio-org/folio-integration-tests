@@ -14,7 +14,7 @@ function fn() {
     generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:8000',
-    centralServerUrl: 'https://folio-edev-volaris-2nd-mockserver.ci.folio.org',
+    centralServerUrl: 'https://folio-edev-vega-2nd-mockserver.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -96,11 +96,11 @@ function fn() {
   karate.repeat(100, rand);
 
   if (env == 'dev') {
-    config.baseUrl = 'https://folio-edev-volaris-2nd-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-2nd-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-2nd-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-2nd-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-vega-2nd-edge.ci.folio.org';
     config.kcClientId = 'folio-backend-admin-client';
-    config.centralServerUrl = karate.get('centralServerUrl') || 'https://folio-edev-volaris-2nd-mockserver.ci.folio.org';
+    config.centralServerUrl = karate.get('centralServerUrl') || 'https://folio-edev-vega-2nd-mockserver.ci.folio.org';
     config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {
       tenant: 'diku',
@@ -116,9 +116,9 @@ function fn() {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'rancher') {
-    config.edgeUrl = 'https://folio-edev-volaris-edge-inn-reach.ci.folio.org';
-    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org/';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-vega-2nd-edge-inn-reach.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-2nd-kong.ci.folio.org/';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-2nd-keycloak.ci.folio.org';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
