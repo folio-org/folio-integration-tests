@@ -9,7 +9,7 @@ Feature: edge-orders integration tests
     * def testTenant = 'testedgeorders' + random
     * def testTenantId = callonce uuid
     * def testAdmin = { tenant: '#(testTenant)', name: 'test-admin', password: '#(generatePassword("test-admin"))' }
-    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: '#(generatePassword("test-user"))' }
+    * def testUser = { tenant: '#(testTenant)', name: 'test-user', password: '#(generateEdgeUserPassword())' }
 
     # Create tenant and users, initialize data
     * def v = callonce read('classpath:thunderjet/edge-orders/init-edge-orders.feature')
