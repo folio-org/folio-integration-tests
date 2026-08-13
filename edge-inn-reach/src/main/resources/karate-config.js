@@ -17,7 +17,7 @@ function fn() {
     generateEdgeUserPassword: generateEdgeUserPassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9703',
-    centralServerUrl: 'https://folio-dev-volaris-mockserver.ci.folio.org',
+    centralServerUrl: 'https://folio-dev-vega-2nd-mockserver.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -92,9 +92,9 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'rancher') {
     config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
-    config.edgeUrl = 'https://folio-edev-volaris-edge-inn-reach.ci.folio.org';
-    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-vega-2nd-edge-inn-reach.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-2nd-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-2nd-keycloak.ci.folio.org';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';

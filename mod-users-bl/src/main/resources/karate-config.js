@@ -81,8 +81,8 @@ function fn() {
     config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   } else if (env == 'rancher-2') {
-    config.baseUrl = 'https://folio-edev-volaris-2nd-kong.ci.folio.org/';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-2nd-keycloak.ci.folio.org/';
+    config.baseUrl = 'https://folio-edev-vega-2nd-kong.ci.folio.org/';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-2nd-keycloak.ci.folio.org/';
   } else if (env == 'snapshot') {
       config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';
       config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
