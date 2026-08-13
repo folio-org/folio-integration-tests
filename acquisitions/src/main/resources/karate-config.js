@@ -11,9 +11,11 @@ function fn() {
   var testEdgeUser = karate.properties['testEdgeUser'];
 
   var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+  var generateEdgeUserPassword = karate.callSingle('classpath:common/util/generate-password.feature').generateEdgeUserPassword;
 
   var config = {
     generatePassword: generatePassword,
+    generateEdgeUserPassword: generateEdgeUserPassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:19000',
     ftpUrl: 'ftp://ftp.ci.folio.org',
@@ -31,7 +33,8 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testEdgeUser: testEdgeUser,
     testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
-    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
+    // this user is used in edge karate tests as well
+    testUser: {tenant: testTenant, name: 'test-user', password: generateEdgeUserPassword()},
 
     // define global features
     createAdditionalUser: karate.read('classpath:common/eureka/create-additional-user.feature'),

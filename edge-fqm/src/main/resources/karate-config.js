@@ -13,9 +13,11 @@ function fn() {
   var testTenantId = karate.properties['testTenantId'];
 
   var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+  var generateEdgeUserPassword = karate.callSingle('classpath:common/util/generate-password.feature').generateEdgeUserPassword;
 
   var config = {
     generatePassword: generatePassword,
+    generateEdgeUserPassword: generateEdgeUserPassword,
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -27,7 +29,8 @@ function fn() {
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
-    testUser: {tenant: 'testfqmtenant', name: 'testFqmUser', password: generatePassword('testFqmUser')},
+    // Password mirrored in pipelines-shared-library resources/edge/config_eureka.yaml.
+    testUser: {tenant: 'testfqmtenant', name: 'testFqmUser', password: generateEdgeUserPassword()},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
