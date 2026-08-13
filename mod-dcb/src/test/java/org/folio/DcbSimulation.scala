@@ -29,10 +29,10 @@ class DcbSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature"))
+    .exec(karateFeature("classpath:vega/mod-dcb/mod-dcb-junit.feature"))
   val dcbBorrowingPickupFlow = scenario("borrowing-pickup")
     .repeat(10) {
-      exec(karateFeature("classpath:volaris/mod-dcb/features/borrowing-pickup.feature"))
+      exec(karateFeature("classpath:vega/mod-dcb/features/borrowing-pickup.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

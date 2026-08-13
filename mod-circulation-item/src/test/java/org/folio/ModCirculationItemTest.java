@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "vega", module = "mod-circulation-item")
 public class ModCirculationItemTest extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:volaris/mod-circulation-item/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-circulation-item/features/";
 
   public ModCirculationItemTest() {
     super(
@@ -26,7 +26,7 @@ public class ModCirculationItemTest extends TestBaseEureka {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:volaris/mod-circulation-item/mod-circulation-item-junit.feature");
+    runFeature("classpath:vega/mod-circulation-item/mod-circulation-item-junit.feature");
   }
 
   @AfterAll

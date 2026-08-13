@@ -36,15 +36,15 @@ function fn() {
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:volaris/edge-inn-reach/global/variables.feature'),
+    variables: karate.read('classpath:vega/edge-inn-reach/global/variables.feature'),
 
-    globalPath: 'classpath:volaris/mod-inn-reach/global/',
-    featuresPath: 'classpath:volaris/mod-inn-reach/features/',
-    mocksPath: 'classpath:volaris/mod-inn-reach/mocks/',
-    samplesPath: 'classpath:volaris/mod-inn-reach/samples/',
-    edgeGlobalPath: 'classpath:volaris/edge-inn-reach/global/',
-    edgeFeaturesPath: 'classpath:volaris/edge-inn-reach/features/',
-    edgeMocksPath: 'classpath:volaris/edge-inn-reach/mocks/',
+    globalPath: 'classpath:vega/mod-inn-reach/global/',
+    featuresPath: 'classpath:vega/mod-inn-reach/features/',
+    mocksPath: 'classpath:vega/mod-inn-reach/mocks/',
+    samplesPath: 'classpath:vega/mod-inn-reach/samples/',
+    edgeGlobalPath: 'classpath:vega/edge-inn-reach/global/',
+    edgeFeaturesPath: 'classpath:vega/edge-inn-reach/features/',
+    edgeMocksPath: 'classpath:vega/edge-inn-reach/mocks/',
 
      // define global functions
     uuid: function () {
