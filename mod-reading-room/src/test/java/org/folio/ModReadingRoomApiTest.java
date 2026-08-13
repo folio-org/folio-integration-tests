@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-reading-room")
+@FolioTest(team = "vega", module = "mod-reading-room")
 class ModReadingRoomApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:volaris/mod-reading-room/features/";
 

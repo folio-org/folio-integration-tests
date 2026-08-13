@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "password-validator")
+@FolioTest(team = "vega", module = "password-validator")
 public class ModPasswordValidatorApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:spitfire/passwordvalidator/features/";
 

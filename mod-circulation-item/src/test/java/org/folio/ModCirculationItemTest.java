@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-circulation-item")
+@FolioTest(team = "vega", module = "mod-circulation-item")
 public class ModCirculationItemTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:volaris/mod-circulation-item/features/";
 

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-inn-reach")
+@FolioTest(team = "vega", module = "mod-inn-reach")
 public class InnReachApiTest extends TestBaseEureka {
 
   // default module settings

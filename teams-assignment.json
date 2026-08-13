@@ -110,13 +110,7 @@
       "mod-circulation-storage",
       "mod-patron",
       "edge-patron",
-      "mod-pubsub"
-    ],
-    "slackChannel": "#vega"
-  },
-  {
-    "team": "Volaris",
-    "modules": [
+      "mod-pubsub",
       "mod-inn-reach",
       "edge-inn-reach",
       "edge-dematic",
@@ -137,7 +131,7 @@
       "mod-remote-storage",
       "mod-reading-room"
     ],
-    "slackChannel": "#volaris-dev"
+    "slackChannel": "#vega"
   },
   {
     "team": "Citation",

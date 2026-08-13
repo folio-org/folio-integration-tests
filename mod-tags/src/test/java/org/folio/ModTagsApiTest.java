@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "tags")
+@FolioTest(team = "vega", module = "tags")
 class ModTagsApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:spitfire/tags/features/";
 
