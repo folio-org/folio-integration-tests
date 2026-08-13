@@ -1,5 +1,5 @@
-  # https://folio-org.atlassian.net/browse/MODFISTO-512
-  Feature: Check the encumbrances after issuing credit when the order is fully paid
+  # For MODFISTO-512, FAT-21205
+  Feature: Encumbrance remains released after another credited invoice was paid
 
     Background:
       * print karate.info.scenarioName
@@ -20,14 +20,16 @@
       * def invoiceLineId2 = callonce uuid8
 
 
-    Scenario: Check the encumbrances after issuing credit when the order is fully paid
+    @C624240
+    @Positive
+    Scenario: Encumbrance remains released after another credited invoice was paid
       # 1. Create a fund and a budget
-      * def v = call createFund { 'id': '#(fundId)', 'ledgerId': '#(globalLedgerWithRestrictionsId)' }
-      * def v = call createBudget { 'id': '#(budgetId)', 'fundId': '#(fundId)', 'allocated': 1000 }
+      * def v = call createFund { id: '#(fundId)', ledgerId: '#(globalLedgerWithRestrictionsId)' }
+      * def v = call createBudget { id: '#(budgetId)', fundId: '#(fundId)', allocated: 100 }
 
       # 2. Create an order, order line and open the order
       * def v = call createOrder { id: '#(orderId)' }
-      * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 100, quantity: 1 }
+      * def v = call createOrderLine { id: '#(poLineId)', orderId: '#(orderId)', fundId: '#(fundId)', listUnitPrice: 10, quantity: 1 }
       * def v = call openOrder { orderId: '#(orderId)' }
 
       # 3. Get encumbrance transaction and check the amount
@@ -36,14 +38,14 @@
       When method GET
       Then status 200
       And match response.transactions[0].encumbrance.status == 'Unreleased'
-      And match response.transactions[0].amount == 100
+      And match response.transactions[0].amount == 10
       * def encumbranceId = response.transactions[0].id
 
       # 4. Create an invoice and invoice line
       * def v = call createInvoice { id: '#(invoiceId1)' }
       * table invoiceLineData
         | invoiceLineId  | invoiceId  | poLineId | total | releaseEncumbrance | fundId | encumbranceId |
-        | invoiceLineId1 | invoiceId1 | poLineId | 100   | true               | fundId | encumbranceId |
+        | invoiceLineId1 | invoiceId1 | poLineId | 10    | true               | fundId | encumbranceId |
       * def v = call createInvoiceLine invoiceLineData
 
       # 5. Approve invoice and check the encumbrance transaction amount
@@ -58,7 +60,7 @@
       * def v = call createInvoice { id: '#(invoiceId2)' }
       * table invoiceLineData
         | invoiceLineId  | invoiceId  | poLineId | total | releaseEncumbrance | fundId | encumbranceId |
-        | invoiceLineId2 | invoiceId2 | poLineId | -100  | true               | fundId | encumbranceId |
+        | invoiceLineId2 | invoiceId2 | poLineId | -10   | false              | fundId | encumbranceId |
       * def v = call createInvoiceLine invoiceLineData
 
       # 8. Approve second invoice and check the encumbrance transaction amount
