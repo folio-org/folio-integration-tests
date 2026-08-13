@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-users-bl")
+@FolioTest(team = "vega", module = "mod-users-bl")
 public class ModUsersBLTests extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:volaris/mod-users-bl/features/";
 

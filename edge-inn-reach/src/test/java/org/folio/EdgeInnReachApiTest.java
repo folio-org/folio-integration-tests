@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "edge-inn-reach")
+@FolioTest(team = "vega", module = "edge-inn-reach")
 class EdgeInnReachApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:volaris/edge-inn-reach/features/";
 
