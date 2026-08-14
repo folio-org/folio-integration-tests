@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "vega", module = "edge-inn-reach")
 class EdgeInnReachApiTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:volaris/edge-inn-reach/features/";
+    private static final String TEST_BASE_PATH = "classpath:vega/edge-inn-reach/features/";
 
     public EdgeInnReachApiTest() {
         super(new TestIntegrationService(
@@ -24,7 +24,7 @@ class EdgeInnReachApiTest extends TestBaseEureka {
 
     @BeforeAll
     public void edgeInnReachApiTestBeforeAll() {
-        runFeature("classpath:volaris/edge-inn-reach/edge-inn-reach-junit.feature");
+        runFeature("classpath:vega/edge-inn-reach/edge-inn-reach-junit.feature");
     }
 
     @AfterAll

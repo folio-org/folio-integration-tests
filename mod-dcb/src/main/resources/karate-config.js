@@ -31,7 +31,7 @@ function fn() {
       loginRegularUser: karate.read('classpath:common/login.feature'),
       loginAdmin: karate.read('classpath:common/login.feature'),
       dev: karate.read('classpath:common/dev.feature'),
-      variables: karate.read('classpath:volaris/mod-dcb/global/variables.feature'),
+      variables: karate.read('classpath:vega/mod-dcb/global/variables.feature'),
 
 // define global functions
     uuid: function () {

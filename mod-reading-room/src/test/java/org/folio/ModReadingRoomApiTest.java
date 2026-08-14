@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "vega", module = "mod-reading-room")
 class ModReadingRoomApiTest extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:volaris/mod-reading-room/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-reading-room/features/";
 
   public ModReadingRoomApiTest() {
     super(new TestIntegrationService(
@@ -19,7 +19,7 @@ class ModReadingRoomApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:volaris/mod-reading-room/reading-room-init.feature");
+    runFeature("classpath:vega/mod-reading-room/reading-room-init.feature");
   }
 
   @AfterAll

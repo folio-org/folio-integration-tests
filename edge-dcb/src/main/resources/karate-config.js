@@ -34,11 +34,11 @@ function fn() {
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:volaris/mod-dcb/global/variables.feature'),
+    variables: karate.read('classpath:vega/mod-dcb/global/variables.feature'),
 
-    globalPath: 'classpath:volaris/mod-dcb/global/',
-    featuresPath: 'classpath:volaris/mod-dcb/features/',
-    edgeFeaturesPath: 'classpath:volaris/edge-dcb/features/',
+    globalPath: 'classpath:vega/mod-dcb/global/',
+    featuresPath: 'classpath:vega/mod-dcb/features/',
+    edgeFeaturesPath: 'classpath:vega/edge-dcb/features/',
 
     // define global functions
         random_uuid: function () {

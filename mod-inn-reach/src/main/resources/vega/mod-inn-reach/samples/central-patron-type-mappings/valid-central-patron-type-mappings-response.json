@@ -1,0 +1,14 @@
+[
+  {
+    "id": "#ignore",
+    "centralPatronType": 200,
+    "barcode": "1234500000",
+    "metadata": "#ignore"
+  },
+  {
+    "id": "#ignore",
+    "centralPatronType": 201,
+    "barcode": "5678900000",
+    "metadata": "#ignore"
+  }
+]

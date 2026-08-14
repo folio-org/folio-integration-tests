@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test;
 class ModUsersTests extends TestBaseEureka {
 
   public ModUsersTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration("classpath:volaris/mod-users/features/")));
+    super(new TestIntegrationService(new TestModuleConfiguration("classpath:vega/mod-users/features/")));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:volaris/mod-users/users-junit.feature");
+    runFeature("classpath:vega/mod-users/users-junit.feature");
   }
 
   @AfterAll
