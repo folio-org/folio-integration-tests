@@ -25,10 +25,10 @@ class InnReachSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:volaris/mod-inn-reach/mod-inn-reach-junit.feature"))
+    .exec(karateFeature("classpath:vega/mod-inn-reach/mod-inn-reach-junit.feature"))
   val innReachLocation = scenario("inn-reach-location")
     .repeat(10) {
-      exec(karateFeature("classpath:volaris/mod-inn-reach/features/inn-reach-location.feature"))
+      exec(karateFeature("classpath:vega/mod-inn-reach/features/inn-reach-location.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

@@ -16,7 +16,7 @@ function fn() {
     generateEdgeUserPassword: generateEdgeUserPassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:1212',
-    centralServerUrl: 'https://folio-dev-volaris-mock-server.ci.folio.org',
+    centralServerUrl: 'https://folio-dev-vega-mock-server.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -34,11 +34,11 @@ function fn() {
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:volaris/mod-dcb/global/variables.feature'),
+    variables: karate.read('classpath:vega/mod-dcb/global/variables.feature'),
 
-    globalPath: 'classpath:volaris/mod-dcb/global/',
-    featuresPath: 'classpath:volaris/mod-dcb/features/',
-    edgeFeaturesPath: 'classpath:volaris/edge-dcb/features/',
+    globalPath: 'classpath:vega/mod-dcb/global/',
+    featuresPath: 'classpath:vega/mod-dcb/features/',
+    edgeFeaturesPath: 'classpath:vega/edge-dcb/features/',
 
     // define global functions
         random_uuid: function () {
@@ -99,10 +99,10 @@ function fn() {
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-volaris-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-vega-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiWDhoYmM1THJDeSIsInQiOiJ0ZXN0ZWRnZWRjYiIsInUiOiJkY2JDbGllbnQifQ==';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-keycloak.ci.folio.org';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
