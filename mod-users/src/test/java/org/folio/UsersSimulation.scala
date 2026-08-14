@@ -24,10 +24,10 @@ class UsersSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:volaris/mod-users/users-junit.feature"))
+    .exec(karateFeature("classpath:vega/mod-users/users-junit.feature"))
   val users = scenario("users")
     .repeat(10) {
-      exec(karateFeature("classpath:volaris/mod-users/features/users.feature"))
+      exec(karateFeature("classpath:vega/mod-users/features/users.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

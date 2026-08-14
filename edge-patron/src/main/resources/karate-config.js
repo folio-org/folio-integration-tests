@@ -120,9 +120,9 @@ function fn() {
   };
 
   if (env == 'dev') {
-    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-volaris-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-vega-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-keycloak.ci.folio.org';
 
     config.kcClientId = 'folio-backend-admin-client';
     config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';

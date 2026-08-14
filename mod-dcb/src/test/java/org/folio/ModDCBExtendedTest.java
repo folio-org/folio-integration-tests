@@ -9,9 +9,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-dcb")
+@FolioTest(team = "vega", module = "mod-dcb")
 public class ModDCBExtendedTest extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:volaris/mod-dcb/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-dcb/features/";
 
   public ModDCBExtendedTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -216,7 +216,7 @@ public class ModDCBExtendedTest extends TestBaseEureka {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:volaris/mod-dcb/mod-dcb-junit.feature");
+    runFeature("classpath:vega/mod-dcb/mod-dcb-junit.feature");
   }
 
   @AfterAll

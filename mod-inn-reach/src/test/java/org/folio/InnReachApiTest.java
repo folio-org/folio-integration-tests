@@ -8,11 +8,11 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-inn-reach")
+@FolioTest(team = "vega", module = "mod-inn-reach")
 public class InnReachApiTest extends TestBaseEureka {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:volaris/mod-inn-reach/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-inn-reach/features/";
 
   public InnReachApiTest() {
     super(new TestIntegrationService(
@@ -136,7 +136,7 @@ public class InnReachApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void innReachApiTestBeforeAll() {
-    runFeature("classpath:volaris/mod-inn-reach/mod-inn-reach-junit.feature");
+    runFeature("classpath:vega/mod-inn-reach/mod-inn-reach-junit.feature");
   }
 
   @AfterAll

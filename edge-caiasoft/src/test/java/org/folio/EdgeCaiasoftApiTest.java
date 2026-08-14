@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Disabled
-@FolioTest(team = "volaris", module = "edge-caiasoft")
+@FolioTest(team = "vega", module = "edge-caiasoft")
 @Deprecated(forRemoval = true)
 public class EdgeCaiasoftApiTest extends TestBase {
 
