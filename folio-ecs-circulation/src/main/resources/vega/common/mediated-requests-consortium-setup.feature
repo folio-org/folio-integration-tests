@@ -92,11 +92,20 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     * def userPermissions = baseUserPermissions
 
     # ========== Step 1: Create and initialize tenants ==========
-    # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
+    # Pre-emptive cleanup: delete any leftover tenants from a previous failed run.
+    # Resolve each tenant's UUID by name first — a prior run may have used a different UUID,
+    # so deleting by the configured UUID alone would silently miss the existing tenant.
+    * def getTenantIdByName = read('classpath:common/eureka/tenant.feature@getIdByName')
     * configure abortedStepsShouldPass = true
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(collegeTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantUuid)' }
+    * def uniLookup = call getTenantIdByName { tenantName: '#(universityTenant)' }
+    * def uniIdToDelete = uniLookup.tenantId != null ? uniLookup.tenantId : universityTenantId
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(uniIdToDelete)' }
+    * def colLookup = call getTenantIdByName { tenantName: '#(collegeTenant)' }
+    * def colIdToDelete = colLookup.tenantId != null ? colLookup.tenantId : collegeTenantId
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(colIdToDelete)' }
+    * def cntLookup = call getTenantIdByName { tenantName: '#(centralTenant)' }
+    * def cntIdToDelete = cntLookup.tenantId != null ? cntLookup.tenantId : centralTenantUuid
+    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(cntIdToDelete)' }
     * configure abortedStepsShouldPass = false
 
     * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }

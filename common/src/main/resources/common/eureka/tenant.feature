@@ -17,6 +17,18 @@ Feature: Tenants
     When method POST
     Then status 201
 
+  @getIdByName
+  Scenario: look up a tenant's UUID by name; returns tenantId (string) or null if not found
+    * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
+    * def keycloakMasterToken = keycloakResponse.response.access_token
+    Given path 'tenants'
+    And param query = 'name==' + __arg.tenantName
+    And header Content-Type = 'application/json'
+    And header Accept = 'application/json'
+    And header Authorization = 'Bearer ' + keycloakMasterToken
+    When method GET
+    * def tenantId = responseStatus == 200 && response.totalRecords > 0 ? response.tenants[0].id : null
+
   @delete
   Scenario: deleteTenant
     * def keycloakResponse = call read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
