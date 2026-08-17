@@ -68,7 +68,6 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'circulation-storage.requests.collection.get'               |
       | 'circulation-storage.requests.item.get'                     |
       | 'circulation-item.item.get'                                 |
-      | 'circulation.check-in-by-barcode.post'                      |
       | 'lost-item-fees-policies.item.post'                         |
       | 'overdue-fines-policies.item.post'                          |
       | 'circulation.settings.item.post'                            |
@@ -83,8 +82,6 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'requests-mediated.mediated-request.item.get'               |
       | 'requests-mediated.mediated-requests.decline.execute'       |
       | 'requests-mediated.mediated-request.confirm.post'           |
-      | 'requests-mediated.confirm-item-arrival.post'               |
-      | 'requests-mediated.send-item-in-transit.post'               |
 
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
