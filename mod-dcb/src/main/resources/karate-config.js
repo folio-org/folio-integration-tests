@@ -31,7 +31,7 @@ function fn() {
       loginRegularUser: karate.read('classpath:common/login.feature'),
       loginAdmin: karate.read('classpath:common/login.feature'),
       dev: karate.read('classpath:common/dev.feature'),
-      variables: karate.read('classpath:volaris/mod-dcb/global/variables.feature'),
+      variables: karate.read('classpath:vega/mod-dcb/global/variables.feature'),
 
 // define global functions
     uuid: function () {
@@ -101,9 +101,9 @@ function fn() {
     config.edgeUrl = 'https://folio-etesting-snapshot2-edge.ci.folio.org';
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot2-keycloak.ci.folio.org';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-volaris-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-vega-edge.ci.folio.org';
   } else if(env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.edgeUrl = '${edgeUrl}';
@@ -119,9 +119,9 @@ function fn() {
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'dev') {
     config.checkDepsDuringModInstall = 'false';
-    config.baseUrl = 'https://folio-edev-volaris-2nd-kong.ci.folio.org:443';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-2nd-keycloak.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-volaris-2nd-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-2nd-kong.ci.folio.org:443';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-2nd-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-vega-2nd-edge.ci.folio.org';
     config.kcClientId = 'folio-backend-admin-client';
     config.kcClientSecret = karate.properties['clientSecret'] || 'SecretPassword';
     config.admin = {

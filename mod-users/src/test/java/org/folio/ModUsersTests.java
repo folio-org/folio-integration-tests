@@ -8,16 +8,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-users")
+@FolioTest(team = "vega", module = "mod-users")
 class ModUsersTests extends TestBaseEureka {
 
   public ModUsersTests() {
-    super(new TestIntegrationService(new TestModuleConfiguration("classpath:volaris/mod-users/features/")));
+    super(new TestIntegrationService(new TestModuleConfiguration("classpath:vega/mod-users/features/")));
   }
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:volaris/mod-users/users-junit.feature");
+    runFeature("classpath:vega/mod-users/users-junit.feature");
   }
 
   @AfterAll
