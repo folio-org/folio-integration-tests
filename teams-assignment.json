@@ -12,7 +12,7 @@
       "mod-data-export-spring",
       "mod-data-export-worker"
     ],
-    "slackChannel": "#athena"
+    "slackChannel": "#athena-notify"
   },
   {
     "team": "Core: Platform",
@@ -31,7 +31,7 @@
     "modules": [
       "mod-calendar"
     ],
-    "slackChannel": "#helios"
+    "slackChannel": "#helios-notify"
   },
   {
     "team": "K-Int",
