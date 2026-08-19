@@ -94,8 +94,8 @@ function fn() {
 
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org:443';
-    config.edgeUrl = 'https://folio-edev-corsair-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-athena-kong.ci.folio.org:443';
+    config.edgeUrl = 'https://folio-edev-athena-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
     config.admin = {
       tenant: 'diku',
@@ -104,7 +104,7 @@ function fn() {
     };
     config.prototypeTenant = 'diku';
 
-    config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-athena-keycloak.ci.folio.org';
   }
   return config;
 }

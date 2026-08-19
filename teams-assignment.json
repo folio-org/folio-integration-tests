@@ -1,21 +1,21 @@
 [
   {
-    "team": "Bama",
+    "team": "Athena",
     "modules": [
-      "mod-calendar"
+      "mod-fqm-manager",
+      "mod-lists",
+      "edge-fqm",
+      "mod-data-export",
+      "mod-oai-pmh",
+      "edge-oai-pmh",
+      "mod-bulk-operations",
+      "mod-data-export-spring",
+      "mod-data-export-worker"
     ],
-    "slackChannel": "#bama"
+    "slackChannel": "#athena"
   },
   {
-    "team": "Bienenvolk",
-    "modules": [
-      "mod-agreements",
-      "mod-licenses"
-    ],
-    "slackChannel": "#erm-developers"
-  },
-  {
-    "team": "Core: Platform",
+    "team": "Core Platform",
     "modules": [
       "mod-configuration",
       "mod-permissions",
@@ -27,25 +27,19 @@
     "slackChannel": "#core-platform-jenkins"
   },
   {
-    "team": "Corsair",
+    "team": "Helios",
     "modules": [
-      "mod-fqm-manager",
-      "mod-lists",
-      "edge-fqm"
+      "mod-calendar"
     ],
-    "slackChannel": "#corsair"
+    "slackChannel": "#helios"
   },
   {
-    "team": "Firebird",
+    "team": "K-Int",
     "modules": [
-      "mod-data-export",
-      "mod-oai-pmh",
-      "edge-oai-pmh",
-      "mod-bulk-operations",
-      "mod-data-export-spring",
-      "mod-data-export-worker"
+      "mod-agreements",
+      "mod-licenses"
     ],
-    "slackChannel": "#firebird"
+    "slackChannel": "#erm-developers"
   },
   {
     "team": "Promin",

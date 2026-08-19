@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 
-@FolioTest(team = "firebird", module = "mod-oai-pmh")
+@FolioTest(team = "athena", module = "mod-oai-pmh")
 public class ModOaiPmhTests extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/oaipmh/";
+    private static final String TEST_BASE_PATH = "classpath:athena/oaipmh/";
 
     public ModOaiPmhTests() {
         super(new TestIntegrationService(
@@ -26,7 +26,7 @@ public class ModOaiPmhTests extends TestBaseEureka {
     public void setup() {
         System.setProperty("testTenant", "testoaipmh" + RandomUtils.nextLong());
         System.setProperty("testTenantId", UUID.randomUUID().toString());
-        runFeature("classpath:firebird/mod-oai-pmh-junit.feature");
+        runFeature("classpath:athena/mod-oai-pmh-junit.feature");
     }
 
     @AfterAll
@@ -58,7 +58,7 @@ public class ModOaiPmhTests extends TestBaseEureka {
 
     @Test
     void loadDefaultConfigurationTests() {
-        runFeature("classpath:firebird/mod-configuration/load-default-pmh-configuration.feature");
+        runFeature("classpath:athena/mod-configuration/load-default-pmh-configuration.feature");
     }
 
     @Test

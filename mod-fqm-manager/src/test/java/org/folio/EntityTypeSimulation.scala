@@ -30,10 +30,10 @@ class EntityTypeSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:corsair/mod-fqm-manager/fqm-junit.feature"))
+    .exec(karateFeature("classpath:athena/mod-fqm-manager/fqm-junit.feature"))
   val perform = scenario("perform")
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-fqm-manager/features/entity-types.feature"))
+      exec(karateFeature("classpath:athena/mod-fqm-manager/features/entity-types.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
