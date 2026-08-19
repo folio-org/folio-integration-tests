@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@FolioTest(team = "firebird", module = "data-export")
+@FolioTest(team = "athena", module = "data-export")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ModDataExportExtendedApiTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/dataexport/features/";
+    private static final String TEST_BASE_PATH = "classpath:athena/dataexport/features/";
 
     public ModDataExportExtendedApiTest() {
         super(new TestIntegrationService(
@@ -25,7 +25,7 @@ public class ModDataExportExtendedApiTest extends TestBaseEureka {
 
     @BeforeAll
     public void modDataExportTestsBeforeAll() {
-        runFeature("classpath:firebird/dataexport/data-export-basic-junit.feature");
+        runFeature("classpath:athena/dataexport/data-export-basic-junit.feature");
     }
 
     @AfterAll

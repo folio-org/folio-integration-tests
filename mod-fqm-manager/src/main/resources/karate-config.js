@@ -31,7 +31,7 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    postQuery: karate.read('classpath:corsair/mod-fqm-manager/features/util/post-query.feature'),
+    postQuery: karate.read('classpath:athena/mod-fqm-manager/features/util/post-query.feature'),
 
     // define global functions
     uuid: function () {
@@ -93,9 +93,9 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-eperf-corsair-kong.ci.folio.org:443';
+    config.baseUrl = 'https://folio-eperf-athena-kong.ci.folio.org:443';
     config.prototypeTenant = 'fs09000000';
-    config.baseKeycloakUrl = 'https://folio-eperf-corsair-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-eperf-athena-keycloak.ci.folio.org';
     config.admin = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
   }
   return config;
