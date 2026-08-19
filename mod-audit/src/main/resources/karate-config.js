@@ -30,7 +30,7 @@ function fn() {
     dev: karate.read('classpath:common/dev.feature'),
     variables: karate.read('classpath:global/variables.feature'),
 
-    updateInstance: karate.read('classpath:firebird/mod-audit/util/reusable/updateInstance.feature'),
+    updateInstance: karate.read('classpath:vega/mod-audit/util/reusable/updateInstance.feature'),
     // define global functions
     uuid: function () {
       return java.util.UUID.randomUUID() + ''

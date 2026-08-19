@@ -32,10 +32,10 @@ function fn() {
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    postList: karate.read('classpath:corsair/mod-lists/features/util/post-list.feature'),
-    updateList: karate.read('classpath:corsair/mod-lists/features/util/update-list.feature'),
-    refreshList: karate.read('classpath:corsair/mod-lists/features/util/refresh-list.feature'),
-    cancelRefresh: karate.read('classpath:corsair/mod-lists/features/util/cancel-refresh.feature'),
+    postList: karate.read('classpath:athena/mod-lists/features/util/post-list.feature'),
+    updateList: karate.read('classpath:athena/mod-lists/features/util/update-list.feature'),
+    refreshList: karate.read('classpath:athena/mod-lists/features/util/refresh-list.feature'),
+    cancelRefresh: karate.read('classpath:athena/mod-lists/features/util/cancel-refresh.feature'),
 
     // define global functions
     uuid: function () {
@@ -97,9 +97,9 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-eperf-corsair-kong.ci.folio.org:443';
+    config.baseUrl = 'https://folio-eperf-athena-kong.ci.folio.org:443';
     config.prototypeTenant = 'fs09000000';
-    config.baseKeycloakUrl = 'https://folio-eperf-corsair-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-eperf-athena-keycloak.ci.folio.org';
     config.admin = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
   }
   return config;

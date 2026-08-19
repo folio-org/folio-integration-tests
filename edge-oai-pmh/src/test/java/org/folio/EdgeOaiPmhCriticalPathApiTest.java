@@ -9,9 +9,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "edge-oai-omh")
+@FolioTest(team = "athena", module = "edge-oai-omh")
 public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/";
+    private static final String TEST_BASE_PATH = "classpath:athena/edge-oai-pmh/features/";
 
     public EdgeOaiPmhCriticalPathApiTest() {
         super(new TestIntegrationService(
@@ -20,7 +20,7 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:firebird/edge-oai-pmh/edge-oai-pmh-junit.feature");
+        runFeature("classpath:athena/edge-oai-pmh/edge-oai-pmh-junit.feature");
     }
 
     @AfterAll

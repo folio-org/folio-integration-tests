@@ -249,13 +249,13 @@ Format:
 [
   {
     // Team name. Should match 'Development Team' Jira field.
-    "team": "Bama",
+    "team": "Helios",
     // List of integration tests modules the team is responsible for
     "modules": [
       "mod-calendar"
     ],
     // Slack channel which will be used to send failed tests notifications
-    "slackChannel": "#bama"
+    "slackChannel": "#helios"
   }
 ]
 ```

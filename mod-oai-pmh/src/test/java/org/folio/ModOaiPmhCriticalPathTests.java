@@ -12,9 +12,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
-@FolioTest(team = "firebird", module = "mod-oai-pmh")
+@FolioTest(team = "athena", module = "mod-oai-pmh")
 public class ModOaiPmhCriticalPathTests extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/oaipmh/";
+    private static final String TEST_BASE_PATH = "classpath:athena/oaipmh/";
 
     public ModOaiPmhCriticalPathTests() {
         super(new TestIntegrationService(
@@ -25,7 +25,7 @@ public class ModOaiPmhCriticalPathTests extends TestBaseEureka {
     public void setup() {
         System.setProperty("testTenant", "testoaipmh" + RandomUtils.nextLong());
         System.setProperty("testTenantId", UUID.randomUUID().toString());
-        runFeature("classpath:firebird/mod-oai-pmh-junit.feature");
+        runFeature("classpath:athena/mod-oai-pmh-junit.feature");
     }
 
     @AfterAll

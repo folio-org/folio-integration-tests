@@ -11,9 +11,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "edge-oai-omh")
+@FolioTest(team = "athena", module = "edge-oai-omh")
 public class ConsortiaEdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/consortia/";
+    private static final String TEST_BASE_PATH = "classpath:athena/edge-oai-pmh/features/consortia/";
 
     public ConsortiaEdgeOaiPmhCriticalPathApiTest() {
         super(new TestIntegrationService(
