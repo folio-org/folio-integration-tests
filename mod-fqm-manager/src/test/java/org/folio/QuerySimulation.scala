@@ -27,10 +27,10 @@ class QuerySimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:corsair/mod-fqm-manager/fqm-junit.feature"))
+    .exec(karateFeature("classpath:athena/mod-fqm-manager/fqm-junit.feature"))
   val query = scenario("query")
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-fqm-manager/features/query.feature"))
+      exec(karateFeature("classpath:athena/mod-fqm-manager/features/query.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

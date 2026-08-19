@@ -28,10 +28,10 @@ class ListRefreshSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:corsair/mod-lists/lists-junit.feature"))
+    .exec(karateFeature("classpath:athena/mod-lists/lists-junit.feature"))
   val refresh = scenario("refresh")
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-lists/features/refresh.feature"))
+      exec(karateFeature("classpath:athena/mod-lists/features/refresh.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

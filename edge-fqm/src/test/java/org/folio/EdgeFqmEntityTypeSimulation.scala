@@ -30,10 +30,10 @@ class EdgeFqmEntityTypeSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:corsair/edge-fqm/edge-fqm-junit.feature"))
+    .exec(karateFeature("classpath:athena/edge-fqm/edge-fqm-junit.feature"))
   val perform = scenario("perform")
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/edge-fqm/features/edge-entity-types.feature"))
+      exec(karateFeature("classpath:athena/edge-fqm/features/edge-entity-types.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
