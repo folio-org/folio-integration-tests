@@ -8,10 +8,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "corsair", module = "edge-fqm")
+@FolioTest(team = "athena", module = "edge-fqm")
 public class EdgeFqmTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:corsair/edge-fqm/features/";
+    private static final String TEST_BASE_PATH = "classpath:athena/edge-fqm/features/";
 
     public EdgeFqmTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -19,7 +19,7 @@ public class EdgeFqmTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:corsair/edge-fqm/edge-fqm-junit.feature");
+        runFeature("classpath:athena/edge-fqm/edge-fqm-junit.feature");
     }
 
     @Test

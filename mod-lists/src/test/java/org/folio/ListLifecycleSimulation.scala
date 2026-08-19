@@ -31,19 +31,19 @@ class ListLifecycleSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:corsair/mod-lists/lists-junit.feature"))
+    .exec(karateFeature("classpath:athena/mod-lists/lists-junit.feature"))
   val perform = scenario("perform")
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-lists/features/create.feature"))
+      exec(karateFeature("classpath:athena/mod-lists/features/create.feature"))
     }
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-lists/features/update.feature"))
+      exec(karateFeature("classpath:athena/mod-lists/features/update.feature"))
     }
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-lists/features/versions.feature"))
+      exec(karateFeature("classpath:athena/mod-lists/features/versions.feature"))
     }
     .repeat(10) {
-      exec(karateFeature("classpath:corsair/mod-lists/features/delete.feature"))
+      exec(karateFeature("classpath:athena/mod-lists/features/delete.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 
