@@ -9,11 +9,12 @@ function fn() {
   var testTenant = karate.properties['testTenant']|| 'testtenant';
   var testTenantId = karate.properties['testTenantId'];
   var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
-  var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
   var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
-  var testUserPassword = karate.properties['testUserPassword'] || 'test';
+
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
 
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9703',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -24,8 +25,8 @@ function fn() {
 
     testTenant: testTenant,
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
-    testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword},
+    testAdmin: {tenant: testTenant, name: testAdminUsername, password: generatePassword(testAdminUsername)},
+    testUser: {tenant: testTenant, name: testUserUsername, password: generatePassword(testUserUsername)},
 
       login: karate.read('classpath:common/login.feature'),
       loginRegularUser: karate.read('classpath:common/login.feature'),
