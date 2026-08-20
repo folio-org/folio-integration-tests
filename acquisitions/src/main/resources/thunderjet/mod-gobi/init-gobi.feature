@@ -95,11 +95,11 @@ Feature: Initialize mod-gobi integration tests
   Scenario: Wait for consortium-locations index to catch up with seeded locations
     * call login testAdmin
     * def headersAdmin = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain', 'x-okapi-tenant': '#(testTenant)' }
-    * def seededCodes = ['LOC1', 'LOC2', 'LOC3', 'LOC4']
+    * callonce variables
     * configure retry = { count: 10, interval: 2000 }
     Given path 'search/consortium/locations'
     And param limit = 10000
     And headers headersAdmin
-    And retry until karate.filter(response.locations || [], function(x){ return seededCodes.indexOf(x.code) != -1 }).length == seededCodes.length
+    And retry until karate.filter(response.locations || [], function(x){ return globalLocationCodes.indexOf(x.code) != -1 }).length == globalLocationCodes.length
     When method GET
     Then status 200
