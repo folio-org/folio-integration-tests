@@ -21,7 +21,6 @@ Feature: Common ECS setup (inventory, circulation policies, ECS TLR, shadow-user
 
   Scenario: setup ECS inventory, policies and shadow-user capabilities
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
     * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
 
     # Fixed UUIDs for inventory entities
@@ -103,8 +102,20 @@ Feature: Common ECS setup (inventory, circulation policies, ECS TLR, shadow-user
     And match response.tenants[*].id contains centralTenant
     And match response.tenants[*].id contains universityTenant
 
-    # ========== Step 2: Grant shadow-user capabilities ==========
-    # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant operations
+    # ========== Step 2: Shadow-user capabilities - NOT granted here ==========
+    # The shadow consortia_admin capabilities this suite needs are listed here for documentation
+    # only. They are granted once per build by consortium-bootstrap.feature, whose shadowPermissions
+    # table is the union of every suite's requirements and must be updated if this list grows.
+    #
+    # DO NOT call putCaps from this file. PutCaps issues a plain POST /users/capabilities, which is
+    # not idempotent - mod-roles-keycloak returns 400 EntityExistsException if any capability in the
+    # payload is already assigned. This feature is callonce'd by BOTH staff-slips.feature and
+    # ecs-requests.feature and callonce is scoped per feature file, so it runs twice per build; and
+    # mediated-requests-consortium-setup.feature (@Order 1, i.e. always earlier) used to grant four
+    # of the entries below to the same shadow user. The result was that staff-slips and ecs-requests
+    # both failed in setup on
+    #     "Relation already exists for user=... and capabilities=[...]"
+    # every single build.
     * table baseShadowPermissions
       | name                                                  |
       | 'circulation.requests.item.post'                      |
@@ -118,14 +129,7 @@ Feature: Common ECS setup (inventory, circulation policies, ECS TLR, shadow-user
       | 'circulation-bff.pick-slips.collection.get'           |
       | 'circulation-bff.search-slips.collection.get'         |
 
-    * def userPermissions = baseShadowPermissions
-
-    * def shadowConsortiaAdmin = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
-    * configure cookies = null
-    * call putCaps { tenant: '#(universityTenant)', user: '#(shadowConsortiaAdmin)' }
-
-    # Re-login as consortia_admin to restore the central tenant okapitoken
-    # (putCaps calls getAuthorizationToken for universityTenant, overwriting okapitoken)
+    # Re-login as consortia_admin to make sure okapitoken addresses the central tenant
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 

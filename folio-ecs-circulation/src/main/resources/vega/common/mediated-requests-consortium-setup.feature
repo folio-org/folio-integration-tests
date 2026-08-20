@@ -20,7 +20,6 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
 
   Scenario: setup mediated-request inventory, policies and shadow-user capabilities
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
     * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
 
     # Fixed UUIDs for inventory entities
@@ -111,9 +110,20 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
     And match response.tenants[*].id contains universityTenant
     And match response.tenants[*].id contains collegeTenant
 
-    # ========== Step 2: Grant shadow-user capabilities ==========
-    # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant operations
-    * table uniShadowPermissions
+    # ========== Step 2: Shadow-user capabilities - NOT granted here ==========
+    # Listed for documentation only. The shadow consortia_admin capabilities for the university and
+    # college tenants are granted once per build by consortium-bootstrap.feature, whose
+    # shadowPermissions table is the union of every suite's requirements and must be updated if this
+    # list grows.
+    #
+    # DO NOT call putCaps from this file. PutCaps issues a plain POST /users/capabilities, which is
+    # not idempotent - mod-roles-keycloak returns 400 EntityExistsException if any capability in the
+    # payload is already assigned. This suite runs at @Order 1, so granting here left the first four
+    # entries below already assigned by the time ecs-consortium-setup.feature (callonce'd by both
+    # staff-slips and ecs-requests, hence run twice) re-POSTed a superset of them, failing both of
+    # those suites in setup on
+    #     "Relation already exists for user=... and capabilities=[...]"
+    * table shadowPermissionsUniversityAndCollege
       | name                                            |
       | 'inventory.instances.item.get'                  |
       | 'inventory.items.item.get'                      |
@@ -121,25 +131,6 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'user-tenants.collection.get'                   |
       | 'requests-mediated.mediated-request.item.post'  |
       | 'requests-mediated.mediated-request.item.get'   |
-
-    * def userPermissions = uniShadowPermissions
-    * def shadowConsortiaAdmin = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
-    * configure cookies = null
-    * call putCaps { tenant: '#(universityTenant)', user: '#(shadowConsortiaAdmin)' }
-
-    # Grant shadow consortia_admin in college tenant
-    * table collegeShadowPermissions
-      | name                                                        |
-      | 'inventory.instances.item.get'                              |
-      | 'inventory.items.item.get'                                  |
-      | 'inventory-storage.holdings.item.get'                       |
-      | 'user-tenants.collection.get'                               |
-      | 'requests-mediated.mediated-request.item.post'              |
-      | 'requests-mediated.mediated-request.item.get'               |
-
-    * def userPermissions = collegeShadowPermissions
-    * def shadowConsortiaAdminCollege = { id: '#(consortiaAdmin.id)', tenant: '#(collegeTenant)' }
-    * call putCaps { tenant: '#(collegeTenant)', user: '#(shadowConsortiaAdminCollege)' }
 
     # Re-login as consortia_admin to restore the central tenant okapitoken
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }

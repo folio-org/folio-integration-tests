@@ -51,11 +51,20 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
     * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
     * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
     * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
+    * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
 
-    # setupTenantForConsortia expects the consortium tenant "id" to be the tenant NAME, while
-    # setupTenant and DeleteTenantAndEntitlement expect the tenant UUID. Keep both around.
+    # setupTenant and DeleteTenantAndEntitlement expect the central tenant UUID, so stash it as
+    # centralTenantUuid before overwriting centralTenantId below.
     * def centralTenantUuid = centralTenantId.length == 36 ? centralTenantId : karate.get('centralTenantUuid')
     * eval karate.set('centralTenantUuid', centralTenantUuid)
+
+    # centralTenantId must hold the central tenant NAME for the rest of this scenario.
+    # InstallApplications (called by setupTenant) reads karate.get('centralTenantId') and passes it
+    # through as the '&tenantParameters=...,centralTenantId=<value>' entitlement parameter, which
+    # FOLIO expects to be the tenant name - the same string used as x-okapi-tenant. Entitling the
+    # member tenants with a UUID here silently breaks the ECS wiring. setupTenantForConsortia
+    # likewise keys consortium tenants by name.
+    * eval karate.set('centralTenantId', centralTenant)
 
     # ========== Modules ==========
     # Union of every module needed by any feature in this module. Tenants are entitled once,
@@ -79,6 +88,24 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
 
     # ========== Local admin permissions ==========
     # Union of the permission sets the per-suite setup features used to request.
+    #
+    # THIS LIST MUST CONTAIN NO DUPLICATES, AND NONE OF THE PERMISSIONS THAT SetupTenant ALREADY
+    # ADDS ITSELF. SetupTenant computes
+    #     userPermissions = requiredCapabilitiesForConsortia.concat(<this list>)
+    # and PutCaps then loops until 'capabilityIds.length == permissions.length'. Duplicates make
+    # that condition unsatisfiable (the deduplicated capability lookup returns fewer ids than the
+    # requested list has entries), so PutCaps burns all 30 retries at 30s each - 15 minutes per
+    # tenant - logs the misleading
+    #     ***** Not all capabilities found. Missing 0 capabilities *****
+    # and then proceeds with the correct capabilities anyway. The old per-suite lists repeated four
+    # consortia.* permissions from requiredCapabilitiesForConsortia (sharing-instances.item.post,
+    # sharing-instances.collection.get, user-tenants.collection.get, user-tenants.item.post) plus
+    # circulation-storage.request-policies.item.post twice: 88 requested, 83 distinct, 45 minutes
+    # of dead time per build across three tenants. Those five entries are deliberately absent here.
+    #
+    # requiredCapabilitiesForConsortia already covers every consortia.* and tags.* permission, so do
+    # not add any of those below. 'user-tenants.collection.get' (mod-users) is NOT part of it and is
+    # required.
     * table userPermissions
       | name                                                        |
       | 'users.item.post'                                           |
@@ -122,11 +149,7 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'lost-item-fees-policies.item.post'                         |
       | 'overdue-fines-policies.item.post'                          |
       | 'tlr.settings.put'                                          |
-      | 'consortia.sharing-instances.item.post'                     |
-      | 'consortia.sharing-instances.collection.get'                |
       | 'user-tenants.collection.get'                               |
-      | 'consortia.user-tenants.collection.get'                     |
-      | 'consortia.user-tenants.item.post'                          |
       | 'search.index.instance-records.reindex.full.post'           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
@@ -194,3 +217,53 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
     And match response.tenants[*].id contains collegeTenant
     And match response.tenants[*].id contains universityTenant
     * print 'consortium-bootstrap: consortium ready with', response.totalRecords, 'tenants'
+
+    # ========== Step 5: grant shadow consortia_admin capabilities, ONCE ==========
+    # The shadow consortia_admin (same user id as the central consortia_admin, projected into each
+    # member tenant by the primary-affiliation propagation triggered in Step 3) needs cross-tenant
+    # read/write capabilities. This grant lives HERE, and only here, because PutCaps issues a plain
+    # POST /users/capabilities, which is NOT idempotent: mod-roles-keycloak answers
+    #     400 EntityExistsException "Relation already exists for user=... and capabilities=[...]"
+    # if any single capability in the payload is already assigned to the user.
+    #
+    # This used to be done from the per-suite setups, and it broke deterministically. Test order is
+    # mediated-requests (@Order 1) -> staff-slips (@Order 3) -> ecs-requests (@Order 4);
+    # mediated-requests-consortium-setup.feature granted
+    #     inventory.instances.item.get, inventory.items.item.get,
+    #     inventory-storage.holdings.item.get, user-tenants.collection.get
+    # to the university shadow admin, and ecs-consortium-setup.feature - callonce'd by BOTH
+    # staff-slips and ecs-requests, and callonce is scoped per feature file, so it runs twice -
+    # then re-POSTed a superset containing those same four. Both later suites died in setup on the
+    # 400 above. Nothing was wrong with the tenants; the grant was simply replayed.
+    #
+    # THE LIST BELOW IS THE UNION OF EVERY SUITE'S SHADOW-USER REQUIREMENTS AND MUST CONTAIN NO
+    # DUPLICATES. Add new shadow capabilities here, never in a per-suite setup feature. See also
+    # the duplicate-permission warning on the userPermissions table above - PutCaps loops until
+    # 'capabilityIds.length == permissions.length', which a duplicated entry makes unsatisfiable.
+    * table shadowPermissions
+      | name                                                  |
+      | 'circulation.requests.item.post'                      |
+      | 'circulation.requests.item.get'                       |
+      | 'circulation-bff.requests.allowed-service-points.get' |
+      | 'circulation-bff.requests.post'                       |
+      | 'circulation-bff.pick-slips.collection.get'           |
+      | 'circulation-bff.search-slips.collection.get'         |
+      | 'inventory.instances.item.get'                        |
+      | 'inventory.items.item.get'                            |
+      | 'inventory-storage.holdings.item.get'                 |
+      | 'user-tenants.collection.get'                         |
+      | 'requests-mediated.mediated-request.item.post'        |
+      | 'requests-mediated.mediated-request.item.get'         |
+
+    * def userPermissions = shadowPermissions
+    * def shadowConsortiaAdminUniversity = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
+    * def shadowConsortiaAdminCollege = { id: '#(consortiaAdmin.id)', tenant: '#(collegeTenant)' }
+    * configure cookies = null
+    * call putCaps { tenant: '#(universityTenant)', user: '#(shadowConsortiaAdminUniversity)' }
+    * call putCaps { tenant: '#(collegeTenant)', user: '#(shadowConsortiaAdminCollege)' }
+
+    # PutCaps calls getAuthorizationToken for the member tenant, overwriting okapitoken - restore
+    # the central token so anything running after this scenario still addresses the central tenant.
+    * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
+    * def okapitoken = centralLogin.okapitoken
+    * print 'consortium-bootstrap: shadow consortia_admin capabilities granted in', universityTenant, 'and', collegeTenant
