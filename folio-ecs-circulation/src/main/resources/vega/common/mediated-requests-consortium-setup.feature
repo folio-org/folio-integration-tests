@@ -1,29 +1,34 @@
 @ignore
-Feature: Common mediated-requests consortium setup (central + university + college tenants, inventory, circulation policies)
+Feature: Common mediated-requests setup (inventory, circulation policies, shadow-user capabilities)
 
-  # Sets up a three-tenant consortium (central + university + college) with inventory data,
-  # circulation policies, and mod-requests-mediated enabled.
+  # Adds the mediated-request-specific data on top of the shared consortium.
   # The university tenant acts as the "secure" tenant where mediated requests are created.
+  #
+  # The central/university/college tenants and the consortium itself are NOT created here - they
+  # are created once per build by vega/common/consortium-bootstrap.feature, invoked from
+  # FolioEcsCirculationTests#bootstrapConsortium (@Order(0)). Everything this feature does is
+  # additive against already-initialised tenants.
+  #
+  # DO NOT reintroduce setupTenant or DeleteTenantAndEntitlement here. Every feature in this
+  # module shares one tenant name-space, so a delete/recreate cycle in this file destroys the
+  # tenants the other features are using (and, with the mediated workflow running for tens of
+  # minutes, can destroy them mid-flight).
 
   Background:
     * url baseUrl
     * configure readTimeout = 600000
 
-  Scenario: setup consortium with central, university, and college tenants
+  Scenario: setup mediated-request inventory, policies and shadow-user capabilities
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
-    * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
-    * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
     * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
     * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
 
     # Fixed UUIDs for inventory entities
     * callonce read('classpath:vega/mediated-requests/mediated-requests-variables.feature')
 
-    * def centralTenantUuid = centralTenantId.length == 36 ? centralTenantId : karate.get('centralTenantUuid')
-    * eval karate.set('centralTenantUuid', centralTenantUuid)
-    * eval karate.set('centralTenantId', centralTenant)
-
+    # Modules required by the mediated-request suite. Kept for documentation only - tenant
+    # entitlement happens in consortium-bootstrap.feature, whose module list is the union of
+    # every suite's requirements and must be updated if this list grows.
     * table baseModules
       | name                        |
       | 'mod-permissions'           |
@@ -39,6 +44,7 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'mod-search'                |
       | 'mod-requests-mediated'     |
 
+    # Likewise: the local-admin permissions this suite needs, granted by consortium-bootstrap.
     * table baseUserPermissions
       | name                                                        |
       | 'users.item.post'                                           |
@@ -89,27 +95,23 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
 
-    # ========== Step 1: Create and initialize tenants ==========
-    # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
-    * configure abortedStepsShouldPass = true
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(collegeTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantUuid)' }
-    * configure abortedStepsShouldPass = false
-
-    * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }
-    * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
-    * call setupTenant { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)' }
-
-    # ========== Step 2: Create consortium and register tenants ==========
+    # ========== Step 1: Confirm the shared consortium is ready ==========
+    # Tenants and consortium registration are done by consortium-bootstrap.feature. Fail fast and
+    # clearly here if that did not happen, instead of erroring deep inside the workflow.
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
-    * call setupConsortium { tenant: '#(centralTenant)' }
-    * call setupTenantForConsortia { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'CON' }
-    * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
-    * call setupTenantForConsortia { tenant: '#(collegeTenant)', id: '#(collegeTenantId)', isCentral: false, code: 'COL' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    * configure retry = { count: 10, interval: 10000 }
+    Given path 'consortia', consortiumId, 'tenants'
+    And retry until responseStatus == 200 && response.totalRecords == 3
+    When method GET
+    Then status 200
+    And match response.tenants[*].id contains centralTenant
+    And match response.tenants[*].id contains universityTenant
+    And match response.tenants[*].id contains collegeTenant
 
+    # ========== Step 2: Grant shadow-user capabilities ==========
     # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant operations
     * table uniShadowPermissions
       | name                                            |

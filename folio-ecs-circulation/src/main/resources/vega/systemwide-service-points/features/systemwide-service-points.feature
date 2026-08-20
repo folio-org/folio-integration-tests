@@ -1,62 +1,35 @@
 @parallel=false
 Feature: systemwide-service-points tests
 
+  # The consortium, college and university (secure) tenants are created once per build by
+  # vega/common/consortium-bootstrap.feature, invoked from
+  # FolioEcsCirculationTests#bootstrapConsortium (@Order(0)) - together with the consortium itself
+  # and the 1-hour Keycloak access-token lifespan.
+  #
+  # This feature used to create those tenants itself, and it was the only setupTenant caller
+  # without a pre-emptive cleanup, so once another feature had already created the shared tenant
+  # name-space it failed with:
+  #   HTTP 400 - Failed to create realm for tenant: consortium<suffix> (Keycloak 409 Conflict)
+  # followed by a cascade of TenantNotEnabledException in every later scenario.
+  #
+  # DO NOT reintroduce setupTenant / setupConsortium / DeleteTenantAndEntitlement here.
+
   Background:
     * url baseUrl
     * configure readTimeout = 600000
     * callonce login admin
 
-    * table modules
-      | name                    |
-      | 'mod-permissions'       |
-      | 'okapi'                 |
-      | 'mod-users'             |
-      | 'mod-login-keycloak'    |
-      | 'mod-inventory-storage' |
-      | 'mod-consortia'         |
-
-    * table userPermissions
-      | name                                              |
-      | 'users.item.post'                                 |
-      | 'usergroups.item.post'                            |
-      | 'perms.permissions.item.post'                     |
-      | 'perms.users.item.post'                           |
-      | 'users.collection.get'                            |
-      | 'users.item.get'                                  |
-      | 'inventory-storage.service-points.item.post'      |
-      | 'inventory-storage.service-points.item.get'       |
-      | 'inventory-storage.service-points.collection.get' |
-
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
-    * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
-    * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
-    * def configureAccessTokenTime = read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime')
 
-  Scenario: create and initialize consortium, college, and university tenants
-    * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)' }
-    * call setupTenant { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)' }
-    * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
-
-    # Extend the Keycloak access-token lifespan to 1 hour after tenant setup so the realms exist.
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(centralTenant)' }
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(collegeTenant)' }
-    * call configureAccessTokenTime { 'AccessTokenLifespance': 3600, testTenant: '#(universityTenant)' }
-
-  Scenario: create consortium and register consortium, college, and university tenants
+  Scenario: verify consortium, college, and university tenants are registered in the consortium
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
-
-    * call setupConsortium { tenant: '#(centralTenant)' }
-    * call setupTenantForConsortia { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'CON' }
-    * call setupTenantForConsortia { tenant: '#(collegeTenant)', id: '#(collegeTenantId)', isCentral: false, code: 'COL' }
-    * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
 
     # Verify all three tenants are visible in the consortium before proceeding
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
     * configure retry = { count: 10, interval: 10000 }
     Given path 'consortia', consortiumId, 'tenants'
-    And retry until response.totalRecords == 3
+    And retry until responseStatus == 200 && response.totalRecords == 3
     When method GET
     Then status 200
     * print 'Consortium tenants registered:', response.totalRecords
@@ -71,7 +44,7 @@ Feature: systemwide-service-points tests
     # Pre-flight: confirm consortium has all 3 tenants before creating the service point
     * configure retry = { count: 10, interval: 10000 }
     Given path 'consortia', consortiumId, 'tenants'
-    And retry until response.totalRecords == 3
+    And retry until responseStatus == 200 && response.totalRecords == 3
     When method GET
     Then status 200
     * print 'Pre-flight OK - consortium tenants:', response.totalRecords

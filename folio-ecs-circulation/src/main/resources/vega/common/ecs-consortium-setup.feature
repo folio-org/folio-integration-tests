@@ -1,29 +1,35 @@
 @ignore
-Feature: Common ECS consortium setup (tenants, consortium, inventory, circulation policies)
+Feature: Common ECS setup (inventory, circulation policies, ECS TLR, shadow-user capabilities)
 
-  # Sets up a two-tenant consortium (central + university) with inventory data,
-  # circulation policies, and ECS TLR enabled.
+  # Adds the ECS-request data on top of the shared consortium: inventory in central and
+  # university, circulation policies, and the ECS TLR feature flag.
+  #
+  # The central/university/college tenants and the consortium itself are NOT created here - they
+  # are created once per build by vega/common/consortium-bootstrap.feature, invoked from
+  # FolioEcsCirculationTests#bootstrapConsortium (@Order(0)). Everything this feature does is
+  # additive against already-initialised tenants.
+  #
+  # This feature is callonce'd by BOTH staff-slips.feature and ecs-requests.feature, and callonce
+  # is scoped per feature file (each runFeature call is a separate Karate suite), so it executes
+  # twice per build. That is why it must never create or delete a tenant: it used to run a
+  # delete/recreate cycle on the shared tenants on each of those two executions, wiping out data
+  # the other features - including the long-running mediated-request workflow - depended on.
 
   Background:
     * url baseUrl
     * configure readTimeout = 600000
 
-  Scenario: setup consortium with central and university tenants
+  Scenario: setup ECS inventory, policies and shadow-user capabilities
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
-    * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
-    * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
     * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
     * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
 
     # Fixed UUIDs for inventory entities
     * callonce read('classpath:vega/ecs-requests/ecs-requests-variables.feature')
 
-    * def centralTenantUuid = centralTenantId.length == 36 ? centralTenantId : karate.get('centralTenantUuid')
-    * eval karate.set('centralTenantUuid', centralTenantUuid)
-    * eval karate.set('centralTenantId', centralTenant)
-
-    # Merge base permissions with any additional permissions passed by the caller
+    # Modules and permissions required by the ECS suites. Kept for documentation only - tenant
+    # entitlement happens in consortium-bootstrap.feature, whose lists are the union of every
+    # suite's requirements and must be updated if these grow.
     * table baseModules
       | name                        |
       | 'mod-permissions'           |
@@ -82,24 +88,22 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
 
-    # ========== Step 1: Create and initialize tenants ==========
-    # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
-    * configure abortedStepsShouldPass = true
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantUuid)' }
-    * configure abortedStepsShouldPass = false
-
-    * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }
-    * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
-
-    # ========== Step 2: Create consortium and register tenants ==========
+    # ========== Step 1: Confirm the shared consortium is ready ==========
+    # Tenants and consortium registration are done by consortium-bootstrap.feature. Fail fast and
+    # clearly here if that did not happen, instead of erroring deep inside a test scenario.
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
-    * call setupConsortium { tenant: '#(centralTenant)' }
-    * call setupTenantForConsortia { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'CON' }
-    * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    * configure retry = { count: 10, interval: 10000 }
+    Given path 'consortia', consortiumId, 'tenants'
+    And retry until responseStatus == 200 && response.totalRecords == 3
+    When method GET
+    Then status 200
+    And match response.tenants[*].id contains centralTenant
+    And match response.tenants[*].id contains universityTenant
 
+    # ========== Step 2: Grant shadow-user capabilities ==========
     # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant operations
     * table baseShadowPermissions
       | name                                                  |
@@ -139,50 +143,54 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
     Given path 'search/index/instance-records/reindex/full'
     And request {}
     When method POST
-    Then status 200
+    Then match [200, 400] contains responseStatus
 
     # ========== Step 4: Setup inventory data in central tenant ==========
+    # All entities below use the fixed UUIDs from ecs-requests-variables.feature, and this feature
+    # runs twice per build (once for staff-slips, once for ecs-requests) against tenants that are
+    # no longer recreated in between. Creation is therefore idempotent: 201 = created, 422 = already
+    # created by the earlier invocation (or replicated from central via Kafka).
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
 
     Given path 'location-units/institutions'
     And request { id: '#(ecsInstitutionId)', name: 'ECS Test Institution Central', code: 'ECSI-C' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/campuses'
     And request { id: '#(ecsCampusId)', name: 'ECS Test Campus Central', code: 'ECSC-C', institutionId: '#(ecsInstitutionId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/libraries'
     And request { id: '#(ecsLibraryId)', name: 'ECS Test Library Central', code: 'ECSL-C', campusId: '#(ecsCampusId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'service-points'
     And request { id: '#(ecsServicePointId)', name: 'ECS Central Service Point', code: 'ECS-SP-C', discoveryDisplayName: 'ECS Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'instance-types'
     And request { id: '#(ecsInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'loan-types'
     And request { id: '#(ecsLoanTypeId)', name: 'ECS Loan Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'material-types'
     And request { id: '#(ecsMaterialTypeId)', name: 'ECS Material Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'holdings-sources'
     And request { id: '#(ecsHoldingsSourceId)', name: 'ECS FOLIO Central' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'locations'
     And request
@@ -199,7 +207,7 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
       }
       """
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     # ========== Step 5: Setup inventory data in university tenant ==========
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
@@ -208,22 +216,22 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
     Given path 'location-units/institutions'
     And request { id: '#(uniInstitutionId)', name: 'ECS Test Institution University', code: 'ECSI-U' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/campuses'
     And request { id: '#(uniCampusId)', name: 'ECS Test Campus University', code: 'ECSC-U', institutionId: '#(uniInstitutionId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/libraries'
     And request { id: '#(uniLibraryId)', name: 'ECS Test Library University', code: 'ECSL-U', campusId: '#(uniCampusId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'service-points'
     And request { id: '#(uniServicePointId)', name: 'ECS University Service Point', code: 'ECS-SP-U', discoveryDisplayName: 'ECS University Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     # Also create the central service point in the university tenant so it is available
     # as a pickup location without relying on cross-tenant Kafka replication.
@@ -237,22 +245,22 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
     Given path 'instance-types'
     And request { id: '#(uniInstanceTypeId)', name: 'ECS Instance Type', code: 'ECSI-T', source: 'local' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'loan-types'
     And request { id: '#(uniLoanTypeId)', name: 'ECS Loan Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'material-types'
     And request { id: '#(uniMaterialTypeId)', name: 'ECS Material Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'holdings-sources'
     And request { id: '#(uniHoldingsSourceId)', name: 'ECS FOLIO University' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'locations'
     And request
@@ -269,7 +277,7 @@ Feature: Common ECS consortium setup (tenants, consortium, inventory, circulatio
       }
       """
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     # ========== Step 6: Setup circulation policies and enable ECS TLR ==========
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }

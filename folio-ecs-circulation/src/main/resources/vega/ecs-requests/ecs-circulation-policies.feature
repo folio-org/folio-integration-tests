@@ -11,7 +11,16 @@ Feature: Setup circulation policies and TLR setting for a tenant
     * url baseUrl
 
   Scenario: create circulation policies, set rules and enable TLR
-    * def policyLabel = karate.get('policyLabel', tenant)
+    # Policy names must be unique per invocation. Tenants are now created once per build
+    # (vega/common/consortium-bootstrap.feature) and no longer recreated by each suite's setup, so
+    # this feature can run more than once against the same tenant - ecs-consortium-setup.feature is
+    # callonce'd by both staff-slips and ecs-requests, which are separate Karate suites. Without a
+    # unique suffix the second invocation would fail with 422 "name is already in use".
+    #
+    # The circulation-rules PUT below is last-write-wins per tenant, so the most recent invocation
+    # owns the rules. That is safe only because the mediated-request suite (which needs its own
+    # policies) runs first - see @Order in FolioEcsCirculationTests.
+    * def policyLabel = karate.get('policyLabel', tenant) + '-' + randomMillis()
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)' }
 
