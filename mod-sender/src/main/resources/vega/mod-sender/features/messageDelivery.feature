@@ -48,8 +48,8 @@ Feature: Sender - message delivery
 
   Scenario: Should return 400 when delivery channel is not supported
     Given path 'message-delivery'
-    * def deliveryChannel = 'sms'
+    * def deliveryChannel = 'unsupported'
     And request read('classpath:vega/mod-sender/features/samples/message-delivery.json')
     When method POST
     Then status 400
-    And match response contains "Delivery channel 'sms' is not supported"
+    And match response contains "Delivery channel 'unsupported' is not supported"
