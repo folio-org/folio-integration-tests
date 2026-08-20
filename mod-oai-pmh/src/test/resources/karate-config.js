@@ -30,7 +30,7 @@ function fn() {
     getModuleIdByName: karate.read('classpath:global/module-operations.feature@getModuleIdByName'),
     enableModule: karate.read('classpath:global/module-operations.feature@enableModule'),
     deleteModule: karate.read('classpath:global/module-operations.feature@deleteModule'),
-    resetConfiguration: karate.read('classpath:firebird/mod-configuration/reusable/reset-configuration.feature'),
+    resetConfiguration: karate.read('classpath:athena/mod-configuration/reusable/reset-configuration.feature'),
     login: karate.read('classpath:common/login.feature'),
     // define global functions
     uuid: function () {
@@ -58,9 +58,9 @@ function fn() {
     config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-athena-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-athena-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-athena-keycloak.ci.folio.org';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',

@@ -8,10 +8,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "mod-bulk-operations")
+@FolioTest(team = "athena", module = "mod-bulk-operations")
 
 public class ModBulkOperationsApiTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/mod-bulk-operations/features/";
+    private static final String TEST_BASE_PATH = "classpath:athena/mod-bulk-operations/features/";
 
     public ModBulkOperationsApiTest() {
         super(new TestIntegrationService(
@@ -20,7 +20,7 @@ public class ModBulkOperationsApiTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:firebird/mod-bulk-operations/mod-bulk-operations-junit.feature");
+        runFeature("classpath:athena/mod-bulk-operations/mod-bulk-operations-junit.feature");
     }
 
     @AfterAll
