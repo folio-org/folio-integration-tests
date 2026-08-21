@@ -14,6 +14,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class WriteData {
     private static Logger LOGGER = new Logger();
@@ -85,5 +87,75 @@ public class WriteData {
         writer.close();
 
         return baos.toByteArray();
+    }
+
+    /**
+     * Reads a MARC21 binary file from the classpath.
+     *
+     * @param classpathResource resource path, e.g. "promin/data-import/samples/mrc-files/x.mrc"
+     * @return the raw file content
+     */
+    public static byte[] readMarcResource(String classpathResource) throws IOException {
+        try (InputStream in = WriteData.class.getClassLoader().getResourceAsStream(classpathResource)) {
+            if (in == null) {
+                throw new IOException("MARC resource not found on classpath: " + classpathResource);
+            }
+            return in.readAllBytes();
+        }
+    }
+
+    /**
+     * Replaces a value inside the single record whose 001 equals controlNumber and returns the
+     * whole file re-serialized, leaving every other record in the file untouched.
+     *
+     * @param marcFile      MARC21 binary file that may hold several records
+     * @param controlNumber 001 value identifying the record to change
+     * @param fieldTag      tag of the field to change
+     * @param subfieldCode  subfield to change; ignored for control fields (001-009)
+     * @param value         the new value
+     */
+    public static byte[] setFieldValueByControlNumber(byte[] marcFile, String controlNumber, String fieldTag,
+                                                      char subfieldCode, String value) throws Exception {
+        MarcReader reader = new MarcStreamReader(new ByteArrayInputStream(marcFile));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        MarcWriter writer = new MarcStreamWriter(baos, "UTF-8");
+        boolean matched = false;
+
+        while (reader.hasNext()) {
+            Record record = reader.next();
+            ControlField controlNumberField = (ControlField) record.getVariableField("001");
+            if (controlNumberField != null && controlNumber.equals(controlNumberField.getData())) {
+                applyValue(record, fieldTag, subfieldCode, value);
+                matched = true;
+            }
+            writer.write(record);
+        }
+        writer.close();
+
+        if (!matched) {
+            throw new IllegalArgumentException("No record with 001 '" + controlNumber + "' found in MARC file");
+        }
+        return baos.toByteArray();
+    }
+
+    private static void applyValue(Record record, String fieldTag, char subfieldCode, String value) {
+        if (fieldTag.matches("00\\d")) {
+            ControlField field = (ControlField) record.getVariableField(fieldTag);
+            if (field == null) {
+                throw new IllegalArgumentException("Control field " + fieldTag + " not found in the record.");
+            }
+            field.setData(value);
+            return;
+        }
+
+        DataField field = (DataField) record.getVariableField(fieldTag);
+        if (field == null) {
+            throw new IllegalArgumentException("Field " + fieldTag + " not found in the record.");
+        }
+        Subfield subfield = field.getSubfield(subfieldCode);
+        if (subfield == null) {
+            throw new IllegalArgumentException("Subfield " + subfieldCode + " not found in field " + fieldTag);
+        }
+        subfield.setData(value);
     }
 }
