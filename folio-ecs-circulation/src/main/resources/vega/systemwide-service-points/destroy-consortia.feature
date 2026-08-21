@@ -1,5 +1,7 @@
 Feature: Destroy folio-ecs-circulation consortia tenants
 
+  # Runs once after all suites. Tenant IDs are resolved by name before deletion.
+
   Background:
     * url baseUrl
     * configure readTimeout = 90000
@@ -7,6 +9,15 @@ Feature: Destroy folio-ecs-circulation consortia tenants
     * call login admin
 
   Scenario: Destroy created ['consortium', 'college', 'university'] tenants
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(collegeTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)' }
+    * def deleteTenant = read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement')
+    * def getTenantIdByName = read('classpath:vega/common/tenant-lookup.feature@getIdByName')
+    * print 'destroy-consortia: deleting', centralTenant, collegeTenant, universityTenant
+    * def centralLookup = call getTenantIdByName { tenantName: '#(centralTenant)' }
+    * def centralIdToDelete = centralLookup.tenantId != null ? centralLookup.tenantId : centralTenantId
+    * call deleteTenant { tenantName: '#(centralTenant)', tenantId: '#(centralIdToDelete)' }
+    * def collegeLookup = call getTenantIdByName { tenantName: '#(collegeTenant)' }
+    * def collegeIdToDelete = collegeLookup.tenantId != null ? collegeLookup.tenantId : collegeTenantId
+    * call deleteTenant { tenantName: '#(collegeTenant)', tenantId: '#(collegeIdToDelete)' }
+    * def universityLookup = call getTenantIdByName { tenantName: '#(universityTenant)' }
+    * def universityIdToDelete = universityLookup.tenantId != null ? universityLookup.tenantId : universityTenantId
+    * call deleteTenant { tenantName: '#(universityTenant)', tenantId: '#(universityIdToDelete)' }

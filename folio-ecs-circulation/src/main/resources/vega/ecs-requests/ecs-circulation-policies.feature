@@ -11,7 +11,29 @@ Feature: Setup circulation policies and TLR setting for a tenant
     * url baseUrl
 
   Scenario: create circulation policies, set rules and enable TLR
-    * def policyLabel = karate.get('policyLabel', tenant)
+    # Policy names must be unique per invocation. Tenants are now created once per build
+    # (vega/common/consortium-bootstrap.feature) and no longer recreated by each suite's setup, so
+    # this feature can run more than once against the same tenant - ecs-consortium-setup.feature is
+    # callonce'd by both staff-slips and ecs-requests, which are separate Karate suites. Without a
+    # unique suffix the second invocation would fail with 422 "name is already in use".
+    #
+    # The circulation-rules PUT below is last-write-wins per tenant, so the most recent invocation
+    # owns the rules. That is safe only because the mediated-request suite (which needs its own
+    # policies) runs first - see @Order in FolioEcsCirculationTests.
+    * def policyLabel = karate.get('policyLabel', tenant) + '-' + randomMillis()
+
+    # Karate only evaluates an embedded expression when '#(...)' is the ENTIRE string value. Inline
+    # forms such as "name": "ECS Loan Policy #(policyLabel)" are NOT interpolated - the literal text
+    # '#(policyLabel)' is posted instead, which silently defeated the unique suffix above and made
+    # every invocation send an identical name. mod-feesfines enforces per-tenant name uniqueness, so
+    # the second invocation against a tenant failed with
+    #     422 feesfines.policy.lost.duplicate
+    # Build each full name as its own variable and reference it as a whole-value expression.
+    * def loanPolicyName = 'ECS Loan Policy ' + policyLabel
+    * def lostItemFeePolicyName = 'ECS Lost Item Fee Policy ' + policyLabel
+    * def overdueFinePolicyName = 'ECS Overdue Fine Policy ' + policyLabel
+    * def patronNoticePolicyName = 'ECS Patron Notice Policy ' + policyLabel
+    * def requestPolicyName = 'ECS Request Policy ' + policyLabel
 
     * configure headers = { 'Content-Type': 'application/json', 'Accept': '*/*', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(tenant)' }
 
@@ -21,7 +43,7 @@ Feature: Setup circulation policies and TLR setting for a tenant
       """
       {
         "id": "#(loanPolicyId)",
-        "name": "ECS Loan Policy #(policyLabel)",
+        "name": "#(loanPolicyName)",
         "loanable": true,
         "loansPolicy": {
           "profileId": "Rolling",
@@ -46,7 +68,7 @@ Feature: Setup circulation policies and TLR setting for a tenant
       """
       {
         "id": "#(lostItemFeePolicyId)",
-        "name": "ECS Lost Item Fee Policy #(policyLabel)",
+        "name": "#(lostItemFeePolicyName)",
         "itemAgedLostOverdue": { "duration": 1, "intervalId": "Months" },
         "patronBilledAfterAgedLost": { "duration": 1, "intervalId": "Months" },
         "lostItemChargeFeeFine": { "duration": 6, "intervalId": "Months" },
@@ -69,7 +91,7 @@ Feature: Setup circulation policies and TLR setting for a tenant
       """
       {
         "id": "#(overdueFinePolicyId)",
-        "name": "ECS Overdue Fine Policy #(policyLabel)",
+        "name": "#(overdueFinePolicyName)",
         "overdueFine": { "quantity": 0.00, "intervalId": "hour" },
         "overdueRecallFine": { "quantity": 0.00, "intervalId": "hour" },
         "gracePeriodRecall": false,
@@ -87,7 +109,7 @@ Feature: Setup circulation policies and TLR setting for a tenant
       """
       {
         "id": "#(patronNoticePolicyId)",
-        "name": "ECS Patron Notice Policy #(policyLabel)",
+        "name": "#(patronNoticePolicyName)",
         "active": false,
         "loanNotices": [],
         "feeFineNotices": [],
@@ -103,7 +125,7 @@ Feature: Setup circulation policies and TLR setting for a tenant
       """
       {
         "id": "#(requestPolicyId)",
-        "name": "ECS Request Policy #(policyLabel)",
+        "name": "#(requestPolicyName)",
         "requestTypes": ["Hold", "Page", "Recall"]
       }
       """
