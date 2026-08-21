@@ -16,33 +16,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 @FolioTest(team = "vega", module = "folio-ecs-circulation")
-// ---------------------------------------------------------------------------------------------
-// TENANT LIFECYCLE
-//
-// Every feature in this module derives its tenant names from the same three lines of
-// karate-config.js, so they all share ONE tenant name-space:
-//
-//     consortium<randomNumbers> / college<randomNumbers> / universitymr1
-//
-// The tenants and the consortium are created exactly once, by bootstrapConsortium() below, and
-// destroyed exactly once, by tearDown(). No feature may create or delete a tenant. Previously
-// each feature deleted and recreated this name-space from its own setup feature, which produced
-// Keycloak 409 "Failed to create realm for tenant" failures plus mediated-request workflows that
-// stalled half-way through because the central tenant vanished underneath them.
-//
-// ISOLATION
-//
-// @Order and @Execution(SAME_THREAD) only serialise the methods of THIS class in THIS JVM. They
-// provide no protection against a second Jenkins executor, a concurrent job, or another test
-// class running against the same environment. Because the secure tenant name is fixed (it must
-// equal mod-requests-mediated's SECURE_TENANT_ID, which is set at deploy time and cannot be read
-// or randomised through any FOLIO API) it is a singleton resource on the environment: the Jenkins
-// job MUST hold an environment-level lock, e.g.
-//
-//     lock(resource: "folio-ecs-circulation-${ENV}") { ... }
-//
-// @ResourceLock below adds the equivalent guarantee for other test classes inside this JVM.
-// ---------------------------------------------------------------------------------------------
+// Tenants are bootstrapped once per test class and removed once during teardown.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 @ResourceLock(FolioEcsCirculationTests.ECS_TENANTS)
@@ -72,15 +46,7 @@ class FolioEcsCirculationTests extends TestBaseEureka {
     System.setProperty("collegeTenantId", UUID.randomUUID().toString());
     System.setProperty("universityTenantId", UUID.randomUUID().toString());
 
-    // Pin the tenant-name suffix for the whole JVM. karate-config.js is re-evaluated before every
-    // Scenario, so without this the suffix - and therefore the central/college tenant NAMES -
-    // drifted from scenario to scenario, while the tenant UUIDs above stayed fixed. That mismatch
-    // both broke cross-feature reuse and left @AfterAll deleting names that were never created,
-    // leaking Keycloak realms into the next build.
-    //
-    // Set once and only if absent, so that (a) it survives regardless of how often this hook is
-    // invoked, and (b) a Jenkins job can pin a suffix of its own with -DrandomNumbers=<suffix>
-    // (needed when mod-requests-mediated's SECURE_TENANT_ID is 'university<suffix>').
+    // Keep tenant names stable across Karate scenarios in this JVM.
     if (System.getProperty("randomNumbers") == null) {
       System.setProperty("randomNumbers", uniqueTenantSuffix());
     }
