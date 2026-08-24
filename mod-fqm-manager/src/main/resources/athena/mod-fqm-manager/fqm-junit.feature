@@ -141,7 +141,9 @@ Feature: mod-fqm-manager integration tests
       | 'orders-storage.titles.item.post'                                  |
       | 'orders.acquisition-methods.collection.get'                        |
       | 'orders.item.get'                                                  |
+      | 'orders.pieces.collection.get'                                     |
       | 'orders.po-lines.item.get'                                         |
+      | 'orders.titles.collection.get'                                     |
       | 'organizations-storage.categories.collection.get'                  |
       | 'organizations-storage.organization-types.collection.get'          |
       | 'organizations-storage.organizations.item.post'                    |
