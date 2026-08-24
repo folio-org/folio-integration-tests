@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "folijet", module = "mod-inventory")
+@FolioTest(team = "promin", module = "mod-inventory")
 public class ModInventoryTests extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:folijet/mod-inventory/features/";
+  private static final String TEST_BASE_PATH = "classpath:promin/mod-inventory/features/";
 
   public ModInventoryTests() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -18,7 +18,7 @@ public class ModInventoryTests extends TestBaseEureka {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:folijet/mod-inventory/inventory-junit.feature");
+    runFeature("classpath:promin/mod-inventory/inventory-junit.feature");
   }
 
   @AfterAll

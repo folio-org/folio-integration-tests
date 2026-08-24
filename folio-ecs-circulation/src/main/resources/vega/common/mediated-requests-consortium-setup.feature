@@ -1,29 +1,33 @@
 @ignore
-Feature: Common mediated-requests consortium setup (central + university + college tenants, inventory, circulation policies)
+Feature: Common mediated-requests setup (inventory, circulation policies, shadow-user capabilities)
 
-  # Sets up a three-tenant consortium (central + university + college) with inventory data,
-  # circulation policies, and mod-requests-mediated enabled.
+  # Adds the mediated-request-specific data on top of the shared consortium.
   # The university tenant acts as the "secure" tenant where mediated requests are created.
+  #
+  # The central/university/college tenants and the consortium itself are NOT created here - they
+  # are created once per build by vega/common/consortium-bootstrap.feature, invoked from
+  # FolioEcsCirculationTests#bootstrapConsortium (@Order(0)). Everything this feature does is
+  # additive against already-initialised tenants.
+  #
+  # DO NOT reintroduce setupTenant or DeleteTenantAndEntitlement here. Every feature in this
+  # module shares one tenant name-space, so a delete/recreate cycle in this file destroys the
+  # tenants the other features are using (and, with the mediated workflow running for tens of
+  # minutes, can destroy them mid-flight).
 
   Background:
     * url baseUrl
     * configure readTimeout = 600000
 
-  Scenario: setup consortium with central, university, and college tenants
+  Scenario: setup mediated-request inventory, policies and shadow-user capabilities
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
-    * def setupTenant = read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant')
-    * def setupConsortium = read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia')
-    * def setupTenantForConsortia = read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia')
-    * def putCaps = read('classpath:common-consortia/eureka/initData.feature@PutCaps')
     * def setupCirculationPolicies = read('classpath:vega/ecs-requests/ecs-circulation-policies.feature')
 
     # Fixed UUIDs for inventory entities
     * callonce read('classpath:vega/mediated-requests/mediated-requests-variables.feature')
 
-    * def centralTenantUuid = centralTenantId.length == 36 ? centralTenantId : karate.get('centralTenantUuid')
-    * eval karate.set('centralTenantUuid', centralTenantUuid)
-    * eval karate.set('centralTenantId', centralTenant)
-
+    # Modules required by the mediated-request suite. Kept for documentation only - tenant
+    # entitlement happens in consortium-bootstrap.feature, whose module list is the union of
+    # every suite's requirements and must be updated if this list grows.
     * table baseModules
       | name                        |
       | 'mod-permissions'           |
@@ -39,6 +43,7 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'mod-search'                |
       | 'mod-requests-mediated'     |
 
+    # Likewise: the local-admin permissions this suite needs, granted by consortium-bootstrap.
     * table baseUserPermissions
       | name                                                        |
       | 'users.item.post'                                           |
@@ -47,6 +52,8 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'inventory-storage.service-points.item.post'                |
       | 'inventory-storage.holdings.item.post'                      |
       | 'inventory-storage.items.item.post'                         |
+      | 'inventory-storage.items.collection.get'                    |
+      | 'inventory-storage.items.item.get'                          |
       | 'inventory-storage.instance-types.item.post'                |
       | 'inventory-storage.loan-types.item.post'                    |
       | 'inventory-storage.material-types.item.post'                |
@@ -62,6 +69,11 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'circulation-storage.loan-policies.item.post'               |
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation-storage.request-policies.item.post'            |
+      | 'circulation-storage.request-policies.item.post'            |
+      | 'circulation-storage.requests.collection.get'               |
+      | 'circulation-storage.requests.item.get'                     |
+      | 'circulation-item.item.get'                                 |
+      | 'circulation.check-in-by-barcode.post'                      |
       | 'lost-item-fees-policies.item.post'                         |
       | 'overdue-fines-policies.item.post'                          |
       | 'circulation.settings.item.post'                            |
@@ -75,33 +87,43 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
       | 'requests-mediated.mediated-requests.decline.execute'       |
+      | 'requests-mediated.mediated-request.confirm.post'           |
+      | 'requests-mediated.confirm-item-arrival.post'               |
+      | 'requests-mediated.send-item-in-transit.post'               |
 
     * def modules = baseModules
     * def userPermissions = baseUserPermissions
 
-    # ========== Step 1: Create and initialize tenants ==========
-    # Pre-emptive cleanup: delete any leftover tenants/realms from a previous failed run.
-    * configure abortedStepsShouldPass = true
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(universityTenant)', tenantId: '#(universityTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(collegeTenant)', tenantId: '#(collegeTenantId)' }
-    * call read('classpath:common-consortia/eureka/initData.feature@DeleteTenantAndEntitlement') { tenantName: '#(centralTenant)', tenantId: '#(centralTenantUuid)' }
-    * configure abortedStepsShouldPass = false
-
-    * call setupTenant { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)' }
-    * call setupTenant { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)' }
-    * call setupTenant { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)' }
-
-    # ========== Step 2: Create consortium and register tenants ==========
+    # ========== Step 1: Confirm the shared consortium is ready ==========
+    # Tenants and consortium registration are done by consortium-bootstrap.feature. Fail fast and
+    # clearly here if that did not happen, instead of erroring deep inside the workflow.
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
-    * call setupConsortium { tenant: '#(centralTenant)' }
-    * call setupTenantForConsortia { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'CON' }
-    * call setupTenantForConsortia { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'UNI' }
-    * call setupTenantForConsortia { tenant: '#(collegeTenant)', id: '#(collegeTenantId)', isCentral: false, code: 'COL' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    * configure retry = { count: 10, interval: 10000 }
+    Given path 'consortia', consortiumId, 'tenants'
+    And retry until responseStatus == 200 && response.totalRecords == 3
+    When method GET
+    Then status 200
+    And match response.tenants[*].id contains centralTenant
+    And match response.tenants[*].id contains universityTenant
+    And match response.tenants[*].id contains collegeTenant
 
-    # Grant shadow consortia_admin in university tenant the permissions needed for cross-tenant operations
-    * table uniShadowPermissions
+    # ========== Step 2: Shadow-user capabilities - NOT granted here ==========
+    # Listed for documentation only. The shadow consortia_admin capabilities for the university and
+    # college tenants are granted once per build by consortium-bootstrap.feature, whose
+    # shadowPermissions table is the union of every suite's requirements and must be updated if this
+    # list grows.
+    #
+    # DO NOT call putCaps from this file. PutCaps issues a plain POST /users/capabilities, which is
+    # not idempotent - mod-roles-keycloak returns 400 EntityExistsException if any capability in the
+    # payload is already assigned. This suite runs at @Order 1, so granting here left the first four
+    # entries below already assigned by the time ecs-consortium-setup.feature (callonce'd by both
+    # staff-slips and ecs-requests, hence run twice) re-POSTed a superset of them, failing both of
+    # those suites in setup on
+    #     "Relation already exists for user=... and capabilities=[...]"
+    * table shadowPermissionsUniversityAndCollege
       | name                                            |
       | 'inventory.instances.item.get'                  |
       | 'inventory.items.item.get'                      |
@@ -109,23 +131,6 @@ Feature: Common mediated-requests consortium setup (central + university + colle
       | 'user-tenants.collection.get'                   |
       | 'requests-mediated.mediated-request.item.post'  |
       | 'requests-mediated.mediated-request.item.get'   |
-
-    * def userPermissions = uniShadowPermissions
-    * def shadowConsortiaAdmin = { id: '#(consortiaAdmin.id)', tenant: '#(universityTenant)' }
-    * configure cookies = null
-    * call putCaps { tenant: '#(universityTenant)', user: '#(shadowConsortiaAdmin)' }
-
-    # Grant shadow consortia_admin in college tenant
-    * table collegeShadowPermissions
-      | name                                  |
-      | 'inventory.instances.item.get'        |
-      | 'inventory.items.item.get'            |
-      | 'inventory-storage.holdings.item.get' |
-      | 'user-tenants.collection.get'         |
-
-    * def userPermissions = collegeShadowPermissions
-    * def shadowConsortiaAdminCollege = { id: '#(consortiaAdmin.id)', tenant: '#(collegeTenant)' }
-    * call putCaps { tenant: '#(collegeTenant)', user: '#(shadowConsortiaAdminCollege)' }
 
     # Re-login as consortia_admin to restore the central tenant okapitoken
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
@@ -237,6 +242,14 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     When method POST
     Then match [201, 422] contains responseStatus
 
+    # Create the interim service point in the university (secure) tenant. mod-requests-mediated uses
+    # this hardcoded service point as the pickup service point when confirming a mediated request,
+    # and mod-tlr looks it up in the primary (university) tenant to clone it into the lending tenants.
+    Given path 'service-points'
+    And request { id: '#(mrInterimServicePointId)', name: 'MR Interim Service Point', code: 'MR-SP-INT', discoveryDisplayName: 'MR Interim Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    When method POST
+    Then match [201, 422] contains responseStatus
+
     Given path 'instance-types'
     And request { id: '#(mrInstanceTypeId)', name: 'MR Instance Type', code: 'MRI-T', source: 'local' }
     When method POST
@@ -274,7 +287,74 @@ Feature: Common mediated-requests consortium setup (central + university + colle
     When method POST
     Then status 201
 
-    # ========== Step 6: Setup circulation policies ==========
+    # ========== Step 6: Setup inventory data in college tenant ==========
+    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(collegeLogin.okapitoken)', 'x-okapi-tenant': '#(collegeTenant)' }
+
+    Given path 'location-units/institutions'
+    And request { id: '#(mrCollegeInstitutionId)', name: 'MR Test Institution College', code: 'MRI-COL' }
+    When method POST
+    Then status 201
+
+    Given path 'location-units/campuses'
+    And request { id: '#(mrCollegeCampusId)', name: 'MR Test Campus College', code: 'MRC-COL', institutionId: '#(mrCollegeInstitutionId)' }
+    When method POST
+    Then status 201
+
+    Given path 'location-units/libraries'
+    And request { id: '#(mrCollegeLibraryId)', name: 'MR Test Library College', code: 'MRL-COL', campusId: '#(mrCollegeCampusId)' }
+    When method POST
+    Then status 201
+
+    Given path 'service-points'
+    And request { id: '#(mrCollegeServicePointId)', name: 'MR College Service Point', code: 'MR-SP-COL', discoveryDisplayName: 'MR College Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    When method POST
+    Then status 201
+
+    # Also create the central service point in the college tenant for pickup availability
+    Given path 'service-points'
+    And request { id: '#(mrCentralServicePointId)', name: 'MR Central Service Point', code: 'MR-SP-C', discoveryDisplayName: 'MR Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
+    When method POST
+    Then match [201, 422] contains responseStatus
+
+    Given path 'instance-types'
+    And request { id: '#(mrInstanceTypeId)', name: 'MR Instance Type', code: 'MRI-T', source: 'local' }
+    When method POST
+    Then status 201
+
+    Given path 'loan-types'
+    And request { id: '#(mrLoanTypeId)', name: 'MR Loan Type' }
+    When method POST
+    Then status 201
+
+    Given path 'material-types'
+    And request { id: '#(mrMaterialTypeId)', name: 'MR Material Type' }
+    When method POST
+    Then status 201
+
+    Given path 'holdings-sources'
+    And request { id: '#(mrCollegeHoldingsSourceId)', name: 'MR FOLIO College' }
+    When method POST
+    Then status 201
+
+    Given path 'locations'
+    And request
+      """
+      {
+        "id": "#(mrCollegeLocationId)",
+        "name": "MR College Location",
+        "code": "MR-LOC-COL",
+        "institutionId": "#(mrCollegeInstitutionId)",
+        "campusId": "#(mrCollegeCampusId)",
+        "libraryId": "#(mrCollegeLibraryId)",
+        "primaryServicePoint": "#(mrCentralServicePointId)",
+        "servicePointIds": ["#(mrCentralServicePointId)", "#(mrCollegeServicePointId)"]
+      }
+      """
+    When method POST
+    Then status 201
+
+    # ========== Step 7: Setup circulation policies ==========
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }
     * def okapitoken = centralLogin.okapitoken
 
@@ -289,3 +369,6 @@ Feature: Common mediated-requests consortium setup (central + university + colle
 
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
     * call setupCirculationPolicies { tenant: '#(universityTenant)', okapitoken: '#(universityLogin.okapitoken)', policyLabel: 'MR-University' }
+
+    * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
+    * call setupCirculationPolicies { tenant: '#(collegeTenant)', okapitoken: '#(collegeLogin.okapitoken)', policyLabel: 'MR-College' }

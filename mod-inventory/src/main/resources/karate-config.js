@@ -30,7 +30,10 @@ function fn() {
   // define consortiumId
   var consortiumId = karate.properties['consortiumId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -41,8 +44,8 @@ function fn() {
     tenantParams: {loadReferenceData : true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
 
     // define consortia users and tenants
     centralTenant: centralTenant,
@@ -53,10 +56,10 @@ function fn() {
     collegeTenantId: collegeTenantId ? collegeTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     consortiumId: consortiumId,
 
-    consortiaAdmin: { id: consortiaAdminUserId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenant},
-    centralUser1: { id: centralUser1Id, username: 'central_user1', password: 'central_user1_password', tenant: centralTenant},
-    universityUser1: { id: universityUser1Id, username: 'university_user1', password: 'university_user1_password', tenant: universityTenant},
-    collegeUser1: { id: collegeUser1Id, username: 'college_user1', password: 'college_user1_password', tenant: collegeTenant},
+    consortiaAdmin: { id: consortiaAdminUserId, username: 'consortia_admin', password: generatePassword('consortia_admin'), tenant: centralTenant},
+    centralUser1: { id: centralUser1Id, username: 'central_user1', password: generatePassword('central_user1'), tenant: centralTenant},
+    universityUser1: { id: universityUser1Id, username: 'university_user1', password: generatePassword('university_user1'), tenant: universityTenant},
+    collegeUser1: { id: collegeUser1Id, username: 'college_user1', password: generatePassword('college_user1'), tenant: collegeTenant},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -108,14 +111,14 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org'
+    config.baseUrl = 'https://folio-edev-promin-kong.ci.folio.org'
     config.prototypeTenant= 'consortium'
     config.admin = {
       tenant: 'consortium',
       name: 'consortium_admin',
       password: 'admin'
     }
-    config.baseKeycloakUrl = 'https://folio-edev-folijet-keycloak.ci.folio.org'
+    config.baseKeycloakUrl = 'https://folio-edev-promin-keycloak.ci.folio.org'
   } else if (env == 'dev') {
     config.checkDepsDuringModInstall = 'false';
     config.baseKeycloakUrl = 'http://keycloak.eureka:8080';

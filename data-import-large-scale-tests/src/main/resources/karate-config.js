@@ -80,8 +80,8 @@ function fn() {
   } else if (env === 'etesting-sprint') {
     config.baseUrl = 'https://folio-etesting-sprint-kong.ci.folio.org';
     config.testUser = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
-  } else if (env === 'edev-folijet') {
-    config.baseUrl = 'https://folio-edev-folijet-kong.ci.folio.org';
+  } else if (env === 'edev-promin') {
+    config.baseUrl = 'https://folio-edev-promin-kong.ci.folio.org';
     config.testUser = {tenant: 'diku', name: 'diku_admin', password: 'admin'};
   } else if (env === 'snapshot') {
     config.baseUrl = 'https://folio-etesting-snapshot-kong.ci.folio.org';

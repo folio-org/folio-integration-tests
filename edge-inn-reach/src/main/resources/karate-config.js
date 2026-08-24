@@ -9,10 +9,15 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+  var generateEdgeUserPassword = karate.callSingle('classpath:common/util/generate-password.feature').generateEdgeUserPassword;
+
   var config = {
+    generatePassword: generatePassword,
+    generateEdgeUserPassword: generateEdgeUserPassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9703',
-    centralServerUrl: 'https://folio-dev-volaris-mockserver.ci.folio.org',
+    centralServerUrl: 'https://folio-dev-vega-2nd-mockserver.ci.folio.org',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
 
@@ -22,23 +27,24 @@ function fn() {
     tenantParams: {loadReferenceData: true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'default', name: 'innreachClient', password: 'default'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    // Password mirrored in pipelines-shared-library resources/edge/config_eureka.yaml.
+    testUser: {tenant: 'default', name: 'innreachClient', password: generateEdgeUserPassword()},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
     loginRegularUser: karate.read('classpath:common/login.feature'),
     loginAdmin: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    variables: karate.read('classpath:volaris/edge-inn-reach/global/variables.feature'),
+    variables: karate.read('classpath:vega/edge-inn-reach/global/variables.feature'),
 
-    globalPath: 'classpath:volaris/mod-inn-reach/global/',
-    featuresPath: 'classpath:volaris/mod-inn-reach/features/',
-    mocksPath: 'classpath:volaris/mod-inn-reach/mocks/',
-    samplesPath: 'classpath:volaris/mod-inn-reach/samples/',
-    edgeGlobalPath: 'classpath:volaris/edge-inn-reach/global/',
-    edgeFeaturesPath: 'classpath:volaris/edge-inn-reach/features/',
-    edgeMocksPath: 'classpath:volaris/edge-inn-reach/mocks/',
+    globalPath: 'classpath:vega/mod-inn-reach/global/',
+    featuresPath: 'classpath:vega/mod-inn-reach/features/',
+    mocksPath: 'classpath:vega/mod-inn-reach/mocks/',
+    samplesPath: 'classpath:vega/mod-inn-reach/samples/',
+    edgeGlobalPath: 'classpath:vega/edge-inn-reach/global/',
+    edgeFeaturesPath: 'classpath:vega/edge-inn-reach/features/',
+    edgeMocksPath: 'classpath:vega/edge-inn-reach/mocks/',
 
      // define global functions
     uuid: function () {
@@ -86,9 +92,9 @@ function fn() {
     config.baseKeycloakUrl = 'https://folio-etesting-snapshot-keycloak.ci.folio.org';
   } else if (env == 'rancher') {
     config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';
-    config.edgeUrl = 'https://folio-edev-volaris-edge-inn-reach.ci.folio.org';
-    config.baseUrl = 'https://folio-edev-volaris-kong.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-volaris-keycloak.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-vega-2nd-edge-inn-reach.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-vega-2nd-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-vega-2nd-keycloak.ci.folio.org';
   } else if (env == 'folio-testing-karate') {
     config.baseUrl = '${baseUrl}';
     config.apikey = 'eyJzIjoiaGVsbG8iLCJ0IjoiZGVmYXVsdCIsInUiOiJpbm5yZWFjaENsaWVudCJ9';

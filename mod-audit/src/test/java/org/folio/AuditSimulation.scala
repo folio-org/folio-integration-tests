@@ -27,10 +27,10 @@ class AuditSimulation extends Simulation {
   protocol.runner.systemProperty("testTenant", generateTenantId())
 
   val before = scenario("before")
-    .exec(karateFeature("classpath:firebird/mod-audit/mod-audit-junit.feature"))
+    .exec(karateFeature("classpath:vega/mod-audit/mod-audit-junit.feature"))
   val create = scenario("create")
     .repeat(10) {
-      exec(karateFeature("classpath:firebird/mod-audit/features/checkInCheckOutEvent.feature"))
+      exec(karateFeature("classpath:vega/mod-audit/features/checkInCheckOutEvent.feature"))
     }
   val after = scenario("after").exec(karateFeature("classpath:common/destroy-data.feature"))
 

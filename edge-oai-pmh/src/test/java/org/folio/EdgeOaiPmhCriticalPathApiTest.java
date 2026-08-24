@@ -9,9 +9,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "firebird", module = "edge-oai-pmh")
+@FolioTest(team = "athena", module = "edge-oai-pmh")
 public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
-    private static final String TEST_BASE_PATH = "classpath:firebird/edge-oai-pmh/features/";
+    private static final String TEST_BASE_PATH = "classpath:athena/edge-oai-pmh/features/";
 
     public EdgeOaiPmhCriticalPathApiTest() {
         super(new TestIntegrationService(
@@ -20,7 +20,7 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:firebird/edge-oai-pmh/edge-oai-pmh-junit.feature");
+        runFeature("classpath:athena/edge-oai-pmh/edge-oai-pmh-junit.feature");
     }
 
     @AfterAll
@@ -45,7 +45,7 @@ public class EdgeOaiPmhCriticalPathApiTest extends TestBaseEureka {
 
     @Test
     public void test03() {
-        runFeatureTest("skip-suppressed-records-C193912.feature");
+        runFeatureTest("skip-suppressed-records-C163912.feature");
     }
 
     @Test

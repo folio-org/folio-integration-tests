@@ -1,18 +1,18 @@
 [
   {
-    "team": "Bama",
+    "team": "Athena",
     "modules": [
-      "mod-calendar"
+      "mod-fqm-manager",
+      "mod-lists",
+      "edge-fqm",
+      "mod-data-export",
+      "mod-oai-pmh",
+      "edge-oai-pmh",
+      "mod-bulk-operations",
+      "mod-data-export-spring",
+      "mod-data-export-worker"
     ],
-    "slackChannel": "#bama"
-  },
-  {
-    "team": "Bienenvolk",
-    "modules": [
-      "mod-agreements",
-      "mod-licenses"
-    ],
-    "slackChannel": "#erm-developers"
+    "slackChannel": "#athena-notify"
   },
   {
     "team": "Core: Platform",
@@ -27,52 +27,37 @@
     "slackChannel": "#core-platform-jenkins"
   },
   {
-    "team": "Corsair",
+    "team": "Helios",
     "modules": [
-      "mod-fqm-manager",
-      "mod-lists",
-      "edge-fqm"
+      "mod-calendar"
     ],
-    "slackChannel": "#corsair"
+    "slackChannel": "#helios-notify"
   },
   {
-    "team": "Firebird",
+    "team": "K-Int",
     "modules": [
-      "mod-data-export",
-      "mod-oai-pmh",
-      "edge-oai-pmh",
-      "mod-bulk-operations",
-      "mod-data-export-spring",
-      "mod-data-export-worker"
+      "mod-agreements",
+      "mod-licenses"
     ],
-    "slackChannel": "#firebird"
+    "slackChannel": "#erm-developers"
   },
   {
-    "team": "Folijet",
+    "team": "Promin",
     "modules": [
       "data-import",
       "data-import-large-scale-tests",
-      "mod-source-record-storage",
-      "mod-source-record-manager",
       "mod-di-converter-storage",
-      "mod-data-import",
-      "mod-data-import-converter-storage",
+      "mod-entities-links",
       "mod-inventory",
-      "mod-di-converter-storage"
-    ],
-    "slackChannel": "#folijet"
-  },
-  {
-    "team": "Spitfire",
-    "modules": [
       "mod-kb-ebsco-java",
+      "mod-linked-data",
       "mod-notes",
       "mod-quick-marc",
-      "mod-entities-links",
-      "mod-inventory-storage",
-      "mod-search"
+      "mod-search",
+      "mod-source-record-manager",
+      "mod-source-record-storage"
     ],
-    "slackChannel": "#spitfire-notify"
+    "slackChannel": "#promin-notify"
   },
   {
     "team": "Thunderjet",
@@ -110,13 +95,7 @@
       "mod-circulation-storage",
       "mod-patron",
       "edge-patron",
-      "mod-pubsub"
-    ],
-    "slackChannel": "#vega"
-  },
-  {
-    "team": "Volaris",
-    "modules": [
+      "mod-pubsub",
       "mod-inn-reach",
       "edge-inn-reach",
       "edge-dematic",
@@ -137,14 +116,7 @@
       "mod-remote-storage",
       "mod-reading-room"
     ],
-    "slackChannel": "#volaris-dev"
-  },
-  {
-    "team": "Citation",
-    "modules": [
-      "mod-linked-data"
-    ],
-    "slackChannel": "#citation-dev"
+    "slackChannel": "#vega"
   },
   {
     "team": "Eureka",

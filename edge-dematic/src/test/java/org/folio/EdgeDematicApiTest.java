@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Disabled
-@FolioTest(team = "volaris", module = "edge-dematic")
+@FolioTest(team = "vega", module = "edge-dematic")
 @Deprecated(forRemoval = true)
 public class EdgeDematicApiTest extends TestBase {
 
   // default module settings
-  private static final String TEST_BASE_PATH = "classpath:firebird/edge-dematic/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/edge-dematic/features/";
 
   public EdgeDematicApiTest() {
     super(new TestIntegrationService(

@@ -8,10 +8,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "corsair", module = "mod-lists")
+@FolioTest(team = "athena", module = "mod-lists")
 public class ModListsTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH =
-            "classpath:corsair/mod-lists/features/";
+            "classpath:athena/mod-lists/features/";
 
     public ModListsTest() {
         super(
@@ -21,7 +21,7 @@ public class ModListsTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:corsair/mod-lists/lists-junit.feature");
+        runFeature("classpath:athena/mod-lists/lists-junit.feature");
     }
 
     @AfterAll

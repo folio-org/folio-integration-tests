@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@FolioTest(team = "spitfire", module = "mod-quick-marc")
+@FolioTest(team = "promin", module = "mod-quick-marc")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class QuickMarcApiTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:spitfire/mod-quick-marc/features/";
+    private static final String TEST_BASE_PATH = "classpath:promin/mod-quick-marc/features/";
 
     public QuickMarcApiTest() {
         super(new TestIntegrationService(
@@ -66,7 +66,7 @@ class QuickMarcApiTest extends TestBaseEureka {
 
     @BeforeAll
     public void quickMarcApiTestBeforeAll() {
-        runFeature("classpath:spitfire/mod-quick-marc/quick-marc-junit.feature");
+        runFeature("classpath:promin/mod-quick-marc/quick-marc-junit.feature");
         runFeatureTest("setup/setup.feature");
     }
 

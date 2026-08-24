@@ -12,7 +12,12 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+  var generateEdgeUserPassword = karate.callSingle('classpath:common/util/generate-password.feature').generateEdgeUserPassword;
+
   var config = {
+    generatePassword: generatePassword,
+    generateEdgeUserPassword: generateEdgeUserPassword,
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -23,8 +28,9 @@ function fn() {
     tenantParams: {loadReferenceData : true},
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: 'testfqmtenant', name: 'testFqmUser', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    // Password mirrored in pipelines-shared-library resources/edge/config_eureka.yaml.
+    testUser: {tenant: 'testfqmtenant', name: 'testFqmUser', password: generateEdgeUserPassword()},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -88,8 +94,8 @@ function fn() {
 
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-corsair-kong.ci.folio.org:443';
-    config.edgeUrl = 'https://folio-edev-corsair-edge.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-athena-kong.ci.folio.org:443';
+    config.edgeUrl = 'https://folio-edev-athena-edge.ci.folio.org';
     config.apikey = 'eyJzIjoiZlU4ZDNkc0pKTCIsInQiOiJ0ZXN0ZnFtdGVuYW50IiwidSI6InRlc3RGcW1Vc2VyIn0='
     config.admin = {
       tenant: 'diku',
@@ -98,7 +104,7 @@ function fn() {
     };
     config.prototypeTenant = 'diku';
 
-    config.baseKeycloakUrl = 'https://folio-edev-corsair-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-athena-keycloak.ci.folio.org';
   }
   return config;
 }

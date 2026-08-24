@@ -27,7 +27,12 @@ function fn() {
   // define consortiumId
   var consortiumId = karate.properties['consortiumId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+  var generateEdgeUserPassword = karate.callSingle('classpath:common/util/generate-password.feature').generateEdgeUserPassword;
+
   var config = {
+    generatePassword: generatePassword,
+    generateEdgeUserPassword: generateEdgeUserPassword,
     baseUrl: 'http://localhost:8000',
     edgeUrl: 'http://localhost:9701',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
@@ -42,8 +47,9 @@ function fn() {
     collegeApikey: 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0Y29sbGVnZSIsInUiOiJ0ZXN0X2VkZ2VfYWRtaW4ifQ==',
     testTenant: 'testoaipmh',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    // Password mirrored in pipelines-shared-library resources/edge/config_eureka.yaml.
+    testUser: {tenant: testTenant, name: 'test-user', password: generateEdgeUserPassword()},
 
     // define consortia users and tenants
     centralTenant: centralTenant,
@@ -54,11 +60,13 @@ function fn() {
     collegeTenantId: collegeTenantId ? collegeTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     consortiumId: consortiumId,
 
-    consortiaAdmin: { id: consortiaAdminUserId, username: 'test_edge_admin', password: 'admin', tenant: centralTenant},
-    universityUser1: { id: universityUser1Id, username: 'test_edge_admin', password: 'admin', tenant: universityTenant},
-    collegeUser1: { id: collegeUser1Id, username: 'test_edge_admin', password: 'admin', tenant: collegeTenant},
+    // The following three flow through the edge module (consortium/university/college apikey).
+    // Passwords mirrored in pipelines-shared-library resources/edge/config_eureka.yaml.
+    consortiaAdmin: { id: consortiaAdminUserId, username: 'test_edge_admin', password: generateEdgeUserPassword(), tenant: centralTenant},
+    universityUser1: { id: universityUser1Id, username: 'test_edge_admin', password: generateEdgeUserPassword(), tenant: universityTenant},
+    collegeUser1: { id: collegeUser1Id, username: 'test_edge_admin', password: generateEdgeUserPassword(), tenant: collegeTenant},
     // shadow user
-    centralUser1: { id: centralUser1Id, username: 'centralUser', password: 'central_user_password', tenant: centralTenant},
+    centralUser1: { id: centralUser1Id, username: 'centralUser', password: generatePassword('centralUser'), tenant: centralTenant},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -128,9 +136,9 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-athena-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-athena-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-athena-keycloak.ci.folio.org';
     config.apikey = 'eyJzIjoiVExodW1JV2JiTCIsInQiOiJ0ZXN0b2FpcG1oIiwidSI6InRlc3QtdXNlciJ9';
     config.admin = {
       tenant: 'supertenant',

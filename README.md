@@ -108,7 +108,7 @@ sh ./runtests.sh ${PROJECT} ${ENVIRONMENT}
 * [Mock server URL](Configure in karate-config.js file as centralServerUrl)
 * [Mock server dashboard](centralServerUrl/mockserver/dashboard)
 * [Mock server deployment steps](https://wiki.folio.org/display/DD/D2IR+Mock+Server+Deployment+in+Rancher)
-* Mock server expectation initializer config file is located at mod-inn-reach/src/main/resources/volaris/mod-inn-reach/mocks/general/expectation_initializer.json
+* Mock server expectation initializer config file is located at mod-inn-reach/src/main/resources/vega/mod-inn-reach/mocks/general/expectation_initializer.json
 
 ## Running specific feature from IDEA
 
@@ -249,13 +249,13 @@ Format:
 [
   {
     // Team name. Should match 'Development Team' Jira field.
-    "team": "Bama",
+    "team": "Helios",
     // List of integration tests modules the team is responsible for
     "modules": [
       "mod-calendar"
     ],
     // Slack channel which will be used to send failed tests notifications
-    "slackChannel": "#bama"
+    "slackChannel": "#helios"
   }
 ]
 ```

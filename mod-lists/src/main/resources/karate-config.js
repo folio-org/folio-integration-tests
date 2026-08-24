@@ -12,7 +12,10 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -22,17 +25,17 @@ function fn() {
 
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
-    testUser2: {tenant: testTenant, name: 'test-user-2', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
+    testUser2: {tenant: testTenant, name: 'test-user-2', password: generatePassword('test-user-2')},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    postList: karate.read('classpath:corsair/mod-lists/features/util/post-list.feature'),
-    updateList: karate.read('classpath:corsair/mod-lists/features/util/update-list.feature'),
-    refreshList: karate.read('classpath:corsair/mod-lists/features/util/refresh-list.feature'),
-    cancelRefresh: karate.read('classpath:corsair/mod-lists/features/util/cancel-refresh.feature'),
+    postList: karate.read('classpath:athena/mod-lists/features/util/post-list.feature'),
+    updateList: karate.read('classpath:athena/mod-lists/features/util/update-list.feature'),
+    refreshList: karate.read('classpath:athena/mod-lists/features/util/refresh-list.feature'),
+    cancelRefresh: karate.read('classpath:athena/mod-lists/features/util/cancel-refresh.feature'),
 
     // define global functions
     uuid: function () {
@@ -94,9 +97,9 @@ function fn() {
     karate.configure('ssl',true);
     config.baseKeycloakUrl = '${baseKeycloakUrl}';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-eperf-corsair-kong.ci.folio.org:443';
+    config.baseUrl = 'https://folio-eperf-athena-kong.ci.folio.org:443';
     config.prototypeTenant = 'fs09000000';
-    config.baseKeycloakUrl = 'https://folio-eperf-corsair-keycloak.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-eperf-athena-keycloak.ci.folio.org';
     config.admin = {tenant: 'fs09000000', name: 'folio', password: 'folio'};
   }
   return config;

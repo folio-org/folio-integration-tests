@@ -9,7 +9,10 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     tenantParams: {
         loadReferenceData : true
     },
@@ -22,8 +25,8 @@ function fn() {
 
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
@@ -81,9 +84,9 @@ function fn() {
       password: 'admin'
     }
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-athena-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-athena-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-athena-keycloak.ci.folio.org';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',

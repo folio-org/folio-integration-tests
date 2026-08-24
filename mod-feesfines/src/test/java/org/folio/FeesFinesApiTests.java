@@ -4,6 +4,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ class FeesFinesApiTests extends TestBaseEureka {
 
     public FeesFinesApiTests() {
         super(new TestIntegrationService(
-                new TestModuleConfiguration(TEST_BASE_PATH)));
+                new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
     }
 
     @BeforeAll

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "volaris", module = "mod-audit")
+@FolioTest(team = "vega", module = "mod-audit")
 public class ModAuditApiTest extends TestBaseEureka {
-  private static final String TEST_BASE_PATH = "classpath:firebird/mod-audit/features/";
+  private static final String TEST_BASE_PATH = "classpath:vega/mod-audit/features/";
 
   public ModAuditApiTest() {
     super(new TestIntegrationService(
@@ -19,7 +19,7 @@ public class ModAuditApiTest extends TestBaseEureka {
 
   @BeforeAll
   public void setup() {
-    runFeature("classpath:firebird/mod-audit/mod-audit-junit.feature");
+    runFeature("classpath:vega/mod-audit/mod-audit-junit.feature");
   }
 
   @AfterAll

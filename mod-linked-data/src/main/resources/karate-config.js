@@ -12,7 +12,10 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     tenantParams: {loadReferenceData: true},
     baseUrl: 'http://localhost:8000',
     foliioUiUrl: karate.properties['foliioUiUrl'] || 'https://my-library.foliio.org',
@@ -24,47 +27,47 @@ function fn() {
 
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
-    linkedDataBulkImportUser: {tenant: testTenant, name: 'linked-data-bulk-import', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
+    linkedDataBulkImportUser: {tenant: testTenant, name: 'linked-data-bulk-import', password: generatePassword('linked-data-bulk-import')},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
-    deleteCache: karate.read('classpath:citation/mod-linked-data/features/util/admin.feature@deleteCache'),
-    getResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResource'),
-    getInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getInventoryInstance'),
-    putInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putInventoryInstance'),
-    getResourceIdFromInventoryId: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceIdFromInventoryId'),
-    postResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postResource'),
-    putResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putResource'),
-    deleteResource: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@deleteResource'),
-    postSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
-    putSourceRecordToStorage: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@putSourceRecordToStorage'),
-    searchLinkedDataWork: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
-    searchLinkedDataHub: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchLinkedDataHub'),
-    searchInventoryInstance: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchInventoryInstance'),
-    browseAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@browseAuthority'),
-    searchAuthority: karate.read('classpath:citation/mod-linked-data/features/util/search-resource.feature@searchAuthority'),
-    getSourceRecordFormatted: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getSourceRecordFormatted'),
-    getResourceGraph: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph'),
-    getDerivedMarc: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getDerivedMarc'),
-    getRdf: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getRdf'),
-    getResourceSupportCheck: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceSupportCheck'),
-    getResourcePreview: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourcePreview'),
-    validationErrorWithCodeOnResourceCreation: karate.read('classpath:citation/mod-linked-data/features/util/validation-resource.feature@validationErrorWithCodeOnResourceCreation'),
-    previewHub: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@previewHub'),
-    importHub: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@importHub'),
-    getSettings: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@getSettings'),
-    putSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@putSetting'),
-    postSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@postSetting'),
-    getSetting: karate.read('classpath:citation/mod-linked-data/features/util/crud-settings.feature@getSetting'),
-    postImport: karate.read('classpath:citation/mod-linked-data/features/util/crud-resource.feature@postImport'),
-    getSpecifications: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getSpecifications'),
-    getRules: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@getRules'),
-    patchRule: karate.read('classpath:citation/mod-linked-data/features/util/crud-specifications.feature@patchRule'),
-    assertReindexJobCompleted: karate.read('classpath:citation/mod-linked-data/features/util/reindex-job-status.feature@assertReindexJobCompleted'),
-    dropSearchIndex: karate.read('classpath:citation/mod-linked-data/features/util/search-index.feature@dropSearchIndex'),
+    deleteCache: karate.read('classpath:promin/mod-linked-data/features/util/admin.feature@deleteCache'),
+    getResource: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getResource'),
+    getInventoryInstance: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getInventoryInstance'),
+    putInventoryInstance: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@putInventoryInstance'),
+    getResourceIdFromInventoryId: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getResourceIdFromInventoryId'),
+    postResource: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@postResource'),
+    putResource: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@putResource'),
+    deleteResource: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@deleteResource'),
+    postSourceRecordToStorage: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@postSourceRecordToStorage'),
+    putSourceRecordToStorage: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@putSourceRecordToStorage'),
+    searchLinkedDataWork: karate.read('classpath:promin/mod-linked-data/features/util/search-resource.feature@searchLinkedDataWork'),
+    searchLinkedDataHub: karate.read('classpath:promin/mod-linked-data/features/util/search-resource.feature@searchLinkedDataHub'),
+    searchInventoryInstance: karate.read('classpath:promin/mod-linked-data/features/util/search-resource.feature@searchInventoryInstance'),
+    browseAuthority: karate.read('classpath:promin/mod-linked-data/features/util/search-resource.feature@browseAuthority'),
+    searchAuthority: karate.read('classpath:promin/mod-linked-data/features/util/search-resource.feature@searchAuthority'),
+    getSourceRecordFormatted: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getSourceRecordFormatted'),
+    getResourceGraph: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getResourceGraph'),
+    getDerivedMarc: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getDerivedMarc'),
+    getRdf: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getRdf'),
+    getResourceSupportCheck: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getResourceSupportCheck'),
+    getResourcePreview: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getResourcePreview'),
+    validationErrorWithCodeOnResourceCreation: karate.read('classpath:promin/mod-linked-data/features/util/validation-resource.feature@validationErrorWithCodeOnResourceCreation'),
+    previewHub: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@previewHub'),
+    importHub: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@importHub'),
+    getSettings: karate.read('classpath:promin/mod-linked-data/features/util/crud-settings.feature@getSettings'),
+    putSetting: karate.read('classpath:promin/mod-linked-data/features/util/crud-settings.feature@putSetting'),
+    postSetting: karate.read('classpath:promin/mod-linked-data/features/util/crud-settings.feature@postSetting'),
+    getSetting: karate.read('classpath:promin/mod-linked-data/features/util/crud-settings.feature@getSetting'),
+    postImport: karate.read('classpath:promin/mod-linked-data/features/util/crud-resource.feature@postImport'),
+    getSpecifications: karate.read('classpath:promin/mod-linked-data/features/util/crud-specifications.feature@getSpecifications'),
+    getRules: karate.read('classpath:promin/mod-linked-data/features/util/crud-specifications.feature@getRules'),
+    patchRule: karate.read('classpath:promin/mod-linked-data/features/util/crud-specifications.feature@patchRule'),
+    assertReindexJobCompleted: karate.read('classpath:promin/mod-linked-data/features/util/reindex-job-status.feature@assertReindexJobCompleted'),
+    dropSearchIndex: karate.read('classpath:promin/mod-linked-data/features/util/search-index.feature@dropSearchIndex'),
 
     // define global functions
     uuid: function () {
@@ -93,7 +96,7 @@ function fn() {
 
     resolveSubgraphIfId: function(idOrSubgraph) {
       if (typeof idOrSubgraph === 'number') {
-        return karate.call('classpath:citation/mod-linked-data/features/util/crud-resource.feature@getResourceGraph', { resourceId: idOrSubgraph }).response;
+        return karate.call('classpath:promin/mod-linked-data/features/util/crud-resource.feature@getResourceGraph', { resourceId: idOrSubgraph }).response;
       }
       return idOrSubgraph;
     },
@@ -141,8 +144,8 @@ function fn() {
     config.prototypeTenant = '${prototypeTenant}';
     karate.configure('ssl',true);
   } else if (env === 'edev') {
-    config.baseUrl = 'https://folio-edev-citation-kong.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-citation-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-promin-kong.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-promin-keycloak.ci.folio.org';
   } else if (env != null && env.match(/^ec2-\d+/)) {
     // Config for FOLIO CI "folio-integration" public ec2- dns name
     config.baseUrl = 'http://' + env + ':8000';

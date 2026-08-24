@@ -13,10 +13,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-@FolioTest(team = "corsair", module = "mod-fqm-manager")
+@FolioTest(team = "athena", module = "mod-fqm-manager")
 public class ModFqmManagerTest extends TestBaseEureka {
 
-    private static final String TEST_BASE_PATH = "classpath:corsair/mod-fqm-manager/features/";
+    private static final String TEST_BASE_PATH = "classpath:athena/mod-fqm-manager/features/";
 
     public ModFqmManagerTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
@@ -24,12 +24,12 @@ public class ModFqmManagerTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:corsair/mod-fqm-manager/fqm-junit.feature");
+        runFeature("classpath:athena/mod-fqm-manager/fqm-junit.feature");
     }
 
     @AfterAll
     public void tearDown() {
-        runFeature("classpath:corsair/mod-fqm-manager/fqm-destroy-data.feature");
+        runFeature("classpath:athena/mod-fqm-manager/fqm-destroy-data.feature");
     }
 
     static List<Arguments> features() {
@@ -43,6 +43,7 @@ public class ModFqmManagerTest extends TestBaseEureka {
                         "query/operators-basic",
                         "query/operators-array",
                         "query/per-entity-type",
+                        "query/marc-fields",
                         "query/special-field-tests",
                         "query/validation",
                         "consortia/consortia-fqm"

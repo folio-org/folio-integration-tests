@@ -8,8 +8,8 @@ Feature: Test POST password validate
     * def headersUser = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapiUserToken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json'  }
     * configure headers = headersUser
 
-    * def testRuleFailure = 'classpath:spitfire/passwordvalidator/test-rule-failure.feature'
-    * def testRuleFailureOnPasswordCheck = 'classpath:spitfire/passwordvalidator/test-rule-failure-on-password-check.feature'
+    * def testRuleFailure = 'classpath:promin/passwordvalidator/test-rule-failure.feature'
+    * def testRuleFailureOnPasswordCheck = 'classpath:promin/passwordvalidator/test-rule-failure-on-password-check.feature'
     * def password = read('classpath:samples/password.json')
     * def passwordCheck = read('classpath:samples/password_check.json')
 

@@ -8,10 +8,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@FolioTest(team = "bama", module = "mod-calendar")
+@FolioTest(team = "helios", module = "mod-calendar")
 public class ModCalendarTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH =
-            "classpath:bama/mod-calendar/features/";
+            "classpath:helios/mod-calendar/features/";
 
     public ModCalendarTest() {
         super(
@@ -21,7 +21,7 @@ public class ModCalendarTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:bama/mod-calendar/calendar-junit.feature");
+        runFeature("classpath:helios/mod-calendar/calendar-junit.feature");
     }
 
     @AfterAll

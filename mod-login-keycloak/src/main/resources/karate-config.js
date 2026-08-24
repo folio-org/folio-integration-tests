@@ -16,7 +16,10 @@ function fn() {
   var adminPasswordOverride = karate.properties['admin.password'];
   var effectiveTestTenant = testTenant ? testTenant : 'testtenant';
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: baseUrlOverride || 'http://localhost:8000',
     admin: {
       tenant: adminTenantOverride || 'diku',
@@ -29,8 +32,8 @@ function fn() {
     tenantParams: { loadReferenceData: true },
     testTenant: effectiveTestTenant,
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: { tenant: effectiveTestTenant, name: 'test-admin', password: 'admin' },
-    testUser: { tenant: effectiveTestTenant, name: 'test-user', password: 'test' },
+    testAdmin: { tenant: effectiveTestTenant, name: 'test-admin', password: generatePassword('test-admin') },
+    testUser: { tenant: effectiveTestTenant, name: 'test-user', password: generatePassword('test-user') },
     loginWithExpiry: karate.read('classpath:eureka/mod-login-keycloak/features/helpers/login-with-expiry.feature'),
     uuid: function () {
       return java.util.UUID.randomUUID() + '';

@@ -8,18 +8,21 @@ function fn() {
 
   var env = karate.env;
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var testTenant = karate.properties['testTenant'];
   var resolvedTestTenant = testTenant || 'testtenant';
   var testTenantId = karate.properties['testTenantId'];
   var testAdminUsername = karate.properties['testAdminUsername'] || 'test-admin';
-  var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
+  var testAdminPassword = karate.properties['testAdminPassword'] || generatePassword(testAdminUsername);
   var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
-  var testUserPassword = karate.properties['testUserPassword'] || 'test';
+  var testUserPassword = karate.properties['testUserPassword'] || generatePassword(testUserUsername);
 
   var randomNumbers = karate.properties['randomNumbers'] || (function() { return java.util.UUID.randomUUID().toString().replace('-', '').substring(0, 10); })();
   var centralTenant = 'consortium' + randomNumbers;
   var collegeTenant = 'college' + randomNumbers;
-  var universityTenant = 'university' + randomNumbers;
+  // Must match mod-requests-mediated's SECURE_TENANT_ID deployment setting.
+  var universityTenant = karate.properties['secureTenantName'] || 'universitymr1';
 
   var centralTenantId = karate.properties['centralTenantId'];
   var collegeTenantId = karate.properties['collegeTenantId'];
@@ -32,6 +35,7 @@ function fn() {
   var universityUser1Id = universityUserId;
 
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -57,9 +61,9 @@ function fn() {
     universityUserId: universityUserId,
     collegeUserId: collegeUserId,
 
-    consortiaAdmin: { id: consortiaAdminUserId, username: 'consortia_admin', password: 'consortia_admin_password', tenant: centralTenant },
-    universityUser1: { id: universityUser1Id, username: 'university_user1', password: 'university_user1_password', tenant: universityTenant },
-    collegeUser1: { id: collegeUserId, username: 'college_user1', password: 'college_user1_password', tenant: collegeTenant },
+    consortiaAdmin: { id: consortiaAdminUserId, username: 'consortia_admin', password: generatePassword('consortia_admin'), tenant: centralTenant },
+    universityUser1: { id: universityUser1Id, username: 'university_user1', password: generatePassword('university_user1'), tenant: universityTenant },
+    collegeUser1: { id: collegeUserId, username: 'college_user1', password: generatePassword('college_user1'), tenant: collegeTenant },
 
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),

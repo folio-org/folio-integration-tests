@@ -9,7 +9,10 @@ function fn() {
   var testTenant = karate.properties['testTenant'];
   var testTenantId = karate.properties['testTenantId'];
 
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var config = {
+    generatePassword: generatePassword,
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
@@ -17,8 +20,8 @@ function fn() {
     kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
-    testAdmin: {tenant: testTenant, name: 'test-admin', password: 'admin'},
-    testUser: {tenant: testTenant, name: 'test-user', password: 'test'},
+    testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
+    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
     edgeHost:'http://localhost:9701',
     edgeApiKey: 'eyJzIjoiQlBhb2ZORm5jSzY0NzdEdWJ4RGgiLCJ0IjoiZGlrdSIsInUiOiJkaWt1In0',
     // define global features
@@ -27,7 +30,7 @@ function fn() {
     getModuleIdByName: karate.read('classpath:global/module-operations.feature@getModuleIdByName'),
     enableModule: karate.read('classpath:global/module-operations.feature@enableModule'),
     deleteModule: karate.read('classpath:global/module-operations.feature@deleteModule'),
-    resetConfiguration: karate.read('classpath:firebird/mod-configuration/reusable/reset-configuration.feature'),
+    resetConfiguration: karate.read('classpath:athena/mod-configuration/reusable/reset-configuration.feature'),
     login: karate.read('classpath:common/login.feature'),
     // define global functions
     uuid: function () {
@@ -55,9 +58,9 @@ function fn() {
     config.kcClientId = 'supersecret';
     config.kcClientSecret = karate.properties['clientSecret'] || 'supersecret';
   } else if (env == 'rancher') {
-    config.baseUrl = 'https://folio-edev-firebird-kong.ci.folio.org';
-    config.edgeUrl = 'https://folio-edev-firebird-edge.ci.folio.org';
-    config.baseKeycloakUrl = 'https://folio-edev-firebird-keycloak.ci.folio.org';
+    config.baseUrl = 'https://folio-edev-athena-kong.ci.folio.org';
+    config.edgeUrl = 'https://folio-edev-athena-edge.ci.folio.org';
+    config.baseKeycloakUrl = 'https://folio-edev-athena-keycloak.ci.folio.org';
     config.admin = {
       tenant: 'supertenant',
       name: 'testing_admin',
