@@ -54,6 +54,7 @@ Feature: mod-roles-keycloak integration tests setup
       | 'user-capability-sets.collection.get'         |
       | 'user-capability-sets.collection.put'         |
       | 'user-capability-sets.collection.delete'      |
+      | 'user-capability-sets.query.post'             |
       | 'permissions.users.item.get'                  |
       | 'loadable-roles.collection.get'               |
       | 'loadable-roles.item.put'                     |
