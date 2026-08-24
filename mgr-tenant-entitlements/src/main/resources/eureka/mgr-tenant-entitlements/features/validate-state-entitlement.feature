@@ -57,6 +57,35 @@ Feature: validate desired-state entitlement requests
     When method post
     Then status 204
 
+  @Negative
+  Scenario: reject a desired-state upgrade to a lower version
+    # A lower version than the entitled application is not a valid upgrade.
+    * def lowerVersionApplicationId = currentApplicationName + '-0.0.1'
+    Given path 'entitlements', 'validate'
+    And param entitlementRequestType = 'state'
+    And param validator = 'ApplicationFlowValidator'
+    And header Authorization = 'Bearer ' + masterToken
+    And request { tenantId: '#(testTenantId)', applications: ['#(lowerVersionApplicationId)'] }
+    When method post
+    Then status 400
+    And match response.errors[0].code == 'validation_error'
+    And match response.errors[0].message == 'Invalid applications provided for upgrade'
+
+  @Negative
+  Scenario: reject a desired-state request with an invalid application version
+    # Application IDs in a desired state must contain a valid semantic version.
+    * def invalidApplicationId = currentApplicationName + '-invalid'
+    Given path 'entitlements', 'validate'
+    And param entitlementRequestType = 'state'
+    And param validator = 'ApplicationFlowValidator'
+    And header Authorization = 'Bearer ' + masterToken
+    And request { tenantId: '#(testTenantId)', applications: ['#(invalidApplicationId)'] }
+    When method post
+    Then status 400
+    And match response.errors[0].code == 'validation_error'
+    And match response.errors[0].type == 'IllegalArgumentException'
+    And match response.errors[0].message == 'Invalid semantic version: source = ' + invalidApplicationId
+
   @Positive
   Scenario: validate a desired-state entitle request
     # Keeps the current entitlement and adds a new application, creating an entitle bucket.
