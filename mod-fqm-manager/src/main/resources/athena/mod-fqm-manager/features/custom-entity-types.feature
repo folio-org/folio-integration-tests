@@ -205,7 +205,8 @@ Feature: Entity types
           {
             "type": "entity-type",
             "alias": "users",
-            "targetId": "bb058933-cd06-4539-bd3a-6f248ff98ee2"
+            "targetId": "bb058933-cd06-4539-bd3a-6f248ff98ee2",
+            "useIdColumns": true
           }
         ]
       }
@@ -237,7 +238,8 @@ Feature: Entity types
           {
             "type": "entity-type",
             "alias": "users",
-            "targetId": "bb058933-cd06-4539-bd3a-6f248ff98ee2"
+            "targetId": "bb058933-cd06-4539-bd3a-6f248ff98ee2",
+            "useIdColumns": true
           }
         ]
       }
@@ -457,7 +459,8 @@ Feature: Entity types
           {
             "type": "entity-type",
             "alias": "users",
-            "targetId": "bb058933-cd06-4539-bd3a-6f248ff98ee2"
+            "targetId": "bb058933-cd06-4539-bd3a-6f248ff98ee2",
+            "useIdColumns": true
           }
         ]
       }
