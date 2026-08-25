@@ -10,9 +10,20 @@
       },
       "isSelected": true,
       "isCustom": true,
-      "visibilityData": {
-        "isHidden": true
-      }
+      "visibility": [
+        {
+          "category": "PF",
+          "isHidden": true
+        },
+        {
+          "category": "FTF",
+          "isHidden": true
+        },
+        {
+          "category": "MARC",
+          "isHidden": true
+        }
+      ]
     }
   }
 }
