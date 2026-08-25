@@ -430,3 +430,128 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     When method GET
     Then status 200
     And match response.status.name == 'Awaiting pickup'
+
+    # ========== Step 5: Check-out in secure tenant (university) ==========
+    # The patron collects the item at the pickup service point. A loan is created
+    # in the university tenant; the primary and mediated requests transition to
+    # 'Closed - Filled'. In the ECS mediated-request flow the intermediate (central)
+    # and secondary (college) requests do not propagate 'Closed - Filled' via the
+    # checkout event - only their item/circulation-item statuses are verified.
+    * configure headers = headersUniversity
+    * configure retry = { count: 20, interval: 15000 }
+    Given path 'circulation/check-out-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', userBarcode: '#(patron.requesterBarcode)', servicePointId: '#(mrCentralServicePointId)', loanDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 201
+    * def loanId = response.id
+    And match loanId == '#notnull'
+    And match response.itemId == inventory.itemId
+    And match response.userId == patron.requesterId
+
+    # Loan is open in university tenant
+    Given path 'loan-storage/loans', loanId
+    When method GET
+    Then status 200
+    And match response.status.name == 'Open'
+    And match response.action == 'checkedout'
+
+    # Circulation item checked out (university)
+    * call getCirculationItem { itemId: '#(inventory.itemId)' }
+    And match response.status.name == 'Checked out'
+
+    # Primary request closed - filled (async, Kafka) - retry
+    Given path 'request-storage/requests', confirmedRequestId
+    And retry until responseStatus == 200 && response.status == 'Closed - Filled'
+    When method GET
+    Then status 200
+    And match response.status == 'Closed - Filled'
+
+    # Mediated request closed - filled (async, Kafka) - retry
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    And retry until responseStatus == 200 && response.status == 'Closed - Filled'
+    When method GET
+    Then status 200
+    And match response.status == 'Closed - Filled'
+
+    # Intermediate (central) and secondary (college) requests remain 'Open - In transit'
+    # after checkout in the mediated-request flow; verify only item statuses.
+    * configure headers = headersCentral
+    Given path 'circulation-item', inventory.itemId
+    And retry until responseStatus == 200 && response.status.name == 'Checked out'
+    When method GET
+    Then status 200
+    And match response.status.name == 'Checked out'
+
+    * configure headers = headersCollege
+    Given path 'item-storage/items', inventory.itemId
+    And retry until responseStatus == 200 && response.status.name == 'Checked out'
+    When method GET
+    Then status 200
+    And match response.status.name == 'Checked out'
+
+    # ========== Step 6: Check-in in central tenant ==========
+    # The patron returns the item at the central service point. The central tenant
+    # processes the check-in and sends the item back in transit to the lending library.
+    * configure headers = headersCentral
+    Given path 'circulation/check-in-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', servicePointId: '#(mrCentralServicePointId)', checkInDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 200
+
+    # Circulation item in transit (central)
+    * call getCirculationItem { itemId: '#(inventory.itemId)' }
+    And match response.status.name == 'In transit'
+
+    # Loan closed in university tenant (async, Kafka) - retry
+    # Cross-tenant event (central check-in → university loan closure) takes longer than
+    # same-tenant events; use a higher count to match the 'In transit for approval' retry above.
+    * configure retry = { count: 40, interval: 15000 }
+    * configure headers = headersUniversity
+    Given path 'loan-storage/loans', loanId
+    And retry until responseStatus == 200 && response.status.name == 'Closed'
+    When method GET
+    Then status 200
+    And match response.status.name == 'Closed'
+    And match response.action == 'checkedin'
+
+    # Circulation item in transit (university)
+    * call getCirculationItem { itemId: '#(inventory.itemId)' }
+    And match response.status.name == 'In transit'
+
+    # Real item in transit (college) - async, Kafka - retry
+    * configure headers = headersCollege
+    Given path 'item-storage/items', inventory.itemId
+    And retry until responseStatus == 200 && response.status.name == 'In transit'
+    When method GET
+    Then status 200
+    And match response.status.name == 'In transit'
+
+    # ========== Step 7: Check-in in lending tenant (college) ==========
+    # The item arrives back at its home library and becomes available.
+    Given path 'circulation/check-in-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', servicePointId: '#(mrCollegeServicePointId)', checkInDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 200
+
+    # Real item available at college library
+    Given path 'item-storage/items', inventory.itemId
+    And retry until responseStatus == 200 && response.status.name == 'Available'
+    When method GET
+    Then status 200
+    And match response.status.name == 'Available'
+
+    # Circulation item available (central) - async, Kafka - retry
+    * configure headers = headersCentral
+    Given path 'circulation-item', inventory.itemId
+    And retry until responseStatus == 200 && response.status.name == 'Available'
+    When method GET
+    Then status 200
+    And match response.status.name == 'Available'
+
+    # Circulation item available (university) - async, Kafka - retry
+    * configure headers = headersUniversity
+    Given path 'circulation-item', inventory.itemId
+    And retry until responseStatus == 200 && response.status.name == 'Available'
+    When method GET
+    Then status 200
+    And match response.status.name == 'Available'

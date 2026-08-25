@@ -68,6 +68,8 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'circulation-storage.circulation-rules.put'                 |
       | 'circulation-storage.loan-policies.item.post'               |
       | 'circulation-storage.patron-notice-policies.item.post'      |
+      | 'circulation.check-out-by-barcode.post'                     |
+      | 'circulation-storage.loans.item.get'                        |
       | 'circulation-storage.request-policies.item.post'            |
       | 'circulation-storage.request-policies.item.post'            |
       | 'circulation-storage.requests.collection.get'               |
