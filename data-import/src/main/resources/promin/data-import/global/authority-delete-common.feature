@@ -13,7 +13,7 @@ Feature: Util feature for the Delete MARC Authority data import scenarios (FAT-2
 
     # 001 values of the two records inside the committed seed file, taken from the Black Panther
     # authority set. Both are replaced with run-unique values before the file is imported.
-    * def seedResource = 'promin/data-import/samples/mrc-files/FAT-26991-authorities.mrc'
+    * def seedResource = samplePath + 'mrc-files/FAT-26991-authorities.mrc'
     * def seedTargetControlNumber = '13389'
     * def seedControlControlNumber = '2426190'
 
@@ -52,7 +52,7 @@ Feature: Util feature for the Delete MARC Authority data import scenarios (FAT-2
     * def targetLccn = 'fat26991t' + __arg.runId
     * def controlLccn = 'fat26991c' + __arg.runId
 
-    * def seedFile = javaWriteData.readMarcResource(seedResource)
+    * def seedFile = read(seedResource)
     * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, seedTargetControlNumber, '001', ' ', targetControlNumber)
     * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, targetControlNumber, '010', 'a', targetLccn)
     * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, seedControlControlNumber, '001', ' ', controlControlNumber)

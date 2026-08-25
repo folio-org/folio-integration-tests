@@ -14,8 +14,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class WriteData {
     private static Logger LOGGER = new Logger();
@@ -87,21 +85,6 @@ public class WriteData {
         writer.close();
 
         return baos.toByteArray();
-    }
-
-    /**
-     * Reads a MARC21 binary file from the classpath.
-     *
-     * @param classpathResource resource path, e.g. "promin/data-import/samples/mrc-files/x.mrc"
-     * @return the raw file content
-     */
-    public static byte[] readMarcResource(String classpathResource) throws IOException {
-        try (InputStream in = WriteData.class.getClassLoader().getResourceAsStream(classpathResource)) {
-            if (in == null) {
-                throw new IOException("MARC resource not found on classpath: " + classpathResource);
-            }
-            return in.readAllBytes();
-        }
     }
 
     /**
