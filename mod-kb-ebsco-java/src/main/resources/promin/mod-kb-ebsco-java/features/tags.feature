@@ -2,7 +2,7 @@ Feature: Tags
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/vnd.api+json' }
 
 #   ================= positive test cases =================
