@@ -2,7 +2,7 @@ Feature: KB Credentials
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/json, text/plain, application/vnd.api+json' }
     * def credentials = read('classpath:promin/mod-kb-ebsco-java/features/samples/kb-credentials/credentials.json')
 
