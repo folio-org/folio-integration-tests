@@ -13,15 +13,15 @@
       "visibility": [
         {
           "category": "PF",
-          "isHidden": true
+          "hidden": true
         },
         {
           "category": "FTF",
-          "isHidden": true
+          "hidden": true
         },
         {
           "category": "MARC",
-          "isHidden": true
+          "hidden": true
         }
       ]
     }
