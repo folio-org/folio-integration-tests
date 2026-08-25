@@ -32,6 +32,36 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                 .run();
     }
 
+    private static final String DELETE_AUTHORITY_PATH =
+            "classpath:promin/data-import/features/marc-records/marc-authorities/delete/";
+
+    // FAT-26991: Delete MARC Authority with match by 001, 010 $a, 999 ff $i, 999 ff $s
+    // TODO: add TestRail case ids to the scenarios once the cases exist
+
+    @Test
+    void deleteAuthorityMatchBy001() {
+        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-001.feature")
+                .run();
+    }
+
+    @Test
+    void deleteAuthorityMatchBy010a() {
+        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-010a.feature")
+                .run();
+    }
+
+    @Test
+    void deleteAuthorityMatchBy999ffi() {
+        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-999ffi.feature")
+                .run();
+    }
+
+    @Test
+    void deleteAuthorityMatchBy999ffs() {
+        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-999ffs.feature")
+                .run();
+    }
+
     @Test
     void diAuthorityExtended() {
         feature("classpath:promin/data-import/features/marc-records/data-import-authority-records-extended.feature")

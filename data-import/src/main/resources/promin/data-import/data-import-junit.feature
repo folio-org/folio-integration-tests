@@ -159,6 +159,8 @@ Feature: mod-data-import integration tests
       | 'invoice.item.pay.execute'                                            |
       | 'invoices.acquisitions-units-assignments.create.execute'              |
       | 'invoices.acquisitions-units-assignments.manage.execute'              |
+      | 'marc-records-editor.item.put'                                        |
+      | 'instance-authority-links.instances.collection.get'                   |
 
 
   Scenario: create tenant and users for testing
