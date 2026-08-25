@@ -4,6 +4,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +22,18 @@ class MgrTenantEntitlementsTests extends TestBaseEureka {
     runFeature("classpath:eureka/mgr-tenant-entitlements/mgr-tenant-entitlements-junit.feature");
   }
 
+  @AfterAll
+  void cleanup() {
+    runFeature("classpath:common/eureka/destroy-data.feature");
+  }
+
   @Test
   void listEntitlements() {
     runFeatureTest("list-entitlements");
+  }
+
+  @Test
+  void validateStateEntitlement() {
+    runFeatureTest("validate-state-entitlement");
   }
 }

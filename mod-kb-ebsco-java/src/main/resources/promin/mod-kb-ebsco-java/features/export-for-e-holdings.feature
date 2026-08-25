@@ -2,7 +2,7 @@ Feature: Packages
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * def samplesPath = 'classpath:promin/mod-kb-ebsco-java/features/samples/export/'
     * def equalsCsv = 'export-for-e-holdings.feature@EqualsCsv'

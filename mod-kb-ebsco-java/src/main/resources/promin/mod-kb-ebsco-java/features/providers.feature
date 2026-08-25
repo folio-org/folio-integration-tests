@@ -2,7 +2,7 @@ Feature: Providers
 
   Background:
     * url baseUrl
-    * callonce login testUser
+    * call login testUser
     * configure headers = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': 'application/vnd.api+json' }
     * def samplesPath = 'classpath:promin/mod-kb-ebsco-java/features/samples/providers/'
 
