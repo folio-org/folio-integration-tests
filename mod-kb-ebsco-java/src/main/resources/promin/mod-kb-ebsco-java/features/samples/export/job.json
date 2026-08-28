@@ -27,7 +27,8 @@
         "packageAccessStatusType",
         "packageTags",
         "packageAgreements",
-        "packageNotes"
+        "packageNotes",
+        "packageUrl"
       ],
       "titleFields": [
         "titleName",
