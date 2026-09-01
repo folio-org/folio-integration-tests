@@ -103,6 +103,7 @@
     <module>mod-users-keycloak</module>
     <module>mod-login-keycloak</module>
     <module>mod-roles-keycloak</module>
+    <module>keycloak-upgrade</module>
     <module>mod-scheduler</module>
   </modules>
 
