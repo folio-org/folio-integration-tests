@@ -6,7 +6,8 @@ Feature: Set for deletion
     * configure headers = { 'x-okapi-tenant':'#(testTenant)','Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'Accept': 'application/json, text/plain' }
     * def utilsPath = 'classpath:promin/mod-inventory/features/utils.feature'
 
-    Scenario: Set instance for deletion and back
+  @C514860
+  Scenario: Set instance for deletion and back
       Given def instance = call read(utilsPath + '@CreateInstance') { source:'MARC', title:'InstanceForDeletion' }
       And def instanceId = instance.id
 
@@ -16,6 +17,11 @@ Feature: Set for deletion
 
       Given def record = call read(utilsPath + '@CreateRecord')
       And def recordId = record.id
+
+      Given path 'source-storage/records/' + recordId
+      When method GET
+      Then status 200
+      And def initialDateValue = get[0] response.parsedRecord.content.fields[?(@['005'])].005
 
       Given path 'inventory/instances/' + instanceId
       When method GET
@@ -43,6 +49,8 @@ Feature: Set for deletion
       And match response.additionalInfo.suppressDiscovery == true
       And match response.leaderRecordStatus == "d"
       And match response.parsedRecord.content.leader.charAt(5) == "d"
+      And def deletedDateValue = get[0] response.parsedRecord.content.fields[?(@['005'])].005
+      And match deletedDateValue != initialDateValue
 
       * eval createdInstance['deleted'] = false
       * eval createdInstance['discoverySuppress'] = false
