@@ -1,0 +1,64 @@
+{
+  "id": "#(recordId)",
+  "snapshotId": "#(snapshotId)",
+  "matchedId": "#(recordId)",
+  "recordType": "MARC_HOLDING",
+  "order": 0,
+  "rawRecord": {
+    "id": "#(recordId)",
+    "content": "00415cy  a22001454  4500"
+  },
+  "parsedRecord": {
+    "id": "#(recordId)",
+    "content": {
+      "leader": "00415cy  a22001454  4500",
+      "fields": [
+        {
+          "001": "#(holdingsHrid)"
+        },
+        {
+          "004": "#(instanceHrid)"
+        },
+        {
+          "005": "20180122150003.0"
+        },
+        {
+          "008": "9301234u    8   1   uu          "
+        },
+        {
+          "852": {
+            "ind1": "0",
+            "ind2": " ",
+            "subfields": [
+              {
+                "b": "E"
+              }
+            ]
+          }
+        },
+        {
+          "999": {
+            "ind1": "f",
+            "ind2": "f",
+            "subfields": [
+              {
+                "s": "#(recordId)"
+              },
+              {
+                "i": "#(holdingsId)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "deleted": false,
+  "state": "ACTUAL",
+  "additionalInfo": {
+    "suppressDiscovery": false
+  },
+  "externalIdsHolder": {
+    "holdingsId": "#(holdingsId)"
+  }
+}
