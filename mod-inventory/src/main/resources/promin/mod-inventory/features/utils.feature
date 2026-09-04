@@ -22,6 +22,13 @@ Feature: inventory
     When method PUT
     Then status 204
 
+  @UpdateHoldings
+  Scenario: Update a holdings
+    Given path 'inventory/holdings/' + holdingsId
+    And request holdings
+    When method PUT
+    Then status 204
+
   @CreateInstance
   Scenario: Create Instance
     Given path 'inventory/instances'
@@ -57,6 +64,26 @@ Feature: inventory
 
     And def id = response.id
     And def effectiveLocationId = response.effectiveLocation.id
+
+  @CreateHoldingsRecord
+  Scenario: Create Holdings and MARC_HOLDING source record
+    * def marcHoldingsSourceId = '036ee84a-6afd-4c3c-9ad3-4a12ab875f59'
+    * def holdingsId = uuid()
+    * def permanentLocationId = karate.get('permanentLocationId', defaultPermanentLocationId)
+
+    Given path 'holdings-storage/holdings'
+    And request { id: '#(holdingsId)', instanceId: '#(instanceId)', permanentLocationId: '#(permanentLocationId)', sourceId: '#(marcHoldingsSourceId)' }
+    When method POST
+    Then status 201
+    And def holdingsHrid = response.hrid
+
+    * def recordId = uuid()
+    Given path 'source-storage/records'
+    And request read(samplesPath + 'marc-holdings.json')
+    When method POST
+    Then status 201
+    And def holdingsSourceRecordId = response.id
+    And def id = holdingsId
 
   @CreateSnapshot
   Scenario: Create Snapshot

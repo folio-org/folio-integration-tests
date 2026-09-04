@@ -33,4 +33,9 @@ class ModInventoryExtendedTest extends TestBaseEureka {
     void setForDeletion() {
         runFeatureTest("setForDeletion.feature");
     }
+
+    @Test
+    void updateHoldings() {
+        runFeatureTest("inventory-update-holdings.feature");
+    }
 }

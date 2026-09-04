@@ -29,8 +29,11 @@ Feature: mod-inventory integration tests
       | 'inventory-storage.locations.collection.get'              |
       | 'inventory-storage.locations.item.post'                   |
       | 'inventory-storage.holdings-sources.item.post'            |
+      | 'inventory-storage.holdings.item.get'                     |
+      | 'inventory.holdings.item.put'                             |
       | 'source-storage.snapshots.post'                           |
       | 'source-storage.records.post'                             |
+      | 'source-storage.source-records.item.get'                  |
       | 'inventory.holdings.update-ownership.item.post'           |
       | 'inventory.items.update-ownership.item.post'              |
       | 'inventory.instances.item.put'                            |
@@ -54,3 +57,13 @@ Feature: mod-inventory integration tests
       }
       """
     * call read('classpath:promin/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: '#(holdingsSource)'}
+
+    * def marcHoldingsSource =
+      """
+      {
+        "id": "036ee84a-6afd-4c3c-9ad3-4a12ab875f59",
+        "name": "MARC",
+        "source": "folio"
+      }
+      """
+    * call read('classpath:promin/mod-inventory/features/utils.feature@PostHoldingsSource') {holdingsSource: '#(marcHoldingsSource)'}
