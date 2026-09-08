@@ -10,12 +10,10 @@ Feature: Util feature for the Delete MARC Authority data import scenarios (FAT-2
     * configure retry = { count: 30, interval: 5000 }
     * def javaWriteData = Java.type('test.java.WriteData')
     * def marcConverter = Java.type('test.java.MarcConverter')
-
-    # 001 values of the two records inside the committed seed file, taken from the Black Panther
-    # authority set. Both are replaced with run-unique values before the file is imported.
     * def seedResource = samplePath + 'mrc-files/FAT-26991-authorities.mrc'
-    * def seedTargetControlNumber = '13389'
-    * def seedControlControlNumber = '2426190'
+    * def seedLinkedControlNumber = '13389'
+    * def seedUnlinkedControlNumber = '2426190'
+    * def seedNonMatchControlNumber = '7394284'
 
     * def defaultAuthorityCreateJobProfileId = '6eefa4c6-bbf7-4845-ad82-de7fc5abd0e3'
     * def defaultCreateInstanceJobProfileId = 'e34d7b92-9b83-11eb-a8b3-0242ac130003'
@@ -40,23 +38,31 @@ Feature: Util feature for the Delete MARC Authority data import scenarios (FAT-2
       """
 
   @SeedAuthorities
-  Scenario: Import two MARC authority records - one to be matched and deleted, one to be left alone
+  Scenario: Import three MARC authority records - two to be matched and deleted, one to be left alone
     # parameters: runId
-    # returns: targetAuthorityId, targetRecordId, targetControlNumber, targetLccn,
-    #          controlAuthorityId, controlRecordId, controlControlNumber, controlLccn
+    # returns: linkedAuthorityId/linkedRecordId/linkedControlNumber,
+    #          unlinkedAuthorityId/unlinkedRecordId/unlinkedControlNumber,
+    #          nonMatchAuthorityId/nonMatchRecordId/nonMatchControlNumber
 
     # Every run gets its own 001 and 010 $a. Data import matches on those fields, so records left
     # behind by an earlier run against the same tenant would otherwise produce multiple matches.
-    * def targetControlNumber = 'FAT26991T' + __arg.runId
-    * def controlControlNumber = 'FAT26991C' + __arg.runId
-    * def targetLccn = 'fat26991t' + __arg.runId
-    * def controlLccn = 'fat26991c' + __arg.runId
+    * def linkedControlNumber = 'FAT26991L' + __arg.runId
+    * def unlinkedControlNumber = 'FAT26991U' + __arg.runId
+    * def nonMatchControlNumber = 'FAT26991N' + __arg.runId
+    * def linkedLccn = 'fat26991l' + __arg.runId
+    * def unlinkedLccn = 'fat26991u' + __arg.runId
+    # nonMatchLccnOverride lets a caller seed a second authority carrying an 010 $a that already
+    # exists, so that an incoming record with that value produces a "multiple matches" error
+    * def passedParams = karate.get('__arg', {})
+    * def nonMatchLccn = passedParams.nonMatchLccnOverride ? passedParams.nonMatchLccnOverride : ('fat26991n' + __arg.runId)
 
     * def seedFile = read(seedResource)
-    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, seedTargetControlNumber, '001', ' ', targetControlNumber)
-    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, targetControlNumber, '010', 'a', targetLccn)
-    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, seedControlControlNumber, '001', ' ', controlControlNumber)
-    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, controlControlNumber, '010', 'a', controlLccn)
+    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, seedLinkedControlNumber, '001', ' ', linkedControlNumber)
+    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, linkedControlNumber, '010', 'a', linkedLccn)
+    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, seedUnlinkedControlNumber, '001', ' ', unlinkedControlNumber)
+    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, unlinkedControlNumber, '010', 'a', unlinkedLccn)
+    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, seedNonMatchControlNumber, '001', ' ', nonMatchControlNumber)
+    * def seedFile = javaWriteData.setFieldValueByControlNumber(seedFile, nonMatchControlNumber, '010', 'a', nonMatchLccn)
 
     * def seedFileName = 'FAT-26991-seed-' + __arg.runId
     * javaWriteData.writeByteArrayToFile(seedFile, 'target/' + seedFileName + '.mrc')
@@ -68,21 +74,25 @@ Feature: Util feature for the Delete MARC Authority data import scenarios (FAT-2
     And param recordType = 'MARC_AUTHORITY'
     And param snapshotId = jobExecutionId
     And headers headersUser
-    And retry until response.totalRecords == 2 && karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0 && karate.sizeOf(response.sourceRecords[1].externalIdsHolder) > 0
+    And retry until response.totalRecords == 3 && karate.sizeOf(response.sourceRecords[0].externalIdsHolder) > 0 && karate.sizeOf(response.sourceRecords[1].externalIdsHolder) > 0 && karate.sizeOf(response.sourceRecords[2].externalIdsHolder) > 0
     When method GET
     Then status 200
 
-    * def targetRecord = findRecordByControlNumber(response.sourceRecords, targetControlNumber)
-    * def controlRecord = findRecordByControlNumber(response.sourceRecords, controlControlNumber)
-    * match targetRecord != null
-    * match controlRecord != null
+    * def linkedRecord = findRecordByControlNumber(response.sourceRecords, linkedControlNumber)
+    * def unlinkedRecord = findRecordByControlNumber(response.sourceRecords, unlinkedControlNumber)
+    * def nonMatchRecord = findRecordByControlNumber(response.sourceRecords, nonMatchControlNumber)
+    * match linkedRecord != null
+    * match unlinkedRecord != null
+    * match nonMatchRecord != null
 
-    * def targetAuthorityId = targetRecord.externalIdsHolder.authorityId
-    * def targetRecordId = targetRecord.recordId
-    * def controlAuthorityId = controlRecord.externalIdsHolder.authorityId
-    * def controlRecordId = controlRecord.recordId
+    * def linkedAuthorityId = linkedRecord.externalIdsHolder.authorityId
+    * def linkedRecordId = linkedRecord.recordId
+    * def unlinkedAuthorityId = unlinkedRecord.externalIdsHolder.authorityId
+    * def unlinkedRecordId = unlinkedRecord.recordId
+    * def nonMatchAuthorityId = nonMatchRecord.externalIdsHolder.authorityId
+    * def nonMatchRecordId = nonMatchRecord.recordId
 
-    * print 'Seeded authorities - target:', targetAuthorityId, 'control:', controlAuthorityId
+    * print 'Seeded authorities - linked:', linkedAuthorityId, 'unlinked:', unlinkedAuthorityId, 'nonMatch:', nonMatchAuthorityId
 
   @CreateDeleteJobProfile
   Scenario: Create a job profile that deletes matched MARC authority records

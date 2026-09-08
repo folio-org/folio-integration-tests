@@ -2,9 +2,10 @@
 Feature: FAT-26991 Delete MARC Authority records matched by 999 ff $i
 
   # UXPROD-4627 - delete authority records via data import.
-  # Imports a file through a job profile where the shipped "Default - Delete MARC Authority records"
-  # action profile sits under a match profile on 999 ff $i, and verifies that the matched authority is
-  # deleted, the non-matched authority survives, and the bib linked to the deleted authority is unlinked.
+  # A job profile puts the shipped "Default - Delete MARC Authority records" action profile under a
+  # match profile on 999 ff $i. The imported file carries three records: one authority that is linked to
+  # a bib and one that is not - both match and must be deleted - plus one that does not match and must
+  # survive. The bib linked to the deleted authority must end up unlinked.
 
   Background:
     * url baseUrl
@@ -19,35 +20,37 @@ Feature: FAT-26991 Delete MARC Authority records matched by 999 ff $i
     * def runId = epoch + randomString(5)
     * configure retry = { count: 30, interval: 5000 }
 
-  # TODO: TestRail case id - add @C<id> once the case exists
+  @C1504478
   Scenario: Delete MARC Authority matched by 999 ff $i
-    # Seed one authority to be deleted and one that must survive the same job
+    # Seed two authorities that will be matched and deleted, and one that must survive
     * def seed = call read(commonFeature + '@SeedAuthorities') { runId: '#(runId)' }
-    * def targetAuthorityId = seed.targetAuthorityId
-    * def targetRecordId = seed.targetRecordId
-    * def targetControlNumber = seed.targetControlNumber
-    * def controlAuthorityId = seed.controlAuthorityId
-    * def controlControlNumber = seed.controlControlNumber
+    * def linkedAuthorityId = seed.linkedAuthorityId
+    * def linkedRecordId = seed.linkedRecordId
+    * def linkedControlNumber = seed.linkedControlNumber
+    * def unlinkedAuthorityId = seed.unlinkedAuthorityId
+    * def unlinkedRecordId = seed.unlinkedRecordId
+    * def nonMatchAuthorityId = seed.nonMatchAuthorityId
+    * def nonMatchControlNumber = seed.nonMatchControlNumber
 
-    # Link a MARC bib to the authority that is about to be deleted
-    * def linked = call read(commonFeature + '@LinkBibToAuthority') { runId: '#(runId)', authorityId: '#(targetAuthorityId)', authorityNaturalId: '#(targetControlNumber)' }
+    # Link a MARC bib to one of the authorities that is about to be deleted
+    * def linked = call read(commonFeature + '@LinkBibToAuthority') { runId: '#(runId)', authorityId: '#(linkedAuthorityId)', authorityNaturalId: '#(linkedControlNumber)' }
     * def instanceId = linked.instanceId
 
     # Job profile: match on 999 ff $i -> Default - Delete MARC Authority records
     * def profiles = call read(commonFeature + '@CreateDeleteJobProfile') { runId: '#(runId)', profileName: 'FAT-26991 delete authority by 999 ff i', matchField: '999', matchSubfield: 'i', ind1: 'f', ind2: 'f' }
     * def jobProfileId = profiles.jobProfileId
 
-    # Export both authorities to build the file that will be re-imported with the delete action
+    # Export all three authorities to build the file that will be re-imported with the delete action
     # Embedded expressions are required here: Karate parses a bare [a, b] as a JSON array of
     # string literals, which would send the variable names to data export instead of the ids
-    * def authorityIdsToExport = ['#(targetAuthorityId)', '#(controlAuthorityId)']
+    * def authorityIdsToExport = ['#(linkedAuthorityId)', '#(unlinkedAuthorityId)', '#(nonMatchAuthorityId)']
     * def exportFileName = 'FAT-26991-export-' + runId
     * def exported = call read(exportAuthorityFeature + '@exportAuthorityRecords') { authorityIds: '#(authorityIdsToExport)', fileName: '#(exportFileName)' }
     * def exportedFile = exported.exportedBinaryMarcRecord
 
-    # Make the second record non-matching, so the same job carries a matched and a non-matched record
+    # Only the third record is made non-matching; the other two keep the values they were exported with
     # A random authority UUID that does not exist
-    * def deleteFile = javaWriteData.setFieldValueByControlNumber(exportedFile, controlControlNumber, '999', 'i', uuid())
+    * def deleteFile = javaWriteData.setFieldValueByControlNumber(exportedFile, nonMatchControlNumber, '999', 'i', uuid())
     * def deleteFileName = 'FAT-26991-delete-' + runId
     * javaWriteData.writeByteArrayToFile(deleteFile, 'target/' + deleteFileName + '.mrc')
 
@@ -55,42 +58,56 @@ Feature: FAT-26991 Delete MARC Authority records matched by 999 ff $i
     Then match status != 'ERROR'
     * def deleteJobExecutionId = jobExecutionId
 
-    # The matched record is reported as deleted, the non-matched one as discarded
+    # Two matched records are reported as deleted, the non-matched one as discarded
     Given path 'metadata-provider/jobLogEntries', deleteJobExecutionId
     And headers headersUser
-    And retry until karate.get('response.entries.length') == 2
+    And retry until karate.get('response.entries.length') == 3
     When method GET
     Then status 200
-    * def deletedEntry = response.entries.find(e => e.relatedAuthorityInfo.actionStatus == 'DELETED')
-    * def discardedEntry = response.entries.find(e => e.relatedAuthorityInfo.actionStatus == 'DISCARDED')
-    And match deletedEntry != null
-    And match discardedEntry != null
-    And match deletedEntry.sourceRecordActionStatus == 'DELETED'
-    And match deletedEntry.relatedAuthorityInfo.idList contains targetAuthorityId
-    And match discardedEntry.sourceRecordActionStatus == 'DISCARDED'
+    * def deletedEntries = response.entries.filter(e => e.relatedAuthorityInfo.actionStatus == 'DELETED')
+    * def discardedEntries = response.entries.filter(e => e.relatedAuthorityInfo.actionStatus == 'DISCARDED')
+    And match karate.sizeOf(deletedEntries) == 2
+    And match karate.sizeOf(discardedEntries) == 1
+    * def deletedAuthorityIds = karate.map(deletedEntries, function(e){ return e.relatedAuthorityInfo.idList[0] })
+    And match deletedAuthorityIds contains linkedAuthorityId
+    And match deletedAuthorityIds contains unlinkedAuthorityId
+    And match deletedEntries[0].sourceRecordActionStatus == 'DELETED'
+    And match discardedEntries[0].sourceRecordActionStatus == 'DISCARDED'
 
-    # The matched authority is gone
-    Given path 'authority-storage/authorities', targetAuthorityId
+    # Both matched authorities are gone
+    Given path 'authority-storage/authorities', linkedAuthorityId
     And headers headersUser
     And retry until responseStatus == 404
     When method GET
     Then status 404
 
-    # ... and its MARC record is marked deleted in SRS
-    Given path 'source-storage/source-records', targetRecordId
+    Given path 'authority-storage/authorities', unlinkedAuthorityId
+    And headers headersUser
+    And retry until responseStatus == 404
+    When method GET
+    Then status 404
+
+    # ... and their MARC records are marked deleted in SRS
+    Given path 'source-storage/source-records', linkedRecordId
     And param recordType = 'MARC_AUTHORITY'
     And headers headersUser
     And retry until response.deleted == true
     When method GET
     Then status 200
-    And match response.deleted == true
+
+    Given path 'source-storage/source-records', unlinkedRecordId
+    And param recordType = 'MARC_AUTHORITY'
+    And headers headersUser
+    And retry until response.deleted == true
+    When method GET
+    Then status 200
 
     # The non-matched authority is untouched
-    Given path 'authority-storage/authorities', controlAuthorityId
+    Given path 'authority-storage/authorities', nonMatchAuthorityId
     And headers headersUser
     When method GET
     Then status 200
-    And match response.id == controlAuthorityId
+    And match response.id == nonMatchAuthorityId
 
     # The bib linked to the deleted authority is unlinked
     Given path 'links/instances', instanceId

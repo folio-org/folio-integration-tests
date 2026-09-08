@@ -35,8 +35,17 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     private static final String DELETE_AUTHORITY_PATH =
             "classpath:promin/data-import/features/marc-records/marc-authorities/delete/";
 
-    // FAT-26991: Delete MARC Authority with match by 001, 010 $a, 999 ff $i, 999 ff $s
-    // TODO: add TestRail case ids to the scenarios once the cases exist
+    @Test
+    void deleteAuthorityDefaultJobProfile() {
+        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-default-job-profile.feature")
+                .run();
+    }
+
+    @Test
+    void deleteAuthorityJobSummaryStatuses() {
+        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-job-summary-statuses.feature")
+                .run();
+    }
 
     @Test
     void deleteAuthorityMatchBy001() {
@@ -57,8 +66,8 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     }
 
     @Test
-    void deleteAuthorityMatchBy999ffs() {
-        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-999ffs.feature")
+    void deleteAuthorityDefaultJobProfileLinked() {
+        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-default-profile-linked.feature")
                 .run();
     }
 
