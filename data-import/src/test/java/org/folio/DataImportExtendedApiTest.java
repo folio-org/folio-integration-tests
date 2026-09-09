@@ -32,6 +32,24 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                 .run();
     }
 
+    private static final String MATCH_AUTHORITY_PATH =
+            "classpath:promin/data-import/features/marc-records/marc-authorities/match/";
+    private static final String MATCH_BIB_PATH =
+            "classpath:promin/data-import/features/marc-records/marc-bibs/match/";
+
+    // FAT-28498: "Only compare part of the value" without "Use a qualifier" (MODDICORE-509)
+    @Test
+    void fat28498AuthorityComparisonPart() {
+        feature(MATCH_AUTHORITY_PATH + "FAT-28498-authority-comparison-part.feature")
+                .run();
+    }
+
+    @Test
+    void fat28498BibComparisonPart() {
+        feature(MATCH_BIB_PATH + "FAT-28498-bib-comparison-part.feature")
+                .run();
+    }
+
     private static final String DELETE_AUTHORITY_PATH =
             "classpath:promin/data-import/features/marc-records/marc-authorities/delete/";
 
