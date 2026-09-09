@@ -161,6 +161,8 @@ Feature: mod-data-import integration tests
       | 'invoices.acquisitions-units-assignments.manage.execute'              |
       | 'marc-records-editor.item.put'                                        |
       | 'instance-authority-links.instances.collection.get'                   |
+      | 'metadata-provider.jobSummary.item.get'                               |
+      | 'inventory-storage.authorities.item.delete'                           |
 
 
   Scenario: create tenant and users for testing
