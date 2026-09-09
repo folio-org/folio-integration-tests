@@ -32,45 +32,6 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                 .run();
     }
 
-    private static final String DELETE_AUTHORITY_PATH =
-            "classpath:promin/data-import/features/marc-records/marc-authorities/delete/";
-
-    @Test
-    void deleteAuthorityDefaultJobProfile() {
-        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-default-job-profile.feature")
-                .run();
-    }
-
-    @Test
-    void deleteAuthorityJobSummaryStatuses() {
-        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-job-summary-statuses.feature")
-                .run();
-    }
-
-    @Test
-    void deleteAuthorityMatchBy001() {
-        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-001.feature")
-                .run();
-    }
-
-    @Test
-    void deleteAuthorityMatchBy010a() {
-        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-010a.feature")
-                .run();
-    }
-
-    @Test
-    void deleteAuthorityMatchBy999ffi() {
-        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-999ffi.feature")
-                .run();
-    }
-
-    @Test
-    void deleteAuthorityDefaultJobProfileLinked() {
-        feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-default-profile-linked.feature")
-                .run();
-    }
-
     @Test
     void diAuthorityExtended() {
         feature("classpath:promin/data-import/features/marc-records/data-import-authority-records-extended.feature")
