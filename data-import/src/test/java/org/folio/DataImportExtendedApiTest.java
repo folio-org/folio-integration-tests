@@ -15,6 +15,8 @@ import static org.folio.test.config.TestParam.TEST_TENANT_ID;
 public class DataImportExtendedApiTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:promin/data-import/features/";
+    private static final String MATCH_AUTHORITY_PATH =
+            "classpath:promin/data-import/features/marc-records/marc-authorities/match/";
 
     public DataImportExtendedApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -32,21 +34,9 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                 .run();
     }
 
-    private static final String MATCH_AUTHORITY_PATH =
-            "classpath:promin/data-import/features/marc-records/marc-authorities/match/";
-    private static final String MATCH_BIB_PATH =
-            "classpath:promin/data-import/features/marc-records/marc-bibs/match/";
-
-    // FAT-28498: "Only compare part of the value" without "Use a qualifier" (MODDICORE-509)
     @Test
-    void fat28498AuthorityComparisonPart() {
-        feature(MATCH_AUTHORITY_PATH + "FAT-28498-authority-comparison-part.feature")
-                .run();
-    }
-
-    @Test
-    void fat28498BibComparisonPart() {
-        feature(MATCH_BIB_PATH + "FAT-28498-bib-comparison-part.feature")
+    void fat28498AuthorityComparisonPartExtended() {
+        feature(MATCH_AUTHORITY_PATH + "FAT-28498-authority-comparison-part-extended.feature")
                 .run();
     }
 
