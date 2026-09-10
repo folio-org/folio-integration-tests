@@ -110,6 +110,9 @@ Feature: mod-invoice integration tests
   Scenario: Set invoice fiscal year automatically
     * call read('features/set-invoice-fiscal-year-automatically.feature')
 
+  Scenario: Update voucher
+    * call read('features/update-voucher.feature')
+
   Scenario: Vendor address must be populated when retrieve voucher by id
     * call read('features/should_populate_vendor_address_on_get_voucher_by_id.feature')
 
