@@ -45,4 +45,9 @@ class ModUsersKeycloakTests extends TestBaseEureka {
   void passwordReset() {
     runFeatureTest("password-reset");
   }
+
+  @Test
+  void self() {
+    runFeatureTest("self");
+  }
 }
