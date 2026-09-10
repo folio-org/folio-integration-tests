@@ -140,6 +140,12 @@ Feature: mod-consortia-keycloak integration tests
   Scenario: Consortia _self endpoint access control tests
     * call read('features/consortia-self.feature')
 
+  Scenario: verify users with shadow or patron types not processed by consortia pipeline
+    * call read('features/consortia-skip-not-required-user-types.feature')
+
+  Scenario: verify user update scenarios
+    * call read('features/consortia-user-update.feature')
+
   Scenario: verify user type update scenarios
     * call read('features/consortia-user-type-update.feature')
 
