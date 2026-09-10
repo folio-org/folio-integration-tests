@@ -24,6 +24,10 @@ public class DataImportCriticalPathApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:promin/data-import/features/";
     private static final String DELETE_AUTHORITY_PATH =
             TEST_BASE_PATH + "marc-records/marc-authorities/delete/";
+    private static final String MATCH_AUTHORITY_PATH =
+            TEST_BASE_PATH + "marc-records/marc-authorities/match/";
+    private static final String MATCH_BIB_PATH =
+            TEST_BASE_PATH + "marc-records/marc-bibs/match/";
 
     public DataImportCriticalPathApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -65,6 +69,21 @@ public class DataImportCriticalPathApiTest extends TestBaseEureka {
     @Test
     void deleteAuthorityMatchBy999ffi() {
         feature(DELETE_AUTHORITY_PATH + "FAT-26991-delete-authority-match-999ffi.feature")
+                .run();
+    }
+
+    // FAT-28498 / MODDICORE-509: "Only compare part of the value" without "Use a qualifier".
+    // Authority C1505044, C1505057, C1505065. Bib C1505070, C1505071, C1505074, C1528147.
+
+    @Test
+    void fat28498AuthorityComparisonPart() {
+        feature(MATCH_AUTHORITY_PATH + "FAT-28498-authority-comparison-part.feature")
+                .run();
+    }
+
+    @Test
+    void fat28498BibComparisonPart() {
+        feature(MATCH_BIB_PATH + "FAT-28498-bib-comparison-part.feature")
                 .run();
     }
 
