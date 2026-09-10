@@ -45,6 +45,9 @@ Feature: mod-linked-data integration tests
       | 'linked-data.profiles.preferred.delete'                        |
       | 'linked-data.profiles.settings.get'                            |
       | 'linked-data.profiles.settings.post'                           |
+      | 'linked-data.profiles.settings.put'                            |
+      | 'linked-data.profiles.settings.delete'                         |
+      | 'linked-data.profiles.settings.list.get'                       |
       | 'linked-data.authority-assignment-check.post'                  |
       | 'linked-data.vocabularies.item.get'                            |
       | 'linked-data.batch.graph.cleaning.post'                        |
