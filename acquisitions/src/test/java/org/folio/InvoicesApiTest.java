@@ -63,6 +63,7 @@ public class InvoicesApiTest extends TestBaseEureka implements AcquisitionsTest 
     "prorated-adjustments-special-cases",
     "set-invoice-fiscal-year-automatically",
     "should_populate_vendor_address_on_get_voucher_by_id",
+    "update-voucher",
     "voucher-numbers",
     "voucher-with-lines-using-same-external-account",
     "delete-line-check-next-line-number"
