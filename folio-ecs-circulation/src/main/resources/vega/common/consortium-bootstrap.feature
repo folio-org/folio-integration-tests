@@ -77,8 +77,10 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'circulation-storage.request-policies.item.post'            |
       | 'circulation-storage.requests.collection.get'               |
       | 'circulation-storage.requests.item.get'                     |
+      | 'circulation-storage.loans.item.get'                        |
       | 'circulation-item.item.get'                                 |
       | 'circulation.check-in-by-barcode.post'                      |
+      | 'circulation.check-out-by-barcode.post'                     |
       | 'circulation.requests.item.post'                            |
       | 'circulation.settings.item.post'                            |
       | 'circulation-bff.requests.allowed-service-points.get'       |
