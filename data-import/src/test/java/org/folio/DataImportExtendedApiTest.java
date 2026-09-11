@@ -15,6 +15,8 @@ import static org.folio.test.config.TestParam.TEST_TENANT_ID;
 public class DataImportExtendedApiTest extends TestBaseEureka {
 
     private static final String TEST_BASE_PATH = "classpath:promin/data-import/features/";
+    private static final String MATCH_AUTHORITY_PATH =
+            "classpath:promin/data-import/features/marc-records/marc-authorities/match/";
 
     public DataImportExtendedApiTest() {
         super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -29,6 +31,12 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     @Test
     void fat21039Contributors() {
         feature("classpath:promin/data-import/features/marc-records/marc-bibs/create/FAT-21039.feature")
+                .run();
+    }
+
+    @Test
+    void fat28498AuthorityComparisonPartExtended() {
+        feature(MATCH_AUTHORITY_PATH + "FAT-28498-authority-comparison-part-extended.feature")
                 .run();
     }
 

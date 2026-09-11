@@ -51,6 +51,7 @@ Feature: Initialize mod-invoice integration tests
       | 'voucher.voucher-lines.collection.get'                      |
       | 'voucher.vouchers.collection.get'                           |
       | 'voucher.vouchers.item.get'                                 |
+      | 'voucher.vouchers.item.put'                                 |
 
     * table adminPermissions
       | name                                                        |
