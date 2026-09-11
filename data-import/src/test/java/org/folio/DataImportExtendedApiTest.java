@@ -38,6 +38,12 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                 .run();
     }
 
+    @Test
+    void instanceOverlayViaSingleRecordImportChangesUpdatedByField() {
+        feature("classpath:promin/data-import/features/marc-records/marc-bibs/update/FAT-21032.feature")
+                .run();
+    }
+
     @BeforeAll
     public void setup() {
         if (shouldCreateTenant()) {
