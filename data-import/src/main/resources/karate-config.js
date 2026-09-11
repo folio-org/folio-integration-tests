@@ -13,6 +13,8 @@ function fn() {
   var testAdminPassword = karate.properties['testAdminPassword'] || 'admin';
   var testUserUsername = karate.properties['testUserUsername'] || 'test-user';
   var testUserPassword = karate.properties['testUserPassword'] || 'test';
+  var testUser2Username = karate.properties['testUser2Username'] || 'test-user2';
+  var testUser2Password = karate.properties['testUser2Password'] || 'test2';
 
   var epoch = (()=> {
     // Get the current date and time
@@ -43,10 +45,12 @@ function fn() {
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
     testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword},
+    testUser2: {tenant: testTenant, name: testUser2Username, password: testUser2Password},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
     dev: karate.read('classpath:common/dev.feature'),
+    createAdditionalUser: karate.read('classpath:common/eureka/create-additional-user.feature'),
 
     epoch: epoch,
 
