@@ -46,6 +46,12 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                 .run();
     }
 
+    @Test
+    void fat21076UpdateMarcBib008Match() {
+        feature("classpath:promin/data-import/features/marc-records/marc-bibs/match/FAT-21076.feature")
+                .run();
+    }
+
     @BeforeAll
     public void setup() {
         if (shouldCreateTenant()) {
