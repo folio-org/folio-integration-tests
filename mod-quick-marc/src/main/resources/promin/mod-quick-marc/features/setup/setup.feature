@@ -104,29 +104,6 @@ Feature: Setup quickMARC
     And request read(samplePath + 'locations/location.json')
     When method POST
 
-  @SetupTypes
-  Scenario: Setup record types
-    Given path 'holdings-sources'
-    And headers headersUser
-    And request
-    """
-      {
-       "id": "#(sourceId)",
-       "name": "MARC"
-      }
-    """
-    When method POST
-
-    Given path 'instance-types'
-    And headers headersUser
-    And request read(samplePath + 'record-types/instance-type.json')
-    When method POST
-
-    Given path 'holdings-types'
-    And headers headersUser
-    And request read(samplePath + 'record-types/holdings-type.json')
-    When method POST
-
   @CreateSnapshot
   Scenario: Create snapshot
     Given path 'source-storage/snapshots'

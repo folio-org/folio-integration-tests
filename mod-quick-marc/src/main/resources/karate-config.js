@@ -16,6 +16,9 @@ function fn() {
 
   var config = {
     generatePassword: generatePassword,
+    tenantParams: {
+      loadReferenceData : true
+    },
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
