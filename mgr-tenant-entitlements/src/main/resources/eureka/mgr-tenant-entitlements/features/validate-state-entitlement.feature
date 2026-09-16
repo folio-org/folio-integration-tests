@@ -17,8 +17,6 @@ Feature: validate desired-state entitlement requests
     * def keycloakResponse = callonce read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
     * def masterToken = keycloakResponse.response.access_token
 
-    * call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(testTenantId)', tenantName: '#(testTenant)' }
-
     Given path 'applications'
     And param query = '(name=="' + applicationName + '")'
     And param limit = 100

@@ -36,4 +36,9 @@ class MgrTenantEntitlementsTests extends TestBaseEureka {
   void validateStateEntitlement() {
     runFeatureTest("validate-state-entitlement");
   }
+
+  @Test
+  void asyncEntitlementProcessingFeedbackLoop() {
+    runFeatureTest("async-entitlement-processing-feedback-loop");
+  }
 }
