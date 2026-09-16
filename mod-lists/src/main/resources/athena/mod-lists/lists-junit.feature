@@ -14,6 +14,9 @@ Feature: mod-lists integration tests
       | 'mod-inventory-storage'     |
       | 'mod-source-record-storage' |
       | 'mod-tags'                  |
+      | 'mod-agreements'            |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
 
     * table userPermissions
       | name                                                            |
@@ -23,10 +26,20 @@ Feature: mod-lists integration tests
       | 'circulation-storage.loan-policies.collection.get'              |
       | 'circulation.loans.collection.get'                              |
       | 'departments.collection.get'                                    |
+      | 'erm.agreements.collection.get'                                 |
+      | 'erm.agreements.item.post'                                      |
+      | 'erm.orgs.collection.get'                                       |
+      | 'erm.packages.collection.import'                                |
+      | 'erm.pci.collection.get'                                        |
+      | 'erm.refdata.category.collection.get'                           |
+      | 'erm.refdata.category.item.put'                                 |
+      | 'erm.refdata.value.collection.get'                              |
       | 'finance.exchange-rate.item.get'                                |
       | 'fqm.entityTypes.collection.get'                                |
+      | 'fqm.entityTypes.install.post'                                  |
       | 'fqm.entityTypes.item.columnValues.get'                         |
       | 'fqm.entityTypes.item.get'                                      |
+      | 'fqm.query.sync.get'                                            |
       | 'inventory-storage.alternative-title-types.collection.get'      |
       | 'inventory-storage.call-number-types.collection.get'            |
       | 'inventory-storage.classification-types.collection.get'         |
@@ -85,6 +98,7 @@ Feature: mod-lists integration tests
       | 'organizations-storage.categories.collection.get'               |
       | 'organizations-storage.organization-types.collection.get'       |
       | 'organizations.organizations.collection.get'                    |
+      | 'organizations.organizations.item.post'                         |
       | 'search.instances.collection.get'                               |
       | 'source-storage.records.collection.get'                         |
       | 'source-storage.records.post'                                   |
