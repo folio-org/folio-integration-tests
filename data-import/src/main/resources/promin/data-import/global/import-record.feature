@@ -29,7 +29,7 @@ Feature: Util feature to import records
 
     # splitting process creates additional job executions for parent/child
     # so we need to query to get the correct job execution ID
-    * call read('classpath:promin/data-import/global/get-completed-job-execution-for-key.feature') { key: '#(s3UploadKey)' }
+    * call read('classpath:promin/data-import/global/get-completed-job-execution-for-key.feature@getJobWhenJobStatusCompleted') { key: '#(s3UploadKey)' }
 
     # Take job execution logs
     Given path 'metadata-provider/jobLogEntries', jobExecutionId
