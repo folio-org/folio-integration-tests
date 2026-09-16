@@ -8,8 +8,23 @@ Feature: FAT-21076 - Update existing record using marc-to-marc match with 00x fi
 
   @C422000
   Scenario: FAT-21076 Update existing MARC Bib record using 008 field match
-    # Import FAT-21076.mrc with the "Default - Create instance and SRS MARC Bib" job profile to create instance
-    * def res = call read(utilFeature+'@ImportRecord') { fileName:'FAT-21076', jobName:'createInstance' }
+    # Make 008 value unique per test run so re-runs against reused tenant
+    # never match a record left over by the test previous execution. Only positions 0-5 are randomized.
+    * def base008Value = '090725s2009    wlk      b    000 0 eng d'
+    * def epochBasedUniquePrefix = epoch.substring(8)
+    * def unique008 = epochBasedUniquePrefix + base008Value.substring(6)
+
+    # Apply the unique 008 value to both the "create" and "updated" MARC files
+    * def recordForCreate = read('classpath:promin/data-import/samples/mrc-files/FAT-21076.mrc')
+    * def uniqueRecordForCreate = javaWriteData.modifyMarcRecord(recordForCreate, '008', ' ', ' ', ' ', unique008)
+    * javaWriteData.writeByteArrayToFile(uniqueRecordForCreate, 'target/FAT-21076-unique.mrc')
+
+    * def recordForUpdate = read('classpath:promin/data-import/samples/mrc-files/FAT-21076-UPDATED.mrc')
+    * def uniqueRecordForUpdate = javaWriteData.modifyMarcRecord(recordForUpdate, '008', ' ', ' ', ' ', unique008)
+    * javaWriteData.writeByteArrayToFile(uniqueRecordForUpdate, 'target/FAT-21076-UPDATED-unique.mrc')
+
+    # Import the unique FAT-21076 file with the "Default - Create instance and SRS MARC Bib" job profile to create instance
+    * def res = call read(utilFeature+'@ImportRecord') { fileName:'FAT-21076-unique', jobName:'createInstance', filePathFromSourceRoot: 'file:target/FAT-21076-unique.mrc' }
     * match res.jobExecution.status == 'COMMITTED'
 
     # Check job log entries to confirm that instance and MARC-Bib record were created.
@@ -23,11 +38,11 @@ Feature: FAT-21076 - Update existing record using marc-to-marc match with 00x fi
     And match response.entries[0].relatedInstanceInfo.actionStatus == 'CREATED'
     And match response.entries[0].error == ''
 
-    # Step 3: Create mapping profile for MARC-Bibliographic record update
+    # Create mapping profile for MARC-Bibliographic record update
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And def recordType = 'MARC_BIBLIOGRAPHIC'
-    And def mappingProfileName = 'FAT-21076 Updating file by 008 match'
+    And def mappingProfileName = 'FAT-21076 Updating file by 008 match ' + epoch
     And request read(samplePath + 'profiles/update-entire-marc-record-mapping-profile.json')
     When method POST
     Then status 201
@@ -36,7 +51,7 @@ Feature: FAT-21076 - Update existing record using marc-to-marc match with 00x fi
     # Create UPDATE MARC-Bibliographic action profile
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And def actionProfileName = 'FAT-21076 Updating file by 008 match'
+    And def actionProfileName = 'FAT-21076 Updating file by 008 match ' + epoch
     And request read(samplePath + 'profiles/action-update.json')
     When method POST
     Then status 201
@@ -45,7 +60,7 @@ Feature: FAT-21076 - Update existing record using marc-to-marc match with 00x fi
     # Create match profile that matches by 008 field.
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
-    And def matchProfileName = 'FAT-21076 Updating file by 008 match'
+    And def matchProfileName = 'FAT-21076 Updating file by 008 match ' + epoch
     And def incomeField = '008'
     And def existingField = '008'
     And def ind1 = ''
@@ -60,18 +75,18 @@ Feature: FAT-21076 - Update existing record using marc-to-marc match with 00x fi
     # Create job profile for MARC-Bib update
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
-    And def jobProfileName = 'FAT-21076 Updating file by 008 match'
+    And def jobProfileName = 'FAT-21076 Updating file by 008 match ' + epoch
     And request read(samplePath + 'profiles/job-profile.json')
     When method POST
     Then status 201
     * def updateJobProfileId = $.id
 
-    # Import the updated file FAT-21076-UPDATED.mrc where value in the 245$a is prepended by "TEST"
+    # Import the updated file FAT-21076-UPDATED-unique.mrc where value in the 245$a is prepended by "TEST"
     * def jobProfileId = updateJobProfileId
-    * def res = call read(utilFeature+'@ImportRecord') { fileName:'FAT-21076-UPDATED', jobName:'customJob' }
+    * def res = call read(utilFeature+'@ImportRecord') { fileName:'FAT-21076-UPDATED-unique', jobName:'customJob', filePathFromSourceRoot: 'file:target/FAT-21076-UPDATED-unique.mrc' }
     * match res.jobExecution.status == 'COMMITTED'
 
-    # Check job log entries that MARC-Bibliographic record and instance were updated.
+    # Check job log entries to verify that MARC-Bibliographic record and instance were updated.
     Given path 'metadata-provider/jobLogEntries', res.jobExecutionId
     And headers headersUser
     And retry until karate.get('response.entries.length') > 0
@@ -83,7 +98,7 @@ Feature: FAT-21076 - Update existing record using marc-to-marc match with 00x fi
     And def updatedInstanceId = response.entries[0].relatedInstanceInfo.idList[0]
 
     # Verify that updated MARC Bibliographic record contains the changed 245$a value ("TEST" prefix)
-    # same as in the imported file FAT-21076-UPDATED.mrc
+    # same as in the imported file FAT-21076-UPDATED-unique.mrc
     Given path 'source-storage/records', updatedInstanceId, 'formatted'
     And headers headersUser
     And param idType = 'INSTANCE'
