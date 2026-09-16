@@ -22,7 +22,6 @@ Feature: Util feature to import records
     # Initiate data import job
     Given path 'data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And headers importHeaders
-    And param defaultMapping = false
     And request read(samplePath + 'jobs/' + jobName)
     When method post
     Then status 204
