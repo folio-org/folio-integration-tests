@@ -25,7 +25,6 @@ Feature: Test import with match on identifier and identifier type
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
@@ -279,7 +278,6 @@ Feature: Test import with match on identifier and identifier type
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """

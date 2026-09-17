@@ -163,11 +163,13 @@ Feature: mod-data-import integration tests
       | 'instance-authority-links.instances.collection.get'                   |
       | 'metadata-provider.jobSummary.item.get'                               |
       | 'inventory-storage.authorities.item.delete'                           |
+      | 'users.collection.get'                                                |
 
 
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')
     * eval java.lang.System.setProperty('testUserId', karate.get('userId'))
+    * def res = call createAdditionalUser { testUser: '#(testUser2)', userPermissions: '#(userPermissions)' }
 
   Scenario: init global data
     * call login testUser
