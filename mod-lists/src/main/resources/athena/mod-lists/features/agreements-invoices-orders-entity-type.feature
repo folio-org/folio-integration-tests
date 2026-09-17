@@ -7,7 +7,7 @@ Feature: Agreements - Invoices - Orders Entity Type Displays Agreement, Lines, P
     * callonce login testUser
     * def testUserHeaders = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
     * configure headers = testUserHeaders
-    * configure retry = { count: 30, interval: 5000 }
+    * configure retry = { count: 10, interval: 1000 }
     * def agreementsInvoicesOrdersEntityTypeId = 'a1e1b9b8-1f9f-4a01-b8c7-2c8a8a000011'
 
     * def createOrganization = read('classpath:athena/mod-lists/features/util/create-organization.feature')
