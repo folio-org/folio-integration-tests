@@ -17,12 +17,21 @@ Feature: mod-lists integration tests
       | 'mod-agreements'            |
       | 'mod-organizations'         |
       | 'mod-organizations-storage' |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-invoice'               |
+      | 'mod-invoice-storage'       |
+      | 'mod-search'                |
 
     * table userPermissions
       | name                                                            |
       | 'accounts.collection.get'                                       |
       | 'actual-cost-record-storage.actual-cost-records.collection.get' |
       | 'acquisitions-units.units.collection.get'                       |
+      | 'batch-groups.collection.get'                                   |
+      | 'batch-groups.item.post'                                        |
       | 'circulation-storage.loan-policies.collection.get'              |
       | 'circulation.loans.collection.get'                              |
       | 'departments.collection.get'                                    |
@@ -34,7 +43,17 @@ Feature: mod-lists integration tests
       | 'erm.refdata.category.collection.get'                           |
       | 'erm.refdata.category.item.put'                                 |
       | 'erm.refdata.value.collection.get'                              |
+      | 'finance.budgets.collection.get'                                |
+      | 'finance.budgets.item.post'                                     |
       | 'finance.exchange-rate.item.get'                                |
+      | 'finance.expense-classes.collection.get'                        |
+      | 'finance.expense-classes.item.post'                             |
+      | 'finance.fiscal-years.collection.get'                           |
+      | 'finance.fiscal-years.item.post'                                |
+      | 'finance.fund-types.collection.get'                             |
+      | 'finance.funds.collection.get'                                  |
+      | 'finance.funds.item.post'                                       |
+      | 'finance.ledgers.item.post'                                     |
       | 'fqm.entityTypes.collection.get'                                |
       | 'fqm.entityTypes.install.post'                                  |
       | 'fqm.entityTypes.item.columnValues.get'                         |
@@ -77,6 +96,10 @@ Feature: mod-lists integration tests
       | 'inventory-storage.statistical-code-types.item.post'            |
       | 'inventory-storage.statistical-codes.collection.get'            |
       | 'inventory-storage.statistical-codes.item.post'                 |
+      | 'invoice-storage.invoice-lines.item.post'                       |
+      | 'invoice-storage.invoices.item.post'                            |
+      | 'invoice.invoice-lines.collection.get'                          |
+      | 'invoice.invoices.collection.get'                               |
       | 'lists.collection.get'                                          |
       | 'lists.collection.post'                                         |
       | 'lists.item.contents.get'                                       |
@@ -95,6 +118,8 @@ Feature: mod-lists integration tests
       | 'orders.acquisition-methods.collection.get'                     |
       | 'orders.item.get'                                               |
       | 'orders.po-lines.item.get'                                      |
+      | 'orders-storage.po-lines.item.post'                             |
+      | 'orders-storage.purchase-orders.item.post'                      |
       | 'organizations-storage.categories.collection.get'               |
       | 'organizations-storage.organization-types.collection.get'       |
       | 'organizations.organizations.collection.get'                    |

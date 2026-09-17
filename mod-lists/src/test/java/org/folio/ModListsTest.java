@@ -87,6 +87,12 @@ public class ModListsTest extends TestBaseEureka {
     }
 
     @Test
+    @DisplayName("(C1373047) Agreements - Invoices - Orders ET Displays Agreement, Lines, PO Lines And Invoice Lines")
+    void testAgreementsInvoicesOrdersEntityType() {
+        runFeatureTest("agreements-invoices-orders-entity-type");
+    }
+
+    @Test
     void testEcsExport() {
         runFeatureTest("consortia/consortia-list");
     }
