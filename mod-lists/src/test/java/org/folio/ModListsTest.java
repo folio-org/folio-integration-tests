@@ -6,7 +6,6 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "athena", module = "mod-lists")
@@ -78,18 +77,6 @@ public class ModListsTest extends TestBaseEureka {
     @Test
     void testVersioning() {
         runFeatureTest("versions");
-    }
-
-    @Test
-    @DisplayName("(C1348599) Agreements + Lines ET Displays Agreement And Line Records")
-    void testAgreementLinesEntityType() {
-        runFeatureTest("agreement-lines-entity-type");
-    }
-
-    @Test
-    @DisplayName("(C1373047) Agreements - Invoices - Orders ET Displays Agreement, Lines, PO Lines And Invoice Lines")
-    void testAgreementsInvoicesOrdersEntityType() {
-        runFeatureTest("agreements-invoices-orders-entity-type");
     }
 
     @Test

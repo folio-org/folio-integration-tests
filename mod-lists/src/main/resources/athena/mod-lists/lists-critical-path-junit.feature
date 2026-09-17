@@ -1,4 +1,4 @@
-Feature: mod-lists integration tests
+Feature: mod-lists critical path integration tests
 
   Background:
     * url baseUrl
@@ -10,23 +10,53 @@ Feature: mod-lists integration tests
       | 'mod-circulation-storage'   |
       | 'mod-fqm-manager'           |
       | 'mod-lists'                 |
-      | 'mod-entities-links'        |
       | 'mod-inventory-storage'     |
-      | 'mod-source-record-storage' |
       | 'mod-tags'                  |
+      | 'mod-agreements'            |
+      | 'mod-organizations'         |
+      | 'mod-organizations-storage' |
+      | 'mod-finance'               |
+      | 'mod-finance-storage'       |
+      | 'mod-orders'                |
+      | 'mod-orders-storage'        |
+      | 'mod-invoice'               |
+      | 'mod-invoice-storage'       |
+      | 'mod-search'                |
 
     * table userPermissions
       | name                                                            |
       | 'accounts.collection.get'                                       |
       | 'actual-cost-record-storage.actual-cost-records.collection.get' |
       | 'acquisitions-units.units.collection.get'                       |
+      | 'batch-groups.collection.get'                                   |
+      | 'batch-groups.item.post'                                        |
       | 'circulation-storage.loan-policies.collection.get'              |
       | 'circulation.loans.collection.get'                              |
       | 'departments.collection.get'                                    |
+      | 'erm.agreements.collection.get'                                 |
+      | 'erm.agreements.item.post'                                      |
+      | 'erm.orgs.collection.get'                                       |
+      | 'erm.packages.collection.import'                                |
+      | 'erm.pci.collection.get'                                        |
+      | 'erm.refdata.category.collection.get'                           |
+      | 'erm.refdata.category.item.put'                                 |
+      | 'erm.refdata.value.collection.get'                              |
+      | 'finance.budgets.collection.get'                                |
+      | 'finance.budgets.item.post'                                     |
       | 'finance.exchange-rate.item.get'                                |
+      | 'finance.expense-classes.collection.get'                        |
+      | 'finance.expense-classes.item.post'                             |
+      | 'finance.fiscal-years.collection.get'                           |
+      | 'finance.fiscal-years.item.post'                                |
+      | 'finance.fund-types.collection.get'                             |
+      | 'finance.funds.collection.get'                                  |
+      | 'finance.funds.item.post'                                       |
+      | 'finance.ledgers.item.post'                                     |
       | 'fqm.entityTypes.collection.get'                                |
+      | 'fqm.entityTypes.install.post'                                  |
       | 'fqm.entityTypes.item.columnValues.get'                         |
       | 'fqm.entityTypes.item.get'                                      |
+      | 'fqm.query.sync.get'                                            |
       | 'inventory-storage.alternative-title-types.collection.get'      |
       | 'inventory-storage.call-number-types.collection.get'            |
       | 'inventory-storage.classification-types.collection.get'         |
@@ -64,6 +94,10 @@ Feature: mod-lists integration tests
       | 'inventory-storage.statistical-code-types.item.post'            |
       | 'inventory-storage.statistical-codes.collection.get'            |
       | 'inventory-storage.statistical-codes.item.post'                 |
+      | 'invoice-storage.invoice-lines.item.post'                       |
+      | 'invoice-storage.invoices.item.post'                            |
+      | 'invoice.invoice-lines.collection.get'                          |
+      | 'invoice.invoices.collection.get'                               |
       | 'lists.collection.get'                                          |
       | 'lists.collection.post'                                         |
       | 'lists.item.contents.get'                                       |
@@ -82,13 +116,13 @@ Feature: mod-lists integration tests
       | 'orders.acquisition-methods.collection.get'                     |
       | 'orders.item.get'                                               |
       | 'orders.po-lines.item.get'                                      |
+      | 'orders-storage.po-lines.item.post'                             |
+      | 'orders-storage.purchase-orders.item.post'                      |
       | 'organizations-storage.categories.collection.get'               |
       | 'organizations-storage.organization-types.collection.get'       |
       | 'organizations.organizations.collection.get'                    |
+      | 'organizations.organizations.item.post'                         |
       | 'search.instances.collection.get'                               |
-      | 'source-storage.records.collection.get'                         |
-      | 'source-storage.records.post'                                   |
-      | 'source-storage.snapshots.post'                                 |
       | 'tags.collection.get'                                           |
       | 'tenant-addresses.collection.get'                               |
       | 'usergroups.collection.get'                                     |
@@ -99,17 +133,3 @@ Feature: mod-lists integration tests
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
-    * eval java.lang.System.setProperty('testUser1Id', karate.get('userId'))
-
-  Scenario: Add sample data for queries
-    Given call read('classpath:athena/mod-lists/features/util/add-list-data.feature')
-
-  Scenario: create second user for testing
-    * def testUserName = testUser.name
-    * def testUser = {tenant: "#(testTenant)", name: '#(testUser2.name)', password: '#(generatePassword(testUser2.name))'}
-    Given call read('classpath:common/eureka/setup-users.feature@getAuthorizationToken')
-    Given call read('classpath:common/eureka/setup-users.feature@createTestUser')
-    * eval java.lang.System.setProperty('testUser2Id', karate.get('userId'))
-    Given call read('classpath:common/eureka/setup-users.feature@specifyUserCredentials')
-    Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
-    * def testUser = {tenant: "#(testTenant)", name: '#(testUserName)', password: '#(generatePassword(testUserName))'}
