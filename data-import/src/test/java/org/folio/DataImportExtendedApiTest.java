@@ -58,6 +58,12 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
                 .run();
     }
 
+    @Test
+    void fat21052ImportOpenOrderPhysicalResourceWithInstanceHoldings() {
+        feature("classpath:promin/data-import/features/marc-records/marc-bibs/create/FAT-21052.feature")
+                .run();
+    }
+
     @BeforeAll
     public void setup() {
         if (shouldCreateTenant()) {
