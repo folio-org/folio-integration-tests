@@ -10,7 +10,12 @@ Feature: Test orders import
     * def setPoLinesLimitFeature = 'classpath:promin/data-import/global/order-lines-limit-settings.feature@setPoLinesLimit'
     * def samplePath = 'classpath:promin/data-import/samples/'
 
-    * def vendorId = "c6dace5d-4574-411e-8ba1-036102fcdc9b"
+    Given path 'organizations/organizations'
+    And headers headersUser
+    And param query = 'code==gobi'
+    When method GET
+    Then status 200
+    * def vendorId = response.organizations[0].id
 
     # configure default PO lines limit before tests only once
     * def defaultPoLineLimit = 2
@@ -18,14 +23,14 @@ Feature: Test orders import
     * if (typeof shouldSetDefaultPoLinesLimit === 'undefined') karate.set('shouldSetDefaultPoLinesLimit', false)
 
 
-  # called from other scenarios
+  # Helper: create all profiles for single action (called only when job profile doesn't exist)
   @Ignore
-  @ImportOrderWithNoOtherAction
-  Scenario: import order single action
-    # Create mapping profile for create order
-    * def mappingProfileName = "FAT-3047: MARC-TO-ORDER mapping profile, single action " + uniqueID
-    * def orderStatusWithQuotes = "\"" + orderStatus + "\""
+  @createSingleActionProfiles
+  Scenario: create mapping + action + job profiles for single action
+    * def mappingProfileName = "FAT-3047: MARC-TO-ORDER mapping profile, single action " + __arg.uniqueID
+    * def orderStatusWithQuotes = __arg.orderStatusWithQuotes
     * def createInventory = "\"None\""
+    * def overridePoLinesLimit = __arg.overridePoLinesLimit
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
     And request read(samplePath + 'profiles/order-import-mapping-profile.json')
@@ -33,8 +38,7 @@ Feature: Test orders import
     Then status 201
     * def createOrderMappingProfileId = $.id
 
-    # Create action profile for create order
-    * def folioRecordNameAndDescription = "FAT-3047: MARC-TO-ORDER action profile, single action " + uniqueID
+    * def folioRecordNameAndDescription = "FAT-3047: MARC-TO-ORDER action profile, single action " + __arg.uniqueID
     * def folioRecord = 'ORDER'
     * def profileAction = 'CREATE'
     * def mappingProfileEntityId = createOrderMappingProfileId
@@ -45,8 +49,7 @@ Feature: Test orders import
     Then status 201
     * def createOrderActionProfileId = $.id
 
-    # Create job profile - Create Order
-    * def createJobProfileName = "FAT-3047: Create Order job profile " + uniqueID
+    * def createJobProfileName = "FAT-3047: Create Order job profile " + __arg.uniqueID
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
     And request
@@ -73,16 +76,33 @@ Feature: Test orders import
     Then status 201
     * def createJobProfileId = $.id
 
+  # called from other scenarios
+  @Ignore
+  @ImportOrderWithNoOtherAction
+  Scenario: import order single action
+    * def createJobProfileName = "FAT-3047: Create Order job profile " + uniqueID
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And param query = 'name=="' + createJobProfileName + '"'
+    When method GET
+    Then status 200
+    * def createJobProfileId = response.totalRecords > 0 ? response.jobProfiles[0].id : null
+    * if (createJobProfileId == null) karate.set('createJobProfileId', karate.call('@createSingleActionProfiles', { uniqueID: uniqueID, orderStatusWithQuotes: '"' + orderStatus + '"', overridePoLinesLimit: overridePoLinesLimit }).createJobProfileId)
+
     # Import file and create order
     * def jobProfileId = createJobProfileId
     * def fileName = mrcFile
     Given call read(utilFeature+'@ImportRecord') { jobName: 'customJob' }
     Then match status != 'ERROR'
 
-  # called from other scenarios
+  # Helper: create all profiles for multiple actions (called only when job profile doesn't exist)
   @Ignore
-  @ImportOrderWithMultipleActions
-  Scenario: import order multiple action
+  @createMultipleActionProfiles
+  Scenario: create mapping + action + job profiles for multiple actions
+    * def uniqueID = __arg.uniqueID
+    * def orderStatusWithQuotes = __arg.orderStatusWithQuotes
+    * def overridePoLinesLimit = __arg.overridePoLinesLimit
+
     * def mappingProfileName = 'FAT-3047: MARC-TO-INSTANCE mapping profile, multiple actions ' + uniqueID
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
@@ -229,7 +249,7 @@ Feature: Test orders import
     Then status 201
     * def createItemMappingProfileId = $.id
 
-    * def folioRecordNameAndDescription = 'FAT-3047: MARC-TO-ITEM action profile, multiple actions ' +  uniqueID
+    * def folioRecordNameAndDescription = 'FAT-3047: MARC-TO-ITEM action profile, multiple actions ' + uniqueID
     * def folioRecord = 'ITEM'
     * def profileAction = 'CREATE'
     * def mappingProfileEntityId = createItemMappingProfileId
@@ -240,9 +260,7 @@ Feature: Test orders import
     Then status 201
     * def createItemActionProfileId = $.id
 
-    # Create mapping profile for create order status
     * def mappingProfileName = "FAT-3047: MARC-TO-ORDER mapping profile, multiple actions " + uniqueID
-    * def orderStatusWithQuotes = "\"" + orderStatus + "\""
     * def createInventory = ""
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
@@ -251,7 +269,6 @@ Feature: Test orders import
     Then status 201
     * def createOrderMappingProfileId = $.id
 
-    # Create action profile for create order
     * def folioRecordNameAndDescription = 'FAT-3047: MARC-TO-ORDER action profile, multiple actions ' + uniqueID
     * def folioRecord = 'ORDER'
     * def profileAction = 'CREATE'
@@ -263,7 +280,6 @@ Feature: Test orders import
     Then status 201
     * def createOrderActionProfileId = $.id
 
-    # Create job profile - Create Order
     * def createJobProfileName = "FAT-3047: Create Order, Holdings, Instance, Item job profile " + uniqueID
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
@@ -311,6 +327,19 @@ Feature: Test orders import
     When method POST
     Then status 201
     * def createdJobProfileId = $.id
+
+  # called from other scenarios
+  @Ignore
+  @ImportOrderWithMultipleActions
+  Scenario: import order multiple action
+    * def createJobProfileName = "FAT-3047: Create Order, Holdings, Instance, Item job profile " + uniqueID
+    Given path 'data-import-profiles/jobProfiles'
+    And headers headersUser
+    And param query = 'name=="' + createJobProfileName + '"'
+    When method GET
+    Then status 200
+    * def createdJobProfileId = response.totalRecords > 0 ? response.jobProfiles[0].id : null
+    * if (createdJobProfileId == null) karate.set('createdJobProfileId', karate.call('@createMultipleActionProfiles', { uniqueID: uniqueID, orderStatusWithQuotes: '"' + orderStatus + '"', overridePoLinesLimit: overridePoLinesLimit }).createdJobProfileId)
 
     # Import file and create order
     * def jobProfileId = createdJobProfileId
