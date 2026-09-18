@@ -35,6 +35,12 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     }
 
     @Test
+    void modsource1019Authority001ComparisonPart() {
+        feature(MATCH_AUTHORITY_PATH + "MODSOURCE-1019-authority-001-comparison-part.feature")
+                .run();
+    }
+
+    @Test
     void fat28498AuthorityComparisonPartExtended() {
         feature(MATCH_AUTHORITY_PATH + "FAT-28498-authority-comparison-part-extended.feature")
                 .run();
