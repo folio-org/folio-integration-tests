@@ -171,6 +171,18 @@ Feature: Sharing a local MARC instance with the central tenant
     And match response.state == 'ACTUAL'
     And match response.deleted == false
 
+    # The local instance is still searchable on the university tenant (re-indexed after the rollback)
+    * configure retry = { count: 12, interval: 5000 }
+    Given path 'search/instances'
+    And param query = 'id==' + instanceId
+    And param expandAll = true
+    And retry until responseStatus == 200 && response.totalRecords == 1
+    When method GET
+    Then status 200
+    And match response.instances[0].tenantId == universityTenant
+    And match response.instances[0].shared == false
+    And match response.instances[0].source == 'MARC'
+
     # Remove the local statistical code from the instance (edit of a non-MARC-controlled field)
     Given path 'inventory/instances', instanceId
     When method GET
@@ -238,3 +250,15 @@ Feature: Sharing a local MARC instance with the central tenant
     Then status 200
     And match response.state == 'ACTUAL'
     And match response.externalIdsHolder.instanceId == instanceId
+
+    # The shared instance is searchable from the university tenant as shared
+    * configure headers = headersUniversity
+    * configure retry = { count: 12, interval: 5000 }
+    Given path 'search/instances'
+    And param query = 'id==' + instanceId
+    And param expandAll = true
+    And retry until responseStatus == 200 && response.totalRecords == 1 && response.instances[0].shared == true
+    When method GET
+    Then status 200
+    And match response.instances[0].tenantId == centralTenant
+    And match response.instances[0].hrid == sharedHrid
