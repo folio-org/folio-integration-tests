@@ -1,0 +1,37 @@
+{
+  "header": {
+    "dataSchema": {
+      "name": "mod-agreements-package",
+      "version": "2.0"
+    }
+  },
+  "records": [
+    {
+      "source": "#(packageSource)",
+      "reference": "#(packageReference)",
+      "name": "#(packageName)",
+      "packageProvider": {
+        "name": "FQM Test Provider"
+      },
+      "availabilityScope": "Global",
+      "lifecycleStatus": "Current",
+      "contentItems": [
+        {
+          "depth": "fulltext",
+          "sourceIdentifierNamespace": "fqm-karate-tests",
+          "sourceIdentifier": "#(packageReference + '-title')",
+          "platformTitleInstance": {
+            "platform": "FQM Test Platform",
+            "platform_url": "https://fqm-test-platform.example.org",
+            "url": "#('https://fqm-test-platform.example.org/' + packageReference)",
+            "titleInstance": {
+              "name": "#(titleName)",
+              "identifiers": [],
+              "type": "serial"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
