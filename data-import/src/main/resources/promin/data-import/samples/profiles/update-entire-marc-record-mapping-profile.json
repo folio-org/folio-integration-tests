@@ -1,0 +1,18 @@
+{
+  "profile" : {
+    "name" : "#(mappingProfileName)",
+    "incomingRecordType" : "#(recordType)",
+    "existingRecordType" : "#(recordType)",
+    "description" : "",
+    "marcFieldProtectionSettings" : [ ],
+    "mappingDetails" : {
+      "marcMappingOption" : "UPDATE",
+      "name" : "Field mapping",
+      "recordType" : "#(recordType)",
+      "mappingFields" : [ ],
+      "marcMappingDetails" : [ ]
+    }
+  },
+  "addedRelations" : [ ],
+  "deletedRelations" : [ ]
+}
