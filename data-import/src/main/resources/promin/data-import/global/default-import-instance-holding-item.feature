@@ -1,4 +1,4 @@
-Feature: Util feature to import instance, holding, item. Based on FAT-937 scenario steps.
+Feature: Util feature to import instance, holding, item. Based on create-instance-holdings-and-items scenario steps.
 
   # requires {testIdentifier} argument
 
@@ -7,8 +7,8 @@ Feature: Util feature to import instance, holding, item. Based on FAT-937 scenar
     * def entitiesIdMap = {}
 
   @importInstanceHoldingItem
-  Scenario: Import Instance, Holdings, Items. Based on FAT-937 scenario steps.
-    * print 'Import Instance, Holdings, Items based on FAT-937 scenario steps'
+  Scenario: Import Instance, Holdings, Items. Based on create-instance-holdings-and-items scenario steps.
+    * print 'Import Instance, Holdings, Items based on create-instance-holdings-and-items scenario steps'
 
     # Create mapping profile for Instance
     Given path 'data-import-profiles/mappingProfiles'
