@@ -67,6 +67,14 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
       .run();
   }
 
+  // MODSOURCE-1019: "Only compare part of the value" on 001 for MARC Authority.
+  // C1538655, C1538657, C1538658. Not yet classified in TestRail - move to CriticalPath if needed.
+  @Test
+  void authority001ComparisonPart() {
+    feature(MATCH_AUTHORITY_PATH + "authority-001-comparison-part.feature")
+      .run();
+  }
+
   @Test
   void diAuthorityExtended() {
     feature("classpath:promin/data-import/features/marc-records/marc-authorities/create/data-import-authority-records-extended.feature")
