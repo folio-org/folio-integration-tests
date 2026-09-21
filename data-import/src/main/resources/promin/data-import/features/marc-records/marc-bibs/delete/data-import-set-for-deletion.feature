@@ -20,7 +20,11 @@ Feature: Set for deletion logic
           "incomingRecordType": "MARC_BIBLIOGRAPHIC",
           "existingRecordType": "INSTANCE",
           "description": "Mapping profile",
-          "mappingDetails": {}
+          "mappingDetails": {
+            "name": "instance",
+            "recordType": "INSTANCE",
+            "mappingFields": []
+          }
         },
         "addedRelations": [],
         "deletedRelations": []
