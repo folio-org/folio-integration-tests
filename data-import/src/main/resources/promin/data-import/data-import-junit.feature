@@ -123,6 +123,7 @@ Feature: mod-data-import integration tests
       | 'copycat.profiles.item.put'                                           |
       | 'metadata-provider.jobExecutions.collection.get'                      |
       | 'inventory-storage.authorities.item.get'                              |
+      | 'inventory-storage.authorities.collection.get'                        |
       | 'converter-storage.actionprofile.collection.get'                      |
       | 'marc-records-editor.item.get'                                        |
       | 'mapping-rules.restore'                                               |
