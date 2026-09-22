@@ -192,6 +192,8 @@ Feature: Setup quickMARC
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
     And request record
+    # retry to tolerate a tenant-provisioning race
+    And retry until responseStatus == 202
     When method PUT
     Then status 202
 
@@ -458,6 +460,7 @@ Feature: Setup quickMARC
     Given path 'records-editor/records', newBibRecord.parsedRecordId
     And headers headersUser
     And request newBibRecord
+    And retry until responseStatus == 202
     When method PUT
     Then status 202
 
