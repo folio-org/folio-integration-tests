@@ -84,6 +84,7 @@ Feature: mod-kb-ebsco-java integration tests
 
   Scenario: create tenant and users for testing
     * callonce read('classpath:common/eureka/setup-users.feature')
+    * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
     * eval java.lang.System.setProperty('mod-kb-ebsco-java-testUserId', karate.get('userId'))
 
 
