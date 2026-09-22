@@ -16,14 +16,26 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
       """
       function(leader, controlNumber, fixed008, matchField, matchSubfield, matchValues, headingTag, headingInd1, heading) {
         var fields = [];
-        fields.push({ '001': controlNumber });
+        if (matchField == '001') {
+          fields.push({ '001': matchValues[0] });
+        } else {
+          fields.push({ '001': controlNumber });
+        }
         fields.push({ '008': fixed008 });
-        for (var i = 0; i < matchValues.length; i++) {
-          var subfield = {};
-          subfield[matchSubfield] = matchValues[i];
-          var field = {};
-          field[matchField] = { 'ind1': ' ', 'ind2': ' ', 'subfields': [ subfield ] };
-          fields.push(field);
+        if (matchField < '010') {
+          if (matchField != '001') {
+            var controlField = {};
+            controlField[matchField] = matchValues[0];
+            fields.push(controlField);
+          }
+        } else {
+          for (var i = 0; i < matchValues.length; i++) {
+            var subfield = {};
+            subfield[matchSubfield] = matchValues[i];
+            var field = {};
+            field[matchField] = { 'ind1': ' ', 'ind2': ' ', 'subfields': [ subfield ] };
+            fields.push(field);
+          }
         }
         var headingField = {};
         headingField[headingTag] = { 'ind1': headingInd1, 'ind2': ' ', 'subfields': [ { 'a': heading } ] };
@@ -221,3 +233,16 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     And match createdId != null
     And match createdId != __arg.existingExternalId
     * print 'FAT-28498 duplicate created:', createdId, 'alongside existing:', __arg.existingExternalId
+
+  @AssertAuthorityHeading
+  Scenario: Assert the authority's 100 $a heading now carries the given value
+    # parameters: authorityId, expectedHeading
+    Given path '/source-storage/source-records'
+    And param recordType = 'MARC_AUTHORITY'
+    And param externalId = __arg.authorityId
+    And headers headersUser
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * def headingValues = karate.jsonPath(response, "$.sourceRecords[0].parsedRecord.content.fields[*]['100'].subfields[*].a")
+    And match headingValues contains __arg.expectedHeading
