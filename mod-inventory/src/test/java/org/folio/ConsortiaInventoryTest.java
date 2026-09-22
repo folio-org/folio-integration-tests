@@ -34,6 +34,11 @@ public class ConsortiaInventoryTest extends TestBaseEureka {
     runFeatureTest("features/update-ownership.feature");
   }
 
+  @Test
+  void shareMarcInstanceTest() {
+    runFeatureTest("features/share-marc-instance.feature");
+  }
+
   @Override
   public void runHook() {
     super.runHook();
