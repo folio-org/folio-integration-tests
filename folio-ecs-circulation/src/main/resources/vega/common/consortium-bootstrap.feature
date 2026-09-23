@@ -79,6 +79,8 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'circulation-storage.requests.item.get'                     |
       | 'circulation-item.item.get'                                 |
       | 'circulation.check-in-by-barcode.post'                      |
+      | 'circulation.check-out-by-barcode.post'                     |
+      | 'circulation-storage.loans.item.get'                        |
       | 'circulation.requests.item.post'                            |
       | 'circulation.settings.item.post'                            |
       | 'circulation-bff.requests.allowed-service-points.get'       |
@@ -90,6 +92,7 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'tlr.settings.put'                                          |
       | 'user-tenants.collection.get'                               |
       | 'search.index.instance-records.reindex.full.post'           |
+      | 'search.instances.collection.get'                           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
       | 'requests-mediated.mediated-requests.decline.execute'       |
