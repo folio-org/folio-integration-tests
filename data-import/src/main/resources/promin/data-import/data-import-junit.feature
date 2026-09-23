@@ -63,6 +63,7 @@ Feature: mod-data-import integration tests
       | 'inventory-storage.identifier-types.collection.get'                   |
       | 'inventory.items.collection.get'                                      |
       | 'inventory.items.item.get'                                            |
+      | 'orders-storage.settings.collection.get'                              |
       | 'orders-storage.settings.item.post'                                   |
       | 'organizations-storage.organizations.item.post'                       |
       | 'source-storage.source-records.collection.get'                        |
@@ -92,6 +93,7 @@ Feature: mod-data-import integration tests
       | 'data-import.fileExtensions.delete'                                   |
       | 'data-import.fileExtensions.default.post'                             |
       | 'data-import.uploadUrl.item.get'                                      |
+      | 'converter-storage.jobprofile.collection.get'                         |
       | 'converter-storage.jobprofile.item.get'                               |
       | 'converter-storage.jobprofile.post'                                   |
       | 'converter-storage.jobprofile.delete'                                 |
@@ -122,6 +124,7 @@ Feature: mod-data-import integration tests
       | 'copycat.profiles.item.put'                                           |
       | 'metadata-provider.jobExecutions.collection.get'                      |
       | 'inventory-storage.authorities.item.get'                              |
+      | 'inventory-storage.authorities.collection.get'                        |
       | 'converter-storage.actionprofile.collection.get'                      |
       | 'marc-records-editor.item.get'                                        |
       | 'mapping-rules.restore'                                               |
@@ -163,11 +166,13 @@ Feature: mod-data-import integration tests
       | 'instance-authority-links.instances.collection.get'                   |
       | 'metadata-provider.jobSummary.item.get'                               |
       | 'inventory-storage.authorities.item.delete'                           |
+      | 'users.collection.get'                                                |
 
 
   Scenario: create tenant and users for testing
     * call read('classpath:common/eureka/setup-users.feature')
     * eval java.lang.System.setProperty('testUserId', karate.get('userId'))
+    * def res = call createAdditionalUser { testUser: '#(testUser2)', userPermissions: '#(userPermissions)' }
 
   Scenario: init global data
     * call login testUser

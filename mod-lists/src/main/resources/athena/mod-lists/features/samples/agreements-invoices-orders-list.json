@@ -1,0 +1,8 @@
+{
+  "name": "Agreements - Invoices - Orders List",
+  "description": "Agreements - Invoices - Orders List",
+  "entityTypeId": "a1e1b9b8-1f9f-4a01-b8c7-2c8a8a000011",
+  "fqlQuery": "{}",
+  "isActive": "true",
+  "isPrivate": "false"
+}
