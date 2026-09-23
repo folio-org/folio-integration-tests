@@ -12,5 +12,6 @@ Feature: Common Functions
     * def samplePath = 'classpath:promin/data-import/samples/'
     * def updateHoldings = 'classpath:promin/data-import/features/data-import-integration.feature@UpdateHoldings'
     * def defaultJobProfileId = '6f7f3cd7-9f24-42eb-ae91-91af1cd54d0a'
+    * def defaultDeleteAuthorityJobProfileId = '1a338fcd-3efc-4a03-b007-394eeb0d5fb9'
     * def javaWriteData = Java.type('test.java.WriteData')
 

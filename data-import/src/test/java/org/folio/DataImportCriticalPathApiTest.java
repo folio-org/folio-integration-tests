@@ -34,7 +34,7 @@ public class DataImportCriticalPathApiTest extends TestBaseEureka {
   }
 
   // FAT-26991 / UXPROD-4627: delete MARC Authority records via data import.
-  // C1434631, C1504469, C1504474, C1504476, C1504477, C1504478.
+  // C1434631, C1504469, C1504474, C1504476, C1504477, C1504478, C1504487.
 
   @BeforeAll
   public void setup() {
@@ -95,6 +95,12 @@ public class DataImportCriticalPathApiTest extends TestBaseEureka {
   @Test
   void deleteAuthorityMatchBy999ffi() {
     feature(DELETE_AUTHORITY_PATH + "delete-authority-match-999ffi.feature")
+      .run();
+  }
+
+  @Test
+  void deleteAuthorityUsingMinimalRecord() {
+    feature(DELETE_AUTHORITY_PATH + "delete-authority-using-minimal-record.feature")
       .run();
   }
 
