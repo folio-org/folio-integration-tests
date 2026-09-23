@@ -99,6 +99,12 @@ public class DataImportCriticalPathApiTest extends TestBaseEureka {
   }
 
   @Test
+  void deleteAuthorityNestedMatch010a100a() {
+    feature(DELETE_AUTHORITY_PATH + "delete-authority-nested-match-010a-100a.feature")
+      .run();
+  }
+
+  @Test
   void deleteAuthorityUsingMinimalRecord() {
     feature(DELETE_AUTHORITY_PATH + "delete-authority-using-minimal-record.feature")
       .run();
