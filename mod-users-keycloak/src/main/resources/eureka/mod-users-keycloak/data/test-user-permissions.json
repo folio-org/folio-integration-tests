@@ -1,7 +1,6 @@
 [
   "users-keycloak.item.get",
   "users-keycloak.item.post",
-  "users-keycloak.collection.get",
   "users-keycloak.item.put",
   "users-keycloak.item.delete",
   "users-keycloak.migrations.post",
