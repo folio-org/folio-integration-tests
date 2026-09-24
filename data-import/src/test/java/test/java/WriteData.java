@@ -9,11 +9,20 @@ import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
+import org.marc4j.marc.VariableField;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class WriteData {
     private static Logger LOGGER = new Logger();
@@ -140,5 +149,36 @@ public class WriteData {
             throw new IllegalArgumentException("Subfield " + subfieldCode + " not found in field " + fieldTag);
         }
         subfield.setData(value);
+    }
+
+    /**
+     * Removes every field from each record in the MARC file except the ones whose tag
+     * is listed in tagsToKeep. The leader field is always preserved.
+     *
+     * @param marcFile    MARC21 binary file that may hold several records
+     * @param tagsToKeep  field tags to retain (e.g. "100", "999")
+     * @return            the trimmed file re-serialized, preserving record order
+     */
+    public static byte[] keepOnlyFields(byte[] marcFile, String... tagsToKeep) {
+        Set<String> fieldsToRetain = new HashSet<>(Arrays.asList(tagsToKeep));
+        MarcReader reader = new MarcStreamReader(new ByteArrayInputStream(marcFile));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        MarcWriter writer = new MarcStreamWriter(baos, UTF_8.name());
+
+        while (reader.hasNext()) {
+            Record marcRecord = reader.next();
+            List<VariableField> toRemove = new ArrayList<>();
+            for (VariableField field : marcRecord.getVariableFields()) {
+                if (!fieldsToRetain.contains(field.getTag())) {
+                    toRemove.add(field);
+                }
+            }
+            for (VariableField field : toRemove) {
+                marcRecord.removeVariableField(field);
+            }
+            writer.write(marcRecord);
+        }
+        writer.close();
+        return baos.toByteArray();
     }
 }

@@ -166,6 +166,7 @@ Feature: mod-data-import integration tests
       | 'instance-authority-links.instances.collection.get'                   |
       | 'metadata-provider.jobSummary.item.get'                               |
       | 'inventory-storage.authorities.item.delete'                           |
+      | 'search.authorities.collection.get'                                   |
       | 'users.collection.get'                                                |
 
 
