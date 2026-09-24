@@ -34,7 +34,7 @@ public class DataImportCriticalPathApiTest extends TestBaseEureka {
   }
 
   // FAT-26991 / UXPROD-4627: delete MARC Authority records via data import.
-  // C1434631, C1504469, C1504474, C1504476, C1504477, C1504478, C1504487.
+  // C1434631, C1504469, C1504474, C1504476, C1504477, C1504478.
 
   @BeforeAll
   public void setup() {

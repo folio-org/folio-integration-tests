@@ -40,6 +40,14 @@ Feature: mod-inventory ECS tests
       | 'inventory-storage.bound-withs.collection.put'            |
       | 'inventory.items.item.put'                                |
       | 'inventory.items.update-ownership.item.post'              |
+      | 'inventory.instances.item.put'                            |
+      | 'inventory-storage.instances.item.post'                   |
+      | 'inventory-storage.statistical-code-types.item.post'      |
+      | 'inventory-storage.statistical-codes.item.post'           |
+      | 'source-storage.snapshots.post'                           |
+      | 'source-storage.records.post'                             |
+      | 'source-storage.records.formatted.item.get'               |
+      | 'search.instances.collection.get'                         |
 
 
 
