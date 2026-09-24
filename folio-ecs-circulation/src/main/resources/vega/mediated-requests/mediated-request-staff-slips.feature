@@ -34,7 +34,21 @@ Feature: Mediated requests - staff slips (pick, search, and template-based slips
     * callonce login admin
 
     * callonce read('classpath:vega/mediated-requests/mediated-requests-variables.feature')
-    * callonce read('classpath:vega/common/mediated-requests-consortium-setup.feature')
+
+    # NOTE: mediated-requests-consortium-setup.feature is deliberately NOT called here.
+    # It is already run by mediated-requests.feature at @Order(1), which is guaranteed to complete
+    # before this feature starts (@Order(2)), and everything this file needs - the MR service
+    # points, locations, instance/material/loan types, holdings sources and the interim service
+    # point - is created there. Every feature in this suite already depends on class-level ordering
+    # (@Order(0) bootstrapConsortium creates the tenants), so this is the same kind of dependency,
+    # one step further along.
+    #
+    # Calling the setup again here would be actively harmful, not merely redundant:
+    #   - it fires a full mod-search reindex (search/index/instance-records/reindex/full), and
+    #   - it re-runs ecs-circulation-policies.feature, whose circulation-rules PUT is
+    #     last-write-wins per tenant.
+    # The fixed UUIDs it POSTs also made the second execution fail outright with
+    # 422 "id value already exists in table locinstitution" until those POSTs were made idempotent.
 
     * def eurekaLogin = read('classpath:common-consortia/eureka/initData.feature@Login')
     * def createPatronUser = read('classpath:vega/mediated-requests/mediated-requests-init-data.feature@CreatePatronUser')
