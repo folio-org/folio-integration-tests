@@ -1,4 +1,4 @@
-# FAT-26989, Karate tests for mediated requests via mod-requests-mediated
+# FAT-26989, FAT-27422, Karate tests for mediated requests via mod-requests-mediated
 @parallel=false
 Feature: Mediated requests - create and retrieve via mod-requests-mediated
 
@@ -109,6 +109,113 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
     And match response.id == mediatedRequestId
     And match response.status == 'Closed - Declined'
+
+  # FAT-27422: create a mediated request in 'New - Awaiting confirmation', edit supported
+  # request fields, verify the edits are persisted, then decline it and verify the request
+  # ends in 'Closed - Declined'.
+  #
+  # No mod-search readiness gate is needed here: like the decline-only scenario above, neither
+  # POST, PUT nor decline picks a lending tenant (only /confirm does), so nothing depends on the
+  # college item being present in the shared index yet.
+  Scenario: create, edit, and decline mediated request
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
+    * def inventoryParams = baseInventoryParams
+    * set inventoryParams.instanceTitle = 'FAT-27422 Create Edit Decline'
+    * def inv = call createInventoryInCollege inventoryParams
+    * def inventory = inv.inventory
+
+    * configure headers = headersUniversity
+
+    # ========== Create: the new request starts in 'New - Awaiting confirmation' ==========
+    Given path 'requests-mediated/mediated-requests'
+    And request
+      """
+      {
+        "requestType": "Page",
+        "fulfillmentPreference": "Hold Shelf",
+        "requestLevel": "Item",
+        "requestDate": "#(java.time.Instant.now().toString())",
+        "patronComments": "FAT-27422 original patron comment",
+        "instanceId": "#(inventory.instanceId)",
+        "holdingsRecordId": "#(inventory.holdingId)",
+        "itemId": "#(inventory.itemId)",
+        "item": { "barcode": "#(inventory.itemBarcode)" },
+        "requesterId": "#(patron.requesterId)",
+        "pickupServicePointId": "#(mrCentralServicePointId)"
+      }
+      """
+    When method POST
+    Then status 201
+    * def mediatedRequestId = response.id
+    And match mediatedRequestId == '#notnull'
+    And match response.status == 'New - Awaiting confirmation'
+    And match response.mediatedRequestStatus == 'New'
+    And match response.mediatedRequestStep == 'Awaiting confirmation'
+    And match response.patronComments == 'FAT-27422 original patron comment'
+    And match response.pickupServicePointId == mrCentralServicePointId
+
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
+    And match response.status == 'New - Awaiting confirmation'
+    And match response.patronComments == 'FAT-27422 original patron comment'
+    And match response.pickupServicePointId == mrCentralServicePointId
+    And match response.pickupServicePoint.name == 'MR Central Service Point'
+
+    # ========== Edit supported request fields ==========
+    # PUT is a full replace, not a merge: MediatedRequestsServiceImpl.update() maps the whole
+    # request body onto the entity, so any field omitted from the body would be wiped (including
+    # 'status', which decline below requires to still be 'New - Awaiting confirmation'). Start
+    # from the stored representation returned by the GET above and mutate only the fields
+    # under test.
+    * copy updatedRequest = response
+    * set updatedRequest.patronComments = 'FAT-27422 edited patron comment'
+    * set updatedRequest.pickupServicePointId = mrUniServicePointId
+    # 'pickupServicePoint' is a read-only copy the module resolves from pickupServicePointId,
+    # so drop the stale copy rather than sending it alongside the new ID.
+    * remove updatedRequest.pickupServicePoint
+
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    And request updatedRequest
+    When method PUT
+    Then status 204
+
+    # ========== Verify the edited fields were saved ==========
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
+    And match response.id == mediatedRequestId
+    And match response.patronComments == 'FAT-27422 edited patron comment'
+    And match response.pickupServicePointId == mrUniServicePointId
+    And match response.pickupServicePoint.name == 'MR University Service Point'
+
+    # Fields that were not edited survive the full-replace PUT unchanged...
+    And match response.requestType == 'Page'
+    And match response.requestLevel == 'Item'
+    And match response.fulfillmentPreference == 'Hold Shelf'
+    And match response.itemId == inventory.itemId
+    And match response.instanceId == inventory.instanceId
+    And match response.holdingsRecordId == inventory.holdingId
+    And match response.requesterId == patron.requesterId
+    And match response.item.barcode == inventory.itemBarcode
+    # ...and the edit does not advance the workflow - still awaiting confirmation
+    And match response.status == 'New - Awaiting confirmation'
+    And match response.mediatedRequestStatus == 'New'
+    And match response.mediatedRequestStep == 'Awaiting confirmation'
+
+    # ========== Decline the edited request ==========
+    # decline() rejects anything not in 'New - Awaiting confirmation' with a 422, so a 204 here
+    # also proves the edit left the request in a declinable state.
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId, 'decline'
+    When method POST
+    Then status 204
+
+    # ========== Verify the final status ==========
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
+    And match response.id == mediatedRequestId
+    And match response.status == 'Closed - Declined'
+    And match response.mediatedRequestStatus == 'Closed'
+    And match response.mediatedRequestStep == 'Declined'
+    # Declining does not create a circulation request, and the edits are still in place
+    And match response.confirmedRequestId == '##null'
+    And match response.patronComments == 'FAT-27422 edited patron comment'
+    And match response.pickupServicePointId == mrUniServicePointId
 
   Scenario: create and confirm item-level mediated page request
     * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
