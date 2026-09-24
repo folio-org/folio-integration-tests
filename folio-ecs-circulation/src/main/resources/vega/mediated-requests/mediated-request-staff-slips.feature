@@ -178,22 +178,53 @@ Feature: Mediated requests - staff slips (pick, search, and template-based slips
     Then status 200
     * def pickSlip = karate.filter(response.pickSlips, function(s){ return s.item.barcode == inventory.itemBarcode })[0]
 
-    # ========== Verify the slip carries the expected item and request data ==========
+    # ========== Verify the slip carries the expected item data ==========
     And match pickSlip.item.title == 'FAT-27423 Pick Slip Instance'
     And match pickSlip.item.barcode == inventory.itemBarcode
+    And match pickSlip.item.status == 'Paged'
     And match pickSlip.item.effectiveLocationSpecific == 'MR College Location'
-    And match pickSlip.request.requestType == 'Page'
-    And match pickSlip.requester.barcode == patron.requesterBarcode
-    And match pickSlip.requester.lastName == 'MRTest'
-    And match pickSlip.requester.firstName == 'Requester'
+    And match pickSlip.item.effectiveLocationLibrary == 'MR Test Library College'
+
+    # ========== Verify the request data, and the tenant context it reflects ==========
+    # The slip's 'request' object carries only requestDate, requestID and servicePointPickup -
+    # there is no requestType on it, so the Page nature of the request is asserted on the mediated
+    # request itself (above) rather than here.
+    And match pickSlip.request.requestID == confirmedRequestId
+    And match pickSlip.request.requestDate == '#notnull'
+
+    # The confirmed request's pickup service point is the DCB-prefixed clone of the interim service
+    # point, NOT the mediated request's own mrCentralServicePointId: mod-requests-mediated's
+    # buildRequest() pins the circulation request to INTERIM_SERVICE_POINT_ID, and mod-tlr clones
+    # that service point into the lending tenant with a 'DCB_' name prefix. The pickup point only
+    # reverts to the patron's chosen one at confirm-item-arrival.
+    And match pickSlip.request.servicePointPickup contains 'MR Interim Service Point'
+
+    # ========== Verify the requester is the SECURE patron, not the real one ==========
+    # This is the privacy guarantee of the mediated-request workflow: the lending library must not
+    # learn who actually placed the request. mod-requests-mediated substitutes a shadow user, so the
+    # slip shows 'Secure Patron' with a 'securepatron_<uuid>' barcode. Asserting the real patron's
+    # name here would be asserting a privacy leak.
+    And match pickSlip.requester.lastName == 'Patron'
+    And match pickSlip.requester.firstName == 'Secure'
+    And match pickSlip.requester.barcode contains 'securepatron_'
+    And match pickSlip.requester.barcode != patron.requesterBarcode
 
   # ==================================================================================
   # Scenario 2 - Search slip
   # ==================================================================================
   # Search slips list Hold requests that staff must go looking for on the shelves. This uses a
   # title-level Hold, the second request shape the ticket calls out.
+  #
+  # ORDER MATTERS: a Hold cannot be placed on an Available item. mod-circulation rejects it, and in
+  # the mediated/ECS flow that surfaces from confirm as an opaque
+  #   500 RequestCreatingException "Failed to create secondary request for instance <id> in all
+  #   potential tenants: [college...]"
+  # rather than anything mentioning item status. So the item is first Paged by a separate mediated
+  # request, exactly as vega/staff-slips/features/staff-slips.feature does for the non-mediated
+  # case ("Create item-level Hold request on the same (now Paged) item").
   Scenario: search slip from central tenant for a title-level Hold mediated request
-    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
+    * def pagePatron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
+    * def holdPatron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
     * def inventoryParams = baseInventoryParams
     * set inventoryParams.instanceTitle = 'FAT-27423 Search Slip Instance'
     * def inv = call createInventoryInCollege inventoryParams
@@ -208,7 +239,39 @@ Feature: Mediated requests - staff slips (pick, search, and template-based slips
     When method GET
     Then status 200
 
-    # ========== Title-level Hold mediated request (no itemId - mod-tlr picks the item) ==========
+    # ========== Step 1: Page the item so it is no longer Available ==========
+    * configure headers = headersUniversity
+    Given path 'requests-mediated/mediated-requests'
+    And request
+      """
+      {
+        "requestType": "Page",
+        "fulfillmentPreference": "Hold Shelf",
+        "requestLevel": "Item",
+        "requestDate": "#(java.time.Instant.now().toString())",
+        "instanceId": "#(inventory.instanceId)",
+        "holdingsRecordId": "#(inventory.holdingId)",
+        "itemId": "#(inventory.itemId)",
+        "item": { "barcode": "#(inventory.itemBarcode)" },
+        "requesterId": "#(pagePatron.requesterId)",
+        "pickupServicePointId": "#(mrCentralServicePointId)"
+      }
+      """
+    When method POST
+    Then status 201
+    * def pageRequestId = response.id
+
+    * configure retry = { count: 10, interval: 15000 }
+    Given path 'requests-mediated/mediated-requests', pageRequestId, 'confirm'
+    And retry until responseStatus == 204
+    When method POST
+    Then status 204
+
+    * configure headers = headersCollege
+    * call getItem { itemId: '#(inventory.itemId)' }
+    And match response.status.name == 'Paged'
+
+    # ========== Step 2: Title-level Hold on the now-Paged item ==========
     * configure headers = headersUniversity
     Given path 'requests-mediated/mediated-requests'
     And request
@@ -219,7 +282,7 @@ Feature: Mediated requests - staff slips (pick, search, and template-based slips
         "requestLevel": "Title",
         "requestDate": "#(java.time.Instant.now().toString())",
         "instanceId": "#(inventory.instanceId)",
-        "requesterId": "#(patron.requesterId)",
+        "requesterId": "#(holdPatron.requesterId)",
         "pickupServicePointId": "#(mrCentralServicePointId)"
       }
       """
@@ -239,7 +302,8 @@ Feature: Mediated requests - staff slips (pick, search, and template-based slips
 
     * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
     And match response.status == 'Open - Not yet filled'
-    And match response.confirmedRequestId == '#notnull'
+    * def confirmedHoldRequestId = response.confirmedRequestId
+    And match confirmedHoldRequestId == '#notnull'
 
     # ========== The Search slip template staff will print into ==========
     * configure headers = headersCentral
@@ -248,51 +312,66 @@ Feature: Mediated requests - staff slips (pick, search, and template-based slips
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    And match response.staffSlips[0].template == '#notnull'
 
     # ========== Generate the search slip from the central tenant (mod-tlr) ==========
+    # Filter on the request ID rather than the requester barcode: the mediated workflow replaces the
+    # requester with a shadow 'Secure Patron' whose barcode is generated, so holdPatron's barcode
+    # never appears on the slip (see the privacy note in Scenario 1).
     * configure headers = headersCentralConsortium
     * configure retry = { count: 12, interval: 10000 }
     Given path 'circulation-bff/search-slips', mrCentralServicePointId
-    And retry until responseStatus == 200 && karate.filter(response.searchSlips, function(s){ return s.requester.barcode == patron.requesterBarcode }).length > 0
+    And retry until responseStatus == 200 && karate.filter(response.searchSlips, function(s){ return s.request.requestID == confirmedHoldRequestId }).length > 0
     When method GET
     Then status 200
-    * def searchSlip = karate.filter(response.searchSlips, function(s){ return s.requester.barcode == patron.requesterBarcode })[0]
+    * def searchSlip = karate.filter(response.searchSlips, function(s){ return s.request.requestID == confirmedHoldRequestId })[0]
 
     # ========== Verify the slip carries the expected title and request data ==========
     And match searchSlip.item.title == 'FAT-27423 Search Slip Instance'
-    And match searchSlip.request.requestType == 'Hold'
-    And match searchSlip.requester.barcode == patron.requesterBarcode
-    And match searchSlip.requester.lastName == 'MRTest'
-    And match searchSlip.requester.firstName == 'Requester'
+    And match searchSlip.request.requestID == confirmedHoldRequestId
+    And match searchSlip.request.requestDate == '#notnull'
+    And match searchSlip.requester.lastName == 'Patron'
+    And match searchSlip.requester.firstName == 'Secure'
 
   # ==================================================================================
   # Scenario 3 - Hold, Transit and Request delivery slips
   # ==================================================================================
   # These three have no render endpoint (see the scope note at the top of this file), so what is
-  # verifiable is that each template exists in the tenant that prints it and carries the tokens
-  # the printed slip is built from. The ticket asks for the Request delivery slip "from the Secure
-  # tenant" and the Hold/Transit slips from Central, which is how the tenants are split below.
-  Scenario: hold, transit and request delivery slip templates exist in the printing tenants
+  # verifiable is that each slip is provisioned in the tenant that prints it. The ticket asks for the
+  # Request delivery slip "from the Secure tenant" and the Hold/Transit slips from Central, which is
+  # how the tenants are split below.
+  #
+  # Deliberately NOT asserted: template CONTENT. On a freshly provisioned tenant every staff slip
+  # ships with an empty body - literally template == '<p></p>' with no {{...}} tokens at all. Tokens
+  # only appear once a library authors the template, so asserting on them would be asserting on
+  # local configuration rather than on FOLIO behaviour. (mod-circulation's own slip tests in this
+  # repo PUT a template containing the token they need before checking it renders, precisely because
+  # the default is empty.)
+  Scenario: hold, transit and request delivery slips are provisioned in the printing tenants
     # ========== Central tenant: Hold and Transit ==========
     * configure headers = headersCentral
     Given path 'staff-slips-storage', 'staff-slips'
     When method GET
     Then status 200
-    * def centralSlipNames = response.staffSlips[*].name
-    And match centralSlipNames contains 'Hold'
-    And match centralSlipNames contains 'Transit'
+    # '[*]' is JsonPath, not JavaScript - it is only valid inside a 'match', and blows up with
+    # "SyntaxError: Expected an operand but found *" if used in a 'def'.
+    And match response.staffSlips[*].name contains 'Hold'
+    And match response.staffSlips[*].name contains 'Transit'
+    # The mediated workflow ships its own transit slip alongside the generic one.
+    And match response.staffSlips[*].name contains 'Transit (mediated requests)'
+    And match response.staffSlips[*].name contains 'Pick slip'
+    And match response.staffSlips[*].name contains 'Search slip (Hold requests)'
 
     * def holdSlip = karate.filter(response.staffSlips, function(s){ return s.name == 'Hold' })[0]
-    And match holdSlip.template == '#notnull'
-    # The Hold slip identifies the item on the hold shelf and who it is waiting for.
-    And match holdSlip.template contains 'item.title'
-    And match holdSlip.template contains 'requester'
+    And match holdSlip.id == '#uuid'
+    And match holdSlip.template == '#string'
 
     * def transitSlip = karate.filter(response.staffSlips, function(s){ return s.name == 'Transit' })[0]
-    And match transitSlip.template == '#notnull'
-    # The Transit slip routes the item onward, so it names the destination service point.
-    And match transitSlip.template contains 'item.toServicePoint'
+    And match transitSlip.id == '#uuid'
+    And match transitSlip.template == '#string'
+
+    * def mediatedTransitSlip = karate.filter(response.staffSlips, function(s){ return s.name == 'Transit (mediated requests)' })[0]
+    And match mediatedTransitSlip.id == '#uuid'
+    And match mediatedTransitSlip.template == '#string'
 
     # ========== Secure (university) tenant: Request delivery ==========
     * configure headers = headersUniversity
@@ -301,6 +380,13 @@ Feature: Mediated requests - staff slips (pick, search, and template-based slips
     When method GET
     Then status 200
     And match response.totalRecords == 1
-    * def deliverySlip = response.staffSlips[0]
-    And match deliverySlip.template == '#notnull'
-    And match deliverySlip.template contains 'item.title'
+    And match response.staffSlips[0].id == '#uuid'
+    And match response.staffSlips[0].template == '#string'
+
+    # The mediated transit slip must also exist in the secure tenant, since that is where the
+    # mediated request's own transit steps (send-item-in-transit / confirm-item-arrival) happen.
+    Given path 'staff-slips-storage', 'staff-slips'
+    And param query = 'name=="Transit (mediated requests)"'
+    When method GET
+    Then status 200
+    And match response.totalRecords == 1
