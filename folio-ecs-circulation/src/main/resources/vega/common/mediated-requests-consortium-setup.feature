@@ -62,6 +62,8 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'inventory-storage.location-units.libraries.item.post'      |
       | 'inventory-storage.locations.item.post'                     |
       | 'inventory-storage.holdings-sources.item.post'              |
+      | 'inventory-storage.staff-slips.collection.get'              |
+      | 'inventory-storage.staff-slips.item.get'                    |
       | 'inventory.instances.item.get'                              |
       | 'inventory.instances.item.post'                             |
       | 'inventory.items.item.post'                                 |
