@@ -1,4 +1,4 @@
-Feature: FAT-21052 - Import to create open orders: Physical resource with Instances, Holdings
+Feature: Import to create open orders: Physical resource with Instances, Holdings
 
   Background:
     * url baseUrl
@@ -11,11 +11,11 @@ Feature: FAT-21052 - Import to create open orders: Physical resource with Instan
     * def acquisitionMethodName = 'Purchase'
 
   @C380475
-  Scenario: FAT-21052 Test physical resource open order with instance, holdings
+  Scenario: Test physical resource open order with instance, holdings
     # Create mapping profile for order creation.
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
-    And def orderMappingProfileName = 'FAT-21052 Test Physical resource open order with instance, holdings ' + epoch
+    And def orderMappingProfileName = 'C380475 Test Physical resource open order with instance, holdings ' + epoch
     And request
       """
       {
@@ -182,7 +182,7 @@ Feature: FAT-21052 - Import to create open orders: Physical resource with Instan
     # Create mapping profile for holdings record creation.
     Given path 'data-import-profiles/mappingProfiles'
     And headers headersUser
-    And def holdingsMappingProfileName = 'FAT-21052 Create simple holdings for open order ' + epoch
+    And def holdingsMappingProfileName = 'C380475 Create simple holdings for open order ' + epoch
     And request
       """
       {
@@ -216,7 +216,7 @@ Feature: FAT-21052 - Import to create open orders: Physical resource with Instan
     # Create action profile for order creation.
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And def folioRecordNameAndDescription = 'FAT-21052 Test Physical resource open order with instance, holdings'
+    And def folioRecordNameAndDescription = 'C380475 Test Physical resource open order with instance, holdings'
     And def profileAction = 'CREATE'
     And def folioRecord = 'ORDER'
     And def mappingProfileEntityId = orderMappingProfileId
@@ -228,7 +228,7 @@ Feature: FAT-21052 - Import to create open orders: Physical resource with Instan
     # Create action profile for holdings record creation.
     Given path 'data-import-profiles/actionProfiles'
     And headers headersUser
-    And def folioRecordNameAndDescription = 'FAT-21052 Create simple holdings for open order'
+    And def folioRecordNameAndDescription = 'C380475 Create simple holdings for open order'
     And def profileAction = 'CREATE'
     And def folioRecord = 'HOLDINGS'
     And def mappingProfileEntityId = holdingsMappingProfileId
@@ -244,7 +244,7 @@ Feature: FAT-21052 - Import to create open orders: Physical resource with Instan
     #   3) holdings action profile
     Given path 'data-import-profiles/jobProfiles'
     And headers headersUser
-    And def jobProfileName = 'FAT-21052 Test Physical resource open order with instance, holdings ' + epoch
+    And def jobProfileName = 'C380475 Test Physical resource open order with instance, holdings ' + epoch
     And request
       """
       {
@@ -284,7 +284,7 @@ Feature: FAT-21052 - Import to create open orders: Physical resource with Instan
     * def jobProfileId = $.id
 
     # Import the prepared file using the job profile created above.
-    * def res = call read(utilFeature+'@ImportRecord') { fileName: 'FAT-21052-TestOpenOrderAndInventory', jobName: 'customJob' }
+    * def res = call read(utilFeature+'@ImportRecord') { fileName: 'C380475-TestOpenOrderAndInventory', jobName: 'customJob' }
     * match res.jobExecution.status == 'COMMITTED'
 
     # Check via job log entries that order, po line, instance and holding were created.
