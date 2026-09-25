@@ -64,6 +64,7 @@ Feature: mod-data-import integration tests
       | 'inventory-storage.identifier-types.collection.get'                   |
       | 'inventory.items.collection.get'                                      |
       | 'inventory.items.item.get'                                            |
+      | 'orders-storage.settings.collection.get'                              |
       | 'orders-storage.settings.item.post'                                   |
       | 'organizations-storage.organizations.item.post'                       |
       | 'source-storage.source-records.collection.get'                        |
@@ -93,6 +94,7 @@ Feature: mod-data-import integration tests
       | 'data-import.fileExtensions.delete'                                   |
       | 'data-import.fileExtensions.default.post'                             |
       | 'data-import.uploadUrl.item.get'                                      |
+      | 'converter-storage.jobprofile.collection.get'                         |
       | 'converter-storage.jobprofile.item.get'                               |
       | 'converter-storage.jobprofile.post'                                   |
       | 'converter-storage.jobprofile.delete'                                 |

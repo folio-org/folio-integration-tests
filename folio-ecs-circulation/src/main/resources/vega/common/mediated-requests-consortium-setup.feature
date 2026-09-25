@@ -86,8 +86,10 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'consortia.user-tenants.collection.get'                     |
       | 'consortia.user-tenants.item.post'                          |
       | 'search.index.instance-records.reindex.full.post'           |
+      | 'search.instances.collection.get'                           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
+      | 'requests-mediated.mediated-request.item.put'               |
       | 'requests-mediated.mediated-requests.decline.execute'       |
       | 'requests-mediated.mediated-request.confirm.post'           |
       | 'requests-mediated.confirm-item-arrival.post'               |
