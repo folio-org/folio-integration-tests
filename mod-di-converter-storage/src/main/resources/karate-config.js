@@ -26,7 +26,7 @@ function configuration() {
     testTenant: testTenant ? testTenant : 'testtenant',
     testTenantId: testTenantId ? testTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
     testAdmin: {tenant: testTenant, name: 'test-admin', password: generatePassword('test-admin')},
-    testUser: {tenant: testTenant, name: 'test-user', password: generatePassword('test-user')},
+    testUser: {tenant: testTenant, name: karate.properties['testUserUsername'] || 'test-user', password: karate.properties['testUserPassword'] || generatePassword('test-user')},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
