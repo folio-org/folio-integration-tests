@@ -92,4 +92,10 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     feature("classpath:promin/data-import/features/marc-records/marc-bibs/match/marc-to-marc-match-by-008-field.feature")
       .run();
   }
+
+  @Test
+  void importOpenOrderPhysicalResourceWithInstanceHoldings() {
+    feature("classpath:promin/data-import/features/marc-records/marc-bibs/create/import-open-physical-order-with-instance-holding.feature")
+      .run();
+  }
 }
