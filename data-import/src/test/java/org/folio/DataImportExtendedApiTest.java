@@ -95,7 +95,7 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
 
   @Test
   void importOpenOrderPhysicalResourceWithInstanceHoldings() {
-    feature("classpath:promin/data-import/features/marc-records/marc-bibs/create/import-open-physical-order-with-instance-holding.feature")
+    feature("classpath:promin/data-import/features/marc-records/marc-bibs/order/import-open-physical-order-with-instance-holding.feature")
       .run();
   }
 }
