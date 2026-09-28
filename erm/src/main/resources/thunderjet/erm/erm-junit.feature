@@ -16,7 +16,7 @@ Feature: ERM (mod-agreements) integration tests
 
     * table userPermissions
       | name                                                  |
-      | 'erm.admin.action.execute'                            |
+      | 'erm.admin.action.triggerEntitlementEholdingsJob.execute' |
       | 'erm.agreements.item.get'                             |
       | 'erm.agreements.item.post'                            |
       | 'erm.agreements.item.put'                             |
