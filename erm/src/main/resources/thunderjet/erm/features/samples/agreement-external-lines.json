@@ -2,6 +2,12 @@
   "name": "#(agreementName)",
   "agreementStatus": "active",
   "renewalPriority": "for_review",
+  "periods": [
+    {
+      "startDate": "2024-01-01",
+      "endDate": "2024-12-31"
+    }
+  ],
   "items": [
     {
       "id": null,
