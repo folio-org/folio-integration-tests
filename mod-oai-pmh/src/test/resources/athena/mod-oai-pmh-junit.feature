@@ -73,6 +73,7 @@ Feature: bulk operations integration tests
       | 'inventory-storage.items.collection.get'                      |
       | 'inventory-storage.holdings.item.get'                         |
       | 'inventory-storage.holdings-types.item.post'                  |
+      | 'inventory.instances.item.mark-deleted.delete'                |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
