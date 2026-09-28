@@ -13,20 +13,21 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * def samples = 'classpath:thunderjet/erm/features/samples/'
     * def setupSamples = 'classpath:thunderjet/erm/features/setup/samples/'
 
-    # Returns The Newest Ended Sync Job Whose Id Differs From The Previously Consumed One, Else Null
+    # Returns The Newest Ended EHoldingsEntitlementSyncJob Whose Id Differs From The Previously Consumed One, Else Null
     * def latestEndedSyncJob =
       """
       function(resp, prevId) {
-        var matches = karate.jsonPath(resp, "$[?(@.name =~ /.*entitlementeholdings.*/i)]");
-        if (!matches || matches.length == 0) return null;
-        // pick the newest job by dateCreated ourselves, without relying on server-side sort
-        var latest = matches[0];
-        for (var i = 1; i < matches.length; i++) {
-          if (('' + matches[i].dateCreated) > ('' + latest.dateCreated)) {
-            latest = matches[i];
-          }
+        if (!resp) return null;
+        // the sync job is org.olf.general.jobs.EHoldingsEntitlementSyncJob (match on class or name)
+        var latest = null;
+        for (var i = 0; i < resp.length; i++) {
+          var j = resp[i];
+          var cls = '' + (j['class'] || '');
+          var nm = '' + (j.name || '');
+          if (cls.indexOf('EHoldingsEntitlementSyncJob') < 0 && nm.indexOf('EHoldingsEntitlementSyncJob') < 0) continue;
+          if (latest == null || j.dateCreated > latest.dateCreated) latest = j;
         }
-        if (latest.status && latest.status.label == 'Ended' && ('' + latest.id) != ('' + prevId)) {
+        if (latest && latest.status && latest.status.label == 'Ended' && ('' + latest.id) != ('' + prevId)) {
           return latest;
         }
         return null;
@@ -103,6 +104,11 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * def run1 = call read('populate-resource-name.feature@TriggerAndWait') { previousJobId: 'none' }
     * def jobId1 = run1.job.id
     * match run1.job.result.label == 'Partial success'
+
+    # (diagnostic) Dump error log so its messages are captured before strict assertions
+    Given path 'erm/jobs', jobId1, 'errorLog'
+    When method GET
+    Then status 200
 
     # 8. Verify Info Log Lists The Three Updated Entitlements
     Given path 'erm/jobs', jobId1, 'infoLog'
