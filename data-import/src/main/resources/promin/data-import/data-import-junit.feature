@@ -169,6 +169,7 @@ Feature: mod-data-import integration tests
       | 'source-storage.source-records.collection.get'                        |
       | 'source-storage.source-records.item.get'                              |
       | 'users.collection.get'                                                |
+      | 'inventory.instances.item.mark-deleted.delete'                        |
 
 
   Scenario: create tenant and users for testing
