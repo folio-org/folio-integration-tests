@@ -103,6 +103,11 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * def jobId1 = run1.job.id
     * match run1.job.result.label == 'Partial success'
 
+    # (diagnostic) Dump error log so its messages are captured before strict assertions
+    Given path 'erm/jobs', jobId1, 'errorLog'
+    When method GET
+    Then status 200
+
     # 8. Verify Info Log Lists The Two Updated (Managed) Entitlements
     Given path 'erm/jobs', jobId1, 'infoLog'
     When method GET
