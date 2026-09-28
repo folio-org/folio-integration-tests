@@ -168,6 +168,7 @@ Feature: mod-data-import integration tests
       | 'metadata-provider.jobSummary.item.get'                               |
       | 'inventory-storage.authorities.item.delete'                           |
       | 'users.collection.get'                                                |
+      | 'inventory.instances.item.mark-deleted.delete'                        |
 
 
   Scenario: create tenant and users for testing
