@@ -1,5 +1,8 @@
 package org.folio;
 
+import static org.folio.test.config.TestParam.TEST_TENANT;
+import static org.folio.test.config.TestParam.TEST_TENANT_ID;
+
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -18,12 +21,21 @@ public class ModDataImportConverterStorageTest extends TestBaseEureka {
 
     @BeforeAll
     public void setup() {
-        runFeature("classpath:promin/mod-di-converter-storage/data-import-converter-storage-junit.feature");
+        if (shouldCreateTenant()) {
+            runFeature("classpath:promin/mod-di-converter-storage/data-import-converter-storage-junit.feature");
+        }
     }
 
     @AfterAll
     public void tearDown() {
-        runFeature("classpath:common/eureka/destroy-data.feature");
+        if (shouldCreateTenant()) {
+            try {
+                runFeature("classpath:common/eureka/destroy-data.feature");
+            } finally {
+                System.clearProperty(TEST_TENANT.getValue());
+                System.clearProperty(TEST_TENANT_ID.getValue());
+            }
+        }
     }
 
     @Test
