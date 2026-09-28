@@ -1,0 +1,37 @@
+{
+  "name": "#(agreementName)",
+  "agreementStatus": "active",
+  "renewalPriority": "for_review",
+  "items": [
+    {
+      "id": null,
+      "type": "external",
+      "authority": "EKB-PACKAGE",
+      "reference": "#(keptPackageId)",
+      "resourceName": null,
+      "haveAccess": true,
+      "suppressFromDiscovery": false,
+      "customCoverage": false
+    },
+    {
+      "id": null,
+      "type": "external",
+      "authority": "EKB-TITLE",
+      "reference": "#(resourceId)",
+      "resourceName": null,
+      "haveAccess": true,
+      "suppressFromDiscovery": false,
+      "customCoverage": false
+    },
+    {
+      "id": null,
+      "type": "external",
+      "authority": "EKB-PACKAGE",
+      "reference": "#(deletedPackageId)",
+      "resourceName": null,
+      "haveAccess": true,
+      "suppressFromDiscovery": false,
+      "customCoverage": false
+    }
+  ]
+}

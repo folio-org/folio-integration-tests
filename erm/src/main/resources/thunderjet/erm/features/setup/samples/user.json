@@ -1,0 +1,6 @@
+{
+  "data": {
+    "id": "##(testUserId)",
+    "credentialsId": "##(credentialId)"
+  }
+}

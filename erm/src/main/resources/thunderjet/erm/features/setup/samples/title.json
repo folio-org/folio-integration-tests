@@ -1,0 +1,23 @@
+{
+  "data": {
+    "type": "titles",
+    "attributes": {
+      "name": "##(titleName)",
+      "publicationType": "Journal",
+      "publisherName": "FolioKarateTests",
+      "isPeerReviewed": true,
+      "contributors": [],
+      "tags": {
+        "tagList": ["KarateTests"]
+      }
+    }
+  },
+  "included": [
+    {
+      "type": "resources",
+      "attributes": {
+        "packageId": "##(packageId)"
+      }
+    }
+  ]
+}
