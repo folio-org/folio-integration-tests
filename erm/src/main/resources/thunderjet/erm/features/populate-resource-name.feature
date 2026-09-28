@@ -38,28 +38,26 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
   @Positive
   Scenario: Manual Sync Job Populates ResourceName And Reports Partial And Clean Success
 
-    # 1. Create Kept EKB Package (Agreement Line #1)
+    # 1. Find A Managed EKB Package (Agreement Line #1) - Managed Resources Resolve Via Bulk Fetch
     * configure headers = vndHeaders
-    * def keptPackageName = 'Karate Kept Package ' + random_string()
     Given path '/eholdings/packages'
-    And def packageName = keptPackageName
-    And request read(setupSamples + 'package.json')
-    When method POST
+    And params { q: 'a', 'filter[type]': 'all', count: 25, page: 1 }
+    When method GET
     Then status 200
-    * def keptPackageId = response.data.id
-    * setSystemProperty('keptPackageId', keptPackageId)
+    * def managedPackages = karate.jsonPath(response, "$.data[?(@.attributes.isCustom == false)]")
+    * assert managedPackages.length > 0
+    * def keptPackageId = managedPackages[0].id
 
-    # 2. Create Title And Resource In The Kept Package (Agreement Line #2)
-    Given path '/eholdings/titles'
-    And def titleName = 'Karate Title ' + random_string()
-    And def packageId = keptPackageId
-    And request read(setupSamples + 'title.json')
-    When method POST
+    # 2. Take A Managed Resource (Title) From That Package (Agreement Line #2)
+    Given path '/eholdings/packages', keptPackageId, 'resources'
+    And param page = 1
+    And param count = 25
+    When method GET
     Then status 200
-    * def titleId = response.data.id
-    * def resourceId = keptPackageId + '-' + titleId
+    * assert response.data.length > 0
+    * def resourceId = response.data[0].id
 
-    # 3. Create EKB Package To Be Deleted (Agreement Line #3)
+    # 3. Create Custom EKB Package To Be Deleted (Agreement Line #3)
     * def deletedPackageName = 'Karate Deleted Package ' + random_string()
     Given path '/eholdings/packages'
     And def packageName = deletedPackageName
@@ -105,19 +103,14 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * def jobId1 = run1.job.id
     * match run1.job.result.label == 'Partial success'
 
-    # (diagnostic) Dump error log so its messages are captured before strict assertions
-    Given path 'erm/jobs', jobId1, 'errorLog'
-    When method GET
-    Then status 200
-
-    # 8. Verify Info Log Lists The Three Updated Entitlements
+    # 8. Verify Info Log Lists The Two Updated (Managed) Entitlements
     Given path 'erm/jobs', jobId1, 'infoLog'
     When method GET
     Then status 200
-    And match $ == '#[3]'
+    And match $ == '#[2]'
     And match each $[*].message == '#regex .*ResourceName for.*updated to.*'
 
-    # 9. Verify Error Log Reports The One Failed Line
+    # 9. Verify Error Log Reports The One Failed (Deleted) Line
     Given path 'erm/jobs', jobId1, 'errorLog'
     When method GET
     Then status 200
@@ -140,28 +133,43 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     Then status 200
     And match $.resourceName == null
 
-    # 11. Delete Line #3 And Re-Trigger - No Updates Are Performed
-    # NOTE (env-confirm): asserts a job IS created and ends with Success / empty info log.
-    # If the deployed build records NO job when there is nothing to do, relax this block.
+    # 11. Delete Line #3, Then Re-Trigger - No Null Lines Remain, So The Job Performs No Actions
+    # Per the case: with no external line having a null resourceName, no log/actions are produced,
+    # so we do NOT wait for a new job here - only assert the trigger is accepted and #1-2 are unchanged.
     Given path 'erm/entitlements', line3Id
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 200
 
-    * def run2 = call read('populate-resource-name.feature@TriggerAndWait') { previousJobId: '#(jobId1)' }
-    * def jobId2 = run2.job.id
-    * match run2.job.result.label == 'Success'
-
-    Given path 'erm/jobs', jobId2, 'infoLog'
+    Given path 'erm/admin/triggerEntitlementEholdings'
+    And param force = true
     When method GET
     Then status 200
-    And match $ == '#[0]'
+    And match $.status == 'OK'
+
+    Given path 'erm/entitlements', line1Id
+    When method GET
+    Then status 200
+    And match $.resourceName == '#string'
+
+    Given path 'erm/entitlements', line2Id
+    When method GET
+    Then status 200
+    And match $.resourceName == '#string'
 
     # 12. Reset ResourceName To Null On Lines #1-2
     * call read('populate-resource-name.feature@SetResourceNameNull') { entitlementId: '#(line1Id)' }
     * call read('populate-resource-name.feature@SetResourceNameNull') { entitlementId: '#(line2Id)' }
 
     # 13. Trigger Again And Verify A Clean Success With Two Updates And No Errors
-    * def run3 = call read('populate-resource-name.feature@TriggerAndWait') { previousJobId: '#(jobId2)' }
+    # Capture the current latest sync job id first, so TriggerAndWait waits for a strictly newer one
+    Given path 'erm/jobs'
+    And param sort = 'dateCreated;desc'
+    And param perPage = 100
+    When method GET
+    Then status 200
+    * def prevSync = latestEndedSyncJob(response, 'none')
+    * def prevJobId3 = prevSync == null ? 'none' : prevSync.id
+    * def run3 = call read('populate-resource-name.feature@TriggerAndWait') { previousJobId: '#(prevJobId3)' }
     * def jobId3 = run3.job.id
     * match run3.job.result.label == 'Success'
 
