@@ -56,6 +56,7 @@ Feature: mod-data-import integration tests
       | 'inventory-storage.ill-policies.item.post'                            |
       | 'inventory-storage.holdings-sources.item.post'                        |
       | 'inventory-storage.holdings.collection.get'                           |
+      | 'inventory-storage.holdings.item.get'                                 |
       | 'inventory-storage.holdings-sources.item.get'                         |
       | 'inventory-storage.instances.item.post'                               |
       | 'inventory-storage.holdings.item.post'                                |
@@ -167,6 +168,7 @@ Feature: mod-data-import integration tests
       | 'metadata-provider.jobSummary.item.get'                               |
       | 'inventory-storage.authorities.item.delete'                           |
       | 'users.collection.get'                                                |
+      | 'inventory.instances.item.mark-deleted.delete'                        |
 
 
   Scenario: create tenant and users for testing

@@ -297,6 +297,13 @@ Feature: inventory
     And match response.leaderRecordStatus == "d"
     And match response.parsedRecord.content.leader.charAt(5) == "d"
 
+  Scenario: Unauthenticated request to mark-deleted returns 401
+    * def randomInstanceId = uuid()
+    * configure headers = { 'x-okapi-tenant': '#(testTenant)', 'Content-Type': 'application/json' }
+    Given path 'inventory/instances/' + randomInstanceId + '/mark-deleted'
+    When method DELETE
+    Then status 401
+
   Scenario: Test changing holding ownership request for non-consortium environment
     * def nonExistentInstanceId = uuid()
     * def nonExistentHoldingsId = uuid()

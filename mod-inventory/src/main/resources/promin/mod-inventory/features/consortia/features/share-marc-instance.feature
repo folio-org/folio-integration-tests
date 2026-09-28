@@ -171,6 +171,14 @@ Feature: Sharing a local MARC instance with the central tenant
     And match response.state == 'ACTUAL'
     And match response.deleted == false
 
+    # Diagnostic: shows whether search works at all on this tenant, to tell a broken search path
+    # apart from a missing document when the assertion below fails
+    Given path 'search/instances'
+    And param query = 'cql.allRecords=1'
+    And param limit = 1
+    When method GET
+    * print 'search availability check on', universityTenant, '->', responseStatus, response
+
     # The local instance is still searchable on the university tenant (re-indexed after the rollback)
     * configure retry = { count: 12, interval: 5000 }
     Given path 'search/instances'
