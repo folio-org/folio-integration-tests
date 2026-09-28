@@ -50,7 +50,7 @@ Feature: Delete two MARC Authority records using a minimal exported records
     And assert response.entries.length == 2
     And match each response.entries[*].sourceRecordActionStatus == 'DELETED'
     And match each response.entries[*].relatedAuthorityInfo.actionStatus == 'DELETED'
-    And def deletedAuthorityIds = karate.jsonPath(response.entries, "$[*].relatedAuthorityInfo.idList[*]")
+    And def deletedAuthorityIds = karate.map(response.entries, e => e.relatedAuthorityInfo.idList[0])
     And match deletedAuthorityIds contains recordAauthorityId
     And match deletedAuthorityIds contains recordBauthorityId
 

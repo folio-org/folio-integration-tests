@@ -56,6 +56,8 @@ Feature: Delete MARC Authority records with multiple matches (by 010 $a then 100
     * match res.jobExecution.status == 'COMMITTED'
 
     # Check job log entries to confirm that three MARC Authority records and their authorities were created
+    # This endpoint returns log entries sorted by incoming record order in a file by default.
+    # Therefore, the first entry corresponds to Record A, the second to Record B, and the third to Record C.
     Given path 'metadata-provider/jobLogEntries', res.jobExecution.id
     And headers headersUser
     And retry until karate.get('response.entries.length') == 3
@@ -69,7 +71,7 @@ Feature: Delete MARC Authority records with multiple matches (by 010 $a then 100
     * def authorityIdB = response.entries[1].relatedAuthorityInfo.idList[0]
     * def authorityIdC = response.entries[2].relatedAuthorityInfo.idList[0]
 
-    # # Create match profile that matches by 010 $a field
+    # Create match profile that matches by 010 $a field
     Given path 'data-import-profiles/matchProfiles'
     And headers headersUser
     And def matchProfileName1 = 'C1504488 match profile 010a ' + runId
