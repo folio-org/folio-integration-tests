@@ -222,19 +222,21 @@ Feature: Settings - profiles for deleting MARC Authority records
     When method POST
     Then status 201
     * def jobProfileId = response.id
-    # The saved associations, which an edit has to name in deletedRelations to replace the layout
     * def savedRelations = response.addedRelations
     And match countJobProfiles() == 1
 
     # Step 12: repeat steps 1-11 editing the created job profile
     * def editedJobProfile = { id: '#(jobProfileId)', name: '#(jobProfileName)', description: '', dataType: 'MARC' }
+    * def savedTopLevelRelations = savedRelations.filter(r => r.masterProfileType == 'JOB_PROFILE')
+    * def jobProfileWrapperId = savedTopLevelRelations[0].masterWrapperId
+    * def onJobProfileWrapper = function(relations) { return relations.map(r => r.masterProfileType == 'JOB_PROFILE' ? karate.merge(r, { masterWrapperId: jobProfileWrapperId }) : r) }
     * def getJobProfileLayout = function() { return karate.call(settingsCommon + '@GetJobProfileLayout', { jobProfileId: jobProfileId, headersUser: headersUser }).layout }
     * def savedLayout = getJobProfileLayout()
     And match savedLayout == { matchProfileId: '#(authorityMatchProfileId)', actions: [{ actionProfileId: '#(defaultDeleteAuthorityActionProfileId)', reactTo: 'MATCH' }] }
 
     Given path 'data-import-profiles/jobProfiles', jobProfileId
     And headers headersUser
-    And request { profile: '#(editedJobProfile)', addedRelations: '#(deleteWithoutMatch)', deletedRelations: '#(savedRelations)' }
+    And request { profile: '#(editedJobProfile)', addedRelations: '#(onJobProfileWrapper(deleteWithoutMatch))', deletedRelations: '#(savedTopLevelRelations)' }
     When method PUT
     Then status 422
     And match response.errors[*].message contains invalidPlacementMessage
@@ -242,7 +244,7 @@ Feature: Settings - profiles for deleting MARC Authority records
 
     Given path 'data-import-profiles/jobProfiles', jobProfileId
     And headers headersUser
-    And request { profile: '#(editedJobProfile)', addedRelations: '#(updateThenDeleteForMatches)', deletedRelations: '#(savedRelations)' }
+    And request { profile: '#(editedJobProfile)', addedRelations: '#(onJobProfileWrapper(updateThenDeleteForMatches))', deletedRelations: '#(savedTopLevelRelations)' }
     When method PUT
     Then status 422
     And match response.errors[*].message contains nextToOtherActionsMessage
@@ -250,7 +252,7 @@ Feature: Settings - profiles for deleting MARC Authority records
 
     Given path 'data-import-profiles/jobProfiles', jobProfileId
     And headers headersUser
-    And request { profile: '#(editedJobProfile)', addedRelations: '#(deleteForNonMatches)', deletedRelations: '#(savedRelations)' }
+    And request { profile: '#(editedJobProfile)', addedRelations: '#(onJobProfileWrapper(deleteForNonMatches))', deletedRelations: '#(savedTopLevelRelations)' }
     When method PUT
     Then status 422
     And match response.errors[*].message contains invalidPlacementMessage
@@ -258,7 +260,7 @@ Feature: Settings - profiles for deleting MARC Authority records
 
     Given path 'data-import-profiles/jobProfiles', jobProfileId
     And headers headersUser
-    And request { profile: '#(editedJobProfile)', addedRelations: '#(deleteUnderBibMatch)', deletedRelations: '#(savedRelations)' }
+    And request { profile: '#(editedJobProfile)', addedRelations: '#(onJobProfileWrapper(deleteUnderBibMatch))', deletedRelations: '#(savedTopLevelRelations)' }
     When method PUT
     Then status 422
     And match response.errors[*].message contains invalidPlacementMessage
@@ -266,7 +268,7 @@ Feature: Settings - profiles for deleting MARC Authority records
 
     Given path 'data-import-profiles/jobProfiles', jobProfileId
     And headers headersUser
-    And request { profile: '#(editedJobProfile)', addedRelations: '#(deleteUnderAuthorityMatch)', deletedRelations: '#(savedRelations)' }
+    And request { profile: '#(editedJobProfile)', addedRelations: '#(onJobProfileWrapper(deleteUnderAuthorityMatch))', deletedRelations: '#(savedTopLevelRelations)' }
     When method PUT
     Then status 200
     And match getJobProfileLayout() == savedLayout
