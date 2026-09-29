@@ -57,6 +57,17 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * assert response.data.length > 0
     * def resourceId = response.data[0].id
 
+    # (diagnostic) Check eHoldings Bulk Fetch Works In This Tenant For The Test User
+    Given path '/eholdings/packages/bulk/fetch'
+    And request { packages: ['#(keptPackageId)'] }
+    When method POST
+    Then status 200
+
+    Given path '/eholdings/resources/bulk/fetch'
+    And request { resources: ['#(resourceId)'] }
+    When method POST
+    Then status 200
+
     # 3. Create Custom EKB Package To Be Deleted (Agreement Line #3)
     * def deletedPackageName = 'Karate Deleted Package ' + random_string()
     Given path '/eholdings/packages'
