@@ -18,12 +18,8 @@ Feature: Setup credentials
     And def credential = responseStatus == 201 ? response : karate.call('setup-credentials.feature@RetrieveCredentials')
     And def credentialId = credential.id
 
-    Given path '/eholdings/kb-credentials', credentialId, 'users'
-    And headers vndHeaders
-    And request read(samplesPath + 'user.json')
-    When method POST
-    Then assert responseStatus == 201 || responseStatus == 422
-
+    # No user is assigned to the credentials on purpose: the sync job calls mod-kb-ebsco as the
+    # mod-agreements system user, which cannot resolve credentials that are assigned to other users only
     * setSystemProperty('credentialId', credentialId)
 
   @Ignore
