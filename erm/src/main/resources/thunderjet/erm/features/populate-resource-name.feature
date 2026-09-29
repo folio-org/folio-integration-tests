@@ -9,14 +9,14 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * def jsonHeaders = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)' }
     * configure headers = jsonHeaders
-    * configure retry = { count: 15, interval: 500 }
+    * configure retry = { count: 10, interval: 2000 }
     * def samples = 'classpath:thunderjet/erm/features/samples/'
     * def setupSamples = 'classpath:thunderjet/erm/features/setup/samples/'
 
-    # Returns The Newest Ended EHoldingsEntitlementSyncJob Whose Id Differs From The Previously Consumed One, Else Null
-    * def latestEndedSyncJob =
+    # Returns The Newest EHoldingsEntitlementSyncJob In Any Status, Else Null
+    * def latestSyncJob =
       """
-      function(resp, prevId) {
+      function(resp) {
         if (!resp) return null;
         // the sync job is org.olf.general.jobs.EHoldingsEntitlementSyncJob (match on class or name)
         var latest = null;
@@ -27,12 +27,14 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
           if (cls.indexOf('EHoldingsEntitlementSyncJob') < 0 && nm.indexOf('EHoldingsEntitlementSyncJob') < 0) continue;
           if (latest == null || j.dateCreated > latest.dateCreated) latest = j;
         }
-        if (latest && latest.status && latest.status.label == 'Ended' && ('' + latest.id) != ('' + prevId)) {
-          return latest;
-        }
-        return null;
+        return latest;
       }
       """
+    * def isEnded = function(job) { return job != null && job.status != null && job.status.label == 'Ended' }
+    # True When No Sync Job Is Queued Or Running
+    * def noActiveSyncJob = function(resp) { var j = latestSyncJob(resp); return j == null || isEnded(j) }
+    # Returns The Newest Sync Job If It Has Ended And Differs From The Previously Seen One, Else Null
+    * def newEndedSyncJob = function(resp, prevId) { var j = latestSyncJob(resp); return isEnded(j) && ('' + j.id) != ('' + prevId) ? j : null }
 
   @C1348606
   @Positive
@@ -66,7 +68,11 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     Then status 200
     * def deletedPackageId = response.data.id
 
-    * eval sleep(15000)
+    # Wait Until The New Package Is Resolvable In eHoldings
+    Given path '/eholdings/packages', deletedPackageId
+    And retry until responseStatus == 200
+    When method GET
+    Then status 200
 
     # 4. Create Agreement With Three External Lines Having Null ResourceName
     * configure headers = jsonHeaders
@@ -95,11 +101,16 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     Given path '/eholdings/packages', deletedPackageId
     When method DELETE
     Then assert responseStatus == 204 || responseStatus == 200
+
+    # Wait Until The Deleted Package Is No Longer Resolvable In eHoldings
+    Given path '/eholdings/packages', deletedPackageId
+    And retry until responseStatus == 404
+    When method GET
+    Then status 404
     * configure headers = jsonHeaders
-    * eval sleep(10000)
 
     # 7. Trigger The Sync Job And Wait For Partial Success
-    * def run1 = call read('populate-resource-name.feature@TriggerAndWait') { previousJobId: 'none' }
+    * def run1 = call read('populate-resource-name.feature@TriggerAndWait')
     * def jobId1 = run1.job.id
     * match run1.job.result.label == 'Partial success'
 
@@ -146,6 +157,15 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     Then status 200
     And match $.status == 'OK'
 
+    # Let A Possibly Started Job Finish Before ResourceName Is Reset, So It Cannot Consume The Nulls From Step 12
+    * configure retry = { count: 10, interval: 8000 }
+    Given path 'erm/jobs'
+    And param sort = 'dateCreated;desc'
+    And param perPage = 100
+    And retry until noActiveSyncJob(response)
+    When method GET
+    Then status 200
+
     Given path 'erm/entitlements', line1Id
     When method GET
     Then status 200
@@ -161,15 +181,7 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * call read('populate-resource-name.feature@SetResourceNameNull') { entitlementId: '#(line2Id)' }
 
     # 13. Trigger Again And Verify A Clean Success With Two Updates And No Errors
-    # Capture the current latest sync job id first, so TriggerAndWait waits for a strictly newer one
-    Given path 'erm/jobs'
-    And param sort = 'dateCreated;desc'
-    And param perPage = 100
-    When method GET
-    Then status 200
-    * def prevSync = latestEndedSyncJob(response, 'none')
-    * def prevJobId3 = prevSync == null ? 'none' : prevSync.id
-    * def run3 = call read('populate-resource-name.feature@TriggerAndWait') { previousJobId: '#(prevJobId3)' }
+    * def run3 = call read('populate-resource-name.feature@TriggerAndWait')
     * def jobId3 = run3.job.id
     * match run3.job.result.label == 'Success'
 
@@ -197,21 +209,32 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
   @Ignore
   @TriggerAndWait
   Scenario: Trigger The Sync Job And Wait For A New Ended Sync Job
-    # Input: previousJobId ; Returns: job (The Ended Sync Job)
+    # Returns: job (The Ended Sync Job Started By This Trigger)
+    * configure retry = { count: 10, interval: 8000 }
+
+    # Wait Until No Sync Job (Scheduled Or From A Previous Trigger) Is Active, Then Remember The Newest One
+    Given path 'erm/jobs'
+    And param sort = 'dateCreated;desc'
+    And param perPage = 100
+    And retry until noActiveSyncJob(response)
+    When method GET
+    Then status 200
+    * def prevJob = latestSyncJob(response)
+    * def previousJobId = prevJob == null ? 'none' : prevJob.id
+
     Given path 'erm/admin/triggerEntitlementEholdings'
     And param force = true
     When method GET
     Then status 200
     And match $.status == 'OK'
 
-    * configure retry = { count: 30, interval: 10000 }
     Given path 'erm/jobs'
     And param sort = 'dateCreated;desc'
     And param perPage = 100
-    And retry until latestEndedSyncJob(response, previousJobId) != null
+    And retry until newEndedSyncJob(response, previousJobId) != null
     When method GET
     Then status 200
-    * def job = latestEndedSyncJob(response, previousJobId)
+    * def job = newEndedSyncJob(response, previousJobId)
 
   @Ignore
   @SetResourceNameNull
