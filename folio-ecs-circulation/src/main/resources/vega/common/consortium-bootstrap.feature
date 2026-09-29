@@ -68,6 +68,8 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'inventory-storage.location-units.libraries.item.post'      |
       | 'inventory-storage.locations.item.post'                     |
       | 'inventory-storage.holdings-sources.item.post'              |
+      | 'circulation-storage.staff-slips.collection.get'            |
+      | 'circulation-storage.staff-slips.item.get'                  |
       | 'inventory.instances.item.get'                              |
       | 'inventory.instances.item.post'                             |
       | 'inventory.items.item.post'                                 |
