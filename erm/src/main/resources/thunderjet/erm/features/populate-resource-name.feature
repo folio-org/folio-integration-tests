@@ -40,8 +40,11 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
 
     # 1. Find A Managed EKB Package (Agreement Line #1) - Managed Resources Resolve Via Bulk Fetch
     * configure headers = vndHeaders
+    # Freshly created KB credentials may not be visible to mod-kb-ebsco reads right away, so retry until they are
+    * configure retry = { count: 30, interval: 2000 }
     Given path '/eholdings/packages'
     And params { q: 'a', 'filter[type]': 'all', count: 25, page: 1 }
+    And retry until responseStatus == 200
     When method GET
     Then status 200
     * def managedPackages = karate.jsonPath(response, "$.data[?(@.attributes.isCustom == false)]")
