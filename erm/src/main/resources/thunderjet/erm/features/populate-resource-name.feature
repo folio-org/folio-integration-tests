@@ -40,28 +40,8 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
 
     # 1. Find A Managed EKB Package (Agreement Line #1) - Managed Resources Resolve Via Bulk Fetch
     * configure headers = vndHeaders
-
-    # (diagnostic) Single-credentials fallback needs exactly 1 credentials and 0 assigned users - dump the tenant state
-    Given path '/eholdings/kb-credentials'
-    When method GET
-    Then status 200
-    * print 'kb-credentials total:', response.meta.totalResults, karate.jsonPath(response, '$.data[*].id')
-
-    * def credentialId = java.lang.System.getProperty('credentialId')
-    Given path '/eholdings/kb-credentials', credentialId, 'users'
-    When method GET
-    Then status 200
-    * print 'assigned users:', response.meta.totalResults, karate.jsonPath(response, '$.data[*].id')
-
-    Given path '/eholdings/user-kb-credential'
-    When method GET
-    * print 'user-kb-credential status:', responseStatus
-
-    # Freshly created KB credentials may not be visible to mod-kb-ebsco reads right away, so retry until they are
-    * configure retry = { count: 30, interval: 2000 }
     Given path '/eholdings/packages'
     And params { q: 'a', 'filter[type]': 'all', count: 25, page: 1 }
-    And retry until responseStatus == 200
     When method GET
     Then status 200
     * def managedPackages = karate.jsonPath(response, "$.data[?(@.attributes.isCustom == false)]")
@@ -76,17 +56,6 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     Then status 200
     * assert response.data.length > 0
     * def resourceId = response.data[0].id
-
-    # (diagnostic) Check eHoldings Bulk Fetch Works In This Tenant For The Test User
-    Given path '/eholdings/packages/bulk/fetch'
-    And request { packages: ['#(keptPackageId)'] }
-    When method POST
-    Then status 200
-
-    Given path '/eholdings/resources/bulk/fetch'
-    And request { resources: ['#(resourceId)'] }
-    When method POST
-    Then status 200
 
     # 3. Create Custom EKB Package To Be Deleted (Agreement Line #3)
     * def deletedPackageName = 'Karate Deleted Package ' + random_string()
@@ -133,11 +102,6 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * def run1 = call read('populate-resource-name.feature@TriggerAndWait') { previousJobId: 'none' }
     * def jobId1 = run1.job.id
     * match run1.job.result.label == 'Partial success'
-
-    # (diagnostic) Dump error log so its messages are captured before strict assertions
-    Given path 'erm/jobs', jobId1, 'errorLog'
-    When method GET
-    Then status 200
 
     # 8. Verify Info Log Lists The Two Updated (Managed) Entitlements
     Given path 'erm/jobs', jobId1, 'infoLog'

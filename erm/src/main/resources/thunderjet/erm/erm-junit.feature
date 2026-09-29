@@ -39,10 +39,7 @@ Feature: ERM (mod-agreements) integration tests
       | 'kb-ebsco.kb-credentials.users.collection.get'        |
       | 'kb-ebsco.kb-credentials.users.collection.post'       |
       | 'kb-ebsco.kb-credentials.users.item.delete'           |
-      | 'kb-ebsco.user-kb-credential.get'                     |
       | 'kb-ebsco.package-resources.collection.get'           |
-      | 'kb-ebsco.packages-bulk.collection.get'               |
-      | 'kb-ebsco.resources-bulk.collection.get'              |
       | 'kb-ebsco.packages.collection.get'                    |
       | 'kb-ebsco.packages.collection.post'                   |
       | 'kb-ebsco.packages.item.delete'                       |
@@ -64,4 +61,3 @@ Feature: ERM (mod-agreements) integration tests
   Scenario: create tenant and users for testing
     * callonce read('classpath:common/eureka/setup-users.feature')
     * call read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }
-    * eval java.lang.System.setProperty('erm-testUserId', karate.get('userId'))

@@ -6,8 +6,6 @@ Feature: Setup credentials
     * callonce login testUser
     * def vndHeaders = { 'Content-Type': 'application/vnd.api+json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)'}
     * def samplesPath = 'classpath:thunderjet/erm/features/setup/samples/'
-    * def testUserId = java.lang.System.getProperty('erm-testUserId')
-
   @SetupCredentials
   Scenario: Create kb-credentials as the only tenant credentials
     # mod-kb-ebsco inserts 'Dummy Credentials' into every new tenant (liquibase migration). The unassigned-user fallback
