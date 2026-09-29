@@ -40,6 +40,23 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
 
     # 1. Find A Managed EKB Package (Agreement Line #1) - Managed Resources Resolve Via Bulk Fetch
     * configure headers = vndHeaders
+
+    # (diagnostic) Single-credentials fallback needs exactly 1 credentials and 0 assigned users - dump the tenant state
+    Given path '/eholdings/kb-credentials'
+    When method GET
+    Then status 200
+    * print 'kb-credentials total:', response.meta.totalResults, karate.jsonPath(response, '$.data[*].id')
+
+    * def credentialId = java.lang.System.getProperty('credentialId')
+    Given path '/eholdings/kb-credentials', credentialId, 'users'
+    When method GET
+    Then status 200
+    * print 'assigned users:', response.meta.totalResults, karate.jsonPath(response, '$.data[*].id')
+
+    Given path '/eholdings/user-kb-credential'
+    When method GET
+    * print 'user-kb-credential status:', responseStatus
+
     # Freshly created KB credentials may not be visible to mod-kb-ebsco reads right away, so retry until they are
     * configure retry = { count: 30, interval: 2000 }
     Given path '/eholdings/packages'

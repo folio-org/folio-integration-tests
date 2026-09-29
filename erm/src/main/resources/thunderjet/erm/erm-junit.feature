@@ -39,6 +39,7 @@ Feature: ERM (mod-agreements) integration tests
       | 'kb-ebsco.kb-credentials.users.collection.get'        |
       | 'kb-ebsco.kb-credentials.users.collection.post'       |
       | 'kb-ebsco.kb-credentials.users.item.delete'           |
+      | 'kb-ebsco.user-kb-credential.get'                     |
       | 'kb-ebsco.package-resources.collection.get'           |
       | 'kb-ebsco.packages-bulk.collection.get'               |
       | 'kb-ebsco.resources-bulk.collection.get'              |
