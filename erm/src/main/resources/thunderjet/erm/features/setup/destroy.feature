@@ -12,6 +12,22 @@ Feature: Destroy test data for erm (mod-agreements)
   Scenario: Delete the agreement created for the test
     * def agreementId = getAndClearSystemProperty('agreementId')
     * if (agreementId == null) karate.abort()
+
+    # An agreement with lines cannot be deleted (405), so remove its lines first
+    Given path 'erm/entitlements'
+    And headers jsonHeaders
+    And param query = 'owner==' + agreementId
+    When method GET
+    Then status 200
+    * def agreement = { id: '#(agreementId)', items: '#(response)' }
+    * set agreement.items[*]._delete = true
+
+    Given path 'erm/sas', agreementId
+    And headers jsonHeaders
+    And request agreement
+    When method PUT
+    Then status 200
+
     Given path 'erm/sas', agreementId
     And headers jsonHeaders
     When method DELETE

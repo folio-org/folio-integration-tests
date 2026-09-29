@@ -59,7 +59,6 @@ Feature: ERM (mod-agreements) integration tests
       | 'kb-ebsco.titles.collection.post'                     |
       | 'kb-ebsco.titles.item.get'                            |
       | 'kb-ebsco.titles.item.put'                            |
-      | 'users.collection.get'                                |
 
   Scenario: create tenant and users for testing
     * callonce read('classpath:common/eureka/setup-users.feature')
