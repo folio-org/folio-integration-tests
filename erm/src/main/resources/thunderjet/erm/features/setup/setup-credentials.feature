@@ -22,17 +22,18 @@ Feature: Setup credentials
     # Assign The Test User To The Credentials
     * call read('setup-credentials.feature@AssignUser') { userId: '#(testUserId)', credentialId: '#(credentialId)' }
 
-    # Assign The mod-agreements System User Too: The Sync Job Calls mod-kb-ebsco As This User,
-    # And mod-kb-ebsco Returns 500 To Users Not Assigned To Any Credentials
+    # Assign All System Users Of The Tenant Too: The Sync Job Runs In The Background As A System User
+    # (The Tenant "<tenant>-system-user"; mod-agreements Has No Own One), And mod-kb-ebsco Returns 500
+    # To Users Not Assigned To Any Credentials
     Given path 'users'
     And headers jsonHeaders
     And param query = 'type=="system"'
     And param limit = 1000
     When method GET
     Then status 200
-    * def agreementsSystemUsers = karate.filter(response.users, function(u){ return ('' + u.username).indexOf('agreements') > -1 })
-    * assert agreementsSystemUsers.length > 0
-    * def assignArgs = karate.map(agreementsSystemUsers, function(u){ return { userId: u.id, credentialId: credentialId } })
+    * def systemUsers = response.users
+    * assert systemUsers.length > 0
+    * def assignArgs = karate.map(systemUsers, function(u){ return { userId: u.id, credentialId: credentialId } })
     * call read('setup-credentials.feature@AssignUser') assignArgs
 
     * setSystemProperty('credentialId', credentialId)
