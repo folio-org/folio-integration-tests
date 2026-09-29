@@ -161,20 +161,42 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.pickupServicePoint.name == 'MR Central Service Point'
 
     # ========== Edit supported request fields ==========
-    # PUT is a full replace, not a merge: MediatedRequestsServiceImpl.update() maps the whole
-    # request body onto the entity, so any field omitted from the body would be wiped (including
-    # 'status', which decline below requires to still be 'New - Awaiting confirmation'). Start
-    # from the stored representation returned by the GET above and mutate only the fields
-    # under test.
-    * copy updatedRequest = response
-    * set updatedRequest.patronComments = 'FAT-27422 edited patron comment'
-    * set updatedRequest.pickupServicePointId = mrUniServicePointId
-    # 'pickupServicePoint' is a read-only copy the module resolves from pickupServicePointId,
-    # so drop the stale copy rather than sending it alongside the new ID.
-    * remove updatedRequest.pickupServicePoint
-
+    # PUT is a full replace, not a merge: MediatedRequestsServiceImpl.update() maps the whole body
+    # onto the entity, so anything omitted is wiped - including 'status', which decline below
+    # requires to still be 'New - Awaiting confirmation'. The body is therefore built explicitly
+    # with every persisted field, not by echoing the GET representation back.
+    #
+    # Do NOT round-trip the GET response here. A GET is enriched by addRequestDetailsForGet() with
+    # derived, read-only sub-objects - 'requester' (plus patronGroup), 'instance' (contributorNames,
+    # publication, editions, hrid), 'item' (location, status, callNumberComponents),
+    # 'pickupServicePoint' and 'metadata' - and PUTting that back returns a bare framework-level
+    # 400 ({"timestamp","status","error","path"} with no "errors" array), i.e. the body is rejected
+    # during deserialization before the module's own code runs.
+    #
+    # Sending them is pointless anyway: addRequestDetailsForUpdate() calls
+    # removeExistingRequestDetails(), which nulls item/requester/proxy/instance/pickupServicePoint/
+    # searchIndex, and then re-derives each one from inventory, mod-search and the user record. Only
+    # the scalar fields below are actually persisted from the request body. This mirrors the POST
+    # body above, which the same schema accepts, plus 'id' and 'status'.
     Given path 'requests-mediated/mediated-requests', mediatedRequestId
-    And request updatedRequest
+    And request
+      """
+      {
+        "id": "#(mediatedRequestId)",
+        "status": "New - Awaiting confirmation",
+        "requestType": "Page",
+        "fulfillmentPreference": "Hold Shelf",
+        "requestLevel": "Item",
+        "requestDate": "#(java.time.Instant.now().toString())",
+        "patronComments": "FAT-27422 edited patron comment",
+        "instanceId": "#(inventory.instanceId)",
+        "holdingsRecordId": "#(inventory.holdingId)",
+        "itemId": "#(inventory.itemId)",
+        "item": { "barcode": "#(inventory.itemBarcode)" },
+        "requesterId": "#(patron.requesterId)",
+        "pickupServicePointId": "#(mrUniServicePointId)"
+      }
+      """
     When method PUT
     Then status 204
 
@@ -193,7 +215,13 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.instanceId == inventory.instanceId
     And match response.holdingsRecordId == inventory.holdingId
     And match response.requesterId == patron.requesterId
-    And match response.item.barcode == inventory.itemBarcode
+    # NB: response.item.barcode is deliberately NOT asserted. The module never persists the 'item'
+    # object from the request body - removeExistingRequestDetails() nulls it and addItem() re-derives
+    # it from the inventory item found via mod-search. This scenario has no mod-search readiness gate
+    # (it does not confirm, so it does not need one), so when the college item is not yet indexed the
+    # createFallbackItem() path returns an item with no barcode at all. The first run of this test
+    # showed exactly that: the GET returned "item": { callNumberComponents, location, status } with
+    # no barcode. itemId above is the reliable assertion; barcode is not.
     # ...and the edit does not advance the workflow - still awaiting confirmation
     And match response.status == 'New - Awaiting confirmation'
     And match response.mediatedRequestStatus == 'New'
