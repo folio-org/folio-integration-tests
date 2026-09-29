@@ -14,11 +14,14 @@ Feature: mod-di-converter-storage integration tests
       | 'converter-storage.jobprofile.put'                           |
       | 'converter-storage.jobprofile.post'                          |
       | 'converter-storage.jobprofile.delete'                        |
+      | 'converter-storage.actionprofile.collection.get'             |
       | 'converter-storage.actionprofile.post'                       |
       | 'converter-storage.actionprofile.delete'                     |
       | 'converter-storage.mappingprofile.post'                      |
       | 'converter-storage.mappingprofile.delete'                    |
       | 'converter-storage.matchprofile.post'                        |
+      | 'converter-storage.matchprofile.item.get'                    |
+      | 'converter-storage.matchprofile.put'                         |
       | 'converter-storage.jobprofilesnapshots.post'                 |
       | 'converter-storage.jobprofilesnapshots.get'                  |
       | 'converter-storage.field-protection-settings.post'           |

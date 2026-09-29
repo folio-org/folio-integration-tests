@@ -1,5 +1,8 @@
 package org.folio;
 
+import static org.folio.test.config.TestParam.TEST_TENANT;
+import static org.folio.test.config.TestParam.TEST_TENANT_ID;
+
 import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
@@ -26,7 +29,18 @@ public class ConsortiaInventoryTest extends TestBaseEureka {
 
   @AfterAll
   public void tearDown() {
-    runFeature(TEST_BASE_PATH + "destroy-consortia.feature");
+    try {
+      runFeature(TEST_BASE_PATH + "destroy-consortia.feature");
+    } finally {
+      // This class never uses the shared testTenant/testTenantId (it builds its own
+      // central/university/college tenants), but the inherited runHook() still generates
+      // and sets them when unset. Clear them here so a later test class in the same JVM
+      // fork doesn't see them as already-provisioned and skip creating its own tenant.
+      if (shouldCreateTenant()) {
+        System.clearProperty(TEST_TENANT.getValue());
+        System.clearProperty(TEST_TENANT_ID.getValue());
+      }
+    }
   }
 
   @Test
