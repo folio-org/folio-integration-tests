@@ -18,9 +18,6 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
     * def authorityUtilFeature = 'classpath:promin/data-import/global/authority-delete-common.feature'
     * def exportAuthorityFeature = 'classpath:promin/data-import/global/export-authority-record.feature'
 
-    # Shipped "Default - Delete MARC Authority records" job profile, which matches on 999 ff $s
-    * def defaultDeleteAuthorityJobProfileId = '1a338fcd-3efc-4a03-b007-394eeb0d5fb9'
-
     * call login consortiaAdmin
     * def headersConsortia = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': '*/*' }
 
