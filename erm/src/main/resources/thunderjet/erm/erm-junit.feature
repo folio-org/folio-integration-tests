@@ -7,12 +7,10 @@ Feature: ERM (mod-agreements) integration tests
     * table modules
       | name                |
       | 'mod-login'         |
-      | 'mod-notes'         |
       | 'mod-users'         |
       | 'mod-agreements'    |
       | 'mod-permissions'   |
       | 'mod-kb-ebsco-java' |
-      | 'mod-configuration' |
 
     * table userPermissions
       | name                                                      |
