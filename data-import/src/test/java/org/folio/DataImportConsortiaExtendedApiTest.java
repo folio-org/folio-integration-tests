@@ -51,6 +51,14 @@ class DataImportConsortiaExtendedApiTest extends TestBaseEureka {
   @Test
   void deleteAuthorityFromMemberTenant() {
     feature(DELETE_AUTHORITY_BASE_PATH + "delete-authority-consortia-member-tenant.feature")
+      .reportDir(timestampedReportDir())
+      .run();
+  }
+
+  @Test
+  void deleteSharedAuthorityFromCentralTenant() {
+    feature(DELETE_AUTHORITY_BASE_PATH + "delete-authority-consortia-central-tenant.feature")
+      .reportDir(timestampedReportDir())
       .run();
   }
 
