@@ -73,20 +73,30 @@ class FolioEcsCirculationTests extends TestBaseEureka {
     runFeature(MEDIATED_REQUESTS_BASE_PATH + "mediated-requests.feature");
   }
 
+  /**
+   * FAT-27423 staff slips for the mediated-request workflow. Runs straight after
+   * {@link #mediatedRequestsTests()} because it reuses the same mediated-request consortium setup.
+   */
   @Test
   @Order(2)
+  void mediatedRequestStaffSlipsTests() {
+    runFeature(MEDIATED_REQUESTS_BASE_PATH + "mediated-request-staff-slips.feature");
+  }
+
+  @Test
+  @Order(3)
   void folioEcsCirculationTests() {
     runFeatureTest("systemwide-service-points");
   }
 
   @Test
-  @Order(3)
+  @Order(4)
   void staffSlipsTests() {
     runFeature("classpath:vega/staff-slips/features/staff-slips.feature");
   }
 
   @Test
-  @Order(4)
+  @Order(5)
   void ecsRequestsTests() {
     runFeature(ECS_REQUESTS_BASE_PATH + "ecs-requests.feature");
   }

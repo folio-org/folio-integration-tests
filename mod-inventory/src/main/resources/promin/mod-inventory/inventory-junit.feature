@@ -10,6 +10,7 @@ Feature: mod-inventory integration tests
       | 'mod-inventory'             |
       | 'mod-source-record-storage' |
       | 'mod-inventory-storage'     |
+      | 'mod-search'                |
 
     * table userPermissions
       | name                                                      |
@@ -37,6 +38,8 @@ Feature: mod-inventory integration tests
       | 'inventory.holdings.update-ownership.item.post'           |
       | 'inventory.items.update-ownership.item.post'              |
       | 'inventory.instances.item.put'                            |
+      | 'inventory.instances.item.mark-deleted.delete'            |
+      | 'search.instances.collection.get'                         |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
