@@ -4,6 +4,7 @@ import org.folio.test.TestBaseEureka;
 import org.folio.test.annotation.FolioTest;
 import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
+import org.folio.test.services.TestRailService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,12 +17,12 @@ import org.junit.jupiter.api.TestInfo;
 import java.util.Set;
 
 @FolioTest(team = "thunderjet", module = "erm")
-public class ErmApiTests extends TestBaseEureka {
+public class ErmExtendedApiTest extends TestBaseEureka {
     private static final String TEST_BASE_PATH = "classpath:thunderjet/erm/features/";
     private static final String SETUP_CREDENTIALS_TAG = "CREDENTIALS";
 
-    public ErmApiTests() {
-        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)));
+    public ErmExtendedApiTest() {
+        super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
     }
 
     @BeforeAll
