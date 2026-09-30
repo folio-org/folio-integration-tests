@@ -90,7 +90,9 @@ Feature: Populate ResourceName For External eHoldings Agreement Lines
     * def line1Id = karate.jsonPath(response, "$[?(@.reference=='" + keptPackageId + "')].id")[0]
     * def line2Id = karate.jsonPath(response, "$[?(@.reference=='" + resourceId + "')].id")[0]
     * def line3Id = karate.jsonPath(response, "$[?(@.reference=='" + deletedPackageId + "')].id")[0]
-    * def expectedInfoMessages = [ updatedMessage('package', line1Id, keptPackageId, keptPackageName), updatedMessage('title', line2Id, resourceId, titleName) ]
+    * def line1Message = updatedMessage('package', line1Id, keptPackageId, keptPackageName)
+    * def line2Message = updatedMessage('title', line2Id, resourceId, titleName)
+    * def expectedInfoMessages = [ '#(line1Message)', '#(line2Message)' ]
 
     # 5. Delete The Custom Package Behind Line #3 So Its Lookup Fails During The Sync
     * configure headers = vndHeaders
