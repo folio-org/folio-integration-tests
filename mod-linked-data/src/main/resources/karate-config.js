@@ -3,7 +3,7 @@ function fn() {
   karate.configure('logPrettyRequest', true);
   karate.configure('logPrettyResponse', true);
 
-  var retryConfig = { count: 120, interval: 5000 }
+  var retryConfig = { count: 60, interval: 10000 }
   karate.configure('retry', retryConfig)
 
   var env = karate.env;
