@@ -1,4 +1,3 @@
-@parallel=false
 Feature: Delete MARC Authority records in a Consortia environment via Data Import
 
   # Uses the shared "SeedAuthorities" util from authority-delete-common.feature to prepare
@@ -7,7 +6,7 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
   #   - Record B: the seed's "linked" authority - linked to a bib's 100 field before deletion.
   # Both records are created in, exported from, and deleted from the Central tenant,
   # through the "Default - Delete MARC Authority records" job profile. After deletion,
-  # neither record is discoverable in the Central tenant or the university Member tenant,
+  # neither record is discoverable in the Central tenant or the College member tenant,
   # and the MARC Bib field previously linked to Record B is no longer linked.
 
   Background:
@@ -22,9 +21,9 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
     * def headersConsortia = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': '*/*' }
     * def centralHeadersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': '*/*' }
 
-    # Login under universityUser1 to build member-tenant headers used in step 5
-    * call login universityUser1
-    * def headersUniversity = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': '*/*' }
+    # Login under collegeUser1 to build member-tenant headers used in step 5
+    * call login collegeUser1
+    * def headersCollege = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': '*/*' }
 
     # Re-login as consortiaAdmin so okapitoken is current for the Central-tenant data-import util
     # features (import-record.feature, export-authority-record.feature, authority-delete-common.feature)
@@ -46,9 +45,6 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
 
   @C1504479
   Scenario: Default delete job profile deletes shared authority records linked and not linked to bib fields from Central tenant
-    * def recordA100FieldValue = 'Kirby, Jack'
-    * def recordB100FieldValue = 'Lee, Stan,'
-
     # Create Record A (unlinked) and Record B (linked) in the Central tenant
     * def seed = call read(authorityUtilFeature + '@SeedAuthorities') { runId: '#(runId)' }
     * def recordAAuthorityId = seed.unlinkedAuthorityId
@@ -57,6 +53,8 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
     * def recordBAuthorityId = seed.linkedAuthorityId
     * def recordBRecordId = seed.linkedRecordId
     * def recordBControlNumber = seed.linkedControlNumber
+    * def recordA100FieldValue = 'Kirby, Jack'
+    * def recordB100FieldValue = 'Lee, Stan,'
 
     # Link a MARC Bib to Authority Record B in the Central tenant
     * def linkingRes = call read(authorityUtilFeature + '@LinkBibToAuthority') { runId: '#(runId)', authorityId: '#(recordBAuthorityId)', authorityNaturalId: '#(recordBControlNumber)' }
@@ -136,7 +134,7 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
     And match response.totalRecords == 0
 
     # Navigate to the bib record that was linked to Record B (in Central tenant) using
-    # quickMARC editor (records-editor/records endpoint) - the previously linked field is no longer linked
+    # quickMARC editor API - the previously linked field is no longer linked
     Given path 'records-editor/records'
     And param externalId = instanceId
     And headers headersUser
@@ -147,18 +145,18 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
     And match bibField100.content !contains '$9'
     And match bibField100.linkDetails == '##null'
 
-    # Navigate to "MARC authority" app in the university Member tenant and search for
+    # Navigate to "MARC authority" app in the college Member tenant and search for
     # Record A and Record B by their headings - neither record should be found in the Member tenant
     Given path 'search/authorities'
     And param query = 'keyword all "' + recordA100FieldValue + '"'
-    And headers headersUniversity
+    And headers headersCollege
     When method GET
     Then status 200
     And match response.totalRecords == 0
 
     Given path 'search/authorities'
     And param query = 'keyword all "' + recordB100FieldValue + '"'
-    And headers headersUniversity
+    And headers headersCollege
     When method GET
     Then status 200
     And match response.totalRecords == 0
