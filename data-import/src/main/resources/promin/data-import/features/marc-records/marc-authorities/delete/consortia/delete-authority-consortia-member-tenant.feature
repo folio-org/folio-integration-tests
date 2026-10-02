@@ -5,7 +5,7 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
   # the two authority records described by the TestRail case:
   #   - Record A: the seed's "unlinked" authority - not linked to any bib field.
   #   - Record B: the seed's "linked" authority - linked to a bib's 100 field before deletion.
-  # Both records are created in, exported from, and deleted from the university Member tenant,
+  # Both records are created in, exported from, and deleted from the college member tenant,
   # through the "Default - Delete MARC Authority records" job profile. After deletion,
   # neither record is discoverable in the Member tenant,
   # and the MARC Bib field previously linked to Record B is no longer linked.
@@ -21,18 +21,18 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
     * call login consortiaAdmin
     * def headersConsortia = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)', 'Accept': '*/*' }
 
-    # Login under universityUser1 provides "okapitoken" variable to the context,
+    # Login under collegeUser1 provides "okapitoken" variable to the context,
     # that is used by util import-record.feature@ImportRecord scenario
-    * call login universityUser1
-    * def headersUniversity = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': '*/*' }
-    * def universityHeadersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(universityTenant)', 'Accept': '*/*' }
+    * call login collegeUser1
+    * def headersCollege = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': '*/*' }
+    * def collegeHeadersUserOctetStream = { 'Content-Type': 'application/octet-stream', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(collegeTenant)', 'Accept': '*/*' }
 
     # Declare testTenant, testUser, headersUser variables so every
     # data-import util features (auth.feature, import-record.feature, authority-delete-common.feature, etc.)
-    # could operates against the university tenant instead of the default single tenant
-    * def testTenant = universityTenant
-    * def testUser = universityUser1
-    * def headersUser = headersUniversity
+    # could operates against the college tenant instead of the default single tenant
+    * def testTenant = collegeTenant
+    * def testUser = collegeUser1
+    * def headersUser = headersCollege
 
     # Clear 'configure headers' made by initData.feature's Background (Content-Type: application/json),
     # so export-authority-record.feature's 'And headers headersUserOctetStream' takes effect
@@ -42,7 +42,7 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
 
   @C1504480
   Scenario: Default delete job profile deletes local authority records linked and not linked to bib fields from Member tenant.
-    # Create Record A (unlinked) and Record B (linked) in the university member tenant
+    # Create Record A (unlinked) and Record B (linked) in the college member tenant
     * def seed = call read(authorityUtilFeature + '@SeedAuthorities') { runId: '#(runId)' }
     * def recordAAuthorityId = seed.unlinkedAuthorityId
     * def recordARecordId = seed.unlinkedRecordId
@@ -50,6 +50,8 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
     * def recordBAuthorityId = seed.linkedAuthorityId
     * def recordBRecordId = seed.linkedRecordId
     * def recordBControlNumber = seed.linkedControlNumber
+    * def recordA100FieldValue = 'Kirby, Jack'
+    * def recordB100FieldValue = 'Lee, Stan,'
 
     # Link a MARC Bib to authority Record B in the member tenant
     * def linkingRes = call read(authorityUtilFeature + '@LinkBibToAuthority') { runId: '#(runId)', authorityId: '#(recordBAuthorityId)', authorityNaturalId: '#(recordBControlNumber)' }
@@ -59,7 +61,7 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
     # the precondition ("exported from Member tenant and downloaded")
     * def authorityIdsToExport = ['#(recordAAuthorityId)', '#(recordBAuthorityId)']
     * def exportFileName = 'C1504480-export-' + runId
-    * def headersUserOctetStream = universityHeadersUserOctetStream
+    * def headersUserOctetStream = collegeHeadersUserOctetStream
     * def exported = call read(exportAuthorityFeature + '@exportAuthorityRecords') { authorityIds: '#(authorityIdsToExport)', fileName: '#(exportFileName)' }
 
     * def deleteFileName = 'C1504480-delete-' + runId
@@ -114,20 +116,20 @@ Feature: Delete MARC Authority records in a Consortia environment via Data Impor
 
     # Neither Record A nor Record B authorities are found anymore
     Given path 'search/authorities'
-    And param query = 'keyword all "Kirby, Jack"'
+    And param query = 'keyword all "' + recordA100FieldValue + '"'
     And headers headersUser
     When method GET
     Then status 200
     And match response.totalRecords == 0
 
     Given path 'search/authorities'
-    And param query = 'keyword all "Lee, Stan,"'
+    And param query = 'keyword all "' + recordB100FieldValue + '"'
     And headers headersUser
     When method GET
     Then status 200
     And match response.totalRecords == 0
 
-    # Verify via quickMARC (records-editor/records) that in the MARC Bib record linked to Record B
+    # Verify via quickMARC API that in the MARC Bib record linked to Record B
     # previously linked field is no longer linked
     Given path 'records-editor/records'
     And param externalId = instanceId
