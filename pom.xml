@@ -68,6 +68,7 @@
     <module>mod-source-record-storage</module>
     <module>mod-notes</module>
     <module>mod-kb-ebsco-java</module>
+    <module>erm</module>
     <module>mod-di-converter-storage</module>
     <module>mod-source-record-manager</module>
     <module>mod-password-validator</module>
