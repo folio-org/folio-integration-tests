@@ -3,7 +3,6 @@ Feature: data-import ECS integration tests
   Background:
     * url baseUrl
     * configure readTimeout = 600000
-    * callonce login admin
 
     * table modules
       | name                        |
