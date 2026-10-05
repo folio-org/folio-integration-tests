@@ -161,6 +161,9 @@ Feature: mod-consortia-keycloak integration tests
   Scenario: Sharing Patron Groups Settings api tests
     * call read('features/sharing-patron-groups-setting.feature')
 
+  Scenario: Keycloak custom login and identity provider api tests
+    * call read('features/keycloak-login-setup.feature')
+
   Scenario: Destroy created ['central', 'university', 'college'] tenants
     * call deleteTenantAndEntitlement { tenantId: '#(universityTenantId)' }
     * call deleteTenantAndEntitlement { tenantId: '#(collegeTenantId)' }

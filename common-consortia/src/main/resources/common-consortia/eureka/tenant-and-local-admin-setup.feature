@@ -20,6 +20,7 @@ Feature: setup tenant
       | 'consortia.consortium.item.get'                       |
       | 'consortia.create-primary-affiliations.item.post'     |
       | 'consortia.custom-login.item.post'                    |
+      | 'consortia.custom-login.item.delete'                  |
       | 'consortia.identity-provider.item.post'               |
       | 'consortia.identity-provider.item.delete'             |
       | 'consortia.inventory.local.sharing-instances.execute' |
