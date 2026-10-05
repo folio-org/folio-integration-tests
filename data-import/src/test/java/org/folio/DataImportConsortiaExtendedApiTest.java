@@ -62,6 +62,13 @@ class DataImportConsortiaExtendedApiTest extends TestBaseEureka {
       .run();
   }
 
+  @Test
+  void deleteSharedAuthorityFromMemberTenant() {
+    feature(DELETE_AUTHORITY_BASE_PATH + "delete-shared-authority-consortia-member-tenant.feature")
+      .reportDir(timestampedReportDir())
+      .run();
+  }
+
   @Override
   public void runHook() {
     super.runHook();
