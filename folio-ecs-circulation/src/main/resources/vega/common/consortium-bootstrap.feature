@@ -94,6 +94,7 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'tlr.settings.put'                                          |
       | 'user-tenants.collection.get'                               |
       | 'search.index.instance-records.reindex.full.post'           |
+      | 'search.index.instance-records.reindex.status.get'          |
       | 'search.instances.collection.get'                           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |

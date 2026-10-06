@@ -97,6 +97,7 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'consortia.user-tenants.collection.get'                     |
       | 'consortia.user-tenants.item.post'                          |
       | 'search.index.instance-records.reindex.full.post'           |
+      | 'search.index.instance-records.reindex.status.get'          |
       | 'search.instances.collection.get'                           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
@@ -161,11 +162,44 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
     Then status 200
 
     # ========== Step 3: Initialize mod-search indices ==========
+    # Reindex also evicts mod-search's USER_TENANTS_CACHE. Wait for any competing reindex to finish
+    # and for that cache eviction to propagate before creating member-tenant inventory; otherwise
+    # college item events can be routed to the college-local index instead of the central consortium
+    # index, leaving the confirmation scenarios' central searches empty indefinitely.
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    * configure retry = { count: 20, interval: 10000 }
     Given path 'search/index/instance-records/reindex/full'
     And request {}
+    And retry until responseStatus == 200
     When method POST
     Then status 200
+
+    # The trigger is asynchronous. Poll the status endpoint instead of sleeping for a fixed time:
+    # this continues immediately when the reindex is ready, while still allowing slower runs to
+    # finish. Failed states are terminal too, so surface them directly rather than timing out.
+    * def isReindexTerminal =
+      """
+      function(statuses) {
+        if (!statuses || statuses.length == 0) return false;
+        if (karate.filter(statuses, function(s) {
+          return s.status && s.status.indexOf('_FAILED') > -1;
+        }).length > 0) return true;
+        var mergeOnlyEntities = ['holding', 'holdings', 'item'];
+        return karate.filter(statuses, function(s) {
+          if (!s.status) return true;
+          if (s.status == 'UPLOAD_COMPLETED') return false;
+          var entityType = (s.entityType || '').toLowerCase();
+          return !(s.status == 'MERGE_COMPLETED' && mergeOnlyEntities.indexOf(entityType) > -1);
+        }).length == 0;
+      }
+      """
+    * configure retry = { count: 60, interval: 10000 }
+    Given path 'search/index/instance-records/reindex/status'
+    And retry until responseStatus == 200 && isReindexTerminal(response)
+    When method GET
+    Then status 200
+    * def failedReindexEntities = karate.filter(response, function(s) { return s.status && s.status.indexOf('_FAILED') > -1; })
+    * if (failedReindexEntities.length > 0) karate.fail('mod-search reindex failed: ' + karate.pretty(failedReindexEntities))
 
     # ========== Step 4: Setup inventory data in central tenant ==========
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
