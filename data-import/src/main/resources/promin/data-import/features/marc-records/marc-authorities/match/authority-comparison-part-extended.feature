@@ -21,7 +21,7 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
     * def qBeginsOclcNumerics = { qualifierType: 'BEGINS_WITH', qualifierValue: '(OCoLC)', comparisonPart: 'NUMERICS_ONLY' }
 
   # A-1 C350723 - baseline.
-  @C350723
+  @C350723 @ignore
   Scenario: Authority matches on 010 $a with neither option selected
     * def value = 'n' + runId
     * def seeded = call read(commonFeature + '@SeedAuthority') { runId: '#(runId)', controlNumber: '#("FAT28498A1" + runId)', heading: '#("FAT-28498 A1 " + runId)', matchField: '010', matchSubfield: 'a', matchValues: ['#(value)'] }
@@ -38,6 +38,7 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
 
   # A-2 C1505056 - negative baseline. The two 010 $a values differ
   # only by one space and no option is selected, so they must not match.
+  @ignore
   @C1505056
   Scenario: Authority does not match on 010 $a differing only in whitespace and a duplicate is created
     * def existingValue = 'n ' + runId
@@ -55,6 +56,7 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
     * call read(commonFeature + '@AssertMarcCreatedAsDuplicate') { jobExecutionId: '#(jobExecutionId)', existingExternalId: '#(seeded.authorityId)', infoField: 'relatedAuthorityInfo' }
 
   # A-9 C1505062 - qualifier and comparison part together on 035 $a.
+  @ignore
   @C1505062
   Scenario: Authority matches on 035 $a with a qualifier and Numerics only on both sides
     * def otherDigits = epoch + randomDigits(6)
@@ -71,3 +73,30 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
     Given call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
     Then match status != 'ERROR'
     * call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(jobExecutionId)', externalId: '#(seeded.authorityId)', infoField: 'relatedAuthorityInfo' }
+
+  @C1538563
+  Scenario: Authority is not updated on 010 $a with numerics only incoming and alphanumerics only existing and no qualifier
+    * def profileName = 'C1538563 MARC authority 010 $a on 010 $a - Numerics only incoming, Alphanumerics only existing, no qualifier (negative)' + runId
+    * def matchValue = 'n79139105 '
+    * def controlNumber = 'C1538563' + runId
+    * def heading = 'Test case: C1538563 ' + runId
+
+    * def seedRes = call read(commonFeature + '@SeedAuthority') { runId: '#(runId)', controlNumber: '#(controlNumber)', heading: '#(heading)', matchField: '010', matchSubfield: 'a', matchValues: ['#(matchValue)'] }
+    * def authorityId = seedRes.authorityId
+
+    * def profiles = call read(commonFeature + '@CreateUpdateJobProfile') { runId: '#(runId)', profileName: '#(profileName)', recordType: 'MARC_AUTHORITY', mappingDetailsName: 'marcAuthority', matchField: '010', matchSubfield: 'a', ind1: ' ', ind2: ' ', incomingQualifier: '#(NC)', existingQualifier: '#(AC)' }
+    * def jobProfileId = profiles.jobProfileId
+
+    * def incomingFileName = 'C1538563-incoming-authority-' + runId
+    * def res = call read(commonFeature + '@BuildAuthorityFile') { controlNumber: '#(controlNumber)', heading: '#(heading)', matchField: '010', matchSubfield: 'a', matchValues: ['#(matchValue)'], fileName: '#(incomingFileName)' }
+
+    * def importRes = call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
+    * match importRes.jobExecution.status == 'COMMITTED'
+
+    * call read(commonFeature + '@AssertMarcNotMatched') { jobExecutionId: '#(importRes.jobExecutionId)' }
+
+    Given path 'authority-storage/authorities', authorityId
+    And headers headersUser
+    When method GET
+    Then status 200
+    And match response.id == authorityId

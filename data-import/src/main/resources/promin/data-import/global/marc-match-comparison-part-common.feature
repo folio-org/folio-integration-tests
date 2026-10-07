@@ -215,6 +215,7 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * def entry = response.entries[0]
     * print 'FAT-28498 job log entry:', entry
     And match entry.sourceRecordActionStatus == 'DISCARDED'
+    And match entry.error == ''
 
   @AssertMarcCreatedAsDuplicate
   Scenario: Assert the import created a new record instead of updating the existing one
