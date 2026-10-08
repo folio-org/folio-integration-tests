@@ -16,6 +16,7 @@ Feature: MARC Authority matching on 001 with "Only compare part of the value"
 
     * def runId = epoch + randomString(5)
     * def AC = { comparisonPart: 'ALPHANUMERICS_ONLY' }
+    * def NC = { comparisonPart: 'NUMERICS_ONLY' }
 
     * def paddedValue = 'n ' + runId + ' '
     * def compactValue = 'n' + runId
@@ -71,3 +72,40 @@ Feature: MARC Authority matching on 001 with "Only compare part of the value"
     Then match status != 'ERROR'
     * call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(jobExecutionId)', externalId: '#(seeded.authorityId)', infoField: 'relatedAuthorityInfo' }
     * call read(commonFeature + '@AssertAuthorityHeading') { authorityId: '#(seeded.authorityId)', expectedHeading: '#(updatedHeading)' }
+
+
+  # C1538659 - Numerics only on both sides. Stored 001 "n <digits> " and incoming "n<digits>" both
+  # reduce to the same digits, so the match must succeed and the record must be updated.
+  @C1538659
+  Scenario: Authority is updated on 001 with Numerics only on both sides
+    # Digits-only id (epoch is numeric), since Numerics only drops letters from both values
+    * def numericPart = '79139501' + epoch
+    * def createMatchValue = 'n ' + numericPart + ' '
+    * def updateMatchValue = 'n' + numericPart
+    * def headingValue = 'Test case: C1538659 ' + epoch
+    * def updatedHeadingValue = headingValue + ' UPDATED'
+    * def profileName = 'C1538659 A-27 MARC authority 001 on 001 - Numerics only both sides' + runId
+
+    * def seedRes = call read(commonFeature + '@SeedAuthority') { runId: '#(numPart)', controlNumber: '#(createMatchValue)', heading: '#(headingValue)', matchField: '001', matchSubfield: '', matchValues: ['#(createMatchValue)'] }
+
+    # Find the imported record and verify field 001 keeps its internal and trailing spaces
+    Given path '/source-storage/source-records'
+    And param recordType = 'MARC_AUTHORITY'
+    And param externalId = seedRes.authorityId
+    And headers headersUser
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    And def createdControlNumbers = karate.jsonPath(response, "$.sourceRecords[0].parsedRecord.content.fields[*]['001']")
+    And match createdControlNumbers contains createMatchValue
+
+    * def profiles = call read(commonFeature + '@CreateUpdateJobProfile') { runId: '#(numPart)', profileName: '#(profileName)', recordType: 'MARC_AUTHORITY', mappingDetailsName: 'marcAuthority', matchField: '001', matchSubfield: '', ind1: '', ind2: '', incomingQualifier: '#(NC)', existingQualifier: '#(NC)' }
+    * def jobProfileId = profiles.jobProfileId
+
+    * def incomingFileName = 'C1538659-incoming-' + runId
+    * def buildFileRes = call read(commonFeature + '@BuildAuthorityFile') { controlNumber: '#(updateMatchValue)', heading: '#(updatedHeadingValue)', matchField: '001', matchSubfield: '', matchValues: ['#(updateMatchValue)'], fileName: '#(incomingFileName)' }
+
+    Given def importRes = call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
+    Then match importRes.jobExecution.status == 'COMMITTED'
+    And call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(importRes.jobExecutionId)', externalId: '#(seedRes.authorityId)', infoField: 'relatedAuthorityInfo' }
+    And call read(commonFeature + '@AssertAuthorityHeading') { authorityId: '#(seedRes.authorityId)', expectedHeading: '#(updatedHeadingValue)' }
