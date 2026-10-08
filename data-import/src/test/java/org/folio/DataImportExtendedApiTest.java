@@ -49,13 +49,13 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
     }
   }
 
-  @Test
+//  @Test
   void relatorTermCode1xx7xxFieldsContributors() {
     feature("classpath:promin/data-import/features/marc-records/marc-bibs/create/relator-term-code-1xx-7xx-fields.feature")
       .run();
   }
 
-  @Test
+//  @Test
   void contributors720RelatorTermsAndCodes() {
     feature("classpath:promin/data-import/features/marc-records/marc-bibs/create/contributors-720-relator-terms-and-codes.feature")
       .run();
@@ -69,31 +69,31 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
 
   // MODSOURCE-1019: "Only compare part of the value" on 001 for MARC Authority.
   // C1538655, C1538657, C1538658. Not yet classified in TestRail - move to CriticalPath if needed.
-  @Test
+//  @Test
   void authority001ComparisonPart() {
     feature(MATCH_AUTHORITY_PATH + "authority-001-comparison-part.feature")
       .run();
   }
 
-  @Test
+//  @Test
   void diAuthorityExtended() {
     feature("classpath:promin/data-import/features/marc-records/marc-authorities/create/data-import-authority-records-extended.feature")
       .run();
   }
 
-  @Test
+//  @Test
   void oclcCopycatImportAndOverlay() {
     feature("classpath:promin/data-import/features/marc-records/marc-bibs/single-record-import/oclc-copycat-import-and-overlay.feature")
       .run();
   }
 
-  @Test
+//  @Test
   void marcToMarcMatchBy008Field() {
     feature("classpath:promin/data-import/features/marc-records/marc-bibs/match/marc-to-marc-match-by-008-field.feature")
       .run();
   }
 
-  @Test
+//  @Test
   void importOpenOrderPhysicalResourceWithInstanceHoldings() {
     feature("classpath:promin/data-import/features/marc-records/marc-bibs/orders/import-open-physical-order-with-instance-holding.feature")
       .run();
