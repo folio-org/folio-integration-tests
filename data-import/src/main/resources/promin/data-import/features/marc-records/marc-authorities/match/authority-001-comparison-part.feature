@@ -16,6 +16,11 @@ Feature: MARC Authority matching on 001 with "Only compare part of the value"
 
     * def runId = epoch + randomString(5)
     * def AC = { comparisonPart: 'ALPHANUMERICS_ONLY' }
+    * def beginsWithNNumerics = { qualifierType: 'BEGINS_WITH', qualifierValue: 'n', comparisonPart: 'NUMERICS_ONLY' }
+    * def randomDigits = function(n) { var r = ''; for (var i = 0; i < n; i++) { r += Math.floor(Math.random() * 10); } return r; }
+    * def digits = epoch + randomDigits(6)
+    * def paddedNumericValue = 'n ' + digits + ' '
+    * def compactNumericValue = 'n' + digits
 
     * def paddedValue = 'n ' + runId + ' '
     * def compactValue = 'n' + runId
@@ -71,3 +76,46 @@ Feature: MARC Authority matching on 001 with "Only compare part of the value"
     Then match status != 'ERROR'
     * call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(jobExecutionId)', externalId: '#(seeded.authorityId)', infoField: 'relatedAuthorityInfo' }
     * call read(commonFeature + '@AssertAuthorityHeading') { authorityId: '#(seeded.authorityId)', expectedHeading: '#(updatedHeading)' }
+
+  # C1538656 - no options, 001 values differ only by whitespace: the update is not matched and the
+  # existing record is left as it was. The control for C1538658, which uses the same two values.
+  @C1538656
+  Scenario: Authority is not matched when 001 control numbers differ by whitespace without normalization
+    # Steps 1-3: create the authority with the default job profile; it is created with 001 "n <id> "
+    * def seeded = call read(commonFeature + '@SeedAuthority') { runId: '#(runId)', controlNumber: '#(paddedValue)', heading: '#(heading)', matchField: '001', matchSubfield: '', matchValues: ['#(paddedValue)'] }
+    * call read(commonFeature + '@AssertJobLogStatus') { jobExecutionId: '#(seeded.jobExecutionId)', infoField: 'relatedAuthorityInfo', expectedStatus: 'CREATED' }
+    * call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_AUTHORITY', externalId: '#(seeded.authorityId)', field: '001', subfield: '', expectedValue: '#(paddedValue)' }
+
+    # Steps 4-5: import "n<id>" with the update job profile - "No action" in the SRS and Authority columns
+    * def profiles = call read(commonFeature + '@CreateUpdateJobProfile') { runId: '#(runId)', profileName: 'MODSOURCE-1019 A-24 001 no match', recordType: 'MARC_AUTHORITY', mappingDetailsName: 'marcAuthority', matchField: '001', matchSubfield: '', ind1: '', ind2: '', incomingQualifier: null, existingQualifier: null }
+    * def jobProfileId = profiles.jobProfileId
+    * def incomingFileName = 'MODSOURCE-1019-a24-incoming-' + runId
+    # Assigned so the call runs in its own scope: an unassigned call shares scope and would overwrite
+    # this scenario's "heading" with the argument passed here, which step 6 still needs
+    * def incomingFile = call read(commonFeature + '@BuildAuthorityFile') { controlNumber: '#(compactValue)', heading: '#(updatedHeading)', matchField: '001', matchSubfield: '', matchValues: ['#(compactValue)'], fileName: '#(incomingFileName)' }
+    Given call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
+    Then match status != 'ERROR'
+    * call read(commonFeature + '@AssertJobLogStatus') { jobExecutionId: '#(jobExecutionId)', infoField: 'relatedAuthorityInfo', expectedStatus: 'DISCARDED' }
+
+    # Step 6: the existing record was not updated
+    * call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_AUTHORITY', externalId: '#(seeded.authorityId)', field: '100', subfield: 'a', expectedValue: '#(heading)' }
+
+  # C1538660 - Begins with "n" plus Numerics only on both sides, incoming 001 without whitespace.
+  @C1538660
+  Scenario: Authority is updated on 001 with a Begins with qualifier and Numerics only on both sides
+    # Steps 1-3
+    * def seeded = call read(commonFeature + '@SeedAuthority') { runId: '#(runId)', controlNumber: '#(paddedNumericValue)', heading: '#(heading)', matchField: '001', matchSubfield: '', matchValues: ['#(paddedNumericValue)'] }
+    * call read(commonFeature + '@AssertJobLogStatus') { jobExecutionId: '#(seeded.jobExecutionId)', infoField: 'relatedAuthorityInfo', expectedStatus: 'CREATED' }
+    * call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_AUTHORITY', externalId: '#(seeded.authorityId)', field: '001', subfield: '', expectedValue: '#(paddedNumericValue)' }
+
+    # Steps 4-5
+    * def profiles = call read(commonFeature + '@CreateUpdateJobProfile') { runId: '#(runId)', profileName: 'MODSOURCE-1019 A-28 001 qualifier and numerics', recordType: 'MARC_AUTHORITY', mappingDetailsName: 'marcAuthority', matchField: '001', matchSubfield: '', ind1: '', ind2: '', incomingQualifier: '#(beginsWithNNumerics)', existingQualifier: '#(beginsWithNNumerics)' }
+    * def jobProfileId = profiles.jobProfileId
+    * def incomingFileName = 'MODSOURCE-1019-a28-incoming-' + runId
+    * call read(commonFeature + '@BuildAuthorityFile') { controlNumber: '#(compactNumericValue)', heading: '#(updatedHeading)', matchField: '001', matchSubfield: '', matchValues: ['#(compactNumericValue)'], fileName: '#(incomingFileName)' }
+    Given call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
+    Then match status != 'ERROR'
+    * call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(jobExecutionId)', externalId: '#(seeded.authorityId)', infoField: 'relatedAuthorityInfo' }
+
+    # Step 6
+    * call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_AUTHORITY', externalId: '#(seeded.authorityId)', field: '100', subfield: 'a', expectedValue: '#(updatedHeading)' }
