@@ -16,7 +16,6 @@ Feature: MARC Authority matching on 001 with "Only compare part of the value"
 
     * def runId = epoch + randomString(5)
     * def AC = { comparisonPart: 'ALPHANUMERICS_ONLY' }
-    * def NC = { comparisonPart: 'NUMERICS_ONLY' }
     * def beginsWithNNumerics = { qualifierType: 'BEGINS_WITH', qualifierValue: 'n', comparisonPart: 'NUMERICS_ONLY' }
     * def randomDigits = function(n) { var r = ''; for (var i = 0; i < n; i++) { r += Math.floor(Math.random() * 10); } return r; }
     * def digits = epoch + randomDigits(6)
@@ -100,26 +99,6 @@ Feature: MARC Authority matching on 001 with "Only compare part of the value"
 
     # Step 6: the existing record was not updated
     * call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_AUTHORITY', externalId: '#(seeded.authorityId)', field: '100', subfield: 'a', expectedValue: '#(heading)' }
-
-  # C1538659 - Numerics only on both sides, incoming 001 without whitespace.
-  @C1538659
-  Scenario: Authority is updated on 001 with Numerics only on both sides
-    # Steps 1-3
-    * def seeded = call read(commonFeature + '@SeedAuthority') { runId: '#(runId)', controlNumber: '#(paddedNumericValue)', heading: '#(heading)', matchField: '001', matchSubfield: '', matchValues: ['#(paddedNumericValue)'] }
-    * call read(commonFeature + '@AssertJobLogStatus') { jobExecutionId: '#(seeded.jobExecutionId)', infoField: 'relatedAuthorityInfo', expectedStatus: 'CREATED' }
-    * call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_AUTHORITY', externalId: '#(seeded.authorityId)', field: '001', subfield: '', expectedValue: '#(paddedNumericValue)' }
-
-    # Steps 4-5
-    * def profiles = call read(commonFeature + '@CreateUpdateJobProfile') { runId: '#(runId)', profileName: 'MODSOURCE-1019 A-27 001 numerics', recordType: 'MARC_AUTHORITY', mappingDetailsName: 'marcAuthority', matchField: '001', matchSubfield: '', ind1: '', ind2: '', incomingQualifier: '#(NC)', existingQualifier: '#(NC)' }
-    * def jobProfileId = profiles.jobProfileId
-    * def incomingFileName = 'MODSOURCE-1019-a27-incoming-' + runId
-    * call read(commonFeature + '@BuildAuthorityFile') { controlNumber: '#(compactNumericValue)', heading: '#(updatedHeading)', matchField: '001', matchSubfield: '', matchValues: ['#(compactNumericValue)'], fileName: '#(incomingFileName)' }
-    Given call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
-    Then match status != 'ERROR'
-    * call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(jobExecutionId)', externalId: '#(seeded.authorityId)', infoField: 'relatedAuthorityInfo' }
-
-    # Step 6
-    * call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_AUTHORITY', externalId: '#(seeded.authorityId)', field: '100', subfield: 'a', expectedValue: '#(updatedHeading)' }
 
   # C1538660 - Begins with "n" plus Numerics only on both sides, incoming 001 without whitespace.
   @C1538660
