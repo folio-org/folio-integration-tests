@@ -21,6 +21,8 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
   private static final String TEST_BASE_PATH = "classpath:promin/data-import/features/";
   private static final String MATCH_AUTHORITY_PATH =
     "classpath:promin/data-import/features/marc-records/marc-authorities/match/";
+  private static final String MATCH_BIB_PATH =
+    "classpath:promin/data-import/features/marc-records/marc-bibs/match/";
 
   public DataImportExtendedApiTest() {
     super(new TestIntegrationService(new TestModuleConfiguration(TEST_BASE_PATH)), new TestRailService());
@@ -72,6 +74,12 @@ public class DataImportExtendedApiTest extends TestBaseEureka {
   @Test
   void authority001ComparisonPart() {
     feature(MATCH_AUTHORITY_PATH + "authority-001-comparison-part.feature")
+      .run();
+  }
+
+  @Test
+  void bibComparisonPartExtended() {
+    feature(MATCH_BIB_PATH + "bib-comparison-part-extended.feature")
       .run();
   }
 

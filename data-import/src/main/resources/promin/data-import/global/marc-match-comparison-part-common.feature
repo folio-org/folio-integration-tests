@@ -246,3 +246,47 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     Then status 200
     * def headingValues = karate.jsonPath(response, "$.sourceRecords[0].parsedRecord.content.fields[*]['100'].subfields[*].a")
     And match headingValues contains __arg.expectedHeading
+
+  @AssertJobLogStatus
+  Scenario: Assert the job log shows the given status in the SRS column and the related record column
+    # parameters: jobExecutionId, infoField ('relatedAuthorityInfo' or 'relatedInstanceInfo'), expectedStatus
+    # The log UI renders DISCARDED as "No action".
+    Given path 'metadata-provider/jobLogEntries', __arg.jobExecutionId
+    And headers headersUser
+    And retry until karate.get('response.entries.length') == 1 && karate.get('response.entries[0].sourceRecordActionStatus') != null
+    When method GET
+    Then status 200
+    * def entry = response.entries[0]
+    * print 'job log entry:', entry
+    * def relatedInfo = entry[__arg.infoField]
+    And match entry.sourceRecordActionStatus == __arg.expectedStatus
+    And match relatedInfo.actionStatus == __arg.expectedStatus
+
+  @AssertSourceRecordValue
+  Scenario: Assert a field of the record's MARC source holds the given value
+    # parameters: recordType ('MARC_AUTHORITY' or 'MARC_BIB'), externalId, field, subfield ('' for a control field), expectedValue
+    * def valuesOf =
+      """
+      function(fields, tag, code) {
+        var values = [];
+        for (var i = 0; i < fields.length; i++) {
+          var f = fields[i][tag];
+          if (f == null) continue;
+          if (!code) { values.push(f); continue; }
+          for (var j = 0; j < f.subfields.length; j++) {
+            if (f.subfields[j][code] != null) values.push(f.subfields[j][code]);
+          }
+        }
+        return values;
+      }
+      """
+    Given path '/source-storage/source-records'
+    And param recordType = __arg.recordType
+    And param externalId = __arg.externalId
+    And headers headersUser
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * def values = valuesOf(response.sourceRecords[0].parsedRecord.content.fields, __arg.field, __arg.subfield)
+    * print __arg.field, __arg.subfield, 'values:', values
+    And match values contains __arg.expectedValue
