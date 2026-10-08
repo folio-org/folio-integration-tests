@@ -21,7 +21,7 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
     * def qBeginsOclcNumerics = { qualifierType: 'BEGINS_WITH', qualifierValue: '(OCoLC)', comparisonPart: 'NUMERICS_ONLY' }
 
   # A-1 C350723 - baseline.
-  @C350723 @ignore
+  @C350723
   Scenario: Authority matches on 010 $a with neither option selected
     * def value = 'n' + runId
     * def seeded = call read(commonFeature + '@SeedAuthority') { runId: '#(runId)', controlNumber: '#("FAT28498A1" + runId)', heading: '#("FAT-28498 A1 " + runId)', matchField: '010', matchSubfield: 'a', matchValues: ['#(value)'] }
@@ -38,7 +38,6 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
 
   # A-2 C1505056 - negative baseline. The two 010 $a values differ
   # only by one space and no option is selected, so they must not match.
-  @ignore
   @C1505056
   Scenario: Authority does not match on 010 $a differing only in whitespace and a duplicate is created
     * def existingValue = 'n ' + runId
@@ -56,7 +55,6 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
     * call read(commonFeature + '@AssertMarcCreatedAsDuplicate') { jobExecutionId: '#(jobExecutionId)', existingExternalId: '#(seeded.authorityId)', infoField: 'relatedAuthorityInfo' }
 
   # A-9 C1505062 - qualifier and comparison part together on 035 $a.
-  @ignore
   @C1505062
   Scenario: Authority matches on 035 $a with a qualifier and Numerics only on both sides
     * def otherDigits = epoch + randomDigits(6)
@@ -100,3 +98,56 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
     When method GET
     Then status 200
     And match response.id == authorityId
+
+  @C1538565
+  Scenario: Authority Records Are Updated On 010 $a With Numerics Only On Both Sides And Devanagari Digits In Incoming
+    * def profileName = 'C1538565 MARC authority 010 $a on 010 $a - Numerics only both sides, incoming contains Devanagari digits'
+    * def devanagariContent = '१२३'
+    * def firstMatchValue = 'n79139107'
+    * def secondMatchValue = 'ts 79139108'
+    * def firstUpdateValue = devanagariContent + '79139107'
+    * def secondUpdateValue = 'na 79139108'
+    * def firstControlNumber = 'C1538565A' + runId
+    * def secondControlNumber = 'C1538565B' + runId
+    * def firstHeading = 'Test case: C1538565 first ' + runId
+    * def secondHeading = 'Test case: C1538565 second ' + runId
+
+    * def createFileName = 'C1538565-create-authority-' + runId
+    * def createRecords = [{ controlNumber: '#(firstControlNumber)', heading: '#(firstHeading)', matchValue: '#(firstMatchValue)' }, { controlNumber: '#(secondControlNumber)', heading: '#(secondHeading)', matchValue: '#(secondMatchValue)' }]
+    * def buildRes = call read(commonFeature + '@BuildMultiAuthoritiesFile') { records: '#(createRecords)', matchField: '010', matchSubfield: 'a', fileName: '#(createFileName)' }
+
+    Given def createRes = call read(utilFeature + '@ImportRecord') { fileName: '#(createFileName)', jobName: 'createAuthority', filePathFromSourceRoot: '#("file:target/" + createFileName + ".mrc")' }
+    Then match createRes.jobExecution.status == 'COMMITTED'
+    * def createJobExecutionId = createRes.jobExecutionId
+
+    # Find the imported MARC Authority records and verify their 010 $a values
+    Given path '/source-storage/source-records'
+    And param recordType = 'MARC_AUTHORITY'
+    And param snapshotId = createJobExecutionId
+    And headers headersUser
+    And retry until response.totalRecords == 2 && karate.get('response.sourceRecords[0].externalIdsHolder.authorityId') != null && karate.get('response.sourceRecords[1].externalIdsHolder.authorityId') != null
+    When method GET
+    Then status 200
+    And def firstRecord = response.sourceRecords.find(r => r.order == 0)
+    And def secondRecord = response.sourceRecords.find(r => r.order == 1)
+    And match karate.jsonPath(firstRecord, "$.parsedRecord.content.fields[*]['010'].subfields[*].a")[0] == firstMatchValue
+    And match karate.jsonPath(secondRecord, "$.parsedRecord.content.fields[*]['010'].subfields[*].a")[0] == secondMatchValue
+    And def firstAuthorityId = karate.get('firstRecord.externalIdsHolder.authorityId')
+    And def secondAuthorityId = karate.get('secondRecord.externalIdsHolder.authorityId')
+    And assert firstAuthorityId != null
+    And assert secondAuthorityId != null
+
+    * def profiles = call read(commonFeature + '@CreateUpdateJobProfile') { runId: '#(runId)', profileName: '#(profileName)', recordType: 'MARC_AUTHORITY', mappingDetailsName: 'marcAuthority', matchField: '010', matchSubfield: 'a', ind1: ' ', ind2: ' ', incomingQualifier: '#(NC)', existingQualifier: '#(NC)' }
+    * def jobProfileId = profiles.jobProfileId
+
+    * def updateFileName = 'C1538565-update-authority-' + runId
+    * def updatedFirstHeading = firstHeading + ' UPDATED'
+    * def updatedSecondHeading = secondHeading + ' UPDATED'
+    * def updateRecords = [{ controlNumber: '#(firstControlNumber)', heading: '#(updatedFirstHeading)', matchValue: '#(firstUpdateValue)' }, { controlNumber: '#(secondControlNumber)', heading: '#(updatedSecondHeading)', matchValue: '#(secondUpdateValue)' }]
+    * def buildRes = call read(commonFeature + '@BuildMultiAuthoritiesFile') { records: '#(updateRecords)', matchField: '010', matchSubfield: 'a', fileName: '#(updateFileName)' }
+
+    Given def updateRes = call read(utilFeature + '@ImportRecord') { fileName: '#(updateFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + updateFileName + ".mrc")' }
+    Then match updateRes.jobExecution.status == 'COMMITTED'
+    And call read(commonFeature + '@AssertMarcUpdatedMultiple') { jobExecutionId: '#(updateRes.jobExecutionId)', expectedCount: 2, externalIds: ['#(firstAuthorityId)', '#(secondAuthorityId)'], infoField: 'relatedAuthorityInfo' }
+    And call read(commonFeature + '@AssertAuthorityHeading') { authorityId: '#(firstAuthorityId)', expectedHeading: '#(updatedFirstHeading)' }
+    And call read(commonFeature + '@AssertAuthorityHeading') { authorityId: '#(secondAuthorityId)', expectedHeading: '#(updatedSecondHeading)' }
