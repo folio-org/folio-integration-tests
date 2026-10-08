@@ -82,7 +82,8 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * call read('classpath:promin/data-import/global/marc-match-comparison-part-common.feature@BuildAuthorityFile') { controlNumber: '#(__arg.controlNumber)', heading: '#(__arg.heading)', matchField: '#(__arg.matchField)', matchSubfield: '#(__arg.matchSubfield)', matchValues: '#(__arg.matchValues)', fileName: '#(seedFileName)' }
 
     Given call read(utilFeature + '@ImportRecord') { fileName: '#(seedFileName)', jobName: 'createAuthority', filePathFromSourceRoot: '#("file:target/" + seedFileName + ".mrc")' }
-    Then match status != 'ERROR'
+#    Then match status != 'ERROR'
+    Then match jobExecution.status == 'COMMITTED'
 
     # Wait for the authority to exist and for SRS to have finished indexing it, otherwise the
     # match job that follows can run against a record that is not yet in marc_indexers
@@ -106,7 +107,8 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * call read('classpath:promin/data-import/global/marc-match-comparison-part-common.feature@BuildBibFile') { controlNumber: '#(__arg.controlNumber)', heading: '#(__arg.heading)', matchField: '#(__arg.matchField)', matchSubfield: '#(__arg.matchSubfield)', matchValues: '#(__arg.matchValues)', fileName: '#(seedFileName)' }
 
     Given call read(utilFeature + '@ImportRecord') { fileName: '#(seedFileName)', jobName: 'createInstance', filePathFromSourceRoot: '#("file:target/" + seedFileName + ".mrc")' }
-    Then match status != 'ERROR'
+#    Then match status != 'ERROR'
+    Then match jobExecution.status == 'COMMITTED'
 
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_BIB'
@@ -218,6 +220,7 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * print 'FAT-28498 job log entry:', entry
     * def relatedInfo = entry[__arg.infoField]
     And match entry.sourceRecordActionStatus == 'UPDATED'
+    And match relatedInfo.actionStatus == 'UPDATED'
     And match relatedInfo.idList contains __arg.externalId
 
   @AssertMarcUpdatedMultiple
