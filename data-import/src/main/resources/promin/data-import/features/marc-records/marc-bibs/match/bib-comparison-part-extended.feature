@@ -107,7 +107,41 @@ Feature: MARC Bib matching with "Only compare part of the value" - extended
     Given def importRes = call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
     Then match importRes.jobExecution.status == 'COMMITTED'
     # Step 5: Verify SRS and instance statuses are updated in the log entries
-    And call read(commonFeature + '@AssertJobLogStatus') { jobExecutionId: '#(importRes.jobExecutionId)', infoField: 'relatedInstanceInfo', expectedStatus: 'UPDATED' }
     And call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(importRes.jobExecutionId)', externalId: '#(seedRes.instanceId)', infoField: 'relatedInstanceInfo' }
     # Step 6: Verify the 245 $a title now ends with "UPDATED"
+    And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '245', subfield: 'a', expectedValue: '#(updatedTitle)' }
+
+  # C1528149 - 035 $a with both an "Ends with" qualifier and Alphanumerics only configured on both sides
+  @C1528149
+  Scenario: MARC Bib is updated on 035 $a with "ENDS_WITH" qualifier and Alphanumerics Only On Both Sides
+    * def profileName = 'C1528149 MARC bib 035 $a on 035 $a with both a Ends with qualifier and Alphanumerics only configured - ' + runId
+    * def qEndsAlphanumerics = { qualifierType: 'ENDS_WITH', qualifierValue: '50133', comparisonPart: 'ALPHANUMERICS_ONLY' }
+    * def controlNumber = 'C1528149' + runId
+    # Unique digits keep the values unique per run, while the matching value still ends with "50133"
+    * def existingValue1 = '(OCoLC)' + digits + '50133'
+    * def existingValue2 = '(OCoLC)' + digits + '50999'
+    # The incoming value contains a space after the prefix, which Alphanumerics only ignores
+    * def incomingValue = '(OCoLC) ' + digits + '50133'
+    * def title = 'Scenario C1528149 ' + runId
+    * def updatedTitle = title + ' UPDATED'
+
+    # Step 1: Import "C1528149-create-bib.mrc" Using The "Default - Create instance and SRS MARC Bib" Job Profile
+    Given def seedRes = call read(commonFeature + '@SeedBib') { runId: '#(runId)', controlNumber: '#(controlNumber)', heading: '#(title)', matchField: '035', matchSubfield: 'a', matchValues: ['#(existingValue1)', '#(existingValue2)'] }
+    # Step 2: Verify Through Log Entries That The Record Was Created
+    Then call read(commonFeature + '@AssertJobLogStatus') { jobExecutionId: '#(seedRes.jobExecutionId)', infoField: 'relatedInstanceInfo', expectedStatus: 'CREATED' }
+    # Step 3: Verify The Instance And Its MARC Source Contain Both 035 $a Values
+    And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '035', subfield: 'a', expectedValue: '#(existingValue1)' }
+    And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '035', subfield: 'a', expectedValue: '#(existingValue2)' }
+
+    # Preconditions: Create Mapping, Action, Match And Job Profiles
+    * def profiles = call read(commonFeature + '@CreateUpdateJobProfile') { runId: '#(runId)', profileName: '#(profileName)', recordType: 'MARC_BIBLIOGRAPHIC', mappingDetailsName: 'marcBib', matchField: '035', matchSubfield: 'a', ind1: '*', ind2: '*', incomingQualifier: '#(qEndsAlphanumerics)', existingQualifier: '#(qEndsAlphanumerics)' }
+    * def jobProfileId = profiles.jobProfileId
+
+    * def incomingFileName = 'C1528149-update-bib-' + runId
+    * def buildRes = call read(commonFeature + '@BuildBibFile') { controlNumber: '#(controlNumber)', heading: '#(updatedTitle)', matchField: '035', matchSubfield: 'a', matchValues: ['#(incomingValue)'], fileName: '#(incomingFileName)' }
+
+    # Step 4-6: Import "C1528149-update-bib.mrc" Using The Custom Job Profile and verify the record is updated
+    Given def importRes = call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
+    Then match importRes.jobExecution.status == 'COMMITTED'
+    And call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(importRes.jobExecutionId)', externalId: '#(seedRes.instanceId)', infoField: 'relatedInstanceInfo' }
     And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '245', subfield: 'a', expectedValue: '#(updatedTitle)' }
