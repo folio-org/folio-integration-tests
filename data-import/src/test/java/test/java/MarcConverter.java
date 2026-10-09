@@ -1,5 +1,7 @@
 package test.java;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import org.marc4j.MarcJsonReader;
 import org.marc4j.MarcStreamWriter;
 import org.marc4j.marc.Record;
@@ -7,7 +9,6 @@ import org.marc4j.marc.Record;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.nio.file.Paths;
@@ -52,14 +53,14 @@ public class MarcConverter {
     public static byte[] convertJsonStringToBinary(String jsonContent) throws IOException {
         try {
             // Create an input stream from the JSON content
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(jsonContent.getBytes(StandardCharsets.UTF_8));
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(jsonContent.getBytes(UTF_8));
 
             // Create a MarcJsonReader
             MarcJsonReader reader = new MarcJsonReader(inputStream);
 
             // Create an output stream for the binary MARC data
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            MarcStreamWriter writer = new MarcStreamWriter(outputStream, StandardCharsets.UTF_8.name());
+            MarcStreamWriter writer = new MarcStreamWriter(outputStream, UTF_8.name());
 
             // Read the MARC record and write it to the output stream
             if (reader.hasNext()) {

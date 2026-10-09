@@ -84,7 +84,7 @@ Feature: MARC Authority matching on 001 with "Only compare part of the value"
     * def updateMatchValue = 'n' + numericPart
     * def headingValue = 'Test case: C1538659 ' + epoch
     * def updatedHeadingValue = headingValue + ' UPDATED'
-    * def profileName = 'C1538659 A-27 MARC authority 001 on 001 - Numerics only both sides' + runId
+    * def profileName = 'C1538659 A-27 MARC authority 001 on 001 - Numerics only both sides-' + runId
 
     * def seedRes = call read(commonFeature + '@SeedAuthority') { runId: '#(numPart)', controlNumber: '#(createMatchValue)', heading: '#(headingValue)', matchField: '001', matchSubfield: '', matchValues: ['#(createMatchValue)'] }
 

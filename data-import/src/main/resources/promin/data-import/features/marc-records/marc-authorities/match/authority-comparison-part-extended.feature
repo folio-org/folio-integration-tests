@@ -74,10 +74,11 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
 
   @C1538563
   Scenario: Authority is not updated on 010 $a with numerics only incoming and alphanumerics only existing and no qualifier
-    * def profileName = 'C1538563 MARC authority 010 $a on 010 $a - Numerics only incoming, Alphanumerics only existing, no qualifier (negative)' + runId
+    * def profileName = 'C1538563 MARC authority 010 $a on 010 $a - Numerics only incoming, Alphanumerics only existing, no qualifier (negative)-' + runId
     * def matchValue = 'n79139105 '
     * def controlNumber = 'C1538563' + runId
     * def heading = 'Test case: C1538563 ' + runId
+    * def updatedHeading = 'Test case: C1538563 - UPDATED ' + runId
 
     * def seedRes = call read(commonFeature + '@SeedAuthority') { runId: '#(runId)', controlNumber: '#(controlNumber)', heading: '#(heading)', matchField: '010', matchSubfield: 'a', matchValues: ['#(matchValue)'] }
     * def authorityId = seedRes.authorityId
@@ -86,22 +87,18 @@ Feature: MARC Authority matching with "Only compare part of the value" - extende
     * def jobProfileId = profiles.jobProfileId
 
     * def incomingFileName = 'C1538563-incoming-authority-' + runId
-    * def res = call read(commonFeature + '@BuildAuthorityFile') { controlNumber: '#(controlNumber)', heading: '#(heading)', matchField: '010', matchSubfield: 'a', matchValues: ['#(matchValue)'], fileName: '#(incomingFileName)' }
+    * def res = call read(commonFeature + '@BuildAuthorityFile') { controlNumber: '#(controlNumber)', heading: '#(updatedHeading)', matchField: '010', matchSubfield: 'a', matchValues: ['#(matchValue)'], fileName: '#(incomingFileName)' }
 
-    * def importRes = call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
-    * match importRes.jobExecution.status == 'COMMITTED'
+    Given def importRes = call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
+    Then match importRes.jobExecution.status == 'COMMITTED'
+    And call read(commonFeature + '@AssertMarcNotMatched') { jobExecutionId: '#(importRes.jobExecutionId)' }
 
-    * call read(commonFeature + '@AssertMarcNotMatched') { jobExecutionId: '#(importRes.jobExecutionId)' }
-
-    Given path 'authority-storage/authorities', authorityId
-    And headers headersUser
-    When method GET
-    Then status 200
-    And match response.id == authorityId
+    # Verify the record (its heading) was not changed
+    * call read(commonFeature + '@AssertAuthorityHeading') { authorityId: '#(authorityId)', expectedHeading: '#(heading)' }
 
   @C1538565
   Scenario: Authority Records Are Updated On 010 $a With Numerics Only On Both Sides And Devanagari Digits In Incoming
-    * def profileName = 'C1538565 MARC authority 010 $a on 010 $a - Numerics only both sides, incoming contains Devanagari digits'
+    * def profileName = 'C1538565 MARC authority 010 $a on 010 $a - Numerics only both sides, incoming contains Devanagari digits-' + runId
     * def devanagariContent = '१२३'
     * def firstMatchValue = 'n79139107'
     * def secondMatchValue = 'ts 79139108'
