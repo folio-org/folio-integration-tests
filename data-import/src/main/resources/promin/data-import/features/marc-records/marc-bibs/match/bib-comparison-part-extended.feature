@@ -18,7 +18,6 @@ Feature: MARC Bib matching with "Only compare part of the value" - extended
   # C1538579 - Numerics only on both sides; the incoming 010 $a starts with Devanagari digits, which
   # Numerics only strips because the digit class is ASCII-only on both the incoming and the stored side.
   @C1538579
-  @ignore
   Scenario: Bib is updated on 010 $a with Numerics only on both sides when the incoming value contains Devanagari digits
     * def existingValue = 'a' + digits
     * def incomingValue = '१२३' + digits
@@ -50,25 +49,28 @@ Feature: MARC Bib matching with "Only compare part of the value" - extended
     * def existingValue1 = '(OCoLC)ocn' + digits
     * def existingValue2 = '(OCoLC)ocm' + otherDigits
     * def incomingValue = '(OCoLC)ocm' + digits
+    # The FOLIO system normalizes 035 $a values starting with (OCoLC) on instance creation: the ocn/ocm prefixes are removed
+    * def normalizedValue1 = '(OCoLC)' + digits
+    * def normalizedValue2 = '(OCoLC)' + otherDigits
     * def title = 'Scenario C1505073 ' + runId
     * def updatedTitle = title + ' UPDATED'
 
-    # Steps 1-3: Import the Create Bib File With Two 035 $a Fields Using The Default Create Job Profile
+    # Steps 1-3: Import MARC-Bib record with two 035 $a fields using the Default Create Job Profile
     Given def seedRes = call read(commonFeature + '@SeedBib') { runId: '#(runId)', controlNumber: '#("C1505073" + runId)', heading: '#(title)', matchField: '035', matchSubfield: 'a', matchValues: ['#(existingValue1)', '#(existingValue2)'] }
     Then call read(commonFeature + '@AssertJobLogStatus') { jobExecutionId: '#(seedRes.jobExecutionId)', infoField: 'relatedInstanceInfo', expectedStatus: 'CREATED' }
-    And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '035', subfield: 'a', expectedValue: '#(existingValue1)' }
-    And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '035', subfield: 'a', expectedValue: '#(existingValue2)' }
+    And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '035', subfield: 'a', expectedValue: '#(normalizedValue1)' }
+    And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '035', subfield: 'a', expectedValue: '#(normalizedValue2)' }
 
-    # Step 4: Import The Update Bib File Using The Match Profile With Begins With Qualifier And Numerics Only
     * def profiles = call read(commonFeature + '@CreateUpdateJobProfile') { runId: '#(runId)', profileName: '#(profileName)', recordType: 'MARC_BIBLIOGRAPHIC', mappingDetailsName: 'marcBib', matchField: '035', matchSubfield: 'a', ind1: '*', ind2: '*', incomingQualifier: '#(qBeginsOclcNumerics)', existingQualifier: '#(qBeginsOclcNumerics)' }
     * def jobProfileId = profiles.jobProfileId
 
     * def incomingFileName = 'C1505073-update-bib-' + runId
     * def buildRes = call read(commonFeature + '@BuildBibFile') { controlNumber: '#("C1505073" + runId)', heading: '#(updatedTitle)', matchField: '035', matchSubfield: 'a', matchValues: ['#(incomingValue)'], fileName: '#(incomingFileName)' }
 
+    # Step 4: Import the update MARC-Bib file using the match profile with begins with qualifier and numerics only
     Given def importRes = call read(utilFeature + '@ImportRecord') { fileName: '#(incomingFileName)', jobName: 'customJob', filePathFromSourceRoot: '#("file:target/" + incomingFileName + ".mrc")' }
     Then match importRes.jobExecution.status == 'COMMITTED'
-    # Step 5: Verify SRS And Instance Statuses Are Updated In The Log Entries
+    # Step 5: Verify SRS and instance statuses are updated
     And call read(commonFeature + '@AssertMarcUpdated') { jobExecutionId: '#(importRes.jobExecutionId)', externalId: '#(seedRes.instanceId)', infoField: 'relatedInstanceInfo' }
-    # Step 6: Verify The 245 $a Title Now Ends With "UPDATED"
+    # Step 6: Verify The 245 $a title now ends with "UPDATED"
     And call read(commonFeature + '@AssertSourceRecordValue') { recordType: 'MARC_BIB', externalId: '#(seedRes.instanceId)', field: '245', subfield: 'a', expectedValue: '#(updatedTitle)' }
