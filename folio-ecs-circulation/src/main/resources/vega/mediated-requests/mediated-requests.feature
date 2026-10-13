@@ -663,3 +663,167 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     Then status 200
     And match response.status.name == 'In transit'
     And match response.inTransitDestinationServicePointId == mrInterimServicePointId
+
+  # FAT-27420: Item-level Page mediated request - full workflow.
+  # Create (New - Awaiting confirmation) -> confirm -> transit/arrival/pickup check-in -> checkout
+  # -> Closed - Filled, then verify request and loan data are consistent across tenants.
+  #
+  # ENVIRONMENT REQUIREMENT: same as the send-in-transit scenario above - SECURE_TENANT_ID of
+  # mod-requests-mediated must equal the university tenant used by this run.
+  Scenario: FAT-27420 item-level page mediated request full workflow
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
+    * def inventoryParams = baseInventoryParams
+    * set inventoryParams.instanceTitle = 'FAT-27420 Page Full Workflow'
+    * def inv = call createInventoryInCollege inventoryParams
+    * def inventory = inv.inventory
+
+    # mod-search readiness gate: confirm needs the college item in the shared index
+    * configure headers = headersCentral
+    * configure retry = { count: 40, interval: 15000 }
+    Given path 'search/instances'
+    And param query = 'items.id=="' + inventory.itemId + '"'
+    And param expandAll = true
+    And retry until responseStatus == 200 && response.totalRecords == 1 && response.instances[0].id == inventory.instanceId
+    When method GET
+    Then status 200
+
+    # ========== Create item-level Page mediated request in secure tenant ==========
+    * configure headers = headersUniversity
+    Given path 'requests-mediated/mediated-requests'
+    And request
+      """
+      {
+        "requestType": "Page",
+        "fulfillmentPreference": "Hold Shelf",
+        "requestLevel": "Item",
+        "requestDate": "#(java.time.Instant.now().toString())",
+        "instanceId": "#(inventory.instanceId)",
+        "holdingsRecordId": "#(inventory.holdingId)",
+        "itemId": "#(inventory.itemId)",
+        "item": { "barcode": "#(inventory.itemBarcode)" },
+        "requesterId": "#(patron.requesterId)",
+        "pickupServicePointId": "#(mrCentralServicePointId)"
+      }
+      """
+    When method POST
+    Then status 201
+    * def mediatedRequestId = response.id
+    And match mediatedRequestId == '#notnull'
+    And match response.requestType == 'Page'
+    And match response.requestLevel == 'Item'
+    And match response.status == 'New - Awaiting confirmation'
+
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
+    And match response.status == 'New - Awaiting confirmation'
+    And match response.mediatedRequestStatus == 'New'
+    And match response.mediatedRequestStep == 'Awaiting confirmation'
+
+    # ========== Confirm ==========
+    * configure retry = { count: 10, interval: 15000 }
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId, 'confirm'
+    And retry until responseStatus == 204
+    When method POST
+    Then status 204
+
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
+    And match response.status == 'Open - Not yet filled'
+    * def confirmedRequestId = response.confirmedRequestId
+    And match confirmedRequestId == '#notnull'
+
+    # ========== Circulation fulfillment ==========
+    # 1. Lending check-in (college) -> in transit towards secure tenant
+    * configure headers = headersCollege
+    Given path 'circulation/check-in-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', servicePointId: '#(mrCollegeServicePointId)', checkInDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 200
+
+    * configure headers = headersUniversity
+    * configure retry = { count: 20, interval: 15000 }
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    And retry until responseStatus == 200 && response.status == 'Open - In transit for approval'
+    When method GET
+    Then status 200
+
+    # 2. Confirm arrival in secure tenant
+    Given path 'requests-mediated/confirm-item-arrival'
+    And request { itemBarcode: '#(inventory.itemBarcode)' }
+    When method POST
+    Then status 200
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
+    And match response.status == 'Open - Item arrived'
+
+    # 3. Send item in transit
+    Given path 'requests-mediated/send-item-in-transit'
+    And request { itemBarcode: '#(inventory.itemBarcode)' }
+    When method POST
+    Then status 200
+    * call getMediatedRequest { mediatedRequestId: '#(mediatedRequestId)' }
+    And match response.status == 'Open - In transit to be checked out'
+
+    # 4. Check-in at pickup service point -> awaiting pickup
+    Given path 'circulation/check-in-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', servicePointId: '#(mrCentralServicePointId)', checkInDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 200
+
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
+    When method GET
+    Then status 200
+
+    # 5. Check-out to the patron
+    Given path 'circulation/check-out-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', userBarcode: '#(patron.requesterBarcode)', servicePointId: '#(mrCentralServicePointId)', loanDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 201
+    * def loanId = response.id
+    And match loanId == '#notnull'
+    And match response.itemId == inventory.itemId
+    And match response.userId == patron.requesterId
+
+    # ========== Verify request reaches Closed - Filled ==========
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    And retry until responseStatus == 200 && response.status == 'Closed - Filled'
+    When method GET
+    Then status 200
+    And match response.status == 'Closed - Filled'
+    And match response.mediatedRequestStatus == 'Closed'
+    And match response.mediatedRequestStep == 'Filled'
+    And match response.confirmedRequestId == confirmedRequestId
+
+    Given path 'request-storage/requests', confirmedRequestId
+    And retry until responseStatus == 200 && response.status == 'Closed - Filled'
+    When method GET
+    Then status 200
+    * def universityRequest = response
+
+    # ========== Verify request and loan data are consistent across tenants ==========
+    Given path 'loan-storage/loans', loanId
+    When method GET
+    Then status 200
+    And match response.status.name == 'Open'
+    And match response.action == 'checkedout'
+    And match response.itemId == inventory.itemId
+    And match response.userId == patron.requesterId
+
+    * call getCirculationItem { itemId: '#(inventory.itemId)' }
+    And match response.status.name == 'Checked out'
+
+    # The same request (same id) exists in all three tenants and describes the same item/instance.
+    And match universityRequest.requesterId == patron.requesterId
+    And match universityRequest.itemId == inventory.itemId
+
+    * configure headers = headersCentral
+    * call getRequest { requestId: '#(confirmedRequestId)' }
+    And match response.id == confirmedRequestId
+    And match response.itemId == inventory.itemId
+    And match response.instanceId == inventory.instanceId
+    And match response.requestType == 'Page'
+
+    * configure headers = headersCollege
+    * call getRequest { requestId: '#(confirmedRequestId)' }
+    And match response.id == confirmedRequestId
+    And match response.itemId == inventory.itemId
+    And match response.instanceId == inventory.instanceId
+    And match response.requestType == 'Page'
