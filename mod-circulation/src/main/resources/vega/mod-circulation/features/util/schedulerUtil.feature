@@ -128,6 +128,32 @@ Feature: scheduler utility for mod-circulation
 
     * karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteTimer', { extToken: extToken, extTimerId: extTimerId })
 
+  # ─── Age-to-lost fee-charging timer scenarios ─────────────────────────────────
+
+  @UpdateAgeToLostFeeChargingTimer
+  Scenario: find age-to-lost fee-charging timer and update its delay
+    # extToken - required: sidecar-module-access-client Bearer token
+    # extUnit  - required: delay unit ('second' or 'minute')
+    # extDelay - required: delay value (e.g. '1' or '35')
+    # extTimer - optional: if provided, skip timer lookup (full timer JSON body)
+
+    * def lookupNeeded = !karate.get('extTimer')
+    * def currentTimer        = karate.get('extTimer')
+    * def currentTimerCreated = false
+
+    * if (lookupNeeded) karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindOrCreateAgeToLostFeeChargingTimer', { extToken: extToken, extUnit: extUnit, extDelay: extDelay })
+
+    # update delay only when timer already existed (created timers already have the desired delay)
+    * if (!currentTimerCreated) karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@PutTimer', { extToken: extToken, extTimer: currentTimer, extUnit: extUnit, extDelay: extDelay })
+
+  @FindOrCreateAgeToLostFeeChargingTimer
+  Scenario: find age-to-lost fee-charging scheduler timer, or create it if not registered
+    * karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@FindOrCreateTimer', { extToken: extToken, extUnit: extUnit, extDelay: extDelay, extPathPattern: '/circulation/scheduled-age-to-lost-fee-charging' })
+
+  @DeleteAgeToLostFeeChargingTimer
+  Scenario: delete age-to-lost fee-charging scheduler timer
+    * karate.call(true, 'classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteTimer', { extToken: extToken, extTimerId: extTimerId })
+
   # ─── Loan-anonymization timer scenarios ───────────────────────────────────────
 
   @UpdateLoanAnonymizationTimer
