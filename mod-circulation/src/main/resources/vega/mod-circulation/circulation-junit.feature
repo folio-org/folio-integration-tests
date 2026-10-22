@@ -177,4 +177,8 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.staff-slips.item.get'                    |
       | 'circulation-storage.staff-slips.item.put'                    |
       | 'circulation.search-slips.get'                                |
+      | 'actual-cost-record-storage.actual-cost-records.collection.get' |
+      | 'actual-cost-record-storage.actual-cost-records.item.get'     |
+      | 'actual-cost-fee-fine-bill.post'                              |
+
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')
