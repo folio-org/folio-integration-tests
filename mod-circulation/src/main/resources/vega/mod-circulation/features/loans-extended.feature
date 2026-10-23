@@ -352,6 +352,8 @@ Feature: Loans tests - extended
     When method GET
     Then status 200
     * def originalRulesAsText = response.rulesAsText
+    # always restore timers and circulation rules, even if a step below fails (a leftover 1 second age-to-lost timer ages every overdue loan of the tenant)
+    * configure afterScenario = read('classpath:vega/mod-circulation/features/util/restore-timers-and-rules-function.js')
     * def newRule = 'm ' + extMaterialTypeId + ' + g ' + extGroupId + ': l ' + extLoanPolicyId + ' o ' + extOverduePolicyId + ' i ' + extLostPolicyId + ' r ' + extRequestPolicyId + ' n ' + extPatronPolicyId
     * def newRulesAsText = originalRulesAsText + '\n' + newRule
     Given path 'circulation', 'rules'
@@ -371,7 +373,8 @@ Feature: Loans tests - extended
     # preconditions: item becomes "Aged to lost" - age-to-lost timer set to 1 second
     * def ageToLostResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
     * def ageToLostTimer = ageToLostResult.currentTimer
-    * def ageToLostOriginal = { unit: '#(ageToLostTimer.routingEntry.unit)', delay: '#(ageToLostTimer.routingEntry.delay)' }
+    # the timer object above is mutated by the update (shared scope), so restore to the module descriptor defaults instead (age-to-lost: 30 minutes)
+    * def ageToLostOriginal = { unit: 'minute', delay: '30' }
     * configure headers = headersUser
     * configure retry = { count: 15, interval: 3000 }
     Given path 'loan-storage', 'loans', loanId
@@ -382,7 +385,8 @@ Feature: Loans tests - extended
     # preconditions: actual cost record is created once "patron billed after aged to lost" (1 min) has passed - fee-charging timer set to 1 second
     * def feeChargingResult = call read('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostFeeChargingTimer') { extToken: #(sidecarToken), extUnit: 'second', extDelay: '1' }
     * def feeChargingTimer = feeChargingResult.currentTimer
-    * def feeChargingOriginal = { unit: '#(feeChargingTimer.routingEntry.unit)', delay: '#(feeChargingTimer.routingEntry.delay)' }
+    # age-to-lost fee-charging default: 35 minutes
+    * def feeChargingOriginal = { unit: 'minute', delay: '35' }
     * configure headers = headersUser
     * configure retry = { count: 30, interval: 5000 }
     Given path 'actual-cost-record-storage', 'actual-cost-records'
@@ -398,6 +402,7 @@ Feature: Loans tests - extended
     * if (!ageToLostResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostTimer', { extToken: sidecarToken, extTimer: ageToLostTimer, extUnit: ageToLostOriginal.unit, extDelay: ageToLostOriginal.delay })
     * if (feeChargingResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@DeleteAgeToLostFeeChargingTimer', { extToken: sidecarToken, extTimerId: feeChargingTimer.id })
     * if (!feeChargingResult.currentTimerCreated) karate.call('classpath:vega/mod-circulation/features/util/schedulerUtil.feature@UpdateAgeToLostFeeChargingTimer', { extToken: sidecarToken, extTimer: feeChargingTimer, extUnit: feeChargingOriginal.unit, extDelay: feeChargingOriginal.delay })
+    * def timersRestored = true
     * configure headers = headersUser
 
     # preconditions: bill actual cost ("Lost items requiring actual cost" -> "Bill actual cost")
@@ -450,3 +455,4 @@ Feature: Loans tests - extended
     And request { rulesAsText: '#(originalRulesAsText)' }
     When method PUT
     Then status 204
+    * def rulesRestored = true
