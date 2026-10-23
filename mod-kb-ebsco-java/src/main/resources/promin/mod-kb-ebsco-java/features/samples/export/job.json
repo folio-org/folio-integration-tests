@@ -28,7 +28,9 @@
         "packageTags",
         "packageAgreements",
         "packageNotes",
-        "packageUrl"
+        "packageUrl",
+        "managedSubjects",
+        "customSubjects"
       ],
       "titleFields": [
         "titleName",

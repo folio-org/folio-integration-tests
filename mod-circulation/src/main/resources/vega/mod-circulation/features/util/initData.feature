@@ -325,6 +325,17 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostLostPolicyActualCost
+  Scenario: create lost item fee policy - aged to lost after 1 min, billed after 1 min, actual cost
+    * def lostItemFeePolicyId = extLostItemFeePolicyId
+    * def lostItemFeePolicyActualCostRequest = read('samples/policies/lost-item-fee-policy-actual-cost-aged-to-lost-entity-request.json')
+    * lostItemFeePolicyActualCostRequest.id = extLostItemFeePolicyId
+    * lostItemFeePolicyActualCostRequest.name = lostItemFeePolicyActualCostRequest.name + ' ' + random_string()
+    Given path 'lost-item-fees-policies'
+    And request lostItemFeePolicyActualCostRequest
+    When method POST
+    Then status 201
+
   @PostOverduePolicy
   Scenario: create overdue policy
     * def intOverduePolicyId = call uuid1
@@ -379,6 +390,14 @@ Feature: init data for mod-circulation
     When method PUT
     Then status 204
 
+
+  @PutCirculationRules
+  Scenario: replace circulation rules
+    # extRulesAsText - required
+    Given path 'circulation', 'rules'
+    And request { rulesAsText: '#(extRulesAsText)' }
+    When method PUT
+    Then status 204
 
   @UpdateRules
   Scenario: create policies

@@ -16,6 +16,26 @@ function fn() {
   var testUser2Username = karate.properties['testUser2Username'] || 'test-user2';
   var testUser2Password = karate.properties['testUser2Password'] || 'test2';
 
+  // generate names for consortia tenants
+  var randomNumbers = karate.properties['randomNumbers'] ? karate.properties['randomNumbers'] : '1234567890';
+
+  var centralTenant = 'central' + randomNumbers;
+  var centralTenantId = karate.properties['centralTenantId'];
+  var universityTenant = 'university' + randomNumbers;
+  var universityTenantId = karate.properties['universityTenantId'];
+  var collegeTenant = 'college' + randomNumbers;
+  var collegeTenantId = karate.properties['collegeTenantId'];
+
+  var consortiaAdminUserId = karate.properties['consortiaAdminUserId'];
+  var centralUser1Id = karate.properties['centralUserId'];
+  var universityUser1Id = karate.properties['universityUserId'];
+  var collegeUser1Id = karate.properties['collegeUserId'];
+
+  // define consortiumId
+  var consortiumId = karate.properties['consortiumId'];
+
+  var generatePassword = karate.callSingle('classpath:common/util/generate-password.feature').generatePassword;
+
   var epoch = (()=> {
     // Get the current date and time
     let now = new Date();
@@ -46,6 +66,20 @@ function fn() {
     testAdmin: {tenant: testTenant, name: testAdminUsername, password: testAdminPassword},
     testUser: {tenant: testTenant, name: testUserUsername, password: testUserPassword},
     testUser2: {tenant: testTenant, name: testUser2Username, password: testUser2Password},
+
+    // define consortia users and tenants
+    centralTenant: centralTenant,
+    centralTenantId: centralTenantId ? centralTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    universityTenant: universityTenant,
+    universityTenantId: universityTenantId ? universityTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    collegeTenant: collegeTenant,
+    collegeTenantId: collegeTenantId ? collegeTenantId : (function() { return java.util.UUID.randomUUID() + '' })(),
+    consortiumId: consortiumId,
+
+    consortiaAdmin: { id: consortiaAdminUserId, username: 'consortia_admin', password: generatePassword('consortia_admin'), tenant: centralTenant},
+    centralUser1: { id: centralUser1Id, username: 'central_user1', password: generatePassword('central_user1'), tenant: centralTenant},
+    universityUser1: { id: universityUser1Id, username: 'university_user1', password: generatePassword('university_user1'), tenant: universityTenant},
+    collegeUser1: { id: collegeUser1Id, username: 'college_user1', password: generatePassword('college_user1'), tenant: collegeTenant},
 
     // define global features
     login: karate.read('classpath:common/login.feature'),
