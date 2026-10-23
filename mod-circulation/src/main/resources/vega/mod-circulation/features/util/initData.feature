@@ -391,6 +391,14 @@ Feature: init data for mod-circulation
     Then status 204
 
 
+  @PutCirculationRules
+  Scenario: replace circulation rules
+    # extRulesAsText - required
+    Given path 'circulation', 'rules'
+    And request { rulesAsText: '#(extRulesAsText)' }
+    When method PUT
+    Then status 204
+
   @UpdateRules
   Scenario: create policies
     # get current circulation rules as text
