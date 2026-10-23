@@ -51,6 +51,22 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * def binary = marcConverter.convertJsonStringToBinary(JSON.stringify(recordJson))
     * javaWriteData.writeByteArrayToFile(binary, 'target/' + __arg.fileName + '.mrc')
 
+  @BuildMultiAuthoritiesFile
+  Scenario: Write one MARC Authority file carrying several records
+    # parameters: records (list of { controlNumber, heading, matchValue }), matchField, matchSubfield, fileName
+    * def multiMatchField = __arg.matchField
+    * def multiMatchSubfield = __arg.matchSubfield
+    * def createRecord =
+      """
+      function(r) {
+        var json = buildRecord('01012cz  a2200241n  4500', r.controlNumber, '201001 n acanaaabn           n aaa     d', multiMatchField, multiMatchSubfield, [r.matchValue], '100', '1', r.heading);
+        return JSON.stringify(karate.toJson(json));
+      }
+      """
+    * def recordJsons = __arg.records.map(r => createRecord(r))
+    * def binary = marcConverter.convertJsonStringsToBinary(recordJsons)
+    * javaWriteData.writeByteArrayToFile(binary, 'target/' + __arg.fileName + '.mrc')
+
   @BuildBibFile
   Scenario: Write a MARC Bibliographic file carrying the given match field values
     # parameters: controlNumber, heading, matchField, matchSubfield, matchValues, fileName
@@ -66,7 +82,7 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * call read('classpath:promin/data-import/global/marc-match-comparison-part-common.feature@BuildAuthorityFile') { controlNumber: '#(__arg.controlNumber)', heading: '#(__arg.heading)', matchField: '#(__arg.matchField)', matchSubfield: '#(__arg.matchSubfield)', matchValues: '#(__arg.matchValues)', fileName: '#(seedFileName)' }
 
     Given call read(utilFeature + '@ImportRecord') { fileName: '#(seedFileName)', jobName: 'createAuthority', filePathFromSourceRoot: '#("file:target/" + seedFileName + ".mrc")' }
-    Then match status != 'ERROR'
+    Then match jobExecution.status == 'COMMITTED'
 
     # Wait for the authority to exist and for SRS to have finished indexing it, otherwise the
     # match job that follows can run against a record that is not yet in marc_indexers
@@ -90,7 +106,7 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * call read('classpath:promin/data-import/global/marc-match-comparison-part-common.feature@BuildBibFile') { controlNumber: '#(__arg.controlNumber)', heading: '#(__arg.heading)', matchField: '#(__arg.matchField)', matchSubfield: '#(__arg.matchSubfield)', matchValues: '#(__arg.matchValues)', fileName: '#(seedFileName)' }
 
     Given call read(utilFeature + '@ImportRecord') { fileName: '#(seedFileName)', jobName: 'createInstance', filePathFromSourceRoot: '#("file:target/" + seedFileName + ".mrc")' }
-    Then match status != 'ERROR'
+    Then match jobExecution.status == 'COMMITTED'
 
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_BIB'
@@ -202,7 +218,23 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * print 'FAT-28498 job log entry:', entry
     * def relatedInfo = entry[__arg.infoField]
     And match entry.sourceRecordActionStatus == 'UPDATED'
+    And match relatedInfo.actionStatus == 'UPDATED'
     And match relatedInfo.idList contains __arg.externalId
+
+  @AssertMarcUpdatedMultiple
+  Scenario: Assert the import updated all the expected existing records
+    # parameters: jobExecutionId, expectedCount, externalIds, infoField
+    Given path 'metadata-provider/jobLogEntries', __arg.jobExecutionId
+    And headers headersUser
+    And retry until karate.get('response.entries.length') == __arg.expectedCount && karate.filter(response.entries, e => e.sourceRecordActionStatus != null).length == __arg.expectedCount
+    When method GET
+    Then status 200
+    And def entries = response.entries
+    And match each response.entries[*].sourceRecordActionStatus == 'UPDATED'
+    And def relatedEntityStatuses = entries.map(e => e[__arg.infoField].actionStatus)
+    And match each relatedEntityStatuses == 'UPDATED'
+    And def relatedIds = entries.flatMap(e => e[__arg.infoField].idList)
+    And match relatedIds contains only __arg.externalIds
 
   @AssertMarcNotMatched
   Scenario: Assert the import matched nothing, so the existing record was left untouched
@@ -215,6 +247,7 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     * def entry = response.entries[0]
     * print 'FAT-28498 job log entry:', entry
     And match entry.sourceRecordActionStatus == 'DISCARDED'
+    And match entry.error == ''
 
   @AssertMarcCreatedAsDuplicate
   Scenario: Assert the import created a new record instead of updating the existing one
@@ -246,3 +279,47 @@ Feature: Util feature for the MARC-to-MARC "Only compare part of the value" scen
     Then status 200
     * def headingValues = karate.jsonPath(response, "$.sourceRecords[0].parsedRecord.content.fields[*]['100'].subfields[*].a")
     And match headingValues contains __arg.expectedHeading
+
+  @AssertJobLogStatus
+  Scenario: Assert the job log shows the given status in the SRS column and the related record column
+    # parameters: jobExecutionId, infoField ('relatedAuthorityInfo' or 'relatedInstanceInfo'), expectedStatus
+    # The log UI renders DISCARDED as "No action".
+    Given path 'metadata-provider/jobLogEntries', __arg.jobExecutionId
+    And headers headersUser
+    And retry until karate.get('response.entries.length') == 1 && karate.get('response.entries[0].sourceRecordActionStatus') != null
+    When method GET
+    Then status 200
+    * def entry = response.entries[0]
+    * print 'job log entry:', entry
+    * def relatedInfo = entry[__arg.infoField]
+    And match entry.sourceRecordActionStatus == __arg.expectedStatus
+    And match relatedInfo.actionStatus == __arg.expectedStatus
+
+  @AssertSourceRecordValue
+  Scenario: Assert a field of the record's MARC source holds the given value
+    # parameters: recordType ('MARC_AUTHORITY' or 'MARC_BIB'), externalId, field, subfield ('' for a control field), expectedValue
+    * def valuesOf =
+      """
+      function(fields, tag, code) {
+        var values = [];
+        for (var i = 0; i < fields.length; i++) {
+          var f = fields[i][tag];
+          if (f == null) continue;
+          if (!code) { values.push(f); continue; }
+          for (var j = 0; j < f.subfields.length; j++) {
+            if (f.subfields[j][code] != null) values.push(f.subfields[j][code]);
+          }
+        }
+        return values;
+      }
+      """
+    Given path '/source-storage/source-records'
+    And param recordType = __arg.recordType
+    And param externalId = __arg.externalId
+    And headers headersUser
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * def values = valuesOf(response.sourceRecords[0].parsedRecord.content.fields, __arg.field, __arg.subfield)
+    * print __arg.field, __arg.subfield, 'values:', values
+    And match values contains __arg.expectedValue
