@@ -41,7 +41,6 @@ Feature: mod-feesfines integration tests
       | 'feesfines.accounts.check-transfer.post'                        |
       | 'feesfines.accounts.check-refund.post'                          |
       | 'actual-cost-fee-fine-cancel.post'                              |
-      | 'actual-cost-fee-fine-bill.post'                                |
       | 'feefines.item.get'                                             |
       | 'feefines.item.post'                                            |
       | 'feefines.item.put'                                             |
@@ -96,7 +95,6 @@ Feature: mod-feesfines integration tests
       | 'circulation.check-out-by-barcode.post'                         |
       | 'circulation.check-in-by-barcode.post'                          |
       | 'circulation.loans.declare-item-lost.post'                      |
-      | 'circulation-storage.loans.item.get'                            |
       | 'circulation-storage.patron-notice-policies.item.post'          |
       | 'circulation-storage.request-policies.item.post'                |
       | 'circulation-storage.loan-policies.item.post'                   |

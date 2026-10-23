@@ -218,23 +218,6 @@ Feature: init data
     When method POST
     Then status 204
 
-  @CheckInItem
-  Scenario: check in item by barcode
-    * def checkInBarcode = karate.get('extItemBarcode', itemBarcode)
-    * def intCheckInDate = call read('classpath:vega/mod-feesfines/features/util/get-time-now-function.js')
-
-    * def checkInRequest = read('classpath:vega/mod-feesfines/features/samples/check-in-by-barcode-entity-request.json')
-    * checkInRequest.itemBarcode = checkInBarcode
-    * checkInRequest.servicePointId = karate.get('extServicePointId', servicePointId)
-    * checkInRequest.checkInDate = karate.get('extCheckInDate', intCheckInDate)
-    Given path 'circulation', 'check-in-by-barcode'
-    And request checkInRequest
-    When method POST
-    Then status 200
-    And match $.item.barcode == checkInBarcode
-    And match $.loan.action == 'checkedin'
-    And match $.loan.status.name == 'Closed'
-
   @PostCancelActualCostFeeFine
   Scenario: cancel actual cost fee/fine
     * def additionalInfoForStaff = karate.get('extAdditionalInfoForStaff', 'Comment for staff')

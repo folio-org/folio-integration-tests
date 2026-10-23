@@ -103,6 +103,7 @@ Feature: mod-circulation integration tests
       | 'inventory.items.item.put'                                     |
       | 'lost-item-fees-policies.item.post'                            |
       | 'lost-item-fees-policies.item.get'                             |
+      | 'lost-item-fees-policies.item.put'                             |
       | 'manualblocks.collection.get'                                  |
       | 'overdue-fines-policies.item.post'                             |
       | 'overdue-fines-policies.item.get'                              |
