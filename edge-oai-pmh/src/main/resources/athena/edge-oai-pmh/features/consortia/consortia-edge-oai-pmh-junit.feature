@@ -98,6 +98,7 @@ Feature: edge-oai-pmh ECS tests
       | 'linked-data.resources.bib.post'                                              |
       | 'source-storage.records.formatted.item.get'                                   |
       | 'source-storage.records.suppress-discovery.item.put'                          |
+      | 'inventory.instances.item.mark-deleted.delete'                                |
 
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
