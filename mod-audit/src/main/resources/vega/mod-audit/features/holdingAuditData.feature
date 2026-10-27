@@ -20,6 +20,7 @@ Feature: holding audit data
     And match response.inventoryAuditItems[0].entityId == '#(holdingId)'
     And match response.inventoryAuditItems[0].action == 'CREATE'
 
+  @C651527
   Scenario: check audit data for Holding update
     Given def instance = call read(modifyDataPath + '@CreateInstance') { source:'FOLIO', title:'TestInstance' }
     And def instanceId = instance.id
