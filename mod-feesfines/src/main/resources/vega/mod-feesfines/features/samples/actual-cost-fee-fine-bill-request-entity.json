@@ -1,0 +1,7 @@
+{
+  "actualCostRecordId": "#(actualCostRecordId)",
+  "servicePointId": "#(testServicePointId)",
+  "amount": "#(actualCostAmount)",
+  "additionalInfoForStaff": "Comment for staff",
+  "additionalInfoForPatron": "Comment for patron"
+}
