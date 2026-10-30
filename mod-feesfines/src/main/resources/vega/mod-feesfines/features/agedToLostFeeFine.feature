@@ -423,3 +423,183 @@ Feature: Aged to lost fee/fine tests
     And request rulesEntityRequest
     When method PUT
     Then status 204
+
+  @C1464248
+  Scenario: C1464248 Check in aged to lost item with billed Set cost lost item fee, lost item fee is cancelled
+    # Save existing circulation rules
+    Given path 'circulation', 'rules'
+    When method GET
+    Then status 200
+    * def oldCirculationRules = response.rulesAsText
+
+    # Own item and patron (patron has no fees/fines), so the scenario does not depend on the state left by other scenarios
+    * def scLoanTypeId = call uuid1
+    * def scItemId = call uuid1
+    * def scUserId = call uuid1
+    * def scItemBarcode = 'aged.lost.sc.item.' + uniqueSuffix
+    * def scUserBarcode = 'aged.lost.sc.user.' + uniqueSuffix
+    * def scItemArgs = { extHoldingsRecordId: '#(testHoldingsId)', extMaterialTypeId: '#(testMaterialTypeId)', extPermanentLoanTypeId: '#(scLoanTypeId)', extItemId: '#(scItemId)', extItemBarcode: '#(scItemBarcode)' }
+    * def scItemResult = call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostItem') scItemArgs
+    * def scUserArgs = { extPatronGroupId: '#(testPatronGroupId)', extUserId: '#(scUserId)', extUserBarcode: '#(scUserBarcode)' }
+    * def scUserResult = call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostUser') scUserArgs
+
+    * def loanPolicyId = call uuid1
+    * def overdueFinePolicyId = call uuid1
+    * def lostItemFeePolicyId = call uuid1
+    * def patronNoticePolicyId = call uuid1
+    * def requestPolicyId = call uuid1
+
+    # Short term loan policy (loan period = 1 minute)
+    * def loanPolicy = read('classpath:vega/mod-feesfines/features/samples/policies/loan-policy-entity-request.json')
+    * loanPolicy.name = 'agedToLostSetCostLoanPolicy-' + loanPolicyId
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicy
+    When method POST
+    Then status 201
+
+    # Overdue fine policy with 0 amount
+    * def overdueFinePoliciesId = overdueFinePolicyId
+    * def overdueFinePolicy = read('classpath:vega/mod-feesfines/features/samples/policies/overdue-fine-policy-entity-request.json')
+    * overdueFinePolicy.name = 'agedToLostSetCostOverdueFinePolicy-' + overdueFinePolicyId
+    * overdueFinePolicy.overdueFine.quantity = 0.0
+    * overdueFinePolicy.overdueRecallFine.quantity = 0.0
+    * overdueFinePolicy.maxOverdueFine = 0.0
+    * overdueFinePolicy.maxOverdueRecallFine = 0.0
+    Given path 'overdue-fines-policies'
+    And request overdueFinePolicy
+    When method POST
+    Then status 201
+
+    # Lost item fee policy: aged to lost after 1 minute, patron billed after 1 minute, Set cost 100.00,
+    # processing fee 0.00 (not charged), close loan after 6 weeks, returned lost item - do not charge overdues,
+    # replacement not allowed
+    * def lostItemFeePolicyName = 'agedToLostSetCostLostItemFeePolicy-' + lostItemFeePolicyId
+    * def lostItemFeePolicy = read('classpath:vega/mod-feesfines/features/samples/policies/lost-item-fee-policy-aged-to-lost-entity-request.json')
+    Given path 'lost-item-fees-policies'
+    And request lostItemFeePolicy
+    When method POST
+    Then status 201
+
+    * def patronPolicyId = patronNoticePolicyId
+    * def patronNoticePolicy = read('classpath:vega/mod-feesfines/features/samples/policies/patron-notice-policy-entity-request.json')
+    * patronNoticePolicy.id = patronNoticePolicyId
+    * patronNoticePolicy.name = 'agedToLostSetCostPatronNoticePolicy-' + patronNoticePolicyId
+    Given path 'patron-notice-policy-storage/patron-notice-policies'
+    And request patronNoticePolicy
+    When method POST
+    Then status 201
+
+    * def requestPolicy = read('classpath:vega/mod-feesfines/features/samples/policies/request-policy-entity-request.json')
+    * requestPolicy.id = requestPolicyId
+    * requestPolicy.name = 'agedToLostSetCostRequestPolicy-' + requestPolicyId
+    Given path 'request-policy-storage/request-policies'
+    And request requestPolicy
+    When method POST
+    Then status 201
+
+    # Circulation rule for the created policies with specific material type and patron group
+    * def policies = 'l ' + loanPolicyId + ' o ' + overdueFinePolicyId + ' i ' + lostItemFeePolicyId + ' r ' + requestPolicyId + ' n ' + patronNoticePolicyId
+    * def rules = 'priority: t, s, c, b, a, m, g\nfallback-policy: ' + policies + '\nm ' + testMaterialTypeId + ' + g ' + testPatronGroupId + ': ' + policies
+    * def rulesEntityRequest = { "rulesAsText": "#(rules)" }
+    Given path 'circulation', 'rules'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
+
+    * configure retry = { count: 10, interval: 1000 }
+    Given path 'circulation', 'rules'
+    And retry until response.rulesAsText == rules
+    When method GET
+    Then status 200
+
+    # Patron has no fees/fines before the check out
+    Given path 'accounts'
+    And param query = 'userId==' + scUserId
+    When method GET
+    Then status 200
+    * match response.totalRecords == 0
+
+    # Check out the item to the patron; loan date is in the past, so the loan is already overdue enough to age to lost
+    * def loanDate = java.time.Instant.ofEpochSecond(java.time.Instant.now().getEpochSecond() - 86400).toString()
+    * def scCheckOutId = call uuid1
+    * def checkOutArgs = { extCheckOutId: '#(scCheckOutId)', extUserBarcode: '#(scUserBarcode)', extItemBarcode: '#(scItemBarcode)', extServicePointId: '#(testServicePointId)', extLoanDate: '#(loanDate)' }
+    * def checkOutResponse = call read('classpath:vega/mod-feesfines/features/util/initData.feature@PostCheckOut') checkOutArgs
+    * def loanId = checkOutResponse.response.id
+    # created policies have been applied to the loan
+    * match checkOutResponse.response.loanPolicyId == loanPolicyId
+    * match checkOutResponse.response.overdueFinePolicyId == overdueFinePolicyId
+    * match checkOutResponse.response.lostItemPolicyId == lostItemFeePolicyId
+
+    # Speed up the age-to-lost and age-to-lost-fee-charging scheduler timers (the UI scenario waits ~65 minutes instead)
+    * def sidecarResult = call read('classpath:common/eureka/keycloak.feature@getSidecarToken')
+    * def sidecarToken = sidecarResult.sidecarToken
+    * def ageToLostTimer = call read('classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@SetTimerByPath') { extToken: #(sidecarToken), extPathPattern: '/circulation/scheduled-age-to-lost', extUnit: 'second', extDelay: '1' }
+    * def feeChargingTimer = call read('classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@SetTimerByPath') { extToken: #(sidecarToken), extPathPattern: '/circulation/scheduled-age-to-lost-fee-charging', extUnit: 'second', extDelay: '1' }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
+    # Item became "Aged to lost"
+    * configure retry = { count: 30, interval: 10000 }
+    Given path 'inventory', 'items', scItemId
+    And retry until response.status.name == 'Aged to lost'
+    When method GET
+    Then status 200
+
+    # Lost item fee has been incurred for the patron
+    Given path 'accounts'
+    And param query = 'loanId==' + loanId
+    And retry until response.totalRecords == 1
+    When method GET
+    Then status 200
+    * def accountId = response.accounts[0].id
+    * match response.accounts[0].feeFineType == 'Lost item fee'
+    * match response.accounts[0].amount == 100.00
+    * match response.accounts[0].remaining == 100.00
+    * match response.accounts[0].status.name == 'Open'
+
+    # Restore the scheduler timers
+    * call read('classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@RestoreTimer') { extToken: #(sidecarToken), extTimerId: #(ageToLostTimer.currentTimerId), extTimerCreated: #(ageToLostTimer.currentTimerCreated), extOriginalTimer: #(ageToLostTimer.originalTimer) }
+    * call read('classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@RestoreTimer') { extToken: #(sidecarToken), extTimerId: #(feeChargingTimer.currentTimerId), extTimerCreated: #(feeChargingTimer.currentTimerCreated), extOriginalTimer: #(feeChargingTimer.originalTimer) }
+    * configure headers = { 'Content-Type': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+
+    # Step 1: check in the aged to lost item
+    * def checkInDate = java.time.Instant.now().toString()
+    * def checkInRequest = read('classpath:vega/mod-feesfines/features/samples/check-in-by-barcode-entity-request.json')
+    * checkInRequest.itemBarcode = scItemBarcode
+    * checkInRequest.checkInDate = checkInDate
+    * checkInRequest.servicePointId = testServicePointId
+    Given path 'circulation', 'check-in-by-barcode'
+    And request checkInRequest
+    When method POST
+    Then status 200
+    * match response.item.status.name == 'Available'
+
+    # Step 2: Fee/fine details contain "Lost item fee" ($100.00 balance) and "Cancelled item returned" ($0.00 balance) actions
+    * configure retry = { count: 10, interval: 2000 }
+    Given path 'feefineactions'
+    And param query = 'accountId==' + accountId
+    And retry until response.totalRecords == 2
+    When method GET
+    Then status 200
+    * def lostItemFeeActions = karate.filter(response.feefineactions, function(a){ return a.typeAction == 'Lost item fee' })
+    * def cancelledActions = karate.filter(response.feefineactions, function(a){ return a.typeAction == 'Cancelled item returned' })
+    * match lostItemFeeActions == '#[1]'
+    * match cancelledActions == '#[1]'
+    * match lostItemFeeActions[0].balance == 100.00
+    * match cancelledActions[0].balance == 0.00
+
+    # Step 3: Fee/fine record is closed with "Cancelled item returned" payment status, billed = $100.00, remaining = $0.00
+    Given path 'accounts', accountId
+    And retry until response.status.name == 'Closed'
+    When method GET
+    Then status 200
+    * match response.feeFineType == 'Lost item fee'
+    * match response.paymentStatus.name == 'Cancelled item returned'
+    * match response.amount == 100.00
+    * match response.remaining == 0.00
+
+    # bring back old circulation rules
+    * def rulesEntityRequest = { "rulesAsText": "#(oldCirculationRules)" }
+    Given path 'circulation-rules-storage'
+    And request rulesEntityRequest
+    When method PUT
+    Then status 204
