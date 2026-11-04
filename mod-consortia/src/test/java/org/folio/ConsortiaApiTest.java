@@ -20,4 +20,9 @@ class ConsortiaApiTest extends TestBaseEureka {
     void consortiaApiTest() {
         runFeature("classpath:thunderjet/mod-consortia/consortia-junit.feature");
     }
+
+    @Test
+    void consortiaMemberTenantSetupStatusTest() {
+        runFeature("classpath:thunderjet/mod-consortia/consortia-setup-status-junit.feature");
+    }
 }
