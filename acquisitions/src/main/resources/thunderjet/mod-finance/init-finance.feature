@@ -45,6 +45,7 @@ Feature: Initialize mod-finance integration tests
       | 'finance.expense-classes.item.post'                           |
       | 'finance.finance-data.collection.get'                         |
       | 'finance.finance-data.collection.put'                         |
+      | 'finance.fiscal-year-hierarchy.collection.get'                |
       | 'finance.fiscal-years.item.delete'                            |
       | 'finance.fiscal-years.item.get'                               |
       | 'finance.fiscal-years.item.post'                              |
