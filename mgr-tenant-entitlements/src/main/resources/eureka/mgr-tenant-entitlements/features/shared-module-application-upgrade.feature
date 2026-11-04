@@ -1,9 +1,17 @@
 Feature: upgrade between application versions that share a module version
 
-  # This test verifies that two versions of the same application can be registered when they share an unchanged module.
-  # It then upgrades a tenant from the first application version to the second and confirms that the shared module remains
-  # entitled while the changed module is upgraded to its newer version. It also verifies discovery registration and reuse;
-  # the synthetic discovery URLs are not expected to be reachable and therefore do not test live API routing.
+  # This test verifies that two versions of the same application can include the same mod-unchanged version.
+  # A tenant is first entitled to app-foo-1.0.0 and then upgraded to app-foo-2.0.0. After the upgrade, mod-unchanged remains
+  # at version 1.2.3 while mod-upgraded changes from version 1.1.0 to 1.2.0. The test also verifies discovery registration
+  # and reuse. The discovery URLs are fake, so this test does not verify live API routing.
+  #
+  # Initial entitlement state: app-foo-1.0.0
+  # - mod-unchanged-1.2.3
+  # - mod-upgraded-1.1.0
+  #
+  # Target entitlement state: app-foo-2.0.0
+  # - mod-unchanged-1.2.3
+  # - mod-upgraded-1.2.0
 
   Background:
     * url baseUrl
@@ -13,18 +21,23 @@ Feature: upgrade between application versions that share a module version
     * def uniqueSuffix = nowMillis()
 
     * def applicationName = 'it-app-foo-' + uniqueSuffix
-    * def applicationV1Id = applicationName + '-1.0.0'
-    * def applicationV2Id = applicationName + '-2.0.0'
+    * def applicationV1Version = '1.0.0'
+    * def applicationV2Version = '2.0.0'
+    * def applicationV1Id = applicationName + '-' + applicationV1Version
+    * def applicationV2Id = applicationName + '-' + applicationV2Version
 
-    * def sharedModuleName = 'it-mod-foo-' + uniqueSuffix
-    * def sharedModuleId = sharedModuleName + '-1.2.3'
-    * def sharedModuleLocation = 'http://' + sharedModuleName + ':8080'
+    * def unchangedModuleName = 'it-mod-unchanged-' + uniqueSuffix
+    * def unchangedModuleVersion = '1.2.3'
+    * def unchangedModuleId = unchangedModuleName + '-' + unchangedModuleVersion
+    * def unchangedModuleLocation = 'http://' + unchangedModuleName + ':8080'
 
-    * def changedModuleName = 'it-mod-bar-' + uniqueSuffix
-    * def changedModuleV1Id = changedModuleName + '-1.1.0'
-    * def changedModuleV2Id = changedModuleName + '-1.2.0'
-    * def changedModuleV1Location = 'http://' + changedModuleName + '-1-1-0:8080'
-    * def changedModuleV2Location = 'http://' + changedModuleName + '-1-2-0:8080'
+    * def upgradedModuleName = 'it-mod-upgraded-' + uniqueSuffix
+    * def upgradedModuleV1Version = '1.1.0'
+    * def upgradedModuleV2Version = '1.2.0'
+    * def upgradedModuleV1Id = upgradedModuleName + '-' + upgradedModuleV1Version
+    * def upgradedModuleV2Id = upgradedModuleName + '-' + upgradedModuleV2Version
+    * def upgradedModuleV1Location = 'http://' + upgradedModuleName + '-v1:8080'
+    * def upgradedModuleV2Location = 'http://' + upgradedModuleName + '-v2:8080'
 
     * def tenantId = uuid()
     * def tenantName = 'sharedapp' + uniqueSuffix
@@ -33,19 +46,19 @@ Feature: upgrade between application versions that share a module version
 
   @Positive
   Scenario: upgrade a tenant when both application versions contain the same module version
-    # Step 1: Register app-foo-1.0.0 and discoveries for mod-foo-1.2.3 and mod-bar-1.1.0.
+    # Step 1: Register app-foo-1.0.0 and discoveries for mod-unchanged-1.2.3 and mod-upgraded-1.1.0.
     * def applicationV1 =
       """
       {
         "name": "#(applicationName)",
-        "version": "1.0.0",
+        "version": "#(applicationV1Version)",
         "modules": [
-          { "id": "#(sharedModuleId)", "name": "#(sharedModuleName)", "version": "1.2.3" },
-          { "id": "#(changedModuleV1Id)", "name": "#(changedModuleName)", "version": "1.1.0" }
+          { "id": "#(unchangedModuleId)", "name": "#(unchangedModuleName)", "version": "#(unchangedModuleVersion)" },
+          { "id": "#(upgradedModuleV1Id)", "name": "#(upgradedModuleName)", "version": "#(upgradedModuleV1Version)" }
         ],
         "moduleDescriptors": [
-          { "id": "#(sharedModuleId)", "name": "#(sharedModuleName)" },
-          { "id": "#(changedModuleV1Id)", "name": "#(changedModuleName)" }
+          { "id": "#(unchangedModuleId)", "name": "#(unchangedModuleName)" },
+          { "id": "#(upgradedModuleV1Id)", "name": "#(upgradedModuleName)" }
         ]
       }
       """
@@ -62,16 +75,16 @@ Feature: upgrade between application versions that share a module version
       {
         "discovery": [
           {
-            "id": "#(sharedModuleId)",
-            "name": "#(sharedModuleName)",
-            "version": "1.2.3",
-            "location": "#(sharedModuleLocation)"
+            "id": "#(unchangedModuleId)",
+            "name": "#(unchangedModuleName)",
+            "version": "#(unchangedModuleVersion)",
+            "location": "#(unchangedModuleLocation)"
           },
           {
-            "id": "#(changedModuleV1Id)",
-            "name": "#(changedModuleName)",
-            "version": "1.1.0",
-            "location": "#(changedModuleV1Location)"
+            "id": "#(upgradedModuleV1Id)",
+            "name": "#(upgradedModuleName)",
+            "version": "#(upgradedModuleV1Version)",
+            "location": "#(upgradedModuleV1Location)"
           }
         ]
       }
@@ -106,19 +119,19 @@ Feature: upgrade between application versions that share a module version
     Then status 200
     And match response.status == 'finished'
 
-    # Step 3: Register app-foo-2.0.0 and upsert discoveries for the shared mod-foo and newer mod-bar.
+    # Step 3: Register app-foo-2.0.0 and upsert discoveries for the shared mod-unchanged and newer mod-upgraded.
     * def applicationV2 =
       """
       {
         "name": "#(applicationName)",
-        "version": "2.0.0",
+        "version": "#(applicationV2Version)",
         "modules": [
-          { "id": "#(sharedModuleId)", "name": "#(sharedModuleName)", "version": "1.2.3" },
-          { "id": "#(changedModuleV2Id)", "name": "#(changedModuleName)", "version": "1.2.0" }
+          { "id": "#(unchangedModuleId)", "name": "#(unchangedModuleName)", "version": "#(unchangedModuleVersion)" },
+          { "id": "#(upgradedModuleV2Id)", "name": "#(upgradedModuleName)", "version": "#(upgradedModuleV2Version)" }
         ],
         "moduleDescriptors": [
-          { "id": "#(sharedModuleId)", "name": "#(sharedModuleName)" },
-          { "id": "#(changedModuleV2Id)", "name": "#(changedModuleName)" }
+          { "id": "#(unchangedModuleId)", "name": "#(unchangedModuleName)" },
+          { "id": "#(upgradedModuleV2Id)", "name": "#(upgradedModuleName)" }
         ]
       }
       """
@@ -136,16 +149,16 @@ Feature: upgrade between application versions that share a module version
       {
         "discovery": [
           {
-            "id": "#(sharedModuleId)",
-            "name": "#(sharedModuleName)",
-            "version": "1.2.3",
-            "location": "#(sharedModuleLocation)"
+            "id": "#(unchangedModuleId)",
+            "name": "#(unchangedModuleName)",
+            "version": "#(unchangedModuleVersion)",
+            "location": "#(unchangedModuleLocation)"
           },
           {
-            "id": "#(changedModuleV2Id)",
-            "name": "#(changedModuleName)",
-            "version": "1.2.0",
-            "location": "#(changedModuleV2Location)"
+            "id": "#(upgradedModuleV2Id)",
+            "name": "#(upgradedModuleName)",
+            "version": "#(upgradedModuleV2Version)",
+            "location": "#(upgradedModuleV2Location)"
           }
         ]
       }
@@ -163,7 +176,7 @@ Feature: upgrade between application versions that share a module version
     When method get
     Then status 200
     * def applicationV2DiscoveryIds = karate.map(response.discovery, discovery => discovery.id)
-    * def expectedApplicationV2DiscoveryIds = ['#(sharedModuleId)', '#(changedModuleV2Id)']
+    * def expectedApplicationV2DiscoveryIds = ['#(unchangedModuleId)', '#(upgradedModuleV2Id)']
     And match applicationV2DiscoveryIds contains only expectedApplicationV2DiscoveryIds
 
     # Step 4: Upgrade the tenant from app-foo-1.0.0 to app-foo-2.0.0 using the desired-state API.
@@ -194,7 +207,7 @@ Feature: upgrade between application versions that share a module version
     Then status 200
     And match response.totalRecords == 1
     And match response.entitlements[0].applicationId == applicationV2Id
-    * def expectedModuleIds = ['#(sharedModuleId)', '#(changedModuleV2Id)']
+    * def expectedModuleIds = ['#(unchangedModuleId)', '#(upgradedModuleV2Id)']
     And match response.entitlements[0].modules contains only expectedModuleIds
 
     # Step 6: Cleanup - Revoke the application, delete the tenant, and remove both test application versions.
@@ -225,13 +238,13 @@ Feature: upgrade between application versions that share a module version
     Then status 204
 
     # The shared discovery must remain because app-foo-1.0.0 still references it.
-    Given path 'modules', sharedModuleId, 'discovery'
+    Given path 'modules', unchangedModuleId, 'discovery'
     And header Authorization = 'Bearer ' + masterToken
     When method get
     Then status 200
-    And match response.location == sharedModuleLocation
+    And match response.location == unchangedModuleLocation
 
-    Given path 'modules', changedModuleV2Id, 'discovery'
+    Given path 'modules', upgradedModuleV2Id, 'discovery'
     And header Authorization = 'Bearer ' + masterToken
     When method get
     Then status 404
@@ -243,12 +256,12 @@ Feature: upgrade between application versions that share a module version
     Then status 204
 
     # Removing the final application reference also removes its module discoveries.
-    Given path 'modules', sharedModuleId, 'discovery'
+    Given path 'modules', unchangedModuleId, 'discovery'
     And header Authorization = 'Bearer ' + masterToken
     When method get
     Then status 404
 
-    Given path 'modules', changedModuleV1Id, 'discovery'
+    Given path 'modules', upgradedModuleV1Id, 'discovery'
     And header Authorization = 'Bearer ' + masterToken
     When method get
     Then status 404
