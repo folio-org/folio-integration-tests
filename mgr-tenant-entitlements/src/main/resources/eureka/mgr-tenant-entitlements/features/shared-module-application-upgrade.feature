@@ -2,7 +2,8 @@ Feature: upgrade between application versions that share a module version
 
   # This test verifies that two versions of the same application can be registered when they share an unchanged module.
   # It then upgrades a tenant from the first application version to the second and confirms that the shared module remains
-  # entitled while the changed module is upgraded to its newer version.
+  # entitled while the changed module is upgraded to its newer version. It also verifies discovery registration and reuse;
+  # the synthetic discovery URLs are not expected to be reachable and therefore do not test live API routing.
 
   Background:
     * url baseUrl
@@ -17,10 +18,13 @@ Feature: upgrade between application versions that share a module version
 
     * def sharedModuleName = 'it-mod-foo-' + uniqueSuffix
     * def sharedModuleId = sharedModuleName + '-1.2.3'
+    * def sharedModuleLocation = 'http://' + sharedModuleName + ':8080'
 
     * def changedModuleName = 'it-mod-bar-' + uniqueSuffix
     * def changedModuleV1Id = changedModuleName + '-1.1.0'
     * def changedModuleV2Id = changedModuleName + '-1.2.0'
+    * def changedModuleV1Location = 'http://' + changedModuleName + '-1-1-0:8080'
+    * def changedModuleV2Location = 'http://' + changedModuleName + '-1-2-0:8080'
 
     * def tenantId = uuid()
     * def tenantName = 'sharedapp' + uniqueSuffix
@@ -29,7 +33,7 @@ Feature: upgrade between application versions that share a module version
 
   @Positive
   Scenario: upgrade a tenant when both application versions contain the same module version
-    # Step 1: Register app-foo-1.0.0 with mod-foo-1.2.3 and mod-bar-1.1.0.
+    # Step 1: Register app-foo-1.0.0 and discoveries for mod-foo-1.2.3 and mod-bar-1.1.0.
     * def applicationV1 =
       """
       {
@@ -53,6 +57,33 @@ Feature: upgrade between application versions that share a module version
     Then status 201
     And match response.id == applicationV1Id
 
+    * def applicationV1Discoveries =
+      """
+      {
+        "discovery": [
+          {
+            "id": "#(sharedModuleId)",
+            "name": "#(sharedModuleName)",
+            "version": "1.2.3",
+            "location": "#(sharedModuleLocation)"
+          },
+          {
+            "id": "#(changedModuleV1Id)",
+            "name": "#(changedModuleName)",
+            "version": "1.1.0",
+            "location": "#(changedModuleV1Location)"
+          }
+        ]
+      }
+      """
+    Given path 'modules', 'discovery'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request applicationV1Discoveries
+    When method post
+    Then status 201
+    And match response.discovery contains only applicationV1Discoveries.discovery
+
     # Step 2: Create a tenant and entitle it to app-foo-1.0.0.
     * call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(tenantId)', tenantName: '#(tenantName)' }
 
@@ -75,7 +106,7 @@ Feature: upgrade between application versions that share a module version
     Then status 200
     And match response.status == 'finished'
 
-    # Step 3: Register app-foo-2.0.0 with the same mod-foo-1.2.3 and the newer mod-bar-1.2.0.
+    # Step 3: Register app-foo-2.0.0 and upsert discoveries for the shared mod-foo and newer mod-bar.
     * def applicationV2 =
       """
       {
@@ -98,6 +129,42 @@ Feature: upgrade between application versions that share a module version
     When method post
     Then status 201
     And match response.id == applicationV2Id
+
+    # The shared module is deliberately included again to verify that its existing discovery can be reused.
+    * def applicationV2Discoveries =
+      """
+      {
+        "discovery": [
+          {
+            "id": "#(sharedModuleId)",
+            "name": "#(sharedModuleName)",
+            "version": "1.2.3",
+            "location": "#(sharedModuleLocation)"
+          },
+          {
+            "id": "#(changedModuleV2Id)",
+            "name": "#(changedModuleName)",
+            "version": "1.2.0",
+            "location": "#(changedModuleV2Location)"
+          }
+        ]
+      }
+      """
+    Given path 'modules', 'discovery'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request applicationV2Discoveries
+    When method post
+    Then status 201
+    And match response.discovery contains only applicationV2Discoveries.discovery
+
+    Given path 'applications', applicationV2Id, 'discovery'
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    * def applicationV2DiscoveryIds = karate.map(response.discovery, discovery => discovery.id)
+    * def expectedApplicationV2DiscoveryIds = ['#(sharedModuleId)', '#(changedModuleV2Id)']
+    And match applicationV2DiscoveryIds contains only expectedApplicationV2DiscoveryIds
 
     # Step 4: Upgrade the tenant from app-foo-1.0.0 to app-foo-2.0.0 using the desired-state API.
     Given path 'entitlements', 'state'
@@ -157,8 +224,31 @@ Feature: upgrade between application versions that share a module version
     When method delete
     Then status 204
 
+    # The shared discovery must remain because app-foo-1.0.0 still references it.
+    Given path 'modules', sharedModuleId, 'discovery'
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    And match response.location == sharedModuleLocation
+
+    Given path 'modules', changedModuleV2Id, 'discovery'
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 404
+
     Given path 'applications', applicationV1Id
     And header Authorization = 'Bearer ' + masterToken
     And header X-Okapi-Token = masterToken
     When method delete
     Then status 204
+
+    # Removing the final application reference also removes its module discoveries.
+    Given path 'modules', sharedModuleId, 'discovery'
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 404
+
+    Given path 'modules', changedModuleV1Id, 'discovery'
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 404
