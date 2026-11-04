@@ -41,4 +41,9 @@ class MgrTenantEntitlementsTests extends TestBaseEureka {
   void asyncEntitlementProcessingFeedbackLoop() {
     runFeatureTest("async-entitlement-processing-feedback-loop");
   }
+
+  @Test
+  void sharedModuleApplicationUpgrade() {
+    runFeatureTest("shared-module-application-upgrade");
+  }
 }
