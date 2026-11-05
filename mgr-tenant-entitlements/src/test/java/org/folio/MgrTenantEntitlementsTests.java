@@ -44,6 +44,11 @@ class MgrTenantEntitlementsTests extends TestBaseEureka {
   }
 
   @Test
+  void entitleModuleWithoutProvides() {
+    runFeatureTest("entitle-module-without-provides");
+  }
+
+  @Test
   void sharedModuleApplicationUpgrade() {
     runFeatureTest("shared-module-application-upgrade");
   }
