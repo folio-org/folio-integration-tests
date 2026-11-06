@@ -12,6 +12,7 @@ Feature: entitlement of modules that provide no interfaces without discovery inf
     * def v2 = '2.0.0'
 
   @Positive
+  @C1599845
   Scenario: entitle, upgrade and revoke an application whose only module has no provides and no discovery
     * def suffix = nowMillis()
     * def appName = 'it-virtual-app-' + suffix
