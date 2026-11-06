@@ -103,6 +103,9 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'requests-mediated.mediated-request.confirm.post'           |
       | 'requests-mediated.confirm-item-arrival.post'               |
       | 'requests-mediated.send-item-in-transit.post'               |
+      | 'requests-mediated.batch-mediated-requests.item.post'       |
+      | 'requests-mediated.batch-mediated-requests.item.get'        |
+      | 'requests-mediated.batch-mediated-requests.batch-details.collection.get' |
 
     # Remove leftovers before creating tenants. Resolve IDs by name first.
     * configure abortedStepsShouldPass = true
