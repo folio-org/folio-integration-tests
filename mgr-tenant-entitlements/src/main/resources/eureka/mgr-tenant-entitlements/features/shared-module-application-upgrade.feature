@@ -12,6 +12,9 @@ Feature: upgrade between application versions that share a module version
   # Target entitlement state: app-foo-2.0.0
   # - mod-unchanged-1.2.3
   # - mod-upgraded-1.2.0
+  #
+  # The test tenant also remains entitled to app-platform-minimal so mod-roles-keycloak can process and confirm the
+  # capability events emitted for the fake modules.
 
   Background:
     * url baseUrl
@@ -19,6 +22,7 @@ Feature: upgrade between application versions that share a module version
     * def keycloakResponse = callonce read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
     * def masterToken = keycloakResponse.response.access_token
     * def uniqueSuffix = nowMillis()
+    * def appPlatformMinimal = 'app-platform-minimal'
 
     * def applicationName = 'it-app-foo-' + uniqueSuffix
     * def applicationV1Version = '1.0.0'
@@ -97,8 +101,38 @@ Feature: upgrade between application versions that share a module version
     Then status 201
     And match response.discovery contains only applicationV1Discoveries.discovery
 
-    # Step 2: Create a tenant and entitle it to app-foo-1.0.0.
+    # Step 2: Create a tenant and entitle it to app-platform-minimal.
     * call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(tenantId)', tenantName: '#(tenantName)' }
+
+    Given path 'applications'
+    And param query = 'name=="' + appPlatformMinimal + '"'
+    And param limit = 100
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    And match response.applicationDescriptors != '#[0]'
+    * def appPlatformMinimalId = response.applicationDescriptors[0].id
+
+    Given path 'entitlements'
+    And param async = true
+    And param purgeOnRollback = false
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { tenantId: '#(tenantId)', applications: ['#(appPlatformMinimalId)'] }
+    When method post
+    Then status 201
+    * def appPlatformMinimalEntitlementFlowId = response.flowId
+
+    * configure retry = { count: 40, interval: 15000 }
+    Given path 'entitlement-flows', appPlatformMinimalEntitlementFlowId
+    And param includeStages = true
+    And header Authorization = 'Bearer ' + masterToken
+    And retry until terminalFlowStatuses.includes(response.status)
+    When method get
+    Then status 200
+    And match response.status == 'finished'
+
+    # Step 3: Entitle the tenant to app-foo-1.0.0.
 
     Given path 'entitlements'
     And param async = true
@@ -119,7 +153,7 @@ Feature: upgrade between application versions that share a module version
     Then status 200
     And match response.status == 'finished'
 
-    # Step 3: Register app-foo-2.0.0 and upsert discoveries for the shared mod-unchanged and newer mod-upgraded.
+    # Step 4: Register app-foo-2.0.0 and upsert discoveries for the shared mod-unchanged and newer mod-upgraded.
     * def applicationV2 =
       """
       {
@@ -179,13 +213,13 @@ Feature: upgrade between application versions that share a module version
     * def expectedApplicationV2DiscoveryIds = ['#(unchangedModuleId)', '#(upgradedModuleV2Id)']
     And match applicationV2DiscoveryIds contains only expectedApplicationV2DiscoveryIds
 
-    # Step 4: Upgrade the tenant from app-foo-1.0.0 to app-foo-2.0.0 using the desired-state API.
+    # Step 5: Upgrade the tenant from app-foo-1.0.0 to app-foo-2.0.0 while retaining app-platform-minimal.
     Given path 'entitlements', 'state'
     And param async = true
     And param purgeOnRollback = false
     And header Authorization = 'Bearer ' + masterToken
     And header X-Okapi-Token = masterToken
-    And request { tenantId: '#(tenantId)', applications: ['#(applicationV2Id)'] }
+    And request { tenantId: '#(tenantId)', applications: ['#(appPlatformMinimalId)', '#(applicationV2Id)'] }
     When method put
     Then status 200
     * def upgradeFlowId = response.flowId
@@ -198,19 +232,21 @@ Feature: upgrade between application versions that share a module version
     Then status 200
     And match response.status == 'finished'
 
-    # Step 5: Verify that the tenant is entitled only to app-foo-2.0.0 and its expected modules.
+    # Step 6: Verify that app-foo-2.0.0 has the expected modules.
     Given path 'entitlements'
     And param query = 'tenantId==' + tenantId
     And param includeModules = true
     And header Authorization = 'Bearer ' + masterToken
     When method get
     Then status 200
-    And match response.totalRecords == 1
-    And match response.entitlements[0].applicationId == applicationV2Id
+    And match response.totalRecords == 2
+    * def entitlementByApplicationId = {}
+    * eval karate.forEach(response.entitlements, entitlement => entitlementByApplicationId[entitlement.applicationId] = entitlement)
+    * def applicationEntitlement = entitlementByApplicationId[applicationV2Id]
     * def expectedModuleIds = ['#(unchangedModuleId)', '#(upgradedModuleV2Id)']
-    And match response.entitlements[0].modules contains only expectedModuleIds
+    And match applicationEntitlement.modules contains only expectedModuleIds
 
-    # Step 6: Cleanup - Revoke the application, delete the tenant, and remove both test application versions.
+    # Step 7: Cleanup - Revoke the fake application while mod-roles-keycloak is still available to confirm events.
     Given path 'entitlements'
     And param purge = true
     And param async = true
@@ -222,6 +258,25 @@ Feature: upgrade between application versions that share a module version
     * def revokeFlowId = response.flowId
 
     Given path 'entitlement-flows', revokeFlowId
+    And param includeStages = true
+    And header Authorization = 'Bearer ' + masterToken
+    And retry until terminalFlowStatuses.includes(response.status)
+    When method get
+    Then status 200
+    And match response.status == 'finished'
+
+    # Revoke app-platform-minimal only after the fake application has been fully revoked.
+    Given path 'entitlements'
+    And param purge = true
+    And param async = true
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { tenantId: '#(tenantId)', applications: ['#(appPlatformMinimalId)'] }
+    When method delete
+    Then status 200
+    * def appPlatformMinimalRevokeFlowId = response.flowId
+
+    Given path 'entitlement-flows', appPlatformMinimalRevokeFlowId
     And param includeStages = true
     And header Authorization = 'Bearer ' + masterToken
     And retry until terminalFlowStatuses.includes(response.status)
