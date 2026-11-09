@@ -85,18 +85,24 @@ class FolioEcsCirculationTests extends TestBaseEureka {
 
   @Test
   @Order(3)
+  void batchRequestsQueueTests() {
+    runFeature(MEDIATED_REQUESTS_BASE_PATH + "batch-requests-queue.feature");
+  }
+
+  @Test
+  @Order(4)
   void folioEcsCirculationTests() {
     runFeatureTest("systemwide-service-points");
   }
 
   @Test
-  @Order(4)
+  @Order(5)
   void staffSlipsTests() {
     runFeature("classpath:vega/staff-slips/features/staff-slips.feature");
   }
 
   @Test
-  @Order(5)
+  @Order(6)
   void ecsRequestsTests() {
     runFeature(ECS_REQUESTS_BASE_PATH + "ecs-requests.feature");
   }

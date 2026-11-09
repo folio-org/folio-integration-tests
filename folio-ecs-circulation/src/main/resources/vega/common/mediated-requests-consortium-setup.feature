@@ -14,8 +14,8 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
   # tenants the other features are using (and, with the mediated workflow running for tens of
   # minutes, can destroy them mid-flight).
   #
-  # This feature is callonce'd by BOTH mediated-requests.feature and
-  # mediated-request-staff-slips.feature, and callonce is scoped per feature file (each runFeature
+  # This feature is callonce'd by the mediated-request and batch-request features,
+  # and callonce is scoped per feature file (each runFeature
   # call is a separate Karate suite), so it executes once per calling feature. Every reference-data
   # POST below must therefore be idempotent: 201 = created on the first execution, 422 = already
   # present on a later one. Asserting a strict 201 here breaks the second caller with
