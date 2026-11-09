@@ -47,7 +47,7 @@ public class FinanceApiTest extends TestBaseEureka implements AcquisitionsTest {
     "current-budget-for-fund",
     /*"curr-fiscal-year-for-ledger-consider-time-zone",*/
     "finance-data",
-          "fiscal-year-hierarchy",
+    "fiscal-year-hierarchy",
     "fiscal-year-totals",
     "group-and-ledger-transfers-after-rollover",
     "group-expense-classes",
