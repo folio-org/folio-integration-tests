@@ -6,6 +6,7 @@ import org.folio.test.config.TestModuleConfiguration;
 import org.folio.test.services.TestIntegrationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @FolioTest(team = "Eureka", module = "mgr-tenant-entitlements")
@@ -40,5 +41,26 @@ class MgrTenantEntitlementsTests extends TestBaseEureka {
   @Test
   void asyncEntitlementProcessingFeedbackLoop() {
     runFeatureTest("async-entitlement-processing-feedback-loop");
+  }
+
+  @Test
+  void entitleModuleWithoutProvides() {
+    runFeatureTest("entitle-module-without-provides");
+  }
+
+  @Test
+  void sharedModuleApplicationUpgrade() {
+    runFeatureTest("shared-module-application-upgrade");
+  }
+
+  @Test
+  @Disabled("Entitlement rejects a module version used by a differently named application")
+  void splitApplicationSameModuleVersion() {
+    runFeatureTest("split-application-same-module-version");
+  }
+
+  @Test
+  void splitApplicationDifferentModuleVersion() {
+    runFeatureTest("split-application-different-module-version");
   }
 }
