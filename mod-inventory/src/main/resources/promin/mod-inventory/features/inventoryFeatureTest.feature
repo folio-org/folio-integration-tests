@@ -35,7 +35,7 @@ Feature: inventory
       * def expected_response = 'Cannot delete holdings_record.id = ' + holdingsId + ' because id is still referenced from table item.'
       Given path '/holdings-storage/holdings/' + holdingsId
       When method DELETE
-      Then status 400
+      Then status 422
       * match expected_response == response
 
     Scenario: Preceding & Succeeding instance title creation
