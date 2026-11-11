@@ -11,8 +11,8 @@ Feature: platform application entitlement
     * def flowIdHeader = 'x-mgr-tenant-entitlement-flow-id'
 
   @Positive
-  Scenario: entitle a platform application and repeat the request
-    * def name = 'it-pa-entitle-' + nowMillis()
+  Scenario: entitle - a platform application is entitled and the repeated request completes
+    * def name = 'platform-app-entitle-' + nowMillis()
     * def app = call read(registerApp) { masterToken: '#(masterToken)', name: '#(name)', version: '1.0.0', scope: 'platform' }
 
     # entitled for the whole deployment, flow record stored
@@ -50,8 +50,8 @@ Feature: platform application entitlement
     And match response.status == 'finished'
 
   @Negative
-  Scenario: reject a second version while another version is entitled
-    * def name = 'it-pa-second-' + nowMillis()
+  Scenario: entitle - a second version is rejected while another version is entitled
+    * def name = 'platform-app-second-' + nowMillis()
     * def v1 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(name)', version: '1.0.0', scope: 'platform' }
     * def v2 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(name)', version: '2.0.0', scope: 'platform' }
 
@@ -87,8 +87,8 @@ Feature: platform application entitlement
     Then status 201
 
   @Positive
-  Scenario: upgrade replaces the entitled version and the same upgrade can be repeated
-    * def name = 'it-pa-upgrade-' + nowMillis()
+  Scenario: upgrade - the entitled version is replaced and the same upgrade can be repeated
+    * def name = 'platform-app-upgrade-' + nowMillis()
     * def v1 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(name)', version: '1.0.0', scope: 'platform' }
     * def v2 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(name)', version: '2.0.0', scope: 'platform' }
 
@@ -132,11 +132,11 @@ Feature: platform application entitlement
     And match karate.toString(response) contains 'Another version of the application is already entitled'
 
   @Negative
-  Scenario: reject an upgrade whose new version breaks a dependent platform application
+  Scenario: upgrade - a new version that breaks a dependent platform application is rejected
     # dependent-1.0.0 requires base ^1.0.0, so base 2.0.0 must be rejected.
     * def suffix = nowMillis()
-    * def baseName = 'it-pa-base-' + suffix
-    * def dependentName = 'it-pa-dependent-' + suffix
+    * def baseName = 'platform-app-base-' + suffix
+    * def dependentName = 'platform-app-dependent-' + suffix
     * def base1 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(baseName)', version: '1.0.0', scope: 'platform' }
     * def base2 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(baseName)', version: '2.0.0', scope: 'platform' }
     * def dependencies = [{ name: '#(baseName)', version: '^1.0.0' }]
@@ -171,11 +171,91 @@ Feature: platform application entitlement
     When method post
     Then status 201
 
-  @Negative
-  Scenario: reject regular applications on the platform endpoint
+  @Positive
+  Scenario: entitle - an application is entitled without its optional dependency
     * def suffix = nowMillis()
-    * def regularName = 'it-ra-' + suffix
-    * def platformName = 'it-pa-mixed-' + suffix
+    * def optionalName = 'platform-app-optional-' + suffix
+    * def dependentName = 'platform-app-optional-dependent-' + suffix
+    * def dependencies = [{ name: '#(optionalName)', version: '^1.0.0', optional: true }]
+    * def optionalParent = call read(registerApp) { masterToken: '#(masterToken)', name: '#(optionalName)', version: '1.0.0', scope: 'platform' }
+    * def dependent = call read(registerApp) { masterToken: '#(masterToken)', name: '#(dependentName)', version: '1.0.0', scope: 'platform', dependencies: '#(dependencies)' }
+
+    # the optional parent is not entitled, and the dependent is still accepted
+    Given path 'entitlements', 'platform'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { applications: ['#(dependent.id)'] }
+    When method post
+    Then status 201
+    And match response.platformEntitlements[*].applicationId == [ '#(dependent.id)' ]
+
+    Given path 'entitlement-flows', response.flowId
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    And match response.status == 'finished'
+
+  @Negative
+  Scenario: entitle - an application is rejected without its required dependency
+    * def suffix = nowMillis()
+    * def requiredName = 'platform-app-required-' + suffix
+    * def dependentName = 'platform-app-required-dependent-' + suffix
+    * def dependencies = [{ name: '#(requiredName)', version: '^1.0.0' }]
+    * def requiredParent = call read(registerApp) { masterToken: '#(masterToken)', name: '#(requiredName)', version: '1.0.0', scope: 'platform' }
+    * def dependent = call read(registerApp) { masterToken: '#(masterToken)', name: '#(dependentName)', version: '1.0.0', scope: 'platform', dependencies: '#(dependencies)' }
+
+    Given path 'entitlements', 'platform'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { applications: ['#(dependent.id)'] }
+    When method post
+    Then status 400
+    * def failedFlowId = responseHeaders[flowIdHeader][0]
+
+    Given path 'entitlement-flows', failedFlowId
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    And match response.status == 'cancelled'
+
+  @Positive
+  Scenario: upgrade - a new version outside the range of an optional dependent is accepted
+    # dependent-1.0.0 optionally uses base ^1.0.0, so base 2.0.0 does not block the upgrade.
+    * def suffix = nowMillis()
+    * def baseName = 'platform-app-opt-base-' + suffix
+    * def dependentName = 'platform-app-opt-dependent-' + suffix
+    * def base1 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(baseName)', version: '1.0.0', scope: 'platform' }
+    * def base2 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(baseName)', version: '2.0.0', scope: 'platform' }
+    * def dependencies = [{ name: '#(baseName)', version: '^1.0.0', optional: true }]
+    * def dependent = call read(registerApp) { masterToken: '#(masterToken)', name: '#(dependentName)', version: '1.0.0', scope: 'platform', dependencies: '#(dependencies)' }
+
+    Given path 'entitlements', 'platform'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { applications: ['#(base1.id)', '#(dependent.id)'] }
+    When method post
+    Then status 201
+
+    Given path 'entitlements', 'platform'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { applications: ['#(base2.id)'] }
+    When method put
+    Then status 200
+    And match response.platformEntitlements[*].applicationId == [ '#(base2.id)' ]
+
+    Given path 'entitlement-flows', response.flowId
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    And match response.status == 'finished'
+    And match response.type == 'platform_upgrade'
+
+  @Negative
+  Scenario: entitle - regular applications are rejected on the platform endpoint
+    * def suffix = nowMillis()
+    * def regularName = 'regular-app-' + suffix
+    * def platformName = 'platform-app-mixed-' + suffix
     * def regular = call read(registerApp) { masterToken: '#(masterToken)', name: '#(regularName)', version: '1.0.0', scope: 'regular' }
     * def platform = call read(registerApp) { masterToken: '#(masterToken)', name: '#(platformName)', version: '1.0.0', scope: 'platform' }
 
@@ -204,9 +284,9 @@ Feature: platform application entitlement
     And match response.status == 'cancelled'
 
   @Negative
-  Scenario: reject a platform application in a desired-state write
+  Scenario: entitle - a platform application is rejected in a desired-state write
     * def suffix = nowMillis()
-    * def stateName = 'it-pa-state-' + suffix
+    * def stateName = 'platform-app-state-' + suffix
     * def tenantName = 'platformstate' + suffix
     * def platform = call read(registerApp) { masterToken: '#(masterToken)', name: '#(stateName)', version: '1.0.0', scope: 'platform' }
     * def tenantId = uuid()
