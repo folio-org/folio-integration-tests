@@ -101,7 +101,7 @@ Feature: mgr-applications - module discovery
     And match response.discovery == []
 
   @Positive
-  Scenario: create and update discovery of several modules in a batch (upsert)
+  Scenario: create discovery of several modules in a batch
     * def firstAppName = 'it-app-batch1-' + suffix
     * def firstModuleName = 'it-mod-batch1-' + suffix
     * def firstAppId = firstAppName + '-1.0.0'
@@ -109,6 +109,61 @@ Feature: mgr-applications - module discovery
     * def firstLocation = 'http://' + firstModuleName + ':8081'
     * def secondAppName = 'it-app-batch2-' + suffix
     * def secondModuleName = 'it-mod-batch2-' + suffix
+    * def secondAppId = secondAppName + '-1.0.0'
+    * def secondModuleId = secondModuleName + '-1.0.0'
+    * def secondLocation = 'http://' + secondModuleName + ':8081'
+
+    * call read('classpath:eureka/mgr-applications/features/reusable/register-application.feature') { appName: '#(firstAppName)', version: '1.0.0', moduleName: '#(firstModuleName)', masterToken: '#(masterToken)' }
+    * karate.appendTo('createdAppIds', firstAppId)
+    * call read('classpath:eureka/mgr-applications/features/reusable/register-application.feature') { appName: '#(secondAppName)', version: '1.0.0', moduleName: '#(secondModuleName)', masterToken: '#(masterToken)' }
+    * karate.appendTo('createdAppIds', secondAppId)
+
+    # create discoveries of both modules
+    Given path 'modules', 'discovery'
+    And request
+      """
+      {
+        "discovery": [
+          { "id": "#(firstModuleId)", "name": "#(firstModuleName)", "version": "1.0.0", "location": "#(firstLocation)" },
+          { "id": "#(secondModuleId)", "name": "#(secondModuleName)", "version": "1.0.0", "location": "#(secondLocation)" }
+        ]
+      }
+      """
+    When method post
+    Then status 201
+    And match response.totalRecords == 2
+    And match response.discovery == '#[2]'
+    And match response.discovery[*].id contains only [ '#(firstModuleId)', '#(secondModuleId)' ]
+    And match response.discovery[*].location contains only [ '#(firstLocation)', '#(secondLocation)' ]
+
+    Given path 'modules', 'discovery'
+    And param query = 'id==' + firstModuleId + ' or id==' + secondModuleId
+    When method get
+    Then status 200
+    And match response.totalRecords == 2
+    And match response.discovery[*].id contains only [ '#(firstModuleId)', '#(secondModuleId)' ]
+
+    # clean the discovery of both modules
+    Given path 'modules', firstModuleId, 'discovery'
+    When method delete
+    Then status 204
+
+    Given path 'modules', secondModuleId, 'discovery'
+    When method delete
+    Then status 204
+
+  # POST /modules/discovery became a batch upsert in MGRAPPS-122 (mgr-applications 4.1.0). Earlier releases (for example
+  # 4.0.x) only create and answer 409 "Module Discovery already exists for ids: [...]" when a module already has discovery.
+  # Skip on such environments, e.g. with -Dkarate.options="--tags ~@Upsert".
+  @Positive @Upsert
+  Scenario: update discovery of several modules in a batch (upsert)
+    * def firstAppName = 'it-app-upsert1-' + suffix
+    * def firstModuleName = 'it-mod-upsert1-' + suffix
+    * def firstAppId = firstAppName + '-1.0.0'
+    * def firstModuleId = firstModuleName + '-1.0.0'
+    * def firstLocation = 'http://' + firstModuleName + ':8081'
+    * def secondAppName = 'it-app-upsert2-' + suffix
+    * def secondModuleName = 'it-mod-upsert2-' + suffix
     * def secondAppId = secondAppName + '-1.0.0'
     * def secondModuleId = secondModuleName + '-1.0.0'
     * def secondLocation = 'http://' + secondModuleName + ':8081'
