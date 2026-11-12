@@ -1,3 +1,4 @@
+@parallel=false
 Feature: platform application entitlement
 
   # POST/PUT /entitlements/platform entitle or upgrade platform-scoped applications for the whole deployment.
