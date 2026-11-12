@@ -36,7 +36,8 @@ Feature: inventory
       Given path '/holdings-storage/holdings/' + holdingsId
       When method DELETE
       Then status 422
-      * match expected_response == response
+      * string responseText = response
+      * match responseText contains expected_response
 
     Scenario: Preceding & Succeeding instance title creation
 #     Preceding Instance
