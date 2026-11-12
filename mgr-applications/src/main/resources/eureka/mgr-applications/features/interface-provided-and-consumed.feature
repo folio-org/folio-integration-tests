@@ -118,11 +118,12 @@ Feature: interface provided and required/optional in the same module descriptor
   @Negative
   Scenario: validation rejects a module that lists the same interface as both required and optional
     * def moduleName = 'it-mod-conflict-' + uniqueSuffix
+    * def moduleConflictName = 'it-app-conflict-' + uniqueSuffix
     * def moduleId = moduleName + '-1.0.0'
     * def conflictApp =
       """
       {
-        "name": "it-app-conflict-#(uniqueSuffix)", "version": "1.0.0",
+        "name": "#(moduleConflictName)", "version": "1.0.0",
         "modules": [ { "name": "#(moduleName)", "version": "1.0.0" } ],
         "moduleDescriptors": [
           {
