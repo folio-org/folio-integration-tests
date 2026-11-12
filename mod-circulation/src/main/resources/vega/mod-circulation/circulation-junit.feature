@@ -38,6 +38,9 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.loan-policies.item.post'                  |
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation.renew-by-barcode.post'                            |
+      | 'circulation.override-renewal-block.post'                      |
+      | 'circulation.override-patron-block.post'                       |
+      | 'users.item.put'                                               |
       | 'circulation-storage.patron-notice-policies.item.post'         |
       | 'circulation-storage.request-policies.item.post'               |
       | 'circulation-storage.request-batch.item.post'                  |
@@ -57,7 +60,6 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
-      | 'circulation.requests.queue.reorder.collection.post'           |
       | 'circulation.requests.item.delete'                             |
       | 'configuration.entries.collection.get'                         |
       | 'configuration.entries.item.post'                              |

@@ -930,6 +930,131 @@ Feature: Loans tests
     And match response.renewalCount == 1
     And match response.dueDate == dueDateAfterRenewal
 
+  @RenewByBarcodeValidation
+  Scenario: When renew-by-barcode request is invalid or renewal is not allowed, return 422 with the corresponding error and do not renew the loan
+    * def extUserId = call uuid1
+    * def extUserBarcode = 'FAT-RENEWVAL-UBC'
+    * def extItemBarcode = 'FAT-RENEWVAL-IBC'
+    * def nonExistentItemBarcode = 'FAT-RENEWVAL-NO-ITEM'
+    * def nonExistentUserBarcode = 'FAT-RENEWVAL-NO-USER'
+    # check out "now" so the loan is not overdue, and use a future due date for the override request
+    * def Instant = Java.type('java.time.Instant')
+    * def ChronoUnit = Java.type('java.time.temporal.ChronoUnit')
+    * def extLoanDate = Instant.now().truncatedTo(ChronoUnit.SECONDS).toString()
+    * def overrideDueDate = Instant.now().plus(60, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS).toString()
+
+    # location and service point setup
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint')
+
+    # post an item
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostItem') { extItemBarcode: #(extItemBarcode) }
+
+    # post a group and user
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostGroup') { extUserGroupId: #(groupId) }
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostUser') { extUserId: #(extUserId), extUserBarcode: #(extUserBarcode) }
+
+    # checkOut the item (the loan has never been renewed)
+    * def checkOutResponse = call read('classpath:vega/mod-circulation/features/util/initData.feature@PostCheckOut') { extCheckOutUserBarcode: #(extUserBarcode), extCheckOutItemBarcode: #(extItemBarcode), extLoanDate: #(extLoanDate) }
+    * def extLoanId = checkOutResponse.response.id
+
+    # step 1: renewal request without item barcode
+    Given path 'circulation', 'renew-by-barcode'
+    And request { userBarcode: '#(extUserBarcode)', servicePointId: '#(servicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'Renewal request must have an item barcode'
+    And match response.errors[0].code == 'RENEWAL_REQUEST_ITEM_BARCODE_REQUIRED'
+    And match response.errors[0].parameters[0].key == 'itemBarcode'
+    And match response.errors[0].parameters[0].value == null
+
+    # step 2: renewal request without user barcode
+    Given path 'circulation', 'renew-by-barcode'
+    And request { itemBarcode: '#(extItemBarcode)', servicePointId: '#(servicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'Renewal request must have a user barcode'
+    And match response.errors[0].code == 'RENEWAL_REQUEST_USER_BARCODE_REQUIRED'
+    And match response.errors[0].parameters[0].key == 'userBarcode'
+    And match response.errors[0].parameters[0].value == null
+
+    # step 3: renewal request with non-existent item barcode
+    Given path 'circulation', 'renew-by-barcode'
+    And request { itemBarcode: '#(nonExistentItemBarcode)', userBarcode: '#(extUserBarcode)', servicePointId: '#(servicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'No item with barcode ' + nonExistentItemBarcode + ' exists'
+    And match response.errors[0].code == 'ITEM_BARCODE_NOT_FOUND'
+    And match response.errors[0].parameters[0].key == 'itemBarcode'
+    And match response.errors[0].parameters[0].value == nonExistentItemBarcode
+
+    # step 4: renewal request with non-existent user barcode
+    Given path 'circulation', 'renew-by-barcode'
+    And request { itemBarcode: '#(extItemBarcode)', userBarcode: '#(nonExistentUserBarcode)', servicePointId: '#(servicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'Cannot renew item checked out to different user'
+    And match response.errors[0].code == 'ITEM_CHECKED_OUT_TO_DIFFERENT_USER'
+    And match response.errors[0].parameters[0].key == 'userBarcode'
+    And match response.errors[0].parameters[0].value == nonExistentUserBarcode
+
+    # step 5: override renewal is not allowed for a loan that can be renewed normally
+    * def overrideRenewalRequest =
+      """
+      {
+        "userBarcode": "#(extUserBarcode)",
+        "itemBarcode": "#(extItemBarcode)",
+        "servicePointId": "#(servicePointId)",
+        "overrideBlocks": {
+          "patronBlock": {},
+          "renewalBlock": {},
+          "renewalDueDateRequiredBlock": { "dueDate": "#(overrideDueDate)" },
+          "comment": "test"
+        }
+      }
+      """
+    Given path 'circulation', 'renew-by-barcode'
+    And request overrideRenewalRequest
+    When method POST
+    Then status 422
+    And match response.errors[0].code == 'OVERRIDE_RENEWAL_NOT_ALLOWED_FOR_CURRENT_LOAN'
+    And match response.errors[0].message contains 'Override renewal does not match any of expected cases'
+    And match response.errors[0].parameters[*].key contains ['loanPolicyName', 'loanPolicyId']
+
+    # step 6: make the user inactive
+    Given path 'users', extUserId
+    When method GET
+    Then status 200
+    * def userToUpdate = response
+    * userToUpdate.active = false
+    Given path 'users', extUserId
+    And request userToUpdate
+    When method PUT
+    Then status 204
+    Given path 'users', extUserId
+    When method GET
+    Then status 200
+    And match response.active == false
+
+    # step 7: renewal request for the inactive user
+    Given path 'circulation', 'renew-by-barcode'
+    And request { itemBarcode: '#(extItemBarcode)', userBarcode: '#(extUserBarcode)', servicePointId: '#(servicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].message == 'Cannot renew loan when user is inactive or expired'
+    And match response.errors[0].code == 'USER_IS_INACTIVE_OR_EXPIRED'
+    And match response.errors[0].parameters[0].key == 'reason'
+    And match response.errors[0].parameters[0].value == 'User is inactive.'
+
+    # step 8: the loan has not been renewed
+    Given path 'circulation', 'loans', extLoanId
+    When method GET
+    Then status 200
+    # renewalCount is omitted from the loan when it has never been renewed
+    And assert (response.renewalCount == null ? 0 : response.renewalCount) == 0
+
   Scenario: When an existing loan is aged to lost update agedToLostDate and aged to lost policy specifies delayed billing, update lostItemHasBeenBilled, dateLostItemShouldBeBilled
 
     * def extItemBarcode = 'FAT-1001IBC'
