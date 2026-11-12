@@ -41,8 +41,8 @@ Feature: Claims export routed by the PO line acquisition method
 
     * table configs
       | configId             | configName       | vendorId | transmissionMethod | fileFormat | defaultAcquisitionMethods         |
-      | configApprovalPlanId | "ACQ_ROUTE_AP"   | orgId    | "File download"    | "CSV"      | [globalApprovalPlanAcqMethodId]   |
-      | configPurchaseId     | "ACQ_ROUTE_PUR"  | orgId    | "File download"    | "CSV"      | [globalPurchaseAcqMethodId]       |
+      | configApprovalPlanId | "ACQ_ROUTE_AP"   | orgId    | "File download"    | "CSV"      | ["#(globalApprovalPlanAcqMethodId)"]   |
+      | configPurchaseId     | "ACQ_ROUTE_PUR"  | orgId    | "File download"    | "CSV"      | ["#(globalPurchaseAcqMethodId)"]       |
     * def v = call createIntegrationDetails configs
 
     # 2. One Late piece per acquisition method
@@ -80,7 +80,7 @@ Feature: Claims export routed by the PO line acquisition method
     * table configs
       | configId         | configName      | vendorId | transmissionMethod | fileFormat | defaultAcquisitionMethods   |
       | configCatchAllId | "ACQ_REST_ALL"  | orgId    | "File download"    | "CSV"      | []                          |
-      | configPurchaseId | "ACQ_REST_PUR"  | orgId    | "File download"    | "CSV"      | [globalPurchaseAcqMethodId] |
+      | configPurchaseId | "ACQ_REST_PUR"  | orgId    | "File download"    | "CSV"      | ["#(globalPurchaseAcqMethodId)"] |
     * def v = call createIntegrationDetails configs
 
     # 2. One Late piece per acquisition method
