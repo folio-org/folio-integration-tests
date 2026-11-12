@@ -152,10 +152,7 @@ Feature: mgr-applications - module discovery
     When method delete
     Then status 204
 
-  # POST /modules/discovery became a batch upsert in MGRAPPS-122 (mgr-applications 4.1.0). Earlier releases (for example
-  # 4.0.x) only create and answer 409 "Module Discovery already exists for ids: [...]" when a module already has discovery.
-  # Skip on such environments, e.g. with -Dkarate.options="--tags ~@Upsert".
-  @Positive @Upsert
+  @Positive
   Scenario: update discovery of several modules in a batch (upsert)
     * def firstAppName = 'it-app-upsert1-' + suffix
     * def firstModuleName = 'it-mod-upsert1-' + suffix
