@@ -1,6 +1,6 @@
 @parallel=false
-# MODORDERS-1491: POST /orders/pieces/claim selects the Claims configs through
-# GET /data-export-spring/effective-configs (vendor + PO line acquisition method, MODEXPS-323).
+# POST /orders/pieces/claim selects the Claims configs through
+# GET /data-export-spring/effective-configs (vendor + PO line acquisition method).
 # A config that selects acquisition methods takes only those; a config without methods takes the methods
 # no other Claims config of the vendor selects; a piece without an applicable config fails the request.
 Feature: Claims export routed by the PO line acquisition method
