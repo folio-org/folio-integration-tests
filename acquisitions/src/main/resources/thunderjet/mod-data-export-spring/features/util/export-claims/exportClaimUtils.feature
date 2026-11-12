@@ -27,7 +27,7 @@ Feature: Init Data for Claims Export
     # 2. Create organization integration details
     # The Claims config must select the PO line's acquisition method (order-line.json uses Approval Plan),
     # because mod-orders routes claimed pieces through GET /data-export-spring/effective-configs (MODORDERS-1491)
-    * def claimsAcqMethods = [globalApprovalPlanAcqMethodId]
+    * def claimsAcqMethods = ["#(globalApprovalPlanAcqMethodId)"]
     * table orgIntegrationDetails
       | configId | configName | vendorId | transmissionMethod | fileFormat | ftpFormat | accountNoList    | defaultAcquisitionMethods |
       | configId | configName | orgId    | transMeth          | fileFormat | ftpFormat | ["#(accountNo)"] | claimsAcqMethods          |
