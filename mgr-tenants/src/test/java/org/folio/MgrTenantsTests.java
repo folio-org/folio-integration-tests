@@ -25,4 +25,14 @@ class MgrTenantsTests extends TestBaseEureka {
   void listTenants() {
     runFeatureTest("list-tenants");
   }
+
+  @Test
+  void tenants() {
+    runFeatureTest("tenants");
+  }
+
+  @Test
+  void tenantAttributes() {
+    runFeatureTest("tenant-attributes");
+  }
 }
