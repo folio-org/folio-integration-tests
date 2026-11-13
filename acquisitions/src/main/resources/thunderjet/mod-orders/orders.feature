@@ -373,3 +373,6 @@ Feature: mod-orders integration tests
 
   Scenario: An Open Order With POL And Funds Distribution Can Be Unopened
     * call read('features/unopen-open-order-with-pol-and-fund-distribution.feature')
+
+  Scenario: Approval Details Are Not Overwritten When Opening An Order
+    * call read('features/open-order-approval-details-not-overwritten.feature')
