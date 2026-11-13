@@ -373,3 +373,6 @@ Feature: mod-orders integration tests
 
   Scenario: An Open Order With POL And Funds Distribution Can Be Unopened
     * call read('features/unopen-open-order-with-pol-and-fund-distribution.feature')
+
+  Scenario: Multi-Year Prepayment Term Validation On Order Opening And Composite Order Creation
+    * call read('features/multi-year-prepayment-term-on-open-and-order-create.feature')
