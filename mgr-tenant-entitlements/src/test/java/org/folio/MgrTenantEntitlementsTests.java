@@ -78,4 +78,10 @@ class MgrTenantEntitlementsTests extends TestBaseEureka {
   void splitApplicationDifferentModuleVersion() {
     runFeatureTest("split-application-different-module-version");
   }
+
+  @Test
+  void platformEntitlement() {
+    runFeatureTest("platform-entitlement");
+  }
 }
+
