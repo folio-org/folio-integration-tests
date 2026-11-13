@@ -1,0 +1,15 @@
+{
+  "id": "#(loanPolicyId)",
+  "name": "Non-renewable Loan Policy",
+  "description": "Can circulate item, renewals are not allowed",
+  "loanable": true,
+  "renewable": false,
+  "loansPolicy": {
+    "profileId": "Rolling",
+    "period": {
+      "duration": 3,
+      "intervalId": "Weeks"
+    },
+    "closedLibraryDueDateManagementId": "CURRENT_DUE_DATE_TIME"
+  }
+}
