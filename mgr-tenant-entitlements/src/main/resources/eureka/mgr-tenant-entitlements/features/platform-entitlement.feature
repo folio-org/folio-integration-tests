@@ -302,3 +302,93 @@ Feature: platform application entitlement
     And match karate.toString(response) contains 'Desired state request contains platform-scoped applications'
 
     * call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(tenantId)' }
+
+  @Negative
+  Scenario: entitle and upgrade - platform requests are rejected while a tenant entitlement is in progress
+    # A platform request fails fast with 409 and Retry-After while any tenant flow is not terminal.
+    * def suffix = nowMillis()
+    * def name = 'platform-app-busy-' + suffix
+    * def v1 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(name)', version: '1.0.0', scope: 'platform' }
+    * def tenantId = uuid()
+    * def tenantName = 'platformbusy' + suffix
+    * call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(tenantId)', tenantName: '#(tenantName)' }
+
+    # app-platform-minimal has many modules, which keeps the tenant flow running long enough to send the platform requests
+    Given path 'applications'
+    And param query = '(name=="app-platform-minimal")'
+    And param limit = 100
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    * match response.applicationDescriptors == '#[1]'
+    * def applicationIds = karate.map(response.applicationDescriptors, d => d.id)
+
+    Given path 'entitlements'
+    And param async = true
+    And param tenantParameters = 'loadReference=true'
+    And param purgeOnRollback = false
+    And request { tenantId: '#(tenantId)', applications: '#(applicationIds)' }
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    When method post
+    Then status 201
+    * def tenantFlowId = response.flowId
+
+    # in async mode the flow row is written after the response, so wait until the flow is in progress
+    * configure retry = { count: 20, interval: 500 }
+    Given path 'entitlement-flows', tenantFlowId
+    And header Authorization = 'Bearer ' + masterToken
+    * retry until responseStatus == 200 && response.status == 'in_progress'
+    When method get
+    Then status 200
+
+    Given path 'entitlements', 'platform'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { applications: ['#(v1.id)'] }
+    When method post
+    Then status 409
+    And match responseHeaders['Retry-After'][0] == '#regex [0-9]+'
+
+    Given path 'entitlements', 'platform'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { applications: ['#(v1.id)'] }
+    When method put
+    Then status 409
+    And match responseHeaders['Retry-After'][0] == '#regex [0-9]+'
+
+    # once the tenant flow is terminal the platform request is accepted
+    * configure retry = { count: 30, interval: 5000 }
+    Given path 'entitlement-flows', tenantFlowId
+    And header Authorization = 'Bearer ' + masterToken
+    * retry until response.status == 'finished' || response.status == 'cancelled' || response.status == 'cancellation_failed' || response.status == 'failed'
+    When method get
+    Then status 200
+    And match response.status == 'finished'
+
+    Given path 'entitlements', 'platform'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { applications: ['#(v1.id)'] }
+    When method post
+    Then status 201
+    And match response.platformEntitlements[*].applicationId == [ '#(v1.id)' ]
+
+    # cleanup: revoke the tenant entitlement and delete the tenant
+    Given path 'entitlements'
+    And param purge = true
+    And param async = true
+    And request { tenantId: '#(tenantId)', applications: '#(applicationIds)' }
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    When method delete
+    Then status 200
+    * def revokeFlowId = response.flowId
+
+    Given path 'entitlement-flows', revokeFlowId
+    And header Authorization = 'Bearer ' + masterToken
+    * retry until response.status == 'finished' || response.status == 'cancelled' || response.status == 'cancellation_failed' || response.status == 'failed'
+    When method get
+
+    * call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(tenantId)' }
