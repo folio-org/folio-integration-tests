@@ -8,6 +8,7 @@ Feature: entitlement of modules that provide no interfaces without discovery inf
     * configure readTimeout = 3000000
     * def keycloakResponse = callonce read('classpath:common/eureka/keycloak.feature@getKeycloakMasterToken')
     * def masterToken = keycloakResponse.response.access_token
+    * def flowSupport = 'classpath:eureka/mgr-tenant-entitlements/util/entitlement-flow-support.feature'
     * def v1 = '1.0.0'
     * def v2 = '2.0.0'
 
@@ -36,11 +37,11 @@ Feature: entitlement of modules that provide no interfaces without discovery inf
     * match response.totalRecords == 0
 
     # AC1: entitle succeeds without discovery.
-    * def entitled = call read('@submitEntitle') { tenantId: '#(tenantId)', applicationId: '#(appIdV1)', masterToken: '#(masterToken)' }
+    * def entitled = call read(flowSupport + '@submitEntitle') { tenantId: '#(tenantId)', applicationId: '#(appIdV1)', masterToken: '#(masterToken)' }
     * match entitled.flowResponse.status == 'finished'
 
     # AC3: upgrade succeeds without discovery for either version.
-    * def upgraded = call read('@submitUpgrade') { tenantId: '#(tenantId)', applicationId: '#(appIdV2)', masterToken: '#(masterToken)' }
+    * def upgraded = call read(flowSupport + '@submitUpgrade') { tenantId: '#(tenantId)', applicationId: '#(appIdV2)', masterToken: '#(masterToken)' }
     * match upgraded.flowResponse.status == 'finished'
 
     Given path 'entitlements'
@@ -51,7 +52,7 @@ Feature: entitlement of modules that provide no interfaces without discovery inf
     * match karate.map(response.entitlements, e => e.applicationId) == ['#(appIdV2)']
 
     # AC3: revoke succeeds without discovery.
-    * def revoked = call read('@submitRevoke') { tenantId: '#(tenantId)', applicationId: '#(appIdV2)', masterToken: '#(masterToken)' }
+    * def revoked = call read(flowSupport + '@submitRevoke') { tenantId: '#(tenantId)', applicationId: '#(appIdV2)', masterToken: '#(masterToken)' }
     * match revoked.flowResponse.status == 'finished'
 
     Given path 'entitlements'
@@ -80,7 +81,7 @@ Feature: entitlement of modules that provide no interfaces without discovery inf
     * def registered = call read('@registerApplication') { applicationName: '#(appName)', version: '#(v1)', moduleName: '#(moduleName)', provides: '#(providesDescriptor)', masterToken: '#(masterToken)' }
     * def appId = registered.applicationId
 
-    * def entitled = call read('@submitEntitle') { tenantId: '#(tenantId)', applicationId: '#(appId)', masterToken: '#(masterToken)' }
+    * def entitled = call read(flowSupport + '@submitEntitle') { tenantId: '#(tenantId)', applicationId: '#(appId)', masterToken: '#(masterToken)' }
     * def flowResponse = entitled.flowResponse
     * match flowResponse.status == '#? _ == "failed" || _ == "cancelled"'
 
@@ -128,52 +129,3 @@ Feature: entitlement of modules that provide no interfaces without discovery inf
     And header X-Okapi-Token = __arg.masterToken
     When method delete
     Then status 204
-
-  @ignore @submitEntitle
-  Scenario: submit an entitle request and wait for the flow to reach a terminal state
-    Given path 'entitlements'
-    And param async = true
-    And param purgeOnRollback = false
-    And request { tenantId: '#(__arg.tenantId)', applications: ['#(__arg.applicationId)'] }
-    And header Authorization = 'Bearer ' + __arg.masterToken
-    And header X-Okapi-Token = __arg.masterToken
-    When method post
-    Then status 201
-    * def waited = call read('@waitForFlow') { flowId: '#(response.flowId)', masterToken: '#(__arg.masterToken)' }
-    * def flowResponse = waited.flowResponse
-
-  @ignore @submitUpgrade
-  Scenario: submit an upgrade request and wait for the flow to reach a terminal state
-    Given path 'entitlements'
-    And param async = true
-    And request { tenantId: '#(__arg.tenantId)', applications: ['#(__arg.applicationId)'] }
-    And header Authorization = 'Bearer ' + __arg.masterToken
-    And header X-Okapi-Token = __arg.masterToken
-    When method put
-    Then status 200
-    * def waited = call read('@waitForFlow') { flowId: '#(response.flowId)', masterToken: '#(__arg.masterToken)' }
-    * def flowResponse = waited.flowResponse
-
-  @ignore @submitRevoke
-  Scenario: submit a revoke request and wait for the flow to reach a terminal state
-    Given path 'entitlements'
-    And param async = true
-    And param purge = true
-    And request { tenantId: '#(__arg.tenantId)', applications: ['#(__arg.applicationId)'] }
-    And header Authorization = 'Bearer ' + __arg.masterToken
-    And header X-Okapi-Token = __arg.masterToken
-    When method delete
-    Then status 200
-    * def waited = call read('@waitForFlow') { flowId: '#(response.flowId)', masterToken: '#(__arg.masterToken)' }
-    * def flowResponse = waited.flowResponse
-
-  @ignore @waitForFlow
-  Scenario: poll an entitlement flow until it reaches a terminal state
-    * configure retry = { count: 40, interval: 15000 }
-    Given path 'entitlement-flows', __arg.flowId
-    And param includeStages = true
-    And header Authorization = 'Bearer ' + __arg.masterToken
-    * retry until response.status == 'finished' || response.status == 'cancelled' || response.status == 'cancellation_failed' || response.status == 'failed'
-    When method get
-    Then status 200
-    * def flowResponse = response
