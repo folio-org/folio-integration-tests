@@ -34,8 +34,23 @@ class MgrTenantEntitlementsTests extends TestBaseEureka {
   }
 
   @Test
-  void validateStateEntitlement() {
-    runFeatureTest("validate-state-entitlement");
+  void entitlementApplication() {
+    runFeatureTest("entitlement-application");
+  }
+
+  @Test
+  void entitlementModule() {
+    runFeatureTest("entitlement-module");
+  }
+
+  @Test
+  void entitlementValidation() {
+    runFeatureTest("entitlement-validation");
+  }
+
+  @Test
+  void entitlementTenantAccess() {
+    runFeatureTest("entitlement-tenant-access");
   }
 
   @Test
