@@ -60,6 +60,9 @@ Feature: mod-finance integration tests
   Scenario: FY finance bulk get/update functionality
     * call read('features/finance-data.feature')
 
+  Scenario: Fiscal year hierarchy
+    * call read('features/fiscal-year-hierarchy.feature')
+
   Scenario: Fiscal year's totals is retrieved when withFinancialSummary parameter is true
     * call read('features/fiscal-year-totals.feature')
 

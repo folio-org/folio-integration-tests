@@ -313,6 +313,18 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostLoanPolicyNonRenewable
+  Scenario: create loan policy that does not allow renewals
+    * def intLoanPolicyId = call uuid1
+
+    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-non-renewable-entity-request.json')
+    * loanPolicyEntityRequest.id = karate.get('extLoanPolicyId', intLoanPolicyId)
+    * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
   @PostLostPolicy
   Scenario: create lost policy
     * def intLostItemPolicyId = call uuid1

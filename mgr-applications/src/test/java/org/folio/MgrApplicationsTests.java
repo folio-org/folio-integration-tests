@@ -16,6 +16,31 @@ class MgrApplicationsTests extends TestBaseEureka {
   }
 
   @Test
+  void applications() {
+    runFeatureTest("applications");
+  }
+
+  @Test
+  void validation() {
+    runFeatureTest("validation");
+  }
+
+  @Test
+  void applicationDiscovery() {
+    runFeatureTest("application-discovery");
+  }
+
+  @Test
+  void moduleDiscovery() {
+    runFeatureTest("module-discovery");
+  }
+
+  @Test
+  void moduleBootstrap() {
+    runFeatureTest("module-bootstrap");
+  }
+
+  @Test
   void interfaceProvidedAndConsumed() {
     runFeatureTest("interface-provided-and-consumed");
   }
