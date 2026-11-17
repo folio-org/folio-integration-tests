@@ -25,9 +25,12 @@ Feature: Init Data for Claims Export
     * callonce createOrganization orgData
 
     # 2. Create organization integration details
+    # The Claims config must select the PO line's acquisition method (order-line.json uses Approval Plan),
+    # because mod-orders routes claimed pieces through GET /data-export-spring/effective-configs
+    * def claimsAcqMethods = ["#(globalApprovalPlanAcqMethodId)"]
     * table orgIntegrationDetails
-      | configId | configName | vendorId | transmissionMethod | fileFormat | ftpFormat | accountNoList    |
-      | configId | configName | orgId    | transMeth          | fileFormat | ftpFormat | ["#(accountNo)"] |
+      | configId | configName | vendorId | transmissionMethod | fileFormat | ftpFormat | accountNoList    | defaultAcquisitionMethods |
+      | configId | configName | orgId    | transMeth          | fileFormat | ftpFormat | ["#(accountNo)"] | claimsAcqMethods          |
     * callonce createIntegrationDetails orgIntegrationDetails
 
     # 3. Create order with order line and open order
@@ -144,3 +147,38 @@ Feature: Init Data for Claims Export
 
     # 4. Set pieces status to Late
     * def v = call updatePiecesBatchStatus { pieceIds: "#(_pieceIds)", receivingStatus: 'Late' }
+
+  @CreateLatePieceForVendor
+  Scenario: createLatePieceForVendor
+    # parameters: orgId, poNumber, poLineNumber, acqMethodId, pieceId, currentDate
+    # Creates an open order for an existing vendor with one PO line using the given acquisition method and one Late piece
+
+    * def orderId = call uuid
+    * def orderData = karate.read('classpath:thunderjet/mod-data-export-spring/features/samples/export-claims/order.json')
+    Given path '/orders/composite-orders'
+    And request orderData
+    When method POST
+    Then status 201
+
+    * def poLineId = call uuid
+    * def poLineData = karate.read('classpath:thunderjet/mod-data-export-spring/features/samples/export-claims/order-line.json')
+    * set poLineData.acquisitionMethod = acqMethodId
+    Given path '/orders/order-lines'
+    And request poLineData
+    When method POST
+    Then status 201
+
+    * def v = call openOrder { orderId: '#(orderId)' }
+
+    * def titleId = call uuid
+    * def titleData = karate.read('classpath:thunderjet/mod-data-export-spring/features/samples/export-claims/title.json')
+    Given path '/orders/titles'
+    And request titleData
+    When method POST
+    Then status 201
+
+    * def pieceData = karate.read('classpath:thunderjet/mod-data-export-spring/features/samples/export-claims/piece.json')
+    Given path '/orders/pieces'
+    And request pieceData
+    When method POST
+    Then status 201
