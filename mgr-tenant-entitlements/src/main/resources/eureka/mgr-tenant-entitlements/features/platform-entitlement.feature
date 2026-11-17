@@ -329,6 +329,52 @@ Feature: platform application entitlement
     * call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(tenantId)' }
 
   @Negative
+  Scenario: upgrade - a regular application upgraded to a platform-scoped version is rejected
+    # v1 is entitled while the application is regular, v2 of the same application is platform-scoped.
+    * def suffix = nowMillis()
+    * def upgradeName = 'platform-app-tenant-upgrade-' + suffix
+    * def tenantName = 'platformtenantupg' + suffix
+    * def v1 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(upgradeName)', version: '1.0.0', scope: 'regular' }
+    * def v2 = call read(registerApp) { masterToken: '#(masterToken)', name: '#(upgradeName)', version: '2.0.0', scope: 'platform' }
+    * def tenantId = uuid()
+    * call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(tenantId)', tenantName: '#(tenantName)' }
+
+    Given path 'entitlements'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { tenantId: '#(tenantId)', applications: ['#(v1.id)'] }
+    When method post
+    Then status 201
+
+    Given path 'entitlements'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { tenantId: '#(tenantId)', applications: ['#(v2.id)'] }
+    When method put
+    Then status 400
+    And match karate.toString(response) contains 'Tenant request contains platform-scoped applications'
+    * def upgradeFlowId = responseHeaders[flowIdHeader][0]
+
+    # PUT /entitlements always runs with ignoreErrors=true, so the flow is failed, not cancelled
+    Given path 'entitlement-flows', upgradeFlowId
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    And match response.status == 'failed'
+
+    # the tenant keeps the regular version: revoking v1 succeeds only while its entitlement exists,
+    # so this also cleans up
+    Given path 'entitlements'
+    And param purge = true
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { tenantId: '#(tenantId)', applications: ['#(v1.id)'] }
+    When method delete
+    Then status 200
+
+    * call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(tenantId)' }
+
+  @Negative
   Scenario: entitle and upgrade - platform requests are rejected while a tenant entitlement is in progress
     # A platform request fails fast with 409 and Retry-After while any tenant flow is not terminal.
     * def suffix = nowMillis()
