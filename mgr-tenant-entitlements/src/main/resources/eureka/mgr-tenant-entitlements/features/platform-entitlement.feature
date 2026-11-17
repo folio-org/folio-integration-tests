@@ -299,7 +299,32 @@ Feature: platform application entitlement
     And request { tenantId: '#(tenantId)', applications: ['#(platform.id)'] }
     When method put
     Then status 400
-    And match karate.toString(response) contains 'Desired state request contains platform-scoped applications'
+
+    * call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(tenantId)' }
+
+  @Negative
+  Scenario: entitle - a platform application is rejected in a tenant entitle request
+    * def suffix = nowMillis()
+    * def tenantEntitleName = 'platform-app-tenant-entitle-' + suffix
+    * def tenantName = 'platformtenantent' + suffix
+    * def platform = call read(registerApp) { masterToken: '#(masterToken)', name: '#(tenantEntitleName)', version: '1.0.0', scope: 'platform' }
+    * def tenantId = uuid()
+    * call read('classpath:common/eureka/tenant.feature@create') { tenantId: '#(tenantId)', tenantName: '#(tenantName)' }
+
+    Given path 'entitlements'
+    And header Authorization = 'Bearer ' + masterToken
+    And header X-Okapi-Token = masterToken
+    And request { tenantId: '#(tenantId)', applications: ['#(platform.id)'] }
+    When method post
+    Then status 400
+    And match karate.toString(response) contains 'Tenant request contains platform-scoped applications'
+    * def entitleFlowId = responseHeaders[flowIdHeader][0]
+
+    Given path 'entitlement-flows', entitleFlowId
+    And header Authorization = 'Bearer ' + masterToken
+    When method get
+    Then status 200
+    And match response.status == 'cancelled'
 
     * call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(tenantId)' }
 
