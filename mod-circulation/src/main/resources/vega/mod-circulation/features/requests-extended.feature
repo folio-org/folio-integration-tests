@@ -13,11 +13,19 @@ Feature: Requests tests - extended
     * def holdingSourceId = call uuid1
     * def holdingSourceName = random_string()
     * def cancellationReasonId = call uuid1
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostServicePoint') { extServicePointId: #(servicePointId) }
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostLocation')
-    * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
     * callonce read('classpath:vega/mod-circulation/features/util/initData.feature@PostCancellationReason')
+    # instance and holdings are created per scenario (not callonce): with TLR enabled the request queue is per instance,
+    # so sharing one instance across scenarios leaves overlapping positions and mod-circulation answers 500
+    # "Request queue positions are not sequential"
+    # ids are regenerated here because callonce replays the first scenario's cached variables
+    * def instanceId = call uuid1
+    * def holdingId = call uuid1
+    * def holdingSourceId = call uuid1
+    * def holdingSourceName = random_string()
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostInstance')
+    * call read('classpath:vega/mod-circulation/features/util/initData.feature@PostHoldings')
 
   @C539
   Scenario: Search requests by item barcode, title, request id, and requester barcode fragment
