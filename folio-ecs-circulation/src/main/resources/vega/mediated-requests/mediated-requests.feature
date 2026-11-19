@@ -1027,3 +1027,208 @@ Feature: Mediated requests - create and retrieve via mod-requests-mediated
     And match response.status.name == 'Closed'
 
     And match response.userId == patron.requesterId
+
+  # Renew-by-barcode negative cases on a loan created through the mediated-request workflow.
+  # Preconditions: shared instance with one college (member) holding + available item; patron in the
+  # secure (university) tenant; item-level Page mediated request confirmed, item checked in at the
+  # lender, arrival confirmed, sent in transit, checked in at the pickup SP and checked out to the
+  # patron. The loan policy is renewable (3 renewals) and the loan has never been renewed.
+  #
+  # Every request below must be rejected with 422, and the loan must stay un-renewed (count 0).
+  @C1525841
+  Scenario: renew-by-barcode validation errors for a loan created via mediated request
+    * def patron = call createPatronUser { uniOkapitoken: '#(uniOkapitoken)', universityTenant: '#(universityTenant)', collegeOkapitoken: '#(collegeOkapitoken)', collegeTenant: '#(collegeTenant)', centralOkapitoken: '#(centralOkapitoken)', centralTenant: '#(centralTenant)' }
+    * def inventoryParams = baseInventoryParams
+    * set inventoryParams.instanceTitle = 'Renew By Barcode Errors'
+    * def inv = call createInventoryInCollege inventoryParams
+    * def inventory = inv.inventory
+
+    # mod-search readiness gate: confirm needs the college item in the shared index
+    * configure headers = headersCentral
+    * configure retry = { count: 40, interval: 15000 }
+    Given path 'search/instances'
+    And param query = 'items.id=="' + inventory.itemId + '"'
+    And param expandAll = true
+    And retry until responseStatus == 200 && response.totalRecords == 1 && response.instances[0].id == inventory.instanceId
+    When method GET
+    Then status 200
+
+    # ========== Create and confirm item-level Page mediated request (secure tenant) ==========
+    * configure headers = headersUniversity
+    Given path 'requests-mediated/mediated-requests'
+    And request
+      """
+      {
+        "requestType": "Page",
+        "fulfillmentPreference": "Hold Shelf",
+        "requestLevel": "Item",
+        "requestDate": "#(java.time.Instant.now().toString())",
+        "instanceId": "#(inventory.instanceId)",
+        "holdingsRecordId": "#(inventory.holdingId)",
+        "itemId": "#(inventory.itemId)",
+        "item": { "barcode": "#(inventory.itemBarcode)" },
+        "requesterId": "#(patron.requesterId)",
+        "pickupServicePointId": "#(mrCentralServicePointId)"
+      }
+      """
+    When method POST
+    Then status 201
+    * def mediatedRequestId = response.id
+
+    * configure retry = { count: 10, interval: 15000 }
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId, 'confirm'
+    And retry until responseStatus == 204
+    When method POST
+    Then status 204
+
+    # ========== Check in at the lending (member) tenant ==========
+    * configure headers = headersCollege
+    Given path 'circulation/check-in-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', servicePointId: '#(mrCollegeServicePointId)', checkInDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 200
+
+    * configure headers = headersUniversity
+    * configure retry = { count: 20, interval: 15000 }
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    And retry until responseStatus == 200 && response.status == 'Open - In transit for approval'
+    When method GET
+    Then status 200
+
+    # ========== Confirm arrival, send in transit (secure tenant) ==========
+    Given path 'requests-mediated/confirm-item-arrival'
+    And request { itemBarcode: '#(inventory.itemBarcode)' }
+    When method POST
+    Then status 200
+
+    Given path 'requests-mediated/send-item-in-transit'
+    And request { itemBarcode: '#(inventory.itemBarcode)' }
+    When method POST
+    Then status 200
+
+    # ========== Check in at pickup SP, then check out to the patron (secure tenant) ==========
+    Given path 'circulation/check-in-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', servicePointId: '#(mrCentralServicePointId)', checkInDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 200
+
+    Given path 'requests-mediated/mediated-requests', mediatedRequestId
+    And retry until responseStatus == 200 && response.status == 'Open - Awaiting pickup'
+    When method GET
+    Then status 200
+
+    Given path 'circulation/check-out-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', userBarcode: '#(patron.requesterBarcode)', servicePointId: '#(mrCentralServicePointId)', loanDate: '#(java.time.Instant.now().toString())' }
+    When method POST
+    Then status 201
+    * def loanId = response.id
+    And match response.userId == patron.requesterId
+
+    # ========== Step 1: missing itemBarcode ==========
+    Given path 'circulation/renew-by-barcode'
+    And request { userBarcode: '#(patron.requesterBarcode)', servicePointId: '#(mrCentralServicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].code == 'RENEWAL_REQUEST_ITEM_BARCODE_REQUIRED'
+    And match response.errors[0].message == 'Renewal request must have an item barcode'
+    And match response.errors[0].parameters[0].key == 'itemBarcode'
+    And match response.errors[0].parameters[0].value == null
+
+    # ========== Step 2: missing userBarcode ==========
+    Given path 'circulation/renew-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', servicePointId: '#(mrCentralServicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].code == 'RENEWAL_REQUEST_USER_BARCODE_REQUIRED'
+    And match response.errors[0].message == 'Renewal request must have a user barcode'
+    And match response.errors[0].parameters[0].key == 'userBarcode'
+    And match response.errors[0].parameters[0].value == null
+
+    # ========== Step 3: non-existent item barcode ==========
+    * def missingItemBarcode = 'no-such-item-' + randomMillis()
+    Given path 'circulation/renew-by-barcode'
+    And request { itemBarcode: '#(missingItemBarcode)', userBarcode: '#(patron.requesterBarcode)', servicePointId: '#(mrCentralServicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].code == 'ITEM_BARCODE_NOT_FOUND'
+    And match response.errors[0].message == 'No item with barcode ' + missingItemBarcode + ' exists'
+    And match response.errors[0].parameters[0].key == 'itemBarcode'
+    And match response.errors[0].parameters[0].value == missingItemBarcode
+
+    # ========== Step 4: non-existent user barcode ==========
+    * def missingUserBarcode = 'no-such-user-' + randomMillis()
+    Given path 'circulation/renew-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', userBarcode: '#(missingUserBarcode)', servicePointId: '#(mrCentralServicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].code == 'ITEM_CHECKED_OUT_TO_DIFFERENT_USER'
+    And match response.errors[0].message == 'Cannot renew item checked out to different user'
+    And match response.errors[0].parameters[0].key == 'userBarcode'
+    And match response.errors[0].parameters[0].value == missingUserBarcode
+
+    # ========== Step 5: override with renewalDueDateRequiredBlock on a renewable loan ==========
+    # The loan is renewable and has no renewals, so none of the override-eligible failure cases apply.
+    * def overrideDueDate = java.time.Instant.now().plus(java.time.Duration.ofDays(90)).toString()
+    Given path 'circulation/renew-by-barcode'
+    And request
+      """
+      {
+        "userBarcode": "#(patron.requesterBarcode)",
+        "itemBarcode": "#(inventory.itemBarcode)",
+        "servicePointId": "#(mrCentralServicePointId)",
+        "overrideBlocks": {
+          "patronBlock": {},
+          "renewalBlock": {},
+          "renewalDueDateRequiredBlock": { "dueDate": "#(overrideDueDate)" },
+          "comment": "test"
+        }
+      }
+      """
+    When method POST
+    Then status 422
+    And match response.errors[0].code == 'OVERRIDE_RENEWAL_NOT_ALLOWED_FOR_CURRENT_LOAN'
+    And match response.errors[0].message contains 'Override renewal does not match any of expected cases'
+    And match response.errors[0].parameters[*].key contains ['loanPolicyName', 'loanPolicyId']
+    * def overrideParams = response.errors[0].parameters
+    * def loanPolicyNameParam = karate.filter(overrideParams, function(p){ return p.key == 'loanPolicyName' })[0]
+    * def loanPolicyIdParam = karate.filter(overrideParams, function(p){ return p.key == 'loanPolicyId' })[0]
+    And match loanPolicyNameParam.value == '#string'
+    And match loanPolicyIdParam.value == '#uuid'
+
+    # ========== Step 6: make the patron inactive (secure tenant) ==========
+    Given path 'users', patron.requesterId
+    When method GET
+    Then status 200
+    * def patronUser = response
+    * set patronUser.active = false
+    # PUT /users/{id} only accepts Accept: text/plain (it returns an empty 204 body)
+    * def headersUniversityTextPlain = { 'Content-Type': 'application/json', 'Accept': 'text/plain', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    * configure headers = headersUniversityTextPlain
+    Given path 'users', patron.requesterId
+    And request patronUser
+    When method PUT
+    Then status 204
+    * configure headers = headersUniversity
+
+    Given path 'users', patron.requesterId
+    When method GET
+    Then status 200
+    And match response.active == false
+
+    # ========== Step 7: renew for the inactive patron ==========
+    Given path 'circulation/renew-by-barcode'
+    And request { itemBarcode: '#(inventory.itemBarcode)', userBarcode: '#(patron.requesterBarcode)', servicePointId: '#(mrCentralServicePointId)' }
+    When method POST
+    Then status 422
+    And match response.errors[0].code == 'USER_IS_INACTIVE_OR_EXPIRED'
+    And match response.errors[0].message == 'Cannot renew loan when user is inactive or expired'
+    And match response.errors[0].parameters[0].key == 'reason'
+    And match response.errors[0].parameters[0].value == 'User is inactive.'
+
+    # ========== Step 8: no renewal was recorded on the loan ==========
+    Given path 'loan-storage/loans', loanId
+    When method GET
+    Then status 200
+    And match response.status.name == 'Open'
+    * def renewalCount = karate.get('response.renewalCount', 0)
+    And match renewalCount == 0
