@@ -49,6 +49,7 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | name                                                        |
       | 'users.item.post'                                           |
       | 'users.item.get'                                            |
+      | 'users.item.put'                                            |
       | 'users.collection.get'                                      |
       | 'usergroups.item.post'                                      |
       | 'perms.permissions.item.post'                               |
@@ -82,6 +83,9 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'circulation-item.item.get'                                 |
       | 'circulation.check-in-by-barcode.post'                      |
       | 'circulation.check-out-by-barcode.post'                     |
+      | 'circulation.renew-by-barcode.post'                         |
+      | 'circulation.override-patron-block.post'                    |
+      | 'circulation.override-renewal-block.post'                   |
       | 'circulation-storage.loans.item.get'                        |
       | 'circulation.requests.item.post'                            |
       | 'circulation.settings.item.post'                            |
