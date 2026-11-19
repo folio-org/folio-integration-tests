@@ -253,26 +253,26 @@ Feature: platform application entitlement
     And match response.type == 'platform_upgrade'
 
   @Negative
-  Scenario: entitle - regular applications are rejected on the platform endpoint
+  Scenario: entitle - tenant applications are rejected on the platform endpoint
     * def suffix = nowMillis()
-    * def regularName = 'regular-app-' + suffix
+    * def tenantName = 'tenant-app-' + suffix
     * def platformName = 'platform-app-mixed-' + suffix
-    * def regular = call read(registerApp) { masterToken: '#(masterToken)', name: '#(regularName)', version: '1.0.0', scope: 'regular' }
+    * def tenantApp = call read(registerApp) { masterToken: '#(masterToken)', name: '#(tenantName)', version: '1.0.0', scope: 'regular' }
     * def platform = call read(registerApp) { masterToken: '#(masterToken)', name: '#(platformName)', version: '1.0.0', scope: 'platform' }
 
     Given path 'entitlements', 'platform'
     And header Authorization = 'Bearer ' + masterToken
     And header X-Okapi-Token = masterToken
-    And request { applications: ['#(regular.id)'] }
+    And request { applications: ['#(tenantApp.id)'] }
     When method post
     Then status 400
     And match karate.toString(response) contains 'Application is not platform-scoped'
 
-    # One regular application rejects the whole request, so the platform application is not entitled either.
+    # One tenant application rejects the whole request, so the platform application is not entitled either.
     Given path 'entitlements', 'platform'
     And header Authorization = 'Bearer ' + masterToken
     And header X-Okapi-Token = masterToken
-    And request { applications: ['#(platform.id)', '#(regular.id)'] }
+    And request { applications: ['#(platform.id)', '#(tenantApp.id)'] }
     When method post
     Then status 400
     And match karate.toString(response) contains 'Application is not platform-scoped'
@@ -329,8 +329,8 @@ Feature: platform application entitlement
     * call read('classpath:common/eureka/tenant.feature@delete') { tenantId: '#(tenantId)' }
 
   @Negative
-  Scenario: upgrade - a regular application upgraded to a platform-scoped version is rejected
-    # v1 is entitled while the application is regular, v2 of the same application is platform-scoped.
+  Scenario: upgrade - a tenant application upgraded to a platform-scoped version is rejected
+    # v1 is entitled while the application is tenant-scoped, v2 of the same application is platform-scoped.
     * def suffix = nowMillis()
     * def upgradeName = 'platform-app-tenant-upgrade-' + suffix
     * def tenantName = 'platformtenantupg' + suffix
@@ -362,7 +362,7 @@ Feature: platform application entitlement
     Then status 200
     And match response.status == 'failed'
 
-    # the tenant keeps the regular version: revoking v1 succeeds only while its entitlement exists,
+    # the tenant keeps the tenant-scoped version: revoking v1 succeeds only while its entitlement exists,
     # so this also cleans up
     Given path 'entitlements'
     And param purge = true
