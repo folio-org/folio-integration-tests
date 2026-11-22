@@ -373,3 +373,6 @@ Feature: mod-orders integration tests
 
   Scenario: An Open Order With POL And Funds Distribution Can Be Unopened
     * call read('features/unopen-open-order-with-pol-and-fund-distribution.feature')
+
+  Scenario: PO Line Number Is Not Reused After Order Edit And Deletion
+    * call read('features/po-line-number-after-order-edit-and-deletion.feature')

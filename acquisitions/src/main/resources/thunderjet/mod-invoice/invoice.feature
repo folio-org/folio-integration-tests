@@ -127,3 +127,6 @@ Feature: mod-invoice integration tests
 
   Scenario: Fund code is automatically populated for invoice lines if it is missing
     * call read('features/fund-code-auto-populate-invoice-lines.feature')
+
+  Scenario: Changing The Next Invoice Line Number Through The API Is Ignored
+    * call read('features/invoice-next-line-number-change-ignored.feature')
