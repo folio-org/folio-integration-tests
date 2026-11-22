@@ -50,4 +50,9 @@ class ModUsersKeycloakTests extends TestBaseEureka {
   void self() {
     runFeatureTest("self");
   }
+
+  @Test
+  void migration() {
+    runFeatureTest("migration");
+  }
 }
