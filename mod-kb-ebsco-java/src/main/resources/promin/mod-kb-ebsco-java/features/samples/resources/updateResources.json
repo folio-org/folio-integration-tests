@@ -13,9 +13,20 @@
       "managedEmbargoPeriod": {
         "embargoValue": 0
       },
-      "visibilityData": {
-        "isHidden": false
-      },
+      "visibility": [
+        {
+          "category": "PF",
+          "hidden": false
+        },
+        {
+          "category": "FTF",
+          "hidden": false
+        },
+        {
+          "category": "MARC",
+          "hidden": false
+        }
+      ],
       "customEmbargoPeriod": {
         "embargoUnit": "Months",
         "embargoValue": 5
