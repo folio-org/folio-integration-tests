@@ -11,9 +11,10 @@ Feature: Titles
 
 #   ================= positive test cases =================
 
-  Scenario: GET all Titles filtered by name with 200 on success
+  Scenario: GET all Titles searched by name with 200 on success
     Given path '/eholdings/titles'
-    And param filter[name] = 'Test'
+    And param q = 'Test'
+    And param q[field] = 'name'
     When method GET
     Then status 200
     And match responseType == 'json'
@@ -23,7 +24,8 @@ Feature: Titles
     Given path '/eholdings/titles'
     And def titleName = random_string()
     And def requestEntity = read(samplesPath + 'createTitle.json')
-    And param filter[publisher] = requestEntity.data.attributes.publisherName
+    And param q = requestEntity.data.attributes.publisherName
+    And param q[field] = 'publisher'
     When method GET
     Then status 200
     And def initial_num_records = response.meta.totalResults
@@ -38,7 +40,8 @@ Feature: Titles
     * eval sleep(20000)
 
     Given path '/eholdings/titles'
-    And param filter[publisher] = requestEntity.data.attributes.publisherName
+    And param q = requestEntity.data.attributes.publisherName
+    And param q[field] = 'publisher'
     And retry until response.meta.totalResults == initial_num_records + 1
     When method GET
     Then status 200
@@ -92,11 +95,11 @@ Feature: Titles
 
 #   ================= negative test cases =================
 
-  Scenario: GET all Titles should return 400 if filter param is missing
+  Scenario: GET all Titles should return 400 if query param is missing
     Given path '/eholdings/titles'
     When method GET
     Then status 400
-    And match response.errors[0].title == "All of filter[name], filter[isxn], filter[subject] and filter[publisher] cannot be missing."
+    And match response.errors[0].title == "Invalid Query Parameter for q: is required"
 
   Scenario: POST Titles should return 400 if custom Title with the provided name already exists
     Given path '/eholdings/titles'
