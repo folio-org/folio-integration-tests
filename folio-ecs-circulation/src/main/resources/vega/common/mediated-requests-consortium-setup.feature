@@ -57,6 +57,7 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | name                                                        |
       | 'users.item.post'                                           |
       | 'users.item.get'                                            |
+      | 'users.item.put'                                            |
       | 'usergroups.item.post'                                      |
       | 'inventory-storage.service-points.item.post'                |
       | 'inventory-storage.holdings.item.post'                      |
@@ -80,6 +81,9 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'circulation-storage.loan-policies.item.post'               |
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation.check-out-by-barcode.post'                     |
+      | 'circulation.renew-by-barcode.post'                         |
+      | 'circulation.override-patron-block.post'                    |
+      | 'circulation.override-renewal-block.post'                   |
       | 'circulation-storage.loans.item.get'                        |
       | 'circulation-storage.request-policies.item.post'            |
       | 'circulation-storage.request-policies.item.post'            |
