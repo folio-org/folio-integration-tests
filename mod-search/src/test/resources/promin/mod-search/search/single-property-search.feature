@@ -154,8 +154,9 @@ Feature: Tests that searches by a single property
     Then match response.totalRecords == 1
     Then match response.instances[0].id == '#(<expectedInstanceId>)'
     Examples:
-      | field     | value                                    | expectedInstanceId    |
-      | subjectId | f7da9ff693f943294580506f24c3e9a5ae03ead7 | webOfMetaphorInstance |
+      | field         | value                                    | expectedInstanceId    |
+      | subjectId     | f7da9ff693f943294580506f24c3e9a5ae03ead7 | webOfMetaphorInstance |
+      | contributorId | fbcccece7752339a678c8761925e69adc405e26d | webOfMetaphorInstance |
 
   Scenario Outline: Can search instances by normalized classification number
     Given path '/search/instances'
