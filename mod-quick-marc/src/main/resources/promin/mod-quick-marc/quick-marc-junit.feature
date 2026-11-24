@@ -48,6 +48,7 @@ Feature: mod-quick-marc integration tests
       | 'marc-records-editor.item.put'                                           |
       | 'marc-records-editor.status.item.get'                                    |
       | 'marc-records-editor.validate.post'                                      |
+      | 'marc-specifications.item.get'                                           |
       | 'source-storage.records.collection.get'                                  |
       | 'source-storage.records.post'                                            |
       | 'source-storage.records.put'                                             |

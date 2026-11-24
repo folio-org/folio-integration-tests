@@ -34,4 +34,9 @@ class QuickMarcExtendedTest extends TestBaseEureka {
     void editQuickMarcJson() {
         runFeatureTest("quick-marc-edit-bib-record.feature");
     }
+
+    @Test
+    void marcBib008ContinuingResourceTypes() {
+        runFeatureTest("marc-bib-008-continuing-resource-types.feature");
+    }
 }
