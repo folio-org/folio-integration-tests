@@ -8,3 +8,4 @@ Feature: Root feature that runs extended mod-circulation features
     * call read('classpath:vega/mod-circulation/features/loans-extended.feature')
     * call read('classpath:vega/mod-circulation/features/requests-extended.feature')
     * call read('classpath:vega/mod-circulation/features/print-events-extended.feature')
+    * call read('classpath:vega/mod-circulation/features/check-in-in-house-use-extended.feature')

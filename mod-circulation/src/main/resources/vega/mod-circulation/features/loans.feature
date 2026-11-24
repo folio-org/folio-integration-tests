@@ -267,6 +267,8 @@ Feature: Loans tests
     * def item = checkInResponse.response.item
     And match item.id == itemId
     And match item.status.name == 'Available'
+    # an ordinary check-in returns no subsequent check-ins (CIRC-2691)
+    And match checkInResponse.response.subsequentCheckIns == '#notpresent'
 
   Scenario: When an requested loaned item is checked in at a service point designated as the pickup location of the request, change the item status to awaiting-pickup
 
