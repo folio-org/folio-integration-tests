@@ -17,17 +17,17 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "Church and the world." },
-      { "totalRecords": 1, "value": "Differential equations." },
-      { "totalRecords": 5, "value": "Electronic books." },
-      { "totalRecords": 1, "value": "Engineering--Mathematical models." },
-      { "totalRecords": 1, "value": "Essais (Montaigne, Michel de)" },
-      { "totalRecords": 0, "value": "F", "isAnchor": true },
-      { "totalRecords": 1, "value": "fantasy" },
-      { "totalRecords": 1, "value": "Fiction" },
-      { "totalRecords": 1, "value": "Folk poetry, Mongolian." },
-      { "totalRecords": 1, "value": "Folk poetry." },
-      { "totalRecords": 1, "value": "French language--Figures of speech" }
+      { "id": "#string", "totalRecords": 1, "value": "Church and the world." },
+      { "id": "#string", "totalRecords": 1, "value": "Differential equations." },
+      { "id": "#string", "totalRecords": 5, "value": "Electronic books." },
+      { "id": "#string", "totalRecords": 1, "value": "Engineering--Mathematical models." },
+      { "id": "#string", "totalRecords": 1, "value": "Essais (Montaigne, Michel de)" },
+      { "id": "#notpresent", "totalRecords": 0, "value": "F", "isAnchor": true },
+      { "id": "#string", "totalRecords": 1, "value": "fantasy" },
+      { "id": "#string", "totalRecords": 1, "value": "Fiction" },
+      { "id": "#string", "totalRecords": 1, "value": "Folk poetry, Mongolian." },
+      { "id": "#string", "totalRecords": 1, "value": "Folk poetry." },
+      { "id": "#string", "totalRecords": 1, "value": "French language--Figures of speech" }
     ]
     """
 
@@ -43,11 +43,11 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "Musical texts." },
-      { "totalRecords": 1, "value": "Persian poetry." },
-      { "totalRecords": 4, "value": "science", "isAnchor": true },
-      { "totalRecords": 1, "value": "Science (General)." },
-      { "totalRecords": 1, "value": "Science Fiction." }
+      { "id": "#string", "totalRecords": 1, "value": "Musical texts." },
+      { "id": "#string", "totalRecords": 1, "value": "Persian poetry." },
+      { "id": "#string", "totalRecords": 4, "value": "science", "isAnchor": true },
+      { "id": "#string", "totalRecords": 1, "value": "Science (General)." },
+      { "id": "#string", "totalRecords": 1, "value": "Science Fiction." }
     ]
     """
 
@@ -64,13 +64,13 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "geography" },
-      { "totalRecords": 1, "value": "Historiography." },
-      { "totalRecords": 1, "value": "History", "isAnchor": true },
-      { "totalRecords": 1, "value": "History." },
-      { "totalRecords": 1, "value": "imaginary world" },
-      { "totalRecords": 2, "value": "Literary style." },
-      { "totalRecords": 1, "value": "Magic--Fiction" }
+      { "id": "#string", "totalRecords": 1, "value": "geography" },
+      { "id": "#string", "totalRecords": 1, "value": "Historiography." },
+      { "id": "#string", "totalRecords": 1, "value": "History", "isAnchor": true },
+      { "id": "#string", "totalRecords": 1, "value": "History." },
+      { "id": "#string", "totalRecords": 1, "value": "imaginary world" },
+      { "id": "#string", "totalRecords": 2, "value": "Literary style." },
+      { "id": "#string", "totalRecords": 1, "value": "Magic--Fiction" }
     ]
     """
 
@@ -87,11 +87,11 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "geography" },
-      { "totalRecords": 1, "value": "Historiography." },
-      { "totalRecords": 1, "value": "History" },
-      { "totalRecords": 1, "value": "History." },
-      { "totalRecords": 1, "value": "imaginary world" }
+      { "id": "#string", "totalRecords": 1, "value": "geography" },
+      { "id": "#string", "totalRecords": 1, "value": "Historiography." },
+      { "id": "#string", "totalRecords": 1, "value": "History" },
+      { "id": "#string", "totalRecords": 1, "value": "History." },
+      { "id": "#string", "totalRecords": 1, "value": "imaginary world" }
     ]
     """
 
@@ -107,11 +107,11 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "Historiography." },
-      { "totalRecords": 1, "value": "History" },
-      { "totalRecords": 0, "value": "history.", "isAnchor": true },
-      { "totalRecords": 1, "value": "imaginary world" },
-      { "totalRecords": 2, "value": "Literary style." }
+      { "id": "#string", "totalRecords": 1, "value": "Historiography." },
+      { "id": "#string", "totalRecords": 1, "value": "History" },
+      { "id": "#notpresent", "totalRecords": 0, "value": "history.", "isAnchor": true },
+      { "id": "#string", "totalRecords": 1, "value": "imaginary world" },
+      { "id": "#string", "totalRecords": 2, "value": "Literary style." }
     ]
     """
 
@@ -128,11 +128,11 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "geography" },
-      { "totalRecords": 1, "value": "Historiography." },
-      { "totalRecords": 1, "value": "History." },
-      { "totalRecords": 1, "value": "imaginary world" },
-      { "totalRecords": 2, "value": "Literary style." }
+      { "id": "#string", "totalRecords": 1, "value": "geography" },
+      { "id": "#string", "totalRecords": 1, "value": "Historiography." },
+      { "id": "#string", "totalRecords": 1, "value": "History." },
+      { "id": "#string", "totalRecords": 1, "value": "imaginary world" },
+      { "id": "#string", "totalRecords": 2, "value": "Literary style." }
     ]
     """
 
@@ -148,11 +148,11 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "biology" },
-      { "totalRecords": 1, "value": "Church and the world." },
-      { "totalRecords": 1, "value": "Differential equations." },
-      { "totalRecords": 5, "value": "Electronic books." },
-      { "totalRecords": 1, "value": "Engineering--Mathematical models." }
+      { "id": "#string", "totalRecords": 1, "value": "biology" },
+      { "id": "#string", "totalRecords": 1, "value": "Church and the world." },
+      { "id": "#string", "totalRecords": 1, "value": "Differential equations." },
+      { "id": "#string", "totalRecords": 5, "value": "Electronic books." },
+      { "id": "#string", "totalRecords": 1, "value": "Engineering--Mathematical models." }
     ]
     """
 
@@ -168,11 +168,11 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "biology" },
-      { "totalRecords": 1, "value": "Church and the world." },
-      { "totalRecords": 1, "value": "Differential equations." },
-      { "totalRecords": 5, "value": "Electronic books." },
-      { "totalRecords": 1, "value": "Engineering--Mathematical models." }
+      { "id": "#string", "totalRecords": 1, "value": "biology" },
+      { "id": "#string", "totalRecords": 1, "value": "Church and the world." },
+      { "id": "#string", "totalRecords": 1, "value": "Differential equations." },
+      { "id": "#string", "totalRecords": 5, "value": "Electronic books." },
+      { "id": "#string", "totalRecords": 1, "value": "Engineering--Mathematical models." }
     ]
     """
 
@@ -188,11 +188,11 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 1, "value": "Science (General)." },
-      { "totalRecords": 1, "value": "Science Fiction." },
-      { "totalRecords": 1, "value": "Semantic Web" },
-      { "totalRecords": 1, "value": "surgery" },
-      { "totalRecords": 2, "value": "Translations." }
+      { "id": "#string", "totalRecords": 1, "value": "Science (General)." },
+      { "id": "#string", "totalRecords": 1, "value": "Science Fiction." },
+      { "id": "#string", "totalRecords": 1, "value": "Semantic Web" },
+      { "id": "#string", "totalRecords": 1, "value": "surgery" },
+      { "id": "#string", "totalRecords": 2, "value": "Translations." }
     ]
     """
 
@@ -208,7 +208,7 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 2, "value": "Literary style." }
+      { "id": "#string", "totalRecords": 2, "value": "Literary style." }
     ]
     """
 
@@ -224,7 +224,7 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      { "totalRecords": 2, "value": "French language--Figures of speech." }
+      { "id": "#string", "totalRecords": 2, "value": "French language--Figures of speech." }
     ]
     """
     Then print response
@@ -241,9 +241,9 @@ Feature: Tests that browse by subjects
     Then match response.items[*] ==
     """
     [
-      {"value":"Montaigne, Michel de,--1533-1592","totalRecords":1},
-      {"value":"Montaigne, Michel de,--1533-1592--Style.","totalRecords":1},
-      {"value":"Möntaigne, Michel de,--1533-1592.--Essais","totalRecords":1}
+      {"id":"#string","value":"Montaigne, Michel de,--1533-1592","totalRecords":1},
+      {"id":"#string","value":"Montaigne, Michel de,--1533-1592--Style.","totalRecords":1},
+      {"id":"#string","value":"Möntaigne, Michel de,--1533-1592.--Essais","totalRecords":1}
     ]
     """
     Then print response
