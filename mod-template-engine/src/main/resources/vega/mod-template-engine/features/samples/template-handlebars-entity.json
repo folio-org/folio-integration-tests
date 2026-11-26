@@ -1,0 +1,14 @@
+{
+  "id": "#(templateId)",
+  "description": "Handlebars template for Karate tests",
+  "outputFormats": [
+    "text/plain"
+  ],
+  "templateResolver": "handlebars",
+  "localizedTemplates": {
+    "en": {
+      "header": "{{#if user.pet}}News from {{user.pet.name}}{{else}}Welcome back{{/if}}, {{user.name}}!",
+      "body": "Hi {{user.name}}{{#each items}}, {{name}}{{/each}}"
+    }
+  }
+}
