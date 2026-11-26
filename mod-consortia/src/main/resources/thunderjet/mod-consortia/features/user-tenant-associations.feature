@@ -393,7 +393,7 @@ Feature: Consortia User Tenant associations api tests
     * def userWithFullDetailsFirstname = 'firstname'
     * def userWithFullDetailsLastname = 'lastname'
     * def userWithFullDetailsEmail = 'x@gmail.com'
-    * def userWithFullDetailsPreferredContactTypeId = 'email'
+    * def userWithFullDetailsPreferredContactTypeIds = ['email']
 
     # 1. create user in centralTenant
     Given path 'users'
@@ -405,7 +405,7 @@ Feature: Consortia User Tenant associations api tests
       "personal": {
         "firstName": "#(userWithFullDetailsFirstname)",
         "lastName": "#(userWithFullDetailsLastname)",
-        "preferredContactTypeId": "#(userWithFullDetailsPreferredContactTypeId)",
+        "preferredContactTypeIds": "#(userWithFullDetailsPreferredContactTypeIds)",
         "email": "#(userWithFullDetailsEmail)"
       },
       "username": "#(userWithFullDetailsUsername)",
@@ -461,7 +461,7 @@ Feature: Consortia User Tenant associations api tests
     And match response.users[0].personal.firstName == userWithFullDetailsFirstname
     And match response.users[0].personal.lastName == userWithFullDetailsLastname
     And match response.users[0].personal.email == userWithFullDetailsEmail
-    And match response.users[0].personal.preferredContactTypeId == userWithFullDetailsPreferredContactTypeId
+    And match response.users[0].personal.preferredContactTypeIds == userWithFullDetailsPreferredContactTypeIds
     And match response.users[0].type == 'shadow'
     And match response.users[0].active == true
 

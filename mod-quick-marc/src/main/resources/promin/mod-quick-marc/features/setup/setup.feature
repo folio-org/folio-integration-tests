@@ -104,29 +104,6 @@ Feature: Setup quickMARC
     And request read(samplePath + 'locations/location.json')
     When method POST
 
-  @SetupTypes
-  Scenario: Setup record types
-    Given path 'holdings-sources'
-    And headers headersUser
-    And request
-    """
-      {
-       "id": "#(sourceId)",
-       "name": "MARC"
-      }
-    """
-    When method POST
-
-    Given path 'instance-types'
-    And headers headersUser
-    And request read(samplePath + 'record-types/instance-type.json')
-    When method POST
-
-    Given path 'holdings-types'
-    And headers headersUser
-    And request read(samplePath + 'record-types/holdings-type.json')
-    When method POST
-
   @CreateSnapshot
   Scenario: Create snapshot
     Given path 'source-storage/snapshots'
@@ -136,13 +113,6 @@ Feature: Setup quickMARC
     Then status 201
 
     * setSystemProperty('snapshotId', snapshotId)
-
-  Scenario: Create Authority Source FIle
-    Given path 'authority-source-files'
-    And request read(samplePath + 'setup-records/authority-source-file.json')
-    And headers headersUser
-    When method POST
-    Then status 201
 
   Scenario: Create MARC-AUTHORITY records
     * call read('setup.feature@CreateAuthority') {recordName: 'authorityId'}
@@ -192,6 +162,8 @@ Feature: Setup quickMARC
     Given path 'records-editor/records', record.parsedRecordId
     And headers headersUser
     And request record
+    # retry to tolerate a tenant-provisioning race
+    And retry until responseStatus == 202
     When method PUT
     Then status 202
 
@@ -458,6 +430,7 @@ Feature: Setup quickMARC
     Given path 'records-editor/records', newBibRecord.parsedRecordId
     And headers headersUser
     And request newBibRecord
+    And retry until responseStatus == 202
     When method PUT
     Then status 202
 

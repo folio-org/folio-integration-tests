@@ -182,8 +182,9 @@ Feature: Check encumbrances after order is reopened
     Given path 'orders/composite-orders', orderId
     And request orderResponse
     When method PUT
-    Then status 500
-    And match $.errors[0].message contains 'Fund cannot be paid due to restrictions'
+    Then status 422
+    And match $.errors[0].code == 'fundCannotBePaid'
+    And match $.errors[0].message == 'Fund cannot be paid due to restrictions'
 
 
   Scenario: Release the added encumbrance

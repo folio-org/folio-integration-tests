@@ -38,6 +38,9 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.loan-policies.item.post'                  |
       | 'circulation-storage.loans.item.get'                           |
       | 'circulation.renew-by-barcode.post'                            |
+      | 'circulation.override-renewal-block.post'                      |
+      | 'circulation.override-patron-block.post'                       |
+      | 'users.item.put'                                               |
       | 'circulation-storage.patron-notice-policies.item.post'         |
       | 'circulation-storage.request-policies.item.post'               |
       | 'circulation-storage.request-batch.item.post'                  |
@@ -57,7 +60,6 @@ Feature: mod-circulation integration tests
       | 'circulation.requests.hold-shelf-clearance-report.get'         |
       | 'circulation.requests.item.get'                                |
       | 'circulation.requests.item.post'                               |
-      | 'circulation.requests.queue.reorder.collection.post'           |
       | 'circulation.requests.item.delete'                             |
       | 'configuration.entries.collection.get'                         |
       | 'configuration.entries.item.post'                              |
@@ -103,6 +105,7 @@ Feature: mod-circulation integration tests
       | 'inventory.items.item.put'                                     |
       | 'lost-item-fees-policies.item.post'                            |
       | 'lost-item-fees-policies.item.get'                             |
+      | 'lost-item-fees-policies.item.put'                             |
       | 'manualblocks.collection.get'                                  |
       | 'overdue-fines-policies.item.post'                             |
       | 'overdue-fines-policies.item.get'                              |
@@ -177,4 +180,8 @@ Feature: mod-circulation integration tests
       | 'circulation-storage.staff-slips.item.get'                    |
       | 'circulation-storage.staff-slips.item.put'                    |
       | 'circulation.search-slips.get'                                |
+      | 'actual-cost-record-storage.actual-cost-records.collection.get' |
+      | 'actual-cost-record-storage.actual-cost-records.item.get'     |
+      | 'actual-cost-fee-fine-bill.post'                              |
+
     Given call read('classpath:common/eureka/setup-users.feature@addUserCapabilities')

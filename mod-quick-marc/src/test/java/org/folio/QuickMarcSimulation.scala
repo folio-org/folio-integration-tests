@@ -29,7 +29,6 @@ class QuickMarcSimulation extends Simulation {
   val setupInfrastructure = scenario("setupInfrastructure")
     .exec(karateFeature(testBasePath + "quick-marc-junit.feature"))
   val setupData = scenario("setupData")
-    .exec(karateFeature(testBasePath + "features/setup/setup.feature@SetupTypes"))
     .exec(karateFeature(testBasePath + "features/setup/setup.feature@CreateSnapshot"))
   val updateMarcBibs = scenario("update")
     .repeat(10) {

@@ -8,6 +8,7 @@ Feature: Reusable setup helpers for mediated-requests scenarios
   #   collegeTenant
   #   centralOkapitoken - central tenant token
   #   centralTenant
+  #   patronTenant, patronOkapitoken - optional patron's home tenant (defaults to university)
   # Returns: requesterId, requesterBarcode, groupId
 
   # Parameters accepted by @CreateSharedInstanceWithItemInUniversity:
@@ -27,7 +28,7 @@ Feature: Reusable setup helpers for mediated-requests scenarios
     * url baseUrl
 
   @CreatePatronUser
-  Scenario: create a patron user group and user in the university tenant, and the same group in college and central
+  Scenario: create a patron in its home tenant, with the same group in university, college and central
     * def groupId = uuid()
     * def groupName = "mr-grp-" + randomMillis()
 
@@ -49,7 +50,9 @@ Feature: Reusable setup helpers for mediated-requests scenarios
     When method POST
     Then status 201
 
-    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(uniOkapitoken)', 'x-okapi-tenant': '#(universityTenant)' }
+    * def patronTenant = karate.get('patronTenant', universityTenant)
+    * def patronOkapitoken = karate.get('patronOkapitoken', uniOkapitoken)
+    * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(patronOkapitoken)', 'x-okapi-tenant': '#(patronTenant)' }
     * def requesterId = uuid()
     * def requesterBarcode = 'MR-USER-' + randomMillis()
     Given path 'users'

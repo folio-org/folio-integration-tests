@@ -88,4 +88,9 @@ class FeesFinesApiTests extends TestBaseEureka {
     void actualCostFeeFine() {
         runFeatureTest("actualCostFeeFine");
     }
+
+    @Test
+    void agedToLostFeeFineTest() {
+        runFeatureTest("agedToLostFeeFine");
+    }
 }

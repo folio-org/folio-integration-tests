@@ -23,6 +23,9 @@ Feature: mod-data-export-spring integration tests
   Scenario: Claims Export
     * call read('features/claims-export.feature')
 
+  Scenario: Claims Export routed by acquisition method
+    * call read('features/claims-export-acquisition-method.feature')
+
   Scenario: Already exported order is not included repeatedly in next exports AND title special characters are escaped in EDI
     * call read('features/exported-order-not-repeated-in-next-exports.feature')
 

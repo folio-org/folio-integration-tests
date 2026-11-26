@@ -206,3 +206,18 @@ Feature: Test user business logic
     And match response.hasOpenTransactions == true
     And match response.feesFines == 1
     And match response.proxies == 1
+
+  @Negative
+  Scenario: unauthenticated request to GET /bl-users/_self returns 401
+    * configure headers = { 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    Given path 'bl-users', '_self'
+    When method get
+    Then status 401
+
+  @Negative
+  Scenario: unauthenticated request to POST /bl-users/settings/myprofile/password returns 401
+    * configure headers = { 'x-okapi-tenant': '#(testTenant)', 'Accept': '*/*' }
+    Given path 'bl-users', 'settings', 'myprofile', 'password'
+    And request {}
+    When method post
+    Then status 401

@@ -19,7 +19,7 @@ function fn() {
     baseUrl: 'http://localhost:8000',
     admin: {tenant: 'diku', name: 'diku_admin', password: 'admin'},
     prototypeTenant: 'diku',
-
+    tenantParams: {loadReferenceData: true},
     kcClientId: 'folio-backend-admin-client',
     kcClientSecret: karate.properties['clientSecret'] || 'SecretPassword',
 

@@ -40,14 +40,25 @@ Feature: mod-inventory ECS tests
       | 'inventory-storage.bound-withs.collection.put'            |
       | 'inventory.items.item.put'                                |
       | 'inventory.items.update-ownership.item.post'              |
+      | 'inventory.instances.item.put'                            |
+      | 'inventory-storage.instances.item.post'                   |
+      | 'inventory-storage.statistical-code-types.item.post'      |
+      | 'inventory-storage.statistical-codes.item.post'           |
+      | 'source-storage.snapshots.post'                           |
+      | 'source-storage.records.post'                             |
+      | 'source-storage.records.formatted.item.get'               |
+      | 'search.instances.collection.get'                         |
 
 
 
     # define custom login
     * def login = read('classpath:common-consortia/eureka/initData.feature@Login')
 
+    * def centralTenantUuid = centralTenantId
+    * karate.set('centralTenantId', centralTenant)
+
   Scenario: Create ['central', 'university', 'college'] tenants and set up admins
-    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantId)', user: '#(consortiaAdmin)'}
+    * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(centralTenant)', tenantId: '#(centralTenantUuid)', user: '#(consortiaAdmin)'}
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(universityTenant)', tenantId: '#(universityTenantId)', user: '#(universityUser1)'}
     * call read('classpath:common-consortia/eureka/tenant-and-local-admin-setup.feature@SetupTenant') { tenant: '#(collegeTenant)', tenantId: '#(collegeTenantId)', user: '#(collegeUser1)'}
 
@@ -55,7 +66,7 @@ Feature: mod-inventory ECS tests
     * call login consortiaAdmin
     * call read('classpath:common-consortia/eureka/consortium.feature@SetupConsortia') { tenant: '#(centralTenant)' }
 
-    * call read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia') { tenant: '#(centralTenant)', id: '#(centralTenantId)', isCentral: true, code: 'ABC' }
+    * call read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia') { tenant: '#(centralTenant)', id: '#(centralTenantUuid)', isCentral: true, code: 'ABC' }
     * call read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia') { tenant: '#(universityTenant)', id: '#(universityTenantId)', isCentral: false, code: 'XYZ' }
     * call read('classpath:common-consortia/eureka/consortium.feature@SetupTenantForConsortia') { tenant: '#(collegeTenant)', id: '#(collegeTenantId)', isCentral: false, code: 'BEE' }
 

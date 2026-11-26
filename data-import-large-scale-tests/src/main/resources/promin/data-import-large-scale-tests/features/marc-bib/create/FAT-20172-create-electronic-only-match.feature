@@ -53,6 +53,13 @@ Feature: data-import-large-scale-tests create-electronic-only-match integration 
     # Waiting import results
     * def result = call read('classpath:promin/data-import-large-scale-tests/global/get-completed-job-execution-for-key.feature@getJobsByKeyWhenStatusCompleted') { key: #(s3UploadKey) }
     * def jobExecutions = result.jobExecutions
+
+    # Print summary and errors for any job that did not end COMMITTED, before the strict assertion below
+    * def notCommitted = jobExecutions.filter(j => j.status != 'COMMITTED')
+    * print 'Jobs not COMMITTED:', notCommitted.length, 'of', jobExecutions.length
+    * def reportFailure = function(job) { karate.log('FAT-20172: job ' + job.id + ' part ' + job.jobPartNumber + ' ended ' + job.status); karate.call('classpath:promin/data-import-large-scale-tests/global/report-job-failure-details.feature@reportJobFailureDetails', { jobId: job.id }) }
+    * karate.forEach(notCommitted, reportFailure)
+
     * match each jobExecutions contains { "status": "COMMITTED" }
     * match each jobExecutions contains { "uiStatus": "RUNNING_COMPLETE" }
     * match each jobExecutions contains { "runBy": "#present" }

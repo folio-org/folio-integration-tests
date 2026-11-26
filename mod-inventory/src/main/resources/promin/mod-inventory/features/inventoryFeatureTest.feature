@@ -35,8 +35,9 @@ Feature: inventory
       * def expected_response = 'Cannot delete holdings_record.id = ' + holdingsId + ' because id is still referenced from table item.'
       Given path '/holdings-storage/holdings/' + holdingsId
       When method DELETE
-      Then status 400
-      * match expected_response == response
+      Then status 422
+      * string responseText = response
+      * match responseText contains expected_response
 
     Scenario: Preceding & Succeeding instance title creation
 #     Preceding Instance
@@ -296,6 +297,13 @@ Feature: inventory
     And match response.deleted == true
     And match response.leaderRecordStatus == "d"
     And match response.parsedRecord.content.leader.charAt(5) == "d"
+
+  Scenario: Unauthenticated request to mark-deleted returns 401
+    * def randomInstanceId = uuid()
+    * configure headers = { 'x-okapi-tenant': '#(testTenant)', 'Content-Type': 'application/json' }
+    Given path 'inventory/instances/' + randomInstanceId + '/mark-deleted'
+    When method DELETE
+    Then status 401
 
   Scenario: Test changing holding ownership request for non-consortium environment
     * def nonExistentInstanceId = uuid()

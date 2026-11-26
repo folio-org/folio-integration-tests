@@ -1,0 +1,28 @@
+{
+  "id": "#(lostItemFeePolicyId)",
+  "name": "#(lostItemFeePolicyName)",
+  "itemAgedLostOverdue": {
+    "duration": 1,
+    "intervalId": "Minutes"
+  },
+  "patronBilledAfterAgedLost": {
+    "duration": 1,
+    "intervalId": "Minutes"
+  },
+  "chargeAmountItem": {
+    "chargeType": "anotherCost",
+    "amount": 100.00
+  },
+  "lostItemProcessingFee": 0.00,
+  "chargeAmountItemPatron": false,
+  "chargeAmountItemSystem": false,
+  "lostItemChargeFeeFine": {
+    "duration": 6,
+    "intervalId": "Weeks"
+  },
+  "returnedLostItemProcessingFee": false,
+  "replacedLostItemProcessingFee": false,
+  "replacementProcessingFee": 0.00,
+  "replacementAllowed": false,
+  "lostItemReturned": "Remove"
+}

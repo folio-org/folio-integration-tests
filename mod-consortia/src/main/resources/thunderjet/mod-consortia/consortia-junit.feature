@@ -137,6 +137,9 @@ Feature: mod-consortia-keycloak integration tests
   Scenario: User-Tenant associations api tests
     * call read('features/user-tenant-associations.feature')
 
+  Scenario: Consortia _self endpoint access control tests
+    * call read('features/consortia-self.feature')
+
   Scenario: verify users with shadow or patron types not processed by consortia pipeline
     * call read('features/consortia-skip-not-required-user-types.feature')
 
@@ -157,6 +160,9 @@ Feature: mod-consortia-keycloak integration tests
 
   Scenario: Sharing Patron Groups Settings api tests
     * call read('features/sharing-patron-groups-setting.feature')
+
+  Scenario: Keycloak custom login and identity provider api tests
+    * call read('features/keycloak-login-setup.feature')
 
   Scenario: Destroy created ['central', 'university', 'college'] tenants
     * call deleteTenantAndEntitlement { tenantId: '#(universityTenantId)' }

@@ -456,7 +456,6 @@ Feature: Import EDIFACT invoice
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And headers headersUser
-    And param defaultMapping = 'false'
     And request
     """
     {
@@ -777,7 +776,6 @@ Feature: Import EDIFACT invoice
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And headers headersUser
-    And param defaultMapping = 'false'
     And request
     """
     {
@@ -1058,7 +1056,6 @@ Feature: Import EDIFACT invoice
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And headers headersUser
-    And param defaultMapping = 'false'
     And request
     """
     {
@@ -1443,7 +1440,6 @@ Feature: Import EDIFACT invoice
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
     And headers headersUser
-    And param defaultMapping = 'false'
     And request
     """
     {

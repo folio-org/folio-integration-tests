@@ -24,7 +24,6 @@ Feature: Data Import Log deletion tests
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """

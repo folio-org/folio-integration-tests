@@ -1,0 +1,29 @@
+{
+  "id": "#(lostItemFeePolicyId)",
+  "name": "Aged to lost - actual cost",
+  "description": "Aged to lost after 1 minute, billed after 1 minute, actual cost",
+  "itemAgedLostOverdue": {
+    "duration": 1,
+    "intervalId": "Minutes"
+  },
+  "patronBilledAfterAgedLost": {
+    "duration": 1,
+    "intervalId": "Minutes"
+  },
+  "chargeAmountItem": {
+    "chargeType": "actualCost",
+    "amount": 0.0
+  },
+  "lostItemProcessingFee": 0.0,
+  "chargeAmountItemPatron": false,
+  "chargeAmountItemSystem": false,
+  "lostItemChargeFeeFine": {
+    "duration": 6,
+    "intervalId": "Weeks"
+  },
+  "returnedLostItemProcessingFee": false,
+  "replacedLostItemProcessingFee": false,
+  "replacementProcessingFee": 0.0,
+  "replacementAllowed": false,
+  "lostItemReturned": "Remove"
+}

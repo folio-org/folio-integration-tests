@@ -63,6 +63,7 @@
     "team": "Thunderjet",
     "modules": [
       "acquisitions",
+      "erm",
       "mod-consortia",
       "mod-ebsconet",
       "mod-finance",
@@ -127,7 +128,8 @@
       "mod-users-keycloak",
       "mod-roles-keycloak",
       "mod-login-keycloak",
-      "mod-scheduler"
+      "mod-scheduler",
+      "mod-okapi-facade"
     ],
     "slackChannel": "#folio-eureka-notify"
   }

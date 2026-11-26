@@ -68,5 +68,7 @@ Feature: mod-quick-marc integration tests
       | 'specification-storage.specifications.collection.get'                    |
       | 'authorities.config.groups.settings.collection.get'                      |
       | 'authorities.config.groups.settings.authorities.collection.get'          |
+
   Scenario: create tenant and users for testing
-    Given call read('classpath:common/eureka/setup-users.feature')
+    * callonce read('classpath:common/eureka/setup-users.feature')
+    * callonce read('classpath:common/eureka/keycloak.feature@configureAccessTokenTime') { 'AccessTokenLifespance' : 3600 }

@@ -41,6 +41,7 @@ Feature: mod-feesfines integration tests
       | 'feesfines.accounts.check-transfer.post'                        |
       | 'feesfines.accounts.check-refund.post'                          |
       | 'actual-cost-fee-fine-cancel.post'                              |
+      | 'actual-cost-fee-fine-bill.post'                                |
       | 'feefines.item.get'                                             |
       | 'feefines.item.post'                                            |
       | 'feefines.item.put'                                             |

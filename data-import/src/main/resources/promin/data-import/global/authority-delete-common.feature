@@ -68,7 +68,7 @@ Feature: Util feature for the Delete MARC Authority data import scenarios (FAT-2
     * javaWriteData.writeByteArrayToFile(seedFile, 'target/' + seedFileName + '.mrc')
 
     Given call read(utilFeature + '@ImportRecord') { fileName: '#(seedFileName)', jobName: 'createAuthority', filePathFromSourceRoot: '#("file:target/" + seedFileName + ".mrc")' }
-    Then match status != 'ERROR'
+    Then match jobExecution.status == 'COMMITTED'
 
     Given path '/source-storage/source-records'
     And param recordType = 'MARC_AUTHORITY'

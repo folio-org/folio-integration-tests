@@ -100,4 +100,9 @@ class ModRolesKeycloakTests extends TestBaseEureka {
   void roleEffectiveAccess() {
     runFeatureTest("role-effective-access");
   }
+
+  @Test
+  void invalidTokenAuthorization() {
+    runFeatureTest("invalid-token-authorization");
+  }
 }

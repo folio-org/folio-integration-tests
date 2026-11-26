@@ -13,6 +13,15 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
   # module shares one tenant name-space, so a delete/recreate cycle in this file destroys the
   # tenants the other features are using (and, with the mediated workflow running for tens of
   # minutes, can destroy them mid-flight).
+  #
+  # This feature is callonce'd by the mediated-request and batch-request features,
+  # and callonce is scoped per feature file (each runFeature
+  # call is a separate Karate suite), so it executes once per calling feature. Every reference-data
+  # POST below must therefore be idempotent: 201 = created on the first execution, 422 = already
+  # present on a later one. Asserting a strict 201 here breaks the second caller with
+  # "id value already exists in table ...", because all of these records use fixed UUIDs from
+  # mediated-requests-variables.feature. Same approach, and same reason, as
+  # vega/common/ecs-consortium-setup.feature.
 
   Background:
     * url baseUrl
@@ -48,6 +57,7 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | name                                                        |
       | 'users.item.post'                                           |
       | 'users.item.get'                                            |
+      | 'users.item.put'                                            |
       | 'usergroups.item.post'                                      |
       | 'inventory-storage.service-points.item.post'                |
       | 'inventory-storage.holdings.item.post'                      |
@@ -62,6 +72,8 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'inventory-storage.location-units.libraries.item.post'      |
       | 'inventory-storage.locations.item.post'                     |
       | 'inventory-storage.holdings-sources.item.post'              |
+      | 'circulation-storage.staff-slips.collection.get'            |
+      | 'circulation-storage.staff-slips.item.get'                  |
       | 'inventory.instances.item.get'                              |
       | 'inventory.instances.item.post'                             |
       | 'inventory.items.item.post'                                 |
@@ -69,6 +81,9 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'circulation-storage.loan-policies.item.post'               |
       | 'circulation-storage.patron-notice-policies.item.post'      |
       | 'circulation.check-out-by-barcode.post'                     |
+      | 'circulation.renew-by-barcode.post'                         |
+      | 'circulation.override-patron-block.post'                    |
+      | 'circulation.override-renewal-block.post'                   |
       | 'circulation-storage.loans.item.get'                        |
       | 'circulation-storage.request-policies.item.post'            |
       | 'circulation-storage.request-policies.item.post'            |
@@ -86,8 +101,11 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       | 'consortia.user-tenants.collection.get'                     |
       | 'consortia.user-tenants.item.post'                          |
       | 'search.index.instance-records.reindex.full.post'           |
+      | 'search.index.instance-records.reindex.status.get'          |
+      | 'search.instances.collection.get'                           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
+      | 'requests-mediated.mediated-request.item.put'               |
       | 'requests-mediated.mediated-requests.decline.execute'       |
       | 'requests-mediated.mediated-request.confirm.post'           |
       | 'requests-mediated.confirm-item-arrival.post'               |
@@ -148,11 +166,44 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
     Then status 200
 
     # ========== Step 3: Initialize mod-search indices ==========
+    # Reindex also evicts mod-search's USER_TENANTS_CACHE. Wait for any competing reindex to finish
+    # and for that cache eviction to propagate before creating member-tenant inventory; otherwise
+    # college item events can be routed to the college-local index instead of the central consortium
+    # index, leaving the confirmation scenarios' central searches empty indefinitely.
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
+    * configure retry = { count: 20, interval: 10000 }
     Given path 'search/index/instance-records/reindex/full'
     And request {}
+    And retry until responseStatus == 200
     When method POST
     Then status 200
+
+    # The trigger is asynchronous. Poll the status endpoint instead of sleeping for a fixed time:
+    # this continues immediately when the reindex is ready, while still allowing slower runs to
+    # finish. Failed states are terminal too, so surface them directly rather than timing out.
+    * def isReindexTerminal =
+      """
+      function(statuses) {
+        if (!statuses || statuses.length == 0) return false;
+        if (karate.filter(statuses, function(s) {
+          return s.status && s.status.indexOf('_FAILED') > -1;
+        }).length > 0) return true;
+        var mergeOnlyEntities = ['holding', 'holdings', 'item'];
+        return karate.filter(statuses, function(s) {
+          if (!s.status) return true;
+          if (s.status == 'UPLOAD_COMPLETED') return false;
+          var entityType = (s.entityType || '').toLowerCase();
+          return !(s.status == 'MERGE_COMPLETED' && mergeOnlyEntities.indexOf(entityType) > -1);
+        }).length == 0;
+      }
+      """
+    * configure retry = { count: 60, interval: 10000 }
+    Given path 'search/index/instance-records/reindex/status'
+    And retry until responseStatus == 200 && isReindexTerminal(response)
+    When method GET
+    Then status 200
+    * def failedReindexEntities = karate.filter(response, function(s) { return s.status && s.status.indexOf('_FAILED') > -1; })
+    * if (failedReindexEntities.length > 0) karate.fail('mod-search reindex failed: ' + karate.pretty(failedReindexEntities))
 
     # ========== Step 4: Setup inventory data in central tenant ==========
     * configure headers = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'x-okapi-token': '#(okapitoken)', 'x-okapi-tenant': '#(centralTenant)' }
@@ -160,42 +211,42 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
     Given path 'location-units/institutions'
     And request { id: '#(mrCentralInstitutionId)', name: 'MR Test Institution Central', code: 'MRI-C' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/campuses'
     And request { id: '#(mrCentralCampusId)', name: 'MR Test Campus Central', code: 'MRC-C', institutionId: '#(mrCentralInstitutionId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/libraries'
     And request { id: '#(mrCentralLibraryId)', name: 'MR Test Library Central', code: 'MRL-C', campusId: '#(mrCentralCampusId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'service-points'
     And request { id: '#(mrCentralServicePointId)', name: 'MR Central Service Point', code: 'MR-SP-C', discoveryDisplayName: 'MR Central Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'instance-types'
     And request { id: '#(mrInstanceTypeId)', name: 'MR Instance Type', code: 'MRI-T', source: 'local' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'loan-types'
     And request { id: '#(mrLoanTypeId)', name: 'MR Loan Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'material-types'
     And request { id: '#(mrMaterialTypeId)', name: 'MR Material Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'holdings-sources'
     And request { id: '#(mrCentralHoldingsSourceId)', name: 'MR FOLIO Central' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'locations'
     And request
@@ -212,7 +263,7 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       }
       """
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     # ========== Step 5: Setup inventory data in university (secure) tenant ==========
     * def universityLogin = call eurekaLogin { username: '#(universityUser1.username)', password: '#(universityUser1.password)', tenant: '#(universityTenant)' }
@@ -221,22 +272,22 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
     Given path 'location-units/institutions'
     And request { id: '#(mrUniInstitutionId)', name: 'MR Test Institution University', code: 'MRI-U' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/campuses'
     And request { id: '#(mrUniCampusId)', name: 'MR Test Campus University', code: 'MRC-U', institutionId: '#(mrUniInstitutionId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/libraries'
     And request { id: '#(mrUniLibraryId)', name: 'MR Test Library University', code: 'MRL-U', campusId: '#(mrUniCampusId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'service-points'
     And request { id: '#(mrUniServicePointId)', name: 'MR University Service Point', code: 'MR-SP-U', discoveryDisplayName: 'MR University Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     # Also create the central service point in the university tenant for pickup availability
     Given path 'service-points'
@@ -255,22 +306,22 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
     Given path 'instance-types'
     And request { id: '#(mrInstanceTypeId)', name: 'MR Instance Type', code: 'MRI-T', source: 'local' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'loan-types'
     And request { id: '#(mrLoanTypeId)', name: 'MR Loan Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'material-types'
     And request { id: '#(mrMaterialTypeId)', name: 'MR Material Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'holdings-sources'
     And request { id: '#(mrUniHoldingsSourceId)', name: 'MR FOLIO University' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'locations'
     And request
@@ -287,7 +338,7 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       }
       """
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     # ========== Step 6: Setup inventory data in college tenant ==========
     * def collegeLogin = call eurekaLogin { username: '#(collegeUser1.username)', password: '#(collegeUser1.password)', tenant: '#(collegeTenant)' }
@@ -296,22 +347,22 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
     Given path 'location-units/institutions'
     And request { id: '#(mrCollegeInstitutionId)', name: 'MR Test Institution College', code: 'MRI-COL' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/campuses'
     And request { id: '#(mrCollegeCampusId)', name: 'MR Test Campus College', code: 'MRC-COL', institutionId: '#(mrCollegeInstitutionId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'location-units/libraries'
     And request { id: '#(mrCollegeLibraryId)', name: 'MR Test Library College', code: 'MRL-COL', campusId: '#(mrCollegeCampusId)' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'service-points'
     And request { id: '#(mrCollegeServicePointId)', name: 'MR College Service Point', code: 'MR-SP-COL', discoveryDisplayName: 'MR College Service Point', pickupLocation: true, holdShelfExpiryPeriod: { duration: 3, intervalId: 'Weeks' } }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     # Also create the central service point in the college tenant for pickup availability
     Given path 'service-points'
@@ -322,22 +373,22 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
     Given path 'instance-types'
     And request { id: '#(mrInstanceTypeId)', name: 'MR Instance Type', code: 'MRI-T', source: 'local' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'loan-types'
     And request { id: '#(mrLoanTypeId)', name: 'MR Loan Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'material-types'
     And request { id: '#(mrMaterialTypeId)', name: 'MR Material Type' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'holdings-sources'
     And request { id: '#(mrCollegeHoldingsSourceId)', name: 'MR FOLIO College' }
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     Given path 'locations'
     And request
@@ -354,7 +405,7 @@ Feature: Common mediated-requests setup (inventory, circulation policies, shadow
       }
       """
     When method POST
-    Then status 201
+    Then match [201, 422] contains responseStatus
 
     # ========== Step 7: Setup circulation policies ==========
     * def centralLogin = call eurekaLogin { username: '#(consortiaAdmin.username)', password: '#(consortiaAdmin.password)', tenant: '#(centralTenant)' }

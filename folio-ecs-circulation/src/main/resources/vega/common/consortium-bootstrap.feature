@@ -49,6 +49,7 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | name                                                        |
       | 'users.item.post'                                           |
       | 'users.item.get'                                            |
+      | 'users.item.put'                                            |
       | 'users.collection.get'                                      |
       | 'usergroups.item.post'                                      |
       | 'perms.permissions.item.post'                               |
@@ -68,6 +69,8 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'inventory-storage.location-units.libraries.item.post'      |
       | 'inventory-storage.locations.item.post'                     |
       | 'inventory-storage.holdings-sources.item.post'              |
+      | 'circulation-storage.staff-slips.collection.get'            |
+      | 'circulation-storage.staff-slips.item.get'                  |
       | 'inventory.instances.item.get'                              |
       | 'inventory.instances.item.post'                             |
       | 'inventory.items.item.post'                                 |
@@ -77,10 +80,13 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'circulation-storage.request-policies.item.post'            |
       | 'circulation-storage.requests.collection.get'               |
       | 'circulation-storage.requests.item.get'                     |
-      | 'circulation-storage.loans.item.get'                        |
       | 'circulation-item.item.get'                                 |
       | 'circulation.check-in-by-barcode.post'                      |
       | 'circulation.check-out-by-barcode.post'                     |
+      | 'circulation.renew-by-barcode.post'                         |
+      | 'circulation.override-patron-block.post'                    |
+      | 'circulation.override-renewal-block.post'                   |
+      | 'circulation-storage.loans.item.get'                        |
       | 'circulation.requests.item.post'                            |
       | 'circulation.settings.item.post'                            |
       | 'circulation-bff.requests.allowed-service-points.get'       |
@@ -92,12 +98,18 @@ Feature: Bootstrap the shared ECS consortium (tenants + consortium registration)
       | 'tlr.settings.put'                                          |
       | 'user-tenants.collection.get'                               |
       | 'search.index.instance-records.reindex.full.post'           |
+      | 'search.index.instance-records.reindex.status.get'          |
+      | 'search.instances.collection.get'                           |
       | 'requests-mediated.mediated-request.item.post'              |
       | 'requests-mediated.mediated-request.item.get'               |
+      | 'requests-mediated.mediated-request.item.put'               |
       | 'requests-mediated.mediated-requests.decline.execute'       |
       | 'requests-mediated.mediated-request.confirm.post'           |
       | 'requests-mediated.confirm-item-arrival.post'               |
       | 'requests-mediated.send-item-in-transit.post'               |
+      | 'requests-mediated.batch-mediated-requests.item.post'       |
+      | 'requests-mediated.batch-mediated-requests.item.get'        |
+      | 'requests-mediated.batch-mediated-requests.batch-details.collection.get' |
 
     # Remove leftovers before creating tenants. Resolve IDs by name first.
     * configure abortedStepsShouldPass = true

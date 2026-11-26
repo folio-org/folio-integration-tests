@@ -218,7 +218,6 @@ Feature: Util feature to import multiple entities from one incoming marc bib. Ba
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     * def profileName = "Instance Mapping profile "
     And request

@@ -103,3 +103,70 @@ Feature: scheduler utility for mod-feesfines
     When method DELETE
     Then status 204
 
+  @SetTimerByPath
+  Scenario: find scheduler timer by path pattern and set its delay, or create it if not registered
+    # extToken       - required: sidecar-module-access-client Bearer token
+    # extPathPattern - required: routing entry path pattern, e.g. '/circulation/scheduled-age-to-lost'
+    # extUnit        - required: delay unit ('second' or 'minute')
+    # extDelay       - required: delay value
+    # returns: currentTimerId, currentTimerCreated, originalTimer (null when the timer was created)
+
+    Given path '/scheduler/timers'
+    And param limit = 500
+    And header Authorization = 'Bearer ' + extToken
+    And header x-okapi-tenant = testTenant
+    When method GET
+    Then status 200
+    * def foundTimers = karate.filter(response.timerDescriptors, function(t){ return t.routingEntry && t.routingEntry.pathPattern == extPathPattern })
+    * def timerFound = foundTimers.length > 0
+    * def originalTimer = timerFound ? foundTimers[0] : null
+    * def currentTimerId = timerFound ? foundTimers[0].id : null
+    * def currentTimerCreated = !timerFound
+
+    * def newRoutingEntry = { methods: ['POST'], pathPattern: '#(extPathPattern)', unit: '#(extUnit)', delay: '#(extDelay)' }
+    * def newTimer = { type: 'system', enabled: true, moduleName: 'mod-circulation', routingEntry: '#(newRoutingEntry)' }
+    * if (timerFound) newTimer.id = foundTimers[0].id
+    * if (timerFound) newTimer.moduleId = foundTimers[0].moduleId
+    * if (timerFound) newTimer.moduleName = foundTimers[0].moduleName
+
+    * if (timerFound) karate.call(true, 'classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@PutTimer', { extToken: extToken, extTimer: newTimer })
+    * if (!timerFound) karate.call(true, 'classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@PostTimer', { extToken: extToken, extTimer: newTimer })
+
+  @PutTimer
+  Scenario: update scheduler timer from a full timer descriptor
+    # extToken - required
+    # extTimer - required: timer descriptor, must contain id
+
+    Given path '/scheduler/timers', extTimer.id
+    And request extTimer
+    And header Authorization = 'Bearer ' + extToken
+    And header x-okapi-tenant = testTenant
+    And header Content-Type = 'application/json'
+    When method PUT
+    Then status 200
+
+  @PostTimer
+  Scenario: create scheduler timer from a timer descriptor
+    # extToken - required
+    # extTimer - required: timer descriptor
+    # returns: currentTimerId
+
+    Given path '/scheduler/timers'
+    And request extTimer
+    And header Authorization = 'Bearer ' + extToken
+    And header x-okapi-tenant = testTenant
+    And header Content-Type = 'application/json'
+    When method POST
+    Then status 201
+    * def currentTimerId = response.id
+
+  @RestoreTimer
+  Scenario: restore a timer changed by SetTimerByPath (delete it if it was created, otherwise put the original back)
+    # extToken        - required
+    # extTimerId      - required
+    # extTimerCreated - required: true when SetTimerByPath created the timer
+    # extOriginalTimer - required when extTimerCreated is false
+
+    * if (extTimerCreated) karate.call(true, 'classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@DeleteActualCostExpirationTimer', { extToken: extToken, extTimerId: extTimerId })
+    * if (!extTimerCreated) karate.call(true, 'classpath:vega/mod-feesfines/features/util/schedulerUtil.feature@PutTimer', { extToken: extToken, extTimer: extOriginalTimer })
+

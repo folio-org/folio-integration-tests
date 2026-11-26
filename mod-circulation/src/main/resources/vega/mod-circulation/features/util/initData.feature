@@ -313,6 +313,18 @@ Feature: init data for mod-circulation
     When method POST
     Then status 201
 
+  @PostLoanPolicyNonRenewable
+  Scenario: create loan policy that does not allow renewals
+    * def intLoanPolicyId = call uuid1
+
+    * def loanPolicyEntityRequest = read('samples/policies/loan-policy-non-renewable-entity-request.json')
+    * loanPolicyEntityRequest.id = karate.get('extLoanPolicyId', intLoanPolicyId)
+    * loanPolicyEntityRequest.name = loanPolicyEntityRequest.name + ' ' + random_string()
+    Given path 'loan-policy-storage/loan-policies'
+    And request loanPolicyEntityRequest
+    When method POST
+    Then status 201
+
   @PostLostPolicy
   Scenario: create lost policy
     * def intLostItemPolicyId = call uuid1
@@ -322,6 +334,17 @@ Feature: init data for mod-circulation
     * lostItemFeePolicyEntityRequest.name = lostItemFeePolicyEntityRequest.name + ' ' + random_string()
     Given path 'lost-item-fees-policies'
     And request lostItemFeePolicyEntityRequest
+    When method POST
+    Then status 201
+
+  @PostLostPolicyActualCost
+  Scenario: create lost item fee policy - aged to lost after 1 min, billed after 1 min, actual cost
+    * def lostItemFeePolicyId = extLostItemFeePolicyId
+    * def lostItemFeePolicyActualCostRequest = read('samples/policies/lost-item-fee-policy-actual-cost-aged-to-lost-entity-request.json')
+    * lostItemFeePolicyActualCostRequest.id = extLostItemFeePolicyId
+    * lostItemFeePolicyActualCostRequest.name = lostItemFeePolicyActualCostRequest.name + ' ' + random_string()
+    Given path 'lost-item-fees-policies'
+    And request lostItemFeePolicyActualCostRequest
     When method POST
     Then status 201
 
@@ -379,6 +402,14 @@ Feature: init data for mod-circulation
     When method PUT
     Then status 204
 
+
+  @PutCirculationRules
+  Scenario: replace circulation rules
+    # extRulesAsText - required
+    Given path 'circulation', 'rules'
+    And request { rulesAsText: '#(extRulesAsText)' }
+    When method PUT
+    Then status 204
 
   @UpdateRules
   Scenario: create policies

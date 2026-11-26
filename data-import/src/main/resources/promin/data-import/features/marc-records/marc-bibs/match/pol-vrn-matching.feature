@@ -497,7 +497,6 @@ Feature: Test matching by POL number and vendor reference number
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
@@ -1056,7 +1055,6 @@ Feature: Test matching by POL number and vendor reference number
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
     """
@@ -1400,7 +1398,6 @@ Feature: Test matching by POL number and vendor reference number
 
     # Process file
     Given path '/data-import/uploadDefinitions', uploadDefinitionId, 'processFiles'
-    And param defaultMapping = 'false'
     And headers headersUser
     And request
       """

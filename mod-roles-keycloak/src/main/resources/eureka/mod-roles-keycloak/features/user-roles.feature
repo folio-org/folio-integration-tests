@@ -42,6 +42,7 @@ Feature: CRUD operations on user roles
     And param query = 'userId=="' + subjectUserId + '"'
     When method get
     Then status 200
+    And assert response.totalRecords == 2
     And assert response.userRoles.length == 2
     And assert response.userRoles.every(userRole => userRole.userId == subjectUserId)
     And match response.userRoles[*].roleId contains firstRoleId

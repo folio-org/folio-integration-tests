@@ -84,6 +84,7 @@ Feature: init data
     * def intOwnerId = call uuid1
     * def ownerEntityRequest = read('samples/owner-entity-request.json')
     * ownerEntityRequest.id = karate.get('extOwnerId', intOwnerId)
+    * ownerEntityRequest.servicePointOwner[0].value = karate.get('extServicePointId', servicePointId)
 
     Given path 'owners'
     And request ownerEntityRequest
@@ -106,6 +107,7 @@ Feature: init data
 
     * def contributorNameTypeEntityRequest = read('samples/contributor-name-type-entity-request.json')
     * contributorNameTypeEntityRequest.id = karate.get('extContributorNameTypeId', contributorNameTypeId)
+    * contributorNameTypeEntityRequest.name = karate.get('extContributorNameTypeName', contributorNameTypeEntityRequest.name)
     Given path 'contributor-name-types'
     And request contributorNameTypeEntityRequest
     When method POST
@@ -123,7 +125,7 @@ Feature: init data
   Scenario: create holdings
     * def sourceIdEntityRequest = read('samples/source-record-entity-request.json')
     * sourceIdEntityRequest.id = karate.get('id', holdingSourceId)
-    * sourceIdEntityRequest.name = 'TestUser-' + holdingSourceName
+    * sourceIdEntityRequest.name = 'TestUser-' + karate.get('extHoldingSourceName', holdingSourceName)
     Given path 'holdings-sources'
     And request sourceIdEntityRequest
     When method POST
