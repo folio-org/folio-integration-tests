@@ -32,7 +32,17 @@ public class ModTemplateEngineTests extends TestBaseEureka {
   }
 
   @Test
+  void templatePreviewTest() {
+    runFeatureTest("templatePreview");
+  }
+
+  @Test
   void templatesTest() {
     runFeatureTest("templates");
+  }
+
+  @Test
+  void handlebarsTest() {
+    runFeatureTest("handlebars");
   }
 }

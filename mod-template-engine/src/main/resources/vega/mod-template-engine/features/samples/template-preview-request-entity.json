@@ -1,0 +1,9 @@
+{
+  "header": "Hello message for {{user.name}}",
+  "body": "Hello {{user.name}}",
+  "context": {
+    "user": {
+      "name": "Alex"
+    }
+  }
+}

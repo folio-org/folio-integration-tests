@@ -16,6 +16,7 @@ Feature: mod-template-engine integration tests
       | 'templates.item.put'                |
       | 'templates.item.delete'             |
       | 'template-request.post'             |
+      | 'template-request.preview.post'     |
 
   Scenario: create tenant and users for testing
     Given call read('classpath:common/eureka/setup-users.feature')
