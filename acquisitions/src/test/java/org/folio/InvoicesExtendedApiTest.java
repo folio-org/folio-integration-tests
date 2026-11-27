@@ -35,7 +35,8 @@ public class InvoicesExtendedApiTest extends TestBaseEureka implements Acquisiti
   private static final String[] FEATURES = {
     // moved from InvoicesSmokeApiTest (TestRail group = Extended)
     "pay-invoice-with-0-value",
-    "fund-code-auto-populate-invoice-lines"
+    "fund-code-auto-populate-invoice-lines",
+    "invoice-next-line-number-change-ignored"
   };
 
   public InvoicesExtendedApiTest() {
